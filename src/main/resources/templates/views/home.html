@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" >
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link th:href="@{css/home.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-zzzzzz
-테스트파일추가
+	<main>
+		<div class="topAndNavbar">
+			<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+			<div class="top" th:replace="~{common/top.html :: top}"></div>
+		</div>
+		<div class="container-lg"></div>
+		<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	</main>
 </body>
 </html>
