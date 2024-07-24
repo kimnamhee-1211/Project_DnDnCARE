@@ -15,4 +15,9 @@ public class MemberController {
 	public String loginView() {
 		return "login";
 	}
+	
+	@GetMapping("myInfo.me")
+	public String myInfo() {		//마이페이지 확인용
+		return "myInfo";
+	}
 }
