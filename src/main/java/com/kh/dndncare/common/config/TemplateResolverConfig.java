@@ -26,21 +26,20 @@ public class TemplateResolverConfig {
 	}
 	
 	
-	//아직 멤버 me는 하지 않았습니다
-//	@Bean
-//	public ClassLoaderTemplateResolver dotMeResolver() {
-//		ClassLoaderTemplateResolver dotMe = new ClassLoaderTemplateResolver();
-//		dotMe.setPrefix("templates/views/member/");
-//		dotMe.setSuffix(".html");
-//		dotMe.setTemplateMode(TemplateMode.HTML);
-//		dotMe.setCharacterEncoding("UTF-8");
-//		dotMe.setCacheable(false);
-//		dotMe.setOrder(2);
-//		dotMe.setCheckExistence(true);
-//		
-//		
-//		return dotMe;
-//		
-//	}
+
+	@Bean
+	public ClassLoaderTemplateResolver dotMeResolver() {
+		ClassLoaderTemplateResolver dotMe = new ClassLoaderTemplateResolver();
+		dotMe.setPrefix("templates/views/member/");
+		dotMe.setSuffix(".html");
+		dotMe.setTemplateMode(TemplateMode.HTML);
+		dotMe.setCharacterEncoding("UTF-8");
+		dotMe.setCacheable(false);
+		dotMe.setOrder(2);
+		dotMe.setCheckExistence(true);		
+		
+		return dotMe;
+		
+	}
 	
 }
