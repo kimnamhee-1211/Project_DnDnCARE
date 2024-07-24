@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class BoardController {
 	
-	@GetMapping("communityBoardlist.bo")
+	@GetMapping("communityBoardList.bo")
 	public String CommunityList() {
 		return "caregiverBoard";
 	}
