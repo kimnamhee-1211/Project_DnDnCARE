@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+.topAndNavbar {
+	background-image:linear-gradient(
+        rgba(0, 0, 0, 0.4),
+        rgba(0, 0, 0, 0.4)
+      )
+      ,url(../image/topImage.jpg);
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-color 0.5s ease;
+}
