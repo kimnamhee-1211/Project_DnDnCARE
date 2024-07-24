@@ -6,10 +6,12 @@
     font-weight: 400;
     font-style: normal;
 }
+
 .navbar {
 	height:80px;
 	font-family: 'Pretendard-Regular';	
 	background-color: white !important;
+	border-bottom:solid #8dd986 1px;
 }
 #navbarNav2 {
 	margin-right:250px;

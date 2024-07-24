@@ -13,72 +13,86 @@
 	padding-top:25px;
 	padding-bottom:10px;
 	font-family: 'Pretendard-Regular';
+    display: flex; 
+    flex-direction: column;
+    flex-shrink: 0;
+    height: auto; /* 높이를 자동으로 조정 */
+    min-height: 100px; /* 최소 높이 설정 */
+    border-top:solid #8dd986 1px;
 }
 
 .inner {
     display: flex;
     flex-wrap: nowrap;
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 800px;
+    margin: 0 200px 0 200px;
     justify-content: space-between;
-    max-height:300px;
-    
- 
+    padding: 10px 0;  /* 상하 패딩 추가 */
+}
+
+.column-wrap {
+	margin-left: 300px;
 }
 
 .footer-logo {
-    flex: 0 0 200px;
-    margin-bottom: 20px;
-    margin-right:150px;
-}
-
-#footer-logo {
-    width: 200px;
-    height: 200px;
+	width:300px;
+    margin-bottom: 10px;  /* 20px에서 줄임 */
 }
 
 .footer-column {
-    flex: 1;
-    flex-wrap: nowrap;
-    margin: 0 15px 20px;
-    min-width: 200px;
-    line-height: 2;
+    flex: 1 1 150px;  /* 200px에서 줄임 */
+    margin: 0 5px 10px;  /* 마진 줄임 */
+    min-width: 120px;  /* 150px에서 줄임 */
+    line-height: 1.5;  /* 1.5에서 줄임 */
+    
+}
+
+.footer-logo {
+	width: 300px; /* 원하는 너비로 조정 */
+    height: 100px; /* 원하는 높이로 조정 */
+    margin-bottom: 10px;
+    margin-right: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 수평 중앙 정렬 추가 */
+}
+
+#footer-logo {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto; /* 추가 */
+    height: auto; /* 추가 */
+    object-fit: contain; /* 추가: 이미지 비율 유지 */
 }
 
 .footer-column h3 {
-    color: black;
-    border-bottom: 2px solid #CEF5D7;
-    padding-bottom: 10px;
-    font-size: 25px;
-    font-weight:bold;
-    margin-bottom:15px;
+    font-size: 20px;  /* 25px에서 줄임 */
+    margin-bottom: 14px;  /* 15px에서 줄임 */
+    text-decoration:underline;
+    text-underline-offset:7px;
+    text-decoration-color:#8dd986;
 }
-
- .footer-column h4 {
- 	margin-left:70px;
- 	margin-bottom:12px;
-}
-
 
 .footer-column p {
-	margin:0;
-	text-decoration:underline;
+    font-size: 14px;  /* 25px에서 줄임 */
+    margin-bottom: 5px;  /* 15px에서 줄임 */
+    
+}
+
+.footer-column h4 {
+    margin-left: 50px;  /* 70px에서 줄임 */
+    margin-bottom: 10px;  /* 12px에서 줄임 */
+    font-size: 16px;  /* 폰트 크기 줄임 */
 }
 
 .footer-column h6 {
- 	font-size:18px;
- 	white-space: nowrap;
-	margin-bottom:20px;
-   	margin-top:20px
-	
+    font-size: 16px;  /* 18px에서 줄임 */
+    margin-bottom: 10px;  /* 20px에서 줄임 */
+    margin-top: 5px;  /* 20px에서 줄임 */
+    white-space:nowrap;
 }
 
 .footer-bottom {
-    width: 100%;
-    text-align: center;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #CEF5D7;
-    font-size: 20px;
-    color: #777;
+    padding-top: 5px;  /* 10px에서 줄임 */
+    font-size: 14px;  /* 16px에서 줄임 */
 }
