@@ -42,4 +42,18 @@ public class TemplateResolverConfig {
 		
 	}
 	
+	@Bean
+	public ClassLoaderTemplateResolver dotBoResolver() {
+		ClassLoaderTemplateResolver dotBo = new ClassLoaderTemplateResolver();
+		dotBo.setPrefix("templates/views/board/");
+		dotBo.setSuffix(".html");
+		dotBo.setTemplateMode(TemplateMode.HTML);
+		dotBo.setCharacterEncoding("UTF-8");
+		dotBo.setCacheable(false);
+		dotBo.setOrder(3);
+		dotBo.setCheckExistence(true);
+		
+		return dotBo;
+	}
+	
 }
