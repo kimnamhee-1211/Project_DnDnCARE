@@ -24,18 +24,20 @@
 .inner {
     display: flex;
     flex-wrap: nowrap;
-    max-width: 800px;
-    margin: 0 200px 0 200px;
+    max-width: 1200px;
+    margin-top:0;
+    margin-bottom:0;
+    margin-left:300px;
     justify-content: space-between;
     padding: 10px 0;  /* 상하 패딩 추가 */
 }
 
 .column-wrap {
-	margin-left: 300px;
+	width: calc(100% - 350px);
 }
 
 .footer-logo {
-	width:300px;
+	width:200px;
     margin-bottom: 10px;  /* 20px에서 줄임 */
 }
 
@@ -66,7 +68,7 @@
 }
 
 .footer-column h3 {
-    font-size: 20px;  /* 25px에서 줄임 */
+    font-size: 23px;  /* 25px에서 줄임 */
     margin-bottom: 14px;  /* 15px에서 줄임 */
     text-decoration:underline;
     text-underline-offset:7px;
