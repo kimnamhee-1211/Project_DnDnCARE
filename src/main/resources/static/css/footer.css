@@ -24,21 +24,21 @@
 .inner {
     display: flex;
     flex-wrap: nowrap;
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 1200px;
+    margin-top:0;
+    margin-bottom:0;
+    margin-left:300px;
     justify-content: space-between;
     padding: 10px 0;  /* 상하 패딩 추가 */
 }
 
-.footer-logo {
-    flex: 0 0 100px;  /* 150px에서 줄임 */
-    margin-bottom: 10px;  /* 20px에서 줄임 */
-    margin-right: 30px;  /* 50px에서 줄임 */
+.column-wrap {
+	width: calc(100% - 350px);
 }
 
-#footer-logo {
-    width: 100px;  /* 150px에서 줄임 */
-    height: auto;  /* 높이를 자동으로 조정 */
+.footer-logo {
+	width:200px;
+    margin-bottom: 10px;  /* 20px에서 줄임 */
 }
 
 .footer-column {
@@ -46,10 +46,29 @@
     margin: 0 5px 10px;  /* 마진 줄임 */
     min-width: 120px;  /* 150px에서 줄임 */
     line-height: 1.5;  /* 1.5에서 줄임 */
+    
+}
+
+.footer-logo {
+	width: 300px; /* 원하는 너비로 조정 */
+    height: 100px; /* 원하는 높이로 조정 */
+    margin-bottom: 10px;
+    margin-right: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 수평 중앙 정렬 추가 */
+}
+
+#footer-logo {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto; /* 추가 */
+    height: auto; /* 추가 */
+    object-fit: contain; /* 추가: 이미지 비율 유지 */
 }
 
 .footer-column h3 {
-    font-size: 20px;  /* 25px에서 줄임 */
+    font-size: 23px;  /* 25px에서 줄임 */
     margin-bottom: 14px;  /* 15px에서 줄임 */
     text-decoration:underline;
     text-underline-offset:7px;
