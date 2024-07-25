@@ -1,8 +1,21 @@
 package com.kh.dndncare.member.model.service;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.dndncare.member.model.dao.MemberMapper;
+import com.kh.dndncare.member.model.vo.Member;
+
 @Service
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
+	@Autowired
+	private MemberMapper mMapper;
+	
+	@Override
+	public Member login(Member m) {
+		return mMapper.login(m);
+	}
+
 
 }
