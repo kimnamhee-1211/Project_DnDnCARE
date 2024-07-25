@@ -50,5 +50,10 @@ public class MemberController {
 		return "caregiverMain";
 	}
 	
+	// 임시버튼 : 환자 메인페이지로 가기
+	@GetMapping("patientMain.me")
+	public String patientMain() {
+		return "patientMain";
+	}
 	
 }
