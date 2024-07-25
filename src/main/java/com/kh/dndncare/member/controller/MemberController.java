@@ -41,4 +41,65 @@ public class MemberController {
 //		}	
 //	}
 
+	
+	@GetMapping("enroll1View.me")
+	public String enroll1View() {
+		return "enroll1";
+	}
+	
+	@GetMapping("enroll2View.me")
+	public String enroll2View() {
+		return "enroll2";
+	}	
+	
+	@GetMapping("enroll3View.me")
+	public String enroll3View() {
+		return "enroll3";
+	}
+	
+	
+	@GetMapping("enroll31View.me")
+	public String enroll31View() {
+		return "enroll3_1";
+	}
+	
+	
+	@GetMapping("enroll32View.me")
+	public String enroll32View() {
+		return "enroll3_2";
+	}
+	
+	
+	@GetMapping("enroll33View.me")
+	public String enroll33View() {
+		return "enroll3_3";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+

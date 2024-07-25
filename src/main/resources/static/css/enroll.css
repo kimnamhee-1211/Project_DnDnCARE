@@ -1,0 +1,64 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+
+#h4{margin: 80px auto;}
+
+.info{margin-bottom:5px; font-size:20px;}
+
+
+#block{width: 30px;}
+
+.inner-content {
+    font-family: 'Pretendard-Regular';
+    flex-grow: 1;
+    min-width: 1200px;
+    margin-top: 100px;
+    padding-bottom: 100px; /* footer와의 간격 */
+}
+
+.logo-image {
+	margin-left:70px;
+}
+
+
+.sign-btn button {
+	height:60px;
+	font-size:18px;
+	border-radius:25px;
+	border:none;
+}
+
+.signIn-btn {
+	background:#8dd986;
+	color:white;
+}
+
+.icon-section {
+	 list-style: none;
+}
+.icon-section li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
