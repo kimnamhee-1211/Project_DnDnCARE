@@ -14,8 +14,8 @@ import com.kh.dndncare.member.model.vo.Member;
 @Controller
 public class MemberController {
 	
-	 @Autowired
-	 private MemberService mService;
+//	 @Autowired
+//	 private MemberService mService;
 	 
 	@GetMapping("loginView.me")
 	public String loginView() {
