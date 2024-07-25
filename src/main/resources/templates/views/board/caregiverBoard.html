@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link th:href="@{css/login.css}" rel="stylesheet" type="text/css"/>
 <style>
     @font-face {
     font-family: 'Pretendard-Regular';
@@ -25,7 +24,7 @@
 		font-size:18px;
 		border-radius:25px; 
 		border:none;
-        background-color: #8DD986;
+        background-color: #cdf2c9;
         color: black;
     }
     .bg-board-main{
@@ -33,15 +32,26 @@
     }
     .bg-category-list{
     	background-color: white;
+    	border: 0;
+    	border-style:solid;
+    	border-color: #cdf2c9;
     	border-radius:25px; 
     }
     .bh-area-list{
     	background-color: white;
+    	border-color: #FFDAB9;
+    	border-style:solid;
     	border-radius:25px; 
     }
     .bg-area-btn{
     	background-color: #FFDAB9;
     	border-radius:25px; 
+    }
+    .btn-search {
+		border:none;
+        background-color: #8DD986;
+        color: black;
+        width:60px;
     }
     
      .topAndNavbar {
@@ -56,6 +66,22 @@
 		    transition: background-color 0.5s ease;
 	}
 	
+	hr{
+		border: 0; 
+		height: 4px;
+		background-color: #8DD986;
+		margin: 20px 0; 
+	}
+	
+	.sidebar-section{
+		border: 0;
+		background-color: #8DD986;
+	}
+	
+	.list-group-item{
+		border: 0;
+		background-color: #8DD986;
+	}
     
    
 </style>
@@ -70,6 +96,7 @@
 	        <div class="row">
 	            <h1 class="text-center">간병인 커뮤니티</h1>
 	            <br>
+	            <hr>
 	            <div class="col-md-9" align="center">
 	                <table class="table table-bordered bg-white table-hover">
 	                    <thead align="center">
@@ -80,7 +107,7 @@
 	                            <th width="10%">작성자</th>
 	                            <th width="6%">지역</th>
 	                            <th width="10%">작성일</th>
-	                            <th width="5%">조회수</th>
+	                            <th width="6%">조회수</th>
 	                        </tr>
 	                    </thead>
 	                    <tbody align="center">
@@ -222,24 +249,25 @@
 	                        
 	                    </tbody>
                 	</table>
-               	
+               	<hr>
                <div>
                <!-- 페이지네이션 -->
 	                <nav aria-label="Standard pagination example" style="float: right;">
-	                  <ul class="pagination">
-	                    <li class="page-item disabled">
-	                      <span class="page-link">&laquo;</span>
-	                    </li>
-	                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-	                    <li class="page-item active" aria-current="page">
-	                      <span class="page-link">2</span>
-	                    </li>
-	                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-	                    <li class="page-item">
-	                      <a class="page-link" href="#">&raquo;</a>
-	                    </li>
-	                  </ul>
-	                </nav>
+			        	<ul class="pagination" th:with="loc=${loc}">
+				            <li class="page-item">
+				            	<a class="page-link" th:href="@{${loc}(page=${pi.currentPage-1})}" aria-label="Previous">
+				            		<span aria-hidden="true">&laquo;</span>
+				              	</a>
+				            </li>
+					            <li class="page-item" th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}">
+					            	<a class="page-link" th:href="@{${loc}(page=${p})}">[[${ p }]]</a></li>
+				            <li class="page-item">
+				            	<a class="page-link" th:href="@{${loc}(page=${pi.currentPage+1})}" aria-label="Next">
+				            		<span aria-hidden="true">&raquo;</span>
+				            	</a>
+				            </li>
+				    	</ul>
+			        </nav>
                 </div>
                 <br>
                 
@@ -252,16 +280,15 @@
 					    <option value="3">글내용</option>
 					  </select>
 					  <input type="text" class="form-control" aria-label="Text input with 2 dropdown buttons" style="width:60%;">
-					  <button class="btn btn-info" type="button">검색</button>
+					  <button class="btn-search" type="button">검색</button>
 					</div>
 	            </div>
             
             <!-- 지역 hidden -->
             <div class="col-md-3"> 
-                
                 <button class="bg-area-btn w-100 mb-4 btn-sm" th:onclick="toggleLocationList()">▼지역</button>
                 <div id="LocationList" class="hidden bh-area-list">
-                    <div class="p-4 border">
+                    <div class="p-4 border bh-area-list">
                             <ul class="list-group w-2">
                                 <li class="list-group-item"><a href="#" class="text-dark">서울</a></li>
                                 <li class="list-group-item"><a href="#" class="text-dark">경기</a></li>
@@ -272,25 +299,25 @@
                                 <li class="list-group-item"><a href="#" class="text-dark">강원</a></li>
                                 <li class="list-group-item"><a href="#" class="text-dark">제주</a></li>
                             </ul>
-                    	
                     </div>
                 </div>
                 <!-- 카테고리 -->
                	<div class="sidebar-section">
 	                <div class="bg-category-list p-4 border mt-4">
 		                <ul class="list-group">
-		                    <li class="list-group-item"><a href="#" class="text-primary">전체글보기</a></li>
+		                	<li class="list-group-item fs-5 fw-bold">간병인 게시판</li>
+		                    <li class="list-group-item"><a href="#" class="text-dark">전체글보기</a></li>
 		                    <hr/>
 		                    <li class="list-group-item fs-5 fw-bold">공지사항</li>
-		                    <li class="list-group-item"><a href="#" class="text-primary">공지사항</a></li>
+		                    <li class="list-group-item"><a href="#" class="text-dark">공지사항</a></li>
 		                    <hr/>
 		                    <li class="list-group-item fs-5 fw-bold">자유게시판</li>
-	                        <li class="list-group-item"><a href="#" class="text-primary">응원의 한마디</a></li>
-	                        <li class="list-group-item"><a href="#" class="text-primary">수다방</a></li>
+	                        <li class="list-group-item"><a href="#" class="text-dark">응원의 한마디</a></li>
+	                        <li class="list-group-item"><a href="#" class="text-dark">수다방</a></li>
 		                    <hr/>
 		                    <li class="list-group-item fs-5 fw-bold">똑똑한 간병인 생활</li>
-	                        <li class="list-group-item"><a href="#" class="text-primary">일감찾기 팁</a></li>
-	                        <li class="list-group-item"><a href="#" class="text-primary">자격증 정보</a></li>
+	                        <li class="list-group-item"><a href="#" class="text-dark">일감찾기 팁</a></li>
+	                        <li class="list-group-item"><a href="#" class="text-dark">자격증 정보</a></li>
 		                </ul>
 	                </div>
 	            </div>

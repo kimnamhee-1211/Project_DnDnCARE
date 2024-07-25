@@ -13,8 +13,10 @@ import com.kh.dndncare.board.model.service.BoardService;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.common.Pagination;
+import com.kh.dndncare.member.model.vo.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class BoardController {
@@ -24,8 +26,10 @@ public class BoardController {
 	
 	@GetMapping("communityBoardList.bo")
 	public String CommunityList(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model, 
-			HttpServletRequest request) {
+			HttpServletRequest request, HttpSession session) {
 		int listCount = bService.getListCountAll();
+		
+		String status = ((Member)session.getAttribute("loginUser")).getMemberStatus();
 		
 		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 5);
 		
@@ -35,10 +39,17 @@ public class BoardController {
 			model.addAttribute("list", list);
 			model.addAttribute("pi", pi);
 			model.addAttribute("loc", request.getRequestURI());
-			// 로그인 멤버가 간병인일때
-			return "caregiverBoard";
-			// 로그인 멤버가 환자일때
-			// return "patientBoard";
+			switch(status) {			
+				// 	로그인 멤버가 간병인일때
+				case "C":
+					return "caregiverBoard";
+				// 로그인 멤버가 환자일때
+				case "P":
+					return "patientBoard";
+				// 그외
+				default :
+					return "adminBoard";
+			}
 		}else {
 			throw new BoardException("게시글 조회를 실패하였습니다.");
 		}

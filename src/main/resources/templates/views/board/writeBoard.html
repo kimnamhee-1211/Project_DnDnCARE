@@ -13,6 +13,7 @@
     body {
         font-family: 'Pretendard-Regular', sans-serif;
         background-color: #f8f9fa;
+        border:solid;
     }
     
      .topAndNavbar {
@@ -79,11 +80,11 @@
                 </div>
                 <div class="mb-3 col-md-8">
                     <label for="content" class="form-label">내용</label>
-                    <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+                    <textarea class="form-control" id="content" name="content" rows="15" required readonly="readonly"></textarea>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary me-2">작성</button>
-                    <button type="reset" class="btn btn-outline-primary" onclick="javascript:history.back();">취소</button>
+                    <button type="submit" class="btn btn-primary me-2">작성하기</button>
+                    <button type="reset" class="btn btn-outline-primary" onclick="javascript:history.back();">취소하기</button>
                 </div>
             </form>
         </main>
