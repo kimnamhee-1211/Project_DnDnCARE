@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
@@ -42,5 +43,11 @@ public class MemberController {
 		}else {
 			throw new MemberException("로그인에 실패했습니다");
 		}	
+	}
+	
+	@GetMapping("logout.me")
+	public String logout(SessionStatus status) {
+		status.setComplete();
+		return "redirect:home.do";
 	}
 }
