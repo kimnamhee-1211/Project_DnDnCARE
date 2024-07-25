@@ -43,4 +43,12 @@ public class MemberController {
 			throw new MemberException("로그인에 실패했습니다");
 		}	
 	}
+	
+	// 임시버튼 : 간병인 메인페이지로 가기 
+	@GetMapping("caregiverMain.me")
+	public String caregiverMain() {
+		return "caregiverMain";
+	}
+	
+	
 }
