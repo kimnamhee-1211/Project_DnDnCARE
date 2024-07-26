@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
@@ -13,16 +14,33 @@ import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.Member;
 
-@SessionAttributes("loginUser")
+@SessionAttributes({"loginUser", "tempMemberCategory"})
 @Controller
 public class MemberController {
 	
-	 @Autowired
-	 private MemberService mService;
-	 
-	@GetMapping("loginView.me")
-	public String loginView() {
-		return "login";
+	@Autowired
+	private MemberService mService;
+	
+	@GetMapping("{memberType}.me")
+	public String selectMemberType(@PathVariable("memberType") String memberType,Model model) {
+		String tempMemberCategory;
+		String viewName;
+		
+		switch(memberType) {
+		case "patient" :
+				tempMemberCategory = "P";
+				viewName = "pLogin";
+				break;
+		case "careGiver" :
+				tempMemberCategory = "C";
+				viewName = "cLogin";
+				break;
+		default : return "errorPage";
+		}
+		
+		model.addAttribute("tempMemberCategory", tempMemberCategory);
+		return viewName;
+		
 	}
 
 	@GetMapping("myInfo.me")
@@ -122,6 +140,31 @@ public class MemberController {
 	public String myInfoBoardList() {		//마이페이지 보드작성 확인용
 		return "myInfoBoardList";
 	}
+	
+	@GetMapping("findId.me")
+	public String findId() {
+		return "findIdPage";
+	}
+	
+	@GetMapping("findPwd.me")
+	public String findPwd() {
+		return "findPwdPage";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
 
