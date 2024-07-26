@@ -1,6 +1,5 @@
 package com.kh.dndncare.member.model.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +15,5 @@ public class MemberServiceImpl implements MemberService {
 	public Member login(Member m) {
 		return mMapper.login(m);
 	}
-
 
 }

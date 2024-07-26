@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
@@ -51,4 +52,73 @@ public class MemberController {
 			throw new MemberException("로그인에 실패했습니다");
 		}	
 	}
+	
+	@GetMapping("logout.me")
+	public String logout(SessionStatus status) {
+		status.setComplete();
+		return "redirect:home.do";
+	}
+	// 임시버튼 : 간병인 메인페이지로 가기 
+	@GetMapping("caregiverMain.me")
+	public String caregiverMain() {
+		return "caregiverMain";
+	}
+	
+	// 임시버튼 : 환자 메인페이지로 가기
+	@GetMapping("patientMain.me")
+	public String patientMain() {
+		return "patientMain";
+	}
+
+	
+	@GetMapping("enroll1View.me")
+	public String enroll1View() {
+		return "enroll1";
+	}
+	
+	@GetMapping("enroll2View.me")
+	public String enroll2View() {
+		return "enroll2";
+	}	
+	
+	@GetMapping("enroll3View.me")
+	public String enroll3View() {
+		return "enroll3";
+	}
+	
+	
+	@GetMapping("enroll31View.me")
+	public String enroll31View() {
+		return "enroll3_1";
+	}
+	
+	
+	@GetMapping("enroll32View.me")
+	public String enroll32View() {
+		return "enroll3_2";
+	}
+	
+	
+	@GetMapping("enroll33View.me")
+	public String enroll33View() {
+		return "enroll3_3";
+	}
+	
+	
 }
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+

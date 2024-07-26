@@ -13,14 +13,23 @@
 	background-color: white !important;
 	border-bottom:solid #8dd986 1px;
 }
+.nav-item {
+	padding:0 15px 0 15px;
+}
+.navbar1 {
+	margin-left:100px;
+	
+}
 #navbarNav2 {
-	margin-right:250px;
+	margin-right:150px;
 }
 
+.
+
 .navbar-logo {
-	width: 250px; /* 원하는 너비로 조정 */
+	width: 200px; /* 원하는 너비로 조정 */
     height: 100px; /* 원하는 높이로 조정 */
-    margin-left:150px;
+    margin-left:200px;
     display: flex;
     align-items: center;
     justify-content: center; /* 수평 중앙 정렬 추가 */
