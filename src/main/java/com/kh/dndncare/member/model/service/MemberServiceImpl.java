@@ -15,5 +15,4 @@ public class MemberServiceImpl implements MemberService {
 	public Member login(Member m) {
 		return mMapper.login(m);
 	}
-
 }

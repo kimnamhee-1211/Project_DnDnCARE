@@ -22,4 +22,5 @@ public class Reply {
 	private Date replyUpdateDate;
 	private String replyStatus;
 	private int refBoardNo;
+	private String memberNickName;
 }
