@@ -8,15 +8,16 @@
 #upperContentsBtn div:nth-child(2) {display:grid; grid-template-columns: 1fr 600px 1fr; grid-template-rows: 100px;}
 #myPresentMatching { 
     position:fixed; top:80%; left:85%; 
-    border : 3px solid gold; border-radius:20px;
-    background: lightyellow;
-  }
+    border : 3px solid green; border-radius:20px;
+    background: #8dd986;
+    font-size: 18px;
+}
 
 /* 대빵 버튼 */
 button {
     margin: 20px;
   }
-  .custom-btn {
+.custom-btn {
     width: 200px;
     height: 80px;
     color: #fff;
@@ -33,10 +34,11 @@ button {
      7px 7px 20px 0px rgba(0,0,0,.1),
      4px 4px 5px 0px rgba(0,0,0,.1);
     outline: none;
-  }
+}
 
 .btn-14 {
-  background: rgb(255,151,0);
+  /* background: rgb(255,151,0); */
+  background: #8dd986;
   border: none;
   z-index: 1;
 }
@@ -71,7 +73,8 @@ button {
 /* Card */
 .card {
     margin-bottom: 24px;
-    box-shadow: 0 2px 3px #e4e8f0;
+    /* box-shadow: 0 2px 3px #e4e8f0; */
+    box-shadow: 0 2px 3px #8dd986;
 }
 .card {
     position: relative;
@@ -136,3 +139,30 @@ a {
     vertical-align: baseline;
     border-radius: 0.75rem;
 }
+
+/* table 효과 */
+.mainTable {box-shadow: 0 2px 3px #8dd986;}
+
+
+/* 페이징 버튼 효과 */
+.page-link {
+  color: #333 !important;  
+  background-color: #8dd986;
+  border-color: green;
+}
+
+.page-item.active .page-link {
+ z-index: 1;
+ color: #333 !important;
+ font-weight:bold;
+ background-color: #8dd986;
+  border-color: green;
+ 
+}
+
+.page-link:focus, .page-link:hover {
+  color: #333 !important;
+  background-color: #8dd986; 
+  border-color: green;
+}
+
