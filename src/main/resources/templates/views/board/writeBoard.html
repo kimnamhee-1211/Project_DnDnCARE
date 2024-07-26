@@ -36,6 +36,26 @@
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+    
+    hr{
+		border: 0; 
+		height: 4px;
+		background-color: #8DD986;
+		margin: 20px 0; 
+	}
+	
+	 .btn-write {
+	    height:40px;
+		font-size:18px;
+		border-radius:10px; 
+		border:none;
+        background-color: #cdf2c9;
+        color: black;
+    }
+    
+    input[readonly] {
+    background-color: gray;
+}
 </style>
 </head>
 <body>
@@ -47,25 +67,29 @@
     <div class="content-wrapper">
         <main class="container">
             <h1 class="text-center">글 작성</h1>
-            <form action="submitPost" method="post">
-                <div class="col-md-6 mb-3">
-                    <label for="title" class="form-label">제목</label>
-                    <input type="text" class="form-control" id="title" name="title" required>
-                </div>
+            <hr>
+            <form action="insertBoard.bo" method="post">
                 <div class="mb-3 row">
                     <div class="col-md-3">
                         <label for="category" class="form-label">카테고리</label>
-                        <select class="form-select" id="category" name="category" required>
+                        <select class="form-select" id="categoryNo" name="categoryNo" required>
                             <option selected disabled>카테고리 선택</option>
+                            <th:block th:if="${session.loginUser.memberCategory} == 'A'">
+                            <option value="0">공지사항</option>
+                            </th:block>
                             <option value="1">응원의 한마디</option>
                             <option value="2">수다방</option>
-                            <option value="3">간병가족정보방</option>
-                            <option value="4">간병일지</option>
+                        	<!-- th:if="${session.loginUser.memberStatus == 'C'}" -->
+                            <option value="3">일감찾기 팁</option>
+                            <option value="4">자격증 정보</option>
+                            <!-- th:if="${session.loginUser.memberStatus == 'P'}"-->
+                            <option value="5">간병가족정보방</option>
+                            <option value="6">간병일지</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <label for="location" class="form-label">지역</label>
-                        <select class="form-select" id="location" name="location" required>
+                    <div class="col-md-2 mb-3">
+                        <label for="area" class="form-label">지역</label>
+                        <select class="form-select" id="areaNo" name="areaNo" required>
                             <option selected disabled>지역 선택</option>
                             <option value="1">서울</option>
                             <option value="2">경기</option>
@@ -77,18 +101,33 @@
                             <option value="8">제주</option>
                         </select>
                     </div>
+                    <div class="col-md-2 mb-3">
+                    	<label for="category" class="form-label">분류</label>
+                    	<input type="text" class="form-control" id="writerCategory" name="writerCategory" th:value="${session.loginUser.memberCategory}" readonly>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                    	<label for="writer" class="form-label">작성자</label>
+                    	<input type="text" class="form-control" id="writerNickName" name="writerNickName" th:value="${session.loginUser.memberNickName}" readonly>
+                    </div>
+                    <br>
+                    <div class="col-md-9 mb-3">
+                    	<label for="title" class="form-label">제목</label>
+                    	<input type="text" class="form-control" id="boardTitle" name="boardTitle" placeholder="제목을 입력해주세요" required>
+                	</div>
                 </div>
-                <div class="mb-3 col-md-8">
+                <div class="mb-3 col-md-9">
                     <label for="content" class="form-label">내용</label>
-                    <textarea class="form-control" id="content" name="content" rows="15" required readonly="readonly"></textarea>
+                    <textarea class="form-control" id="boardContent" name="boardContent" rows="15" placeholder="내용을 입력해주세요" required></textarea>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary me-2">작성하기</button>
-                    <button type="reset" class="btn btn-outline-primary" onclick="javascript:history.back();">취소하기</button>
+                    <button type="submit" class="btn-write me-2">작성하기</button>
+                    <button type="reset" class="btn btn-outline-danger" onclick="javascript:history.back();">취소하기</button>
                 </div>
             </form>
         </main>
     </div>
     <div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 </body>
+
+
 </html>

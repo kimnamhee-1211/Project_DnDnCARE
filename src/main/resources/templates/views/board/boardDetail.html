@@ -38,6 +38,12 @@
     #boardContent{
     	height: 500px;
     }
+    hr{
+		border: 0; 
+		height: 4px;
+		background-color: #8DD986;
+		margin: 20px 0; 
+	}
 </style>
 </head>
 <body>
@@ -47,41 +53,47 @@
 	</div>
     
     <div class="content-wrapper">
-        <main class="container">
+        <main class="container" >
             <h1 class="text-center">글 조회</h1>
             <hr>
             <form action="submitPost" method="post">
-                <div class="col-md-6 mb-3">
-                    <label for="title" class="form-label">제목 : </label>
-					<span>{board_title}</span>
-                </div>
-                <hr>
-                <div class="mb-3 row">
-                    <div class="col-md-4">
-                        <label for="category" class="form-label">카테고리 : </label>
-                        <span>{board_category}</span>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="location" class="form-label">지역 : </label>
-                        <span>{board_area}</span>
-                    </div>
-                    <hr>
-                    <div class="col-md-4">
-                    	<label for="createDate" class="form-label">작성시간 : </label>
-                    	<span>{board_update_date}</span>
-                    </div>
-                    <div class="col-md-3">
-                    	<label for="count" class="form-label">조회수 : </label>
-                    	<span>{board_Count}</span>
-                    </div>
-                </div>
-                <hr>
-                <div class="mb-5 col-md-8">
-                    <label for="content" class="form-label">내용 : </label>
-                    <div class="form-control" id="boardContent">
-                    	{board_Content}
-                    </div>
-                </div>
+            		<input type="hidden" th:value="${b.boardNo}" name="boardId"/>
+            		<input type="hidden" th:value="${page}" name="page"/>
+	                <div class="col-md-6 mb-3">
+	                    <label for="title" class="form-label">제목 : </label>
+						<span>[[${b.boardTitle}]]</span>
+	                </div>
+	                <hr>
+	                <div class="mb-3 row">
+	                    <div class="col-md-4">
+	                        <label for="category" class="form-label">카테고리 : </label>
+	                        <span>[[${b.CategoryName}]]</span>
+	                    </div>
+	                    <div class="col-md-3">
+	                        <label for="location" class="form-label">지역 : </label>
+	                        <span>[[${b.AreaName}]]</span>
+	                    </div>
+	                    <hr>
+	                    <div class="col-md-4">
+	                    	<label for="createDate" class="form-label">작성시간 : </label>
+	                    	<span>[[${b.boardCreateDate}]]</span>
+	                    </div>
+	                    <div class="col-md-4">
+	                    	<label for="updateDate" class="form-label">수정시간 : </label>
+	                    	<span>[[${b.boardUpdateDate}]]</span>
+	                    </div>
+	                    <div class="col-md-3">
+	                    	<label for="count" class="form-label">조회수 : </label>
+	                    	<span>[[${b.boardCount}]]</span>
+	                    </div>
+	                </div>
+	                <hr>
+	                <div class="mb-5 col-md-8">
+	                    <label for="content" class="form-label">내용 : </label>
+	                    <div class="form-control" id="boardContent">
+	                    	[[${b.boardContent}]]
+	                    </div>
+	                </div>
                 <div class="d-flex justify-content-center mb-5">
 	                <button type="button" class="btn btn-outline-primary btn-lg">
 	                	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
@@ -89,17 +101,19 @@
 						</svg>
 						추천
 	                </button>
-	                <button type="button" class="btn btn-primary btn-lg">	
+	                <!-- 	
+	                <button type="button" class="btn btn-primary btn-lg">
 	                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
 					  <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a10 10 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733q.086.18.138.363c.077.27.113.567.113.856s-.036.586-.113.856c-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.2 3.2 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.8 4.8 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z"/>
 					</svg>
 					추천완료
 				</button>
+					-->
                 </div>
 
                 <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-success me-2 btn-lg" onclick="">수정하기</button>
-                    <button type="button" class="btn btn-primary me-2 btn-lg">목록보기</button>
+                    <button type="button" class="btn btn-primary me-2 btn-lg" onclick="location.href='communityBoardList.bo'">목록보기</button>
                     <button type="button" class="btn btn-danger me-2 btn-lg">삭제하기</button>
                 </div>
             </form>
@@ -120,10 +134,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>{reply_content}</td>
-						<td>{member_NickName}</td>
-						<td>{reply_CreateDate}</td>
+					<tr th:each="r:${reply}">
+						<td>[[${replyContent}]]</td>
+						<td>[[${memberNickName}</td>
+						<td>[[${replyCreateDate}]]</td>
 						<td>
 							<button>
 								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
