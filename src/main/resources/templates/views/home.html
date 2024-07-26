@@ -4,15 +4,39 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link th:href="@{css/home.css}" rel="stylesheet" type="text/css"/>
+<style>
+	.navbar {
+	height:80px;
+	font-family: 'Pretendard-Regular';	
+	background-color: white !important;
+	border:none !important;
+}
+</style>
 </head>
 <body>
+	<div class="topAndNavbar">
+		<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+		<div class="top" th:replace="~{common/top.html :: top}"></div>
+	</div>
 	<main>
-		<div class="topAndNavbar">
-			<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
-			<div class="top" th:replace="~{common/top.html :: top}"></div>
+		<div class="container-lg d-flex flex-column text-center">
+			<div class="question"><p>방문 목적을 알려주세요</p></div>
+			<span class="direct-login">로그인 바로 하기</span>
+			<div class="d-flex justify-content-evenly mt-5">
+				<div class="select d-flex justify-content-center align-items-center"><a href=#>간병인을 찾고 있어요</a></div>
+				<div class="select d-flex justify-content-center align-items-center"><a href=#>간병일감을 찾고 있어요</a></div>
+			</div>
 		</div>
-		<div class="container-lg"></div>
-		<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+		
+		<!-- 명훈님이 본인페이지 확인용으로 만들어 놓은 구간 -->
+		<!-- <button onclick="location.href='caregiverMain.me'">간병인 메인</button>
+		&nbsp;&nbsp;
+		<button onclick="location.href='patientMain.me'">환자 메인</button>
+		
+		<div class="container-lg"></div> -->
+		<!-- 여기까지 -->
+	
 	</main>
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 </body>
 </html>

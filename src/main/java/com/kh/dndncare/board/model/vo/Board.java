@@ -24,4 +24,6 @@ public class Board {
 	private int boardCount;
 	private int categoryNo;
 	private int areaNo;
+	private String categoryName;
+	private String areaName;
 }

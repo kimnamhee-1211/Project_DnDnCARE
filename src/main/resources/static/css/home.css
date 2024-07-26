@@ -2,13 +2,53 @@
 
 .topAndNavbar {
 	background-image:linear-gradient(
-        rgba(0, 0, 0, 0.4),
-        rgba(0, 0, 0, 0.4)
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2)
       )
-      ,url(../image/topImage.jpg);
+      ,url(../image/topImage2.PNG);
     background-size: cover; 
     background-position: center;
     background-repeat: no-repeat;
     transition: background-color 0.5s ease;
 }
+
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
+}
+
+main {
+	font-family: 'Pretendard-Regular';
+}
+.container-lg {
+	width:1200px;
+	height:1500px;
+}
+
+.question {
+	margin-top:200px;
+	color:gray;
+}
+
+.question p {
+	font-size:50px;
+}
+
+.select {
+	width:400px;
+	height:400px;
+	border-radius:50%;
+	border:3px #8dd986 solid;
+	background:#EEFAEC;
+	overflow: hidden; 
+}
+
+.select a{
+	text-decoration:none;
+	color:gray;
+	font-size: 2rem;
+}
+
 
