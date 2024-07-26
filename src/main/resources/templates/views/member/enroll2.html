@@ -34,8 +34,10 @@
 					</div>
 					
 					<p class="info">연락처를 입력해주세요.</p>
+					<p style="font-size:16px" class="info">연락처는 -를 제외하고 입력해주세요.</p>
 					<div class="form-floating mb-4 ">
 						<input type="tel" class="form-control" id="telInput" name="memberPhone">
+						<label for="telInput">전화번호</label>
 					</div>
 										
 										
@@ -52,7 +54,7 @@
 						<input type="text" class="form-control" id="sample4_roadAddress" name="roadAddress">
 						<label for="sample4_roadAddress">도로명주소</label>
 					</div>
-					<div class="form-floating mb-1">
+					<div class="form-floating mb-4">
 						<input type="text" class="form-control" id="sample4_detailAddress" name="detailAddress">
 						<label for="sample4_detailAddress">상세주소</label>						
 					</div>		
@@ -60,11 +62,11 @@
 					
 					<p class="info">이메일을 입력해주세요.</p>
 					<div class="form-floating mb-4 ">
+						<div class="row g-3">
 						  <div class="col-md-6">
-						    <label for="inputCity" class="form-label">City</label>
-						    <input type="text" class="form-control" id="inputCity">
+						    <input type="text" class="form-control" id="emailInput" name="memberEmail" placeholder="이메일">
 						  </div>
-						  <div class="col-md-2">@</div>
+						  <div class="col-md-1">@</div>
 						  <div class="col-md-4">
 						    <select id="inputState" class="form-select" name="emailDomain">
 							    <option selected>선택해주세요.</option>
@@ -74,6 +76,7 @@
 								<option th:selected="${emailDomain eq 'nate.com' }">nate.com</option>								
 						    </select>
 						  </div>
+						</div>
 					</div>
 					
 					

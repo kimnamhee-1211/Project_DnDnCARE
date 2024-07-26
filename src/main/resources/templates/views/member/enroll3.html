@@ -13,19 +13,25 @@
 			<div class="login-wrap">
 				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
 				<h1 class="h3 mb-3 fw-bold mb-5 text-center">회원가입</h1>
-				<h4 class="h4 mb-3 fw-bold mb-5" id="h4">원하는 서비스 종류를 선택해 주세요.</h4>
+				<h5 class="h4 mb-3 fw-bold mb-5" id="h4">원하는 서비스 종류를 선택해 주세요.</h5>
 				<div class="login-input">			
-					<div class="form-floating mb-4 infoCategory" >
-						<div class="d-grid gap-2 d-md-block text-center">
-							<input type="radio" name="memberCategory" value="P" class="btn-check memberCategory" id="pInput" autocomplete="off">
-							<label class="btn memberCategory" for="pInput" style="font-size:30px;">간병인 찾기</label>
-							 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
-							<input type="radio" name="memberCategory" value="C" class="btn-check memberCategory" id="cInput" autocomplete="off">
-							<label class="btn memberCategory" for="cInput" style="font-size:30px;">간병 일감 찾기</label>						
-						</div>	
-					</div>								
+					<div class="form-floating mb-4" >		
+						<div class="form-check form-check-inline" >				
+							<input type="radio" class="btn-check" name="memberCategory" id="pInput" autocomplete="off" checked>
+							<label class="btn" id="pInput_label" for="pInput">
+								간병인 찾기</br>
+								<span class="text-center" style="font-size:20px;">내게 딱 맞는 간병인과의 매칭 서비스</span>	
+							</label>
+							<input type="radio" class="btn-check" name="memberCategory" id="cInput" autocomplete="off">
+							<label class="btn" id="cInput_label" for="cInput">
+								간병 일감 찾기</br>
+								<span class="text-center" style="font-size:20px;">내게 딱 맞는 간병 일감 매칭 서비스</span>	
+							</label>	
+						</div>
+					</div>
 				</div>
 			</div>
+			
 			<div class="sign-btn d-flex flex-column">
 				<button type="button" class="signIn-btn mt-4" id="nextButton"><span>다음</span></button>
 			</div>
@@ -33,6 +39,7 @@
 				<p class="text-center">다음으로 넘어가<br>회원가입을 계속 진행해주세요.</p>
 			</div>
 		</form>
+		
 	</main>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	<script th:inline="javascript" src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
