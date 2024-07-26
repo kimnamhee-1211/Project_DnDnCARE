@@ -1,11 +1,11 @@
 /* #mainContainer {display:grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows:500px;} */
-#upperLeftContents {display:grid; grid-template-rows: 250px 250px;}
+/* #upperLeftContents {display:grid; grid-template-columns:100%; grid-template-rows: 100px 200px 200px;} */
 #upperContents {display: grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows: 500px;}
 #container div:nth-child(2) {display:grid; grid-template-columns: 100%; grid-template-rows: 200px;}        
 #underContents {display:grid; grid-template-columns:1fr 500px 80px 700px 1fr; grid-template-rows: 700px;}
 /* #cardDiv {display:grid; grid-template-columns: 350px 350px; grid-template-rows: 200px;} */
 /* #findWorkList {border: 2px solid black;} */
-#upperContentsBtn {display:grid; grid-template-columns: 1fr 600px 1fr; grid-template-rows: 250px;}
+#upperContentsBtn div:nth-child(2) {display:grid; grid-template-columns: 1fr 600px 1fr; grid-template-rows: 100px;}
 #myPresentMatching { 
     position:fixed; top:80%; left:85%; 
     border : 3px solid gold; border-radius:20px;
