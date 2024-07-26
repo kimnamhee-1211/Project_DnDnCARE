@@ -6,12 +6,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.Member;
+
+import jakarta.servlet.http.HttpSession;
 
 @SessionAttributes("loginUser")
 @Controller
@@ -71,39 +74,35 @@ public class MemberController {
 	}
 
 	
+	//회원가입 페이지 이동
 	@GetMapping("enroll1View.me")
 	public String enroll1View() {
 		return "enroll1";
 	}
 	
-	@GetMapping("enroll2View.me")
-	public String enroll2View() {
-		return "enroll2";
-	}	
 	
-	@GetMapping("enroll3View.me")
-	public String enroll3View() {
-		return "enroll3";
+	//회원가입	 검증
+	@PostMapping("idCheck.me")
+	public String idCheck(@RequestParam("id") String id) {		
+		int result = mService.idCheck(id);	
+		if(result == 0) {
+			return "usable";
+		}else{
+			return "unusable";
+		}
+
 	}
 	
-	
-	@GetMapping("enroll31View.me")
-	public String enroll31View() {
-		return "enroll3_1";
+	//회원가입
+	@PostMapping("enroll.me")
+	public String enroll() {
+		
+		
+		return null;
 	}
+
 	
-	
-	@GetMapping("enroll32View.me")
-	public String enroll32View() {
-		return "enroll3_2";
-	}
-	
-	
-	@GetMapping("enroll33View.me")
-	public String enroll33View() {
-		return "enroll3_3";
-	}
-	
+
 	
 }
 
