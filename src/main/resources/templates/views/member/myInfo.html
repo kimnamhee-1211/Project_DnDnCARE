@@ -18,17 +18,19 @@
 			<div class="col" >
 	     		<div align="center"class="myInfo-Border m-4">
 	     			<div class="m-4" style="border-bottom:2px solid #8dd986;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
-	     			<div class="h4 m-2 p-2"><span style="border-bottom:2px solid #8dd986;"><b>내 정보</b></span></div>
-	     			<div class="h4 m-2 p-2">현재 매칭 정보</div>
-	     			<div class="h4 m-2 p-2">매칭 이력</div>
-	     			<div class="h4 m-2 p-2">내 든든지수/후기</div>
-	     			<div class="h4 m-2 p-2">내가 쓴 글 보기</div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatching.me">현재 매칭 정보</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingHistory.me">매칭 이력</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내 든든지수/후기</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
 	     		</div>
 	    	</div>
 	    	
 	    	<div class="col" >
 	      		
-	      		
+	      		<div class="row m-4" style="width:950px"> <!-- 여기로규격정햇다 -->
+		      		<div class="m-3 h1 menu-name" >내 정보</div>
+	      		</div>
 	      		<div align="center"class="row m-4" style="border:2px solid #8dd986;width:950px"> <!-- 여기로규격정햇다 -->
 		      		<div class="col-2 m-4">
 			      		<img id="profile-image" src="image/icon_profile.png"/>
@@ -225,6 +227,21 @@
 	
 	
 	</div>
+	
+	<script th:inline="javascript">
+		
+		window.onload =() =>{
+			const menuAtag = document.getElementsByClassName('my-menu');
+			const menuName = document.getElementsByClassName('menu-name')[0];
+			for(i of menuAtag){
+				if(i.innerText == menuName.innerText){
+					i.innerHTML= '<span style="border-bottom:2px solid #8dd986; font-weight:bold;">'+i.innerText+'</span>';
+				}
+			};
+			
+		}
+	
+	</script>
 	
 </body>
 </html>

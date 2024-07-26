@@ -113,6 +113,16 @@ public class MemberController {
 		return "myInfoMatchingHistory";
 	}
 	
+	@GetMapping("myInfoMatchingReview.me")
+	public String myInfoMatchingReview() {		//마이페이지 매칭 이력 확인용
+		return "myInfoMatchingReview";
+	}
+	
+	@GetMapping("myInfoBoardList.me")
+	public String myInfoBoardList() {		//마이페이지 보드작성 확인용
+		return "myInfoBoardList";
+	}
+	
 }
 
 
