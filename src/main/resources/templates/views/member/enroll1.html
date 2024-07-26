@@ -20,7 +20,7 @@
 						<p class="info">아이디를 입력해주세요.</p>
 						<div class="form-floating mb-5">
 							<input type="text" class="form-control" id="idInput" name="memberId">
-							<label for="IdInput" id="IdInputLabel">아이디</label>
+							<label for="idInput" id="idInputLabel">아이디</label>
 						</div>
 						
 						<p class="info" style="margin-bottom:0">비밀번호를 입력해주세요.</p>
@@ -156,12 +156,12 @@
 				
 				nextButton.addEventListener('click', function(){
 					let isValid = true;	
+
 					
-					
-				    if(isValid){
-				    	if(!inputCheck())
-				    		isValid = false;				    		
-						if(!idCheck()){
+				    if(isValid){				    	
+						if(!inputCheck()){
+				    		isValid = false;   					    	
+				    	}else if(idInputLabel.innerText.includes('없는')){
 							idInput.focus();					
 							isValid = false;
 						}else if(!pwdCheck()){
@@ -184,6 +184,7 @@
 							
 							enroll1.style.display="none";
 							enroll2.style.display="block";
+							
 						} else if(this == nextButton2){
 							form.submit();
 						}			            	
@@ -259,26 +260,33 @@
     			
         		$.ajax({
         			url : 'idCheck.me',
-        			method : 'post',
+        			type : 'post',
         			data : {id : idInputVal},
         			success : (data) =>{
         				console.log(data)
-        				if(data == 'usable' ){
-        					idInputLabel.innerText = "사용 가능한 아이디";
-        					idInputLabel.style.color="green"
-        					isValid = true;
+        				if(data == 'usable'){
+        					if(idInputLabel != null){
+            					idInputLabel.innerText = "사용 가능한 아이디";
+            					idInputLabel.style.color="green"
+            					isValid = true;
+            					return true;
+        					}
  
         				}else{
-        					idInputLabel.innerText = "사용할 수 없는 아이디입니다.";
-        					idInputLabel.style.color="red"
-        					isValid = false;
-        				}
+        					if(idInputLabel != null){
+            					idInputLabel.innerText = "사용할 수 없는 아이디입니다.";
+            					idInputLabel.style.color="red"
+            					isValid = false;
+            					return false;
+        					}
+        				}					
         			},
         			error: data => console.log(data)
+        			
         		});
-        		return isValid;
-    		}	   		
+    		}
     	}
+    	
     	if(idInput != null){
         	idInput.addEventListener('focusout', idCheck);	
     	}		
@@ -288,13 +296,12 @@
 		const pwdInput2 = document.getElementById("pwdInput2")
 		
 		const regExp1 = /[0-9]/g;			
-		const regExp2 = /(!|@|#|$|%|&)/;			
-		const regExp3 = /[A-Z]/g;
+		const regExp2 = /[!@#$%&]/g;			
 		const regExp4 = /[a-z]/g;				
 		
 		function pwdCheck(){
 			const pwdInputLabel = document.getElementById("pwdInputLabel");
-			if(!regExp1.test(pwdInput.value) || !regExp2.test(pwdInput.value) || regExp3.test(pwdInput.value) || !regExp4.test(pwdInput.value) || pwdInput.value.length<6 || pwdInput.value.length>10){
+			if(!regExp1.test(pwdInput.value) || !regExp2.test(pwdInput.value) || !regExp4.test(pwdInput.value) || pwdInput.value.length<6 || pwdInput.value.length>10){
 				pwdInputLabel.innerText = "비밀번호를 양식에 맞게 설정해주세요."; 
 				pwdInputLabel.style.color="red";					
 				return false;
