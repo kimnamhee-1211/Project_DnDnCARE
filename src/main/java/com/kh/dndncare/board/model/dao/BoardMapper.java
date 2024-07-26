@@ -13,7 +13,7 @@ public interface BoardMapper {
 
 	int getListCountAll();
 
-	ArrayList<Board> selectBoardAllList(RowBounds rowBounds);
+	ArrayList<Board> selectBoardAllList(String category, RowBounds rowBounds);
 
 	int reCount();
 

@@ -35,7 +35,7 @@ public class BoardController {
 		String category = ((Member)session.getAttribute("loginUser")).getMemberCategory();
 		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 20);
 		
-		ArrayList<Board> list = bService.selectBoardAllList(pi);
+		ArrayList<Board> list = bService.selectBoardAllList(pi, category);
 		System.err.println(list);
 		if(list != null) {
 			model.addAttribute("list", list);
@@ -63,7 +63,6 @@ public class BoardController {
 		b.setMemberNo(memberNo);
 		b.setAreaNo(b.getAreaNo());
 		b.setCategoryNo(b.getCategoryNo());
-		System.out.println(b);
 		int result = bService.insertBoard(b);
 		if(result > 0) {
 			return "redirect:communityBoardList.bo";			

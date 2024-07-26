@@ -10,7 +10,7 @@ public interface BoardService {
 
 	int getListCountAll();
 
-	ArrayList<Board> selectBoardAllList(PageInfo pi);
+	ArrayList<Board> selectBoardAllList(PageInfo pi, String category);
 
 	int insertBoard(Board b);
 

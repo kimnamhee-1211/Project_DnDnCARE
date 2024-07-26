@@ -23,10 +23,10 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public ArrayList<Board> selectBoardAllList(PageInfo pi) {
+	public ArrayList<Board> selectBoardAllList(PageInfo pi, String category) {
 		int offset = (pi.getCurrentPage() - 1)*pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
-		return bMapper.selectBoardAllList(rowBounds);
+		return bMapper.selectBoardAllList(category,rowBounds);
 	}
 
 	@Override

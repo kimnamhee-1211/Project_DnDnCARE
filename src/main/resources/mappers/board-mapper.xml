@@ -14,7 +14,7 @@
 			join b_category c on(c.category_no=b.category_no)
 			join member m on(m.member_no=b.member_no)
 			join area a on(b.area_no=a.area_no)
-		where board_status='Y'
+		where b.board_status='Y' and m.member_category=#{category}
 		order by board_no desc
 	</select>
 	
