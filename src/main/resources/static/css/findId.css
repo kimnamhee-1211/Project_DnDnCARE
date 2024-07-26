@@ -59,20 +59,3 @@ body {
     align-items: center;
     text-align: center;
 }
-.kakao {
-    background: url(../image/icon_kakao.svg) no-repeat center center;
-    margin-bottom:5px;
-    cursor:pointer;
-}
-
-.naver {
-    background: url(../image/icon_naver.svg) no-repeat center center;
-    margin-bottom:5px;
-    cursor:pointer;
-}
-
-.google {
-    background: url(../image/icon_google.svg) no-repeat center center;
-    margin-bottom:5px;
-    cursor:pointer;
-}

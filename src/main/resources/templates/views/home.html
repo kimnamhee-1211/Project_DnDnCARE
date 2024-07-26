@@ -5,12 +5,13 @@
 <title>Insert title here</title>
 <link th:href="@{css/home.css}" rel="stylesheet" type="text/css"/>
 <style>
-	.navbar {
+.navbar {
 	height:80px;
 	font-family: 'Pretendard-Regular';	
 	background-color: white !important;
 	border:none !important;
 }
+
 </style>
 </head>
 <body>
@@ -20,11 +21,17 @@
 	</div>
 	<main>
 		<div class="container-lg d-flex flex-column text-center">
-			<div class="question"><p>방문 목적을 알려주세요</p></div>
-			<span class="direct-login">로그인 바로 하기</span>
-			<div class="d-flex justify-content-evenly mt-5">
-				<div class="select d-flex justify-content-center align-items-center"><a href=#>간병인을 찾고 있어요</a></div>
-				<div class="select d-flex justify-content-center align-items-center"><a href=#>간병일감을 찾고 있어요</a></div>
+			<div class="question">
+			<p>방문 목적을 선택해주세요</p>
+			<div class="arrow-section d-flex justify-content-between">
+				<!-- <img th:src="@{/image/arrow-left3.png}" alt="화살표 오른쪽" id="arrow">
+				<img th:src="@{/image/arrow-right3.png}" alt="화살표 오른쪽" id="arrow"> -->
+			</div>
+			
+			</div>
+			<div class="select-section d-flex justify-content-evenly">
+				<div class="select d-flex justify-content-center align-items-center" id="select1"><a th:href="@{patient.me}">간병인을 찾고 있어요</a></div>
+				<div class="select d-flex justify-content-center align-items-center" id="select2"><a th:href="@{careGiver.me}">간병일감을 찾고 있어요</a></div>
 			</div>
 		</div>
 		

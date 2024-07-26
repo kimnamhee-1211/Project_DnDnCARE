@@ -50,17 +50,7 @@
 			    </div>
 		    </th:block>
 		    <div class="collapse navbar-collapse" id="navbarNav2">
-		    	<th:block th:if="${session.loginUser ==null}">
-			    	<ul class="navbar-nav ms-auto fs-4">
-				        <li class="nav-item">
-				          <a class="nav-link" href="loginView.me">로그인</a>
-				        </li>
-				        <li class="nav-item">
-				          <a class="nav-link" href="#">회원가입</a>
-				        </li>
-			       </ul>
-	    		</th:block>
-		    	<th:block th:unless="${session.loginUser ==null}">
+		    	<th:block th:if="${session.loginUser != null}">
 			    	<ul class="navbar-nav ms-auto fs-4">
 				        <li class="nav-item">
 				          <a class="nav-link" href="logout.me">로그아웃</a>
