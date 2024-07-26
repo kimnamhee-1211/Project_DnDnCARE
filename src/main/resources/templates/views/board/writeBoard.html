@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>writerBoard</title>
-<link th:href="@{css/login.css}" rel="stylesheet" type="text/css"/>
 <style>
     @font-face {
         font-family: 'Pretendard-Regular';
@@ -14,7 +13,20 @@
     body {
         font-family: 'Pretendard-Regular', sans-serif;
         background-color: #f8f9fa;
+        border:solid;
     }
+    
+     .topAndNavbar {
+		background-image:linear-gradient(
+		        rgba(0, 0, 0, 0.4),
+		        rgba(0, 0, 0, 0.4)
+		      )
+		      ,url(../image/topImage.jpg);
+		    background-size: cover; 
+		    background-position: center;
+		    background-repeat: no-repeat;
+		    transition: background-color 0.5s ease;
+	}
    
     .container {
         max-width: 600px;
@@ -27,30 +39,34 @@
 </style>
 </head>
 <body>
-    <div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+    <div class="topAndNavbar">
+		<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+		<div class="top" th:replace="~{common/top.html :: top}"></div>
+	</div>
+    
     <div class="content-wrapper">
         <main class="container">
             <h1 class="text-center">글 작성</h1>
             <form action="submitPost" method="post">
-                <div class="mb-3">
+                <div class="col-md-6 mb-3">
                     <label for="title" class="form-label">제목</label>
                     <input type="text" class="form-control" id="title" name="title" required>
                 </div>
                 <div class="mb-3 row">
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="category" class="form-label">카테고리</label>
                         <select class="form-select" id="category" name="category" required>
-                            <option selected disabled>카테고리를 선택하세요</option>
+                            <option selected disabled>카테고리 선택</option>
                             <option value="1">응원의 한마디</option>
                             <option value="2">수다방</option>
                             <option value="3">간병가족정보방</option>
                             <option value="4">간병일지</option>
                         </select>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <label for="location" class="form-label">지역</label>
                         <select class="form-select" id="location" name="location" required>
-                            <option selected disabled>지역을 선택하세요</option>
+                            <option selected disabled>지역 선택</option>
                             <option value="1">서울</option>
                             <option value="2">경기</option>
                             <option value="3">인천</option>
@@ -62,13 +78,13 @@
                         </select>
                     </div>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 col-md-8">
                     <label for="content" class="form-label">내용</label>
-                    <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+                    <textarea class="form-control" id="content" name="content" rows="15" required readonly="readonly"></textarea>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary me-2">작성</button>
-                    <button type="reset" class="btn btn-outline-primary" onclick="javascript:history.back();">취소</button>
+                    <button type="submit" class="btn btn-primary me-2">작성하기</button>
+                    <button type="reset" class="btn btn-outline-primary" onclick="javascript:history.back();">취소하기</button>
                 </div>
             </form>
         </main>
