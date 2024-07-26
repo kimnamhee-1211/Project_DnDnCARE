@@ -25,7 +25,10 @@ public class MemberController {
 		return "login";
 	}
 
-
+	@GetMapping("myInfo.me")
+	public String myInfo() {		//마이페이지  확인용
+		return "myInfo";
+	}
 
 
 	
@@ -103,6 +106,11 @@ public class MemberController {
 	@GetMapping("myInfoMatching.me")
 	public String myInfoMatching() {		//마이페이지 현재매칭정보 확인용
 		return "myInfoMatching";
+	}
+	
+	@GetMapping("myInfoMatchingHistory.me")
+	public String myInfoMatchingHistory() {		//마이페이지 매칭 이력 확인용
+		return "myInfoMatchingHistory";
 	}
 	
 }

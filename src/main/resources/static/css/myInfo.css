@@ -20,12 +20,12 @@ body {
 }
 
 
-.inner-content {
+/* .inner-content {
     font-family: 'Pretendard-Regular';
     flex-grow: 1;
     min-width: 1200px;
     margin-top: 100px;
-    padding-bottom: 100px; /* footer와의 간격 */
+    padding-bottom: 100px; footer와의 간격
 }
 
 .logo-image {
@@ -70,6 +70,68 @@ body {
     background: url(../image/icon_google.svg) no-repeat center center;
     margin-bottom:5px;
     cursor:pointer;
+} */
+
+.container{
+		position: relative;
+		min-width:1280px;
+		margin: 0 auto;
+		margin-top: 50px;
+		font-family: 'Pretendard-Regular';
+		
+}
+.testBorder{
+	border:1px solid #dee2e6;
+	border-radius: 5px;
+}
+
+.myInfo-Border{
+	border:1px solid #dee2e6;
+	font-family: 'Pretendard-Regular';
+	border-radius: 5px;
+}
+
+.myInfo-Border-maincolor{
+	border-radius: 5px;
+	border:1px solid #8dd986;
 }
 
 
+#profile-image {
+   width: 100px; /* 원하는 크기로 설정 */
+   height: 100px; /* 원하는 크기로 설정 */
+   border-radius: 50%; /* 이미지를 동그랗게 만듦 */
+   object-fit: cover; /* 이미지 비율을 유지하며 잘라냄 */
+   border:3px solid #8dd986;
+}
+
+.myInfo-btn{
+	width:150px;
+	background-color: #8dd986;
+	border:1px solid #8dd986;
+	color:white;
+	border-radius: 3px;
+	padding:5px;
+	
+}
+
+.btn-outline-maincolor-2{
+	color:#8dd986;
+	border-radius: 5px;
+	width:150px;
+	border:1px solid #8dd986;
+	padding:5px;
+	background:white;
+}
+
+.btn-outline-maincolor{
+	color:#8dd986;
+	border-radius: 5px;
+	border:1px solid #8dd986;
+	padding:2px;
+	background:white;
+}
+
+.myInfo-title{
+	border-bottom:2px solid #8dd986;
+}
