@@ -13,27 +13,24 @@
 			<div class="login-wrap">
 				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
 				<h1 class="h3 mb-3 fw-bold mb-5 text-center">회원가입</h1>
-				<h5 class="h5 mb-1 fw-bold mb-1">아래 내용은 간병인 정보 입력 사항입니다.</h5>
+				<h5 class="h5 mb-1 fw-bold mb-1">아래 내용은 매칭을 원하는 간병인 정보 입력 사항입니다.</h5>
 				<h5 class="h5 mb-3 fw-bold mb-5">이를 바탕으로 보다 정확한 매칭 서비스를 제공할 수 있습니다.</h5>
 				<div class="login-input">
-					
-					<p class="info">원하는 서비스를 선택해주세요.</p>
+				
+					<p class="info">원하는 매칭 상대의 성별을 선택해 주세요.</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="병원돌봄" name="careExpS" id="expS1Input">
-						  <label class="form-check-label" for="expS1Input">병원돌봄</label>
+						  <input class="form-check-input" type="checkbox" name="memberGender" id="menInput" value="M">
+						  <label class="form-check-label" for="menInput">남성</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="가정돌봄" name="careExpS" id="expS2Input">
-						  <label class="form-check-label" for="expS2Input">가정돌봄</label>
+						  <input class="form-check-input" type="checkbox" name="memberGender" id="womenInput" value="F">
+						  <label class="form-check-label" for="womenInpu">여성</label>
 						</div>
-						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="동행서비스" name="careExpS" id="expS3Input">
-						  <label class="form-check-label" for="expS3Input">동행서비스</label>
-						</div>
-					</div>				
+					</div>
+								
 				
-					<p class="info">경력 기간을 선택해주세요.</p>
+					<p class="info">경력 기간이 몇 년인 분과 매칭되고 싶나요?(0~4개 선택)</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
 						  <input class="form-check-input" type="radio" name="careCareer" id="1Input" value="1">
@@ -53,7 +50,7 @@
 						</div>
 					</div>		
 					
-					<p class="info">만약 경력이 있다면, 어떤 서비스를 경험했는지 선택해주세요.</p>
+					<p class="info">어떤 서비스 경험을 가진 분과 매칭되고 싶나요?(0~3개 선택)</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
 						  <input class="form-check-input" type="checkbox" value="병원돌봄" name="careExpS" id="expS1Input">
@@ -70,7 +67,7 @@
 					</div>		
 					
 					
-					<p class="info">만약 경력이 있다면, 어떤 질환 환자를 경험했는지 선택해주세요.</p>
+					<p class="info">어떤 서비스 경험을 가진 분과 매칭되고 싶나요?(0~10개 선택)</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
 						  <input class="form-check-input" type="checkbox" value="치매" name="careExpD" id="expD1Input">
@@ -115,7 +112,7 @@
 					</div>	
 					
 					
-					<p class="info">관련 자격사항이 있다면 선택해주세요.</p>
+					<p class="info">어떤 자격증을 가진 분과 매칭되고 싶나요?(0~3개 선택)</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
 						  <input class="form-check-input" type="checkbox" value="간병사" name="careLicense" id="license1Input">
@@ -144,13 +141,6 @@
 						  </div>
 						</div>
 					</div>
-					
-					<p class="info">자기소개를 100자 이내로 입력해주세요.</p>
-					<div class="form-floating mb-5">
-						<textarea class="form-control" id="careIntro" name="careIntro" rows="3" maxlength="100"></textarea>
-						<label for="careIntro">자기소개(100자 이내)</label>
-					</div>				
-					
 										
 				</div>
 			</div>

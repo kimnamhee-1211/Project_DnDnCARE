@@ -26,6 +26,22 @@ body {
 .info{margin-bottom:5px; font-size:20px;}
 
 
+#pInput_label, #cInput_label{font-size:35px;
+							margin: 50px auto;
+							padding-top:40px;
+							height:200px;
+							width:350px;
+							}
+
+#pInput_label{margin-right:100px;}
+
+#msg{font-size:20px;}
+
+
+
+
+
+
 #block{width: 30px;}
 
 .inner-content {

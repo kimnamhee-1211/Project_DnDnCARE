@@ -1,6 +1,16 @@
-#mainContainer {display:grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows:500px;}
-#upperLeftContents {display:grid; grid-template-rows: 250px 250px;}
+/* 폰트 */
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+	font-weight: 400;
+	font-style: normal;
+}
 
+body { font-family: 'Pretendard-Regular'; background-color:white; color: #333; }
+
+
+/* #mainContainer {display:grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows:500px;} */
+#upperLeftContents {display:grid; grid-template-rows: 250px 250px;}
 #upperContents {display: grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows: 500px;}
 #container div:nth-child(2) {display:grid; grid-template-columns: 100%; grid-template-rows: 200px;}        
 #underContents {display:grid; grid-template-columns:1fr 500px 80px 700px 1fr; grid-template-rows: 700px;}
@@ -9,15 +19,16 @@
 #upperContentsBtn {display:grid; grid-template-columns: 1fr 600px 1fr; grid-template-rows: 250px;}
 #myPresentMatching { 
     position:fixed; top:80%; left:85%; 
-    border : 3px solid gold; border-radius:20px;
-    background: lightyellow;
-  }
+    border : 3px solid green; border-radius:20px;
+    background: #8dd986;
+    font-size: 18px;
+}
 
 /* 대빵 버튼 */
 button {
     margin: 20px;
   }
-  .custom-btn {
+ .custom-btn {
     width: 200px;
     height: 80px;
     color: #fff;
@@ -37,7 +48,8 @@ button {
   }
 
 .btn-14 {
-  background: rgb(255,151,0);
+  /* background: rgb(255,151,0); */
+  background: #8dd986;
   border: none;
   z-index: 1;
 }
@@ -52,6 +64,7 @@ button {
   border-radius: 5px;
   background-image: linear-gradient(315deg, #eaf818 0%, #f6fc9c 74%);
   background-color: #eaf818;
+  /* background-color: #8dd986; */
   box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
   7px 7px 20px 0px rgba(0,0,0,.1),
   4px 4px 5px 0px rgba(0,0,0,.1);
@@ -72,7 +85,8 @@ button {
 /* Card */
 .card {
     margin-bottom: 24px;
-    box-shadow: 0 2px 3px #e4e8f0;
+    /* box-shadow: 0 2px 3px #e4e8f0; */
+    box-shadow: 0 2px 3px #8dd986;
 }
 .card {
     position: relative;
@@ -136,4 +150,30 @@ a {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.75rem;
+}
+
+/* table 효과 */
+.mainTable {box-shadow: 0 2px 3px #8dd986;}
+
+
+/* 페이징 버튼 효과 */
+.page-link {
+  color: #333 !important;  
+  background-color: #8dd986;
+  border-color: green;
+}
+
+.page-item.active .page-link {
+ z-index: 1;
+ color: #333 !important;
+ font-weight:bold;
+ background-color: #8dd986;
+  border-color: green;
+ 
+}
+
+.page-link:focus, .page-link:hover {
+  color: #333 !important;
+  background-color: #8dd986; 
+  border-color: green;
 }
