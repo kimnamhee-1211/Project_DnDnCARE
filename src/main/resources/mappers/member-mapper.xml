@@ -14,7 +14,10 @@
 	  </select>
 	  
 	  
-	  
+	  <select id="selectAllMember" resultType="Member">		<!-- 멤버좀 확인할라구요 -->
+		select *
+		from member	  
+	  </select>
 	  
 	  
 	  

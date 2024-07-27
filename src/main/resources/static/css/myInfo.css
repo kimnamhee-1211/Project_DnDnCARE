@@ -72,6 +72,9 @@ body {
     cursor:pointer;
 } */
 
+
+
+
 .container{
 		position: relative;
 		min-width:1280px;
@@ -136,13 +139,7 @@ body {
 	border-bottom:2px solid #8dd986;
 }
 
-
-.triangle-button {
-            width: 20px;
-            height: 20px;
-            border-left: 17px solid transparent;
-            border-right: 17px solid transparent;
-            border-top: 50px solid #8dd986;
-            cursor: pointer;
-            position: relative;
+.reviewDetail{
+	cursor: pointer;
 }
+
