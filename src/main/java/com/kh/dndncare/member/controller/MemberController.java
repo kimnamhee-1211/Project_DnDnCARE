@@ -158,13 +158,37 @@ public class MemberController {
 	}
 	
 	@GetMapping("myInfoMatchingHistory.me")
-	public String myInfoMatchingHistory() {		//마이페이지 매칭 이력 확인용
-		return "myInfoMatchingHistory";
+	public String myInfoMatchingHistory(HttpSession session) {		//마이페이지 매칭 이력 확인용
+		
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		if(loginUser != null) {
+			char check = loginUser.getMemberCategory().charAt(0);
+			switch(check) {
+				case 'C': return "myInfoMatchingHistory";
+				case 'P': return "myInfoMatchingHistoryP";
+				case 'A': return null;
+			}
+		}
+		
+		throw new MemberException("로그인없음. 인터셉터설정");
 	}
 	
 	@GetMapping("myInfoMatchingReview.me")
-	public String myInfoMatchingReview() {		//마이페이지 매칭 이력 확인용
-		return "myInfoMatchingReview";
+	public String myInfoMatchingReview(HttpSession session) {		//마이페이지 매칭 이력 확인용
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		if(loginUser != null) {
+			char check = loginUser.getMemberCategory().charAt(0);
+			switch(check) {
+				case 'C': return "myInfoMatchingReview";
+				case 'P': return "myInfoMatchingReviewP";
+				case 'A': return null;
+			}
+		}
+		throw new MemberException("로그인없음. 인터셉터설정");
 	}
 	
 	@GetMapping("myInfoBoardList.me")

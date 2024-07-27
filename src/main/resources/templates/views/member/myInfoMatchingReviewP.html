@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+</head>
+<body>
+	<div th:replace="~{common/navbar :: navbar}"></div>
+	
+	
+	
+	<div class="container" >
+	
+		 <div class="row">
+			<div class="col" >
+				
+			
+			
+	     		<div align="center"class="myInfo-Border m-4">
+	     			<div class="m-4" style="border-bottom:2px solid #8dd986;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatching.me">현재 매칭 정보</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingHistory.me">매칭 이력</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내가 쓴 후기</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
+	     		</div>
+	    	</div>
+	    	
+	    	<div class="col" >
+	      		
+	      		<div class="row m-4" style="width:950px"> <!-- 여기로규격정햇다 -->
+		      		<div class="m-3 h1 menu-name" >내가 쓴 후기</div>
+	      		</div>
+	      		
+	      		
+	      		
+	      		
+	      		
+	      		<div class="row m-4">
+	      			<div class="col m-3"><!-- 실제 데이터 넣고 for문 돌리기  -->
+						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-1 d-flex justify-content-between">
+								<div class="h5 m-2">OOO님에 대한  후기<img class="tri-btn"width="35" src="image/icon_turnTri.png"/></div>
+								<div>
+									<button class="btn-outline-maincolor btn-sm m-2">수정하기</button>
+									<button class="btn-outline-maincolor btn-sm m-2">삭제하기</button>
+								</div>
+							</div>
+							
+						</div>
+						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-1 d-flex justify-content-between">
+								<div class="h5 m-2">OOO님에 대한  후기<img class="tri-btn"width="35" src="image/icon_turnTri.png"/></div>
+								<div>
+									<button class="btn-outline-maincolor btn-sm m-2">수정하기</button>
+									<button class="btn-outline-maincolor btn-sm m-2">삭제하기</button>
+								</div>
+							</div>
+							
+						</div>
+						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-1 d-flex justify-content-between">
+								<div class="h5 m-2">OOO님에 대한  후기<img class="tri-btn"width="35" src="image/icon_turnTri.png"/></div>
+								<div>
+									<button class="btn-outline-maincolor btn-sm m-2">수정하기</button>
+									<button class="btn-outline-maincolor btn-sm m-2">삭제하기</button>
+								</div>
+							</div>
+							
+						</div>
+	      			</div>
+	      		</div>
+	      		
+	    	</div>
+    	</div>
+	
+	
+	</div>
+	
+	<script th:inline="javascript">
+		
+		window.onload =() =>{
+			//좌측메뉴 폰트 굵게,밑줄표시하기
+			const menuAtag = document.getElementsByClassName('my-menu');
+			const menuName = document.getElementsByClassName('menu-name')[0];
+			for(i of menuAtag){
+				if(i.innerText == menuName.innerText){
+					i.innerHTML= '<span style="border-bottom:2px solid #8dd986; font-weight:bold;">'+i.innerText+'</span>';
+				}
+			};
+			
+			const reviewDetails = document.getElementsByClassName('reviewDetail');
+			for(i of reviewDetails){
+				i.addEventListener('click',function(){
+					if(this.children[0].children[1].classList.contains('tri-btn')){
+						this.children[0].children[1].src = 'image/icon_tri.png';
+						this.children[0].children[1].classList.remove('tri-btn');
+					}else{
+						this.children[0].children[1].src = 'image/icon_turnTri.png';
+						this.children[0].children[1].classList.add('tri-btn');
+					}
+				});
+			}
+		
+		}
+	
+	</script>
+	
+</body>
+</html>
