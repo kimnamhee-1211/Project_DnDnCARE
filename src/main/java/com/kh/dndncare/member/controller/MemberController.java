@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
@@ -97,23 +98,41 @@ public class MemberController {
 	
 	//회원가입
 	@PostMapping("enroll.me")
-	public String enroll(@ModelAttribute Member m, 4
+	public String enroll(@ModelAttribute Member m,
 						@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress,@RequestParam("detailAddress") String detailAddress,
-						@RequestParam("memberEmail") String memberEmail, @RequestParam("emailDomain") String emailDomain, 
-						HttpSession ssession) {
+						@RequestParam("email") String email, @RequestParam("emailDomain") String emailDomain, 
+						HttpSession session, Model model) {
 		
+		System.out.println(m);
+		
+		//간병인/환자 택
+		//String memberStatus = (String) session.getAttribute(memberStatus);
+		//m.setMemberStatus(memberStatus);
 		String memberAddress = postcode +"//"+ roadAddress +"//"+ detailAddress;
+		m.setMemberAddress(memberAddress);
+		String memberEmail = email + "@" + emailDomain;
+		m.setMemberEmail(memberEmail);
 		
-	
-		
-
+		int result = mService.enroll(m);
 		
 		
+		return "enroll2";
 		
-		return null;
 	}
 
-	
+	//간병인 회원가입 페이지 이동
+	@GetMapping("enrollCaregiver.me")
+	public String enrollCaregiver() {
+		
+		
+		
+		
+		
+		
+		
+		
+		return "enroll1";
+	}
 
 	
 }

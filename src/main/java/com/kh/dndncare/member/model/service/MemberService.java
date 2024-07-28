@@ -8,4 +8,6 @@ public interface MemberService {
 
 	int idCheck(String id);
 
+	int enroll(Member m);
+
 }

@@ -22,4 +22,10 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.idCheck(id);
 	}
 
+	@Override
+	public int enroll(Member m) {
+		// TODO Auto-generated method stub
+		return mMapper.enroll(m);
+	}
+
 }

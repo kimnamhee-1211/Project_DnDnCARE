@@ -13,4 +13,6 @@ public interface MemberMapper {
 
 	int idCheck(String id);
 
+	int enroll(Member m);
+
 }
