@@ -113,7 +113,37 @@ public class MemberController {
 	
 	//회원가입
 	@PostMapping("enroll.me")
-	public String enroll() {
+	public String enroll(@ModelAttribute Member m, 4
+						@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress,@RequestParam("detailAddress") String detailAddress,
+						@RequestParam("memberEmail") String memberEmail, @RequestParam("emailDomain") String emailDomain, 
+						HttpSession ssession) {
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		return null;
