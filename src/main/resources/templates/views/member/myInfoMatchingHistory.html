@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+</head>
+<body>
+	<div th:replace="~{common/navbar :: navbar}"></div>
+	
+	
+	
+	<div class="container" >
+	
+		 <div class="row">
+			<div class="col" >
+	     		<div align="center"class="myInfo-Border m-4">
+	     			<div class="m-4" style="border-bottom:2px solid #8dd986;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatching.me">현재 매칭 정보</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingHistory.me">매칭 이력</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내 든든지수/후기</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
+	     		</div>
+	    	</div>
+	    	
+	    	<div class="col" >
+	      		
+	      		
+	      		<div class="row m-4" style="width:950px"> <!-- 여기로규격정햇다 -->
+		      		<div class="m-3 h1 menu-name" >매칭 이력</div>
+	      		</div>
+	      		
+	      		<div class="row m-4">
+	      			<div class="m-4 col">
+					  <button type="button" class="myInfo-btn">매칭별 대상 통계</button>
+					  <button type="button" class="btn-outline-maincolor-2">매칭 일수/수익</button>
+					  <button type="button" class="btn-outline-maincolor-2">매칭 이력</button>
+	      			</div>
+	      		</div>
+	      		
+	      		
+	      		
+	      		
+	      		<div class="row m-4">
+	      			<div class="col m-3">
+						<div class="myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-2 d-flex justify-content-between">
+								<div class="h3 myInfo-title">내가 간호한 피간병인 통계</div>
+								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">검색란?</button>
+							
+							</div>
+	      						<table class="d-flex justify-content-center m-2">
+		      						<tr>
+										<td>10대</td>
+										<td rowspan="4"width="200px"><img width="200"src="image/icon_PieChart.png"/></td>
+										<td>뇌성 환자</td>
+										<td rowspan="4"width="200px"><img width="200"src="image/icon_PieChart.png"/></td>
+										<td>공동간병</td>
+										<td rowspan="4"width="200px"><img width="200"src="image/icon_PieChart.png"/></td>
+		      						</tr>
+		      						<tr>
+		      							<td>20대</td>
+		      							<td>암환자</td>
+		      							<td>동행</td>
+		      						</tr>
+		      						<tr>
+		      							<td>30대</td>
+		      							<td>치매</td>
+		      							<td>수발</td>
+		      						</tr>
+		      						<tr>
+		      							<td>50대</td>
+		      							<td>에이즈</td>
+		      							<td>재활</td>
+		      						</tr>
+	      						</table>
+			      				
+						</div>
+						
+						
+						<div class="myInfo-Border-maincolor mt-2 mb-3">
+						
+							<div class="m-2 d-flex justify-content-between">
+								<div class="h3 myInfo-title">월별 근무수익 일수</div>
+								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">검색란?</button>
+							</div>
+							
+							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
+								<div>-------------------------------------------------꺽은선그래프-------------------------------------------------</div>
+							</div>
+						</div>
+						
+						<!-- <div class="myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-2 d-flex fustity- content-between">
+								<div class="h3 myInfo-title">결제 수단 변경하기</div>
+							
+							</div>
+						</div> -->
+						
+	      			</div>
+	      		</div>
+	      		
+	    	</div>
+    	</div>
+	
+	
+	</div>
+	
+	
+	<script th:inline="javascript">
+		
+		window.onload =() =>{
+			const menuAtag = document.getElementsByClassName('my-menu');
+			const menuName = document.getElementsByClassName('menu-name')[0];
+			for(i of menuAtag){
+				if(i.innerText == menuName.innerText){
+					i.innerHTML= '<span style="border-bottom:2px solid #8dd986; font-weight:bold;">'+i.innerText+'</span>';
+				}
+			};
+			
+		}
+	
+	</script>
+	
+</body>
+</html>

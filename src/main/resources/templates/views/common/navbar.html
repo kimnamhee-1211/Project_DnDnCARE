@@ -9,14 +9,14 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg bg-body-tertiary">
-		<div class="container-fluid">
+		<div class="container-fluid ps-5">
 		    <div class="navbar-logo">
 	            <a href="home.do"><img th:src="@{/image/logo-removebg.png}" alt="로고" id="navbar-logo"></a>
 	        </div>
-		    <th:block th:if="${loginUser !=null && loginUser.memberCategory !='A'}">
-			    <div class="collapse navbar-collapse" id="navbarNav1">
-			    		<th:block th:if="${ loginUser.memberCategory =='C'}">
-					    	<ul class="navbar-nav ms-auto fs-5">
+		    <th:block th:if="${session.loginUser !=null && session.loginUser.memberCategory !='A'}">
+			    <div class="navbar1 d-flex justify-content-evenly" id="navbarNav1">
+			    		<th:block th:if="${ session.loginUser.memberCategory =='C'}">
+					    	<ul class="navbar-nav ms-auto fs-4">
 						    	<li class="nav-item">
 						          	<a class="nav-link" href="#">일감 찾기</a>
 						        </li>
@@ -31,8 +31,8 @@
 						        </li>
 					       </ul>
 				       </th:block>
-				       <th:block th:if="${ loginUser.memberCategory =='P'}">
-					    	<ul class="navbar-nav ms-auto fs-5">
+				       <th:block th:if="${ session.loginUser.memberCategory =='P'}">
+					    	<ul class="navbar-nav ms-auto fs-4">
 						    	<li class="nav-item">
 						          	<a class="nav-link" href="#">간병인 찾기</a>
 						        </li>
@@ -50,27 +50,17 @@
 			    </div>
 		    </th:block>
 		    <div class="collapse navbar-collapse" id="navbarNav2">
-		    	<th:block th:if="${loginUser ==null}">
+		    	<th:block th:if="${session.loginUser != null}">
 			    	<ul class="navbar-nav ms-auto fs-4">
 				        <li class="nav-item">
-				          <a class="nav-link" href="loginView.me">로그인</a>
+				          <a class="nav-link" href="logout.me">로그아웃</a>
 				        </li>
-				        <li class="nav-item">
-				          <a class="nav-link" href="#">회원가입</a>
-				        </li>
-			       </ul>
-	    		</th:block>
-		    	<th:block th:unless="${loginUser ==null}">
-			    	<ul class="navbar-nav ms-auto fs-4">
-				        <li class="nav-item">
-				          <a class="nav-link" href="#">로그아웃</a>
-				        </li>
-				        <th:block th:if="${loginUser.memberCategory == 'A'}">
+				        <th:block th:if="${session.loginUser.memberCategory == 'A'}">
 					        <li class="nav-item">
 					          <a class="nav-link" href="#">관리자 페이지</a>
 					        </li>
 				        </th:block>
-   				        <th:block th:unless="${loginUser.memberCategory == 'A'}">
+   				        <th:block th:unless="${session.loginUser.memberCategory == 'A'}">
 					        <li class="nav-item">
 					          <a class="nav-link" href="#">내 정보</a>
 					        </li>

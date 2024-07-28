@@ -21,7 +21,4 @@ public class Matching {
 	private String matConfirm;//MAT_CONFIRM
 	private int matType;//MAT_TYPE
 	private int hosptalNo;//HOSPTAL_NO
-	private Date start; // 캘린더 API 이벤트를 지정하기 위한 필드
-	private Date end; // 캘린더 API 이벤트를 지정하기 위한 필드
-	
 }

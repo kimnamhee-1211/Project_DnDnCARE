@@ -11,15 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <link href='fullcalendar/main.css' rel='stylesheet' />
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth'
-        });
-        calendar.render();
-      });
-    </script>
     <style>
     	.fc{width:500px !important; height:500px !important; } 
     </style>
@@ -278,6 +269,30 @@
     
     <th:block th:replace="../common/footer"></th:block>
     
-        
+    <script>
+    	document.addEventListener('DOMContentLoaded', function() {
+        	var calendarEl = document.getElementById('calendar');
+        	var request = $.ajax({
+        		url: 'tempEvent'
+        	})
+        	
+        	request.done(function(data) {
+        		var calendar = new FullCalendar.Calendar(calendarEl, {
+  		          initialView: 'dayGridMonth',
+  		          events : data,
+  		          eventColor: '#8dd986',
+  		          eventClick: function(info) {
+  		        	    alert('Event: ' + info.event.title + '\n' + '금액: ' + '80,000원\n' + '장소 :' + '세브란스 병원' );
+  		        	  }
+  		        });
+  		        calendar.render();
+        	})
+        	
+        	var calendar = new FullCalendar.Calendar(calendarEl, {
+          		initialView: 'dayGridMonth'
+        	});
+        	calendar.render();
+      	});
+    </script>    
 </body>
 </html>

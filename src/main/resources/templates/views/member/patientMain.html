@@ -290,23 +290,29 @@
     <script>
     // 캘린더 객체 생성
     // 이벤트 : 이벤트 정보를 담아서 객체를 생성해야 한다. 문법은 json을 따른다.
-	    document.addEventListener('DOMContentLoaded', function() {
-	      var calendarEl = document.getElementById('calendar');
-	      var calendar = new FullCalendar.Calendar(calendarEl, {
-	        initialView: 'dayGridMonth'
-	      });
-	      calendar.render();
-	      console.log(document.querySelectorAll('.fc-day'));
-	      	
-	    });
-	    
-	    
-	    
-	    window.onload = () => {
-	    	
-	    	
-	    }
-	    
+    	document.addEventListener('DOMContentLoaded', function() {
+        	var calendarEl = document.getElementById('calendar');
+        	var request = $.ajax({
+        		url: 'tempEvent'
+        	})
+        	
+        	request.done(function(data) {
+        		var calendar = new FullCalendar.Calendar(calendarEl, {
+  		          initialView: 'dayGridMonth',
+  		          events : data,
+  		          eventColor: '#8dd986',
+  		          eventClick: function(info) {
+  		        	    alert('Event: ' + info.event.title + '\n' + '금액: ' + '80,000원\n' + '장소 :' + '세브란스 병원' );
+  		        	  }
+  		        });
+  		        calendar.render();
+        	})
+        	
+        	var calendar = new FullCalendar.Calendar(calendarEl, {
+          		initialView: 'dayGridMonth'
+        	});
+        	calendar.render();
+      	});
     </script>    
 </body>
 </html>
