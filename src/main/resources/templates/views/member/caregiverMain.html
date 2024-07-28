@@ -272,7 +272,7 @@
     <script>
     	document.addEventListener('DOMContentLoaded', function() {
         	var calendarEl = document.getElementById('calendar');
-        	var request = $.ajax({
+        	/* var request = $.ajax({
         		url: 'tempEvent'
         	})
         	
@@ -286,7 +286,7 @@
   		        	  }
   		        });
   		        calendar.render();
-        	})
+        	}) */
         	
         	var calendar = new FullCalendar.Calendar(calendarEl, {
           		initialView: 'dayGridMonth'

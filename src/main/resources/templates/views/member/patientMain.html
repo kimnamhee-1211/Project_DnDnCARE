@@ -292,7 +292,7 @@
     // 이벤트 : 이벤트 정보를 담아서 객체를 생성해야 한다. 문법은 json을 따른다.
     	document.addEventListener('DOMContentLoaded', function() {
         	var calendarEl = document.getElementById('calendar');
-        	var request = $.ajax({
+        	/* var request = $.ajax({
         		url: 'tempEvent'
         	})
         	
@@ -306,7 +306,7 @@
   		        	  }
   		        });
   		        calendar.render();
-        	})
+        	}) */
         	
         	var calendar = new FullCalendar.Calendar(calendarEl, {
           		initialView: 'dayGridMonth'
