@@ -28,10 +28,10 @@
     display: block;
     margin-bottom: 70px; /* 원하는 간격으로 조절 가능 */
     margin-right:350px;
-    color:#EEFAEC;
-    font-weight: 600;
+    color:white;
+    font-weight: 400;
     line-height: 1.5;
-    font-size:3.5rem;
+    font-size:4rem;
     text-decoration:underline;
     text-underline-offset:0.3em;
     text-decoration-thickness: 1px;

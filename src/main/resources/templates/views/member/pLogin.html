@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/login.css}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+	<main class="inner-content d-flex justify-content-center">
+		<form action="login.me" method="post">
+			<div class="login-wrap">
+				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
+				<h1 class="h3 mb-3 fw-bold mb-5 text-center">환자 / 보호자 로그인</h1>
+				
+				<div class="login-input">
+					<div class="form-floating mb-3">
+						<input type="text" class="form-control" id="floatingInput" name="memberId">
+						<label for="floatingInput">아이디</label>
+					</div>
+					<div class="form-floating">
+						<input type="password" class="form-control" id="floatingPassword" name="memberPwd">
+						<label for="floatingPassword">비밀번호</label>
+					</div>
+				</div>
+				<div class="find-section d-flex justify-content-end mt-2">
+					<a th:href="@{findId.me}">아이디 찾기 |</a>
+					<a th:href="@{findPwd.me}">&nbsp;비밀번호 찾기</a>
+				</div>				
+			</div>
+			<div class="sign-btn d-flex flex-column">
+				<button type="submit" class="signIn-btn mt-4"><span>로그인</span></button>
+				<button type="button" class="signUp-btn mt-2" id="enrollButton"><span>회원가입</span></button>
+			</div>
+			<div class="sns-section d-flex flex-column justify-content-center mt-5 fs-5">
+				<p class="text-center">SNS계정으로 <br> DnDnCare를 편하게 이용하세요</p>
+				<ul class="icon-section d-flex justify-content-evenly">
+					<li>    
+						<svg class="kakao" width="60" height="60" id="kakao">
+        					<use xlink:href="../image/icon_kakao.svg#icon"></use>
+        				</svg>카카오
+       				</li>
+       				<li>    
+						<svg class="naver" width="60" height="60" id="naver">
+        					<use xlink:href="../image/icon_naver.svg#icon"></use>
+        				</svg>네이버
+       				</li>
+       				<li>    
+						<svg class="google" width="60" height="60" id="google">
+        					<use xlink:href="../image/icon_google.svg#icon"></use>
+        				</svg>구글
+       				</li>
+					
+				</ul>
+			</div>
+		</form>
+	</main>
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() { // DOMContentLoaded => 페이지 로딩될때 다른거 기다리지 않고 바로 되게하는 것 굳이 필요하진않음
+		    document.getElementById('kakao').addEventListener('click', handleKakaoLogin);
+		    document.getElementById('naver').addEventListener('click', handleNaverLogin);
+		    document.getElementById('google').addEventListener('click', handleGoogleLogin);
+		});
+		
+		function handleKakaoLogin() {
+		    console.log('카카오 로그인 시도');
+		    // 카카오 로그인 로직 구현
+		}
+		
+		function handleNaverLogin() {
+		    console.log('네이버 로그인 시도');
+		    // 네이버 로그인 로직 구현
+		}
+		
+		function handleGoogleLogin() {
+		    console.log('구글 로그인 시도');
+		    // 구글 로그인 로직 구현
+		} 
+		
+		//회원가입 이동
+		const enrollButton = document.getElementById("enrollButton")
+		enrollButton.addEventListener('click', ()=>{
+			location.href="enroll1View.me"
+		})
+
+	</script>
+		
+</body>
+</html>

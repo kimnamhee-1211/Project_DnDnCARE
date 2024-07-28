@@ -20,31 +20,6 @@ body {
 }
 
 
-
-#h4{margin: 80px auto;}
-
-.info{margin-bottom:5px; font-size:20px;}
-
-
-#pInput_label, #cInput_label{font-size:35px;
-							margin: 50px auto;
-							padding-top:40px;
-							height:200px;
-							width:350px;
-							}
-
-#pInput_label{margin-right:100px;}
-
-#msg{font-size:20px;}
-
-
-#erollsucdiv{margin-top:50px;
-			margin-bottom: 50px;}
-
-
-
-#block{width: 30px;}
-
 .inner-content {
     font-family: 'Pretendard-Regular';
     flex-grow: 1;
@@ -57,6 +32,10 @@ body {
 	margin-left:70px;
 }
 
+.find-pwd a {
+	text-decoration:none;
+	color:black;
+}
 
 .sign-btn button {
 	height:60px;
@@ -68,6 +47,11 @@ body {
 .signIn-btn {
 	background:#8dd986;
 	color:white;
+}
+
+.find-section a {
+	text-decoration:none;
+	color:black;
 }
 
 .icon-section {

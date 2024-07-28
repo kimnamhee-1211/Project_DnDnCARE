@@ -45,7 +45,7 @@
 	
 						<p class="info">별명(닉네임)을 입력해주세요.</p>
 						<div class="form-floating mb-5">
-							<input type="text" class="form-control" id="nickNameInput" name="memberNickname">
+							<input type="text" class="form-control" id="nickNameInput" name="memberNickName">
 							<label for="nickNameInput">별명(닉네임)</label>
 						</div>
 						
@@ -189,7 +189,7 @@
 				nextButton1.addEventListener('click', function(){					
 					let isValid = true;			
 					
-					if(idInputLabel.innerText.includes("없는")){
+					if(idInputLabel.innerText.includes("없는") || idInput.value.trim() == ''){
 						idInput.focus();					
 						isValid = false;
 					}
@@ -386,7 +386,7 @@
 		////비밀번호 확인 검사
 		function pwdCheck2(){
 			const pwdInput2Label = document.getElementById("pwdInput2Label");
-			if(pwdInput.value !== pwdInput2.value || pwdInput.value == ''){							
+			if(pwdInput.value !== pwdInput2.value){							
 				pwdInput2Label.innerText = "비밀번호가 일치하지 않습니다.";
 				pwdInput2Label.style.color="red";
 				return false;				

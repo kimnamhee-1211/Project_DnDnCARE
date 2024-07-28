@@ -45,6 +45,11 @@ body {
 	color:white;
 }
 
+.find-section a {
+	text-decoration:none;
+	color:black;
+}
+
 .icon-section {
 	 list-style: none;
 }

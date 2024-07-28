@@ -25,5 +25,7 @@ public class Patient {
 	private String ptService;
 	private String ptAddress;
 	private String ptRequest;
-	private int ptLevel;
+	
+	private String[] diseaseName;
+	private String[] diseaseLevel;
 }

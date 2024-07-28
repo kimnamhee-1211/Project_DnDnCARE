@@ -18,24 +18,30 @@
 				<h5 class="h5 mb-3 fw-bold mb-5">이를 바탕으로 보다 정확한 매칭 서비스를 제공할 수 있습니다.</h5>
 				<div class="login-input">
 					
-					<p class="info">원하는 서비스를 선택해주세요.</p>
+					<p class="info">원하는 서비스를 선택해주세요.(1~3개)</p>
+					<p style="font-size:18px; color:red;" class="info">필수 입력사항입니다.</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="병원돌봄" name="careExpS" id="expS1Input">
+						  <input class="form-check-input" type="checkbox" value="병원돌봄" name="careService" id="expS1Input" checked>
 						  <label class="form-check-label" for="expS1Input">병원돌봄</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="가정돌봄" name="careExpS" id="expS2Input">
+						  <input class="form-check-input" type="checkbox" value="가정돌봄" name="careService" id="expS2Input">
 						  <label class="form-check-label" for="expS2Input">가정돌봄</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="동행서비스" name="careExpS" id="expS3Input">
+						  <input class="form-check-input" type="checkbox" value="동행서비스" name="careService" id="expS3Input">
 						  <label class="form-check-label" for="expS3Input">동행서비스</label>
 						</div>
 					</div>				
 				
-					<p class="info">경력 기간을 선택해주세요.</p>
+					<p class="info">경력 기간을 선택해주세요.(1개)</p>
+					<p style="font-size:18px; color:red;" class="info">필수 입력사항입니다.</p>
 					<div class="form-floating mb-5">
+						<div class="form-check form-check-inline">
+						  <input class="form-check-input" type="radio" name="careCareer" id="0Input" value="0" checked>
+						  <label class="form-check-label" for="0Input">없음</label>
+						</div>
 						<div class="form-check form-check-inline">
 						  <input class="form-check-input" type="radio" name="careCareer" id="1Input" value="1">
 						  <label class="form-check-label" for="1Input">1년미만</label>
@@ -54,94 +60,95 @@
 						</div>
 					</div>		
 					
-					<p class="info">만약 경력이 있다면, 어떤 서비스를 경험했는지 선택해주세요.</p>
+					<p class="info">만약 경력이 있다면, 어떤 서비스를 경험했는지 선택해주세요.(0~3개)</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="병원돌봄" name="careExpS" id="expS1Input">
+						  <input class="form-check-input" type="checkbox" value="병원돌봄" name="serviceName" id="expS1Input">
 						  <label class="form-check-label" for="expS1Input">병원돌봄</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="가정돌봄" name="careExpS" id="expS2Input">
+						  <input class="form-check-input" type="checkbox" value="가정돌봄" name="serviceName" id="expS2Input">
 						  <label class="form-check-label" for="expS2Input">가정돌봄</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="동행서비스" name="careExpS" id="expS3Input">
+						  <input class="form-check-input" type="checkbox" value="동행서비스" name="serviceName" id="expS3Input">
 						  <label class="form-check-label" for="expS3Input">동행서비스</label>
 						</div>
 					</div>		
 					
 					
-					<p class="info">만약 경력이 있다면, 어떤 질환 환자를 경험했는지 선택해주세요.</p>
+					<p class="info">만약 경력이 있다면, 어떤 질환 환자를 경험했는지 선택해주세요.(0~10개)</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="치매" name="careExpD" id="expD1Input">
+						  <input class="form-check-input" type="checkbox" value="치매" name="disaseName" id="expD1Input">
 						  <label class="form-check-label" for="expD1Input">치매</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="호흡기 질환" name="careExpD" id="expD2Input">
+						  <input class="form-check-input" type="checkbox" value="호흡기 질환" name="disaseName" id="expD2Input">
 						  <label class="form-check-label" for="expD2Input">호흡기 질환</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="거동불편" name="careExpD" id="expD3Input">
+						  <input class="form-check-input" type="checkbox" value="거동불편" name="disaseName" id="expD3Input">
 						  <label class="form-check-label" for="expD3Input">거동불편</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="와상환자" name="careExpD" id="expD4Input">
+						  <input class="form-check-input" type="checkbox" value="와상환자" name="disaseName" id="expD4Input">
 						  <label class="form-check-label" for="expD4Input">와상환자</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="파킨슨" name="careExpD" id="expD5Input">
+						  <input class="form-check-input" type="checkbox" value="파킨슨" name="disaseName" id="expD5Input">
 						  <label class="form-check-label" for="expD5Input">파킨슨</label>
 						</div></br>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="수면질환" name="careExpD" id="expD6Input">
+						  <input class="form-check-input" type="checkbox" value="수면질환" name="disaseName" id="expD6Input">
 						  <label class="form-check-label" for="expD6Input">수면질환</label>
 						</div>						
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="정신질환" name="careExpD" id="expD7Input">
+						  <input class="form-check-input" type="checkbox" value="정신질환" name="disaseName" id="expD7Input">
 						  <label class="form-check-label" for="expD8Input">정신질환</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="기저귀 케어" name="careExpD" id="expD9Input">
+						  <input class="form-check-input" type="checkbox" value="기저귀 케어" name="disaseName" id="expD9Input">
 						  <label class="form-check-label" for="expD9Input">기저귀 케어</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="재활" name="careExpD" id="expD10Input">
+						  <input class="form-check-input" type="checkbox" value="재활" name="disaseName" id="expD10Input">
 						  <label class="form-check-label" for="expD10Input">재활</label>
 						</div>
 						<div class="form-check form-check-inline">
-						     <input class="form-check-input" type="checkbox" value="기타" name="careExpD" id="expD11Input">
+						     <input class="form-check-input" type="checkbox" value="기타" name="disaseName" id="expD11Input">
 						  <label class="form-check-label" for="expD11Input">기타</label>
 						</div>													
 					</div>	
 					
 					
-					<p class="info">관련 자격사항이 있다면 선택해주세요.</p>
+					<p class="info">관련 자격사항이 있다면 선택해주세요.(0~3개)</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="간병사" name="careLicense" id="license1Input">
+						  <input class="form-check-input" type="checkbox" value="간병사" name="licenseName" id="license1Input">
 						  <label class="form-check-label" for="license1Input">간병사</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="요양보호사" name="careLicense" id="license2Input">
+						  <input class="form-check-input" type="checkbox" value="요양보호사" name="licenseName" id="license2Input">
 						  <label class="form-check-label" for="license2Input">요양보호사</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="간호조무시" name="careLicense" id="license3Input">
+						  <input class="form-check-input" type="checkbox" value="간호조무시" name="licenseName" id="license3Input">
 						  <label class="form-check-label" for="license3Input">간호조무사</label>
 						</div>
 					</div>		
 					
 					
 					<p class="info">생각하시는 적정 1일 돌봄 비용은 얼마인가요?</p>
+					<p style="font-size:18px; color:red;" class="info">필수 입력사항입니다.</p>
 					<div class="form-floating mb-5">
 						<div class="row">
 						  <div class="col">
-						    <input type="text" class="form-control" placeholder="최소 금액" name="minMoney">
+						    <input type="text" class="form-control" placeholder="최소 금액" name="minMoney" id="minMoneyInput">
 						  </div>
 						  <div class="col-md-1" style="font-size: 20px;">~</div>
 						  <div class="col">
-						    <input type="text" class="form-control" placeholder="최대 금액" name="maxMoney">
+						    <input type="text" class="form-control" placeholder="최대 금액" name="maxMoney" id="maxMoneyInput">
 						  </div>
 						</div>
 					</div>
@@ -187,16 +194,16 @@
 			});	
 		}
 		
-		const inputs = document.getElementsByTagName('input');
-		
-				
-		const inputs = document.getElementsByTagName('input');
+		const minMoneyInput = document.getElementById('minMoneyInput');
+		const maxMoneyInput = document.getElementById('maxMoneyInput');				
+		const inputs = {minMoneyInput, maxMoneyInput};
 		const ifCheck = document.getElementById('ifCheck');
+				
 		function inputCheck(){ 
 			for(const input of Object.values(inputs)){
 				if(input.value.trim() == ''){
 					if(ifCheck){
-						ifCheck.innerText = "모든 내용을 빠짐없이 입력해주세요."
+						ifCheck.innerText = "필수 입력 사항을 빠짐없이 작성해주세요."
 						ifCheck.style.color="red";
 						input.focus();
 						return false;

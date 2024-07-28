@@ -7,7 +7,7 @@
 	  	where member_status = 'N' and member_id=#{memberId}
 	  </select>
 	  
-	  <select id="idCheck" resultType="int">
+	  <select id="idCheck" resultType="_int">
 	  	select count(*)
 	  	from member
 	  	where member_status = 'Y' and member_id=#{id}	  
@@ -18,8 +18,70 @@
 	  	insert into member
 	  	values(seq_mid.nextval, #{memberId}, #{memberPwd}, #{memberName}, #{memberGender}, 
 	  			#{memberNickName}, #{memberAge}, #{memberPhone}, #{memberEmail}, sysdate,
-	  		 	#{memberAddress}, #{memberCategory}, 'Y', #{memberNational}, null)  	
+	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, null)  	
 	  </insert>
+	  
+	  <select id="getMemberNo" resultType="_int">
+	  	select member_no
+	  	from member
+	  	where member_id = #{memberId}
+	  </select>
+	  
+	  <insert id="enrollCareGiver">
+	  	insert into caregiver
+	  	values (#{memberNo}, #{careImg}, #{careCareer}, #{care_service}, 
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careIntro})	  
+	  </insert>
+	  
+	  <insert id="enrollExpService">
+	  	<foreach item="item" collection="serviceName">
+	  		insert into exp_Service
+	  		values (#{memberNo}, #{item}) 
+	  	</foreach>
+	  </insert>
+	  
+	  <insert id="enrollDisase">
+	  	<foreach item="item" collection="disaseName" separator=" ">
+	  		insert into disase
+	  		values (#{memberNo}, #{item}, #{category}) 
+	  	</foreach>
+	  </insert>
+	  
+	  <insert id="enrollLicense">
+	  	<foreach item="item" collection="licenseName" separator=" ">
+	  		insert into license
+	  		values (#{memberNo}, #{item}) 
+	  	</foreach>
+	  </insert>
+	  
+	  <insert id="enrollCaregiverWantPt">
+	  	insert into patient
+	  	values(SEQ_PID.nextval, #{memberNo}, null, #{ptGender}, #{ptAge}, null, null, null, null, null)	  
+	  </insert>
+	  
+	 <insert id="enrollDisaseLevel">
+	  	<foreach item="item" collection="diseaseLevel" separator=" ">
+	  		insert into disease_level
+	  		values (#{memberNo}, #{item}) 
+	  	</foreach>
+	  </insert>
+	 
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
 	  
 	  
 	  
