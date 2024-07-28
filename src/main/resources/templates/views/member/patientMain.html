@@ -288,13 +288,25 @@
     <th:block th:replace="../common/footer"></th:block>
     
     <script>
+    // 캘린더 객체 생성
+    // 이벤트 : 이벤트 정보를 담아서 객체를 생성해야 한다. 문법은 json을 따른다.
 	    document.addEventListener('DOMContentLoaded', function() {
 	      var calendarEl = document.getElementById('calendar');
 	      var calendar = new FullCalendar.Calendar(calendarEl, {
 	        initialView: 'dayGridMonth'
 	      });
 	      calendar.render();
+	      console.log(document.querySelectorAll('.fc-day'));
+	      	
 	    });
+	    
+	    
+	    
+	    window.onload = () => {
+	    	
+	    	
+	    }
+	    
     </script>    
 </body>
 </html>
