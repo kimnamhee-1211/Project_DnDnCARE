@@ -20,7 +20,7 @@
 						<p class="info">아이디를 입력해주세요.</p>
 						<div class="form-floating mb-5">
 							<input type="text" class="form-control" id="idInput" name="memberId">
-							<label for="idInput" id="idInputLabel">아이디</label>
+							<label for="IdInput" id="IdInputLabel">아이디</label>
 						</div>
 						
 						<p class="info" style="margin-bottom:0">비밀번호를 입력해주세요.</p>
@@ -44,8 +44,8 @@
 	
 						<p class="info">별명(닉네임)을 입력해주세요.</p>
 						<div class="form-floating mb-5">
-							<input type="text" class="form-control" id="nicknameInput" name="memberNickname">
-							<label for="nicknameInput">별명(닉네임)</label>
+							<input type="text" class="form-control" id="nickNameInput" name="memberNickname">
+							<label for="nickNameInput">별명(닉네임)</label>
 						</div>
 						
 						<div class="sign-btn d-flex flex-column">
@@ -63,7 +63,7 @@
 						<p class="info">성별을 선택해 주세요.</p>
 						<div class="form-floating mb-5">
 							<div class="form-check form-check-inline">
-							  <input class="form-check-input" type="radio" name="memberGender" id="menInput" th:value="M">
+							  <input class="form-check-input" type="radio" name="memberGender" id="menInput" th:value="M" checked>
 							  <label class="form-check-label" for="menInput">남성</label>
 							</div>
 							<div class="form-check form-check-inline">
@@ -102,7 +102,7 @@
 						<div class="form-floating mb-5">
 							<input type="text" class="form-control" id="sample4_detailAddress" name="detailAddress">
 							<label for="sample4_detailAddress">상세주소</label>						
-						</div>		
+						</div>	
 						
 						
 						<p class="info">이메일을 입력해주세요.</p>
@@ -129,7 +129,7 @@
 						</div>	
 						
 						<div class="sign-btn d-flex flex-column">
-							<p class="text-center ifCheck"  style="font-size:20px"> </p>
+							<p class="text-center ifCheck" style="font-size:20px"> </p>
 							<button type="button" class="signIn-btn mt-4" id="nextButton2"><span>다음</span></button>
 						</div>
 						<div class="sns-section d-flex flex-column justify-content-center mt-3 fs-5">
@@ -151,17 +151,15 @@
 			const nextButton2 = document.getElementById('nextButton2');
 			const form = document.getElementById('enrollForm');
 			
-			const nextButtons = [nextButton1, nextButton2]
-			for(const nextButton of nextButtons){
-				
-				nextButton.addEventListener('click', function(){
-					let isValid = true;	
-
+			//1page 검사 - 이동
+			if(nextButton1 != null){
+				nextButton1.addEventListener('click', function(){					
+					let isValid = true;						
 					
-				    if(isValid){				    	
-						if(!inputCheck()){
-				    		isValid = false;   					    	
-				    	}else if(idInputLabel.innerText.includes('없는')){
+				    if(isValid){
+				    	if(!inputCheck1()){
+				    		isValid = false;
+						}else if(!idCheck()){
 							idInput.focus();					
 							isValid = false;
 						}else if(!pwdCheck()){
@@ -170,30 +168,42 @@
 						}else if(!pwdCheck2()){
 							pwdInput2.focus();	
 							isValid = false;
+						}										
+				    }
+												
+				    if(isValid){
+						const enroll1 = document.getElementById("enroll1");
+						const enroll2 = document.getElementById("enroll2");
+						
+						enroll1.style.display="none";
+						enroll2.style.display="block";			            	
+		            }
+				
+				});
+			}
+			if(nextButton2 != null){
+				nextButton2.addEventListener('click', function(){
+					let isValid = true;	
+					
+				    if(isValid){
+				    	if(!inputCheck2()){
+				    		isValid = false;
 						}else if(!telCheck()){
 							telInput.focus();	
 							isValid = false;
 						}											
 				    }
-						
-						
+												
 				    if(isValid){
-						if(this == nextButton1){
-							const enroll1 = document.getElementById("enroll1");
-							const enroll2 = document.getElementById("enroll2");
-							
-							enroll1.style.display="none";
-							enroll2.style.display="block";
-							
-						} else if(this == nextButton2){
-							form.submit();
-						}			            	
+						form.submit();			            	
 		            }
 				
 				});
-			}		
+			}				
 			
-		}
+		}		
+		
+		
 	
 
 	
@@ -228,30 +238,62 @@
 	    
     	
 		//필수 입력사항 입력 확인
-		const inputs = document.getElementsByTagName("input");
-		const ifCheck = document.getElementsByClassName("ifCheck")[0];
-		function inputCheck(){ 
-			for(const input of inputs){
+		const idInput = document.getElementById("idInput");
+		const pwdInput = document.getElementById("pwdInput")
+		const pwdInput2 = document.getElementById("pwdInput2");
+		const nameInput = document.getElementById("nameInput");
+		const nickNameInput = document.getElementById("nickNameInput");		
+		const input1 = {idInput, pwdInput, pwdInput2, nameInput, nickNameInput};
+		
+		const menInput = document.getElementById("menInput");	
+		const ageInput = document.getElementById("ageInput");	
+		const telInput = document.getElementById("telInput");
+		const addInput = document.getElementById('sample4_postcode');
+		const emailInput = document.getElementById("emailInput");		
+		const input2 = {menInput, ageInput, telInput, addInput, emailInput};		
+				
+		const ifCheck1 = document.getElementsByClassName("ifCheck")[0];
+		const ifCheck2 = document.getElementsByClassName("ifCheck")[1];
+						
+		function inputCheck1(){ 
+			for(const input of input1){
 				if(input.value.trim() == ''){
-					if(ifCheck){
-						ifCheck.innerText = "내용을 빠짐없이 입력해주세요."
-						ifCheck.style.color="red";
+					if(ifCheck1){
+						ifCheck1.innerText = "모든 내용을 빠짐없이 입력해주세요."
+						ifCheck1.style.color="red";
 						input.focus();
 						return false;
 					}
 				}else{
-					if(ifCheck){
-						ifCheck.innerText = ""
+					if(ifCheck1){
+						ifCheck1.innerText = ""
 						return true;
 					}
 				}
 			}	
 		}
+		function inputCheck2(){ 
+			for(const input of input2){
+				if(input.value.trim() == ''){
+					if(ifCheck2){
+						ifCheck2.innerText = "모든 내용을 빠짐없이 입력해주세요."
+						ifCheck2.style.color="red";
+						input.focus();
+						return false;
+					}
+				}else{
+					if(ifCheck2){
+						ifCheck2.innerText = ""
+						return true;
+					}
+				}
+			}	
+		}
+			
 		
 					
 			
 	    //아이디 검사	    
-	    const idInput = document.getElementById("idInput");
     	const idInputLabel = document.getElementById("idInputLabel");
     	function idCheck(){   		
     		if(idInput != null){
@@ -260,48 +302,38 @@
     			
         		$.ajax({
         			url : 'idCheck.me',
-        			type : 'post',
+        			method : 'post',
         			data : {id : idInputVal},
         			success : (data) =>{
         				console.log(data)
-        				if(data == 'usable'){
-        					if(idInputLabel != null){
-            					idInputLabel.innerText = "사용 가능한 아이디";
-            					idInputLabel.style.color="green"
-            					isValid = true;
-            					return true;
-        					}
+        				if(data == 'usable' ){
+        					idInputLabel.innerText = "사용 가능한 아이디";
+        					idInputLabel.style.color="green"
+        					return true;
  
         				}else{
-        					if(idInputLabel != null){
-            					idInputLabel.innerText = "사용할 수 없는 아이디입니다.";
-            					idInputLabel.style.color="red"
-            					isValid = false;
-            					return false;
-        					}
-        				}					
+        					idInputLabel.innerText = "사용할 수 없는 아이디입니다.";
+        					idInputLabel.style.color="red"
+        					return false;
+        				}
         			},
         			error: data => console.log(data)
-        			
         		});
-    		}
+    		}	   		
     	}
-    	
     	if(idInput != null){
         	idInput.addEventListener('focusout', idCheck);	
     	}		
-    	
+ 
+		   	
 		//비밀번호 검사
-		const pwdInput = document.getElementById("pwdInput")
-		const pwdInput2 = document.getElementById("pwdInput2")
-		
 		const regExp1 = /[0-9]/g;			
-		const regExp2 = /[!@#$%&]/g;			
-		const regExp4 = /[a-z]/g;				
+		const regExp2 = /(!|@|#|$|%|&)/;			
+		const regExp3 = /[a-z]/g;				
 		
 		function pwdCheck(){
 			const pwdInputLabel = document.getElementById("pwdInputLabel");
-			if(!regExp1.test(pwdInput.value) || !regExp2.test(pwdInput.value) || !regExp4.test(pwdInput.value) || pwdInput.value.length<6 || pwdInput.value.length>10){
+			if(!regExp1.test(pwdInput.value) || !regExp2.test(pwdInput.value) || !regExp3.test(pwdInput.value) || pwdInput.value.length<6 || pwdInput.value.length>10){
 				pwdInputLabel.innerText = "비밀번호를 양식에 맞게 설정해주세요."; 
 				pwdInputLabel.style.color="red";					
 				return false;
@@ -314,6 +346,7 @@
 		}		
 		pwdInput.addEventListener('focusout', pwdCheck);
 		
+		////비밀번호 확인 검사
 		function pwdCheck2(){
 			const pwdInput2Label = document.getElementById("pwdInput2Label");
 			if(pwdInput.value !== pwdInput2.value || pwdInput.value == ''){							
@@ -333,7 +366,6 @@
 		//전화번호 검사
 		function telCheck(){
 			const regExp5 = /-/g;	
-			const telInput = document.getElementById("telInput");
 			if(regExp5.test(telInput.value)){
 				const telInputLabel = document.getElementById("telInputLabel");
 				telInputLabel.innerText = "-을 제외하고 입력해주세요."; 
