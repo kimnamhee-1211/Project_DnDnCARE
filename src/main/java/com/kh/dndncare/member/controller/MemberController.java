@@ -1,6 +1,7 @@
 package com.kh.dndncare.member.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,9 @@ public class MemberController {
 	
 	 @Autowired
 	 private MemberService mService;
+	 
+	 @Autowired
+	 private BCryptPasswordEncoder bCrypt;
 	 
 	@GetMapping("loginView.me")
 	public String loginView() {
@@ -106,17 +110,24 @@ public class MemberController {
 		System.out.println(m);
 		
 		//간병인/환자 택
-		//String memberStatus = (String) session.getAttribute(memberStatus);
-		//m.setMemberStatus(memberStatus);
+		//String memberCategory = (String) session.getAttribute(memberCategory);
+		//m.setMemberCategory(memberCategory);
+		String memberPwd = bCrypt.encode(m.getMemberPwd());
+		m.setMemberPwd(memberPwd);
 		String memberAddress = postcode +"//"+ roadAddress +"//"+ detailAddress;
 		m.setMemberAddress(memberAddress);
 		String memberEmail = email + "@" + emailDomain;
 		m.setMemberEmail(memberEmail);
 		
+		model.addAttribute("m", m);
 		int result = mService.enroll(m);
+		if(result > 0) {
+			return "enroll2";
+		}else {
+			throw new MemberException("회원가입에 실패했습니다.");
+		}
 		
 		
-		return "enroll2";
 		
 	}
 	
@@ -124,14 +135,17 @@ public class MemberController {
 	//타입별 회원가입 페이지 이동
 	@GetMapping("enroll2View.me")
 	public String enrol21View(@ModelAttribute Member m) {
+		System.out.println(m);
+		String memberCategory = m.getMemberCategory();
+		if(memberCategory.equals("c")) {
+			return "enroll3";
+		}else {
+			return "enroll5";
+		}
 		
-		
-		
-		return "enroll2";
 	}
 	
 	
-
 	//간병인 회원가입 페이지 이동
 	@GetMapping("enrollCaregiver.me")
 	public String enrollCaregiver() {

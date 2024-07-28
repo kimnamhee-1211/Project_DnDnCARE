@@ -7,7 +7,7 @@
 	  	where member_status = 'N' and member_id=#{memberId}
 	  </select>
 	  
-	  <select id="idCheck" resultType="_int">
+	  <select id="idCheck" resultType="int">
 	  	select count(*)
 	  	from member
 	  	where member_status = 'Y' and member_id=#{id}	  
@@ -16,8 +16,9 @@
 	  
 	  <insert id="enroll">
 	  	insert into member
-	  	values{}
-	  
+	  	values(seq_mid.nextval, #{memberId}, #{memberPwd}, #{memberName}, #{memberGender}, 
+	  			#{memberNickName}, #{memberAge}, #{memberPhone}, #{memberEmail}, sysdate,
+	  		 	#{memberAddress}, #{memberCategory}, 'Y', #{memberNational}, null)  	
 	  </insert>
 	  
 	  

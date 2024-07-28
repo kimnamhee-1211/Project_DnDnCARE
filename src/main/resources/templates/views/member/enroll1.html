@@ -73,6 +73,23 @@
 							</div>
 						</div>
 						
+						<p class="info">국적을 입력해 주세요.</p>
+						<div class="form-floating mb-5">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="memberNational" id="national1Input" th:value="대한민국" checked>
+								<label class="form-check-label" for="menInput">대한민국</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<div class="input-group mb-3">
+								  <div class="input-group-text">
+								    <input class="form-check-input mt-0" type="radio" name="memberNational" id="national2Input">
+								  </div>
+								  <input type="text" class="form-control" id="nationalOtherInput" placeholder="직접 입력">
+								</div>
+							</div>
+						</div>
+												
+						
 						<p class="info">생년월일을 입력해주세요.</p>
 						<div class="form-floating mb-5">
 							<input type="date" class="form-control" id="ageInput" name="memberAge">
@@ -148,6 +165,24 @@
 			const nextButton1 = document.getElementById('nextButton');
 			const nextButton2 = document.getElementById('nextButton2');
 			const form = document.getElementById('enrollForm');
+			
+			
+			//국적 입력
+			const national1Input = document.getElementById('national1Input');
+			const national2Input = document.getElementById('national2Input');
+			const nationalOtherInput = document.getElementById('nationalOtherInput');
+			document.querySelectorAll('input[name="memberNational"]').forEach((elem) => {
+			        elem.addEventListener("change", function(event) {
+			            const value = event.target.value;
+			            if (value != "대한민국" && nationalOtherInput.value.trim() !== '' || nationalOtherInput.value.trim() !== '국적을 입력해주세요') {
+			                national2Input.value = nationalOtherInput.value
+			            } else if(value != "대한민국" && nationalOtherInput.value.trim() === ''){
+			                national2Input.value = "국적을 입력해주세요."
+			            }
+			        });
+			    });
+			
+			
 			
 			//1page 검사 - 이동
 			if(nextButton1 != null){
@@ -241,10 +276,7 @@
 			}).open();
     	};
 
-	
 		
-	    
-    	
 		//필수 입력사항 입력 확인
 		const idInput = document.getElementById("idInput");
 		const pwdInput = document.getElementById("pwdInput")
@@ -253,13 +285,12 @@
 		const nickNameInput = document.getElementById("nickNameInput");		
 		const input1 = {idInput, pwdInput, pwdInput2, nameInput, nickNameInput};
 		
-		const menInput = document.getElementById("menInput");	
 		const ageInput = document.getElementById("ageInput");	
 		const telInput = document.getElementById("telInput");
 		const addInput = document.getElementById('sample4_postcode');
 		const emailInput = document.getElementById("emailInput");		
 		const inputState = document.getElementById("inputState");	
-		const input2 = {menInput, ageInput, telInput, addInput, emailInput, inputState};		
+		const input2 = {ageInput, telInput, addInput, emailInput, inputState};		
 				
 		const ifCheck1 = document.getElementsByClassName("ifCheck")[0];
 		const ifCheck2 = document.getElementsByClassName("ifCheck")[1];

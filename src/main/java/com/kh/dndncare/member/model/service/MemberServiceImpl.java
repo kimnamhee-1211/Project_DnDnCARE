@@ -24,7 +24,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public int enroll(Member m) {
-		// TODO Auto-generated method stub
 		return mMapper.enroll(m);
 	}
 
