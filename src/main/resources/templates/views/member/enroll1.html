@@ -302,11 +302,11 @@
     			
         		$.ajax({
         			url : 'idCheck.me',
-        			method : 'post',
+        			type : 'post',
         			data : {id : idInputVal},
         			success : (data) =>{
         				console.log(data)
-        				if(data == 'usable' ){
+        				if(data == "usable"){
         					idInputLabel.innerText = "사용 가능한 아이디";
         					idInputLabel.style.color="green"
         					return true;
@@ -321,6 +321,7 @@
         		});
     		}	   		
     	}
+		
     	if(idInput != null){
         	idInput.addEventListener('focusout', idCheck);	
     	}		
