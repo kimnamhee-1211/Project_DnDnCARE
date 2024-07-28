@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kh.dndncare.member.model.dao.MemberMapper">
-	  <select id="login" resultType="Member">
-	  	select *
-	  	from member
-	  	where member_status = 'N' and member_id=#{memberId}
-	  </select>
+	<select id="login" resultType="Member">
+		select *
+	 	from member
+	 	where member_status = 'N' and member_id=#{memberId}
+	</select>
+	
+	<resultMap type="Matching" id="calendarResultMap">
+		<id column="MAT_NO" property="matNo"/>
+		<result column="BEGIN_DT" property="start"/>
+		<result column="END_DT" property="end"/>
+		<result column="MONEY" property="money"/>
+		<result column="MAT_CONFIRM" property="matConfirm"/>
+		<result column="MAT_TYPE" property="matType"/>
+		<result column="HOSPTAL_NO" property="hosptalNo"/>
+	</resultMap>
+	
+	
+	
+	
+	
 </mapper>
