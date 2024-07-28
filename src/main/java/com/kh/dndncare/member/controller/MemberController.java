@@ -119,6 +119,18 @@ public class MemberController {
 		return "enroll2";
 		
 	}
+	
+	
+	//타입별 회원가입 페이지 이동
+	@GetMapping("enroll2View.me")
+	public String enrol21View(@ModelAttribute Member m) {
+		
+		
+		
+		return "enroll2";
+	}
+	
+	
 
 	//간병인 회원가입 페이지 이동
 	@GetMapping("enrollCaregiver.me")
