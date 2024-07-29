@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
@@ -101,6 +102,7 @@ public class MemberController {
 	
 	//회원가입	 검증
 	@PostMapping("idCheck.me")
+	@ResponseBody
 	public String idCheck(@RequestParam("id") String id) {		
 		int result = mService.idCheck(id);	
 		if(result == 0) {
@@ -113,7 +115,36 @@ public class MemberController {
 	
 	//회원가입
 	@PostMapping("enroll.me")
-	public String enroll() {
+	public String enroll(@ModelAttribute Member m, 
+						@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress,@RequestParam("detailAddress") String detailAddress,
+						@RequestParam("memberEmail") String memberEmail, @RequestParam("emailDomain") String emailDomain, 
+						HttpSession ssession) {
+		
+		
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		return null;
