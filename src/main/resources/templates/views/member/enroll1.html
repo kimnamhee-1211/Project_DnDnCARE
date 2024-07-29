@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/enroll.css}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+	<main class="inner-content d-flex justify-content-center">
+		<form action="enroll.me" method="post" id="enrollForm">		
+			<div class="login-wrap">
+				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
+				<h1 class="h3 mb-3 fw-bold mb-3 text-center">회원가입</h1>
+				<h5 class="h5 mb-3 fw-bold mb-5">아래 내용은 필수입력 사항입니다.</h5>
+				<div class="login-input">
+				
+					<div id="enroll1">							
+						<p class="info">아이디를 입력해주세요.</p>
+						<div class="form-floating mb-5">
+							<input type="text" class="form-control" id="idInput" name="memberId">
+							<label for="IdInput" id="IdInputLabel">아이디</label>
+						</div>
+						
+						<p class="info" style="margin-bottom:0">비밀번호를 입력해주세요.</p>
+						<p style="font-size:16px" class="info">비밀번호는 영어소문자, 숫자, 특수문자(!,@,#,$,%,&)를 조합해 6~10자로 작성해주세요.</p>
+						<div class="form-floating mb-5">
+							<input type="password" class="form-control" id="pwdInput" name="memberPwd">
+							<label for="passInput" id="pwdInputLabel">비밀번호</label>
+						</div>
+						
+						<p class="info">비밀번호를 한번 더 입력해주세요.</p>
+						<div class="form-floating mb-5">
+							<input type="password" class="form-control" id="pwdInput2">
+							<label for="pwdInput2" id="pwdInput2Label">비밀번호 확인</label>
+						</div>
+						
+						<p class="info">성함을 입력해주세요.</p>
+						<div class="form-floating mb-5">
+							<input type="text" class="form-control" id="nameInput" name="memberName">
+							<label for="nameInput">성함</label>
+						</div>
+	
+						<p class="info">별명(닉네임)을 입력해주세요.</p>
+						<div class="form-floating mb-5">
+							<input type="text" class="form-control" id="nickNameInput" name="memberNickname">
+							<label for="nickNameInput">별명(닉네임)</label>
+						</div>
+						
+						<div class="sign-btn d-flex flex-column">
+							<p class="text-center ifCheck" style="font-size:20px"> </p>
+							<button type="button" id="nextButton" class="signIn-btn mt-5"><span>다음</span></button>
+						</div>
+						<div class="sns-section d-flex flex-column justify-content-center mt-3 fs-5">
+							<p class="text-center">다음으로 넘어가<br>회원가입을 계속 진행해주세요.</p>
+						</div>
+					</div>
+
+	
+
+					<div id="enroll2" style="display: none;">					
+						<p class="info">성별을 선택해 주세요.</p>
+						<div class="form-floating mb-5">
+							<div class="form-check form-check-inline">
+							  <input class="form-check-input" type="radio" name="memberGender" id="menInput" th:value="M" checked>
+							  <label class="form-check-label" for="menInput">남성</label>
+							</div>
+							<div class="form-check form-check-inline">
+							  <input class="form-check-input" type="radio" name="memberGender" id="womenInput" th:value="F">
+							  <label class="form-check-label" for="womenInpu">여성</label>
+							</div>
+						</div>
+						
+						<p class="info">생년월일을 입력해주세요.</p>
+						<div class="form-floating mb-5">
+							<input type="date" class="form-control" id="ageInput" name="memberAge">
+							<label for="ageInput">생년월일</label>
+						</div>
+						
+						<p class="info">연락처를 입력해주세요.</p>
+						<p style="font-size:16px" class="info">연락처는 -를 제외하고 입력해주세요.</p>
+						<div class="form-floating mb-5">
+							<input type="tel" class="form-control" id="telInput" name="memberPhone">
+							<label for="telInput" id="telInputLabel">전화번호</label>
+						</div>
+											
+											
+						<p class="info">주소를 입력해주세요.</p>
+						<p style="font-size:16px" class="info">주소는 반드시 도로명 주소를 선택/입력해주세요.</p>
+						<div class="form-floating mb-1" >
+							<button type="button" onclick="sample4_execDaumPostcode()" class="signIn-btn" style="border:none;">주소 검색</button>
+						</div>
+						<div class="form-floating mb-1" >
+	   						<input type="text" class="form-control" id="sample4_postcode" name="postcode">
+	   						<label for="sample4_postcod">우편번호</label>
+						</div>
+						<div class="form-floating mb-1">
+							<input type="text" class="form-control" id="sample4_roadAddress" name="roadAddress" style="width:551.328px;">
+							<label for="sample4_roadAddress">도로명주소</label>
+						</div>
+						<div class="form-floating mb-5">
+							<input type="text" class="form-control" id="sample4_detailAddress" name="detailAddress">
+							<label for="sample4_detailAddress">상세주소</label>						
+						</div>	
+						
+						
+						<p class="info">이메일을 입력해주세요.</p>
+						<div class="form-floating mb-5">
+							<div class="row g-3">
+							  <div class="col-md-7">
+							    <div class="form-floating mb-4">
+							    	<input type="text" class="form-control" id="emailInput" name="memberEmail" >
+							    	<label for="emailInput">이메일</label>
+							    </div>
+							  </div>
+							  <div class="col-md-1" style="font-size:20px; line-height:55px;">@</div>
+							  <div class="col-md-4">
+							    <select id="inputState" class="form-select" name="emailDomain" style="height:57.9883px;">
+								    <option selected>선택해주세요.</option>
+								    <option th:selected="${emailDomain eq 'naver.com' }">naver.com</option>
+								    <option th:selected="${emailDomain eq 'hanmail.net' }">hanmail.net</option>
+									<option th:selected="${emailDomain eq 'gmail.com' }">gmail.com</option>
+									<option th:selected="${emailDomain eq 'nate.com' }">nate.com</option>								
+							    </select>
+							  </div>
+							</div>
+							
+						</div>	
+						
+						<div class="sign-btn d-flex flex-column">
+							<p class="text-center ifCheck" style="font-size:20px"> </p>
+							<button type="button" class="signIn-btn mt-4" id="nextButton2"><span>다음</span></button>
+						</div>
+						<div class="sns-section d-flex flex-column justify-content-center mt-3 fs-5">
+							<p class="text-center">다음으로 넘어가<br>회원가입을 계속 진행해주세요.</p>
+						</div>									
+					</div>					
+				</div>
+			</div>			
+		</form>
+	</main>
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	
+	
+	<script th:inline="javascript">
+			
+		window.onload=()=>{
+	
+			const nextButton1 = document.getElementById('nextButton');
+			const nextButton2 = document.getElementById('nextButton2');
+			const form = document.getElementById('enrollForm');
+			
+			//1page 검사 - 이동
+			if(nextButton1 != null){
+				nextButton1.addEventListener('click', function(){					
+					let isValid = true;						
+					
+				    if(isValid){
+				    	if(!inputCheck1()){
+				    		isValid = false;
+						}else if(!idCheck()){
+							idInput.focus();					
+							isValid = false;
+						}else if(!pwdCheck()){
+							pwdInput.focus();
+							isValid = false;
+						}else if(!pwdCheck2()){
+							pwdInput2.focus();	
+							isValid = false;
+						}										
+				    }
+												
+				    if(isValid){
+						const enroll1 = document.getElementById("enroll1");
+						const enroll2 = document.getElementById("enroll2");
+						
+						enroll1.style.display="none";
+						enroll2.style.display="block";			            	
+		            }
+				
+				});
+			}
+			if(nextButton2 != null){
+				nextButton2.addEventListener('click', function(){
+					let isValid = true;	
+					
+				    if(isValid){
+				    	if(!inputCheck2()){
+				    		isValid = false;
+						}else if(!telCheck()){
+							telInput.focus();	
+							isValid = false;
+						}											
+				    }
+												
+				    if(isValid){
+						form.submit();			            	
+		            }
+				
+				});
+			}				
+			
+		}		
+		
+		
+	
+
+	
+		//주소검색 api
+		function sample4_execDaumPostcode() {
+	    	new daum.Postcode({
+	    		oncomplete: function(data) {
+				    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+				
+				    // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+				    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+				    var roadAddr = data.roadAddress; // 도로명 주소 변수
+				    var extraRoadAddr = ''; // 참고 항목 변수
+				
+				    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+				    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+				    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+				        extraRoadAddr += data.bname;
+				    }
+				    // 건물명이 있고, 공동주택일 경우 추가한다.
+				    if(data.buildingName !== '' && data.apartment === 'Y'){
+				       extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+				    }
+				
+				    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+				    document.getElementById('sample4_postcode').value = data.zonecode;
+				    document.getElementById("sample4_roadAddress").value = roadAddr;
+   
+				}
+			}).open();
+    	};
+	    
+    	
+		//필수 입력사항 입력 확인
+		const idInput = document.getElementById("idInput");
+		const pwdInput = document.getElementById("pwdInput")
+		const pwdInput2 = document.getElementById("pwdInput2");
+		const nameInput = document.getElementById("nameInput");
+		const nickNameInput = document.getElementById("nickNameInput");		
+		const input1 = {idInput, pwdInput, pwdInput2, nameInput, nickNameInput};
+		
+		const menInput = document.getElementById("menInput");	
+		const ageInput = document.getElementById("ageInput");	
+		const telInput = document.getElementById("telInput");
+		const addInput = document.getElementById('sample4_postcode');
+		const emailInput = document.getElementById("emailInput");		
+		const input2 = {menInput, ageInput, telInput, addInput, emailInput};		
+				
+		const ifCheck1 = document.getElementsByClassName("ifCheck")[0];
+		const ifCheck2 = document.getElementsByClassName("ifCheck")[1];
+						
+		function inputCheck1(){ 
+			for(const input of input1){
+				if(input.value.trim() == ''){
+					if(ifCheck1){
+						ifCheck1.innerText = "내용을 빠짐없이 입력해주세요."
+						ifCheck1.style.color="red";
+						input.focus();
+						return false;
+					}
+				}else{
+					if(ifCheck1){
+						ifCheck1.innerText = ""
+						return true;
+					}
+				}
+			}	
+		}
+		function inputCheck2(){ 
+			for(const input of input2){
+				if(input.value.trim() == ''){
+					if(ifCheck2){
+						ifCheck2.innerText = "내용을 빠짐없이 입력해주세요."
+						ifCheck2.style.color="red";
+						input.focus();
+						return false;
+					}
+				}else{
+					if(ifCheck2){
+						ifCheck2.innerText = ""
+						return true;
+					}
+				}
+			}	
+		}
+			
+		
+					
+			
+	    //아이디 검사	    
+    	const idInputLabel = document.getElementById("idInputLabel");
+    	function idCheck(){   		
+    		if(idInput != null){
+    			const idInputVal = idInput.value;
+    			let isValid = false;
+    			
+        		$.ajax({
+        			url : 'idCheck.me',
+        			method : 'post',
+        			data : {id : idInputVal},
+        			success : (data) =>{
+        				console.log(data)
+        				if(data == 'usable' ){
+        					idInputLabel.innerText = "사용 가능한 아이디";
+        					idInputLabel.style.color="green"
+        					return true;
+ 
+        				}else{
+        					idInputLabel.innerText = "사용할 수 없는 아이디입니다.";
+        					idInputLabel.style.color="red"
+        					return false;
+        				}
+        			},
+        			error: data => console.log(data)
+        		});
+    		}	   		
+    	}
+    	if(idInput != null){
+        	idInput.addEventListener('focusout', idCheck);	
+    	}		
+ 
+		   	
+		//비밀번호 검사
+		const regExp1 = /[0-9]/g;			
+		const regExp2 = /(!|@|#|$|%|&)/;			
+		const regExp3 = /[a-z]/g;				
+		
+		function pwdCheck(){
+			const pwdInputLabel = document.getElementById("pwdInputLabel");
+			if(!regExp1.test(pwdInput.value) || !regExp2.test(pwdInput.value) || !regExp3.test(pwdInput.value) || pwdInput.value.length<6 || pwdInput.value.length>10){
+				pwdInputLabel.innerText = "비밀번호를 양식에 맞게 설정해주세요."; 
+				pwdInputLabel.style.color="red";					
+				return false;
+				
+			}else{
+				pwdInputLabel.innerText = "비밀번호"; 
+				pwdInputLabel.style.color="green";					
+				return true;
+			}
+		}		
+		pwdInput.addEventListener('focusout', pwdCheck);
+		
+		////비밀번호 확인 검사
+		function pwdCheck2(){
+			const pwdInput2Label = document.getElementById("pwdInput2Label");
+			if(pwdInput.value !== pwdInput2.value || pwdInput.value == ''){							
+				pwdInput2Label.innerText = "비밀번호가 일치하지 않습니다.";
+				pwdInput2Label.style.color="red";
+				return false;				
+			}else{
+				pwdInput2Label.innerText = "비밀번호 확인";
+				pwdInput2Label.style.color="green";
+				return true;	
+			}
+		
+		}
+		pwdInput2.addEventListener('focusout', pwdCheck2);				
+		
+					
+		//전화번호 검사
+		function telCheck(){
+			const regExp5 = /-/g;	
+			if(regExp5.test(telInput.value)){
+				const telInputLabel = document.getElementById("telInputLabel");
+				telInputLabel.innerText = "-을 제외하고 입력해주세요."; 
+				telInputLabel.style.color="red";	
+				return false;				
+			}else{
+				telInputLabel.innerText = "전화번호";
+				telInputLabel.style.color="green";
+				return true;	
+			}
+		}		
+		telInput.addEventListener('focusout', telCheck);
+			
+
+	
+	</script>
+		
+</body>
+</html>

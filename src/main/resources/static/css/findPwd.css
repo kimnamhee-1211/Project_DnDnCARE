@@ -19,6 +19,37 @@ body {
     min-height: 100vh;
 }
 
+.form-floating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-floating.find-id {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px !important;
+}
+
+.form-floating input {
+	flex: 1;
+    min-width: 0;
+}
+
+.form-floating button {
+    white-space: nowrap;
+}
+
+.findPwd-input .placeholder-div,
+.findPwd-input .requestAuthCode,
+.findPwd-input .checkAuthCode {
+    width: 100px; /* 버튼의 너비에 맞게 조정 */
+    flex-shrink: 0; /* 크기 고정 */
+    margin-left: 10px;
+    height:50px;
+}
+
+
 
 .inner-content {
     font-family: 'Pretendard-Regular';
@@ -33,18 +64,45 @@ body {
 }
 
 .find-pwd a {
-	text-decoration:none;
+	text-decoration:underline;
+	text-underline-offset:3px;
+	color:black;
+	font-size:14px;
 	color:black;
 }
 
-.sign-btn button {
+.find-pwd {
+	margin-bottom:15px;
+	margin-left:10px;
+}
+
+.findPwd-input {
+	padding:10px;
+}
+
+.requestAuthCode {
+	height:60px;
+	font-size:15px;
+	border-radius:25px;
+	border:none;
+	color:black;
+	padding:10px;
+}
+.checkAuthCode {
+	height:60px;
+	font-size:15px;
+	border-radius:25px;
+	border:none;
+	background:#8dd986;
+	color:white;
+	padding:10px;
+}
+
+.signIn-btn {
 	height:60px;
 	font-size:18px;
 	border-radius:25px;
 	border:none;
-}
-
-.signIn-btn {
 	background:#8dd986;
 	color:white;
 }

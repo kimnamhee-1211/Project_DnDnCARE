@@ -1,0 +1,168 @@
+/* #mainContainer {display:grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows:500px;} */
+/* #upperLeftContents {display:grid; grid-template-columns:100%; grid-template-rows: 100px 200px 200px;} */
+#upperContents {display: grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows: 500px;}
+#container div:nth-child(2) {display:grid; grid-template-columns: 100%; grid-template-rows: 200px;}        
+#underContents {display:grid; grid-template-columns:1fr 500px 80px 700px 1fr; grid-template-rows: 700px;}
+/* #cardDiv {display:grid; grid-template-columns: 350px 350px; grid-template-rows: 200px;} */
+/* #findWorkList {border: 2px solid black;} */
+#upperContentsBtn div:nth-child(2) {display:grid; grid-template-columns: 1fr 600px 1fr; grid-template-rows: 100px;}
+#myPresentMatching { 
+    position:fixed; top:80%; left:85%; 
+    border : 3px solid green; border-radius:20px;
+    background: #8dd986;
+    font-size: 18px;
+}
+
+/* 대빵 버튼 */
+button {
+    margin: 20px;
+  }
+.custom-btn {
+    width: 200px;
+    height: 80px;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 25px;
+    display:inline;
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+    /* transition: all 0.3s ease; */
+    position: relative;
+     box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+     7px 7px 20px 0px rgba(0,0,0,.1),
+     4px 4px 5px 0px rgba(0,0,0,.1);
+    outline: none;
+}
+
+.btn-14 {
+  /* background: rgb(255,151,0); */
+  background: #8dd986;
+  border: none;
+  z-index: 1;
+}
+.btn-14:after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 0;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  border-radius: 5px;
+  background-image: linear-gradient(315deg, #eaf818 0%, #f6fc9c 74%);
+  background-color: #eaf818;
+  box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+  7px 7px 20px 0px rgba(0,0,0,.1),
+  4px 4px 5px 0px rgba(0,0,0,.1);
+ transition: all 0.3s ease;
+}
+.btn-14:hover {
+  color: #000;
+}
+.btn-14:hover:after {
+  top: auto;
+  bottom: 0;
+  height: 100%;
+}
+.btn-14:active {
+  top: 2px;
+}
+ 
+/* Card */
+.card {
+    margin-bottom: 24px;
+    /* box-shadow: 0 2px 3px #e4e8f0; */
+    box-shadow: 0 2px 3px #8dd986;
+}
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #eff0f2;
+    border-radius: 1rem;
+}
+.avatar-md {
+    height: 4rem;
+    width: 4rem;
+}
+.rounded-circle {
+    border-radius: 50%!important;
+}
+.img-thumbnail {
+    padding: 0.25rem;
+    background-color: #f1f3f7;
+    border: 1px solid #eff0f2;
+    border-radius: 0.75rem;
+}
+.avatar-title {
+    align-items: center;
+    background-color: #3b76e1;
+    color: #fff;
+    display: flex;
+    font-weight: 500;
+    height: 100%;
+    justify-content: center;
+    width: 100%;
+}
+.bg-soft-primary {
+    background-color: rgba(59,118,225,.25)!important;
+}
+a {
+    text-decoration: none!important;
+}
+.badge-soft-danger {
+    color: #f56e6e !important;
+    background-color: rgba(245,110,110,.1);
+}
+.badge-soft-success {
+    color: #63ad6f !important;
+    background-color: rgba(99,173,111,.1);
+}
+.mb-0 {
+    margin-bottom: 0!important;
+}
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 75%;
+    font-weight: 500;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.75rem;
+}
+
+/* table 효과 */
+.mainTable {box-shadow: 0 2px 3px #8dd986;}
+
+
+/* 페이징 버튼 효과 */
+.page-link {
+  color: #333 !important;  
+  background-color: #8dd986;
+  border-color: green;
+}
+
+.page-item.active .page-link {
+ z-index: 1;
+ color: #333 !important;
+ font-weight:bold;
+ background-color: #8dd986;
+  border-color: green;
+ 
+}
+
+.page-link:focus, .page-link:hover {
+  color: #333 !important;
+  background-color: #8dd986; 
+  border-color: green;
+}
+
