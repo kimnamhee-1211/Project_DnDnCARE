@@ -59,33 +59,66 @@
 							</div>
 	      						<table class="d-flex justify-content-center m-2">
 		      						<tr>
-		      							<td width="60"> 성별</td>
+		      							<td width="55">성별</td>
 		      							<td width="60">이재용</td>
 		      							<td width="40">연령</td>
-		      							<td width="120">1950-25-68</td>
-		      							<td width="40">지역</td>
-		      							<td width="40" id="areaUpdate">서울</td>
+		      							<td width="100">1950-25-68</td>
+		      							<td width="60">활동지역</td>
+		      							<td width="60" id="areaUpdate">서울</td>
 		      							<td width="40">
-		      								<button class="btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+		      								<div style="position: relative;">
+		      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+		      									<div id="area"class="selectUpdateDiv select-hidden m-1">
+		      										<div>서울</div>
+		      										<div>경기도</div>
+		      										<div>인천</div>
+		      										<div>충청도</div>
+		      										<div>전라도</div>
+		      										<div>경상도</div>
+		      										<div>강원도</div>
+		      										<div>제주도</div>
+		      									</div>
+		      									
+		      								</div>
+		      								
 		      							</td>
 		      						</tr>
 		      						<tr>
 		      							<td>경력</td>
-		      							<td colspan="5">없음</td>
+		      							<td colspan="5" id="careerUpdate">없음</td>
 		      							<td colspan="1">
-			      							<button class="btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+			      							<div style="position: relative;">
+		      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+		      									<div id="career"class="selectUpdateDiv select-hidden m-1">
+		      										<div>없음</div>
+		      										<div>1년이하</div>
+		      										<div>1~3년</div>
+		      										<div>3~5년</div>
+		      										<div>5~8년</div>
+		      										<div>8년이상</div>
+		      									</div>
+		      									
+		      								</div>
 										</td>
 		      						</tr>
 		      						<tr>
 		      							<td>자격증</td>
-		      							<td colspan="5">
+		      							<td colspan="5" id="licenseUpdate">
 		      								<span>간호사</span>
 		      								<span>응급구조사</span>
 		      								<span>간호조무사</span>
-		      								<span>요양 보호사</span>
+		      								<span>요양보호사</span>
 		      							</td>
 		      							<td>
-		      								<button class="btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+		      								<div style="position: relative;">
+		      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+		      									<div id="license"class="selectUpdateDiv select-hidden m-1">
+		      										<div>간병사</div>
+		      										<div>요양보호사</div>
+		      										<div>간호조무사</div>
+		      									</div>
+		      									
+		      								</div>
 		      							</td>
 		      						</tr>
 		      						<tr>
@@ -142,48 +175,51 @@
 	      				<div class="myInfo-Border-maincolor mt-2">
 		      				<div class="m-3"  ><span class="h3 myInfo-title">일감 매칭 조건 설정</span>
 		      				</div>
+		      				<div class="m-3">1. 국적
+			      				<table class="d-flex justify-content-center ">
+			      					<tr align="center">
+			      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;내국인&nbsp;</span></td>
+			      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;외국인&nbsp;</span></td>
+			      					</tr>
+			      				</table>
+			      			</div>
 		      				<div class="m-3">1. 성별
 			      				<table class="d-flex justify-content-center ">
-			      					<tr >
-			      						<td width="80px">▶ 남자</td>
-			      						<td width="80px">▶ 여자</td>
+			      					<tr align="center">
+			      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;남자&nbsp;</span></td>
+			      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;여자&nbsp;</span></td>
 			      					</tr>
 			      				</table>
 			      			</div>
 		      				<div class="m-3">2.연령대
-			      				<table class="d-flex justify-content-center ">
-			      					<tr >
-			      						<td width="90px">▶ 10대</td>
-			      						<td width="90px">▶ 20대</td>
-			      						<td width="90px">▶ 30대</td>
-			      					</tr>
-			      					<tr >
-			      						<td >▶ 40대</td>
-			      						<td >▶ 50대</td>
-			      						<td >▶ 60대 이상</td>
+			      				<table class="d-flex justify-content-center">
+			      					<tr align="center">
+			      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;청년층&nbsp;</span></td>
+			      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;중년층&nbsp;</span></td>
+			      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;노년층&nbsp;</span></td>
 			      					</tr>
 			      				</table>
 		      				</div>
 		      				<div class="m-3 ">3.질환
-			      				<table class="d-flex justify-content-center ">
-			      					<tr >
-			      						<td width="100px">▶ 뇌질환</td>
-			      						<td width="100px">▶ 호흡기 질환</td>
-			      						<td width="100px">▶ 거동 장애</td>
+			      				<table class="d-flex justify-content-center m-2">
+			      					<tr class="m-2">
+			      						<td width="100px" height="35px"><span class="btn-outline-maincolor-2 m-2">&nbsp;뇌질환&nbsp;</span></td>
+			      						<td width="100px"><span class="btn-outline-maincolor-2 m-2">호흡기질환</span></td>
+			      						<td width="100px"><span class="btn-outline-maincolor-2 m-2">&nbsp;거동장애&nbsp;</span></td>
 			      					</tr>
-			      					<tr >
-			      						<td >▶ 와상환자</td>
-			      						<td >▶ 파킨슨</td>
-			      						<td >▶ 수면질환</td>
+			      					<tr class="m-2">
+			      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;와상환자&nbsp;</span></td>
+			      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;파킨슨&nbsp;</span></td>
+			      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;수면질환&nbsp;</span></td>
 			      					</tr>
-			      					<tr >
-			      						<td >▶ 의식상실</td>
-			      						<td >▶ 정신질환</td>
-			      						<td >▶ 기저귀 케어</td>
+			      					<tr class="m-2">
+			      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;의식상실&nbsp;</span></td>
+			      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;정신질환&nbsp;</span></td>
+			      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;수면질환&nbsp;</span></td>
 			      					</tr>
-			      					<tr >
-			      						<td >▶ 재활</td>
-			      						<td >▶ 기타</td>
+			      					<tr class="m-2" >
+			      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;재 활&nbsp;</span></td>
+			      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;기 타&nbsp;</span></td>
 			      						<td ></td>
 			      					</tr>
 			      				</table>
@@ -191,19 +227,17 @@
 		      				<div class="m-3">4. 중증도
 			      				<table class="d-flex justify-content-center ">
 			      					<tr >
-			      						<td width="80px">▶ 낮음</td>
-			      						<td width="80px">▶ 중간</td>
-			      						<td width="80px">▶ 높음</td>
-			      						<td width="100px">▶ 매우높음</td>
-			      						<td width="80px">▶ 기타</td>
+			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;낮 음&nbsp;</span></td>
+			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;중 간&nbsp;</span></td>
+			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;높 음&nbsp;</span></td>
 			      					</tr>
 			      				</table>
 			      			</div>
 		      				<div class="m-3">5. 공동간병
 			      				<table class="d-flex justify-content-center ">
 			      					<tr >
-			      						<td width="80px">▶ 예</td>
-			      						<td width="80px">▶ 아니요</td>
+			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;예&nbsp;</span></td>
+			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;아니오&nbsp;</span></td>
 			      					</tr>
 			      				</table>
 			      			</div>
@@ -232,7 +266,75 @@
 					i.innerHTML= '<span style="border-bottom:2px solid #8dd986; font-weight:bold;">'+i.innerText+'</span>';
 				}
 			};
+			
+			//업데이트 + 누르면 메뉴보이고 사라지게
+			const selectUpdate = document.getElementsByClassName('selectUpdate');
+			for(i of selectUpdate){
+				i.addEventListener('click',function(){
+					if(this.nextElementSibling.classList.contains('select-hidden')){
+						this.nextElementSibling.classList.remove('select-hidden');
+						this.nextElementSibling.classList.add('select-block');
+					}else{
+						this.nextElementSibling.classList.remove('select-block');
+						this.nextElementSibling.classList.add('select-hidden');
+					}
+				});
 				
+			};
+			
+			
+			//활동지역 선택클릭
+			const areaDiv = document.getElementById('area');
+			const area = document.getElementById('area').children;
+			const areaUpdate = document.getElementById('areaUpdate'); 
+			for(i of area){
+				i.addEventListener('click',function(){
+					console.log(this);
+					areaUpdate.innerText = this.innerText;
+					console.log(i.parentElement);
+					areaDiv.classList.remove('select-block');
+					areaDiv.classList.add('select-hidden');
+				})
+			};
+			
+			const careerDiv = document.getElementById('career');
+			const career = document.getElementById('career').children;
+			const careerUpdate = document.getElementById('careerUpdate'); 
+			for(i of career){
+				i.addEventListener('click',function(){
+					console.log(this);
+					careerUpdate.innerText = this.innerText;
+					
+					careerDiv.classList.remove('select-block');
+					careerDiv.classList.add('select-hidden');
+				});
+			};
+			
+			const license = document.getElementById('license').children;
+			const licenseUpdate = document.getElementById('licenseUpdate'); 
+			for(i of license){
+				i.addEventListener('click',function(){
+					console.log(licenseUpdate.innerText);
+					console.log(licenseUpdate.innerText.includes('병사'));
+					console.log(licenseUpdate.innerText.includes('요양보호사'));
+					console.log(licenseUpdate.innerText.includes('간호조무사'));
+
+					if(licenseUpdate.innerText.includes(this.innerText)){
+						for(span of licenseUpdate.children){
+							if(span.innerText==this.innerText){
+								span.remove();
+							}
+						}
+					}else{
+						licenseUpdate.innerHTML += '<span>'+this.innerText+'</span> ';
+					}
+					
+					
+					i.parentElement.classList.remove('select-block');
+					i.parentElement.classList.add('select-hidden');
+				});
+			};
+			 
 		}
 		
 		

@@ -121,9 +121,10 @@ body {
 .btn-outline-maincolor-2{
 	color:#8dd986;
 	border-radius: 5px;
-	width:150px;
+	width:160px;
 	border:1px solid #8dd986;
 	padding:5px;
+	margin:8px;
 	background:white;
 }
 
@@ -143,3 +144,26 @@ body {
 	cursor: pointer;
 }
 
+.selectUpdateDiv{
+	position: absolute;
+	overflow: auto;
+	height:100px;
+	min-width:80px;
+	background:white;
+	border:1px solid #8dd986;
+	border-radius:5px;
+	z-index:1;
+}
+
+.select-hidden{
+	display : none;
+}
+
+.select-block{
+	display : block;
+	cursor: pointer;	
+}
+
+.select-block>div:hover{
+	background:#8dd986;
+}
