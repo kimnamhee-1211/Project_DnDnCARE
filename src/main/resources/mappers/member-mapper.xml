@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kh.dndncare.member.model.dao.MemberMapper">
 
-	<select id="login" resultType="Member">
+	<!-- <select id="login" resultType="Member">
 		select *
 	 	from member
 	 	where member_status = 'N' and member_id=#{memberId}
-	</select>
+	</select> -->
 	
 	  <select id="login" resultType="Member">
 	  	select *
@@ -20,11 +20,11 @@
 	  	where member_status = 'Y' and member_id=#{id}	  
 	  </select>
 	  
-	<select id="calendarEvent" resultType="calendarResultMap">
+	<!-- <select id="calendarEvent" resultMap="calendarResultMap">
 		SELECT *
 		FROM MATCHING
 				JOIN MAT_PT_INFO USING(MAT_NO)
-	</select>	  
+	</select> -->	  
 	  
 	  
 	  
