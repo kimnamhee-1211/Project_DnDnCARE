@@ -4,15 +4,46 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link th:href="@{css/home.css}" rel="stylesheet" type="text/css"/>
+<style>
+.navbar {
+	height:80px;
+	font-family: 'Pretendard-Regular';	
+	background-color: white !important;
+	border:none !important;
+}
+
+</style>
 </head>
 <body>
+	<div class="topAndNavbar">
+		<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+		<div class="top" th:replace="~{common/top.html :: top}"></div>
+	</div>
 	<main>
-		<div class="topAndNavbar">
-			<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
-			<div class="top" th:replace="~{common/top.html :: top}"></div>
+		<div class="container-lg d-flex flex-column text-center">
+			<div class="question">
+			<p>방문 목적을 선택해주세요</p>
+			<div class="arrow-section d-flex justify-content-between">
+				<!-- <img th:src="@{/image/arrow-left3.png}" alt="화살표 오른쪽" id="arrow">
+				<img th:src="@{/image/arrow-right3.png}" alt="화살표 오른쪽" id="arrow"> -->
+			</div>
+			
+			</div>
+			<div class="select-section d-flex justify-content-evenly">
+				<div class="select d-flex justify-content-center align-items-center" id="select1"><a th:href="@{patient.me}">간병인을 찾고 있어요</a></div>
+				<div class="select d-flex justify-content-center align-items-center" id="select2"><a th:href="@{careGiver.me}">간병일감을 찾고 있어요</a></div>
+			</div>
 		</div>
-		<div class="container-lg"></div>
-		<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+		
+		<!-- 명훈님이 본인페이지 확인용으로 만들어 놓은 구간 -->
+		<!-- <button onclick="location.href='caregiverMain.me'">간병인 메인</button>
+		&nbsp;&nbsp;
+		<button onclick="location.href='patientMain.me'">환자 메인</button>
+		
+		<div class="container-lg"></div> -->
+		<!-- 여기까지 -->
+	
 	</main>
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 </body>
 </html>

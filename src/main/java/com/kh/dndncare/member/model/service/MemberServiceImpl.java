@@ -15,4 +15,11 @@ public class MemberServiceImpl implements MemberService {
 	public Member login(Member m) {
 		return mMapper.login(m);
 	}
+
+	@Override
+	public int idCheck(String id) {
+
+		return mMapper.idCheck(id);
+	}
+
 }
