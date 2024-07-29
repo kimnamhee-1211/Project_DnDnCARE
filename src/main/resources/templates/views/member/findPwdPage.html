@@ -15,21 +15,28 @@
 				<h1 class="h3 mb-3 fw-bold text-center">비밀번호 찾기</h1>
 				<div class="text-center mb-5">본인의 아이디와 휴대폰 번호로 비밀번호를 찾을 수 있습니다.</div>
 				
-				<div class="login-input">
-					<div class="form-floating mb-3">
-						<input type="text" class="form-control" id="floatingInput" name="memberId">
+				<div class="findPwd-input">
+					<div class="form-floating find-id">
+						<input type="text" class="form-control " id="floatingInput" name="memberId">
 						<label for="floatingInput">아이디를 입력해주세요</label>
+						
 					</div>
-					<div class="form-floating d-flex ">
-						<input type="password" class="form-control" id="floatingPassword" name="memberPwd">
-						<label for="floatingPassword">핸드폰 번호를 입력해주세요</label>
-						<button type="submit" class="signIn-btn"><span>인증번호 요청</span></button>
+					<div class="find-pwd d-flex justify-content-start"><a th:href="@{findId.me}">아이디 찾기</a></div>
+					<div class="form-floating d-flex mb-3">
+						<input type="text" class="form-control " id="floatingPhone" name="memberPhone">
+						<label for="floatingPhone">핸드폰 번호를 입력해주세요</label>
+						<button type="button" class="requestAuthCode"><span>인증번호 요청</span></button>
+					</div>
+					<div class="form-floating d-flex">
+						<input type="password" class="form-control " id="floatingAuthCode" name="AuthCode">
+						<label for="floatingAuthCode">인증 번호를 입력해주세요</label>
+						<button type="button" class="checkAuthCode"><span>인증번호 확인</span></button>
 					</div>
 				</div>
-				<div class="find-pwd d-flex justify-content-end mt-2"><a th:href="@{findId.me}">아이디 찾기</a></div>	
+					
 			</div>
 			<div class="sign-btn d-flex flex-column">
-				<button type="submit" class="signIn-btn mt-4 "><span>아이디 찾기</span></button>
+				<button type="submit" class="signIn-btn mt-4 "><span>비밀번호 찾기</span></button>
 			</div>
 		</form>
 	</main>
