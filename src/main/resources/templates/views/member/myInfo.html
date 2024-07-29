@@ -123,8 +123,12 @@
 		      						</tr>
 		      						<tr>
 		      							<td>자기<br>소개</td>
-		      							<td colspan="5">깔깔유머집을 소유하고있습니다.</td>
-		      							<td><button class="btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button></td>
+		      							<td colspan="5"id="introUpdate">깔깔유머집을 소유하고있습니다.</td>
+		      							<td>
+		      								<div style="position: relative;">
+		      									<button id="intro" class="btn-outline-maincolor" onclick="introEdit()">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+		      								</div>
+		      							</td>
 		      						</tr>
 		      						<tr>
 		      							<td colspan="1">돌봄비</td>
@@ -133,10 +137,18 @@
 		      						</tr>
 		      						
 		      						<tr>
-		      							<td colspan="1">서비스</td>
-		      							<td colspan="2">▶병원돌봄 </td>
-										<td>▶가정돌봄</td>		      							
-										<td colspan="3">▶동행 서비스</td>		      							
+		      							<td colspan="2">서비스 경험</td>
+		      							<td colspan="4" id="serviceUpdate"></td>
+		      							<td>
+		      								<div style="position: relative;">
+		      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+		      									<div id="service"class="selectUpdateDiv select-hidden m-1">
+		      										<div>병원돌봄</div>
+		      										<div>가정돌봄</div>
+		      										<div>동행서비스</div>
+		      									</div>
+		      								</div>
+		      							</td>
 		      						</tr>
 		      						
 		      					</table>
@@ -151,12 +163,12 @@
 								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">수정하기</button>
 							</div>
 							
-							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
+							<div id="matchingNow"class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
 								<div>???님과 매칭중입니다 (yyyy-MM-dd)~(yyyy-MM-dd)</div>
 								<div>???님과 매칭중입니다 (yyyy-MM-dd)~(yyyy-MM-dd)</div>
 								<div>???님과 매칭중입니다 (yyyy-MM-dd)~(yyyy-MM-dd)</div>
 							</div>
-							<div class="m-3 p-2">
+							<div id="matchingLimit"class="m-3 p-2">
 								<div>00님과의 매칭이 x일 남았습니다</div>
 								<div>00님과의 매칭이 x일 남았습니다</div>
 								<div>00님과의 매칭이 x일 남았습니다</div>
@@ -172,7 +184,7 @@
 						
 	      			</div>
 	      			<div class="col m-3">
-	      				<div class="myInfo-Border-maincolor mt-2">
+	      				<div id="setMatchingList"class="myInfo-Border-maincolor mt-2">
 		      				<div class="m-3"  ><span class="h3 myInfo-title">일감 매칭 조건 설정</span>
 		      				</div>
 		      				<div class="m-3">1. 국적
@@ -183,7 +195,7 @@
 			      					</tr>
 			      				</table>
 			      			</div>
-		      				<div class="m-3">1. 성별
+		      				<div class="m-3">2. 성별
 			      				<table class="d-flex justify-content-center ">
 			      					<tr align="center">
 			      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;남자&nbsp;</span></td>
@@ -191,7 +203,7 @@
 			      					</tr>
 			      				</table>
 			      			</div>
-		      				<div class="m-3">2.연령대
+		      				<div class="m-3">3.연령대
 			      				<table class="d-flex justify-content-center">
 			      					<tr align="center">
 			      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;청년층&nbsp;</span></td>
@@ -200,7 +212,7 @@
 			      					</tr>
 			      				</table>
 		      				</div>
-		      				<div class="m-3 ">3.질환
+		      				<div class="m-3 ">4.질환
 			      				<table class="d-flex justify-content-center m-2">
 			      					<tr class="m-2">
 			      						<td width="100px" height="35px"><span class="btn-outline-maincolor-2 m-2">&nbsp;뇌질환&nbsp;</span></td>
@@ -224,7 +236,7 @@
 			      					</tr>
 			      				</table>
 		      				</div>
-		      				<div class="m-3">4. 중증도
+		      				<div class="m-3">5. 중증도
 			      				<table class="d-flex justify-content-center ">
 			      					<tr >
 			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;낮 음&nbsp;</span></td>
@@ -233,7 +245,7 @@
 			      					</tr>
 			      				</table>
 			      			</div>
-		      				<div class="m-3">5. 공동간병
+		      				<div class="m-3">6. 공동간병
 			      				<table class="d-flex justify-content-center ">
 			      					<tr >
 			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;예&nbsp;</span></td>
@@ -297,6 +309,7 @@
 				})
 			};
 			
+			//경험클릭
 			const careerDiv = document.getElementById('career');
 			const career = document.getElementById('career').children;
 			const careerUpdate = document.getElementById('careerUpdate'); 
@@ -310,14 +323,13 @@
 				});
 			};
 			
+			
+			//자격증
+			const licenseDiv = document.getElementById('license');
 			const license = document.getElementById('license').children;
 			const licenseUpdate = document.getElementById('licenseUpdate'); 
 			for(i of license){
 				i.addEventListener('click',function(){
-					console.log(licenseUpdate.innerText);
-					console.log(licenseUpdate.innerText.includes('병사'));
-					console.log(licenseUpdate.innerText.includes('요양보호사'));
-					console.log(licenseUpdate.innerText.includes('간호조무사'));
 
 					if(licenseUpdate.innerText.includes(this.innerText)){
 						for(span of licenseUpdate.children){
@@ -330,13 +342,93 @@
 					}
 					
 					
-					i.parentElement.classList.remove('select-block');
-					i.parentElement.classList.add('select-hidden');
+					licenseDiv.classList.remove('select-block');
+					licenseDiv.classList.add('select-hidden');
 				});
 			};
-			 
+			
+			//자기소개
+			const intro = document.getElementById('intro');
+			const introUpdate = document.getElementById('introUpdate');
+			introEdit = () =>{
+				if(intro.classList.contains('btn-outline-maincolor')){
+					introUpdate.contentEditable = true;	
+					introUpdate.focus();
+					intro.classList.remove('btn-outline-maincolor');
+					intro.classList.add('btn-maincolor');
+				}else{
+					introUpdate.contentEditable = false;	
+					intro.classList.add('btn-outline-maincolor');
+					intro.classList.remove('btn-maincolor');
+					
+				}
+			};
+			
+			//희망가격 min max은 나중에?
+			
+					
+			// 현재매칭,매칭 남은기간 클릭하여 넘어가기
+			const matchingNow = document.getElementById('matchingNow'); 
+			const matchingLimit = document.getElementById('matchingLimit');
+			
+			for(i of matchingNow.children){
+				i.addEventListener('click',function(){
+					location.href= '#';
+				})
+			};
+			
+			for(i of matchingLimit.children){
+				i.addEventListener('click',function(){
+					location.href= '#';
+				})
+			};
+			
+			
+			
+			//서비스고르기
+			const serviceDiv = document.getElementById('service');
+			const service = document.getElementById('service').children;
+			const serviceUpdate = document.getElementById('serviceUpdate'); 
+			for(i of service){
+				i.addEventListener('click',function(){
+
+					if(serviceUpdate.innerText.includes(this.innerText)){
+						for(span of serviceUpdate.children){
+							if(span.innerText==this.innerText){
+								span.remove();
+							}
+						}
+					}else{
+						serviceUpdate.innerHTML += '<span>'+this.innerText+'</span> ';
+					}
+					
+					
+					serviceDiv.classList.remove('select-block');
+					serviceDiv.classList.add('select-hidden');
+				});
+			};
+			
+			
+			
 		}
 		
+		
+		//매칭조건 설정하기
+		const setMatchingList = document.getElementById('setMatchingList');
+		const click = setMatchingList.querySelectorAll('.btn-outline-maincolor-2');
+		
+		for(i of click){
+			i.addEventListener('click',function(){
+				if(this.classList.contains('btn-outline-maincolor-2')){
+					this.classList.remove('btn-outline-maincolor-2');
+					this.classList.add('btn-maincolor');
+				}else{
+					this.classList.add('btn-outline-maincolor-2');
+					this.classList.remove('btn-maincolor');
+				};
+			})
+		}
+
 		
 	
 	</script>

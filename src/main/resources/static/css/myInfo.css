@@ -126,7 +126,9 @@ body {
 	padding:5px;
 	margin:8px;
 	background:white;
+	cursor: pointer;
 }
+
 
 .btn-outline-maincolor{
 	color:#8dd986;
@@ -134,6 +136,26 @@ body {
 	border:1px solid #8dd986;
 	padding:2px;
 	background:white;
+	
+}
+
+.btn-outline-maincolor:hover{
+	color:white;
+	border-radius: 5px;
+	border:1px solid #8dd986;
+	padding:2px;
+	background:#8dd986;
+	
+}
+
+
+
+.btn-maincolor{
+	color:white;
+	border-radius: 5px;
+	border:1px solid #8dd986;
+	padding:2px;
+	background:#8dd986;
 }
 
 .myInfo-title{
@@ -166,4 +188,23 @@ body {
 
 .select-block>div:hover{
 	background:#8dd986;
+}
+
+#matchingNow>div:hover{
+	font-weight: bold;
+}
+#matchingLimit>div:hover{
+	font-weight: bold;
+}
+
+.review-content{
+	height:00px;
+	overflow:hidden;
+	
+	transition: height 0.2s;
+}
+
+.show{
+	height:200px;
+	border-top: 1px solid #8dd986;
 }

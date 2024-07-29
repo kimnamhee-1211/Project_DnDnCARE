@@ -57,18 +57,21 @@
 								<div class="h5 m-1">OOO님의 후기</div>
 								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
 							</div>
+							<div class="review-content m-2">확인</div>
 						</div>
 						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
 							<div class="m-1 d-flex justify-content-between">
 								<div class="h5 m-1">OOO님의 후기</div>
 								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
 							</div>
+							<div class="review-content m-2">확인</div>
 						</div>
 						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
 							<div class="m-1 d-flex justify-content-between">
 								<div class="h5 m-1">OOO님의 후기</div>
 								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
 							</div>
+							<div class="review-content m-2">확인</div>
 						</div>
 						
 						
@@ -99,15 +102,24 @@
 					if(this.children[0].children[1].classList.contains('tri-btn')){
 						this.children[0].children[1].src = 'image/icon_tri.png';
 						this.children[0].children[1].classList.remove('tri-btn');
+						console.log(this.children[0].nextElementSibling);
+						this.children[0].nextElementSibling.classList.toggle('show');
 					}else{
 						this.children[0].children[1].src = 'image/icon_turnTri.png';
 						this.children[0].children[1].classList.add('tri-btn');
+						this.children[0].nextElementSibling.classList.toggle('show');
 					}
 				});
 			}
 		
+			
+			
 		}
 	
+			function test(a){
+//				this.previousElementSibling.classList.toggle('show');
+				a.previousElementSibling.classList.toggle('show');
+			};
 	</script>
 	
 </body>
