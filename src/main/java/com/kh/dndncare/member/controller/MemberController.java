@@ -25,7 +25,7 @@ import com.kh.dndncare.member.model.vo.Patient;
 
 import jakarta.servlet.http.HttpSession;
 
-@SessionAttributes({"loginUser", "tempMemberCategory"})
+@SessionAttributes({"loginUser", "tempMemberCategory", "enrollmember"})
 @Controller
 public class MemberController {
 	
@@ -137,20 +137,30 @@ public class MemberController {
 						HttpSession session, Model model) {
 		
 		//간병인/환자 택
-		String memberCategory = (String)session.getAttribute("tempMemberCategory");
-		
+		String memberCategory = (String)session.getAttribute("tempMemberCategory");		
 		m.setMemberCategory(memberCategory);
+		
+		//대문 등록 카테고리 session삭제
+		session.removeAttribute("tempMemberCategory");
+		
 		String memberPwd = bCrypt.encode(m.getMemberPwd().toLowerCase());
 		m.setMemberPwd(memberPwd);
+		
 		String memberAddress = postcode +"//"+ roadAddress +"//"+ detailAddress;
 		m.setMemberAddress(memberAddress);
+		
 		String memberEmail = email + "@" + emailDomain;
 		m.setMemberEmail(memberEmail);
 		
 		System.out.println("회원가입 검증=" + m);
 		
-		model.addAttribute("m", m);
 		int result = mService.enroll(m);
+		
+		//회원가입용 session데이터
+		model.addAttribute("enrollmember", m);
+		System.out.println("회원가입 데이터 전송 검증 =" +m);
+		
+		
 		if(result > 0) {
 			return "enroll2";
 		}else {
@@ -163,10 +173,10 @@ public class MemberController {
 	//타입별 회원가입 페이지 이동
 	@PostMapping("enroll2View.me")
 	public String enrol21View(@ModelAttribute Member m, Model model, HttpSession session) {
-		model.addAttribute("m", m);
-		String memberCategory = (String)session.getAttribute("tempMemberCategory");
+
+		String memberCategory = ((Member)session.getAttribute("enrollmember")).getMemberCategory();
 		if(memberCategory.equals("C")) {
-			return "enroll3";
+			return "enroll2";
 		}else {
 			return "enroll5";
 		}
@@ -176,89 +186,58 @@ public class MemberController {
 	
 	//간병인 회원가입(간병인 정보 입력)
 	@PostMapping("enrollCaregiver.me")
-	public String enrollCaregiver(@ModelAttribute CareGiver cg, @ModelAttribute Member m, @RequestParam("careService") String[] careServiceArr) {
+	public String enrollCaregiver(@ModelAttribute CareGiver cg, @RequestParam("careService") String[] careServiceArr, HttpSession session) {
+		System.out.println("데이터 확인"+cg);
+			
 		//간병인 memberNo 세팅
-		String memberId = (String)m.getMemberId();
-		int memberNo = mService.getMemberNo(memberId);
-		cg.setMemberNo(memberNo);
+		cg.setMemberNo(((Member)session.getAttribute("enrollmember")).getMemberNo());		
 		
-		//간병인 기본 정보
-		String careService = "";
-		for(String i : careServiceArr) {
-			careService += (i + "//");
+		//간병인 기본 정보 세팅
+		String careService = "";		
+		for(int i = 0; i < careServiceArr.length; i++) {
+			if(i < careServiceArr.length -1 ) {
+				careService += careServiceArr[i] + "//";
+			}else {
+				careService += careServiceArr[i];
+			}
 		}
 		cg.setCareService(careService);
 		
-		System.out.println(cg);
+		System.out.println("간병인 정보=" + cg);
 		
-		//간병인 테이블 조인(경력 사항 관련) 세팅
-		if(cg.getServiceName() != null || cg.getDisaseName() != null || cg.getLicenseName() != null) {
-			cg.setCareJoinStatus("Y");
-		}else {
-			cg.setCareJoinStatus("N");
-		}		
+		int result1 = mService.enrollCareGiver(cg);
+		System.out.println("result1" + result1);
 		
-		//간병인 테이블 insert
-		System.out.println(cg);
-		int result = mService.enrollCareGiver(cg);
+		int result2 = mService.enrollnfoCategory(cg);
+		System.out.println("result2" + result2);
 		
-		//간병인 테이블 조인(경력 사항 관련) insert
-		if(cg.getServiceName() != null) {
-			int result1 = mService.enrollExpService(cg);
-		}
-		
-		if(cg.getDisaseName() != null) {
-			int result2 = mService.enrollDisase(cg, null, "EXP");
-		}
-		if(cg.getLicenseName() != null) {
-			int result3 = mService.enrollLicense(cg);
-		}
-		
-		if(result>0) {
-			return "emroll4";
+		if(result1 > 0 || result2 > 0 ) {
+			
+			session.removeAttribute("enrollmember");
+			return "enroll7";
 		}else {
 			throw new MemberException("회원가입에 실패했습니다.");
-		}
+		}		
 	}
-
+	
+	
+	
+	
 	
 	@PostMapping("enrollCaregiverWantPt.me")
-	public String enrollCaregiverWantPt(@ModelAttribute Patient pt, @ModelAttribute Member m,
+	public String enrollCaregiverWantPt(@ModelAttribute Patient pt,
 										@RequestParam("ptAge") int ptAge) {
 		
-		//간병인 memberNo 세팅
-		String memberId = (String)m.getMemberId();
-		int memberNo = mService.getMemberNo(memberId);
-		pt.setMemberNo(memberNo);
 		
-		//간병인 원하는 환자 나이 계산		
-		Calendar c = Calendar.getInstance();
-		int currentYear = c.get(Calendar.YEAR);
-		int ptAgeYear = currentYear - ptAge;
 		
-		Calendar calendar = Calendar.getInstance();
-        calendar.set(ptAgeYear, Calendar.JANUARY, 1, 0, 0, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        Date sqlDate = new Date(calendar.getTimeInMillis());		
-		pt.setPtAge(sqlDate);
 		
-		//간병인 원하는 환자 입력
-		System.out.println(pt);
 		
-		int result = mService.enrollCaregiverWantPt(pt);
-				
-		if(pt.getDiseaseName() != null) {
-			int result2 = mService.enrollDisase(null, pt, "WANT");
-		}
-		if(pt.getDiseaseLevel() != null) {
-			int result3 = mService.enrollDisaseLevel(null, pt);
-		}
 		
-		if(result>0) {
-			return "emroll7";
-		}else {
-			throw new MemberException("회원가입에 실패했습니다.");
-		}			
+		
+		
+		
+		
+		return "enroll7";
 	}
 	
 	

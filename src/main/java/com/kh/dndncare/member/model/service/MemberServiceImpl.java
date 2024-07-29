@@ -30,42 +30,17 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int getMemberNo(String memberId) {
-		return mMapper.getMemberNo(memberId);
-	}
-
-	@Override
 	public int enrollCareGiver(CareGiver cg) {
 		return  mMapper.enrollCareGiver(cg);
 	}
 
 	@Override
-	public int enrollExpService(CareGiver cg) {
-		return mMapper.enrollExpService(cg);
-	}
-	
-	@Override
-	public int enrollDisase(CareGiver cg, Patient pt, String category) {
-		return mMapper.enrollDisase(cg, pt, category);
+	public int enrollnfoCategory(CareGiver cg) {
+		return mMapper.enrollnfoCategory(cg);
 	}
 
 
-	@Override
-	public int enrollLicense(CareGiver cg) {
-		return mMapper.enrollLicense(cg);
-	}
 
-	@Override
-	public int enrollCaregiverWantPt(Patient pt) {
-		// TODO Auto-generated method stub
-		return mMapper.enrollCaregiverWantPt(pt);
-	}
-
-	@Override
-	public int enrollDisaseLevel(CareGiver cg, Patient pt) {
-		// TODO Auto-generated method stub
-		return mMapper.enrollDisaseLevel(cg, pt);
-	}
 
 	
 	

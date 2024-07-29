@@ -1,6 +1,7 @@
 package com.kh.dndncare.member.model.vo;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,5 @@ public class Patient {
 	private String ptAddress;
 	private String ptRequest;
 	
-	private String[] diseaseName;
-	private String[] diseaseLevel;
+	private List<Integer> infoCategory;
 }

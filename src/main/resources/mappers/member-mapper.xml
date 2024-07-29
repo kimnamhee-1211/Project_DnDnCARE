@@ -14,58 +14,29 @@
 	  </select>
 	  
 	  
-	  <insert id="enroll">
+	  <insert id="enroll"  useGeneratedKeys="true">
+	  	<selectKey resultType="_int" keyProperty="memberNo" order="BEFORE">
+	  		select seq_mid.nextval from dual 
+	  	</selectKey>
 	  	insert into member
-	  	values(seq_mid.nextval, #{memberId}, #{memberPwd}, #{memberName}, #{memberGender}, 
+	  	values(#{memberNo}, #{memberId}, #{memberPwd}, #{memberName}, #{memberGender}, 
 	  			#{memberNickName}, #{memberAge}, #{memberPhone}, #{memberEmail}, sysdate,
 	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, null)  	
 	  </insert>
 	  
-	  <select id="getMemberNo" resultType="_int">
-	  	select member_no
-	  	from member
-	  	where member_id = #{memberId}
-	  </select>
-	  
 	  <insert id="enrollCareGiver">
 	  	insert into caregiver
-	  	values (#{memberNo}, #{careImg}, #{careCareer}, #{care_service}, 
-	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careIntro})	  
+	  	values(#{memberNo}, #{careImg}, #{careIntro}, 
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService})	  
 	  </insert>
 	  
-	  <insert id="enrollExpService">
-	  	<foreach item="item" collection="serviceName">
-	  		insert into exp_Service
-	  		values (#{memberNo}, #{item}) 
-	  	</foreach>
-	  </insert>
+	<insert id="enrollnfoCategory">
+		<foreach collection="infoCategory" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
+			into member_Info values(#{memberNo}, #{item})
+		</foreach>
+	</insert>
 	  
-	  <insert id="enrollDisase">
-	  	<foreach item="item" collection="disaseName" separator=" ">
-	  		insert into disase
-	  		values (#{memberNo}, #{item}, #{category}) 
-	  	</foreach>
-	  </insert>
-	  
-	  <insert id="enrollLicense">
-	  	<foreach item="item" collection="licenseName" separator=" ">
-	  		insert into license
-	  		values (#{memberNo}, #{item}) 
-	  	</foreach>
-	  </insert>
-	  
-	  <insert id="enrollCaregiverWantPt">
-	  	insert into patient
-	  	values(SEQ_PID.nextval, #{memberNo}, null, #{ptGender}, #{ptAge}, null, null, null, null, null)	  
-	  </insert>
-	  
-	 <insert id="enrollDisaseLevel">
-	  	<foreach item="item" collection="diseaseLevel" separator=" ">
-	  		insert into disease_level
-	  		values (#{memberNo}, #{item}) 
-	  	</foreach>
-	  </insert>
-	 
+
 	  
 	  
 	  

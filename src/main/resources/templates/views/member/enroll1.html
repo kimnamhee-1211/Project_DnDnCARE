@@ -76,16 +76,12 @@
 						<p class="info">국적을 입력해 주세요.</p>
 						<div class="form-floating mb-5">
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="memberNational" id="national1Input" th:value="대한민국" checked>
-								<label class="form-check-label" for="menInput">대한민국</label>
+								<input class="form-check-input" type="radio" name="memberNational" id="national1Input" th:value="내국인" checked>
+								<label class="form-check-label" for="menInput">내국인</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<div class="input-group mb-3">
-								  <div class="input-group-text">
-								    <input class="form-check-input mt-0" type="radio" name="memberNational" id="national2Input">
-								  </div>
-								  <input type="text" class="form-control" id="nationalOtherInput" placeholder="직접 입력">
-								</div>
+								<input class="form-check-input" type="radio" name="memberNational" th:value="외국인">
+								<label class="form-check-label" for="menInput">외국인</label>
 							</div>
 						</div>
 												
@@ -134,7 +130,7 @@
 							  </div>
 							  <div class="col-md-1" style="font-size:20px; line-height:55px;">@</div>
 							  <div class="col-md-4">
-							    <select id="inputState" class="form-select" name="emailDomain" style="height:57.9883px;">
+							    <select class="form-select" id="emailDomainInput" name="emailDomain" style="height:57.9883px;">
 								    <option selected>선택해주세요.</option>
 								    <option th:selected="${emailDomain eq 'naver.com' }">naver.com</option>
 								    <option th:selected="${emailDomain eq 'hanmail.net' }">hanmail.net</option>
@@ -143,13 +139,15 @@
 							    </select>
 							  </div>
 							</div>
-							
 						</div>	
 						
 						<div class="sign-btn d-flex flex-column">
 							<p class="text-center ifCheck" style="font-size:20px"> </p>
-							<button type="button" class="signIn-btn mt-4" id="nextButton2"><span>회원가입</span></button>
+							<button type="button" class="signIn-btn mt-4" id="nextButton2"><span>다음</span></button>
 						</div>								
+						<div class="sns-section d-flex flex-column justify-content-center mt-3 fs-5">
+							<p class="text-center">다음으로 넘어가<br>회원가입을 계속 진행해주세요.</p>
+						</div>
 					</div>					
 				</div>
 			</div>			
@@ -165,47 +163,44 @@
 			const nextButton1 = document.getElementById('nextButton');
 			const nextButton2 = document.getElementById('nextButton2');
 			const form = document.getElementById('enrollForm');
-			
-			
-			//국적 입력
-			const national1Input = document.getElementById('national1Input');
-			const national2Input = document.getElementById('national2Input');
-			const nationalOtherInput = document.getElementById('nationalOtherInput');
-			document.querySelectorAll('input[name="memberNational"]').forEach((elem) => {
-			        elem.addEventListener("change", function(event) {
-			            const value = event.target.value;
-			            if (value != "대한민국" && nationalOtherInput.value.trim() !== '' || nationalOtherInput.value.trim() !== '국적을 입력해주세요') {
-			                national2Input.value = nationalOtherInput.value
-			            } else if(value != "대한민국" && nationalOtherInput.value.trim() === ''){
-			                national2Input.value = "국적을 입력해주세요."
-			            }
-			        });
-			    });
-			
-			
+				
 			
 			//1page 검사 - 이동
 			if(nextButton1 != null){
 				nextButton1.addEventListener('click', function(){					
 					let isValid = true;			
 					
-					if(idInputLabel.innerText.includes("없는") || idInput.value.trim() == ''){
+					const inputs = document.querySelectorAll('input')
+					let count = 0;
+					for(let i=0 ; i < 5 ; i++){
+						let input = inputs[i]
+						if(input.value.trim() == ''){
+							count++
+						}			
+					}
+					var ifCheck1 = document.getElementsByClassName("ifCheck")[0];
+					if(ifCheck1){
+						if(count > 0){
+							ifCheck1.innerText = "모든 내용을 빠짐없이 입력해주세요."
+							ifCheck1.style.color="red";
+							isValid = false;
+						}else{
+							ifCheck1.innerText = ""
+						}	
+					}
+									
+					if(idInputLabel.innerText.includes("없는")){
 						idInput.focus();					
 						isValid = false;
 					}
-					
-				    if(isValid){
-				    	if(!inputCheck1()){
-				    		isValid = false;
-						}else if(!pwdCheck()){
-							pwdInput.focus();
-							isValid = false;
-						}else if(!pwdCheck2()){
-							pwdInput2.focus();	
-							isValid = false;
-						}										
-				    }
-												
+			    	if(!pwdCheck()){
+						pwdInput.focus();
+						isValid = false;
+					}
+			    	if(!pwdCheck2()){
+						pwdInput2.focus();	
+						isValid = false;
+					}										
 				    if(isValid){
 						const enroll1 = document.getElementById("enroll1");
 						const enroll2 = document.getElementById("enroll2");
@@ -217,30 +212,63 @@
 				});
 			}
 			
+			
 			//submit
 			if(nextButton2 != null){
 				nextButton2.addEventListener('click', function(){
-					let isValid = true;	
 					
-				    if(isValid){
-				    	if(!inputCheck2()){
-				    		isValid = false;
-						}else if(!telCheck()){
-							telInput.focus();	
+					let isValid = true;					
+					
+					const inputs = document.querySelectorAll('input')
+					let count = 0;
+					for(let i=5 ; i < inputs.length; i++){
+						let input = inputs[i]
+						if(input.value.trim() == ''){
+							count++
+						}			
+					}					
+					
+					var ifCheck2 = document.getElementsByClassName("ifCheck")[1];
+					if(ifCheck2){
+						if(count > 0){
+							ifCheck2.innerText = "모든 내용을 빠짐없이 입력해주세요."
+							ifCheck2.style.color="red";
 							isValid = false;
-						}											
-				    }
-												
+						}else{
+							ifCheck2.innerText = ""
+						}	
+					}	
+					
+					
+					var emailDomainInput = document.getElementById("emailDomainInput");
+					if(emailDomainInput.value === '선택해주세요.'){
+						if(ifCheck2){
+							ifCheck2.innerText = "모든 내용을 빠짐없이 입력해주세요."
+							ifCheck2.style.color="red";
+						}
+						emailDomainInput.focus();
+						isValid = false;
+					}										
+			    	if(!telCheck()){
+						telInput.focus();	
+						isValid = false;
+					}															    
 				    if(isValid){
 						form.submit();			            	
 		            }
 				
 				});
-			}				
-			
-			
+			}
 			
 		}		
+		
+	
+		
+		var idInput = document.getElementById("idInput");
+		var pwdInput = document.getElementById("pwdInput")
+		var pwdInput2 = document.getElementById("pwdInput2");
+		var telInput = document.getElementById("telInput");		
+		
 		
 		
 		//주소검색 api
@@ -277,64 +305,8 @@
     	};
 
 		
-		//필수 입력사항 입력 확인
-		const idInput = document.getElementById("idInput");
-		const pwdInput = document.getElementById("pwdInput")
-		const pwdInput2 = document.getElementById("pwdInput2");
-		const nameInput = document.getElementById("nameInput");
-		const nickNameInput = document.getElementById("nickNameInput");		
-		const input1 = {idInput, pwdInput, pwdInput2, nameInput, nickNameInput};
-		
-		const ageInput = document.getElementById("ageInput");	
-		const telInput = document.getElementById("telInput");
-		const addInput = document.getElementById('sample4_postcode');
-		const emailInput = document.getElementById("emailInput");		
-		const inputState = document.getElementById("inputState");	
-		const input2 = {ageInput, telInput, addInput, emailInput, inputState};		
-				
-		const ifCheck1 = document.getElementsByClassName("ifCheck")[0];
-		const ifCheck2 = document.getElementsByClassName("ifCheck")[1];
-						
-		function inputCheck1(){ 
-			for(const input of Object.values(input1)){
-				if(input.value.trim() == ''){
-					if(ifCheck1){
-						ifCheck1.innerText = "모든 내용을 빠짐없이 입력해주세요."
-						ifCheck1.style.color="red";
-						input.focus();
-						return false;
-					}
-				}else{
-					if(ifCheck1){
-						ifCheck1.innerText = ""
-						return true;
-					}
-				}
-			}	
-		}
-		function inputCheck2(){ 
-			for(const input of Object.values(input2)){
-				if(input.value.trim() == '' || input.value.trim() == '선택해주세요.' ){
-					if(ifCheck2){
-						ifCheck2.innerText = "모든 내용을 빠짐없이 입력해주세요."
-						ifCheck2.style.color="red";
-						input.focus();
-						return false;
-					}
-				}else{
-					if(ifCheck2){
-						ifCheck2.innerText = ""
-						return true;
-					}
-				}
-			}	
-		}
-			
-		
-					
-			
 	    //아이디 검사	    
-    	const idInputLabel = document.getElementById("idInputLabel");
+    	var idInputLabel = document.getElementById("idInputLabel");
     	function idCheck(){   		
     		if(idInput != null){
     			const idInputVal = idInput.value;
@@ -395,7 +367,6 @@
 				pwdInput2Label.style.color="green";
 				return true;	
 			}
-		
 		}
 		pwdInput2.addEventListener('focusout', pwdCheck2);				
 		
@@ -415,8 +386,7 @@
 			}
 		}		
 		telInput.addEventListener('focusout', telCheck);
-			
-
+		
 	
 	</script>
 		

@@ -12,19 +12,11 @@ public interface MemberService {
 
 	int enroll(Member m);
 
-	int getMemberNo(String memberId);
-
 	int enrollCareGiver(CareGiver cg);
 
-	int enrollExpService(CareGiver cg);
-	
-	int enrollDisase(CareGiver cg, Patient pt, String category);
+	int enrollnfoCategory(CareGiver cg);
 
-	int enrollLicense(CareGiver cg);
 
-	int enrollCaregiverWantPt(Patient pt);
-
-	int enrollDisaseLevel(CareGiver cg, Patient pt);
 
 
 }
