@@ -30,13 +30,18 @@
 	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService})	  
 	  </insert>
 	  
-	<insert id="enrollnfoCategory">
+	<insert id="enrollInfoCategory">
 		<foreach collection="infoCategory" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
 			into member_Info values(#{memberNo}, #{item})
 		</foreach>
 	</insert>
 	  
-
+	<insert id="enrollPatient">
+	  	insert into patient
+	  	values(seq_pid.nextval #{memberNo}, #{ptName}, #{careIntro}, 
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService})	  
+	  </insert>
+	  
 	  
 	  
 	  

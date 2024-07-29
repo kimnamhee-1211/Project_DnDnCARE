@@ -1,5 +1,7 @@
 package com.kh.dndncare.member.model.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +37,15 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int enrollnfoCategory(CareGiver cg) {
-		return mMapper.enrollnfoCategory(cg);
+	public int enrollInfoCategory(List<Integer> infoCategory) {
+		return mMapper.enrollInfoCategory(infoCategory);
 	}
+
+	@Override
+	public int enrollPatient(Patient pt) {
+		return  mMapper.enrollPatient(pt);
+	}
+
 
 
 

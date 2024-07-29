@@ -1,5 +1,7 @@
 package com.kh.dndncare.member.model.service;
 
+import java.util.List;
+
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
@@ -14,7 +16,9 @@ public interface MemberService {
 
 	int enrollCareGiver(CareGiver cg);
 
-	int enrollnfoCategory(CareGiver cg);
+	int enrollInfoCategory(List<Integer> infoCategory);
+
+	int enrollPatient(Patient pt);
 
 
 

@@ -19,6 +19,7 @@ import lombok.ToString;
 public class Patient {
 	private int ptNo;
 	private int memberNo;
+	private String ptName;
 	private String ptGender;
 	private Date ptAge;
 	private int ptWeight;

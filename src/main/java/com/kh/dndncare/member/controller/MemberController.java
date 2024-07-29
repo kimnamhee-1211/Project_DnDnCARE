@@ -162,24 +162,14 @@ public class MemberController {
 		
 		
 		if(result > 0) {
-			return "enroll2";
+			if(m.getMemberCategory().equals("C")) {
+				return "enroll2";
+			}else {
+				return "enroll3";
+			}
 		}else {
 			throw new MemberException("회원가입에 실패했습니다.");
 		}		
-		
-	}
-	
-	
-	//타입별 회원가입 페이지 이동
-	@PostMapping("enroll2View.me")
-	public String enrol21View(@ModelAttribute Member m, Model model, HttpSession session) {
-
-		String memberCategory = ((Member)session.getAttribute("enrollmember")).getMemberCategory();
-		if(memberCategory.equals("C")) {
-			return "enroll2";
-		}else {
-			return "enroll5";
-		}
 		
 	}
 	
@@ -208,36 +198,60 @@ public class MemberController {
 		int result1 = mService.enrollCareGiver(cg);
 		System.out.println("result1" + result1);
 		
-		int result2 = mService.enrollnfoCategory(cg);
+		int result2 = mService.enrollInfoCategory(cg.getInfoCategory());
 		System.out.println("result2" + result2);
 		
-		if(result1 > 0 || result2 > 0 ) {
-			
+		if(result1 > 0 || result2 > 0 ) {			
 			session.removeAttribute("enrollmember");
-			return "enroll7";
+			return "enroll4";
 		}else {
 			throw new MemberException("회원가입에 실패했습니다.");
 		}		
 	}
 	
-	
-	
-	
-	
-	@PostMapping("enrollCaregiverWantPt.me")
-	public String enrollCaregiverWantPt(@ModelAttribute Patient pt,
-										@RequestParam("ptAge") int ptAge) {
+		
+	@PostMapping("enrollPatient.me")
+	public String enrollPatient(@ModelAttribute Patient pt, 
+							@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress,@RequestParam("detailAddress") String detailAddress,
+							@RequestParam("ptService") String[] ptServiceArr, HttpSession session) {
+		
+		//간병인 memberNo 세팅
+		pt.setMemberNo(((Member)session.getAttribute("enrollmember")).getMemberNo());	
 		
 		
+		//돌봄 주소 세팅
+		String ptAddress = postcode +"//"+ roadAddress +"//"+ detailAddress;
+		pt.setPtAddress(ptAddress);
+		
+		//간병인 기본 정보 세팅
+		String ptService = "";		
+		for(int i = 0; i < ptServiceArr.length; i++) {
+			if(i < ptServiceArr.length -1 ) {
+				ptService += ptServiceArr[i] + "//";
+			}else {
+				ptService += ptServiceArr[i];
+			}
+		}
+		pt.setPtService(ptService);
+
+		System.out.println("간병인 정보=" + pt);
+		
+		int result1 = mService.enrollPatient(pt);
+		System.out.println("result1" + result1);
+		
+		int result2 = mService.enrollInfoCategory(pt.getInfoCategory());
+		System.out.println("result2" + result2);
+		
+		if(result1 > 0 || result2 > 0 ) {			
+			session.removeAttribute("enrollmember");
+			return "enroll4";
+		}else {
+			
+			throw new MemberException("회원가입에 실패했습니다.");
+		}		
 		
 		
-		
-		
-		
-		
-		
-		
-		return "enroll7";
+
 	}
 	
 	

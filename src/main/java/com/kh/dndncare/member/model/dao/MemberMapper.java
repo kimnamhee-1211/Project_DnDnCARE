@@ -1,5 +1,7 @@
 package com.kh.dndncare.member.model.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.kh.dndncare.member.model.vo.CareGiver;
@@ -18,7 +20,9 @@ public interface MemberMapper {
 
 	int enrollCareGiver(CareGiver cg);
 
-	int enrollnfoCategory(CareGiver cg);
+	int enrollInfoCategory(List<Integer> infoCategory);
+
+	int enrollPatient(Patient pt);
 
 
 
