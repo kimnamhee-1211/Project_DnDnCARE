@@ -1,20 +1,14 @@
 package com.kh.dndncare.member.model.service;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
 import java.util.List;
-=======
->>>>>>> refs/remotes/origin/myunghun
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.dndncare.member.model.dao.MemberMapper;
-<<<<<<< HEAD
 import com.kh.dndncare.member.model.vo.CareGiver;
-=======
 import com.kh.dndncare.member.model.vo.Matching;
->>>>>>> refs/remotes/origin/myunghun
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 import com.kh.dndncare.sms.SmsService;
