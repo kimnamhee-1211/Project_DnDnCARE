@@ -27,6 +27,7 @@ public class Patient {
 	private String ptService;
 	private String ptAddress;
 	private String ptRequest;
+	private Date ptUpdateDate;
 	
 	private List<Integer> infoCategory;
 }

@@ -31,4 +31,5 @@ public class Member {
 	private String memberStatus;
 	private String memberNational;
 	private String memberPay;
+	private Date memberUpdateDate;
 }
