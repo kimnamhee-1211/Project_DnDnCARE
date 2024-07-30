@@ -2,7 +2,7 @@ package com.kh.dndncare.member.model.service;
 
 import java.util.ArrayList;
 
-import com.kh.dndncare.member.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.Member;
 
 public interface MemberService {
@@ -11,6 +11,6 @@ public interface MemberService {
 
 	int idCheck(String id);
 
-	ArrayList<Matching> calendarEvent(Member loginUser);
+	ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser);
 
 }

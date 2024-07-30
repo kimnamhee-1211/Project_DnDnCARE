@@ -20,11 +20,27 @@
 	  	where member_status = 'Y' and member_id=#{id}	  
 	  </select>
 	  
-	<!-- <select id="calendarEvent" resultMap="calendarResultMap">
-		SELECT *
+	  
+	<!-- ResultMap : 캘린더에 적합도록 매핑 -->
+	<resultMap type="CalendarEvent" id="calendarResultMap">
+		<id column="MAT_NO" property="matNo"/>
+	  	<result column="TITLE" property="title"/>
+		<result column="BEGIN_DT" property="start"/>
+		<result column="END_DT" property="end"/>
+		<result column="MONEY" property="money"/>
+		<result column="HOSPTAL_NO" property="hosptalNo"/>
+		<result column="HOSPTAL_ADDRESS" property="hosptalAddress"/>
+		<result column="HOSPTAL_NAME" property="hosptalName"/>
+	</resultMap>
+	  
+	  
+	  
+	<select id="caregiverCalendarEvent" resultMap="calendarResultMap">
+		SELECT MAT_NO, '간병하기' AS TITLE, BEGIN_DT, END_DT, MONEY, HOSPTAL_NO, HOSPTAL_ADDRESS, HOSPTAL_NAME 
 		FROM MATCHING
-				JOIN MAT_PT_INFO USING(MAT_NO)
-	</select> -->	  
+		        JOIN HOSPTAL USING(HOSPTAL_NO)
+		WHERE MEMBER_NO = #{memberNo}
+	</select>
 	  
 	  
 	  

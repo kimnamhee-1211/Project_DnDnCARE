@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.kh.dndncare.member.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.Member;
 
 @Mapper
@@ -14,6 +14,6 @@ public interface MemberMapper {
 
 	int idCheck(String id);
 
-	ArrayList<Matching> calendarEvent(Member loginUser);
+	ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser);
 
 }

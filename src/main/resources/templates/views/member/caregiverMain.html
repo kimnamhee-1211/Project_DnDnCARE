@@ -16,7 +16,7 @@
     </style>
 </head>
 <body>
-	<div th:replace="../common/navbar"></div>
+	<div th:replace="~{common/navbar :: navbar}"></div>
 	<div id="upperContents">
 		<div><!-- 왼쪽 공백 --></div>
 		<div id="upperLeftContents">
@@ -26,9 +26,7 @@
                      <tr>
                          <th colspan="5">나와 딱 맞는 일감을 찾아드려요.</th>
                          <th class="text-center">
-                         	<a href="chatGpt.me?memberNo=1">
-                         		<img src="image/icon/refresh.png" style="width:30px; height:30px;">
-                         	</a>
+                        	<img src="image/icon/refresh.png" id="refreshChoice" style="width:30px; height:30px;">
                         </th>
                      </tr>
                  </thead>
@@ -66,7 +64,7 @@
                          <td>80,000원</td>
                      </tr>
                  </tbody>
-             </table>
+            </table>
 			</div>
 			<div id="upperContentsBtn" class="align-middle text-center"><!-- 메뉴판 -->
 				<div></div>
@@ -271,13 +269,14 @@
         </a>
     </div>
     
-    <th:block th:replace="../common/footer"></th:block>
+    <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     <script>
     	document.addEventListener('DOMContentLoaded', function() {
         	var calendarEl = document.getElementById('calendar');
         	/* var request = $.ajax({
-        		url: 'tempEvent'
+        		url: 'caregiverCalendarEvent.me'
+        		data: {memberNo : 회원번호}
         	})
         	
         	request.done(function(data) {
@@ -297,6 +296,36 @@
         	});
         	calendar.render();
       	});
+    	
+    	window.onload = () => {
+    		// 자동추천 새로고침 비동기 요청 (시작)
+    		const refreshChoice = document.querySelector('#refreshChoice');
+    		refreshChoice.addEventListener('mouseenter', function() {
+    			this.style.cursor= 'pointer';
+    		})
+    		
+    		refreshChoice.addEventListener('click', () => {
+    			$.ajax({
+    				url: 'refreshChoice.me',
+    				success: data => {
+    					console.log(data)
+    				},
+    				error: data => {
+    					console.log('에러')
+    				}
+    			})
+    		})
+    		// 자동추천 새로고침 비동기 요청 (끝)
+    		
+    		
+    		
+    		
+    		
+    	}
+    	
+    	
+    	
+    	
     </script>    
 </body>
 </html>

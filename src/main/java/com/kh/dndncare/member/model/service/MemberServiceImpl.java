@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.dndncare.member.model.dao.MemberMapper;
-import com.kh.dndncare.member.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.Member;
 
 @Service
@@ -26,8 +26,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<Matching> calendarEvent(Member loginUser) {
-		return mMapper.calendarEvent(loginUser);
+	public ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser) {
+		return mMapper.caregiverCalendarEvent(loginUser);
 	}
 
 }
