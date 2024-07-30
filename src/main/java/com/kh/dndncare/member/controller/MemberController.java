@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,19 +18,30 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.CalendarEvent;
+import com.kh.dndncare.member.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
+
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
+
 
 @SessionAttributes({"loginUser", "tempMemberCategory", "enrollmember"})
 @Controller
@@ -373,6 +386,38 @@ public class MemberController {
 	    response.put("success", findMember != null);
 	    
 	    return response;
+	}
+	// 임시 : 메인페이지 이동시 캘린더 이벤트 조회	
+	public void calendarEvent(Model model, HttpServletResponse response) {
+		Member loginUser = (Member)model.getAttribute("loginUser");
+		ArrayList<Matching> list = mService.calendarEvent(loginUser);
+		
+		// 캘린더에 사용될 이벤트 정보로 가공
+		ArrayList<CalendarEvent> eList = new ArrayList<CalendarEvent>();
+		if(!list.isEmpty()) {
+			for(Matching m : list) {
+				CalendarEvent e = new CalendarEvent();
+				e.setStart(m.getBeginDt());
+				e.setEnd(m.getEndDt());
+				if(loginUser.getMemberCategory().equals("C")) {
+					e.setTitle("간병하기");
+				}
+				if(loginUser.getMemberCategory().equals("P")) {
+					e.setTitle("간병받기");
+				}
+				eList.add(e);
+			}
+		}
+		
+		// GSON
+		response.setContentType("application/json; charset=UTF-8");
+		GsonBuilder gb = new GsonBuilder().setDateFormat("YYYY-MM-DD");
+		Gson gson = gb.create();
+		try {
+			gson.toJson(eList, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@PostMapping("/api/send-auth-code") // 인증번호 전송

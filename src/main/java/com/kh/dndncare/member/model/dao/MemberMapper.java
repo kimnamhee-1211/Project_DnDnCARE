@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
@@ -27,5 +28,6 @@ public interface MemberMapper {
 
 
 	Member findIdResult(Member member);
+	ArrayList<Matching> calendarEvent(Member loginUser);
 
 }

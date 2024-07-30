@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kh.dndncare.member.model.dao.MemberMapper">
+
+	<!-- <select id="login" resultType="Member">
+		select *
+	 	from member
+	 	where member_status = 'N' and member_id=#{memberId}
+	</select> -->
+	
 	  <select id="login" resultType="Member">
 	  	select *
 	  	from member
@@ -33,6 +40,11 @@
 	  	values(#{memberNo}, #{careImg}, #{careIntro}, 
 	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService})	  
 	  </insert>
+	<!-- <select id="calendarEvent" resultMap="calendarResultMap">
+		SELECT *
+		FROM MATCHING
+				JOIN MAT_PT_INFO USING(MAT_NO)
+	</select> -->	  
 	  
 	<insert id="enrollInfoCategory">
 		<foreach collection="infoCategory" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
