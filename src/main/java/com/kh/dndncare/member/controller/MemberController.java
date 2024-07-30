@@ -1,6 +1,8 @@
 package com.kh.dndncare.member.controller;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -98,8 +101,7 @@ public class MemberController {
 	}
 	
 	
-	//회원가입	 검증
-	@PostMapping("idCheck.me")
+
 	@ResponseBody
 	public String idCheck(@RequestParam("id") String id) {		
 		int result = mService.idCheck(id);	
@@ -183,9 +185,73 @@ public class MemberController {
 		
 	}
 	
-	@PostMapping("findPwdResult.me")
-	public String findPwdResult() {
-		return "findPwdResult";
+	@PostMapping("/api/verify-member") //입력한 아이디로 등록된 핸드폰번호 있는지 확인
+	@ResponseBody
+	public Map<String, Object> verifyMember(@RequestBody Member member) {
+	    Map<String, Object> response = new HashMap<>();
+	    
+	    Member findMember = mService.findIdResult(member);
+	    response.put("success", findMember != null);
+	    
+	    return response;
+	}
+	
+	@PostMapping("/api/send-auth-code") // 인증번호 전송
+	@ResponseBody
+	public Map<String, Object> sendAuthCode(@RequestBody Map<String, String> request,HttpSession session) {
+	    String phoneNumber = request.get("phoneNumber");
+	    String authCode = generateAuthCode(); // 6자리 랜덤 숫자 생성
+	    
+	    boolean success = mService.sendSms(phoneNumber, "인증번호: " + authCode);
+	    
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("success", success);
+	    
+	    if (success) {        
+	       session.setAttribute("authCode", authCode);
+	    }
+	    
+	    return response;
+	}
+
+	private String generateAuthCode() { // 인증번호 생성
+	    Random random = new Random();
+	    StringBuilder sb = new StringBuilder();
+	    for (int i = 0; i < 6; i++) {
+	        sb.append(random.nextInt(10));
+	    }
+	    return sb.toString();
+	}
+	
+	@PostMapping("/api/verify-auth-code") // 인증번호 확인
+	@ResponseBody
+	public Map<String, Object> verifyAuthCode(@RequestBody Map<String, String> request, HttpSession session) {
+	    String inputAuthCode = request.get("authCode");
+	    String sessionAuthCode = (String) session.getAttribute("authCode");
+
+	    Map<String, Object> response = new HashMap<>();
+	    boolean isVerified = sessionAuthCode != null && sessionAuthCode.equals(inputAuthCode);
+	    response.put("success", isVerified);
+
+	    if (isVerified) {
+	        // 인증 성공 시 세션에 인증 상태 저장
+	        session.setAttribute("isVerified", true);
+	    }
+
+	    return response;
+	}
+
+	@PostMapping("findPwdResult.me") // 비밀번호 재설정 페이지로 이동
+	public String findPwdResult(HttpSession session) {
+	    Boolean isVerified = (Boolean) session.getAttribute("isVerified");
+	    
+	    if (isVerified != null && isVerified) {
+	        // 인증된 경우 비밀번호 재설정 페이지로 이동
+	        return "findPwdResult";
+	    } else {
+	        // 인증되지 않은 경우 다시 비밀번호 찾기 페이지로 리다이렉트
+	        return "redirect:findPwd.me";
+	    }
 	}
 }
 

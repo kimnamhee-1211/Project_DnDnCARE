@@ -10,5 +10,6 @@ public interface MemberService {
 
 	Member findIdResult(Member member);
 
+	boolean sendSms(String phoneNumber, String string);
 
 }
