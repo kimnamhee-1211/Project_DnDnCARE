@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+</head>
+<body>
+	<div th:replace="~{common/navbar :: navbar}"></div>
+	
+	
+	
+	<div class="container" >
+	
+		 <div class="row">
+			<div class="col" >
+	     		<div align="center"class="myInfo-Border m-4">
+	     			<div class="m-4" style="border-bottom:2px solid #8dd986;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatching.me">현재 매칭 정보</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingHistory.me">매칭 이력</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내가 쓴 후기</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
+	     		</div>
+	    	</div>
+	    	
+	    	<div class="col" >
+	      		
+	      		
+	      		<div class="row m-4" style="width:950px"> <!-- 여기로규격정햇다 -->
+		      		<div class="m-3 h1 menu-name" >매칭 이력</div>
+	      		</div>
+	      		
+	      		<div class="row m-4">
+	      			<div class="m-4 col">
+					  <button type="button" class="btn-outline-maincolor-2">피간병인(나환자)</button>
+					  <button type="button" class="btn-outline-maincolor-2">피간병인(찐환자)</button>
+	      			</div>
+	      		</div>
+	      		
+	      		
+	      		
+	      		
+	      		<div class="row m-4">
+	      			<div class="col m-3">
+						<div class="myInfo-Border-maincolor mt-2 mb-3">
+						
+							<div class="m-2 d-flex justify-content-between">
+								<div class="h3 myInfo-title">OOO님 이용일수/지출</div>
+								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">검색란?</button>
+							</div>
+							
+							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
+								<div>-------------------------------------------------꺽은선그래프-------------------------------------------------</div>
+							</div>
+						</div>
+						
+						
+						<div class="myInfo-Border-maincolor mt-2 mb-3">
+						
+							<div class="m-2 d-flex justify-content-between">
+								<div class="h3 myInfo-title">OOO님 매칭 이력</div>
+								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">검색란?</button>
+							</div>
+							
+							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
+								<table class="m-2">
+		      						<tr>
+										<th width="300px">간호 일자</th>
+										<th width="820px">정보</th>
+										<th width="150px">매칭 상태</th>
+										<th width="120px">후기 작성</th>
+		      						</tr>
+		      						<tr>
+		      							<td>2020.11.12 ~ 2020.11.13</td>
+		      							<td>나간병님 여자 60세 서울 </td>
+		      							<td>진행중</td>
+		      							<td><button class="myInfo-btn btn-sm">후기 남기기</button></td>
+		      						</tr>	
+		      						<tr>
+		      							<td>2020.11.12 ~ 2020.11.13</td>
+		      							<td>나간병님 여자 60세 서울 </td>
+		      							<td>완료</td>
+		      							<td><button class="myInfo-btn btn-sm">후기 남기기</button></td>
+		      						</tr>	
+		      						<tr>
+		      							<td>2020.11.12 ~ 2020.11.13</td>
+		      							<td>나간병님 여자 60세 서울 </td>
+		      							<td>완료</td>
+		      							<td><button class="myInfo-btn btn-sm">후기 남기기</button></td>
+		      						</tr>	
+		      					
+		      						
+	      						</table>
+							</div>
+						</div>
+						
+						
+	      			</div>
+	      		</div>
+	      		
+	    	</div>
+    	</div>
+	
+	
+	</div>
+	
+	
+	<script th:inline="javascript">
+		
+		window.onload =() =>{
+			const menuAtag = document.getElementsByClassName('my-menu');
+			const menuName = document.getElementsByClassName('menu-name')[0];
+			for(i of menuAtag){
+				if(i.innerText == menuName.innerText){
+					i.innerHTML= '<span style="border-bottom:2px solid #8dd986; font-weight:bold;">'+i.innerText+'</span>';
+				}
+			};
+			
+		}
+	
+	</script>
+	
+</body>
+</html>

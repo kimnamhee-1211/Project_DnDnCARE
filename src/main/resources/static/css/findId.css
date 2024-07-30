@@ -32,6 +32,10 @@ body {
 	margin-left:70px;
 }
 
+.find-pwd a {
+	text-decoration:none;
+	color:black;
+}
 
 .sign-btn button {
 	height:60px;

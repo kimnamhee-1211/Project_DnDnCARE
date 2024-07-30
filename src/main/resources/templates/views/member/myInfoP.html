@@ -21,7 +21,7 @@
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatching.me">현재 매칭 정보</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingHistory.me">매칭 이력</a></div>
-	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내 든든지수/후기</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내가 쓴 후기</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
 	     		</div>
 	    	</div>
@@ -33,15 +33,17 @@
 	      		</div>
 	      		<div align="center"class="row m-4" style="border:2px solid #8dd986;width:950px"> <!-- 여기로규격정햇다 -->
 		      		<div class="col-2 m-4">
-			      		<img id="profile-image" src="image/icon_profile.png"/>
-			      		<span><br>프로필 사진</span>
 		      		</div>
 		      		<div  class="col-3 d-flex align-items-center">
 		      			<div>???님! 어서오세요!</div>
 		      		</div>
-		      		<div class="col-3">
-		      			<div >든든 지수 : 88</div>
-		      			<img src="image/icon_score.png"/>
+		      		<div  class="col-3 d-flex align-items-center">
+		      			<div>
+		      				<div>피간병인 정보 : 나환자</div>
+		      				<div>피간병인 정보 : 찐환자</div>
+		      				<div>피간병인 정보 추가하기</div>
+		      				<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+		      			</div>
 		      		</div>
 		      		<div  class="col-3 d-flex align-items-center m-2">
 		      			<div><button class="myInfo-btn" style="height:100px">공개 구인 신청하기</button></div>
@@ -53,20 +55,20 @@
 	      			<div class="col m-3">
 						<div class="myInfo-Border-maincolor mt-2 mb-3">
 							<div class="m-2 d-flex justify-content-between">
-								<div class="h3 myInfo-title">간병인 정보</div>
+								<div class="h3 myInfo-title">피간병인 정보(나환자)</div>
 								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">수정하기</button>
 							
 							</div>
 	      						<table class="d-flex justify-content-center m-2">
-		      						<tr>
-		      							<td width="55">성별</td>
-		      							<td width="60">이재용</td>
-		      							<td width="40">연령</td>
-		      							<td width="100">1950-25-68</td>
-		      							<td width="60">활동지역</td>
-		      							<td width="60" id="areaUpdate">서울</td>
-		      							<td width="40">
-		      								<div style="position: relative;">
+	      						<tr>
+	      							<td width="55">성별</td>
+	      							<td width="60">나환자</td>
+	      							<td width="40">연령</td>
+	      							<td width="100">1955-11-12</td>
+	      							<td width="63">활동지역</td>
+	      							<td width="60" id="areaUpdate">서울</td>
+	      							<td width="40">
+	      								<div style="position: relative;">
 		      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
 		      									<div id="area"class="selectUpdateDiv select-hidden m-1">
 		      										<div>서울</div>
@@ -80,78 +82,106 @@
 		      									</div>
 		      									
 		      								</div>
-		      								
-		      							</td>
-		      						</tr>
-		      						<tr>
-		      							<td>경력</td>
-		      							<td colspan="5" id="careerUpdate">없음</td>
-		      							<td colspan="1">
-			      							<div style="position: relative;">
+	      							</td>
+	      						</tr>
+	      						<tr>
+	      							<td>질환</td>
+	      							<td colspan="5" id="disaseUpdate">
+	      								<span>치매</span>	
+	      								<span>거동불편</span>	
+	      							</td>
+	      							<td colspan="1">
+		      							<div style="position: relative;">
 		      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
-		      									<div id="career"class="selectUpdateDiv select-hidden m-1">
-		      										<div>없음</div>
-		      										<div>1년이하</div>
-		      										<div>1~3년</div>
-		      										<div>3~5년</div>
-		      										<div>5~8년</div>
-		      										<div>8년이상</div>
+		      									<div id="disase"class="selectUpdateDiv select-hidden m-1">
+		      										<div>치매</div>
+		      										<div>호흡기질환</div>
+		      										<div>거동불편</div>
+		      										<div>와상</div>
+		      										<div>파킨슨</div>
+		      										<div>수면질환</div>
+		      										<div>정신질환</div>
+		      										<div>기저귀 케어</div>
+		      										<div>재활</div>
+		      										<div>기타</div>
 		      									</div>
 		      									
 		      								</div>
-										</td>
-		      						</tr>
-		      						<tr>
-		      							<td>자격증</td>
-		      							<td colspan="5" id="licenseUpdate">
-		      								<span>간호사</span>
-		      								<span>응급구조사</span>
-		      								<span>간호조무사</span>
-		      								<span>요양보호사</span>
-		      							</td>
-		      							<td>
-		      								<div style="position: relative;">
-		      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
-		      									<div id="license"class="selectUpdateDiv select-hidden m-1">
-		      										<div>간병사</div>
-		      										<div>요양보호사</div>
-		      										<div>간호조무사</div>
-		      									</div>
-		      									
-		      								</div>
-		      							</td>
-		      						</tr>
-		      						<tr>
-		      							<td>자기<br>소개</td>
-		      							<td colspan="5"id="introUpdate">깔깔유머집을 소유하고있습니다.</td>
-		      							<td>
-		      								<div style="position: relative;">
-		      									<button id="intro" class="btn-outline-maincolor" onclick="introEdit()">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
-		      								</div>
-		      							</td>
-		      						</tr>
-		      						<tr>
-		      							<td colspan="1">돌봄비</td>
-		      							<td colspan="5">500만원~1000만원</td>
-		      							<td><button class="btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button></td>
-		      						</tr>
-		      						
-		      						<tr>
-		      							<td colspan="2">서비스 경험</td>
-		      							<td colspan="4" id="serviceUpdate"></td>
-		      							<td>
-		      								<div style="position: relative;">
-		      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
-		      									<div id="service"class="selectUpdateDiv select-hidden m-1">
-		      										<div>병원돌봄</div>
-		      										<div>가정돌봄</div>
-		      										<div>동행서비스</div>
-		      									</div>
-		      								</div>
-		      							</td>
-		      						</tr>
-		      						
-		      					</table>
+									</td>
+	      						</tr>
+	      						<tr>
+	      							<td>중증도</td>
+	      							<td colspan="2" id="diseaseLevelUpdate">낮음</td>
+	      							<td colspan="1">
+		      							<div style="position: relative;">
+	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+	      									<div id="diseaseLevel"class="selectUpdateDiv select-hidden m-1">
+	      										<div>낮음</div>
+	      										<div>중간</div>
+	      										<div>높음</div>
+	      									</div>
+	      									
+	      								</div>
+									</td>
+									<td>성별</td>
+									<td colspan="1" id="ageUpdate">남성</td>
+									<td>
+										<div style="position: relative;">
+	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+	      									<div id="age"class="selectUpdateDiv select-hidden m-1">
+	      										<div>남성</div>
+	      										<div>여성</div>
+	      									</div>
+	      									
+	      								</div>
+									</td>
+	      						</tr>
+	      						<tr>
+	      							<td>키</td>
+	      							<td colspan="2" id="heightUpdate">152cm</td>
+	      							<td>
+	      								<div style="position: relative;">
+	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+	      									<div id="height"class="selectUpdateDiv select-hidden m-1">
+												<input type="number" style="width:80px;" value="" min="00" max="300">
+	      									</div>
+	      									
+	      								</div>
+	      							</td>
+	      							<td colspan="1" width="50px">몸무게</td>
+	      							<td colspan="1" id="weightUpdate">50kg</td>
+	      							<td>
+	      								<div style="position: relative;">
+	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+	      									<div id="weight"class="selectUpdateDiv select-hidden m-1">
+	      										<input type="number" style="width:80px;" value="" min="00" max="300">
+	      									</div>
+	      									
+	      								</div>
+	      							</td>
+	      						</tr>
+	      						<tr>
+	      							<td colspan="1">돌봄비</td>
+	      							<td colspan="5">500만원~1000만원</td>
+	      							<td><button class="btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button></td>
+	      						</tr>
+	      						
+	      						<tr>
+	      							<td colspan="2">요청 서비스</td>
+	      							<td colspan="4" id="serviceUpdate"></td>
+	      							<td>
+	      								<div style="position: relative;">
+	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+	      									<div id="service"class="selectUpdateDiv select-hidden m-1">
+	      										<div>병원돌봄</div>
+	      										<div>가정돌봄</div>
+	      										<div>동행서비스</div>
+	      									</div>
+	      								</div>
+	      							</td>
+	      						</tr>
+	      						
+	      					</table>
 			      				
 						</div>
 						
@@ -184,8 +214,8 @@
 						
 	      			</div>
 	      			<div class="col m-3">
-	      				<div id="setMatchingList"class="myInfo-Border-maincolor mt-2">
-		      				<div class="m-3"  ><span class="h3 myInfo-title">일감 매칭 조건 설정</span>
+	      				<div id="setMatchingList" class="myInfo-Border-maincolor mt-2">
+		      				<div class="m-3"  ><span class="h3 myInfo-title">간병인 매칭 조건 설정</span>
 		      				</div>
 		      				<div class="m-3">1. 국적
 			      				<table class="d-flex justify-content-center ">
@@ -279,6 +309,7 @@
 				}
 			};
 			
+			
 			//업데이트 + 누르면 메뉴보이고 사라지게
 			const selectUpdate = document.getElementsByClassName('selectUpdate');
 			for(i of selectUpdate){
@@ -299,6 +330,8 @@
 			const areaDiv = document.getElementById('area');
 			const area = document.getElementById('area').children;
 			const areaUpdate = document.getElementById('areaUpdate'); 
+			console.log(area)
+			console.log(areaUpdate);
 			for(i of area){
 				i.addEventListener('click',function(){
 					console.log(this);
@@ -309,81 +342,80 @@
 				})
 			};
 			
-			//경험클릭
-			const careerDiv = document.getElementById('career');
-			const career = document.getElementById('career').children;
-			const careerUpdate = document.getElementById('careerUpdate'); 
-			for(i of career){
-				i.addEventListener('click',function(){
-					console.log(this);
-					careerUpdate.innerText = this.innerText;
-					
-					careerDiv.classList.remove('select-block');
-					careerDiv.classList.add('select-hidden');
-				});
-			};
-			
-			
-			//자격증
-			const licenseDiv = document.getElementById('license');
-			const license = document.getElementById('license').children;
-			const licenseUpdate = document.getElementById('licenseUpdate'); 
-			for(i of license){
+			//질환클릭
+			const disaseDiv = document.getElementById('disase');
+			const disase = document.getElementById('disase').children;
+			const disaseUpdate = document.getElementById('disaseUpdate'); 
+			for(i of disase){
 				i.addEventListener('click',function(){
 
-					if(licenseUpdate.innerText.includes(this.innerText)){
-						for(span of licenseUpdate.children){
+					if(disaseUpdate.innerText.includes(this.innerText)){
+						for(span of disaseUpdate.children){
 							if(span.innerText==this.innerText){
 								span.remove();
 							}
 						}
 					}else{
-						licenseUpdate.innerHTML += '<span>'+this.innerText+'</span> ';
+						disaseUpdate.innerHTML += '<span>'+this.innerText+'</span> ';
 					}
 					
 					
-					licenseDiv.classList.remove('select-block');
-					licenseDiv.classList.add('select-hidden');
+					disaseDiv.classList.remove('select-block');
+					disaseDiv.classList.add('select-hidden');
 				});
 			};
 			
-			//자기소개
-			const intro = document.getElementById('intro');
-			const introUpdate = document.getElementById('introUpdate');
-			introEdit = () =>{
-				if(intro.classList.contains('btn-outline-maincolor')){
-					introUpdate.contentEditable = true;	
-					introUpdate.focus();
-					intro.classList.remove('btn-outline-maincolor');
-					intro.classList.add('btn-maincolor');
-				}else{
-					introUpdate.contentEditable = false;	
-					intro.classList.add('btn-outline-maincolor');
-					intro.classList.remove('btn-maincolor');
-					
-				}
-			};
-			
-			//희망가격 min max은 나중에?
-			
-					
-			// 현재매칭,매칭 남은기간 클릭하여 넘어가기
-			const matchingNow = document.getElementById('matchingNow'); 
-			const matchingLimit = document.getElementById('matchingLimit');
-			
-			for(i of matchingNow.children){
+			//중증도클릭
+			const diseaseLevelDiv = document.getElementById('diseaseLevel');
+			const diseaseLevel = document.getElementById('diseaseLevel').children;
+			const diseaseLevelUpdate = document.getElementById('diseaseLevelUpdate'); 
+			for(i of diseaseLevel){
 				i.addEventListener('click',function(){
-					location.href= '#';
-				})
+					diseaseLevelUpdate.innerText = this.innerText;
+					
+					diseaseLevelDiv.classList.remove('select-block');
+					diseaseLevelDiv.classList.add('select-hidden');
+				});
 			};
 			
-			for(i of matchingLimit.children){
+			//성별클릭
+			const ageDiv = document.getElementById('age');
+			const age = document.getElementById('age').children;
+			const ageUpdate = document.getElementById('ageUpdate'); 
+			for(i of age){
 				i.addEventListener('click',function(){
-					location.href= '#';
-				})
+					ageUpdate.innerText = this.innerText;
+					
+					ageDiv.classList.remove('select-block');
+					ageDiv.classList.add('select-hidden');
+				});
 			};
 			
+			//키클릭
+			const heightDiv = document.getElementById('height');
+			const height = document.getElementById('height').children;
+			const heightUpdate = document.getElementById('heightUpdate'); 
+			for(i of height){
+				i.addEventListener('blur',function(){
+					heightUpdate.innerText = this.value +'cm';
+					
+					heightDiv.classList.remove('select-block');
+					heightDiv.classList.add('select-hidden');
+				});
+			};
 			
+			//몸무게클릭
+			const weightDiv = document.getElementById('weight');
+			const weight = document.getElementById('weight').children;
+			const weightUpdate = document.getElementById('weightUpdate'); 
+			for(i of weight){
+				i.addEventListener('blur',function(){
+					weightUpdate.innerText = this.value + 'cm';
+					
+					weightDiv.classList.remove('select-block');
+					weightDiv.classList.add('select-hidden');
+				});
+			};
 			
 			//서비스고르기
 			const serviceDiv = document.getElementById('service');
@@ -408,28 +440,38 @@
 				});
 			};
 			
+			// 현재매칭,매칭 남은기간 클릭하여 넘어가기
+			const matchingNow = document.getElementById('matchingNow'); 
+			const matchingLimit = document.getElementById('matchingLimit');
 			
+			for(i of matchingNow.children){
+				i.addEventListener('click',function(){
+					location.href= '#';
+				})
+			};
 			
+			for(i of matchingLimit.children){
+				i.addEventListener('click',function(){
+					location.href= '#';
+				})
+			};
+			
+			//매칭조건 설정하기
+			const setMatchingList = document.getElementById('setMatchingList');
+			const click = setMatchingList.querySelectorAll('.btn-outline-maincolor-2');
+			
+			for(i of click){
+				i.addEventListener('click',function(){
+					if(this.classList.contains('btn-outline-maincolor-2')){
+						this.classList.remove('btn-outline-maincolor-2');
+						this.classList.add('btn-maincolor');
+					}else{
+						this.classList.add('btn-outline-maincolor-2');
+						this.classList.remove('btn-maincolor');
+					};
+				})
+			}
 		}
-		
-		
-		//매칭조건 설정하기
-		const setMatchingList = document.getElementById('setMatchingList');
-		const click = setMatchingList.querySelectorAll('.btn-outline-maincolor-2');
-		
-		for(i of click){
-			i.addEventListener('click',function(){
-				if(this.classList.contains('btn-outline-maincolor-2')){
-					this.classList.remove('btn-outline-maincolor-2');
-					this.classList.add('btn-maincolor');
-				}else{
-					this.classList.add('btn-outline-maincolor-2');
-					this.classList.remove('btn-maincolor');
-				};
-			})
-		}
-
-		
 	
 	</script>
 	

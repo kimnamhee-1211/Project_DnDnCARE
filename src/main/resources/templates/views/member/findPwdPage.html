@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/findPwd.css}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+	<main class="inner-content d-flex justify-content-center">
+		<form action="findPwdResult.me" method="post">
+			<div class="findId-wrap">
+				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
+				<h1 class="h3 mb-3 fw-bold text-center">비밀번호 찾기</h1>
+				<div class="text-center mb-5">본인의 아이디와 휴대폰 번호로 비밀번호를 찾을 수 있습니다.</div>
+				
+				<div class="findPwd-input">
+					<div class="form-floating find-id">
+						<input type="text" class="form-control " id="floatingInput" name="memberId">
+						<label for="floatingInput">아이디를 입력해주세요</label>
+						
+					</div>
+					<div class="find-pwd d-flex justify-content-start"><a th:href="@{findId.me}">아이디 찾기</a></div>
+					<div class="form-floating d-flex mb-3">
+						<input type="text" class="form-control " id="floatingPhone" name="memberPhone">
+						<label for="floatingPhone">핸드폰 번호를 입력해주세요</label>
+						<button type="button" id="requestAuthCodeBtn" class="requestAuthCode"><span>인증번호 요청</span></button>
+					</div>
+					<div class="form-floating d-flex">
+						<input type="password" class="form-control " id="floatingAuthCode" name="AuthCode">
+						<label for="floatingAuthCode">인증 번호를 입력해주세요</label>
+						<button type="button" id="verifyAuthCodeBtn" class="checkAuthCode"><span>인증번호 확인</span></button>
+					</div>
+				</div>
+					
+			</div>
+			<div class="sign-btn d-flex flex-column">
+				<button type="submit" class="signIn-btn mt-4 "><span>비밀번호 찾기</span></button>
+			</div>
+		</form>
+	</main>
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	<script th:inline="javascript">
+		//인증번호 발송 코드
+		document.getElementById('requestAuthCodeBtn').addEventListener('click', function() {
+		    let memberId = document.getElementById('floatingInput').value;
+		    let phoneNumber = document.getElementById('floatingPhone').value;
+		
+		    if (!memberId) {
+		        alert('아이디를 입력해주세요.');
+		        return;
+		    }
+		
+		    if (!phoneNumber) {
+		        alert('휴대폰 번호를 입력해주세요.');
+		        return;
+		    }
+		
+		    fetch('/api/verify-member', {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json',
+		        },
+		        body: JSON.stringify({ 
+		            memberId: memberId,
+		            memberPhone: phoneNumber
+		        })
+		    })
+		    .then(response => response.json())
+		    .then(data => {
+		        if (data.success) {
+		            // 회원 정보 확인 성공, 인증번호 요청
+		            requestAuthCode(phoneNumber);
+		        } else {
+		            alert('입력하신 정보와 일치하는 회원이 없습니다.');
+		        }
+		    })
+		    .catch(error => {
+		        console.error('Error:', error);
+		        alert('오류가 발생했습니다. 다시 시도해주세요.');
+		    });
+		});
+
+		function requestAuthCode(phoneNumber) {
+		    fetch('/api/send-auth-code', {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json',
+		        },
+		        body: JSON.stringify({ phoneNumber: phoneNumber })
+		    })
+		    .then(response => response.json())
+		    .then(data => {
+		        if (data.success) {
+		            alert('인증번호가 발송되었습니다.');
+		        } else {
+		            alert('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
+		        }
+		    })
+		    .catch(error => {
+		        console.error('Error:', error);
+		        alert('오류가 발생했습니다. 다시 시도해주세요.');
+		    });
+		}
+	
+	let isVerified = false;  // 인증 상태를 저장할 변수
+
+	document.querySelector('.checkAuthCode').addEventListener('click', function() {
+	    let inputAuthCode = document.getElementById('floatingAuthCode').value;
+	    let memberId = document.getElementById('floatingInput').value;
+	    let phoneNumber = document.getElementById('floatingPhone').value;
+
+	    fetch('/api/verify-auth-code', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json',
+	        },
+	        body: JSON.stringify({ 
+	            authCode: inputAuthCode,
+	            memberId: memberId,
+	            phoneNumber: phoneNumber
+	        })
+	    })
+	    .then(response => response.json())
+	    .then(data => {
+	        if (data.success) {
+	            alert('인증되었습니다.');
+	            isVerified = true;  // 인증 상태를 true로 설정
+	        } else {
+	            alert('인증번호가 일치하지 않습니다.');
+	        }
+	    })
+	    .catch(error => {
+	        console.error('Error:', error);
+	        alert('오류가 발생했습니다.');
+	    });
+	});
+
+	// 폼 제출 이벤트 리스너 추가
+	document.querySelector('form').addEventListener('submit', function(e) {
+	    if (!isVerified) {
+	        e.preventDefault();  // 폼 제출 막기
+	        alert('인증번호를 확인해주세요.');
+	    }
+	    // isVerified가 true면 폼이 정상적으로 제출됩니다.
+	});
+	  	
+</script>
+		
+</body>
+</html>

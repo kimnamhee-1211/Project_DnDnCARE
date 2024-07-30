@@ -72,6 +72,9 @@ body {
     cursor:pointer;
 } */
 
+
+
+
 .container{
 		position: relative;
 		min-width:1280px;
@@ -118,11 +121,14 @@ body {
 .btn-outline-maincolor-2{
 	color:#8dd986;
 	border-radius: 5px;
-	width:150px;
+	width:160px;
 	border:1px solid #8dd986;
 	padding:5px;
+	margin:8px;
 	background:white;
+	cursor: pointer;
 }
+
 
 .btn-outline-maincolor{
 	color:#8dd986;
@@ -130,19 +136,78 @@ body {
 	border:1px solid #8dd986;
 	padding:2px;
 	background:white;
+	
+}
+
+.btn-outline-maincolor:hover{
+	color:white;
+	border-radius: 5px;
+	border:1px solid #8dd986;
+	padding:2px;
+	background:#8dd986;
+	
+}
+
+
+
+.btn-maincolor{
+	color:white;
+	border-radius: 5px;
+	border:1px solid #8dd986;
+	padding:2px;
+	background:#8dd986;
+	cursor: pointer;
 }
 
 .myInfo-title{
 	border-bottom:2px solid #8dd986;
 }
 
+.reviewDetail{
+	cursor: pointer;
+}
 
-.triangle-button {
-            width: 20px;
-            height: 20px;
-            border-left: 17px solid transparent;
-            border-right: 17px solid transparent;
-            border-top: 50px solid #8dd986;
-            cursor: pointer;
-            position: relative;
+.selectUpdateDiv{
+	position: absolute;
+	overflow: auto;
+	height:100px;
+	min-width:80px;
+	background:white;
+	border:1px solid #8dd986;
+	border-radius:5px;
+	z-index:1;
+}
+
+.select-hidden{
+	display : none;
+}
+
+.select-block{
+	display : block;
+	cursor: pointer;	
+}
+
+.select-block>div:hover{
+	background:#8dd986;
+}
+
+#matchingNow>div:hover{
+	font-weight: bold;
+	cursor: pointer;
+}
+#matchingLimit>div:hover{
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.review-content{
+	height:00px;
+	overflow:hidden;
+	
+	transition: height 0.2s;
+}
+
+.show{
+	height:200px;
+	border-top: 1px solid #8dd986;
 }
