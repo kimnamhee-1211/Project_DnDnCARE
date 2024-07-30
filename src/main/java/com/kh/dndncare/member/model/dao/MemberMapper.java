@@ -34,7 +34,9 @@ public interface MemberMapper {
 	Member findIdResult(Member member);
 	ArrayList<Matching> calendarEvent(Member loginUser);
 
-	ArrayList<Patient> selectAllPatient(int memberNo);
+	Patient selectPatient(int memberNo);
+
+	List<Integer> selectInfoCategory(int memberNo);
 
 
 

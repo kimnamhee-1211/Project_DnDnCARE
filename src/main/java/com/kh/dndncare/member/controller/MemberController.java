@@ -78,7 +78,7 @@ public class MemberController {
 	}
 
 	@GetMapping("myInfo.me")
-	public String myInfo(HttpSession session,Model model) {		//마이페이지  확인용
+	public String myInfo(HttpSession session,Model model,@RequestParam(value="ptInfo", defaultValue="1") int ptInfo) {		//마이페이지  확인용
 		//ArrayList<Member> m =  mService.selectAllMember();	//노트북,피시방에 디비가없으니 접근용
 
 		
@@ -87,13 +87,23 @@ public class MemberController {
 		
 		
 		if(loginUser != null) {
-			ArrayList<Patient> p = mService.selectAllPatient(loginUser.getMemberNo());
+			Patient p = mService.selectPatient(loginUser.getMemberNo());
+			p.setInfoCategory(mService.selectInfoCategory(loginUser.getMemberNo()));
+			
 			System.out.println(p);
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch(check) {
-				case 'C': return "myInfo";
-				case 'P': model.addAttribute("p",p);   return "myInfoP";
-				case 'A': return "myInfoA";
+				case 'C':
+					return "myInfo";
+				
+				case 'P':
+					model.addAttribute("p",p);
+					
+					return "myInfoP";
+					
+					
+				case 'A':
+					return "myInfoA";
 			}
 		}
 		throw new MemberException("로그인이 필요합니다.인터셉터만드세요");

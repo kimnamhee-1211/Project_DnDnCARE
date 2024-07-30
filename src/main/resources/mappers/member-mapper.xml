@@ -95,10 +95,11 @@
 	  </select>
 	  
 	  <!-- 환자정보 가져오기 -->
-	  <select id="selectAllPatient" resultType="Patient">
+	  <select id="selectPatient" resultType="Patient">
 	  	select *
 	  	from patient
 	  	where member_no = #{memberNo}
 	  </select>
+	  <!-- 환자 인포카테고리 -->
 
 </mapper>

@@ -97,8 +97,13 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<Patient> selectAllPatient(int memberNo) {
-		return mMapper.selectAllPatient(memberNo);
+	public Patient selectPatient(int memberNo) {
+		return mMapper.selectPatient(memberNo);
+	}
+
+	@Override
+	public List<Integer> selectInfoCategory(int memberNo) {
+		return mMapper.selectInfoCategory(memberNo);
 	}
 
 
