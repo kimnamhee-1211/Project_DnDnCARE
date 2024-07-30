@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -100,12 +101,26 @@ public class MemberController {
 
 	
 	@PostMapping("login.me")
-	public String login(@ModelAttribute Member m, Model model) {
+	public String login(@ModelAttribute Member m, Model model, RedirectAttributes ra) {
 		Member loginUser = mService.login(m);
 		
 		if(bCrypt.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
 			model.addAttribute("loginUser",loginUser);
+			
+			
+			if(loginUser.getMemberCategory().equalsIgnoreCase("C")) {
+				ra.addAttribute("memberNo", loginUser.getMemberNo());
+				return "redirect:caregiverMain.me";
+			}
+			
+			
 			return "redirect:home.do";
+			
+			
+			
+			
+			
+			
 		}else {
 			throw new MemberException("로그인을 실패하였습니다.");
 		}		
@@ -126,19 +141,39 @@ public class MemberController {
 	
 	// 임시버튼 : 간병인 메인페이지로 가기 
 	@GetMapping("caregiverMain.me")
-	public String caregiverMain() {
+	public String caregiverMain(@RequestParam("memberNo") int memberNo) {
 		// (1) 자동추천 기능구현 : 간병인이라 가정하고 테스트
-		System.out.println("컨트롤러");
-		// 1. 간병인 정보 설정
-		HashMap<String, String> cMap = new HashMap<String, String>();
-		//서비스경험=병원돌봄/경력=2년/환자유형=치매,재활/자격증=요양보호사/환자중증도=경증/거주지=서울시종로구/지불받기를바라는최소간병비용=60,000원이상
-		cMap.put("서비스경험", "병원돌봄");
-		cMap.put("경력", "2년");
-		cMap.put("환자유형", "치매");
-		cMap.put("자격증", "요양보호사");
-		cMap.put("환자중증도", "경증");
-		cMap.put("거주지", "서울시 종로구");
-		cMap.put("지불받기를 바라는 최소 간병비용", "60,000원 이상");
+		// 1. 간병인 정보 조회 
+		// 		MEMBER : 성별, 나이, 주소, 국적
+		HashMap<String, String> infoMap =  mService.getCaregiverInfo(memberNo); // {국적=내국인, 주소=제주시 첨단로 242 히히, 나이=29, 성별=남성}
+		// 		INFO_CATEGORY : 서비스경험, 경력, 질환경험, 자격증, 중증도
+		ArrayList<HashMap<String, String>> expList = mService.getCaregiverExp(memberNo); // [{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=0, L_CATEGORY=career}, {S_CATEGORY=호흡기 질환, L_CATEGORY=disase}, {S_CATEGORY=거동불편, L_CATEGORY=disase}, {S_CATEGORY=와상환자, L_CATEGORY=disase}, {S_CATEGORY=간병사, L_CATEGORY=license}]
+		
+		// 2. 간병인 정보 가공
+		String service = ""; // service
+		String career = ""; // career
+		String disease = ""; // disease
+		String license = ""; // license
+		for(HashMap<String, String> m : expList) {
+			switch(m.get("L_CATEGORY")) {
+			case "service" : service += m.get("S_CATEGORY") + "/"; break;
+			case "career" : career = m.get("S_CATEGORY"); break;
+			case "disease" : disease = m.get("S_CATEGORY") + "/"; break;
+			case "license" : license = m.get("S_CATEGORY") + "/"; break;
+			}
+		}
+		service = service.substring(0, service.lastIndexOf("/"));
+		disease = disease.substring(0, disease.lastIndexOf("/"));
+		license = license.substring(0, license.lastIndexOf("/"));
+		
+		infoMap.put("서비스경험", service);
+		infoMap.put("경력", career);
+		infoMap.put("돌봄질환경험", disease);
+		infoMap.put("자격증", license); // 가공 종료!
+		
+		// 2. 환자 목록 조회
+		
+		
 		
 		// 2. 환자 목록 설정
 		String pStr = "{\r\n"
@@ -159,17 +194,16 @@ public class MemberController {
 				+ "		}";
 		
 		// 3.
-		String prompt = "간병인 정보는" + cMap.toString() + "환자 목록은 " + pStr + "간병인의 정보를 바탕으로 가장 적절한 환자번호 5개만 숫자로만 짧게 대답해줘.";
+//		String prompt = "간병인 정보는" + cMap.toString() + "환자 목록은 " + pStr + "간병인의 정보를 바탕으로 가장 적절한 환자번호 5개만 숫자로만 짧게 대답해줘.";
+//		
+//		String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
+//		
+//		
+//		ArrayList<Integer> list = new ArrayList<Integer>();
+//		for(int i = 0; i < 5; i++) {
+//			list.add(Integer.parseInt(result.split(", ")[i]));
+//		} // [2, 5, 8, 10, 14] 
 		
-		String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
-		
-		
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		for(int i = 0; i < 5; i++) {
-			list.add(Integer.parseInt(result.split(", ")[i]));
-		} // [2, 5, 8, 10, 14] 
-		
-		// 
 		
 		
 		

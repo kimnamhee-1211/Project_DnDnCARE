@@ -1,6 +1,7 @@
 package com.kh.dndncare.member.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,8 +104,18 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public ArrayList<Matching> calendarEvent(Member loginUser) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub 이거 뭐여
 		return null;
+	}
+
+	@Override
+	public HashMap<String, String> getCaregiverInfo(int memberNo) {
+		return mMapper.getCaregiverInfo(memberNo);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> getCaregiverExp(int memberNo) {
+		return mMapper.getCaregiverExp(memberNo);
 	}
 	
 

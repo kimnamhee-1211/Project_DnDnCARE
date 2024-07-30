@@ -1,7 +1,7 @@
 package com.kh.dndncare.member.model.service;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 
@@ -40,6 +40,10 @@ public interface MemberService {
 
 	boolean sendSms(String phoneNumber, String string);
 	ArrayList<Matching> calendarEvent(Member loginUser);
+
+	HashMap<String, String> getCaregiverInfo(int memberNo);
+
+	ArrayList<HashMap<String, String>> getCaregiverExp(int memberNo);
 
 
 }

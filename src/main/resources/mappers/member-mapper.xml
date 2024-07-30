@@ -100,12 +100,31 @@
 	  	insert into patient
 	  	values(seq_pid.nextval, #{memberNo}, #{ptName}, #{ptGender}, #{ptAge}, 
 	  			#{ptWeight}, #{ptHeight}, #{ptService}, #{ptAddress}, #{ptRequest}, sysdate)	  
-	  </insert>
+	</insert>
 	  
 	  <select id="findIdResult" resultType="Member">
 	  	select member_id,member_create_date,member_status,member_category,member_name
 	  	from member
 	  	where member_id=#{memberId} and member_phone=#{memberPhone}
 	  </select>
+	
+	<!-- 간병인 메인페이지에서의 자동 추천을 위한 간병인 본인 정보 조회 -->
+	<select id="getCaregiverInfo" resultType="map">
+		SELECT DECODE(MEMBER_GENDER, 'M', '남성', 'F', '여성') AS "성별", TRUNC(SYSDATE - MEMBER_AGE) AS "나이", 
+        SUBSTR(REPLACE(MEMBER_ADDRESS, '//', ' ') , INSTR(MEMBER_ADDRESS, ' ') ) AS "주소",
+		        MEMBER_NATIONAL AS "국적"
+		FROM MEMBER
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
+
+	<select id="getCaregiverExp" resultType="map">
+		SELECT L_CATEGORY, S_CATEGORY
+		FROM MEMBER
+		        JOIN MEMBER_INFO USING(MEMBER_NO)
+		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
+
+	
 
 </mapper>
