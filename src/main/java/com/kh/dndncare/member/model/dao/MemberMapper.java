@@ -26,5 +26,6 @@ public interface MemberMapper {
 	int enrollPatient(Patient pt);
 
 
+	Member findIdResult(Member member);
 
 }

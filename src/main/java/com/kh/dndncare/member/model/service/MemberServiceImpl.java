@@ -10,9 +10,19 @@ import com.kh.dndncare.member.model.dao.MemberMapper;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
+import com.kh.dndncare.sms.SmsService;
+
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 
 @Service
 public class MemberServiceImpl implements MemberService {
+	
+	private final SmsService smsService;
+	
+    public MemberServiceImpl(SmsService smsService) {
+        this.smsService = smsService;
+    }
+	
 	@Autowired
 	private MemberMapper mMapper;
 	
@@ -51,4 +61,21 @@ public class MemberServiceImpl implements MemberService {
 		return  mMapper.enrollPatient(pt);
 	}
 	
+
+	@Override
+	public Member findIdResult(Member member) {
+		return mMapper.findIdResult(member);
+	}
+
+	@Override
+	public boolean sendSms(String phoneNumber, String text) {
+	    try {
+	        SingleMessageSentResponse response = smsService.sendSms(phoneNumber, "01077651258", text);
+	        return response.getStatusCode().equals("2000");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
 }

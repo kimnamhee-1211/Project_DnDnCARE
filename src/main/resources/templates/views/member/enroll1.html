@@ -436,15 +436,19 @@
     			
         		$.ajax({
         			url : 'idCheck.me',
-        			type : 'post',
+        			method : 'post',
         			data : {id : idInputVal},
         			success : (data) =>{
         				console.log(data)
+<<<<<<< HEAD
 <<<<<<< HEAD
         				if(data == "usable"){
 =======
         				if(data == 'usable'){
 >>>>>>> refs/remotes/origin/namhee
+=======
+        				if(data == 'usable' ){
+>>>>>>> refs/remotes/origin/Kiryong
         					idInputLabel.innerText = "사용 가능한 아이디";
         					idInputLabel.style.color="green"
 <<<<<<< HEAD
@@ -466,7 +470,6 @@
         		});
     		}	   		
     	}
-		
     	if(idInput != null){
         	idInput.addEventListener('focusout', idCheck);	
     	}		
