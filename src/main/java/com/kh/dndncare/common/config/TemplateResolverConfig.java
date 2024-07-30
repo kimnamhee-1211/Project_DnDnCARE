@@ -65,7 +65,7 @@ public class TemplateResolverConfig {
 		dotJm.setTemplateMode(TemplateMode.HTML);
 		dotJm.setCharacterEncoding("UTF-8");
 		dotJm.setCacheable(false);
-		dotJm.setOrder(3);
+		dotJm.setOrder(4);
 		dotJm.setCheckExistence(true);
 		
 		return dotJm;
