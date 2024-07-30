@@ -1,0 +1,97 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+
+.container{
+		position: relative;
+		min-width:1280px;
+		margin: 0 auto;
+		margin-top: 50px;
+		font-family: 'Pretendard-Regular';
+		
+}
+.testBorder{
+	border:1px solid #dee2e6;
+	border-radius: 5px;
+}
+
+.myInfo-Border{
+	border:1px solid #dee2e6;
+	font-family: 'Pretendard-Regular';
+	border-radius: 5px;
+}
+
+.myInfo-Border-maincolor{
+	border-radius: 5px;
+	border:1px solid #8dd986;
+}
+
+
+#profile-image {
+   width: 100px; /* 원하는 크기로 설정 */
+   height: 100px; /* 원하는 크기로 설정 */
+   border-radius: 50%; /* 이미지를 동그랗게 만듦 */
+   object-fit: cover; /* 이미지 비율을 유지하며 잘라냄 */
+   border:3px solid #8dd986;
+}
+
+.myInfo-btn{
+	width:150px;
+	background-color: #8dd986;
+	border:1px solid #8dd986;
+	color:white;
+	border-radius: 5px;
+	padding:5px;
+	
+}
+
+.btn-outline-maincolor-2{
+	color:#8dd986;
+	border-radius: 5px;
+	width:150px;
+	border:1px solid #8dd986;
+	padding:5px;
+	background:white;
+}
+
+.btn-outline-maincolor{
+	color:#8dd986;
+	border-radius: 5px;
+	border:1px solid #8dd986;
+	padding:2px;
+	background:white;
+}
+
+.myInfo-title{
+	border-bottom:2px solid #8dd986;
+}
+
+
+.triangle-button {
+            width: 20px;
+            height: 20px;
+            border-left: 17px solid transparent;
+            border-right: 17px solid transparent;
+            border-top: 50px solid #8dd986;
+            cursor: pointer;
+            position: relative;
+}
