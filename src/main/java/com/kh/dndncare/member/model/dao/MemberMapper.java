@@ -19,7 +19,11 @@ public interface MemberMapper {
 
 	Member login(Member m);
 
+	int noInfomemberdle();
+	
 	int idCheck(String id);
+	
+	int nickNameCheck(String nickName);
 
 	ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser);
 
@@ -29,12 +33,14 @@ public interface MemberMapper {
 
 	int enrollCareGiver(CareGiver cg);
 
-	int enrollInfoCategory(List<Integer> infoCategory);
+	int enrollInfoCategory(Object ob);
 
 	int enrollPatient(Patient pt);
 
 
 	Member findIdResult(Member member);
 	
+
+
 
 }

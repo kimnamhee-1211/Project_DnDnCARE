@@ -35,12 +35,26 @@ public class MemberServiceImpl implements MemberService {
 	public Member login(Member m) {
 		return mMapper.login(m);
 	}
+	
+	@Override
+	public int noInfomemberdle() {
+		return mMapper.noInfomemberdle();
+	}
+
 
 	@Override
 	public int idCheck(String id) {
 
 		return mMapper.idCheck(id);
 	}
+	
+	@Override
+	public int nickNameCheck(String nickName) {
+		return mMapper.nickNameCheck(nickName);
+	}
+
+	
+	
 
 	@Override
 	public ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser) {
@@ -61,8 +75,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int enrollInfoCategory(List<Integer> infoCategory) {
-		return mMapper.enrollInfoCategory(infoCategory);
+	public int enrollInfoCategory(Object ob) {
+		return mMapper.enrollInfoCategory(ob);
 	}
 
 	@Override
@@ -93,5 +107,7 @@ public class MemberServiceImpl implements MemberService {
 		return null;
 	}
 	
+
+
 
 }

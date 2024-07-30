@@ -14,11 +14,30 @@
 	  	where member_status = 'N' and member_id=#{memberId}
 	  </select>
 	  
+	  
+	  <!-- 회원가입 중도탈출 멤버 데이터 삭제 -->
+	  <update id="noInfomemberdle">
+	  	update member
+	  	set member_status = 'Y'
+	  	where member_no NOT IN (select member_no from caregiver union select member_no from patient)	 
+	  			and member_category != 'A'
+	  </update>
+	  	  
+	  
+	  <!-- 아이디 중복 확인 -->
 	  <select id="idCheck" resultType="_int">
 	  	select count(*)
 	  	from member
-	  	where member_status = 'N' and member_id=#{id}	  
+	  	where member_id = #{id}	  
 	  </select>
+	  
+	  <!-- 닉네임 중복 확인 -->
+	  <select id="nickNameCheck" resultType="_int">
+	  	select count(*)
+	  	from member
+	  	where member_nickname = #{nickNameCheck}	  
+	  </select>
+	  
 	  
 	  
 
@@ -48,6 +67,8 @@
 		from member	  
 	  </select>
 	  
+
+	  <!-- 회원가입1(member) -->
 	  <insert id="enroll"  useGeneratedKeys="true">
 	  	<selectKey resultType="_int" keyProperty="memberNo" order="BEFORE">
 	  		select seq_mid.nextval from dual 
@@ -55,26 +76,30 @@
 	  	insert into member
 	  	values(#{memberNo}, #{memberId}, #{memberPwd}, #{memberName}, #{memberGender}, 
 	  			#{memberNickName}, #{memberAge}, #{memberPhone}, #{memberEmail}, sysdate,
-	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, null)  	
+	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, null, sysdate)  	
 	  </insert>
 	  
+	  
+	  <!-- 회원가입2(CareGiver) -->
 	  <insert id="enrollCareGiver">
 	  	insert into caregiver
 	  	values(#{memberNo}, #{careImg}, #{careIntro}, 
-	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService})	  
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService}, sysdate)	  
 	  </insert>
 	  
-	  
+	 <!-- 정보 입력-->
 	<insert id="enrollInfoCategory">
 		<foreach collection="infoCategory" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
 			into member_Info values(#{memberNo}, #{item})
 		</foreach>
 	</insert>
 	  
+	  
+	<!-- 회원가입3(Patient) -->
 	<insert id="enrollPatient">
 	  	insert into patient
-	  	values(seq_pid.nextval #{memberNo}, #{ptName}, #{careIntro}, 
-	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService})	  
+	  	values(seq_pid.nextval, #{memberNo}, #{ptName}, #{ptGender}, #{ptAge}, 
+	  			#{ptWeight}, #{ptHeight}, #{ptService}, #{ptAddress}, #{ptRequest}, sysdate)	  
 	  </insert>
 	  
 	  <select id="findIdResult" resultType="Member">
