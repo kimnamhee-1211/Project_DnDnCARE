@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.dndncare.board.model.dao.BoardMapper">
+	<select id="getListCountAll" resultType="_int">
+		select count(*)
+		from board
+		where board_status='Y' 
+	</select>
+	
+	<select id="selectBoardAllList">
+		select b.board_No, c.category_Name, b.board_Title, m.member_NickName, a.area_Name, 
+			   b.board_create_date, b.board_count 
+		from board b
+			join b_category c on(c.category_no=b.category_no)
+			join member m on(m.member_no=b.member_no)
+			join area a on(b.area_no=a.area_no)
+		where board_status='Y'
+		order by board_no desc
+	</select>
+	
+	<insert id="insertBoard">
+		<selectKey resultType="_int" keyProperty="boardNo" order="BEFORE">
+			select seq_bid.nextval from dual
+		</selectKey>		
+		insert into board
+		values (#{boardNo}, #{memberNo}, #{boardTitle}, #{boardContent}, 
+				default, sysdate, sysdate, 0, #{categoryNo}, #{areaNo})
+	</insert>
+	
+	<select id="selectBoard" resultType="Board">
+		select b.board_No, c.category_Name, b.board_Title, m.member_NickName, a.area_Name, b.board_create_date,
+			   b.board_update_date, b.board_count, b.board_content
+		from board b
+			join b_category c on(c.category_no=b.category_no)
+			join member m on(m.member_no=b.member_no)
+			join area a on(b.area_no=a.area_no)
+		where board_status = 'Y' and board_no=#{bId}
+	</select>
+	
+	<update id="updateCount">
+		update board
+		set board_count = board_count+1
+		where board_no=#{bId}
+	</update>
+	
+	<select id="selectReply" resultType="Reply">
+		select *
+		from reply
+		where ref_board_no=#{bId}
+	</select>
+</mapper>
