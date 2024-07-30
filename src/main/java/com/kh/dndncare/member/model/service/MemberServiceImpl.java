@@ -1,5 +1,7 @@
 package com.kh.dndncare.member.model.service;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,11 @@ public class MemberServiceImpl implements MemberService {
 	public int idCheck(String id) {
 
 		return mMapper.idCheck(id);
+	}
+
+	@Override
+	public ArrayList<Member> selectAllMember() {
+		return mMapper.selectAllMember();
 	}
 
 }

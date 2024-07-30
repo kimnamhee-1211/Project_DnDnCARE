@@ -1,5 +1,7 @@
 package com.kh.dndncare.member.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,8 +51,26 @@ public class MemberController {
 	}
 
 	@GetMapping("myInfo.me")
-	public String myInfo() {		//마이페이지  확인용
-		return "myInfo";
+	public String myInfo(HttpSession session) {		//마이페이지  확인용
+		ArrayList<Member> m =  mService.selectAllMember();	//노트북,피시방에 디비가없으니 접근용
+
+		for(Member z : m) {
+			System.out.println(z);
+			System.out.println("");
+		}
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		if(loginUser != null) {
+			char check = loginUser.getMemberCategory().charAt(0);
+			switch(check) {
+				case 'C': return "myInfo";
+				case 'P': return "myInfoP";
+				case 'A': return "myInfoA";
+			}
+		}
+		throw new MemberException("로그인이 필요합니다.인터셉터만드세요");
+		
 	}
 
 
@@ -169,13 +189,37 @@ public class MemberController {
 	}
 	
 	@GetMapping("myInfoMatchingHistory.me")
-	public String myInfoMatchingHistory() {		//마이페이지 매칭 이력 확인용
-		return "myInfoMatchingHistory";
+	public String myInfoMatchingHistory(HttpSession session) {		//마이페이지 매칭 이력 확인용
+		
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		if(loginUser != null) {
+			char check = loginUser.getMemberCategory().charAt(0);
+			switch(check) {
+				case 'C': return "myInfoMatchingHistory";
+				case 'P': return "myInfoMatchingHistoryP";
+				case 'A': return null;
+			}
+		}
+		
+		throw new MemberException("로그인없음. 인터셉터설정");
 	}
 	
 	@GetMapping("myInfoMatchingReview.me")
-	public String myInfoMatchingReview() {		//마이페이지 매칭 이력 확인용
-		return "myInfoMatchingReview";
+	public String myInfoMatchingReview(HttpSession session) {		//마이페이지 매칭 이력 확인용
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		if(loginUser != null) {
+			char check = loginUser.getMemberCategory().charAt(0);
+			switch(check) {
+				case 'C': return "myInfoMatchingReview";
+				case 'P': return "myInfoMatchingReviewP";
+				case 'A': return null;
+			}
+		}
+		throw new MemberException("로그인없음. 인터셉터설정");
 	}
 	
 	@GetMapping("myInfoBoardList.me")

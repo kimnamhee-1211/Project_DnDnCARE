@@ -1,5 +1,7 @@
 package com.kh.dndncare.member.model.dao;
 
+import java.util.ArrayList;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.kh.dndncare.member.model.vo.Member;
@@ -10,5 +12,7 @@ public interface MemberMapper {
 	Member login(Member m);
 
 	int idCheck(String id);
+
+	ArrayList<Member> selectAllMember();
 
 }
