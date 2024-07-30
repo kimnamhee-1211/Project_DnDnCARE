@@ -149,6 +149,7 @@ public class MemberController {
 	
 
 	@ResponseBody
+	
 	public String idCheck(@RequestParam("id") String id) {		
 		int result = mService.idCheck(id);	
 		if(result == 0) {
