@@ -1,17 +1,11 @@
 package com.kh.dndncare.member.controller;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 import java.util.ArrayList;
-=======
 import java.sql.Date;
 import java.util.Calendar;
->>>>>>> refs/remotes/origin/namhee
-=======
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
->>>>>>> refs/remotes/origin/Kiryong
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,10 +26,7 @@ import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.Member;
-<<<<<<< HEAD
 import com.kh.dndncare.member.model.vo.Patient;
-=======
->>>>>>> refs/remotes/origin/Kiryong
 
 import jakarta.servlet.http.HttpSession;
 
@@ -159,7 +150,6 @@ public class MemberController {
 	@PostMapping("enroll.me")
 	public String enroll(@ModelAttribute Member m,
 						@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress,@RequestParam("detailAddress") String detailAddress,
-<<<<<<< HEAD
 						@RequestParam("email") String email, @RequestParam("emailDomain") String emailDomain, 
 						HttpSession session, Model model) {
 		
@@ -198,11 +188,6 @@ public class MemberController {
 			throw new MemberException("회원가입에 실패했습니다.");
 		}		
 		
-=======
-						@RequestParam("memberEmail") String memberEmail, @RequestParam("emailDomain") String emailDomain, 
-						HttpSession ssession) {
-		return null;
->>>>>>> refs/remotes/origin/Kiryong
 	}
 	
 	
@@ -417,12 +402,6 @@ public class MemberController {
 	    return sb.toString();
 	}
 	
-<<<<<<< HEAD
-	
-	
-	
-	
-=======
 	@PostMapping("/api/verify-auth-code") // 인증번호 확인
 	@ResponseBody
 	public Map<String, Object> verifyAuthCode(@RequestBody Map<String, String> request, HttpSession session) {
@@ -453,7 +432,6 @@ public class MemberController {
 	        return "redirect:findPwd.me";
 	    }
 	}
->>>>>>> refs/remotes/origin/Kiryong
 }
 
 
