@@ -56,4 +56,43 @@ public class TemplateResolverConfig {
 		return dotBo;
 	}
 	
+	
+	@Bean
+	public ClassLoaderTemplateResolver dotJmResolver() {
+		ClassLoaderTemplateResolver dotJm = new ClassLoaderTemplateResolver();
+		dotJm.setPrefix("templates/views/joinMaching/");
+		dotJm.setSuffix(".html");
+		dotJm.setTemplateMode(TemplateMode.HTML);
+		dotJm.setCharacterEncoding("UTF-8");
+		dotJm.setCacheable(false);
+		dotJm.setOrder(3);
+		dotJm.setCheckExistence(true);
+		
+		return dotJm;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
