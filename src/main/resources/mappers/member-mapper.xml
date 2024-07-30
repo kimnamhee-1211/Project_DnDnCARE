@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kh.dndncare.member.model.dao.MemberMapper">
+
+	<!-- <select id="login" resultType="Member">
+		select *
+	 	from member
+	 	where member_status = 'N' and member_id=#{memberId}
+	</select> -->
+	
 	  <select id="login" resultType="Member">
 	  	select *
 	  	from member
@@ -10,13 +17,73 @@
 	  <select id="idCheck" resultType="_int">
 	  	select count(*)
 	  	from member
-	  	where member_status = 'Y' and member_id=#{id}	  
+	  	where member_status = 'N' and member_id=#{id}	  
 	  </select>
+	  
+	  
+	  <select id="selectAllMember" resultType="Member">		<!-- 멤버좀 확인할라구요 -->
+		select *
+		from member	  
+	  </select>
+	  <insert id="enroll"  useGeneratedKeys="true">
+	  	<selectKey resultType="_int" keyProperty="memberNo" order="BEFORE">
+	  		select seq_mid.nextval from dual 
+	  	</selectKey>
+	  	insert into member
+	  	values(#{memberNo}, #{memberId}, #{memberPwd}, #{memberName}, #{memberGender}, 
+	  			#{memberNickName}, #{memberAge}, #{memberPhone}, #{memberEmail}, sysdate,
+	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, null)  	
+	  </insert>
+	  
+	  <insert id="enrollCareGiver">
+	  	insert into caregiver
+	  	values(#{memberNo}, #{careImg}, #{careIntro}, 
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService})	  
+	  </insert>
+	  
+	  
+	<insert id="enrollInfoCategory">
+		<foreach collection="infoCategory" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
+			into member_Info values(#{memberNo}, #{item})
+		</foreach>
+	</insert>
+	  
+	<insert id="enrollPatient">
+	  	insert into patient
+	  	values(seq_pid.nextval #{memberNo}, #{ptName}, #{careIntro}, 
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService})	  
+	  </insert>
 	  
 	  <select id="findIdResult" resultType="Member">
 	  	select member_id,member_create_date,member_status,member_category,member_name
 	  	from member
 	  	where member_id=#{memberId} and member_phone=#{memberPhone}
 	  </select>
+	  
+	  <update id="updatePassword">
+	  	update member
+	  	set member_pwd = #{newPwd}
+	  	where member_id = #{memberId}
+	  </update>
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
 
 </mapper>

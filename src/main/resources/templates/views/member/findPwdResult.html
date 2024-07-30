@@ -8,32 +8,71 @@
 <body>
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
 	<main class="inner-content d-flex justify-content-center">
-			<div class="findId-wrap d-flex flex-column">
+			<form th:action="@{updatePassword.me}" method="post" class="findId-wrap d-flex flex-column">
 				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
 				<h1 class="h3 mb-3 fw-bold text-center">비밀번호 재설정</h1>
-				<div class="text-center mb-5"><strong>김기룡</strong>님 안녕하세요!<br>가입하신 계정 <strong>rlfyd1258</strong>에 대한 비밀번호를 재설정해 주세요</div>
+				<div class="text-center mb-5"><strong>김기룡</strong>님 안녕하세요!<br>가입하신 계정 <strong>[[${memberId}]]</strong>에 대한 비밀번호를 재설정해 주세요</div>
 				<div class="updatePwd-input">
 					<div class="form-floating mb-3">
-						<input type="text" class="form-control" id="floatingInput" name="memberId">
-						<label for="floatingInput">비밀번호를 입력하세요</label>
+						<input type="password" class="form-control" id="floatingpassword" name="memberPwd">
+						<input type="hidden" th:value="${memberId}" name="memberId">
+						<label for="floatingpassword" id="passwordLabel">비밀번호를 입력하세요</label>
 					</div>
 					<div class="form-floating">
-						<input type="password" class="form-control" id="floatingPassword" name="memberPwd">
-						<label for="floatingPassword">비밀번호를 한번 더 입력하세요</label>						
+						<input type="password" class="form-control" id="floatingPasswordFirm" name="memberPwdFirm">
+						<label for="floatingPasswordFirm" id="passwordFirmLabel">비밀번호를 한번 더 입력하세요</label>						
 					</div>
-					<p class="pwd-info">* 비밀번호는 영어소문자, 숫자, 특수문자(!,@,#,$,%,&)를 조합해 6~10자로 작성해주세요.</p>
+					<p class="pwd-info">* 비밀번호는 영어소문자, 숫자, 특수문자(!,@,#,$,%,&)를 조합해 6~10자로 작성해주세요.</p>					
 				</div>
+				
 
 				<div class="sign-btn d-flex flex-column">
-					<button type="submit" class="signIn-btn mt-4 "><a th:href="@{patient.me}">비밀번호 재설정</a></button>
-					<button type="submit" class="findPwd-btn mt-4 "><a th:href="@{findPwd.me}">취소</a></button>
+					<button type="submit" class="signIn-btn mt-4 "><a th:href="@{updatePassword.me}">비밀번호 재설정</a></button>
+					<button type="button" class="findPwd-btn mt-4 "><a th:href="@{findPwd.me}">취소</a></button>
 				</div>
-			</div>
+			</form>
 	</main>
 			
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	<script>
+	//비밀번호 검사
+	const pwdInput = document.getElementById("floatingpassword")
+	const pwdInput2 = document.getElementById("floatingPasswordFirm");
+ 	const regExp1 = /[0-9]/;  // 'g' 플래그 제거
+    const regExp2 = /[!@#$%&]/;  // 문자 클래스로 변경
+    const regExp3 = /[a-z]/;  // 'g' 플래그 제거		
+	
+	function pwdCheck(){
+		const pwdInputLabel = document.getElementById("passwordLabel");
+		if(!regExp1.test(pwdInput.value) || !regExp2.test(pwdInput.value) || !regExp3.test(pwdInput.value) || pwdInput.value.length<6 || pwdInput.value.length>10){
+			pwdInputLabel.innerText = "비밀번호를 양식에 맞게 설정해주세요."; 
+			pwdInputLabel.style.color="red";					
+			return false;
+			
+		}else{
+			pwdInputLabel.innerText = "비밀번호"; 
+			pwdInputLabel.style.color="green";					
+			return true;
+		}
+	}		
+	pwdInput.addEventListener('focusout', pwdCheck);
+	
+	////비밀번호 확인 검사
+	function pwdCheck2(){
+		const pwdInput2Label = document.getElementById("passwordFirmLabel");
+		if(pwdInput.value !== pwdInput2.value || pwdInput.value == ''){							
+			pwdInput2Label.innerText = "비밀번호가 일치하지 않습니다.";
+			pwdInput2Label.style.color="red";
+			return false;				
+		}else{
+			pwdInput2Label.innerText = "비밀번호 확인";
+			pwdInput2Label.style.color="green";
+			return true;	
+		}
+	
+	}
+	pwdInput2.addEventListener('focusout', pwdCheck2);				
+	
 	</script>
-		
 </body>
 </html>

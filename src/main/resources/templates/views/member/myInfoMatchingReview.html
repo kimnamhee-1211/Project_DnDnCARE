@@ -51,6 +51,7 @@
 	      		
 	      		
 	      		<div class="row m-4">
+<<<<<<< HEAD
 	      			<div class="col m-3">
 						<div class="myInfo-Border-maincolor mt-2 mb-3">
 							<div class="m-2 d-flex justify-content-between">
@@ -85,6 +86,77 @@
 			
 		}
 	
+=======
+	      			<div class="col m-3"><!-- 실제 데이터 넣고 for문 돌리기  -->
+						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-1 d-flex justify-content-between">
+								<div class="h5 m-1">OOO님의 후기</div>
+								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
+							</div>
+							<div class="review-content m-2">확인</div>
+						</div>
+						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-1 d-flex justify-content-between">
+								<div class="h5 m-1">OOO님의 후기</div>
+								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
+							</div>
+							<div class="review-content m-2">확인</div>
+						</div>
+						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-1 d-flex justify-content-between">
+								<div class="h5 m-1">OOO님의 후기</div>
+								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
+							</div>
+							<div class="review-content m-2">확인</div>
+						</div>
+						
+						
+	      			</div>
+	      		</div>
+	      		
+	    	</div>
+    	</div>
+	
+	
+	</div>
+	
+	<script th:inline="javascript">
+		
+		window.onload =() =>{
+			//좌측메뉴 폰트 굵게,밑줄표시하기
+			const menuAtag = document.getElementsByClassName('my-menu');
+			const menuName = document.getElementsByClassName('menu-name')[0];
+			for(i of menuAtag){
+				if(i.innerText == menuName.innerText){
+					i.innerHTML= '<span style="border-bottom:2px solid #8dd986; font-weight:bold;">'+i.innerText+'</span>';
+				}
+			};
+			
+			const reviewDetails = document.getElementsByClassName('reviewDetail');
+			for(i of reviewDetails){
+				i.addEventListener('click',function(){
+					if(this.children[0].children[1].classList.contains('tri-btn')){
+						this.children[0].children[1].src = 'image/icon_tri.png';
+						this.children[0].children[1].classList.remove('tri-btn');
+						console.log(this.children[0].nextElementSibling);
+						this.children[0].nextElementSibling.classList.toggle('show');
+					}else{
+						this.children[0].children[1].src = 'image/icon_turnTri.png';
+						this.children[0].children[1].classList.add('tri-btn');
+						this.children[0].nextElementSibling.classList.toggle('show');
+					}
+				});
+			}
+		
+			
+			
+		}
+	
+			function test(a){
+//				this.previousElementSibling.classList.toggle('show');
+				a.previousElementSibling.classList.toggle('show');
+			};
+>>>>>>> refs/remotes/origin/master
 	</script>
 	
 </body>
