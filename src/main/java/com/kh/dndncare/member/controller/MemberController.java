@@ -142,15 +142,44 @@ public class MemberController {
 	
 	//회원가입 페이지 이동
 	@GetMapping("enroll1View.me")
-	public String enroll1View() {
+	public String enroll1View(HttpSession session) {
+		
+		
+		//멤버 테이블만 있고 환자/ 간병인 테이블에 insert됮 않은 경우 멤버 테이블 삭제 -> 회원가입 도충 탈출 등
+		String memberCategory = (String)session.getAttribute("tempMemberCategory");		
+		
+		String table = "";
+		if(memberCategory.equals("C")) {
+			table = "caregiver";
+		}else {
+			table = "patient";
+		}
+		
+		int resultNoInfo = mService.noInfomemberdle();		
+		System.out.println(resultNoInfo);
+		
 		return "enroll1";
 	}
 	
 	
-
+	//아이디 중복체크
 	@ResponseBody
+	@PostMapping("idCheck.me")
 	public String idCheck(@RequestParam("id") String id) {		
 		int result = mService.idCheck(id);	
+		if(result == 0) {
+			return "usable";
+		}else{
+			return "unusable";
+		}
+
+	}
+	
+	//닉네임 중복 체크
+	@ResponseBody
+	@PostMapping("nickNameCheck.me")
+	public String nickNameCheck(@RequestParam("nickName") String nickName) {		
+		int result = mService.nickNameCheck(nickName);	
 		if(result == 0) {
 			return "usable";
 		}else{
@@ -204,17 +233,6 @@ public class MemberController {
 	}
 	
 	
-	@GetMapping("enroll32View.me")
-	public String enroll32View() {
-		return "enroll3_2";
-	}
-	
-	
-	@GetMapping("enroll33View.me")
-	public String enroll33View() {
-		return "enroll3_3";
-	}
-	
 	@GetMapping("myInfoMatching.me")
 	public String myInfoMatching() {		//마이페이지 현재매칭정보 확인용
 		return "myInfoMatching";
@@ -258,6 +276,8 @@ public class MemberController {
 	public String myInfoBoardList() {		//마이페이지 보드작성 확인용
 		return "myInfoBoardList";
 	}
+	
+	
 	//간병인 회원가입(간병인 정보 입력)
 	@PostMapping("enrollCaregiver.me")
 	public String enrollCaregiver(@ModelAttribute CareGiver cg, @RequestParam("careService") String[] careServiceArr, HttpSession session) {
@@ -282,7 +302,7 @@ public class MemberController {
 		int result1 = mService.enrollCareGiver(cg);
 		System.out.println("result1" + result1);
 		
-		int result2 = mService.enrollInfoCategory(cg.getInfoCategory());
+		int result2 = mService.enrollInfoCategory(cg);
 		System.out.println("result2" + result2);
 		
 		if(result1 > 0 || result2 > 0 ) {			
@@ -293,10 +313,11 @@ public class MemberController {
 		}		
 	}
 	
-		
+	
+	//환자 회원가입
 	@PostMapping("enrollPatient.me")
 	public String enrollPatient(@ModelAttribute Patient pt, 
-							@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress,@RequestParam("detailAddress") String detailAddress,
+							@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress, @RequestParam("detailAddress") String detailAddress,
 							@RequestParam("ptService") String[] ptServiceArr, HttpSession session) {
 		
 		//간병인 memberNo 세팅
@@ -323,7 +344,7 @@ public class MemberController {
 		int result1 = mService.enrollPatient(pt);
 		System.out.println("result1" + result1);
 		
-		int result2 = mService.enrollInfoCategory(pt.getInfoCategory());
+		int result2 = mService.enrollInfoCategory(pt);
 		System.out.println("result2" + result2);
 		
 		if(result1 > 0 || result2 > 0 ) {			
