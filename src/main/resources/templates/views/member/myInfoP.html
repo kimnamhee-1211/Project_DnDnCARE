@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -39,8 +39,9 @@
 		      		</div>
 		      		<div  class="col-3 d-flex align-items-center">
 		      			<div>
-		      				<div>피간병인 정보 : 나환자</div>
-		      				<div>피간병인 정보 : 찐환자</div>
+		      				<th:block th:each="p : ${p}" >
+		      				<span>[[${p.ptName}]]</span>
+		      				</th:block>
 		      				<div>피간병인 정보 추가하기</div>
 		      				<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
 		      			</div>

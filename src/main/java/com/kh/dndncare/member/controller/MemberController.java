@@ -78,21 +78,21 @@ public class MemberController {
 	}
 
 	@GetMapping("myInfo.me")
-	public String myInfo(HttpSession session) {		//마이페이지  확인용
-		ArrayList<Member> m =  mService.selectAllMember();	//노트북,피시방에 디비가없으니 접근용
+	public String myInfo(HttpSession session,Model model) {		//마이페이지  확인용
+		//ArrayList<Member> m =  mService.selectAllMember();	//노트북,피시방에 디비가없으니 접근용
 
-		for(Member z : m) {
-			System.out.println(z);
-			System.out.println("");
-		}
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
+		
+		
 		if(loginUser != null) {
+			ArrayList<Patient> p = mService.selectAllPatient(loginUser.getMemberNo());
+			System.out.println(p);
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch(check) {
 				case 'C': return "myInfo";
-				case 'P': return "myInfoP";
+				case 'P': model.addAttribute("p",p);   return "myInfoP";
 				case 'A': return "myInfoA";
 			}
 		}

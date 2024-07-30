@@ -96,6 +96,11 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.calendarEvent(loginUser);
 	}
 
+	@Override
+	public ArrayList<Patient> selectAllPatient(int memberNo) {
+		return mMapper.selectAllPatient(memberNo);
+	}
+
 
 
 }

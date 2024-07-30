@@ -34,6 +34,8 @@ public interface MemberService {
 	boolean sendSms(String phoneNumber, String string);
 	ArrayList<Matching> calendarEvent(Member loginUser);
 
+	ArrayList<Patient> selectAllPatient(int memberNo);
+
 
 
 
