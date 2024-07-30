@@ -18,11 +18,33 @@
 		select *
 		from member	  
 	  </select>
+	  <insert id="enroll"  useGeneratedKeys="true">
+	  	<selectKey resultType="_int" keyProperty="memberNo" order="BEFORE">
+	  		select seq_mid.nextval from dual 
+	  	</selectKey>
+	  	insert into member
+	  	values(#{memberNo}, #{memberId}, #{memberPwd}, #{memberName}, #{memberGender}, 
+	  			#{memberNickName}, #{memberAge}, #{memberPhone}, #{memberEmail}, sysdate,
+	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, null)  	
+	  </insert>
 	  
+	  <insert id="enrollCareGiver">
+	  	insert into caregiver
+	  	values(#{memberNo}, #{careImg}, #{careIntro}, 
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService})	  
+	  </insert>
 	  
+	<insert id="enrollInfoCategory">
+		<foreach collection="infoCategory" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
+			into member_Info values(#{memberNo}, #{item})
+		</foreach>
+	</insert>
 	  
-	  
-	  
+	<insert id="enrollPatient">
+	  	insert into patient
+	  	values(seq_pid.nextval #{memberNo}, #{ptName}, #{careIntro}, 
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService})	  
+	  </insert>
 	  
 	  
 	  

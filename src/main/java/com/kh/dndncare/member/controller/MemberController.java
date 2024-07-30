@@ -1,8 +1,14 @@
 package com.kh.dndncare.member.controller;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
+=======
+import java.sql.Date;
+import java.util.Calendar;
+>>>>>>> refs/remotes/origin/namhee
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,21 +19,31 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
+import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.Member;
-
+import com.kh.dndncare.member.model.vo.Patient;
 
 import jakarta.servlet.http.HttpSession;
 
-@SessionAttributes({"loginUser", "tempMemberCategory"})
+@SessionAttributes({"loginUser", "tempMemberCategory", "enrollmember"})
 @Controller
 public class MemberController {
 	
-	@Autowired
-	private MemberService mService;
-	
+	 @Autowired
+	 private MemberService mService;
+	 
+	 @Autowired
+	 private BCryptPasswordEncoder bCrypt;
+	 
+	@GetMapping("loginView.me")
+	public String loginView() {
+		return "login";
+	}
+		
 	@GetMapping("{memberType}.me")
 	public String selectMemberType(@PathVariable("memberType") String memberType,Model model) {
 		String tempMemberCategory;
@@ -135,41 +151,47 @@ public class MemberController {
 	
 	//회원가입
 	@PostMapping("enroll.me")
-	public String enroll(@ModelAttribute Member m, 
+	public String enroll(@ModelAttribute Member m,
 						@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress,@RequestParam("detailAddress") String detailAddress,
-						@RequestParam("memberEmail") String memberEmail, @RequestParam("emailDomain") String emailDomain, 
-						HttpSession ssession) {
+						@RequestParam("email") String email, @RequestParam("emailDomain") String emailDomain, 
+						HttpSession session, Model model) {
+		
+		//간병인/환자 택
+		String memberCategory = (String)session.getAttribute("tempMemberCategory");		
+		m.setMemberCategory(memberCategory);
+		
+		//대문 등록 카테고리 session삭제
+		session.removeAttribute("tempMemberCategory");
+		
+		String memberPwd = bCrypt.encode(m.getMemberPwd().toLowerCase());
+		m.setMemberPwd(memberPwd);
+		
+		String memberAddress = postcode +"//"+ roadAddress +"//"+ detailAddress;
+		m.setMemberAddress(memberAddress);
+		
+		String memberEmail = email + "@" + emailDomain;
+		m.setMemberEmail(memberEmail);
+		
+		System.out.println("회원가입 검증=" + m);
+		
+		int result = mService.enroll(m);
+		
+		//회원가입용 session데이터
+		model.addAttribute("enrollmember", m);
+		System.out.println("회원가입 데이터 전송 검증 =" +m);
 		
 		
-	
+		if(result > 0) {
+			if(m.getMemberCategory().equals("C")) {
+				return "enroll2";
+			}else {
+				return "enroll3";
+			}
+		}else {
+			throw new MemberException("회원가입에 실패했습니다.");
+		}		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		return null;
 	}
-
 	
 	
 	@GetMapping("enroll32View.me")
@@ -226,6 +248,94 @@ public class MemberController {
 	public String myInfoBoardList() {		//마이페이지 보드작성 확인용
 		return "myInfoBoardList";
 	}
+	//간병인 회원가입(간병인 정보 입력)
+	@PostMapping("enrollCaregiver.me")
+	public String enrollCaregiver(@ModelAttribute CareGiver cg, @RequestParam("careService") String[] careServiceArr, HttpSession session) {
+		System.out.println("데이터 확인"+cg);
+			
+		//간병인 memberNo 세팅
+		cg.setMemberNo(((Member)session.getAttribute("enrollmember")).getMemberNo());		
+		
+		//간병인 기본 정보 세팅
+		String careService = "";		
+		for(int i = 0; i < careServiceArr.length; i++) {
+			if(i < careServiceArr.length -1 ) {
+				careService += careServiceArr[i] + "//";
+			}else {
+				careService += careServiceArr[i];
+			}
+		}
+		cg.setCareService(careService);
+		
+		System.out.println("간병인 정보=" + cg);
+		
+		int result1 = mService.enrollCareGiver(cg);
+		System.out.println("result1" + result1);
+		
+		int result2 = mService.enrollInfoCategory(cg.getInfoCategory());
+		System.out.println("result2" + result2);
+		
+		if(result1 > 0 || result2 > 0 ) {			
+			session.removeAttribute("enrollmember");
+			return "enroll4";
+		}else {
+			throw new MemberException("회원가입에 실패했습니다.");
+		}		
+	}
+	
+		
+	@PostMapping("enrollPatient.me")
+	public String enrollPatient(@ModelAttribute Patient pt, 
+							@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress,@RequestParam("detailAddress") String detailAddress,
+							@RequestParam("ptService") String[] ptServiceArr, HttpSession session) {
+		
+		//간병인 memberNo 세팅
+		pt.setMemberNo(((Member)session.getAttribute("enrollmember")).getMemberNo());	
+		
+		
+		//돌봄 주소 세팅
+		String ptAddress = postcode +"//"+ roadAddress +"//"+ detailAddress;
+		pt.setPtAddress(ptAddress);
+		
+		//간병인 기본 정보 세팅
+		String ptService = "";		
+		for(int i = 0; i < ptServiceArr.length; i++) {
+			if(i < ptServiceArr.length -1 ) {
+				ptService += ptServiceArr[i] + "//";
+			}else {
+				ptService += ptServiceArr[i];
+			}
+		}
+		pt.setPtService(ptService);
+
+		System.out.println("간병인 정보=" + pt);
+		
+		int result1 = mService.enrollPatient(pt);
+		System.out.println("result1" + result1);
+		
+		int result2 = mService.enrollInfoCategory(pt.getInfoCategory());
+		System.out.println("result2" + result2);
+		
+		if(result1 > 0 || result2 > 0 ) {			
+			session.removeAttribute("enrollmember");
+			return "enroll4";
+		}else {
+			
+			throw new MemberException("회원가입에 실패했습니다.");
+		}		
+		
+		
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@GetMapping("findId.me")
 	public String findId() {
@@ -236,7 +346,6 @@ public class MemberController {
 	public String findPwd() {
 		return "findPwdPage";
 	}
-	
 	
 	
 	

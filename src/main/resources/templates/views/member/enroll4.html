@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/enroll.css}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+	<main class="inner-content d-flex justify-content-center">
+			<div class="login-wrap">
+				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
+				<h1 class="h3 mb-3 fw-bold mb-5 text-center">회원가입</h1>
+				
+				<div class="login-input" id="erollsucdiv" >
+					<h5 class="h5 mb-2 fw-bold mb-1">환영합니다. DnDnCARE의 든든한 회원이 되었습니다. </h5>
+					<h5 class="h5 mb-2 fw-bold mb-1">이제 로그인 후 입력하신 정보를 바탕으로 매칭 서비스를 이용하실 수 있습니다.</h5>
+				</div>				
+			</div>
+			
+			<div class="sign-btn d-flex flex-column">
+				<p class="text-center ifCheck" style="font-size:20px"> </p>
+				<button type="button" class="signIn-btn mt-4" id="nextButton"><span>홈으로</span></button>
+			</div>
+							
+		</form>
+	</main>
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	
+	
+	<script th:inline="javascript">
+		
+		window.onload=()=>{
+			const nextButton = document.getElementById('nextButton');
+			nextButton.addEventListener('click', ()=>{
+				location.href = "home.do"
+			});	
+		}
+
+	
+	
+	
+	
+	
+	</script>
+		
+		
+</body>
+</html>

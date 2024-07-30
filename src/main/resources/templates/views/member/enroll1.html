@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link th:href="@{css/enroll.css}" rel="stylesheet" type="text/css"/>
-
+ <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
 </head>
 <body>
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
@@ -20,14 +21,14 @@
 						<p class="info">아이디를 입력해주세요.</p>
 						<div class="form-floating mb-5">
 							<input type="text" class="form-control" id="idInput" name="memberId">
-							<label for="IdInput" id="IdInputLabel">아이디</label>
+							<label for="idInput" id="idInputLabel">아이디</label>
 						</div>
 						
 						<p class="info" style="margin-bottom:0">비밀번호를 입력해주세요.</p>
 						<p style="font-size:16px" class="info">비밀번호는 영어소문자, 숫자, 특수문자(!,@,#,$,%,&)를 조합해 6~10자로 작성해주세요.</p>
 						<div class="form-floating mb-5">
 							<input type="password" class="form-control" id="pwdInput" name="memberPwd">
-							<label for="passInput" id="pwdInputLabel">비밀번호</label>
+							<label for="pwdInput" id="pwdInputLabel">비밀번호</label>
 						</div>
 						
 						<p class="info">비밀번호를 한번 더 입력해주세요.</p>
@@ -44,7 +45,7 @@
 	
 						<p class="info">별명(닉네임)을 입력해주세요.</p>
 						<div class="form-floating mb-5">
-							<input type="text" class="form-control" id="nickNameInput" name="memberNickname">
+							<input type="text" class="form-control" id="nickNameInput" name="memberNickName">
 							<label for="nickNameInput">별명(닉네임)</label>
 						</div>
 						
@@ -68,14 +69,27 @@
 							</div>
 							<div class="form-check form-check-inline">
 							  <input class="form-check-input" type="radio" name="memberGender" id="womenInput" th:value="F">
-							  <label class="form-check-label" for="womenInpu">여성</label>
+							  <label class="form-check-label" for="womenInput">여성</label>
 							</div>
 						</div>
+						
+						<p class="info">국적을 입력해 주세요.</p>
+						<div class="form-floating mb-5">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="memberNational" id="national1Input" th:value="내국인" checked>
+								<label class="form-check-label" for="menInput">내국인</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="memberNational" th:value="외국인">
+								<label class="form-check-label" for="menInput">외국인</label>
+							</div>
+						</div>
+												
 						
 						<p class="info">생년월일을 입력해주세요.</p>
 						<div class="form-floating mb-5">
 							<input type="date" class="form-control" id="ageInput" name="memberAge">
-							<label for="ageInput">생년월일</label>
+							<label for="ageInput" id="ageInputLabel">생년월일</label>
 						</div>
 						
 						<p class="info">연락처를 입력해주세요.</p>
@@ -90,7 +104,7 @@
 						<p style="font-size:16px" class="info">주소는 반드시 도로명 주소를 선택/입력해주세요.</p>
 						<div class="form-floating mb-1" >
 							<button type="button" onclick="sample4_execDaumPostcode()" class="signIn-btn" style="border:none;">주소 검색</button>
-						</div>
+						</div> 
 						<div class="form-floating mb-1" >
 	   						<input type="text" class="form-control" id="sample4_postcode" name="postcode">
 	   						<label for="sample4_postcod">우편번호</label>
@@ -110,13 +124,13 @@
 							<div class="row g-3">
 							  <div class="col-md-7">
 							    <div class="form-floating mb-4">
-							    	<input type="text" class="form-control" id="emailInput" name="memberEmail" >
+							    	<input type="text" class="form-control" id="emailInput" name="email" >
 							    	<label for="emailInput">이메일</label>
 							    </div>
 							  </div>
 							  <div class="col-md-1" style="font-size:20px; line-height:55px;">@</div>
 							  <div class="col-md-4">
-							    <select id="inputState" class="form-select" name="emailDomain" style="height:57.9883px;">
+							    <select class="form-select" id="emailDomainInput" name="emailDomain" style="height:57.9883px;">
 								    <option selected>선택해주세요.</option>
 								    <option th:selected="${emailDomain eq 'naver.com' }">naver.com</option>
 								    <option th:selected="${emailDomain eq 'hanmail.net' }">hanmail.net</option>
@@ -125,16 +139,15 @@
 							    </select>
 							  </div>
 							</div>
-							
 						</div>	
 						
 						<div class="sign-btn d-flex flex-column">
 							<p class="text-center ifCheck" style="font-size:20px"> </p>
 							<button type="button" class="signIn-btn mt-4" id="nextButton2"><span>다음</span></button>
-						</div>
+						</div>								
 						<div class="sns-section d-flex flex-column justify-content-center mt-3 fs-5">
 							<p class="text-center">다음으로 넘어가<br>회원가입을 계속 진행해주세요.</p>
-						</div>									
+						</div>
 					</div>					
 				</div>
 			</div>			
@@ -150,13 +163,55 @@
 			const nextButton1 = document.getElementById('nextButton');
 			const nextButton2 = document.getElementById('nextButton2');
 			const form = document.getElementById('enrollForm');
+<<<<<<< HEAD
 			
 			//1page 검사 - 이동
 			if(nextButton1 != null){
 				nextButton1.addEventListener('click', function(){					
 					let isValid = true;						
 					
+=======
+				
+			
+			//1page 검사 - 이동
+			if(nextButton1 != null){
+				nextButton1.addEventListener('click', function(){					
+					let isValid = true;			
+					
+					const inputs = document.querySelectorAll('input')
+					let count = 0;
+					for(let i=0 ; i < 5 ; i++){
+						let input = inputs[i]
+						if(input.value.trim() == ''){
+							count++
+						}			
+					}
+					var ifCheck1 = document.getElementsByClassName("ifCheck")[0];
+					if(ifCheck1){
+						if(count > 0){
+							ifCheck1.innerText = "모든 내용을 빠짐없이 입력해주세요."
+							ifCheck1.style.color="red";
+							isValid = false;
+						}else{
+							ifCheck1.innerText = ""
+						}	
+					}
+									
+					if(idInputLabel.innerText.includes("없는")){
+						idInput.focus();					
+						isValid = false;
+					}
+			    	if(!pwdCheck()){
+						pwdInput.focus();
+						isValid = false;
+					}
+			    	if(!pwdCheck2()){
+						pwdInput2.focus();	
+						isValid = false;
+					}										
+>>>>>>> refs/remotes/origin/namhee
 				    if(isValid){
+<<<<<<< HEAD
 				    	if(!inputCheck1()){
 				    		isValid = false;
 						}else if(!idCheck()){
@@ -196,17 +251,86 @@
 												
 				    if(isValid){
 						form.submit();			            	
+=======
+						const enroll1 = document.getElementById("enroll1");
+						const enroll2 = document.getElementById("enroll2");
+						
+						enroll1.style.display="none";
+						enroll2.style.display="block";			            	
+>>>>>>> refs/remotes/origin/namhee
 		            }
 				
 				});
+<<<<<<< HEAD
 			}				
+=======
+			}
+>>>>>>> refs/remotes/origin/namhee
 			
+<<<<<<< HEAD
 		}		
 		
+=======
+			
+			//submit
+			if(nextButton2 != null){
+				nextButton2.addEventListener('click', function(){
+					
+					let isValid = true;					
+					
+					const inputs = document.querySelectorAll('input')
+					let count = 0;
+					for(let i=5 ; i < inputs.length; i++){
+						let input = inputs[i]
+						if(input.value.trim() == ''){
+							count++
+						}			
+					}					
+					
+					var ifCheck2 = document.getElementsByClassName("ifCheck")[1];
+					if(ifCheck2){
+						if(count > 0){
+							ifCheck2.innerText = "모든 내용을 빠짐없이 입력해주세요."
+							ifCheck2.style.color="red";
+							isValid = false;
+						}else{
+							ifCheck2.innerText = ""
+						}	
+					}	
+					
+					
+					var emailDomainInput = document.getElementById("emailDomainInput");
+					if(emailDomainInput.value === '선택해주세요.'){
+						if(ifCheck2){
+							ifCheck2.innerText = "모든 내용을 빠짐없이 입력해주세요."
+							ifCheck2.style.color="red";
+						}
+						emailDomainInput.focus();
+						isValid = false;
+					}										
+			    	if(!telCheck()){
+						telInput.focus();	
+						isValid = false;
+					}															    
+				    if(isValid){
+						form.submit();			            	
+		            }
+				
+				});
+			}
+			
+		}		
+>>>>>>> refs/remotes/origin/namhee
 		
 	
-
-	
+		
+		var idInput = document.getElementById("idInput");
+		var pwdInput = document.getElementById("pwdInput")
+		var pwdInput2 = document.getElementById("pwdInput2");
+		var telInput = document.getElementById("telInput");		
+		
+		
+		
 		//주소검색 api
 		function sample4_execDaumPostcode() {
 	    	new daum.Postcode({
@@ -227,6 +351,10 @@
 				    if(data.buildingName !== '' && data.apartment === 'Y'){
 				       extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
 				    }
+					// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+			       if(extraRoadAddr !== ''){
+			           extraRoadAddr = ' (' + extraRoadAddr + ')';
+			       }
 				
 				    // 우편번호와 주소 정보를 해당 필드에 넣는다.
 				    document.getElementById('sample4_postcode').value = data.zonecode;
@@ -235,6 +363,7 @@
 				}
 			}).open();
     	};
+<<<<<<< HEAD
 	    
     	
 		//필수 입력사항 입력 확인
@@ -290,11 +419,16 @@
 			}	
 		}
 			
+=======
+
+>>>>>>> refs/remotes/origin/namhee
 		
-					
-			
 	    //아이디 검사	    
+<<<<<<< HEAD
     	const idInputLabel = document.getElementById("idInputLabel");
+=======
+    	var idInputLabel = document.getElementById("idInputLabel");
+>>>>>>> refs/remotes/origin/namhee
     	function idCheck(){   		
     		if(idInput != null){
     			const idInputVal = idInput.value;
@@ -306,16 +440,27 @@
         			data : {id : idInputVal},
         			success : (data) =>{
         				console.log(data)
+<<<<<<< HEAD
         				if(data == "usable"){
+=======
+        				if(data == 'usable'){
+>>>>>>> refs/remotes/origin/namhee
         					idInputLabel.innerText = "사용 가능한 아이디";
         					idInputLabel.style.color="green"
+<<<<<<< HEAD
         					return true;
  
+=======
+>>>>>>> refs/remotes/origin/namhee
         				}else{
         					idInputLabel.innerText = "사용할 수 없는 아이디입니다.";
         					idInputLabel.style.color="red"
+<<<<<<< HEAD
         					return false;
         				}
+=======
+						}
+>>>>>>> refs/remotes/origin/namhee
         			},
         			error: data => console.log(data)
         		});
@@ -329,7 +474,11 @@
 		   	
 		//비밀번호 검사
 		const regExp1 = /[0-9]/g;			
+<<<<<<< HEAD
 		const regExp2 = /(!|@|#|$|%|&)/;			
+=======
+		const regExp2 = /[!@#$%&]/;			
+>>>>>>> refs/remotes/origin/namhee
 		const regExp3 = /[a-z]/g;				
 		
 		function pwdCheck(){
@@ -350,7 +499,7 @@
 		////비밀번호 확인 검사
 		function pwdCheck2(){
 			const pwdInput2Label = document.getElementById("pwdInput2Label");
-			if(pwdInput.value !== pwdInput2.value || pwdInput.value == ''){							
+			if(pwdInput.value !== pwdInput2.value){							
 				pwdInput2Label.innerText = "비밀번호가 일치하지 않습니다.";
 				pwdInput2Label.style.color="red";
 				return false;				
@@ -359,7 +508,6 @@
 				pwdInput2Label.style.color="green";
 				return true;	
 			}
-		
 		}
 		pwdInput2.addEventListener('focusout', pwdCheck2);				
 		
@@ -379,8 +527,7 @@
 			}
 		}		
 		telInput.addEventListener('focusout', telCheck);
-			
-
+		
 	
 	</script>
 		
