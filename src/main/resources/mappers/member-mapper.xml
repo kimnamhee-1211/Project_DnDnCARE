@@ -10,7 +10,7 @@
 	  <select id="idCheck" resultType="_int">
 	  	select count(*)
 	  	from member
-	  	where member_status = 'Y' and member_id=#{id}	  
+	  	where member_status = 'N' and member_id=#{id}	  
 	  </select>
 	  
 	  
