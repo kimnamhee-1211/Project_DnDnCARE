@@ -1,7 +1,6 @@
 package com.kh.dndncare.board.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -147,5 +146,6 @@ public class BoardController {
 		model.addAttribute("b", b);
 		model.addAttribute("page", page);
 		return "editBoard";
+
 	}
 }

@@ -1,14 +1,19 @@
 package com.kh.dndncare.member.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.dao.MemberMapper;
+
+import com.kh.dndncare.member.model.vo.CalendarEvent;
+
 import com.kh.dndncare.member.model.vo.CareGiver;
-import com.kh.dndncare.member.model.vo.Matching;
+
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 import com.kh.dndncare.sms.SmsService;
@@ -52,7 +57,12 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 
+
 	@Override
+	public ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser) {
+		return mMapper.caregiverCalendarEvent(loginUser);
+	}
+	
 	public ArrayList<Member> selectAllMember() {
 		return mMapper.selectAllMember();
 	}
@@ -92,14 +102,27 @@ public class MemberServiceImpl implements MemberService {
 	        return false;
 	    }
 	}
+
+	@Override
 	public ArrayList<Matching> calendarEvent(Member loginUser) {
-		return mMapper.calendarEvent(loginUser);
+		// TODO Auto-generated method stub 이거 뭐여
+		return null;
 	}
 
 	@Override
 	public Patient selectPatient(int memberNo) {
 		return mMapper.selectPatient(memberNo);
 	}
+	public HashMap<String, String> getCaregiverInfo(int memberNo) {
+		return mMapper.getCaregiverInfo(memberNo);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> getCaregiverExp(int memberNo) {
+		return mMapper.getCaregiverExp(memberNo);
+	}
+	
+
 
 	@Override
 	public List<Integer> selectInfoCategory(int memberNo) {
@@ -107,5 +130,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 
+	public int updatePassword(HashMap<String, String> changeInfo) {
+		return mMapper.updatePassword(changeInfo);
+	}
 
 }
