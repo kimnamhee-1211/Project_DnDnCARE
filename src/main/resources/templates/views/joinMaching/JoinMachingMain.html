@@ -17,8 +17,6 @@
 	</div>
 	
 	<main class="inner-content d-flex justify-content-center">
-		<form></form>
-		
 		
 			<!-- (c) ammap.com | SVG map of South Korea - High -->
 			<svg width="900px" height="1200px" viewBox="340 300 200 1300" xmlns="http://www.w3.org/2000/svg" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
@@ -70,11 +68,13 @@
 			<div id="hoInfo" style="display: none">
 				<span id="admCodeInfo"></span>
 				<span class="btn-group">
-					<select class="form-select form-select-lg mb-3" id="addSelect" aria-label="Default select example"></select>
-				</span>					
+					<select class="form-select mb-2" id="addSelect" aria-label="Default select example"></select>
+				</span>&nbsp;&nbsp;&nbsp;&nbsp;						
 				<span>
-					<input type="text" id="nameHo" style="display:inline-block" placeholder="병원명">
-					<button type="button" id="nameHoButton" style="display:inline-block">병원명 검색</button>
+					<input type="text" id="nameHo" class="form-control" style="display:inline-block; width:350px;" placeholder="병원명">
+				</span>
+				<span>
+					<button type="button" id="nameHoButton" class="btn btn-outline-secondary" style="display:inline-block">병원명 검색</button>
 				</span>
 				
 				<table class="table table-hover">
@@ -138,94 +138,93 @@
 					    // 현재 클릭한 요소를 lastClickedPath로 저장
 					    lastClickedPath = currentPath;      				    	 					    	 
 					  
-									//테이블 보이게
-									var hoInfo = document.getElementById("hoInfo");
-									hoInfo.style.display="inline-block"
-									var admCodeInfo = document.getElementById("admCodeInfo");
-									admCodeInfo.innerText='';
-									admCodeInfo.innerHTML = admCode+'&nbsp;&nbsp;&nbsp&nbsp';
+					  //테이블 보이게
+						var hoInfo = document.getElementById("hoInfo");
+						hoInfo.style.display="inline-block"
+						let admCodeInfo = document.getElementById("admCodeInfo");
+						let admCode = this.getAttribute("id");
+						admCodeInfo.innerHTML='';
+						admCodeInfo.innerHTML = admCode+'&nbsp;&nbsp;'						
 																
-								 //selet 태그로 지역 선택 시작
-									select.innerHTML = '';
-									let admCode = this.getAttribute("id");
-									console.log(admCode)
-																
-									//selet 태그에 option 달기
-									let local = [];
-									if(admCode == "서울특별시"){
-										local = ["종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구", "성북구", "강북구", "도봉구", "노원구", "은평구", "서대문구", "마포구", 
-									        	"양천구", "강서구", "구로구", "금천구", "영등포구", "동작구", "관악구", "서초구", "강남구", "송파구", "강동구"]
-									}
-									else if(admCode == "부산광역시"){
-										local = ["중구", "서구", "동구", "영도구", "부산진구", "동래구", "남구", "북구", "해운대구", "사하구", "금정구", "강서구", "연제구", "수영구", "사상구"]
-									}
-									else if(admCode == "대구광역시"){
-										local = ["중구", "동구", "서구", "남구", "북구", "수성구", "달서구", "달성군"]
-									}	        
-									else if(admCode == "인천광역시"){
-										local = ["중구", "동구", "미추홀구", "연수구", "남동구", "부평구", "계양구", "서구", "강화군", "옹진군"]
-									}	        
-									else if(admCode == "광주광역시"){
-										local = ["동구", "서구", "남구", "북구", "광산구"]
-									}	   	        
-									else if(admCode == "대전광역시"){
-										local = ["동구", "중구", "서구", "유성구", "대덕구"]
-									}	 	        
-									else if(admCode == "울산광역시"){
-										local = ["중구", "남구", "동구", "북구", "울주군"]
-									}	 	        
-									else if(admCode == "경기도"){
-										local = ["수원시", "고양시", "용인시", "성남시", "화성시", "광명시", "평택시", "부천시", "안양시", "남양주시", "안산시", "오산시", "군포시", "의정부시", "시흥시", "파주시", "이천시", "여주시", "양주시", "포천시", "가평군", "연천군"]
-									}
-									else if(admCode == "강원도"){
-										local = ["춘천시", "원주시", "강릉시", "동해시", "속초시", "삼척시", "홍천군", "횡성군", "영월군", "평창군", "정선군", "철원군", "화천군", "양구군", "인제군", "고성군", "양양군"]
-									}
-									else if(admCode == "충청북도"){
-										local = ["청주시", "충주시", "제천시", "보은군", "옥천군", "영동군", "증평군", "진천군", "괴산군", "음성군", "단양군"]
-									}
-									else if(admCode == "충청남도"){
-										local = ["천안시", "공주시", "보령시", "아산시", "서산시", "논산시", "계룡시", "당진시", "금산군", "부여군", "서천군", "청양군", "홍성군", "예산군", "예산군"]
-									}
-									else if(admCode == "전라북도"){
-										local = ["전주시", "군산시", "익산시", "정읍시", "남원시", "김제시", "완주군", "진안군", "무주군", "장수군", "임실군", "순창군", "고창군", "부안군"]
-									}
-									else if(admCode == "전라남도"){
-										local = ["광양시", "여수시", "순천시", "목포시", "나주시", "담양군", "곡성군", "구례군", "장성군", "화순군", "영암군", "무안군", "신안군", "진도군", "완도군", "해남군", "강진군", "영광군", "장흥군", "평현군"]
-									}
-									else if(admCode == "경상북도"){
-										local = ["포항시", "경주시", "구미시", "김천시", "안동시", "영주시", "영천시", "상주시", "문경시", "경산시", "군위군", "군북군", "의성군", "청송군", "영양군", "영덕군", "봉화군", "울진군", "울릉군"]
-									}
-									else if(admCode == "경상남도"){
-										local = ["창원시", "진주시", "통영시", "사천시", "김해시", "밀양시", "거제시", "양산시", "하동군", "하남군", "산청군", "진해군", "거창군", "합천군", "함양군", "의령군", "창녕군", "함안군", "양산군", "김해군"]
-									}
-									else if(admCode == "제주특별자치도"){
-										local = ["제주시", "서귀포시"]
-									}
-									else if(admCode == "세종특별자치시"){
-										local = ["세종시"]
-									}
-									
-									console.log(local);
-									const option0 = document.createElement("option");
-									option0.innerText = '선택'
-									option0.value = '선택'
-									option0.setAttribute("selected", "selected");
-									select.appendChild(option0);					
-									for(const i of local){
-										const option = document.createElement("option");
-										option.innerHtml = '';
-										option.innerText = i
-										option.value = i
-										select.appendChild(option);						
-									}
-									//전국 병원 리스트 가져오는 API 함수 호출
-									locaHospi()
-								});
+						 //selet 태그로 지역 선택 시작
+						select.innerHTML = '';
+						
+						//selet 태그에 option 달기
+						let local = [];
+						if(admCode == "서울특별시"){
+							local = ["종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구", "성북구", "강북구", "도봉구", "노원구", "은평구", "서대문구", "마포구", 
+						        	"양천구", "강서구", "구로구", "금천구", "영등포구", "동작구", "관악구", "서초구", "강남구", "송파구", "강동구"]
 						}
-					}
-				
+						else if(admCode == "부산광역시"){
+							local = ["중구", "서구", "동구", "영도구", "부산진구", "동래구", "남구", "북구", "해운대구", "사하구", "금정구", "강서구", "연제구", "수영구", "사상구"]
+						}
+						else if(admCode == "대구광역시"){
+							local = ["중구", "동구", "서구", "남구", "북구", "수성구", "달서구", "달성군"]
+						}	        
+						else if(admCode == "인천광역시"){
+							local = ["중구", "동구", "미추홀구", "연수구", "남동구", "부평구", "계양구", "서구", "강화군", "옹진군"]
+						}	        
+						else if(admCode == "광주광역시"){
+							local = ["동구", "서구", "남구", "북구", "광산구"]
+						}	   	        
+						else if(admCode == "대전광역시"){
+							local = ["동구", "중구", "서구", "유성구", "대덕구"]
+						}	 	        
+						else if(admCode == "울산광역시"){
+							local = ["중구", "남구", "동구", "북구", "울주군"]
+						}	 	        
+						else if(admCode == "경기도"){
+							local = ["수원시", "고양시", "용인시", "성남시", "화성시", "광명시", "평택시", "부천시", "안양시", "남양주시", "안산시", "오산시", "군포시", "의정부시", "시흥시", "파주시", "이천시", "여주시", "양주시", "포천시", "가평군", "연천군"]
+						}
+						else if(admCode == "강원도"){
+							local = ["춘천시", "원주시", "강릉시", "동해시", "속초시", "삼척시", "홍천군", "횡성군", "영월군", "평창군", "정선군", "철원군", "화천군", "양구군", "인제군", "고성군", "양양군"]
+						}
+						else if(admCode == "충청북도"){
+							local = ["청주시", "충주시", "제천시", "보은군", "옥천군", "영동군", "증평군", "진천군", "괴산군", "음성군", "단양군"]
+						}
+						else if(admCode == "충청남도"){
+							local = ["천안시", "공주시", "보령시", "아산시", "서산시", "논산시", "계룡시", "당진시", "금산군", "부여군", "서천군", "청양군", "홍성군", "예산군", "예산군"]
+						}
+						else if(admCode == "전라북도"){
+							local = ["전주시", "군산시", "익산시", "정읍시", "남원시", "김제시", "완주군", "진안군", "무주군", "장수군", "임실군", "순창군", "고창군", "부안군"]
+						}
+						else if(admCode == "전라남도"){
+							local = ["광양시", "여수시", "순천시", "목포시", "나주시", "담양군", "곡성군", "구례군", "장성군", "화순군", "영암군", "무안군", "신안군", "진도군", "완도군", "해남군", "강진군", "영광군", "장흥군", "평현군"]
+						}
+						else if(admCode == "경상북도"){
+							local = ["포항시", "경주시", "구미시", "김천시", "안동시", "영주시", "영천시", "상주시", "문경시", "경산시", "군위군", "군북군", "의성군", "청송군", "영양군", "영덕군", "봉화군", "울진군", "울릉군"]
+						}
+						else if(admCode == "경상남도"){
+							local = ["창원시", "진주시", "통영시", "사천시", "김해시", "밀양시", "거제시", "양산시", "하동군", "하남군", "산청군", "진해군", "거창군", "합천군", "함양군", "의령군", "창녕군", "함안군", "양산군", "김해군"]
+						}
+						else if(admCode == "제주특별자치도"){
+							local = ["제주시", "서귀포시"]
+						}
+						else if(admCode == "세종특별자치시"){
+							local = ["세종시"]
+						}
+						
+						console.log(local);
+						const option0 = document.createElement("option");
+						option0.innerText = '선택'
+						option0.value = '선택'
+						option0.setAttribute("selected", "selected");
+						select.appendChild(option0);					
+						for(const i of local){
+							const option = document.createElement("option");
+							option.innerHtml = '';
+							option.innerText = i
+							option.value = i
+							select.appendChild(option);						
+						}
+						//전국 병원 리스트 가져오는 API 함수 호출
+						locaHospi()
+					});
 				}
-	
+			}
+		
+		}
+
 		
 		
 		
@@ -234,10 +233,11 @@
 			locaHospi(); // Call the method when the select element's value changes
 		});		 
 						
-	 //병원명 검색할때마다 API 재실행
+		//병원명 검색할때마다 API 재실행
+		let hospitalNm = ''
 		const nameHoButton = document.getElementById("nameHoButton")
 		nameHoButton.addEventListener('click',()=>{
-			let hospitalNm = ''
+			
 			hospitalNm = document.getElementById("nameHo").value;
 			locaHospi();
 		});
@@ -270,12 +270,12 @@
 			};	
 			xhr.send('');
 		}
-		
+		//xml 요소 가져오기
 		function parseXML(xml){
 			const tableBody = document.querySelector("tbody");  
 			tableBody.innerHTML='';
 		    let items = xml.getElementsByTagName("item");
-		    totalCount = xml.getElementsByTagName("totalCount")[0].textContent;;
+		    totalCount = xml.getElementsByTagName("totalCount")[0].textContent;
 		    
 		    Array.from(items).forEach(item => {
 		        const hospitalName = item.getElementsByTagName("hospitalNm")[0].textContent;
@@ -287,12 +287,12 @@
 		    });
 		}
        
-	       
+	    //페이징처리   
 		const before = document.getElementById("before");
 		const after = document.getElementById("after");
 		let page = 1;
 		let totalCount = 0
-		
+		//페이징-이전
 		before.addEventListener('click', ()=>{
 			if(page > 1){
 				page = page - 1
@@ -300,6 +300,7 @@
 			console.log(page)
 			locaHospi()
 		});
+		//페이징-이후
 		after.addEventListener('click', ()=>{
 			if(Math.ceil(totalCount / 20) > page)
 			page = page + 1
@@ -307,7 +308,17 @@
 			locaHospi()
 		});
 		   
-	       
+	    //페이지 이동
+	    const trs = $('tbody').children()
+	    if(trs){
+	    	for(const tr of trs){
+	    		tr.addEventListener('click', function(){
+	    			let hospitalName = this.children()[0].value
+	    			let hospitalAddress = this.children()[1].value
+	    			location.href='joinMaching.jm?hospitalName='+hospitalName+'&hospitalAddress='+hospitalAddress;
+	    		})
+	    	}
+	    }
 	       
 	       
 
