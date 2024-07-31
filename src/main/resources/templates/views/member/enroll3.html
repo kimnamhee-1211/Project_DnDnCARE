@@ -242,19 +242,22 @@
 				
 		function inputCheck(){ 
 			for(const input of Object.values(inputs)){
-				if(input.value.trim() == ''){
-					if(ifCheck){
-						ifCheck.innerText = "필수 입력 사항을 빠짐없이 작성해주세요."
-						ifCheck.style.color="red";
-						input.focus();
+				if(input){
+					if(input.value.trim() == ''){
+						if(ifCheck){
+							ifCheck.innerText = "필수 입력 사항을 빠짐없이 작성해주세요."
+							ifCheck.style.color="red";
+							input.focus();
+						}
+						return false;
+					}else{
+						if(ifCheck){
+							ifCheck.innerText = ""
+						}
+						return true;
 					}
-					return false;
-				}else{
-					if(ifCheck){
-						ifCheck.innerText = ""
-					}
-					return true;
 				}
+					
 			}	
 		}
 	
