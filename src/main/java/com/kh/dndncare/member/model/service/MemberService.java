@@ -45,5 +45,12 @@ public interface MemberService {
 
 	ArrayList<HashMap<String, String>> getCaregiverExp(int memberNo);
 
+	ArrayList<Patient> selectPatientList(String caregiverCity);
+
+	ArrayList<HashMap<String, String>> getPatientExp(ArrayList<Integer> pNoList);
+
+	ArrayList<Patient> choicePatientList(ArrayList<Integer> choiceNoList);
+
+
 
 }
