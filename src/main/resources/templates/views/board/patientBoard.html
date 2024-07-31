@@ -92,10 +92,7 @@
 		background-color: #8DD986;
 	}
 	
-	.{
-		border: 0;
-		background-color: #8DD986;
-	}
+
     
    
 </style>
@@ -104,7 +101,7 @@
     <div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
     <main class="bg-board-main container p-5">
         <div class="row h-50 p-3">
-            <h1 class="text-center" id="target">피간병인 커뮤니티</h1>
+            <h1 class="text-center" id="target">간병인 커뮤니티</h1>
             <br>
             <hr>
             <div class="col-md-9 p-4" align="center">
@@ -112,28 +109,28 @@
                <form th:action="@{/communityBoardList.bo}" method="get" id="areaForm">
 				    <input type="hidden" name="categoryNo" id="categoryNo" th:value="${categoryNo}">
 				    <input type="checkbox" class="btn-check" id="seoul" name="area" value="1" autocomplete="off" onchange="submitForm()"
-				           th:checked="${#lists.contains(areas, 1)}">
+				           th:checked="${areas != null and #lists.contains(areas, 1)}">
 				    <label class="btn-outline-area btn-sm me-2" for="seoul">서울</label>
 				    <input type="checkbox" class="btn-check" id="gynggi" name="area" value="2" autocomplete="off" onchange="submitForm()"
-				           th:checked="${#lists.contains(areas, 2)}">
+				           th:checked="${areas != null and #lists.contains(areas, 2)}">
 				    <label class="btn-outline-area btn-sm me-2" for="gynggi">경기</label>
 				    <input type="checkbox" class="btn-check" id="incheon" name="area" value="3" autocomplete="off" onchange="submitForm()"
-				           th:checked="${#lists.contains(areas, 3)}">
+				           th:checked="${areas != null and #lists.contains(areas, 3)}">
 				    <label class="btn-outline-area btn-sm me-2" for="incheon">인천</label>
 				    <input type="checkbox" class="btn-check" id="chungcheong" name="area" value="4" autocomplete="off" onchange="submitForm()"
-				           th:checked="${#lists.contains	(areas, 4)}">
+				           th:checked="${areas != null and #lists.contains	(areas, 4)}">
 				    <label class="btn-outline-area btn-sm me-2" for="chungcheong">충청도</label>
 				    <input type="checkbox" class="btn-check" id="jeolla" name="area" value="5" autocomplete="off" onchange="submitForm()"
-				           th:checked="${#lists.contains(areas, 5)}">
+				           th:checked="${areas != null and #lists.contains(areas, 5)}">
 				    <label class="btn-outline-area btn-sm me-2" for="jeolla">전라도</label>
 				    <input type="checkbox" class="btn-check" id="gyeongsang" name="area" value="6" autocomplete="off" onchange="submitForm()"
-				           th:checked="${#lists.contains(areas, 6)}">
+				           th:checked="${areas != null and #lists.contains(areas, 6)}">
 				    <label class="btn-outline-area btn-sm me-2" for="gyeongsang">경상도</label>
 				    <input type="checkbox" class="btn-check" id="gangwon" name="area" value="7" autocomplete="off" onchange="submitForm()"
-				           th:checked="${#lists.contains(areas, 7)}">
+				           th:checked="${areas != null and #lists.contains(areas, 7)}">
 				    <label class="btn-outline-area btn-sm me-2" for="gangwon">강원도</label>
 				    <input type="checkbox" class="btn-check" id="jeju" name="area" value="8" autocomplete="off" onchange="submitForm()"
-				           th:checked="${#lists.contains(areas, 8)}">
+				           th:checked="${areas != null and #lists.contains(areas, 8)}">
 				    <label class="btn-outline-area btn-sm me-2" for="jeju">제주도</label>
 				</form>
 
@@ -151,22 +148,25 @@
                         </tr>
                     </thead>
                     <tbody align="center">
-                        <tr class="table-light" th:each="b:${list}">
-                            <td>[[${b.boardNo}]]</td>
-                            <td>[[${b.categoryName}]]</td>
-                            <td>[[${b.boardTitle}]]
-                            	<th:block th:if="${replyCounts != 0}" th:each="rc:${replyCounts}">
-                            		<span class="badge badge-primary rounded-pill">[[${replyCounts[b.boardNo]}]]</span>
-                            	</th:block>
-                            </td>
-                            <td>[[${b.memberNickName}]]</td>
-                            <td>[[${b.areaName}]]</td>
-                            <td>[[${b.boardCreateDate}]]</td>
-                            <td>[[${b.boardCount}]]</td>
+                        <tr class="table-light" th:each="b:${list}" th:if="${list != null}">
+                            <td th:text="${b.boardNo}">1</td>
+                                <td th:text="${b.categoryName}">카테고리</td>
+                                <td>
+                                    <span th:text="${b.boardTitle}">제목</span>
+                                    <span th:if="${replyCounts != 0}" th:text="${replyCounts[b.boardNo]}" class="badge badge-primary rounded-pill">0</span>
+                                </td>
+                                <td th:text="${b.memberNickName}">작성자</td>
+                                <td th:text="${b.areaName}">지역</td>
+                                <td th:text="${b.boardCreateDate}">작성일</td>
+                                <td th:text="${b.boardCount}">조회수</td>
+                        </tr>
+                        <tr th:if="${list == null}">
+                            <td colspan="7">게시글이 없습니다.</td>
                         </tr>
                     </tbody>
                 </table>
 			</div>
+		
                 <hr>
                 <!-- 페이지네이션 -->
                 <div class="d-flex justify-content-end align-items-center mb-5">
@@ -189,18 +189,19 @@
                     </nav>
                 </div>
                 <div class="d-flex justify-content-center align-items-center mb-5">
-                    <div class="input-group" style="width:60%;">
-                        <select class="form-select form-select-sm" aria-label="Small select example" style="width:5%;">
-                            <option selected>전체</option>
-                            <option value="1">제목</option>
-                            <option value="2">작성자</option>
-                            <option value="3">글내용</option>
-                        </select>
-                        <input type="text" class="form-control" aria-label="Text input with dropdown buttons" style="width:50%;">
-                        <button class="btn-search" type="button">검색</button>
-                    </div>
-                    
-                </div>
+				    <div class="input-group" style="width: 60%;">
+				        <form id="searchBoardForm" action="searchBoard.bo" method="get" class="d-flex w-100">
+				            <select id="searchType" name="searchType" class="form-select form-select-sm" aria-label="Small select example" style="max-width: 15%;">
+				                <option th:value="boardTitle" selected>제목</option>
+				                <option th:value="memberNickName">작성자</option>
+				                <option th:value="boardContent">글내용</option>
+				            </select>
+				            <input id="searchText" name="searchText" type="text" class="form-control" aria-label="Text input with dropdown buttons" style="max-width: 65%;">
+				            <button class="btn btn-outline-secondary" type="button" id="searchBtn" th:onclick="searchBoard()">검색</button>
+				        </form>
+				    </div>
+				</div>
+
                 <br>
             </div>
             <div class="col-md-3">
@@ -211,7 +212,7 @@
                 <div class="sidebar-section">
 				    <div class="bg-category-list p-4 border mt-4">
 				        <ul class="list-group">
-				            <li class="list-group-item fs-5 fw-bold">피간병인 게시판</li>
+				            <li class="list-group-item fs-5 fw-bold">간병인 게시판</li>
 				            <li class="list-group-item"><a href="#" class="text-dark" onclick="selectCategory(-1)">전체글보기</a></li>
 				            <hr/>
 				            <li class="list-group-item fs-5 fw-bold">공지사항</li>
@@ -267,6 +268,20 @@
             document.getElementById('areaForm').submit();
         }
         
+    	function searchBoard(){
+    		const searchForm = document.getElementById('searchBoardForm')
+    		const searchType = document.getElementById('searchType').value;
+	        const searchText = document.getElementById('searchText').value;
+	        
+	        if (searchText.trim() === "") {
+	            alert("검색어를 입력하세요.");
+	            return;
+	        }
+	        console.log(searchType);
+	        console.log(searchText);
+	        searchForm.submit();
+	        
+	        
+    	}
     </script>
 </html>
->>>>>>> refs/remotes/origin/jaeyoung

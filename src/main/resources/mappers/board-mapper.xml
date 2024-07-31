@@ -140,4 +140,15 @@
 		from board_like
 		where board_no = #{boardNo}
 	</select>
+	
+	<insert id="insertReplyLike">
+		insert into reply_like
+		values(#{memberNo}, #{rId})
+	</insert>
+	
+	<select id="replyLikeCount" resultType="_int">
+		select count(*)
+		from reply_like
+		where reply_no = #{rId}
+	</select>
 </mapper>

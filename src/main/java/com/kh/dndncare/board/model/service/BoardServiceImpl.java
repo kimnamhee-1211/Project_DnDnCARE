@@ -106,6 +106,11 @@ public class BoardServiceImpl implements BoardService {
 		return bMapper.insertReplyLike(map);
 	}
 
+	@Override
+	public int replyLikeCount(int rId) {
+		return bMapper.replyLikeCount(rId);
+	}
+
 
 	
 }

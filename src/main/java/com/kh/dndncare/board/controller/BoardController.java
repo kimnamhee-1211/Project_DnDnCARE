@@ -64,6 +64,7 @@ public class BoardController {
 		    	int replyCount = bService.getReplyCount(board.getBoardNo());
 		    	replyCounts.put(board.getBoardNo(), replyCount);
 		    	
+		    	
 		    }
 	        model.addAttribute("list", list);
 	        model.addAttribute("pi", pi);
@@ -112,11 +113,21 @@ public class BoardController {
 		ArrayList<Reply> reply = bService.selectReply(bId);
 		System.out.println(reply);
 		int boardLikeCount = bService.boardLikeCount(bId);
+		
+		HashMap<Integer, Integer> replyLikeCounts = new HashMap<>();
+		 for (Reply replys : reply) {
+	            int rId = replys.getReplyNo();
+	            int replyLikeCount = bService.replyLikeCount(rId);
+	            replyLikeCounts.put(rId, replyLikeCount);
+	        }
+		 
+		
 		if(board != null) {
 			model.addAttribute("b", board); 
 			model.addAttribute("page", page); 
 			model.addAttribute("reply", reply);
 			model.addAttribute("boardLikeCount", boardLikeCount);
+			model.addAttribute("replyLikeCounts", replyLikeCounts);
 			return "boardDetail";
 		}else {
 			throw new BoardException("게시글 상세보기를 실패했습니다");
@@ -254,18 +265,27 @@ public class BoardController {
 	    } catch (Exception e) {
 	        json.put("resultString", "error");
 	    }
-	    System.out.println(json.toString());
 	    return json.toString();
 	}
 	
 	@PostMapping("replyLike.bo")
 	@ResponseBody
-	public String reply(@RequestParam("replyNo") int replyNo, @RequestParam("memberNo") int memberNo) {
+	public String reply(@RequestParam("rId") int rId, @RequestParam("memberNo") int memberNo) {
 		HashMap<String, Integer> map = new HashMap<>();
-		map.put("replyNo", replyNo);
+		map.put("rId", rId);
 		map.put("memberNo", memberNo);
-		int result = bService.insertReplyLike(map);
-		return null;
+		
+		JSONObject json = new JSONObject();
+		try {
+			int result = bService.insertReplyLike(map);
+			String resultString = result == 1 ? "success" : "fail";
+			int replyLikeCount = bService.replyLikeCount(rId);
+			json.put("resultString", resultString);
+			json.put("replyLikeCount", replyLikeCount);
+		} catch(Exception e) {
+			json.put("resultString", "error");
+		}
+		return json.toString();
 	}
 
 
