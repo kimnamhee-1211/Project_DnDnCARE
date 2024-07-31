@@ -134,4 +134,10 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.updatePassword(changeInfo);
 	}
 
+	@Override
+	public List<Integer> selectMemberInfo(int memberNo) {
+		return null;
+		/* return mMapper.selectMemberInfo(memberNo); */
+	}
+
 }

@@ -1,6 +1,8 @@
 package com.kh.dndncare.member.model.vo;
 
 import java.sql.Date;
+import java.util.HashMap;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,4 +34,8 @@ public class Member {
 	private String memberNational;
 	private String memberPay;
 	private Date memberUpdateDate;
+	
+	
+	//카테고리 추가하기
+	
 }

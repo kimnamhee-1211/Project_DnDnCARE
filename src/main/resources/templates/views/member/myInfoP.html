@@ -35,6 +35,7 @@
 	      		</div>
 	      		<div align="center"class="row m-4" style="border:2px solid #8dd986;width:950px"> <!-- 여기로규격정햇다 -->
 		      		<div class="col-2 m-4">
+		      			<div><button class="myInfo-btn" style="height:100px">내 계정 정보 수정하기</button></div>
 		      		</div>
 		      		<div  class="col-3 d-flex align-items-center">
 		      			<div>???님! 어서오세요!</div>
@@ -67,7 +68,7 @@
 	      							<td width="63"></td>
 	      							<td width="60"></td>
 	      							<td width="40">
-	      								<div style="position: relative;">
+	      								<!-- <div style="position: relative;">
 		      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
 		      									<div id="area"class="selectUpdateDiv select-hidden m-1">
 		      										<div>서울</div>
@@ -81,7 +82,7 @@
 		      										
 		      									</div>
 		      									
-		      								</div>
+		      							</div> -->
 	      							</td>
 	      						</tr>
 	      						<tr>
@@ -103,7 +104,7 @@
 	      							<td>질환</td>
 	      							<td colspan="5" id="disaseUpdate">
 	      								
-	      								<span>[[${p.ptName}]]</span>	
+	      								<span th:each="disease : ${p.getDisease}"> [[${disease}]] </span>	
 	      									
 	      							</td>
 	      							<td colspan="1">
@@ -127,7 +128,7 @@
 	      						</tr>
 	      						<tr>
 	      							<td>중증도</td>
-	      							<td colspan="2" id="diseaseLevelUpdate">낮음</td>
+	      							<td colspan="2" id="diseaseLevelUpdate">[[${p.diseaseLevel}]]</td>
 	      							<td colspan="1">
 		      							<div style="position: relative;">
 	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
@@ -140,7 +141,7 @@
 	      								</div>
 									</td>
 									<td>성별</td>
-									<td colspan="1" id="ageUpdate">남성</td>
+									<td colspan="1" id="ageUpdate">[[${p.ptGender == "M" ? "남자" : "여자"}]]</td>
 									<td>
 										<div style="position: relative;">
 	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
@@ -154,7 +155,8 @@
 	      						</tr>
 	      						<tr>
 	      							<td>키</td>
-	      							<td colspan="2" id="heightUpdate">152cm</td>
+	      							<td colspan="1" id="heightUpdate">[[${p.ptHeight}]]</td>
+	      							<td>cm</td>
 	      							<td>
 	      								<div style="position: relative;">
 	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
@@ -165,7 +167,7 @@
 	      								</div>
 	      							</td>
 	      							<td colspan="1" width="50px">몸무게</td>
-	      							<td colspan="1" id="weightUpdate">50kg</td>
+	      							<td colspan="1" id="weightUpdate">[[${p.ptWeight}]]</td>
 	      							<td>
 	      								<div style="position: relative;">
 	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
@@ -184,12 +186,14 @@
 	      						
 	      						<tr>
 	      							<td colspan="2">요청 서비스</td>
-	      							<td colspan="4" id="serviceUpdate"></td>
+	      							<td colspan="4" id="serviceUpdate">
+	      								<span class ="m-1"th:each="number:${#numbers.sequence(1,p.ptService.split('//').length)}">[[${p.ptService.split('//')[number-1]}]]</span>
+	      							</td>
 	      							<td>
 	      								<div style="position: relative;">
 	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
 	      									<div id="service"class="selectUpdateDiv select-hidden m-1">
-	      										<div>병원돌봄</div>
+	      										<div >병원돌봄</div>
 	      										<div>가정돌봄</div>
 	      										<div>동행서비스</div>
 	      									</div>
@@ -230,64 +234,66 @@
 						
 	      			</div>
 	      			<div class="col m-3">
-	      				<div id="setMatchingList" class="myInfo-Border-maincolor mt-2">
-		      				<div class="m-3"  ><span class="h3 myInfo-title">간병인 매칭 조건 설정</span>
+	      				<form id="wantInfo" action="updateWantInfo.me" method="post">
+		      				<div id="setMatchingList" class="myInfo-Border-maincolor mt-2">
+			      				<div class="m-3"  ><span class="h3 myInfo-title">간병인 매칭 조건 설정</span><span><br><br>원하는 간병인의 정보를 입력하세요!</span>
+			      				</div>
+			      				<div class="m-3">1. 국적
+				      				<table class="d-flex justify-content-center ">
+				      					<tr align="center">
+				      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;내국인&nbsp;</span></td>
+				      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;외국인&nbsp;</span></td>
+				      					</tr>
+				      				</table>
+				      			</div>
+			      				<div class="m-3">2. 성별
+				      				<table class="d-flex justify-content-center ">
+				      					<tr align="center">
+				      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;남자&nbsp;</span></td>
+				      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;여자&nbsp;</span></td>
+				      					</tr>
+				      				</table>
+				      			</div>
+			      				<div class="m-3">3.연령대
+				      				<table class="d-flex justify-content-center">
+				      					<tr align="center">
+				      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;청년층&nbsp;</span></td>
+				      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;중년층&nbsp;</span></td>
+				      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;노년층&nbsp;</span></td>
+				      					</tr>
+				      				</table>
+			      				</div>
+			      				<div class="m-3 ">4.질환경험
+				      				<table class="d-flex justify-content-center m-2">
+				      					<tr class="m-2">
+				      						<td width="100px" height="35px"><span class="btn-outline-maincolor-2 m-2">&nbsp;뇌질환&nbsp;</span></td>
+				      						<td width="100px"><span class="btn-outline-maincolor-2 m-2">호흡기질환</span></td>
+				      						<td width="100px"><span class="btn-outline-maincolor-2 m-2">&nbsp;거동장애&nbsp;</span></td>
+				      					</tr>
+				      					<tr class="m-2">
+				      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;와상환자&nbsp;</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;파킨슨&nbsp;</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;수면질환&nbsp;</span></td>
+				      					</tr>
+				      					<tr class="m-2">
+				      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;의식상실&nbsp;</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;정신질환&nbsp;</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;수면질환&nbsp;</span></td>
+				      					</tr>
+				      					<tr class="m-2" >
+				      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;재 활&nbsp;</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;기 타&nbsp;</span></td>
+				      						<td ></td>
+				      					</tr>
+				      				</table>
+			      				</div>
+			      				<div align="center"class="row align-items-center">
+			      					<div class="mb-4">
+			      						<button type="button" id="wantInfoButton" class="myInfo-btn">수정하기 </button>
+			      					</div>
+			      				</div>
 		      				</div>
-		      				<div class="m-3">1. 국적
-			      				<table class="d-flex justify-content-center ">
-			      					<tr align="center">
-			      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;내국인&nbsp;</span></td>
-			      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;외국인&nbsp;</span></td>
-			      					</tr>
-			      				</table>
-			      			</div>
-		      				<div class="m-3">2. 성별
-			      				<table class="d-flex justify-content-center ">
-			      					<tr align="center">
-			      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;남자&nbsp;</span></td>
-			      						<td width="80px"><span class="btn-outline-maincolor-2">&nbsp;여자&nbsp;</span></td>
-			      					</tr>
-			      				</table>
-			      			</div>
-		      				<div class="m-3">3.연령대
-			      				<table class="d-flex justify-content-center">
-			      					<tr align="center">
-			      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;청년층&nbsp;</span></td>
-			      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;중년층&nbsp;</span></td>
-			      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;노년층&nbsp;</span></td>
-			      					</tr>
-			      				</table>
-		      				</div>
-		      				<div class="m-3 ">4.질환
-			      				<table class="d-flex justify-content-center m-2">
-			      					<tr class="m-2">
-			      						<td width="100px" height="35px"><span class="btn-outline-maincolor-2 m-2">&nbsp;뇌질환&nbsp;</span></td>
-			      						<td width="100px"><span class="btn-outline-maincolor-2 m-2">호흡기질환</span></td>
-			      						<td width="100px"><span class="btn-outline-maincolor-2 m-2">&nbsp;거동장애&nbsp;</span></td>
-			      					</tr>
-			      					<tr class="m-2">
-			      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;와상환자&nbsp;</span></td>
-			      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;파킨슨&nbsp;</span></td>
-			      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;수면질환&nbsp;</span></td>
-			      					</tr>
-			      					<tr class="m-2">
-			      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;의식상실&nbsp;</span></td>
-			      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;정신질환&nbsp;</span></td>
-			      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;수면질환&nbsp;</span></td>
-			      					</tr>
-			      					<tr class="m-2" >
-			      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;재 활&nbsp;</span></td>
-			      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;기 타&nbsp;</span></td>
-			      						<td ></td>
-			      					</tr>
-			      				</table>
-		      				</div>
-		      				<div align="center"class="row align-items-center">
-		      					<div class="mb-4">
-		      						<button  class="myInfo-btn">수정하기 </button>
-		      					</div>
-		      				</div>
-	      				</div>
+	      				</form>
 	      			</div>
 	      		</div>
 	      		
@@ -325,8 +331,8 @@
 			};
 			
 			
-			//활동지역 선택클릭
-			const areaDiv = document.getElementById('area');
+			//활동지역 선택클릭 // 환자페이지엔 없음
+			/* const areaDiv = document.getElementById('area');
 			const area = document.getElementById('area').children;
 			const areaUpdate = document.getElementById('areaUpdate'); 
 			console.log(area)
@@ -339,7 +345,7 @@
 					areaDiv.classList.remove('select-block');
 					areaDiv.classList.add('select-hidden');
 				})
-			};
+			}; */
 			
 			//질환클릭
 			const disaseDiv = document.getElementById('disase');
@@ -394,9 +400,12 @@
 			const heightDiv = document.getElementById('height');
 			const height = document.getElementById('height').children;
 			const heightUpdate = document.getElementById('heightUpdate'); 
+			height[0].value=heightUpdate.innerText;
 			for(i of height){
+				
+				
 				i.addEventListener('blur',function(){
-					heightUpdate.innerText = this.value +'cm';
+					heightUpdate.innerText = this.value;
 					
 					heightDiv.classList.remove('select-block');
 					heightDiv.classList.add('select-hidden');
@@ -407,9 +416,10 @@
 			const weightDiv = document.getElementById('weight');
 			const weight = document.getElementById('weight').children;
 			const weightUpdate = document.getElementById('weightUpdate'); 
+			weight[0].value=weightUpdate.innerText;
 			for(i of weight){
 				i.addEventListener('blur',function(){
-					weightUpdate.innerText = this.value + 'cm';
+					weightUpdate.innerText = this.value;
 					
 					weightDiv.classList.remove('select-block');
 					weightDiv.classList.add('select-hidden');
@@ -468,9 +478,22 @@
 						this.classList.add('btn-outline-maincolor-2');
 						this.classList.remove('btn-maincolor');
 					};
-				})
-			}
-		}
+				});
+			};
+			
+			//매칭조건 데이터넘기자
+			const wantInfoForm = document.getElementById('wantInfo');
+			const wantInfoButton = document.getELementById('wantInfoButton');
+			
+			wantInfoButton.addEventListener('click',function(){
+				
+			});
+			
+		
+			
+			
+			
+		}//window.onload
 		
 		
 		//주소검색 api

@@ -51,5 +51,7 @@ public interface MemberService {
 	int updatePassword(HashMap<String, String> changeInfo);
 	ArrayList<HashMap<String, String>> getCaregiverExp(int memberNo);
 
+	List<Integer> selectMemberInfo(int memberNo);
+
 
 }

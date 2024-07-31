@@ -3,6 +3,7 @@ package com.kh.dndncare.member.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -85,18 +86,18 @@ public class MemberController {
 		
 		
 		
+		
 		if(loginUser != null) {
 			Patient p = mService.selectPatient(loginUser.getMemberNo());
-			
-			System.out.println(p);
+			List<Integer> memberInfo =  mService.selectMemberInfo(loginUser.getMemberNo());
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch(check) {
 				case 'C':
 					return "myInfo";
 				
 				case 'P':
+					p = categoryFunction(p, loginUser.getMemberNo());
 					model.addAttribute("p",p);
-					
 					return "myInfoP";
 					
 					
@@ -106,6 +107,23 @@ public class MemberController {
 		}
 		throw new MemberException("로그인이 필요합니다.인터셉터만드세요");
 		
+	}
+	
+	public Patient categoryFunction(Patient p,int memberNo){		//카테고리가공메소드
+		ArrayList<HashMap<String, String>> category = mService.getCaregiverExp(memberNo);
+		
+		p.setDisease(new ArrayList<String>());
+		
+		for(HashMap<String,String> m : category) {
+			
+			
+			 switch(m.get("L_CATEGORY")) {
+			 case "disease" : p.getDisease().add(0,m.get("S_CATEGORY")); break;
+			 case "diseaseLevel" : p.setDiseaseLevel(m.get("S_CATEGORY")); break;
+			 
+			 }
+		}
+		return p;
 	}
 
 

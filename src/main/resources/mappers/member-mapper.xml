@@ -140,6 +140,8 @@
 		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
 		WHERE MEMBER_NO = ${memberNo}
 	</select>
+	
+	
 
 	
 
