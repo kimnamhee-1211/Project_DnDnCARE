@@ -87,7 +87,6 @@ public class MemberController {
 		
 		if(loginUser != null) {
 			Patient p = mService.selectPatient(loginUser.getMemberNo());
-			p.setInfoCategory(mService.selectInfoCategory(loginUser.getMemberNo()));
 			
 			System.out.println(p);
 			char check = loginUser.getMemberCategory().charAt(0);

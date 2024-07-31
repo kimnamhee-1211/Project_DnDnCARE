@@ -89,7 +89,7 @@
 	  
 	 <!-- 정보 입력-->
 	<insert id="enrollInfoCategory">
-		<foreach collection="infoCategory" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
+		<foreach collection="memberInfo" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
 			into member_Info values(#{memberNo}, #{item})
 		</foreach>
 	</insert>

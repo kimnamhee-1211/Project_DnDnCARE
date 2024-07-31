@@ -29,5 +29,7 @@ public class Patient {
 	private String ptRequest;
 	private Date ptUpdateDate;
 	
-	private List<Integer> infoCategory;
+	private List<Integer> memberInfo;
+	private List<Integer> wantInfo;
+	
 }
