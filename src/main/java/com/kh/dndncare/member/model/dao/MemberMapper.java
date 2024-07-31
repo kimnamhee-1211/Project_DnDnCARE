@@ -7,7 +7,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.kh.dndncare.matching.model.vo.Matching;
+
+import com.kh.dndncare.member.model.vo.CalendarEvent;
+
 import com.kh.dndncare.member.model.vo.CareGiver;
+
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
@@ -22,7 +26,10 @@ public interface MemberMapper {
 	
 	int nickNameCheck(String nickName);
 
+	ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser);
+
 	ArrayList<Member> selectAllMember();
+	
 	int enroll(Member m);
 
 	int enrollCareGiver(CareGiver cg);
@@ -33,7 +40,11 @@ public interface MemberMapper {
 
 
 	Member findIdResult(Member member);
-	ArrayList<Matching> calendarEvent(Member loginUser);
+
+	HashMap<String, String> getCaregiverInfo(int memberNo);
+
+	ArrayList<HashMap<String, String>> getCaregiverExp(int memberNo);
+	
 
 	Patient selectPatient(int memberNo);
 

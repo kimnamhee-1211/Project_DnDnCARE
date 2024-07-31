@@ -40,12 +40,34 @@
 	  
 	  
 	  
+
+	<!-- ResultMap : 캘린더에 적합도록 매핑 -->
+	<resultMap type="CalendarEvent" id="calendarResultMap">
+		<id column="MAT_NO" property="matNo"/>
+	  	<result column="TITLE" property="title"/>
+		<result column="BEGIN_DT" property="start"/>
+		<result column="END_DT" property="end"/>
+		<result column="MONEY" property="money"/>
+		<result column="HOSPTAL_NO" property="hosptalNo"/>
+		<result column="HOSPTAL_ADDRESS" property="hosptalAddress"/>
+		<result column="HOSPTAL_NAME" property="hosptalName"/>
+	</resultMap>
+	  
+	  
+	  
+	<select id="caregiverCalendarEvent" resultMap="calendarResultMap">
+		SELECT MAT_NO, '간병하기' AS TITLE, BEGIN_DT, END_DT, MONEY, HOSPTAL_NO, HOSPTAL_ADDRESS, HOSPTAL_NAME 
+		FROM MATCHING
+		        JOIN HOSPTAL USING(HOSPTAL_NO)
+		WHERE MEMBER_NO = #{memberNo}
+	</select>
+
 	  <select id="selectAllMember" resultType="Member">		<!-- 멤버좀 확인할라구요 -->
 		select *
 		from member	  
 	  </select>
 	  
-	  
+
 	  <!-- 회원가입1(member) -->
 	  <insert id="enroll"  useGeneratedKeys="true">
 	  	<selectKey resultType="_int" keyProperty="memberNo" order="BEFORE">
@@ -65,14 +87,6 @@
 	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService}, sysdate)	  
 	  </insert>
 	  
-	  
-	<!-- <select id="calendarEvent" resultMap="calendarResultMap">
-		SELECT *
-		FROM MATCHING
-				JOIN MAT_PT_INFO USING(MAT_NO)
-	</select> -->	  
-	  
-	  
 	 <!-- 정보 입력-->
 	<insert id="enrollInfoCategory">
 		<foreach collection="infoCategory" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
@@ -86,7 +100,7 @@
 	  	insert into patient
 	  	values(seq_pid.nextval, #{memberNo}, #{ptName}, #{ptGender}, #{ptAge}, 
 	  			#{ptWeight}, #{ptHeight}, #{ptService}, #{ptAddress}, #{ptRequest}, sysdate)	  
-	  </insert>
+	</insert>
 	  
 	  <select id="findIdResult" resultType="Member">
 	  	select member_id,member_create_date,member_status,member_category,member_name
@@ -109,5 +123,24 @@
 	  
 	  
 	  
+	
+	<!-- 간병인 메인페이지에서의 자동 추천을 위한 간병인 본인 정보 조회 -->
+	<select id="getCaregiverInfo" resultType="map">
+		SELECT DECODE(MEMBER_GENDER, 'M', '남성', 'F', '여성') AS "성별", TRUNC(SYSDATE - MEMBER_AGE) AS "나이", 
+        SUBSTR(REPLACE(MEMBER_ADDRESS, '//', ' ') , INSTR(MEMBER_ADDRESS, ' ') ) AS "주소",
+		        MEMBER_NATIONAL AS "국적"
+		FROM MEMBER
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
+
+	<select id="getCaregiverExp" resultType="map">
+		SELECT L_CATEGORY, S_CATEGORY
+		FROM MEMBER
+		        JOIN MEMBER_INFO USING(MEMBER_NO)
+		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
+
+	
 
 </mapper>
