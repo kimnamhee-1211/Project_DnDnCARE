@@ -37,5 +37,7 @@ public interface BoardService {
 
 	int boardLikeCount(int boardNo);
 
+	int insertReplyLike(HashMap<String, Integer> map);
+
 
 }

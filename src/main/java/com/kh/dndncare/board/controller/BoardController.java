@@ -1,5 +1,6 @@
 package com.kh.dndncare.board.controller;
 
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -236,19 +237,35 @@ public class BoardController {
 		return result == 1 ? "success" : "fail";
 	}
 	
-	@GetMapping("boardLike.bo")
+	@PostMapping("boardLike.bo")
 	@ResponseBody
 	public String boardLike(@RequestParam("boardNo") int boardNo, @RequestParam("memberNo") int memberNo) {
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
-		map.put("boardNo", boardNo);
+	    HashMap<String, Integer> map = new HashMap<>();
+	    map.put("boardNo", boardNo);
+	    map.put("memberNo", memberNo);
+	    JSONObject json = new JSONObject();
+	    try {
+	        int result = bService.insertBoardLike(map);
+	        String resultString = result == 1 ? "success" : "fail";
+	        int boardUpdateLikeCount = bService.boardLikeCount(boardNo);
+	        
+	        json.put("boardUpdateLikeCount", boardUpdateLikeCount);
+	        json.put("resultString", resultString);
+	    } catch (Exception e) {
+	        json.put("resultString", "error");
+	    }
+	    System.out.println(json.toString());
+	    return json.toString();
+	}
+	
+	@PostMapping("replyLike.bo")
+	@ResponseBody
+	public String reply(@RequestParam("replyNo") int replyNo, @RequestParam("memberNo") int memberNo) {
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("replyNo", replyNo);
 		map.put("memberNo", memberNo);
-		int result = bService.insertBoardLike(map);
-		int boardLikeCount = bService.boardLikeCount(boardNo);
-		System.out.println(map);
-		JSONObject json = new JSONObject();
-		json.put("boardLikeCount", boardLikeCount);
-		
-		return result == 1 ? "success" : "fail";
+		int result = bService.insertReplyLike(map);
+		return null;
 	}
 
 

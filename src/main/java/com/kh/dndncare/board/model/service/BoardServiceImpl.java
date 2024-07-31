@@ -101,6 +101,11 @@ public class BoardServiceImpl implements BoardService {
 		return bMapper.boardLikeCount(boardNo);
 	}
 
+	@Override
+	public int insertReplyLike(HashMap<String, Integer> map) {
+		return bMapper.insertReplyLike(map);
+	}
+
 
 	
 }

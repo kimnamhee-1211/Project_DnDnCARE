@@ -44,4 +44,6 @@ public interface BoardMapper {
 
 	int boardLikeCount(int boardNo);
 
+	int insertReplyLike(HashMap<String, Integer> map);
+
 }
