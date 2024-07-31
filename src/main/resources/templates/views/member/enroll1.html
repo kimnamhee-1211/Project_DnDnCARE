@@ -301,7 +301,6 @@
     			
         		$.ajax({
         			url : 'idCheck.me',
-<<<<<<< HEAD
         			type : 'post',
         			data : {id : idInputVal},
         			success : (data) =>{
@@ -322,7 +321,6 @@
     		}	   		
     	}
 		
-=======
         			method : 'post',
         			data : {id : idInputVal},
         			success : (data) =>{
@@ -342,7 +340,6 @@
         		});
     		}	   		
     	}
->>>>>>> refs/remotes/origin/Kiryong
     	if(idInput != null){
         	idInput.addEventListener('focusout', idCheck);	
     	}		
@@ -402,7 +399,6 @@
 		telInput.addEventListener('focusout', telCheck);
 			
 
-=======
  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 </head>
@@ -562,16 +558,7 @@
 			const nextButton1 = document.getElementById('nextButton');
 			const nextButton2 = document.getElementById('nextButton2');
 			const form = document.getElementById('enrollForm');
-<<<<<<< HEAD
-			
-			//1page 검사 - 이동
-			if(nextButton1 != null){
-				nextButton1.addEventListener('click', function(){					
-					let isValid = true;						
-					
-=======
-				
-			
+						
 			//1page 검사 - 이동
 			if(nextButton1 != null){
 				nextButton1.addEventListener('click', function(){					
@@ -608,9 +595,7 @@
 						pwdInput2.focus();	
 						isValid = false;
 					}										
->>>>>>> refs/remotes/origin/namhee
 				    if(isValid){
-<<<<<<< HEAD
 				    	if(!inputCheck1()){
 				    		isValid = false;
 						}else if(!idCheck()){
@@ -650,26 +635,19 @@
 												
 				    if(isValid){
 						form.submit();			            	
-=======
 						const enroll1 = document.getElementById("enroll1");
 						const enroll2 = document.getElementById("enroll2");
 						
 						enroll1.style.display="none";
 						enroll2.style.display="block";			            	
->>>>>>> refs/remotes/origin/namhee
 		            }
 				
 				});
-<<<<<<< HEAD
 			}				
-=======
 			}
->>>>>>> refs/remotes/origin/namhee
 			
-<<<<<<< HEAD
 		}		
 		
-=======
 			
 			//submit
 			if(nextButton2 != null){
@@ -719,7 +697,6 @@
 			}
 			
 		}		
->>>>>>> refs/remotes/origin/namhee
 		
 	
 		
@@ -762,7 +739,6 @@
 				}
 			}).open();
     	};
-<<<<<<< HEAD
 	    
     	
 		//필수 입력사항 입력 확인
@@ -818,16 +794,11 @@
 			}	
 		}
 			
-=======
 
->>>>>>> refs/remotes/origin/namhee
 		
 	    //아이디 검사	    
-<<<<<<< HEAD
     	const idInputLabel = document.getElementById("idInputLabel");
-=======
     	var idInputLabel = document.getElementById("idInputLabel");
->>>>>>> refs/remotes/origin/namhee
     	function idCheck(){   		
     		if(idInput != null){
     			const idInputVal = idInput.value;
@@ -839,31 +810,24 @@
         			data : {id : idInputVal},
         			success : (data) =>{
         				console.log(data)
-<<<<<<< HEAD
-<<<<<<< HEAD
         				if(data == "usable"){
-=======
         				if(data == 'usable'){
->>>>>>> refs/remotes/origin/namhee
-=======
+
         				if(data == 'usable' ){
->>>>>>> refs/remotes/origin/Kiryong
+
         					idInputLabel.innerText = "사용 가능한 아이디";
         					idInputLabel.style.color="green"
-<<<<<<< HEAD
+
         					return true;
- 
-=======
->>>>>>> refs/remotes/origin/namhee
         				}else{
         					idInputLabel.innerText = "사용할 수 없는 아이디입니다.";
         					idInputLabel.style.color="red"
-<<<<<<< HEAD
+
         					return false;
         				}
-=======
+
 						}
->>>>>>> refs/remotes/origin/namhee
+
         			},
         			error: data => console.log(data)
         		});
@@ -927,7 +891,7 @@
 		}		
 		telInput.addEventListener('focusout', telCheck);
 		
->>>>>>> refs/remotes/origin/master
+
 	
 	</script>
 		

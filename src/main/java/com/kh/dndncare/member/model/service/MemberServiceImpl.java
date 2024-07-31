@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.dndncare.member.model.dao.MemberMapper;
 import com.kh.dndncare.member.model.vo.CareGiver;
-import com.kh.dndncare.member.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 import com.kh.dndncare.sms.SmsService;
