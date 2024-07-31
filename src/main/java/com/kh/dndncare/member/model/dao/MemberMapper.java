@@ -59,4 +59,6 @@ public interface MemberMapper {
 
 	ArrayList<HashMap<String, String>> selectWantInfo(int memberNo);
 
+	int updatePatient(Patient p);
+
 }

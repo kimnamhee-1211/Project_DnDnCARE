@@ -59,5 +59,7 @@ public interface MemberService {
 
 	ArrayList<HashMap<String, String>> selectWantInfo(int memberNo);
 
+	int updatePatient(Patient p);
+
 
 }

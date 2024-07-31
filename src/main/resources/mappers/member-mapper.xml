@@ -163,5 +163,10 @@
 		WHERE MEMBER_NO = ${memberNo}
 	</select>
 	
+	<update id="updatePatient">
+		update patient
+		set pt_name = #{ptName}, pt_age = #{ptAge}, pt_weight = #{ptWeight}, pt_height = #{ptHeight}
+		where member_no = #{memberNo}
+	</update>
 
 </mapper>

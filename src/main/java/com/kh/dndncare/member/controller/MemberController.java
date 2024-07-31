@@ -103,6 +103,7 @@ public class MemberController {
 					model.addAttribute("p",p);
 					model.addAttribute("memberInfo",memberInfo);
 					model.addAttribute("wantInfo",wantInfo);
+					System.out.println(wantInfo.getInfoDisease());
 					
 					//Patient pWant = categoryFunction()
 					
@@ -772,6 +773,16 @@ public class MemberController {
 //		ArrayList<String> wi = wantInfo
 //		mService.selectwantInfo(wantInfo);
 		return "redirect:myInfo.me";
+	}
+	
+	@PostMapping("patientUpdate.me")
+	public String updatePatient(@ModelAttribute Patient p,HttpSession session) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		p.setMemberNo(loginUser.getMemberNo());
+		
+		int result = mService.updatePatient(p);
+		return "redirect:home.do";
 	}
 	
 	

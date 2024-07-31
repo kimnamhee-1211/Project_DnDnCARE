@@ -155,4 +155,9 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectWantInfo(memberNo);
 	}
 
+	@Override
+	public int updatePatient(Patient p) {
+		return mMapper.updatePatient(p);
+	}
+
 }
