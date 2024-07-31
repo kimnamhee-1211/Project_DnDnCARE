@@ -101,5 +101,13 @@
 	  	where member_no = #{memberNo}
 	  </select>
 	  <!-- 환자 인포카테고리 -->
+	  <update id="updatePassword">
+	  	update member
+	  	set member_pwd = #{newPwd}
+	  	where member_id = #{memberId}
+	  </update>
+	  
+	  
+	  
 
 </mapper>

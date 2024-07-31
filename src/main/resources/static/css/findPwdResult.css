@@ -19,31 +19,39 @@ body {
     min-height: 100vh;
 }
 
+.updatePwd-input{
+	padding:10px;
+}
 
+.pwd-info {
+	font-size:13px;
+}
 
-#h4{margin: 80px auto;}
+.form-floating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
 
-.info{margin-bottom:5px; font-size:20px;}
+strong {
+	text-decoration:underline;
+	text-underline-offset:3px;
+}
 
+.findIdResult-wrap {
+	border: 1px solid lightgray;
+	color:gray;
+}
+.findIdResult-wrap li {
+	margin-left:10px;
+}
 
-#pInput_label, #cInput_label{font-size:35px;
-							margin: 50px auto;
-							padding-top:40px;
-							height:200px;
-							width:350px;
-							}
+.form-floating.find-id {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px !important;
+}
 
-#pInput_label{margin-right:100px;}
-
-#msg{font-size:20px;}
-
-#erollsucdiv{margin-top:50px;
-			margin-bottom: 50px;}
-
-
-
-
-#block{width: 30px;}
 
 .inner-content {
     font-family: 'Pretendard-Regular';
@@ -58,16 +66,34 @@ body {
 }
 
 
-.sign-btn button {
+
+.signIn-btn {
+	height:60px;
+	font-size:18px;
+	border-radius:25px;
+	border:none;
+	background:#8dd986;
+}
+
+.signIn-btn a {
+	text-decoration:none;
+	color:white;
+}
+
+.findPwd-btn a {
+	text-decoration:none;
+	color:black;
+}
+
+.findPwd-btn {
 	height:60px;
 	font-size:18px;
 	border-radius:25px;
 	border:none;
 }
 
-.signIn-btn {
-	background:#8dd986;
-	color:white;
+.findPwd-btn {
+	text-decoration:none;
 }
 
 .icon-section {

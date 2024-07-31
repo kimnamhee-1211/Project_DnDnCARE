@@ -1,7 +1,7 @@
 package com.kh.dndncare.member.model.service;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.List;
 
 import com.kh.dndncare.member.model.vo.CareGiver;
@@ -32,6 +32,7 @@ public interface MemberService {
 	Member findIdResult(Member member);
 
 	boolean sendSms(String phoneNumber, String string);
+
 	ArrayList<Matching> calendarEvent(Member loginUser);
 
 	Patient selectPatient(int memberNo);
@@ -39,6 +40,7 @@ public interface MemberService {
 	List<Integer> selectInfoCategory(int memberNo);
 
 
+	int updatePassword(HashMap<String, String> changeInfo);
 
 
 }

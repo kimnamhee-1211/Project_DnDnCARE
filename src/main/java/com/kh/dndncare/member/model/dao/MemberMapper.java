@@ -1,6 +1,7 @@
 package com.kh.dndncare.member.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -39,5 +40,6 @@ public interface MemberMapper {
 	List<Integer> selectInfoCategory(int memberNo);
 
 
+	int updatePassword(HashMap<String, String> changeInfo);
 
 }

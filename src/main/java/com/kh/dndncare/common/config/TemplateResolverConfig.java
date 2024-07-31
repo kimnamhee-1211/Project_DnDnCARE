@@ -56,4 +56,18 @@ public class TemplateResolverConfig {
 		return dotBo;
 	}
 	
+	@Bean
+	public ClassLoaderTemplateResolver dotMcResolver() {
+		ClassLoaderTemplateResolver dotMc = new ClassLoaderTemplateResolver();
+		dotMc.setPrefix("templates/views/matching/");
+		dotMc.setSuffix(".html");
+		dotMc.setTemplateMode(TemplateMode.HTML);
+		dotMc.setCharacterEncoding("UTF-8");
+		dotMc.setCacheable(false);
+		dotMc.setOrder(4);
+		dotMc.setCheckExistence(true);
+		
+		return dotMc;
+	}
+	
 }

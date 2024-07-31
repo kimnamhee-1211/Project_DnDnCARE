@@ -1,13 +1,10 @@
 package com.kh.dndncare.member.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.sql.Date;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.io.IOException;
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,29 +15,24 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
-import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
+import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
-
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 
 
 @SessionAttributes({"loginUser", "tempMemberCategory", "enrollmember"})
@@ -114,23 +106,31 @@ public class MemberController {
 	
 	@PostMapping("login.me")
 	public String login(@ModelAttribute Member m, Model model) {
-		Member loginUser = mService.login(m);
+	    Member loginUser = mService.login(m);
+	    if(bCrypt.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
+	        model.addAttribute("loginUser", loginUser);
+	        System.out.println(loginUser.getMemberCategory());
+	        
+	        if("C".equals(loginUser.getMemberCategory())) {
+	            return "redirect:caregiverMain.me";
+	        } else if("P".equals(loginUser.getMemberCategory())) {
+	            return "redirect:patientMain.me";
+	        }
+	        return "redirect:adminMain.me";
+	    }
+	    throw new MemberException("로그인에 실패하였습니다.");
+	}
+			
 		
-//		if(bcrypt.matches(m.getPwd(), loginUser.getPwd())) {
+		
+//		System.out.println(loginUser);
+//		if(loginUser !=null) { // 회원가입 기능 구현 전 암호화안한 테스트용
 //			model.addAttribute("loginUser",loginUser);
 //			return "redirect:home.do";
 //		}else {
-//			throw new MemberException("로그인을 실패하였습니다.");
-//		}		
-		
-		System.out.println(loginUser);
-		if(loginUser !=null) { // 회원가입 기능 구현 전 암호화안한 테스트용
-			model.addAttribute("loginUser",loginUser);
-			return "redirect:home.do";
-		}else {
-			throw new MemberException("로그인에 실패했습니다");
-		}	
-	}
+//			throw new MemberException("로그인에 실패했습니다");
+//		}	
+	
 	
 	@GetMapping("logout.me")
 	public String logout(SessionStatus status) {
@@ -450,6 +450,7 @@ public class MemberController {
 			e.printStackTrace();
 		}
 	}
+
 	
 	@PostMapping("/api/send-auth-code") // 인증번호 전송
 	@ResponseBody
@@ -497,16 +498,32 @@ public class MemberController {
 	}
 
 	@PostMapping("findPwdResult.me") // 비밀번호 재설정 페이지로 이동
-	public String findPwdResult(HttpSession session) {
-	    Boolean isVerified = (Boolean) session.getAttribute("isVerified");
-	    
+	public String findPwdResult(HttpSession session,@RequestParam("memberId") String memberId,Model model) {
+	    Boolean isVerified = (Boolean) session.getAttribute("isVerified");	    
 	    if (isVerified != null && isVerified) {
 	        // 인증된 경우 비밀번호 재설정 페이지로 이동
+	    	model.addAttribute("memberId",memberId); // 비밀번호 재설정을 위해 아이디 정보 가지고 이동
 	        return "findPwdResult";
 	    } else {
 	        // 인증되지 않은 경우 다시 비밀번호 찾기 페이지로 리다이렉트
 	        return "redirect:findPwd.me";
 	    }
+	}
+	
+	@PostMapping("updatePassword.me")
+	public String updatePassword(@RequestParam("memberId") String memberId,@RequestParam("memberPwd") String memberPwd) {
+		HashMap<String,String> changeInfo = new HashMap<String,String>();
+		changeInfo.put("memberId", memberId);
+		changeInfo.put("newPwd", bCrypt.encode(memberPwd));
+		System.out.println(changeInfo);
+		int result = mService.updatePassword(changeInfo);
+		
+		if(result > 0) {
+			return "redirect:home.do";
+		} else {
+			throw new MemberException("비밀번호 수정에 실패하였습니다");
+		}
+		
 	}
 }
 

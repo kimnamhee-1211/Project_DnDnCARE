@@ -24,4 +24,5 @@ public interface BoardService {
 	int insertReply(Reply r);
 
 
+
 }

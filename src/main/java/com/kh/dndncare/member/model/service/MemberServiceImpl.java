@@ -1,6 +1,7 @@
 package com.kh.dndncare.member.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 
+
 	@Override
 	public ArrayList<Member> selectAllMember() {
 		return mMapper.selectAllMember();
@@ -92,6 +94,7 @@ public class MemberServiceImpl implements MemberService {
 	        return false;
 	    }
 	}
+
 	public ArrayList<Matching> calendarEvent(Member loginUser) {
 		return mMapper.calendarEvent(loginUser);
 	}
@@ -107,5 +110,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 
+	public int updatePassword(HashMap<String, String> changeInfo) {
+		return mMapper.updatePassword(changeInfo);
+	}
 
 }
