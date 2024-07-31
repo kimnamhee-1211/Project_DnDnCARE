@@ -139,11 +139,14 @@
 
 	// 폼 제출 이벤트 리스너 추가
 	document.querySelector('form').addEventListener('submit', function(e) {
+		const memberId = document.getElementById("floatingInput").value;
 	    if (!isVerified) {
 	        e.preventDefault();  // 폼 제출 막기
 	        alert('인증번호를 확인해주세요.');
 	    }
 	    // isVerified가 true면 폼이 정상적으로 제출됩니다.
+	    console.log("폼 제출 성공");
+	    console.log("memberId:", memberId);
 	});
 	  	
 </script>

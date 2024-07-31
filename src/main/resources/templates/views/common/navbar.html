@@ -25,16 +25,16 @@
 						        </li>
 						        <li class="nav-item">
 						          <a class="nav-link" href="#">간병 백과</a>
-						        </li>
-						        <li class="nav-item">
-						          <a class="nav-link" href="#">사용 팁</a>
-						        </li>
+						        </li>					
 					       </ul>
 				       </th:block>
 				       <th:block th:if="${ session.loginUser.memberCategory =='P'}">
 					    	<ul class="navbar-nav ms-auto fs-4">
 						    	<li class="nav-item">
 						          	<a class="nav-link" href="#">간병인 찾기</a>
+						        </li>
+						        <li class="nav-item">
+						          	<a class="nav-link" href="joinMachingMainView.jm">공동 간병</a>
 						        </li>
 						    	<li class="nav-item">
 						          	<a class="nav-link" href="communityBoardList.bo">환자/보호자 게시판</a>
@@ -43,7 +43,7 @@
 						          <a class="nav-link" href="#">간병 백과</a>
 						        </li>
 						        <li class="nav-item">
-						          <a class="nav-link" href="#">사용 팁</a>
+						          <a class="nav-link" href="#">공동간병</a>
 						        </li>
 					       </ul>
 				       </th:block>
