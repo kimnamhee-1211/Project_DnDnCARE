@@ -156,6 +156,7 @@ body {
 	border:1px solid #8dd986;
 	padding:2px;
 	background:#8dd986;
+	cursor: pointer;
 }
 
 .myInfo-title{
@@ -192,9 +193,11 @@ body {
 
 #matchingNow>div:hover{
 	font-weight: bold;
+	cursor: pointer;
 }
 #matchingLimit>div:hover{
 	font-weight: bold;
+	cursor: pointer;
 }
 
 .review-content{

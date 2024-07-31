@@ -38,4 +38,5 @@ public interface BoardService {
 	int boardLikeCount(int boardNo);
 
 
+
 }
