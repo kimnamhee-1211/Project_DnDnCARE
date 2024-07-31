@@ -30,4 +30,18 @@ public interface BoardMapper {
 
 	int insertReply(Reply r);
 
+	int updateBoard(Board b);
+
+	int deleteBoard(int bId);
+
+	ArrayList<Board> searchBoard(RowBounds rowBounds, HashMap<String, Object> map);
+
+	int updateReply(Reply r);
+
+	int deleteReply(int rId);
+
+	int insertBoardLike(HashMap<String, Integer> map);
+
+	int boardLikeCount(int boardNo);
+
 }

@@ -17,17 +17,6 @@
         border:solid;
     }
     
-     .topAndNavbar {
-		background-image:linear-gradient(
-		        rgba(0, 0, 0, 0.4),
-		        rgba(0, 0, 0, 0.4)
-		      )
-		      ,url(../image/topImage.jpg);
-		    background-size: cover; 
-		    background-position: center;
-		    background-repeat: no-repeat;
-		    transition: background-color 0.5s ease;
-	}
    
     .container {
         max-width: 600px;
@@ -60,10 +49,7 @@
 </style>
 </head>
 <body>
-    <div class="topAndNavbar">
 		<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
-		<div class="top" th:replace="~{common/top.html :: top}"></div>
-	</div>
     
     <div class="content-wrapper">
         <main class="container">
