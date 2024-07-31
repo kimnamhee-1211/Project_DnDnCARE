@@ -142,7 +142,26 @@
 	</select>
 	
 	
-
+	<delete id="deleteWantInfo">
+		delete want_info
+		where member_no = #{memberNo}
+		
+	</delete>
+	<insert id="insertWantInfo">
+	insert into want_info values(
+		${memberNo},
+		${categoryNo}
+	)
+	
+	</insert>
+	
+	<select id="selectWantInfo" resultType="map">
+		SELECT L_CATEGORY, S_CATEGORY
+		FROM MEMBER
+		        JOIN want_INFO USING(MEMBER_NO)
+		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
 	
 
 </mapper>

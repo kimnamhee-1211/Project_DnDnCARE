@@ -140,4 +140,19 @@ public class MemberServiceImpl implements MemberService {
 		/* return mMapper.selectMemberInfo(memberNo); */
 	}
 
+	@Override
+	public int deleteWantInfo(int memberNo) {
+		return mMapper.deleteWantInfo(memberNo);
+	}
+
+	@Override
+	public int insertWantInfo(HashMap<String, Integer> info) {
+		return mMapper.insertWantInfo(info);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> selectWantInfo(int memberNo) {
+		return mMapper.selectWantInfo(memberNo);
+	}
+
 }

@@ -53,5 +53,11 @@ public interface MemberService {
 
 	List<Integer> selectMemberInfo(int memberNo);
 
+	int deleteWantInfo(int i);
+
+	int insertWantInfo(HashMap<String, Integer> info);
+
+	ArrayList<HashMap<String, String>> selectWantInfo(int memberNo);
+
 
 }

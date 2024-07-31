@@ -30,11 +30,13 @@ import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.Info;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.Session;
 
 
 @SessionAttributes({"loginUser", "tempMemberCategory", "enrollmember"})
@@ -78,7 +80,7 @@ public class MemberController {
 	}
 
 	@GetMapping("myInfo.me")
-	public String myInfo(HttpSession session,Model model,@RequestParam(value="ptInfo", defaultValue="1") int ptInfo) {		//마이페이지  확인용
+	public String myInfo(HttpSession session,Model model) {		//마이페이지  확인용
 		//ArrayList<Member> m =  mService.selectAllMember();	//노트북,피시방에 디비가없으니 접근용
 
 		
@@ -89,15 +91,21 @@ public class MemberController {
 		
 		if(loginUser != null) {
 			Patient p = mService.selectPatient(loginUser.getMemberNo());
-			List<Integer> memberInfo =  mService.selectMemberInfo(loginUser.getMemberNo());
+			//List<Integer> memberInfo =  mService.selectMemberInfo(loginUser.getMemberNo());
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch(check) {
 				case 'C':
 					return "myInfo";
 				
 				case 'P':
-					p = categoryFunction(p, loginUser.getMemberNo());
+					Info memberInfo = categoryFunction(loginUser.getMemberNo(),true);	//내정보
+					Info wantInfo = categoryFunction(loginUser.getMemberNo(),false);	//원하는간병인정보
 					model.addAttribute("p",p);
+					model.addAttribute("memberInfo",memberInfo);
+					model.addAttribute("wantInfo",wantInfo);
+					
+					//Patient pWant = categoryFunction()
+					
 					return "myInfoP";
 					
 					
@@ -109,21 +117,64 @@ public class MemberController {
 		
 	}
 	
-	public Patient categoryFunction(Patient p,int memberNo){		//카테고리가공메소드
-		ArrayList<HashMap<String, String>> category = mService.getCaregiverExp(memberNo);
+	public Info categoryFunction(int memberNo,boolean choice){//카테고리 가공 메소드
 		
-		p.setDisease(new ArrayList<String>());
+		if(choice) {
+			ArrayList<HashMap<String, String>> category = mService.getCaregiverExp(memberNo);	//명훈님메소드이용
+			Info memberInfo = new Info();
+			
+			memberInfo.setInfoService(new ArrayList<String>());
+			memberInfo.setInfoCareer(new ArrayList<String>());
+			memberInfo.setInfoDisease(new ArrayList<String>());
+			memberInfo.setInfoLicense(new ArrayList<String>());
+			memberInfo.setInfoDiseaseLevel(new ArrayList<String>());
+			memberInfo.setInfoGender(new ArrayList<String>());
+			memberInfo.setInfoNational(new ArrayList<String>());
+			memberInfo.setInfoAgeGroup(new ArrayList<String>());
+			
+			for(HashMap<String,String> m : category) {
+				 switch(m.get("L_CATEGORY")) {
+					 case "service" : memberInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
+					 case "career" : memberInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
+					 case "disease" : memberInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
+					 case "license" : memberInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;
+					 case "diseaseLevel" : memberInfo.getInfoDiseaseLevel().add(0,m.get("S_CATEGORY")); break;
+					 case "gender" : memberInfo.getInfoGender().add(0,m.get("S_CATEGORY")); break;
+					 case "national" : memberInfo.getInfoNational().add(0,m.get("S_CATEGORY")); break;
+					 case "ageGroup" : memberInfo.getInfoAgeGroup().add(0,m.get("S_CATEGORY")); break;
+				 }
+			};
 		
-		for(HashMap<String,String> m : category) {
+			return memberInfo;
+		
+		}else {
+			ArrayList<HashMap<String, String>> category = mService.selectWantInfo(memberNo);	//명훈님메소드 wantInfo 재가공
+			Info wantInfo = new Info();
+						
+			wantInfo.setInfoService(new ArrayList<String>());
+			wantInfo.setInfoCareer(new ArrayList<String>());
+			wantInfo.setInfoDisease(new ArrayList<String>());
+			wantInfo.setInfoLicense(new ArrayList<String>());
+			wantInfo.setInfoDiseaseLevel(new ArrayList<String>());
+			wantInfo.setInfoGender(new ArrayList<String>());
+			wantInfo.setInfoNational(new ArrayList<String>());
+			wantInfo.setInfoAgeGroup(new ArrayList<String>());
 			
+			for(HashMap<String,String> m : category) {
+				 switch(m.get("L_CATEGORY")) {
+					 case "service" : wantInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
+					 case "career" : wantInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
+					 case "disease" : wantInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
+					 case "license" : wantInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;
+					 case "diseaseLevel" : wantInfo.getInfoDiseaseLevel().add(0,m.get("S_CATEGORY")); break;
+					 case "gender" : wantInfo.getInfoGender().add(0,m.get("S_CATEGORY")); break;
+					 case "national" : wantInfo.getInfoNational().add(0,m.get("S_CATEGORY")); break;
+					 case "ageGroup" : wantInfo.getInfoAgeGroup().add(0,m.get("S_CATEGORY")); break;
+				 }
+			};
 			
-			 switch(m.get("L_CATEGORY")) {
-			 case "disease" : p.getDisease().add(0,m.get("S_CATEGORY")); break;
-			 case "diseaseLevel" : p.setDiseaseLevel(m.get("S_CATEGORY")); break;
-			 
-			 }
+			return wantInfo;
 		}
-		return p;
 	}
 
 
@@ -692,9 +743,42 @@ public class MemberController {
 		}
 		
 	}
-}
+	
+	
+	@PostMapping("updateWantInfo.me")
+	public String updateWantInfo(@RequestParam("wantInfo")String wantInfo,HttpSession session) {
+		System.out.println(wantInfo);
+		
+		
+		String[] wis = wantInfo.split(",");
+		
+		
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		int result1 = mService.deleteWantInfo(loginUser.getMemberNo());
+		
+		for(String wi : wis ) {
+			HashMap<String,Integer> info = new HashMap<String,Integer>();
+			info.put("memberNo",loginUser.getMemberNo());
+			info.put("categoryNo",Integer.parseInt(wi));
+			
+			int result2 = mService.insertWantInfo(info); 
+			System.out.println(result2);
+			
+		}
+		
+		
+		
+//		ArrayList<String> wi = wantInfo
+//		mService.selectwantInfo(wantInfo);
+		return "redirect:myInfo.me";
+	}
+	
+	
+}//클래스 끝
 
-
+	
+	
 
 	
 
