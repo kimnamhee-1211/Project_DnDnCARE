@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.dndncare.board.model.dao.BoardMapper">
@@ -140,6 +141,7 @@
 		from board_like
 		where board_no = #{boardNo}
 	</select>
+<<<<<<< HEAD
 	
 	<insert id="insertReplyLike">
 		insert into reply_like
@@ -151,4 +153,95 @@
 		from reply_like
 		where reply_no = #{rId}
 	</select>
+=======
+=======
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.dndncare.board.model.dao.BoardMapper">
+	<select id="getListCountAll" parameterType="map" resultType="int">
+        select count(*)
+        from board b
+            join b_category c on c.category_no = b.category_no
+            join member m on m.member_no = b.member_no
+            join area a on b.area_no = a.area_no
+        where b.board_status = 'Y'
+            and m.member_category = #{category}
+        <if test="categoryNo != -1">
+            and b.category_no = #{categoryNo}
+        </if>
+        <if test="areas != null and !areas.isEmpty()">
+            and a.area_no IN 
+            <foreach item="area" collection="areas" open="(" separator="," close=")">
+                #{area}
+            </foreach>
+        </if>
+    </select>
+	
+	<select id="selectBoardAllList">
+	    select b.board_No, c.category_Name, b.board_Title, m.member_NickName, a.area_Name, 
+	           b.board_create_date, b.board_count 
+	    from board b
+	        join b_category c on(c.category_no=b.category_no)
+	        join member m on(m.member_no=b.member_no)
+	        join area a on(b.area_no=a.area_no)
+	    where b.board_status='Y' 
+	        and m.member_category=#{category}
+	    <if test="categoryNo != -1">
+	        and b.category_no = #{categoryNo}
+	    </if>
+	    <if test="areas != null and !areas.isEmpty()">
+	    and a.area_no IN 
+	        <foreach item="area" collection="areas" open="(" separator="," close=")">
+	            #{area}
+	        </foreach>
+	    </if>
+	    order by board_no desc
+	</select>
+
+	
+	<insert id="insertBoard">
+		<selectKey resultType="_int" keyProperty="boardNo" order="BEFORE">
+			select seq_bid.nextval from dual
+		</selectKey>		
+		insert into board
+		values (#{boardNo}, #{memberNo}, #{boardTitle}, #{boardContent}, 
+				default, sysdate, sysdate, 0, #{categoryNo}, #{areaNo})
+	</insert>
+	
+	<select id="selectBoard" resultType="Board">
+		select b.board_No, c.category_Name, b.board_Title, m.member_NickName, a.area_Name, b.board_create_date,
+			   b.board_update_date, b.board_count, b.board_content
+		from board b
+			join b_category c on(c.category_no=b.category_no)
+			join member m on(m.member_no=b.member_no)
+			join area a on(b.area_no=a.area_no)
+		where board_status = 'Y' and board_no=#{bId}
+	</select>
+	
+	<update id="updateCount">
+		update board
+		set board_count = board_count+1
+		where board_no=#{bId}
+	</update>
+	
+	<select id="selectReply" resultType="Reply">
+		select r.reply_no, r.reply_content, r.member_No, r.reply_create_date, r.reply_update_date, r.reply_status, r.ref_board_no, m.member_NickName
+		from reply r
+		   join member m on(m.member_no = r.member_no) 
+		where ref_board_no=#{bId} and reply_status = 'Y'
+		order by reply_no desc
+	</select>
+	
+	<select id="getReplyCount" resultType="_int">
+		select count(*)
+		from reply
+		where ref_board_No=#{boardNo}
+	</select>
+	
+	<insert id="insertReply">
+		insert into reply
+		values (seq_rid.nextval, #{replyContent}, #{memberNo}, sysdate, sysdate, default, #{refBoardNo})
+	</insert>
+>>>>>>> refs/remotes/origin/master
+>>>>>>> refs/remotes/origin/jaeyoung
 </mapper>

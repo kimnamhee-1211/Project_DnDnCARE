@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html xmlns="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
 <link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script><!-- 도로명주소api -->
+
 </head>
-<body>
+<body >
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	
 	
@@ -39,8 +41,7 @@
 		      		</div>
 		      		<div  class="col-3 d-flex align-items-center">
 		      			<div>
-		      				<div>피간병인 정보 : 나환자</div>
-		      				<div>피간병인 정보 : 찐환자</div>
+		      				<span>[[${p.ptName}]]</span>
 		      			</div>
 		      		</div>
 		      		<div  class="col-3 d-flex align-items-center m-2">
@@ -53,18 +54,18 @@
 	      			<div class="col m-3">
 						<div class="myInfo-Border-maincolor mt-2 mb-3">
 							<div class="m-2 d-flex justify-content-between">
-								<div class="h3 myInfo-title">피간병인 정보(나환자)</div>
+								<div class="h3 myInfo-title">피간병인 정보([[${p.ptName}]])</div>
 								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">수정하기</button>
 							
 							</div>
 	      						<table class="d-flex justify-content-center m-2">
 	      						<tr>
-	      							<td width="55">성별</td>
-	      							<td width="60">나환자</td>
-	      							<td width="40">연령</td>
-	      							<td width="100">1955-11-12</td>
-	      							<td width="60">활동지역</td>
-	      							<td width="60" id="areaUpdate">서울</td>
+	      							<td width="55">이름</td>
+	      							<td width="60">[[${p.ptName}]]</td>
+	      							<td width="40">나이</td>
+	      							<td width="100">[[${p.ptAge}]]</td>
+	      							<td width="63"></td>
+	      							<td width="60"></td>
 	      							<td width="40">
 	      								<div style="position: relative;">
 		      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
@@ -77,24 +78,48 @@
 		      										<div>경상도</div>
 		      										<div>강원도</div>
 		      										<div>제주도</div>
+		      										
 		      									</div>
 		      									
 		      								</div>
 	      							</td>
 	      						</tr>
 	      						<tr>
+	      							<td>주소</td>
+	      							<td colspan="1" id="sample4_postcode" >[[${p.ptAddress.split('//')[0]}]]</td>
+	      							<td colspan="3" id="sample4_roadAddress">[[${p.ptAddress.split('//')[1]}]]</td>
+	      							<td id="sample4_detailAddress"></td>
+	      							<td colspan="1">
+		      							<button onclick="sample4_execDaumPostcode()" class="btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+									</td>
+	      						</tr>
+	      						<tr>
+	      							<td colspan="2" >상세 주소</td>
+	      							<td colspan="3"id="sample4_detailAddress" contentEditable="true">[[${p.ptAddress.split('//')[2]}]]</td>
+	      							<td colspan="1">
+									</td>
+	      						</tr>
+	      						<tr>
 	      							<td>질환</td>
-	      							<td colspan="5">
-	      								<span>암투병</span>	
-	      								<span>뇌암</span>	
+	      							<td colspan="5" id="disaseUpdate">
+	      								
+	      								<span>[[${p.ptName}]]</span>	
+	      									
 	      							</td>
 	      							<td colspan="1">
 		      							<div style="position: relative;">
 		      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
-		      									<div id="license"class="selectUpdateDiv select-hidden m-1">
-		      										<div>간병사</div>
-		      										<div>요양보호사</div>
-		      										<div>간호조무사</div>
+		      									<div id="disase"class="selectUpdateDiv select-hidden m-1">
+		      										<div>치매</div>
+		      										<div>호흡기질환</div>
+		      										<div>거동불편</div>
+		      										<div>와상</div>
+		      										<div>파킨슨</div>
+		      										<div>수면질환</div>
+		      										<div>정신질환</div>
+		      										<div>기저귀 케어</div>
+		      										<div>재활</div>
+		      										<div>기타</div>
 		      									</div>
 		      									
 		      								</div>
@@ -102,19 +127,54 @@
 	      						</tr>
 	      						<tr>
 	      							<td>중증도</td>
-	      							<td colspan="5">9 : 높음</td>
-	      							<td>
-	      								<button class="btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
-	      							</td>
+	      							<td colspan="2" id="diseaseLevelUpdate">낮음</td>
+	      							<td colspan="1">
+		      							<div style="position: relative;">
+	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+	      									<div id="diseaseLevel"class="selectUpdateDiv select-hidden m-1">
+	      										<div>낮음</div>
+	      										<div>중간</div>
+	      										<div>높음</div>
+	      									</div>
+	      									
+	      								</div>
+									</td>
+									<td>성별</td>
+									<td colspan="1" id="ageUpdate">남성</td>
+									<td>
+										<div style="position: relative;">
+	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+	      									<div id="age"class="selectUpdateDiv select-hidden m-1">
+	      										<div>남성</div>
+	      										<div>여성</div>
+	      									</div>
+	      									
+	      								</div>
+									</td>
 	      						</tr>
 	      						<tr>
 	      							<td>키</td>
-	      							<td colspan="1">152</td>
-	      							<td colspan="1">몸무게</td>
-	      							<td colspan="1">50</td>
-	      							<td colspan="1">성별</td>
-	      							<td colspan="1">남</td>
-	      							<td><button class="btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button></td>
+	      							<td colspan="2" id="heightUpdate">152cm</td>
+	      							<td>
+	      								<div style="position: relative;">
+	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+	      									<div id="height"class="selectUpdateDiv select-hidden m-1">
+												<input type="number" style="width:80px;" value="" min="00" max="300">
+	      									</div>
+	      									
+	      								</div>
+	      							</td>
+	      							<td colspan="1" width="50px">몸무게</td>
+	      							<td colspan="1" id="weightUpdate">50kg</td>
+	      							<td>
+	      								<div style="position: relative;">
+	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+	      									<div id="weight"class="selectUpdateDiv select-hidden m-1">
+	      										<input type="number" style="width:80px;" value="" min="00" max="300">
+	      									</div>
+	      									
+	      								</div>
+	      							</td>
 	      						</tr>
 	      						<tr>
 	      							<td colspan="1">돌봄비</td>
@@ -123,10 +183,18 @@
 	      						</tr>
 	      						
 	      						<tr>
-	      							<td colspan="1">서비스</td>
-	      							<td colspan="2">▶병원돌봄 </td>
-									<td>▶가정돌봄</td>		      							
-									<td colspan="3">▶동행 서비스</td>		      							
+	      							<td colspan="2">요청 서비스</td>
+	      							<td colspan="4" id="serviceUpdate"></td>
+	      							<td>
+	      								<div style="position: relative;">
+	      									<button class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
+	      									<div id="service"class="selectUpdateDiv select-hidden m-1">
+	      										<div>병원돌봄</div>
+	      										<div>가정돌봄</div>
+	      										<div>동행서비스</div>
+	      									</div>
+	      								</div>
+	      							</td>
 	      						</tr>
 	      						
 	      					</table>
@@ -141,12 +209,12 @@
 								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">수정하기</button>
 							</div>
 							
-							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
+							<div id="matchingNow"class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
 								<div>???님과 매칭중입니다 (yyyy-MM-dd)~(yyyy-MM-dd)</div>
 								<div>???님과 매칭중입니다 (yyyy-MM-dd)~(yyyy-MM-dd)</div>
 								<div>???님과 매칭중입니다 (yyyy-MM-dd)~(yyyy-MM-dd)</div>
 							</div>
-							<div class="m-3 p-2">
+							<div id="matchingLimit"class="m-3 p-2">
 								<div>00님과의 매칭이 x일 남았습니다</div>
 								<div>00님과의 매칭이 x일 남았습니다</div>
 								<div>00님과의 매칭이 x일 남았습니다</div>
@@ -162,7 +230,7 @@
 						
 	      			</div>
 	      			<div class="col m-3">
-	      				<div class="myInfo-Border-maincolor mt-2">
+	      				<div id="setMatchingList" class="myInfo-Border-maincolor mt-2">
 		      				<div class="m-3"  ><span class="h3 myInfo-title">간병인 매칭 조건 설정</span>
 		      				</div>
 		      				<div class="m-3">1. 국적
@@ -214,23 +282,6 @@
 			      					</tr>
 			      				</table>
 		      				</div>
-		      				<div class="m-3">5. 중증도
-			      				<table class="d-flex justify-content-center ">
-			      					<tr >
-			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;낮 음&nbsp;</span></td>
-			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;중 간&nbsp;</span></td>
-			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;높 음&nbsp;</span></td>
-			      					</tr>
-			      				</table>
-			      			</div>
-		      				<div class="m-3">6. 공동간병
-			      				<table class="d-flex justify-content-center ">
-			      					<tr >
-			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;예&nbsp;</span></td>
-			      						<td width="80px"><span class="btn-outline-maincolor-2 m-2">&nbsp;아니오&nbsp;</span></td>
-			      					</tr>
-			      				</table>
-			      			</div>
 		      				<div align="center"class="row align-items-center">
 		      					<div class="mb-4">
 		      						<button  class="myInfo-btn">수정하기 </button>
@@ -290,7 +341,170 @@
 				})
 			};
 			
+			//질환클릭
+			const disaseDiv = document.getElementById('disase');
+			const disase = document.getElementById('disase').children;
+			const disaseUpdate = document.getElementById('disaseUpdate'); 
+			for(i of disase){
+				i.addEventListener('click',function(){
+
+					if(disaseUpdate.innerText.includes(this.innerText)){
+						for(span of disaseUpdate.children){
+							if(span.innerText==this.innerText){
+								span.remove();
+							}
+						}
+					}else{
+						disaseUpdate.innerHTML += '<span>'+this.innerText+'</span> ';
+					}
+					
+					
+					disaseDiv.classList.remove('select-block');
+					disaseDiv.classList.add('select-hidden');
+				});
+			};
+			
+			//중증도클릭
+			const diseaseLevelDiv = document.getElementById('diseaseLevel');
+			const diseaseLevel = document.getElementById('diseaseLevel').children;
+			const diseaseLevelUpdate = document.getElementById('diseaseLevelUpdate'); 
+			for(i of diseaseLevel){
+				i.addEventListener('click',function(){
+					diseaseLevelUpdate.innerText = this.innerText;
+					
+					diseaseLevelDiv.classList.remove('select-block');
+					diseaseLevelDiv.classList.add('select-hidden');
+				});
+			};
+			
+			//성별클릭
+			const ageDiv = document.getElementById('age');
+			const age = document.getElementById('age').children;
+			const ageUpdate = document.getElementById('ageUpdate'); 
+			for(i of age){
+				i.addEventListener('click',function(){
+					ageUpdate.innerText = this.innerText;
+					
+					ageDiv.classList.remove('select-block');
+					ageDiv.classList.add('select-hidden');
+				});
+			};
+			
+			//키클릭
+			const heightDiv = document.getElementById('height');
+			const height = document.getElementById('height').children;
+			const heightUpdate = document.getElementById('heightUpdate'); 
+			for(i of height){
+				i.addEventListener('blur',function(){
+					heightUpdate.innerText = this.value +'cm';
+					
+					heightDiv.classList.remove('select-block');
+					heightDiv.classList.add('select-hidden');
+				});
+			};
+			
+			//몸무게클릭
+			const weightDiv = document.getElementById('weight');
+			const weight = document.getElementById('weight').children;
+			const weightUpdate = document.getElementById('weightUpdate'); 
+			for(i of weight){
+				i.addEventListener('blur',function(){
+					weightUpdate.innerText = this.value + 'cm';
+					
+					weightDiv.classList.remove('select-block');
+					weightDiv.classList.add('select-hidden');
+				});
+			};
+			
+			//서비스고르기
+			const serviceDiv = document.getElementById('service');
+			const service = document.getElementById('service').children;
+			const serviceUpdate = document.getElementById('serviceUpdate'); 
+			for(i of service){
+				i.addEventListener('click',function(){
+
+					if(serviceUpdate.innerText.includes(this.innerText)){
+						for(span of serviceUpdate.children){
+							if(span.innerText==this.innerText){
+								span.remove();
+							}
+						}
+					}else{
+						serviceUpdate.innerHTML += '<span>'+this.innerText+'</span> ';
+					}
+					
+					
+					serviceDiv.classList.remove('select-block');
+					serviceDiv.classList.add('select-hidden');
+				});
+			};
+			
+			// 현재매칭,매칭 남은기간 클릭하여 넘어가기
+			const matchingNow = document.getElementById('matchingNow'); 
+			const matchingLimit = document.getElementById('matchingLimit');
+			
+			for(i of matchingNow.children){
+				i.addEventListener('click',function(){
+					location.href= '#';
+				})
+			};
+			
+			for(i of matchingLimit.children){
+				i.addEventListener('click',function(){
+					location.href= '#';
+				})
+			};
+			
+			//매칭조건 설정하기
+			const setMatchingList = document.getElementById('setMatchingList');
+			const click = setMatchingList.querySelectorAll('.btn-outline-maincolor-2');
+			
+			for(i of click){
+				i.addEventListener('click',function(){
+					if(this.classList.contains('btn-outline-maincolor-2')){
+						this.classList.remove('btn-outline-maincolor-2');
+						this.classList.add('btn-maincolor');
+					}else{
+						this.classList.add('btn-outline-maincolor-2');
+						this.classList.remove('btn-maincolor');
+					};
+				})
+			}
 		}
+		
+		
+		//주소검색 api
+		function sample4_execDaumPostcode() {
+	    	new daum.Postcode({
+	    		oncomplete: function(data) {
+				    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+				
+				    // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+				    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+				    var roadAddr = data.roadAddress; // 도로명 주소 변수
+				    var extraRoadAddr = ''; // 참고 항목 변수
+				
+				    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+				    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+				    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+				        extraRoadAddr += data.bname;
+				    }
+				    // 건물명이 있고, 공동주택일 경우 추가한다.
+				    if(data.buildingName !== '' && data.apartment === 'Y'){
+				       extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+				    }
+					// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+			       if(extraRoadAddr !== ''){
+			           extraRoadAddr = ' (' + extraRoadAddr + ')';
+			       }
+				
+				    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+				    document.getElementById('sample4_postcode').innerText = data.zonecode;
+				    document.getElementById("sample4_roadAddress").innerText = roadAddr;
+   
+				}
+			}).open();
+    	};
 	
 	</script>
 	

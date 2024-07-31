@@ -56,4 +56,36 @@ public class TemplateResolverConfig {
 		return dotBo;
 	}
 	
+	@Bean
+	public ClassLoaderTemplateResolver dotMcResolver() {
+		ClassLoaderTemplateResolver dotMc = new ClassLoaderTemplateResolver();
+		dotMc.setPrefix("templates/views/matching/");
+		dotMc.setSuffix(".html");
+		dotMc.setTemplateMode(TemplateMode.HTML);
+		dotMc.setCharacterEncoding("UTF-8");
+		dotMc.setCacheable(false);
+		dotMc.setOrder(4);
+		dotMc.setCheckExistence(true);
+		
+		return dotMc;
+	}
+	
+	@Bean
+	public ClassLoaderTemplateResolver dotJmResolver() {
+		ClassLoaderTemplateResolver dotJm = new ClassLoaderTemplateResolver();
+		dotJm.setPrefix("templates/views/joinMaching/");
+		dotJm.setSuffix(".html");
+		dotJm.setTemplateMode(TemplateMode.HTML);
+		dotJm.setCharacterEncoding("UTF-8");
+		dotJm.setCacheable(false);
+		dotJm.setOrder(4);
+		dotJm.setCheckExistence(true);
+		
+		return dotJm;
+	}
+	
+	
+	
+	
+	
 }

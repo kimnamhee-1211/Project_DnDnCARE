@@ -1,5 +1,6 @@
 package com.kh.dndncare.member.model.vo;
 
+import java.sql.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +22,8 @@ public class CareGiver {
 	private int maxMoney;
 	private String careJoinStatus;
 	private String careService;
+	private Date careUpdateDate;
 	
-	private List<Integer> infoCategory;
+	private List<Integer> memberInfo;
+	private List<Integer> wantInfo;
 }

@@ -163,6 +163,7 @@ public class BoardController {
 		model.addAttribute("b", b);
 		model.addAttribute("page", page);
 		return "editBoard";
+
 	}
 	
 	@PostMapping("updateBoard.bo")

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/findIdResult.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+	<main class="inner-content d-flex justify-content-center">
+			<div class="findId-wrap d-flex flex-column">
+				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
+				<h1 class="h3 mb-3 fw-bold text-center">가입정보 확인</h1>
+				<div class="text-center mb-5"><strong>김기룡</strong>님 안녕하세요!<br>고객님께서는 다음과 같은 정보로 든든케어에 가입하셨습니다.</div>
+
+				<ul class="findIdResult-wrap p-4">
+					<li class="idResult mb-3">아이디 :[[${findMember.memberId}]] <strong></strong> </li>
+					<li class="createDate mb-3">가입일 : [[${findMember.memberCreateDate}]] </li>
+					<li class="idStatus mb-3">가입 상태 : [[${findMember.memberStatus == 'N' ? '정상' : '탈퇴' }]]</li>
+					<li class="memberCategory">가입 유형 : [[${findMember.memberCategory == 'P' ? '환자/간병인' : '간병인' }]]</li>
+				</ul>	
+				<div class="sign-btn d-flex flex-column">
+					<button type="submit" class="signIn-btn mt-4 "> <a th:href="@{${findMember.memberCategory == 'P' ? 'patient.me' : 'careGiver.me'}}"  >로그인</a></button>
+					<button type="submit" class="findPwd-btn mt-4 "><a th:href="@{findPwd.me}">비밀번호 찾기</a></button>
+				</div>
+			</div>
+	</main>
+			
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	<script>
+	</script>
+		
+</body>
+</html>
