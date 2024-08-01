@@ -65,5 +65,7 @@ public interface MemberService {
 
 	int deleteMemberInfo(int memberNo);
 
+	int updateMember(Member m);
+
 
 }

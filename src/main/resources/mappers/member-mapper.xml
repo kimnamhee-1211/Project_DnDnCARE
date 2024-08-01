@@ -179,5 +179,17 @@
 		set pt_name = #{ptName}, pt_age = #{ptAge}, pt_weight = #{ptWeight}, pt_height = #{ptHeight}, pt_address = #{ptAddress}, pt_gender = #{ptGender}
 		where member_no = #{memberNo}
 	</update>
+	
+	<update id="updateMember">
+		update member
+		set member_Name = #{memberName}, member_gender = #{memberGender},
+		member_nickName = #{memberNickName}, member_age= #{memberAge},
+		member_phone = #{memberPhone},member_email = #{memberEmail},
+		member_address = #{memberAddress},member_national = #{memberNational},
+		member_update_date = sysdate
+		where member_no = #{memberNo}
+		
+	
+	</update>
 
 </mapper>

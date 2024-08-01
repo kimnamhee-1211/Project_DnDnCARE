@@ -840,6 +840,41 @@ public class MemberController {
 		
 	};
 	
+	@GetMapping("updateMemberView.me")
+	public String updateMemberView() {
+		
+		return "updateMember";
+	}
+	
+	@PostMapping("updateMember.me")
+	public String updateMember(@ModelAttribute Member m,
+			@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress,@RequestParam("detailAddress") String detailAddress,
+			@RequestParam("email") String email, @RequestParam("emailDomain") String emailDomain,
+			HttpSession session,Model model) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		String memberAddress = postcode +"//"+ roadAddress +"//"+ detailAddress;
+		m.setMemberAddress(memberAddress);
+		
+		String memberEmail = email + "@" + emailDomain;
+		m.setMemberEmail(memberEmail);
+		
+		m.setMemberId(loginUser.getMemberId());
+		m.setMemberNo(loginUser.getMemberNo());
+		
+		System.out.println(m);
+		
+		int result = mService.updateMember(m);
+		
+		if(result>0) {
+			model.addAttribute("loginUser", mService.login(m));
+			return "redirect:myInfo.me";
+		}
+		throw new MemberException("정보변경을 실패했습니다");
+	}
+	
+	
 	
 }//클래스 끝
 

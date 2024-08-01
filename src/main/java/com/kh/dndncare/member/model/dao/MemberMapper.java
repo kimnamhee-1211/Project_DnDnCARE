@@ -65,4 +65,6 @@ public interface MemberMapper {
 
 	int insertMemberInfo(HashMap<String, Integer> info);
 
+	int updateMember(Member m);
+
 }

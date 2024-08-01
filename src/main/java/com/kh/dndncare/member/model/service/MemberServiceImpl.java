@@ -170,4 +170,9 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.deleteMemberInfo(memberNo);
 	}
 
+	@Override
+	public int updateMember(Member m) {
+		return mMapper.updateMember(m);
+	}
+
 }
