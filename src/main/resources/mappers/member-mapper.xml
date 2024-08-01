@@ -62,7 +62,7 @@
 	  <insert id="enrollCareGiver">
 	  	insert into caregiver
 	  	values(#{memberNo}, #{careImg}, #{careIntro}, 
-	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService}, sysdate)	  
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, sysdate)	  
 	  </insert>
 	  
 	  
@@ -85,7 +85,7 @@
 	<insert id="enrollPatient">
 	  	insert into patient
 	  	values(seq_pid.nextval, #{memberNo}, #{ptName}, #{ptGender}, #{ptAge}, 
-	  			#{ptWeight}, #{ptHeight}, #{ptService}, #{ptAddress}, #{ptRequest}, sysdate)	  
+	  			#{ptWeight}, #{ptHeight}, #{ptAddress}, #{ptRequest}, sysdate)	  
 	  </insert>
 	  
 	  <select id="findIdResult" resultType="Member">

@@ -191,7 +191,7 @@ public class MemberController {
 	//회원가입
 	@PostMapping("enroll.me")
 	public String enroll(@ModelAttribute Member m,
-						@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress,@RequestParam("detailAddress") String detailAddress,
+						@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress, @RequestParam("detailAddress") String detailAddress,
 						@RequestParam("email") String email, @RequestParam("emailDomain") String emailDomain, 
 						HttpSession session, Model model) {
 		
@@ -280,22 +280,11 @@ public class MemberController {
 	
 	//간병인 회원가입(간병인 정보 입력)
 	@PostMapping("enrollCaregiver.me")
-	public String enrollCaregiver(@ModelAttribute CareGiver cg, @RequestParam("careService") String[] careServiceArr, HttpSession session) {
+	public String enrollCaregiver(@ModelAttribute CareGiver cg, HttpSession session) {
 		System.out.println("데이터 확인"+cg);
 			
 		//간병인 memberNo 세팅
 		cg.setMemberNo(((Member)session.getAttribute("enrollmember")).getMemberNo());		
-		
-		//간병인 기본 정보 세팅
-		String careService = "";		
-		for(int i = 0; i < careServiceArr.length; i++) {
-			if(i < careServiceArr.length -1 ) {
-				careService += careServiceArr[i] + "//";
-			}else {
-				careService += careServiceArr[i];
-			}
-		}
-		cg.setCareService(careService);
 		
 		System.out.println("간병인 정보=" + cg);
 		
@@ -318,26 +307,14 @@ public class MemberController {
 	@PostMapping("enrollPatient.me")
 	public String enrollPatient(@ModelAttribute Patient pt, 
 							@RequestParam("postcode") String postcode, @RequestParam("roadAddress") String roadAddress, @RequestParam("detailAddress") String detailAddress,
-							@RequestParam("ptService") String[] ptServiceArr, HttpSession session) {
+							HttpSession session) {
 		
 		//간병인 memberNo 세팅
 		pt.setMemberNo(((Member)session.getAttribute("enrollmember")).getMemberNo());	
 		
-		
 		//돌봄 주소 세팅
 		String ptAddress = postcode +"//"+ roadAddress +"//"+ detailAddress;
 		pt.setPtAddress(ptAddress);
-		
-		//간병인 기본 정보 세팅
-		String ptService = "";		
-		for(int i = 0; i < ptServiceArr.length; i++) {
-			if(i < ptServiceArr.length -1 ) {
-				ptService += ptServiceArr[i] + "//";
-			}else {
-				ptService += ptServiceArr[i];
-			}
-		}
-		pt.setPtService(ptService);
 
 		System.out.println("간병인 정보=" + pt);
 		
@@ -353,9 +330,7 @@ public class MemberController {
 		}else {
 			
 			throw new MemberException("회원가입에 실패했습니다.");
-		}		
-		
-		
+		}				
 
 	}
 	

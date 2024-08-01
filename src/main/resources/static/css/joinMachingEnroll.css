@@ -29,9 +29,9 @@ body {
 
 
 .tableDiv{
-	display : inline-block; width:550px;
-	margin : 40px; 
-	font-size:18px; 
+	display : inline-block; width:1300px;
+	margin : 40px auto; 
+	font-size: 20px; 
 	border: 1px solid lightgray;
 	border-radius: 15px;
 	padding: 20px;
