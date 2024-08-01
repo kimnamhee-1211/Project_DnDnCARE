@@ -1,6 +1,7 @@
 package com.kh.dndncare.member.controller;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -683,6 +684,15 @@ public class MemberController {
 	        return "redirect:findPwd.me";
 	    }
 	}
+	
+	@GetMapping("moreWorkInfo.me")
+	public String moreWorkInfo() {
+		return "moreWorkInfo";
+	}
+	
+	
+	
+	
 }
 
 

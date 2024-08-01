@@ -48,17 +48,17 @@
 		<result column="BEGIN_DT" property="start"/>
 		<result column="END_DT" property="end"/>
 		<result column="MONEY" property="money"/>
-		<result column="HOSPTAL_NO" property="hosptalNo"/>
-		<result column="HOSPTAL_ADDRESS" property="hosptalAddress"/>
-		<result column="HOSPTAL_NAME" property="hosptalName"/>
+		<result column="HOSPITAL_NO" property="hosptialNo"/>
+		<result column="HOSPITAL_ADDRESS" property="hospitalAddress"/>
+		<result column="HOSPITAL_NAME" property="hospitalName"/>
 	</resultMap>
 	  
 	  
 	<!-- 캘린더 이벤트 정보 조회 --> 
 	<select id="caregiverCalendarEvent" resultMap="calendarResultMap">
-		SELECT MAT_NO, '간병하기' AS TITLE, BEGIN_DT, END_DT, MONEY, HOSPTAL_NO, HOSPTAL_ADDRESS, HOSPTAL_NAME 
+		SELECT MAT_NO, '간병하기' AS TITLE, BEGIN_DT, END_DT, MONEY, HOSPITAL_NO, HOSPITAL_ADDRESS, HOSPITAL_NAME 
 		FROM MATCHING
-		        JOIN HOSPTAL USING(HOSPTAL_NO)
+		        JOIN HOSPITAL USING(HOSPITAL_NO)
 		WHERE MEMBER_NO = #{memberNo}
 	</select>
 
@@ -131,7 +131,7 @@
 		SELECT *
 		FROM   (SELECT  MEMBER.MEMBER_NO, PT_NAME, PT_GENDER, TRUNC(SYSDATE - PT_AGE) AS PT_REAL_AGE, 
 						SUBSTR(REPLACE(PT_ADDRESS, '//', ' ') , INSTR(REPLACE(PT_ADDRESS, '//', ' '), ' ')+1) as PT_ADDRESS,
-						HOS_INFO, MEMBER_NATIONAL, PT_WEIGHT, PT_HEIGHT, PT_SERVICE, PT_REQUEST, 
+						MEMBER_NATIONAL, PT_WEIGHT, PT_HEIGHT, PT_REQUEST, 
 						BEGIN_DT, END_DT, MONEY, MAT_TYPE
 		       FROM MATCHING 
 		            JOIN MAT_PT_INFO USING(MAT_NO)

@@ -16,6 +16,9 @@
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
+	
+	<br/>
+	
 	<div id="upperContents">
 		<div><!-- 왼쪽 공백 --></div>
 		<div id="upperLeftContents">
@@ -86,43 +89,43 @@
                     </tr>
                     <tr class="align-middle text-center">
                         <td colspan="4" class="align-middle">나팔꽃님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
+                        <td><button class="btn btn-success workInfo">정보보기</button></td>
                     </tr>
                     <tr class="align-middle text-center">
                         <td colspan="4" class="align-middle">다람쥐님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
+                        <td><button class="btn btn-success workInfo">정보보기</button></td>
                     </tr>
                     <tr class="align-middle text-center">
                         <td colspan="4" class="align-middle">라일락님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
+                        <td><button class="btn btn-success workInfo">정보보기</button></td>
                     </tr>
                     <tr class="align-middle text-center">    
                         <td colspan="4" class="align-middle">마동석님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
+                        <td><button class="btn btn-success workInfo">정보보기</button></td>
                     </tr>   
                     <tr class="align-middle text-center">    
                         <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
+                        <td><button class="btn btn-success workInfo">정보보기</button></td>
                     </tr>
                     <tr class="align-middle text-center">    
                         <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
+                        <td><button class="btn btn-success workInfo">정보보기</button></td>
                     </tr>
                     <tr class="align-middle text-center">    
                         <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
+                        <td><button class="btn btn-success workInfo">정보보기</button></td>
                     </tr>
                     <tr class="align-middle text-center">    
                         <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
+                        <td><button class="btn btn-success workInfo">정보보기</button></td>
                     </tr>
                     <tr class="align-middle text-center">    
                         <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
+                        <td><button class="btn btn-success workInfo">정보보기</button></td>
                     </tr>
                     <tr class="align-middle text-center">    
                         <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
+                        <td><button class="btn btn-success workInfo">정보보기</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -141,25 +144,39 @@
             <button type="button" class="btn btn-light">중증도</button>
             &nbsp;&nbsp;
             <br/>
-            <button type="button" class="btn btn-link">더 보기</button>
+            <button type="button" class="btn btn-link" onclick="location.href='moreWorkInfo.me'">더 보기</button>
             <br/><br/>
 
             <div class="row row-cols-md-2 g-2">
                 <div class="col-sm-6">
                     <div class="card h-95 w-80">
                       <div class="card-body">
-                        <h5 class="card-title">다람쥐님</h5>
-                        <p class="card-text">남성 8 서울시 노원구</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
+                        <h6 class="card-title">
+                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+                        	<img src="image/icon/hospital.png"/>
+                       	</h6>
+                        <p class="card-text">
+                        	<span>병원이름</span>
+                       	</p>
+                        <button class="btn btn-success workInfo">정보 보기</button>
                       </div>
                     </div>
                   </div>
                 <div class="col-sm-6">
                     <div class="card h-95 w-80">
                       <div class="card-body">
-                        <h5 class="card-title">라일락님</h5>
-                        <p class="card-text">여성 20 광주 북구</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
+                        <h6 class="card-title">
+                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+                        	<img src="image/icon/home.png"/>
+                       	</h6>
+                        <p class="card-text">
+                        	<span>집 주소(가사돌봄임)</span>
+                       	</p>
+                        <button class="btn btn-success workInfo">정보 보기</button>
                       </div>
                     </div>
                 </div>
@@ -167,18 +184,32 @@
                 <div class="col-sm-6">
                     <div class="card h-95 w-80">
                       <div class="card-body">
-                        <h5 class="card-title">다람쥐님</h5>
-                        <p class="card-text">남성 8 서울시 노원구</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
+                        <h6 class="card-title">
+                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+                        	<img src="image/icon/users.png"/>
+                       	</h6>
+                        <p class="card-text">
+                        	<span>병원명(공동간병버전)</span>
+                       	</p>
+                        <button class="btn btn-success workInfo">정보 보기</button>
                       </div>
                     </div>
                   </div>
                 <div class="col-sm-6">
                     <div class="card h-95 w-80">
                       <div class="card-body">
-                        <h5 class="card-title">라일락님</h5>
-                        <p class="card-text">여성 20 광주 북구</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
+                        <h6 class="card-title">
+                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+                        	<img src="image/icon/hospital.png"/>
+                       	</h6>
+                        <p class="card-text">
+                        	<span>병원명</span>
+                       	</p>
+                        <button class="btn btn-success workInfo">정보 보기</button>
                       </div>
                     </div>
                 </div>
@@ -186,18 +217,32 @@
                 <div class="col-sm-6">
                     <div class="card h-95 w-80">
                       <div class="card-body">
-                        <h5 class="card-title">마동석님</h5>
-                        <p class="card-text">남성 60 제주도 서귀포시</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
+                        <h6 class="card-title">
+                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+                        	<img src="image/icon/hospital.png"/>
+                       	</h6>
+                        <p class="card-text">
+                        	<span>병원명</span>
+                       	</p>
+                        <button class="btn btn-success workInfo">정보 보기</button>
                       </div>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="card h-95 w-80">
                       <div class="card-body">
-                        <h5 class="card-title">바밤바님</h5>
-                        <p class="card-text">남성 30 강원도 철원군</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
+                        <h6 class="card-title">
+                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+                        	<img src="image/icon/hospital.png"/>
+                       	</h6>
+                        <p class="card-text">
+                        	<span>병원명</span>
+                       	</p>
+                        <button class="btn btn-success workInfo">정보 보기</button>
                       </div>
                     </div>
                 </div>
@@ -243,6 +288,50 @@
             나의 매칭 현황
         </a>
     </div>
+    
+    <!-- 일감찾기(우측하단)의 모달박스 -->
+    <div class="modal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+		   		<div class="modal-header">
+		    		<div class="modal-title workInfo">
+		    			<div>
+			    			<span class="badge bg-danger"><img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음</span><br/>
+			    			<span>혜민병원</span><br/>
+			    			<span>서울특별시 광진구</span>
+		    			</div>
+		    			<div class="text-end align-middle">
+		    				<br/>
+				    		<img src="image/icon/hospital.png" aria-label="Close" style="width:60px; height:60px;">
+		    			</div>
+		    		</div>
+		    		<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+		   		</div>
+		    	<div class="modal-body workInfo">
+		    		<div>
+		    			<span>환자 성별</span><br/>
+		    			<span>간병 시작일</span><br/>
+		    			<span>총 간병 기간</span><br/>
+		    			<span>예상 일 간병비</span><br/>
+		    		</div>
+		    		<div class="text-end fw-bold">
+		    			<span>남성</span><br/>
+		    			<span>08월 01일 16시</span><br/>
+		    			<span>17일</span><br/>
+		    			<span>152,000원</span>
+		    		</div>
+		    	</div>
+		    	<div class="modal-footer">
+	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">Close</button>
+	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">자세히 보기</button>
+		    	</div>
+		  	</div>
+		</div>
+	</div>
+    
+    
+    
+    
     
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
@@ -327,6 +416,26 @@
     			}
     		})
     		// 자동추천 새로고침 비동기 요청 (끝)
+    		
+    		// 일감 목록에서 모달창으로 정보 보기(시작)
+    		const infoBtnList = document.querySelectorAll('.workInfo');
+    		for(let btn of infoBtnList) {
+    			btn.addEventListener('click', () => {
+    				$('.modal').modal('show');
+    			})
+    		}
+    		// 일감 목록에서 모달창으로 정보 보기(끝)
+    		
+    		// 일감 목록 모달창에서 자세한 정보 보기(시작)
+    		const detailInfo = document.querySelector('#detailInfo');
+    		detailInfo.addEventListener('click', () => {
+    			// location.href = '';
+    			
+    			
+    		})
+    		// 일감 목록 모달창에서 자세한 정보 보기(끝)
+    		
+    		
     		
     		
     		
