@@ -802,7 +802,43 @@ public class MemberController {
 		}
 		return "redirect:home.do";
 		
-	}
+	};
+	
+	@GetMapping("updatePwdView.me")
+	public String updatePwdView() {
+		return "updatePwd";
+	};
+	
+	@PostMapping("updatePwd.me")
+	public String updatePwd(@RequestParam("checkPwd") String checkPwd, @RequestParam("memberPwd") String memberPwd,HttpSession session,Model model) {
+		Member loginUser = (Member)model.getAttribute("loginUser");
+		
+		
+		if(bCrypt.matches(checkPwd, loginUser.getMemberPwd())) {
+			
+			
+			HashMap<String,String> changeInfo = new HashMap<String,String>();
+			changeInfo.put("memberId", loginUser.getMemberId());
+			changeInfo.put("newPwd", bCrypt.encode(memberPwd));
+			int result = mService.updatePassword(changeInfo);
+			
+					
+			if(result >0) {
+				return "redirect:myInfo.me";
+			}else {
+				throw new MemberException("비밀번호 변경을 실패했습니다");
+			}
+			
+			
+		}else {
+			
+			
+			throw new MemberException("비밀번호가 틀립니다");
+		}
+		
+		
+		
+	};
 	
 	
 }//클래스 끝

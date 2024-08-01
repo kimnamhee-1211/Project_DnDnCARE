@@ -35,7 +35,8 @@
 	      		</div>
 	      		<div align="center"class="row m-4" style="border:2px solid #8dd986;width:950px"> <!-- 여기로규격정햇다 -->
 		      		<div class="col-2 m-4">
-		      			<div><button class="myInfo-btn" style="height:100px">내 계정 정보 수정하기</button></div>
+		      			<div><button class="myInfo-btn m-2" style="height:50px">내 계정 정보 수정하기</button></div>
+		      			<div><button class="myInfo-btn m-2" onclick ="location.href='updatePwdView.me'"style="height:50px">비밀번호 변경하기</button></div>
 		      		</div>
 		      		<div  class="col-3 d-flex align-items-center">
 		      			<div>???님! 어서오세요!</div>
@@ -127,9 +128,9 @@
 			      							<div style="position: relative;">
 		      									<button type="button"class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
 		      									<div id="diseaseLevel"class="selectUpdateDiv select-hidden m-1">
-		      										<div>낮음</div>
-		      										<div>중간</div>
-		      										<div>높음</div>
+		      										<div>중증</div>
+		      										<div>중등증</div>
+		      										<div>경증</div>
 		      									</div>
 		      									
 		      								</div>
@@ -549,13 +550,21 @@
 						memberInfoValue += '30,'; break;
 					}
 				};
+				switch(diseaseLevelUpdate.innerText.trim()){
+				case '중증':
+					memberInfoValue += '61,'; break;
+				case '중등증':
+					memberInfoValue += '62,'; break;
+				case '경증':
+					memberInfoValue += '63,'; break;
+				}
 				
 				
 				if(memberInfoValue != ''){
 					let result2 = memberInfoValue.replace(/^,+|,+$/g, '');
 					document.getElementsByName('memInfo')[0].value = result2;
 				}else{
-					document.getElementsByName('memInfo')[0].value = '실패';
+					document.getElementsByName('memInfo')[0].value = 'fail';
 				}
 				
 				patientForm.submit();
