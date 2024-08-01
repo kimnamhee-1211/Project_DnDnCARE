@@ -39,11 +39,11 @@
 						      <th scope="col" >인원</th>
 						      <td scope="col" >
 						      	<span>
-						      		<input type="radio" class="btn-check" name="options-outlined" id="success-outlined" autocomplete="off" checked>
+						      		<input type="radio" class="btn-check" name="options-outlined" id="2p" autocomplete="off" checked>
 									<label class="btn btn-outline-success" for="success-outlined">2명</label>
 						      	</span>
 						      	<span>
-						      		<input type="radio" class="btn-check" name="options-outlined" id="success-outlined" autocomplete="off" checked>
+						      		<input type="radio" class="btn-check" name="options-outlined" id="3p" autocomplete="off">
 									<label class="btn btn-outline-success" for="success-outlined">3명</label>		
 						      	</span>
 						      </td>
@@ -52,15 +52,27 @@
 						  <tbody>
 						    <tr>
 						      <th>시작날짜</th>
-						      <td>2024-02-01</td>
+						      <td>
+						      	<input type="date" class="form-control" id="startDay" name="startDay">
+						      </td>
 						      <th>종료날짜</th>
-						      <td>2024-02-01</td>
+						      <td>
+						      	<input type="date" class="form-control" id="endDay" name="startDay">
+						      </td>
 						    </tr>
 						    <tr>
 						      <th>시작시간</th>
-						      <td>07시 00분</td>
+						      <td>
+								<select class="form-select" aria-label="Default select example">
+								  <option th:each="num : ${#numbers.sequence(00, 24)}" value="${num}">[[${num}]] 시</option>
+								</select>
+						      </td>
 						      <th>종료시간</th>
-						      <td>13시 00븐</td>
+						      <td>
+						      	<select class="form-select" aria-label="Default select example">
+								  <option th:each="num : ${#numbers.sequence(00, 24)}" value="${num}">[[${num}]] 시</option>
+								</select>						      						     
+						      </td>
 						    </tr>
 						     <tr>
 						      <th>상세주소</th>
@@ -69,7 +81,10 @@
 						  </tbody>
 						  	<tr>
 						      <th colspan="2">1인당 1일 돌봄비용</th>
-						      <td colspan="2">1000원</td>
+						      <td colspan="2">
+						      
+						      
+						      </td>
 						    </tr>
 						   <tr>
 						      <th colspan="2">1인당 1일 돌봄비용</th>
@@ -90,9 +105,7 @@
 	<script th:inline="javascript">
 	
 	window.onload = function() {
-	    document.getElementById("insertGruop").addEventListener('click', function() {
-	        location.href = 'joinMachingEnroll.jm';
-	    });
+	
 	};
 	
 	
