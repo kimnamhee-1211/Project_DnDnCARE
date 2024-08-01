@@ -135,7 +135,7 @@ public class MemberController {
 			
 			for(HashMap<String,String> m : category) {
 				 switch(m.get("L_CATEGORY")) {
-					 case "service" : memberInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
+					 case "service" : memberInfo.getInfoService().add(0,m.get("S_CATEGORY")); break;
 					 case "career" : memberInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "disease" : memberInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
 					 case "license" : memberInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;
@@ -163,7 +163,7 @@ public class MemberController {
 			
 			for(HashMap<String,String> m : category) {
 				 switch(m.get("L_CATEGORY")) {
-					 case "service" : wantInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
+					 case "service" : wantInfo.getInfoService().add(0,m.get("S_CATEGORY")); break;
 					 case "career" : wantInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "disease" : wantInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
 					 case "license" : wantInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;
@@ -774,15 +774,34 @@ public class MemberController {
 //		mService.selectwantInfo(wantInfo);
 		return "redirect:myInfo.me";
 	}
+
 	
 	@PostMapping("patientUpdate.me")
-	public String updatePatient(@ModelAttribute Patient p,HttpSession session) {
+	public String updatePatient(@ModelAttribute Patient p,HttpSession session, @RequestParam("memInfo") String memInfo) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
 		p.setMemberNo(loginUser.getMemberNo());
 		
-		int result = mService.updatePatient(p);
+		
+		System.out.println(p);
+		System.out.println(memInfo);
+		int result = mService.updatePatient(p);	//환자정보바꾸기
+		
+		int result2 = mService.deleteMemberInfo(loginUser.getMemberNo()); //환자인포정보 한번 다 지우기
+		if(!memInfo.equals("fail")) {
+			
+			String[] mis = memInfo.split(",");
+			
+			for(String mi : mis) {
+				HashMap<String,Integer> info = new HashMap<String,Integer>();
+				info.put("memberNo",loginUser.getMemberNo());
+				info.put("categoryNo",Integer.parseInt(mi));
+				int result3 = mService.insertMemberInfo(info);
+			}
+			
+		}
 		return "redirect:home.do";
+		
 	}
 	
 	

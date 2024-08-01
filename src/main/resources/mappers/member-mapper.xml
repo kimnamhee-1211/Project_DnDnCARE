@@ -142,17 +142,28 @@
 	</select>
 	
 	
-	<delete id="deleteWantInfo">
+	<delete id="deleteWantInfo">		<!-- 내가원하는 상대매칭정보 -->
 		delete want_info
 		where member_no = #{memberNo}
 		
 	</delete>
-	<insert id="insertWantInfo">
+	<insert id="insertWantInfo">		<!-- 내가 원하는 상대매칭 정보 -->
 	insert into want_info values(
 		${memberNo},
 		${categoryNo}
 	)
 	
+	</insert>
+	<delete id="deleteMemberInfo">		<!-- 내 인포정보 -->
+		delete member_info
+		where member_no = #{memberNo}
+		
+	</delete>
+	<insert id="insertMemberInfo">		<!-- 내 인포정보 -->
+	insert into member_info values(
+		${memberNo},
+		${categoryNo}
+	)
 	</insert>
 	
 	<select id="selectWantInfo" resultType="map">
@@ -165,7 +176,7 @@
 	
 	<update id="updatePatient">
 		update patient
-		set pt_name = #{ptName}, pt_age = #{ptAge}, pt_weight = #{ptWeight}, pt_height = #{ptHeight}
+		set pt_name = #{ptName}, pt_age = #{ptAge}, pt_weight = #{ptWeight}, pt_height = #{ptHeight}, pt_address = #{ptAddress}, pt_gender = #{ptGender}
 		where member_no = #{memberNo}
 	</update>
 

@@ -98,7 +98,7 @@
 		      							<td>질환</td>
 		      							<td colspan="5" id="disaseUpdate">
 		      								
-		      								<span th:each="disease : ${memberInfo.InfoDisease}"> [[${disease}]] </span>	
+		      								<span class="memDisease" th:each="disease : ${memberInfo.InfoDisease}"> [[${disease}]] </span>	
 		      									
 		      							</td>
 		      							<td colspan="1">
@@ -108,7 +108,7 @@
 			      										<div>치매</div>
 			      										<div>호흡기질환</div>
 			      										<div>거동불편</div>
-			      										<div>와상</div>
+			      										<div>와상환자</div>
 			      										<div>파킨슨</div>
 			      										<div>수면질환</div>
 			      										<div>정신질환</div>
@@ -181,7 +181,7 @@
 		      						<tr>
 		      							<td colspan="2">요청 서비스</td>
 		      							<td colspan="4" id="serviceUpdate">
-		      								<span class ="m-1"th:each="number:${#numbers.sequence(1,p.ptService.split('//').length)}">[[${p.ptService.split('//')[number-1]}]] </span>
+		      								<span class="memService m-1" th:each="i : ${memberInfo.infoService}">[[${i}]]</span>
 		      							</td>
 		      							<td>
 		      								<div style="position: relative;">
@@ -204,8 +204,8 @@
 							<input type="hidden" name="ptGender" >
 							<input type="hidden" name="ptHeight" >
 							<input type="hidden" name="ptWeight" >
-							<input type="hidden" name="ptService" >
 							<input type="hidden" name="ptRequest" >
+							<input type="hidden" name="memInfo" >
 							<input type="hidden" name="ptDisease" value="3">
 							<input type="hidden" name="ptDiseaseLevel" value="3">
 						</form>
@@ -301,8 +301,8 @@
 				      					</tr>
 				      					<tr align="center">
 				      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;3~5년&nbsp;</span></td>
-				      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;5~8년&nbsp;</span></td>
-				      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;8년이상&nbsp;</span></td>
+				      						<td width="90px"><span class="btn-outline-maincolor-2">&nbsp;5년이상&nbsp;</span></td>
+				      						<td></td>
 				      					</tr>
 				      				</table>
 			      				</div>
@@ -400,12 +400,12 @@
 
 					if(disaseUpdate.innerText.includes(this.innerText)){
 						for(span of disaseUpdate.children){
-							if(span.innerText==this.innerText){
+							if(span.innerText.trim()==this.innerText){
 								span.remove();
 							}
 						}
 					}else{
-						disaseUpdate.innerHTML += '<span>'+this.innerText+'</span> ';
+						disaseUpdate.innerHTML += '<span class="memDisease" >'+this.innerText+'</span> ';
 					}
 					
 					
@@ -484,7 +484,7 @@
 							}
 						}
 					}else{
-						serviceUpdate.innerHTML += '<span>'+this.innerText+'</span> ';
+						serviceUpdate.innerHTML += '<span class="memService">'+this.innerText+'</span> ';
 					}
 					
 					
@@ -498,16 +498,66 @@
 			const patientForm = document.getElementById('patientForm');
 			
 			document.getElementById('patientButton').addEventListener('click',function(){
+				//PT 테이블에 접근할 데이터들
 				document.getElementsByName('ptName')[0].value = nameUpdate.innerText;
 				document.getElementsByName('ptAge')[0].value = ageUpdate.innerText;
 				document.getElementsByName('ptAddress')[0].value = document.getElementById('sample4_postcode').innerText;
 				document.getElementsByName('ptAddress')[0].value +='//' +document.getElementById('sample4_roadAddress').innerText;
 				document.getElementsByName('ptAddress')[0].value +='//' +document.getElementById('sample4_detailAddress').innerText;
-				document.getElementsByName('ptGender')[0].value = genderUpdate.innerText;
+				document.getElementsByName('ptGender')[0].value = genderUpdate.innerText == '남자' ? 'M' : 'F' ;
 				document.getElementsByName('ptHeight')[0].value = heightUpdate.innerText;
 				document.getElementsByName('ptWeight')[0].value = weightUpdate.innerText;
 				document.getElementsByName('ptRequest')[0].value = document.getElementById('requestUpdate').innerText;
-				document.getElementsByName('ptService')[0].value = serviceUpdate.innerText;
+				//MEMBERINFO에 접근할 데이터들
+				//document.getElementsByName('infoService')[0].value = serviceUpdate.innerText;
+				//document.getElementsByName('ptDisease')[0].value =
+				//document.getElementsByName('ptDiseaseLevel')[0].value =
+				//document.getElementsByName('ptService')[0].value =
+				let memberInfoValue = '';
+				
+				for(i of document.getElementsByClassName('memService')){
+					switch(i.innerText.trim()){
+					case '병원돌봄' :
+						memberInfoValue += '1,'; break;
+					case '가정돌봄' :
+						memberInfoValue += '2,'; break;
+					case '동행서비스' :
+						memberInfoValue += '3,'; break;
+					}
+				};
+				for(i of document.getElementsByClassName('memDisease')){
+					switch(i.innerText.trim()){
+					case '치매':
+						memberInfoValue += '21,'; break;
+					case '호흡기질환':
+						memberInfoValue += '22,'; break;
+					case '거동불편':
+						memberInfoValue += '23,'; break;
+					case '와상환자':
+						memberInfoValue += '24,'; break;
+					case '파킨슨':
+						memberInfoValue += '25,'; break;
+					case '수면질환':
+						memberInfoValue += '26,'; break;
+					case '정신질환':
+						memberInfoValue += '27,'; break;
+					case '기저귀 케어':
+						memberInfoValue += '28,'; break;
+					case '재활':
+						memberInfoValue += '29,'; break;
+					case '기타':
+						memberInfoValue += '30,'; break;
+					}
+				};
+				
+				
+				if(memberInfoValue != ''){
+					let result2 = memberInfoValue.replace(/^,+|,+$/g, '');
+					document.getElementsByName('memInfo')[0].value = result2;
+				}else{
+					document.getElementsByName('memInfo')[0].value = '실패';
+				}
+				
 				patientForm.submit();
 			})
 			
@@ -579,8 +629,7 @@
 					case '1년이하': if(j =='1'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
 					case '1~3년': if(j =='3'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
 					case '3~5년': if(j =='5'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
-					case '5~8년': if(j =='8'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
-					case '8년이상': if(j =='100'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+					case '5년이상': if(j =='8'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
 					}
 					
 				};
@@ -647,10 +696,8 @@
 						wantInfoValue += '13,'; break;
 					case '3~5년':
 						wantInfoValue += '14,'; break;
-					case '5~8년':
+					case '5년이상':
 						wantInfoValue += '15,'; break;
-					case '8년이상':
-						wantInfoValue += '16,'; break;
 					}
 					
 					

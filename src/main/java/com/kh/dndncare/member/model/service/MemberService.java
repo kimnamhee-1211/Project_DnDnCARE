@@ -61,5 +61,9 @@ public interface MemberService {
 
 	int updatePatient(Patient p);
 
+	int insertMemberInfo(HashMap<String, Integer> info);
+
+	int deleteMemberInfo(int memberNo);
+
 
 }

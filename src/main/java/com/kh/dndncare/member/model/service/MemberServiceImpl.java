@@ -160,4 +160,14 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.updatePatient(p);
 	}
 
+	@Override
+	public int insertMemberInfo(HashMap<String, Integer> info) {
+		return mMapper.insertMemberInfo(info);
+	}
+
+	@Override
+	public int deleteMemberInfo(int memberNo) {
+		return mMapper.deleteMemberInfo(memberNo);
+	}
+
 }
