@@ -64,6 +64,53 @@ public class BoardServiceImpl implements BoardService {
 		return bMapper.insertReply(r);
 	}
 
+	@Override
+	public int updateBoard(Board b) {
+		return bMapper.updateBoard(b);
+	}
+
+	@Override
+	public int deleteBoard(int bId) {
+		return bMapper.deleteBoard(bId);
+	}
+
+	@Override
+	public ArrayList<Board> searchBoard(PageInfo pi, HashMap<String, Object> map) {
+		int offset = (pi.getCurrentPage() - 1)*pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
+		return bMapper.searchBoard(rowBounds, map);
+	}
+
+	@Override
+	public int updateReply(Reply r) {
+		return bMapper.updateReply(r);
+	}
+
+	@Override
+	public int deleteReply(int rId) {
+		return bMapper.deleteReply(rId);
+	}
+
+	@Override
+	public int insertBoardLike(HashMap<String, Integer> map) {
+		return bMapper.insertBoardLike(map);
+	}
+
+	@Override
+	public int boardLikeCount(int boardNo) {
+		return bMapper.boardLikeCount(boardNo);
+	}
+
+	@Override
+	public int insertReplyLike(HashMap<String, Integer> map) {
+		return bMapper.insertReplyLike(map);
+	}
+
+	@Override
+	public int replyLikeCount(int rId) {
+		return bMapper.replyLikeCount(rId);
+	}
+
 
 	
 }
