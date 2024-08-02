@@ -2,6 +2,7 @@ package com.kh.dndncare.member.model.vo;
 
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -31,5 +32,9 @@ public class Patient {
 	
 	private List<Integer> memberInfo;
 	private List<Integer> wantInfo;
+	
+	private ArrayList<String> disease;
+	private String diseaseLevel;
+	
 	
 }

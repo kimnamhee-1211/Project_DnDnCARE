@@ -47,13 +47,13 @@
 			select seq_bid.nextval from dual
 		</selectKey>		
 		insert into board
-		values (#{boardNo}, #{memberNo}, #{boardTitle}, #{boardContent}, 
-				default, sysdate, sysdate, 0, #{categoryNo}, #{areaNo})
+		values (#{boardNo}, #{memberNo}, #{boardTitle}, default, 
+		sysdate, sysdate, 0, #{categoryNo}, #{areaNo}, #{boardContent})
 	</insert>
 	
 	<select id="selectBoard" resultType="Board">
 		select b.board_No, c.category_Name, b.board_Title, m.member_NickName, a.area_Name, b.board_create_date,
-			   b.board_update_date, b.board_count, b.board_content
+			   b.board_update_date, b.board_count, b.board_content, b.category_No, b.area_no
 		from board b
 			join b_category c on(c.category_no=b.category_no)
 			join member m on(m.member_no=b.member_no)
@@ -79,10 +79,77 @@
 		select count(*)
 		from reply
 		where ref_board_No=#{boardNo}
+		and reply_status= 'Y'
 	</select>
 	
 	<insert id="insertReply">
 		insert into reply
 		values (seq_rid.nextval, #{replyContent}, #{memberNo}, sysdate, sysdate, default, #{refBoardNo})
 	</insert>
+	
+	<update id="updateBoard">
+		update board
+		set board_title = #{boardTitle}, board_content = #{boardContent}, board_update_date=sysdate, category_no=#{categoryNo}, area_no=#{areaNo}
+		where board_no = #{boardNo}
+	</update>
+	
+	<update id="deleteBoard">
+		update board
+		set board_status ='N'
+		where board_no=#{bId}
+	</update>
+	
+	<select id="searchBoard" resultType="Board">
+		select *
+	    from board b
+	        join b_category c on(c.category_no=b.category_no)
+	        join member m on(m.member_no=b.member_no)
+	        join area a on(b.area_no=a.area_no)
+	    where b.board_status='Y' 
+	        and m.member_category=#{category}
+	        <if test="searchType != null and searchType=='boardTitle'">
+				and b.board_Title like '%' || #{searchText} || '%'
+			</if>
+	         <if test="searchType != null and searchType=='boardContent'">
+	         	and b.board_Content like '%' || #{searchText} || '%'
+	         </if>
+	         <if test= "searchType != null and searchType=='memberNickName'">
+	         	and m.member_NickName like '%' || #{searchText} || '%'
+	   		</if>
+	    order by b.board_no desc
+	</select>
+	
+	<update id="updateReply">
+		update reply
+		set reply_content = #{replyContent}
+		where reply_no = #{replyNo}
+	</update>
+	
+	<update id="deleteReply">
+		update reply
+		set reply_status = 'N'
+		where reply_no=#{rId}
+	</update>
+	
+	<insert id="insertBoardLike">
+		insert into board_like
+		values(#{boardNo}, #{memberNo})
+	</insert>
+	
+	<select id="boardLikeCount" resultType="_int">
+		select count(*)
+		from board_like
+		where board_no = #{boardNo}
+	</select>
+	
+	<insert id="insertReplyLike">
+		insert into reply_like
+		values(#{memberNo}, #{rId})
+	</insert>
+	
+	<select id="replyLikeCount" resultType="_int">
+		select count(*)
+		from reply_like
+		where reply_no = #{rId}
+	</select>
 </mapper>

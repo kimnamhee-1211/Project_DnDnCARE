@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -14,21 +13,9 @@
     body {
         font-family: 'Pretendard-Regular', sans-serif;
         background-color: #f8f9fa;
-        border:solid;
+        border: solid;
     }
-    
-     .topAndNavbar {
-		background-image:linear-gradient(
-		        rgba(0, 0, 0, 0.4),
-		        rgba(0, 0, 0, 0.4)
-		      )
-		      ,url(../image/topImage.jpg);
-		    background-size: cover; 
-		    background-position: center;
-		    background-repeat: no-repeat;
-		    transition: background-color 0.5s ease;
-	}
-   
+
     .container {
         max-width: 600px;
         margin-top: 50px;
@@ -37,34 +24,31 @@
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-    
-    hr{
-		border: 0; 
-		height: 4px;
-		background-color: #8DD986;
-		margin: 20px 0; 
-	}
-	
-	 .btn-write {
-	    height:40px;
-		font-size:18px;
-		border-radius:10px; 
-		border:none;
+
+    hr {
+        border: 0;
+        height: 4px;
+        background-color: #8DD986;
+        margin: 20px 0;
+    }
+
+    .btn-write {
+        height: 40px;
+        font-size: 18px;
+        border-radius: 10px;
+        border: none;
         background-color: #cdf2c9;
         color: black;
     }
-    
+
     input[readonly] {
-    background-color: gray;
-}
+        background-color: gray;
+    }
 </style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="topAndNavbar">
-		<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
-		<div class="top" th:replace="~{common/top.html :: top}"></div>
-	</div>
-    
+    <div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
     <div class="content-wrapper">
         <main class="container">
             <h1 class="text-center">글 작성</h1>
@@ -80,7 +64,7 @@
                             </th:block>
                             <option value="1">응원의 한마디</option>
                             <option value="2">수다방</option>
-                        	<!-- th:if="${session.loginUser.memberStatus == 'C'}" -->
+                            <!-- th:if="${session.loginUser.memberStatus == 'C'}" -->
                             <option value="3">일감찾기 팁</option>
                             <option value="4">자격증 정보</option>
                             <!-- th:if="${session.loginUser.memberStatus == 'P'}"-->
@@ -103,22 +87,21 @@
                         </select>
                     </div>
                     <div class="col-md-2 mb-3">
-                    	<label for="category" class="form-label">분류</label>
-                    	<input type="text" class="form-control" id="writerCategory" name="writerCategory" th:value="${session.loginUser.memberCategory}" readonly>
+                        <label for="category" class="form-label">분류</label>
+                        <input type="text" class="form-control" id="writerCategory" name="writerCategory" th:value="${session.loginUser.memberCategory}" readonly>
                     </div>
                     <div class="col-md-2 mb-3">
-                    	<label for="writer" class="form-label">작성자</label>
-                    	<input type="text" class="form-control" id="writerNickName" name="writerNickName" th:value="${session.loginUser.memberNickName}" readonly>
+                        <label for="writer" class="form-label">작성자</label>
+                        <input type="text" class="form-control" id="writerNickName" name="writerNickName" th:value="${session.loginUser.memberNickName}" readonly>
                     </div>
-                    <br>
                     <div class="col-md-9 mb-3">
-                    	<label for="title" class="form-label">제목</label>
-                    	<input type="text" class="form-control" id="boardTitle" name="boardTitle" placeholder="제목을 입력해주세요" required>
-                	</div>
+                        <label for="title" class="form-label">제목</label>
+                        <input type="text" class="form-control" id="boardTitle" name="boardTitle" placeholder="제목을 입력해주세요" required>
+                    </div>
                 </div>
                 <div class="mb-3 col-md-9">
                     <label for="content" class="form-label">내용</label>
-                    <textarea class="form-control" id="boardContent" name="boardContent" rows="15" placeholder="내용을 입력해주세요" required></textarea>
+                    <textarea class="form-control" id="summernote" name="boardContent" rows="15" placeholder="내용을 입력해주세요" required></textarea>
                 </div>
                 <div class="d-flex justify-content-center">
                     <button type="submit" class="btn-write me-2">작성하기</button>
@@ -128,128 +111,30 @@
         </main>
     </div>
     <div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('#summernote').summernote({
+          placeholder: '내용을 입력해주세요',
+          tabsize: 2,
+          minHeight: 500,             // 최소 높이
+          maxHeight: null,             // 최대 높이
+          toolbar: [
+        	['fontname', ['fontname']],
+        	['fontsize', ['fontsize']],
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', ['link', 'picture']],
+          ],
+          fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
+          fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+         
+        });
+      });
+    </script>
 </body>
-
-
 </html>
-=======
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>writerBoard</title>
-<style>
-    @font-face {
-        font-family: 'Pretendard-Regular';
-        src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-        font-weight: 400;
-        font-style: normal;
-    }
-    body {
-        font-family: 'Pretendard-Regular', sans-serif;
-        background-color: #f8f9fa;
-        border:solid;
-    }
-    
-   
-    .container {
-        max-width: 600px;
-        margin-top: 50px;
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    hr{
-		border: 0; 
-		height: 4px;
-		background-color: #8DD986;
-		margin: 20px 0; 
-	}
-	
-	 .btn-write {
-	    height:40px;
-		font-size:18px;
-		border-radius:10px; 
-		border:none;
-        background-color: #cdf2c9;
-        color: black;
-    }
-    
-    input[readonly] {
-    background-color: gray;
-}
-</style>
-</head>
-<body>
-		<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
-    
-    <div class="content-wrapper">
-        <main class="container">
-            <h1 class="text-center">글 작성</h1>
-            <hr>
-            <form action="insertBoard.bo" method="post">
-                <div class="mb-3 row">
-                    <div class="col-md-3">
-                        <label for="category" class="form-label">카테고리</label>
-                        <select class="form-select" id="categoryNo" name="categoryNo" required>
-                            <option selected disabled>카테고리 선택</option>
-                            <th:block th:if="${session.loginUser.memberCategory} == 'A'">
-                            <option value="0">공지사항</option>
-                            </th:block>
-                            <option value="1">응원의 한마디</option>
-                            <option value="2">수다방</option>
-                        	<!-- th:if="${session.loginUser.memberStatus == 'C'}" -->
-                            <option value="3">일감찾기 팁</option>
-                            <option value="4">자격증 정보</option>
-                            <!-- th:if="${session.loginUser.memberStatus == 'P'}"-->
-                            <option value="5">간병가족정보방</option>
-                            <option value="6">간병일지</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <label for="area" class="form-label">지역</label>
-                        <select class="form-select" id="areaNo" name="areaNo" required>
-                            <option selected disabled>지역 선택</option>
-                            <option value="1">서울</option>
-                            <option value="2">경기</option>
-                            <option value="3">인천</option>
-                            <option value="4">충청</option>
-                            <option value="5">전라</option>
-                            <option value="6">경상</option>
-                            <option value="7">강원</option>
-                            <option value="8">제주</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 mb-3">
-                    	<label for="category" class="form-label">분류</label>
-                    	<input type="text" class="form-control" id="writerCategory" name="writerCategory" th:value="${session.loginUser.memberCategory}" readonly>
-                    </div>
-                    <div class="col-md-2 mb-3">
-                    	<label for="writer" class="form-label">작성자</label>
-                    	<input type="text" class="form-control" id="writerNickName" name="writerNickName" th:value="${session.loginUser.memberNickName}" readonly>
-                    </div>
-                    <br>
-                    <div class="col-md-9 mb-3">
-                    	<label for="title" class="form-label">제목</label>
-                    	<input type="text" class="form-control" id="boardTitle" name="boardTitle" placeholder="제목을 입력해주세요" required>
-                	</div>
-                </div>
-                <div class="mb-3 col-md-9">
-                    <label for="content" class="form-label">내용</label>
-                    <textarea class="form-control" id="boardContent" name="boardContent" rows="15" placeholder="내용을 입력해주세요" required></textarea>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn-write me-2">작성하기</button>
-                    <button type="reset" class="btn btn-outline-danger" onclick="javascript:history.back();">취소하기</button>
-                </div>
-            </form>
-        </main>
-    </div>
-    <div class="footer" th:replace="~{common/footer.html :: footer}"></div>
-</body>
-
-
-</html>
->>>>>>> refs/remotes/origin/jaeyoung

@@ -23,5 +23,25 @@ public interface BoardService {
 
 	int insertReply(Reply r);
 
+	int updateBoard(Board b);
+
+	int deleteBoard(int bId);
+
+	ArrayList<Board> searchBoard(PageInfo pi, HashMap<String, Object> map);
+
+	int updateReply(Reply r);
+
+	int deleteReply(int rId);
+
+	int insertBoardLike(HashMap<String, Integer> map);
+
+	int boardLikeCount(int boardNo);
+
+	int insertReplyLike(HashMap<String, Integer> map);
+
+	int replyLikeCount(int rId);
+
+
+
 
 }

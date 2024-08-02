@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script><!-- 도로명주소api -->
+</head>
+<body>
+	<div th:replace="~{common/navbar :: navbar}"></div>
+	
+	<form action="updateMember.me" method="post" id="updateMemberForm">
+		<div class="container" >
+		
+			 <div class="row">
+				<div class="col" >
+		     		<div align="center"class="myInfo-Border m-4">
+		     			<div class="m-4" style="border-bottom:2px solid #8dd986;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
+		     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
+		     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatching.me">현재 매칭 정보</a></div>
+		     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingHistory.me">매칭 이력</a></div>
+		     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내가 쓴 후기</a></div>
+		     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
+		     		</div>
+		    	</div>
+		    	
+		    	<div class="col" >
+		    		<div class="row m-4" style="width:950px"> <!-- 여기로규격정햇다 -->
+			      		<div class="m-3 h1 menu-name" >내 정보</div>
+		      		</div>
+		      		<div class="m-3">
+		      			<div class="m-3 h2">사용자 정보 변경</div>
+		      			<div class="m-3" style="width:500px;">
+			    		<p class="info">변경하고자 하는 정보를 변경해주세요</p>
+							<div class="form-floating mb-2">
+							<input type="text" class="form-control" id="nameInput" name="memberName" th:value="${session.loginUser.memberName}">
+							<label for="nameInput">성함</label>
+						</div>
+						</div>
+			      		<div class="m-3" style="width:500px;">
+			      			<p class="info" style="margin-bottom:0">별명(닉네임)</p>
+							<div class="form-floating mb-2">
+								<input type="text" class="form-control" id="nickNameInput" name="memberNickName" th:value="${session.loginUser.memberNickName}">
+								<label for="nickNameInput" id="nickNameInputLavel">별명(닉네임)</label>
+							</div>
+			    		</div>
+			    		<div class="m-3" style="width:500px;">
+				    		<p class="info">성별</p>
+							<div class="form-floating mb-2">
+								<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="radio" name="memberGender" id="menInput" th:value="M" th:checked="${session.loginUser.memberGender == 'M'}">
+								  <label class="form-check-label" for="menInput">남성</label>
+								</div>
+								<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="radio" name="memberGender" id="womenInput" th:value="F" th:checked="${session.loginUser.memberGender == 'F'}">
+								  <label class="form-check-label" for="womenInput">여성</label>
+								</div>
+							</div>
+			    		</div>
+			    		<div class="m-3" style="width:500px">
+			    			<p class="info">국적</p>
+							<div class="form-floating mb-5">
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="memberNational" id="national1Input" th:value="내국인" th:checked="${session.loginUser.memberNational == '내국인'}">
+									<label class="form-check-label" for="menInput">내국인</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" name="memberNational" th:value="외국인" th:checked="${session.loginUser.memberNational == '외국인'}">
+									<label class="form-check-label" for="menInput">외국인</label>
+								</div>
+							</div>
+			    		</div>
+			    		<div class="m-3" style="width:500px">
+			    			<p class="info">생년월일</p>
+							<div class="form-floating mb-2">
+								<input type="date" class="form-control" id="ageInput" name="memberAge" th:value="${session.loginUser.memberAge}">
+								<label for="ageInput" id="ageInputLabel">생년월일</label>
+							</div>
+			    		</div>
+			    		<div class="m-3" style="width:500px">
+			    			<p class="info">연락처</p>
+							<p style="font-size:16px" class="info">연락처는 -를 제외하고 입력해주세요.</p>
+							<div class="form-floating mb-2">
+								<input type="tel" class="form-control" id="telInput" name="memberPhone" th:value="${session.loginUser.memberPhone}">
+								<label for="telInput" id="telInputLabel">전화번호</label>
+							</div>
+			    		</div>
+			    		<div class="m-3" style="width:500px">
+			    			<p class="info">주소를 입력해주세요.</p>
+							<p style="font-size:16px" class="info">주소는 반드시 도로명 주소를 선택/입력해주세요.</p>
+							<div class="form-floating mb-1" >
+								<button type="button" onclick="sample4_execDaumPostcode()"  style="border:none; background:#8dd986;color:white;">주소 검색</button>
+							</div> 
+							<div class="form-floating mb-1" >
+		   						<input type="text" class="form-control w-25" id="sample4_postcode" name="postcode" th:value="${session.loginUser.memberAddress.split('//')[0]}">
+		   						<label for="sample4_postcod">우편번호</label>
+							</div>
+							<div class="form-floating mb-1">
+								<input type="text" class="form-control" id="sample4_roadAddress" name="roadAddress" style="width:500px;" th:value="${session.loginUser.memberAddress.split('//')[1]}">
+								<label for="sample4_roadAddress">도로명주소</label>
+							</div>
+							<div class="form-floating mb-2">
+								<input type="text" class="form-control" id="sample4_detailAddress" name="detailAddress" th:value="${session.loginUser.memberAddress.split('//')[2]}">
+								<label for="sample4_detailAddress">상세주소</label>						
+							</div>	
+			    		</div>
+			    		<div class="m-3" style="width:500px">
+			    			<p class="info">이메일</p>
+							<div class="form-floating mb-5">
+								<div class="row g-3">
+								  <div class="col-md-7">
+								    <div class="form-floating mb-4">
+								    	<input type="text" class="form-control" id="emailInput" name="email"  th:value="${session.loginUser.memberEmail.split('@')[0]}">
+								    	<label for="emailInput">이메일</label>
+								    </div>
+								  </div>
+								  <div class="col-md-1" style="font-size:20px; line-height:55px;">@</div>
+								  <div class="col-md-4">
+								    <select class="form-select" id="emailDomainInput" name="emailDomain" style="height:57.9883px;">
+									    <option th:selected="${session.loginUser.memberEmail.split('@')[1] eq 'naver.com' }">naver.com</option>
+									    <option th:selected="${session.loginUser.memberEmail.split('@')[1] eq 'hanmail.net' }">hanmail.net</option>
+										<option th:selected="${session.loginUser.memberEmail.split('@')[1] eq 'gmail.com' }">gmail.com</option>
+										<option th:selected="${session.loginUser.memberEmail.split('@')[1] eq 'nate.com' }">nate.com</option>								
+								    </select>
+								  </div>
+								</div>
+							</div>	
+			    		</div>
+			    		
+			    		<div class="m-3" style="width:500px;">
+								<div class="form-floating mb-2">
+									<div align="center" class="m-4"><button class="myInfo-btn">수정하기</button></div>
+								</div>
+							
+						</div>
+		      		</div>
+		    	
+		    	</div>
+		    </div>
+		    
+		</div><!-- 컨테이너 끝 -->
+	</form>
+	<script>
+	//주소검색 api
+	function sample4_execDaumPostcode() {
+    	new daum.Postcode({
+    		oncomplete: function(data) {
+			    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+			
+			    // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+			    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+			    var roadAddr = data.roadAddress; // 도로명 주소 변수
+			    var extraRoadAddr = ''; // 참고 항목 변수
+			
+			    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+			    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+			    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+			        extraRoadAddr += data.bname;
+			    }
+			    // 건물명이 있고, 공동주택일 경우 추가한다.
+			    if(data.buildingName !== '' && data.apartment === 'Y'){
+			       extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+			    }
+				// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+		       if(extraRoadAddr !== ''){
+		           extraRoadAddr = ' (' + extraRoadAddr + ')';
+		       }
+			
+			    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+			    document.getElementById('sample4_postcode').value = data.zonecode;
+			    document.getElementById("sample4_roadAddress").value = roadAddr;
+
+			}
+		}).open();
+	};
+
+	</script>
+</body>
+</html>

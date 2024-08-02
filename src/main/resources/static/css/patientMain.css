@@ -1,5 +1,6 @@
 /* #mainContainer {display:grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows:500px;} */
 /* #upperLeftContents {display:grid; grid-template-columns:100%; grid-template-rows: 100px 200px 200px;} */
+#patientBtn {display: grid; grid-template-cloumns:1fr 1fr 1fr;}
 #upperContents {display: grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows: 500px;}
 #container div:nth-child(2) {display:grid; grid-template-columns: 100%; grid-template-rows: 200px;}        
 #underContents {display:grid; grid-template-columns:1fr 500px 80px 700px 1fr; grid-template-rows: 700px;}
@@ -165,4 +166,3 @@ a {
   background-color: #8dd986; 
   border-color: green;
 }
-
