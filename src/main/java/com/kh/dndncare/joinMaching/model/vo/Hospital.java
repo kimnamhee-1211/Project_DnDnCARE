@@ -13,8 +13,8 @@ import lombok.ToString;
 @ToString
 public class Hospital {
 	
-	private String hospitalNm; //의료기관명
-	private String addr; //주소
-	private String tel; //전화번호
+	private String hospitalNo; 
+	private String hospitalName;
+	private String hospitalAddress; 
 
 }

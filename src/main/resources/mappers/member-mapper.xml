@@ -84,7 +84,7 @@
 	  <insert id="enrollCareGiver">
 	  	insert into caregiver
 	  	values(#{memberNo}, #{careImg}, #{careIntro}, 
-	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService}, sysdate)	  
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, sysdate)	  
 	  </insert>
 	  
 	 <!-- 정보 입력-->
@@ -99,8 +99,8 @@
 	<insert id="enrollPatient">
 	  	insert into patient
 	  	values(seq_pid.nextval, #{memberNo}, #{ptName}, #{ptGender}, #{ptAge}, 
-	  			#{ptWeight}, #{ptHeight}, #{ptService}, #{ptAddress}, #{ptRequest}, sysdate)	  
-	</insert>
+	  			#{ptWeight}, #{ptHeight}, #{ptAddress}, #{ptRequest}, sysdate)	  
+	  </insert>
 	  
 	  <select id="findIdResult" resultType="Member">
 	  	select member_id,member_create_date,member_status,member_category,member_name
