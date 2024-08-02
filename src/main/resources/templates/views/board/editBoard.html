@@ -46,6 +46,7 @@
     input[readonly] {
         background-color: gray;
     }
+    
 </style>
 </head>
 <body>
@@ -67,7 +68,7 @@
                     <div class="col-md-4">
                         <label for="category" class="form-label">카테고리 : </label>
                         <select class="form-select" id="categoryNo" name="categoryNo" required>
-                            <option disabled>카테고리 선택</option>
+                            <option value="" disabled>카테고리 선택</option>
                             <th:block th:if="${session.loginUser.memberCategory} == 'A'">
                                 <option value="0" th:selected="${b.category == null}">공지사항</option>
                             </th:block>
@@ -86,7 +87,7 @@
                     <div class="col-md-2 mb-3">
                         <label for="area" class="form-label">지역</label>
                         <select class="form-select" id="areaNo" name="areaNo" required>
-                            <option disabled th:selected="${b.areaNo == null}">지역 선택</option>
+                            <option value="" disabled th:selected="${b.areaNo == null}">지역 선택</option>
                             <option value="1" th:selected="${b.areaNo == 1}">서울</option>
                             <option value="2" th:selected="${b.areaNo == 2}">경기</option>
                             <option value="3" th:selected="${b.areaNo == 3}">인천</option>
@@ -112,9 +113,9 @@
                     </div>
                 </div>
                 <hr>
-                <div class="mb-5 col-md-12">
+                <div class="mb-5 col-md-12" id="divBoardContent" style="width:100%; min-height: 100%;">
                     <label for="content" class="form-label">내용 : </label>
-					 <textarea class="form-control" id="boardContent" name="boardContent" rows="15" th:text="${b.boardContent}" required></textarea>
+					 <textarea rows="50" class="form-control" id="boardContent" name="boardContent"  th:text="${b.boardContent}" required></textarea>
                 </div>
 
                 <div class="d-flex justify-content-center">
