@@ -15,6 +15,7 @@ import lombok.ToString;
 @ToString 
 public class Info {
 	private ArrayList<String> infoService;
+	private ArrayList<String> infoServiceCareer;
 	private ArrayList<String> infoCareer;
 	private ArrayList<String> infoDisease;
 	private ArrayList<String> infoLicense;

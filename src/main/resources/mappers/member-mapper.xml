@@ -120,6 +120,12 @@
 	  	set member_pwd = #{newPwd}
 	  	where member_id = #{memberId}
 	  </update>
+	  <!-- 간병인정보 가져오기 -->
+	  <select id="selectCareGiver" resultType="CareGiver">
+	  	select *
+	  	from CAREGIVER
+	  	where member_no = #{memberNo}
+	  </select>
 	  
 	  
 	  
@@ -190,6 +196,19 @@
 		where member_no = #{memberNo}
 		
 	
+	</update>
+	
+	<update id="updateCareGiver">
+		update caregiver
+		set care_intro = #{careIntro}, min_money = #{minMoney}, max_money = ${maxMoney},care_Update_Date = sysdate, care_join_status = #{careJoinStatus}
+		where member_no = #{memberNo}
+	</update>
+	
+	<update id="updateMemberVer2">
+		update member
+		set member_name = #{memberName}, member_gender = #{memberGender},member_age = #{memberAge}
+		where member_no =#{memberNo}	
+
 	</update>
 
 </mapper>

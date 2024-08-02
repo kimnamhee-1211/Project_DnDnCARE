@@ -175,4 +175,19 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.updateMember(m);
 	}
 
+	@Override
+	public CareGiver selectCareGiver(int memberNo) {
+		return mMapper.selectCareGiver(memberNo);
+	}
+
+	@Override
+	public int updateCareGiver(CareGiver cg) {
+		return mMapper.updateCareGiver(cg);
+	}
+
+	@Override
+	public int updateMemberVer2(Member m) {
+		return mMapper.updateMemberVer2(m);
+	}
+
 }

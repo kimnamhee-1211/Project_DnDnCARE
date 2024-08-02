@@ -89,20 +89,24 @@ public class MemberController {
 		
 		
 		if(loginUser != null) {
-			Patient p = mService.selectPatient(loginUser.getMemberNo());
-			//List<Integer> memberInfo =  mService.selectMemberInfo(loginUser.getMemberNo());
+			
+			
+			Info memberInfo = categoryFunction(loginUser.getMemberNo(),true);	//내정보
+			Info wantInfo = categoryFunction(loginUser.getMemberNo(),false);	//원하는간병인정보
+			model.addAttribute("memberInfo",memberInfo);
+			model.addAttribute("wantInfo",wantInfo);
+
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch(check) {
 				case 'C':
+					CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+					model.addAttribute("cg",cg);
 					return "myInfo";
 				
 				case 'P':
-					Info memberInfo = categoryFunction(loginUser.getMemberNo(),true);	//내정보
-					Info wantInfo = categoryFunction(loginUser.getMemberNo(),false);	//원하는간병인정보
+					Patient p = mService.selectPatient(loginUser.getMemberNo());
 					model.addAttribute("p",p);
-					model.addAttribute("memberInfo",memberInfo);
-					model.addAttribute("wantInfo",wantInfo);
-					System.out.println(wantInfo.getInfoDisease());
+					//System.out.println(wantInfo.getInfoDisease());
 					
 					//Patient pWant = categoryFunction()
 					
@@ -135,6 +139,7 @@ public class MemberController {
 			for(HashMap<String,String> m : category) {
 				 switch(m.get("L_CATEGORY")) {
 					 case "service" : memberInfo.getInfoService().add(0,m.get("S_CATEGORY")); break;
+					 case "serviceCareer" : memberInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "career" : memberInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "disease" : memberInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
 					 case "license" : memberInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;
@@ -163,6 +168,7 @@ public class MemberController {
 			for(HashMap<String,String> m : category) {
 				 switch(m.get("L_CATEGORY")) {
 					 case "service" : wantInfo.getInfoService().add(0,m.get("S_CATEGORY")); break;
+					 case "serviceCareer" : wantInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "career" : wantInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "disease" : wantInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
 					 case "license" : wantInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;
@@ -223,54 +229,54 @@ public class MemberController {
 		// (1) 자동추천 기능구현 : 간병인이라 가정하고 테스트
 		// 1. 간병인 정보 조회 
 		// 		MEMBER : 성별, 나이, 주소, 국적
-		HashMap<String, String> infoMap =  mService.getCaregiverInfo(memberNo); // {국적=내국인, 주소=제주시 첨단로 242 히히, 나이=29, 성별=남성}
-		// 		INFO_CATEGORY : 서비스경험, 경력, 질환경험, 자격증, 중증도
-		ArrayList<HashMap<String, String>> expList = mService.getCaregiverExp(memberNo); // [{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=0, L_CATEGORY=career}, {S_CATEGORY=호흡기 질환, L_CATEGORY=disase}, {S_CATEGORY=거동불편, L_CATEGORY=disase}, {S_CATEGORY=와상환자, L_CATEGORY=disase}, {S_CATEGORY=간병사, L_CATEGORY=license}]
-		
-		// 2. 간병인 정보 가공
-		String service = ""; // service
-		String career = ""; // career
-		String disease = ""; // disease
-		String license = ""; // license
-		for(HashMap<String, String> m : expList) {
-			switch(m.get("L_CATEGORY")) {
-			case "service" : service += m.get("S_CATEGORY") + "/"; break;
-			case "career" : career = m.get("S_CATEGORY"); break;
-			case "disease" : disease = m.get("S_CATEGORY") + "/"; break;
-			case "license" : license = m.get("S_CATEGORY") + "/"; break;
-			}
-		}
-		service = service.substring(0, service.lastIndexOf("/"));
-		disease = disease.substring(0, disease.lastIndexOf("/"));
-		license = license.substring(0, license.lastIndexOf("/"));
-		
-		infoMap.put("서비스경험", service);
-		infoMap.put("경력", career);
-		infoMap.put("돌봄질환경험", disease);
-		infoMap.put("자격증", license); // 가공 종료!
-		
-		// 2. 환자 목록 조회
-		
-		
-		
-		// 2. 환자 목록 설정
-		String pStr = "{\r\n"
-				+ "			환자번호=1/필요한서비스=병원돌봄/원하는간병인경력=0년이상/보유질환=치매/중증도=경증/간병받을장소=성북서울요양병원/지불가능한금액=50,000원이하,\r\n"
-				+ "			환자번호=2/필요한서비스=가정돌봄/원하는간병인경력=1년이상/보유질환=호흡기질환/중증도=중증/간병받을장소=종로구관철동19-19/지불가능한금액=100,000원이하,\r\n"
-				+ "			환자번호=3/필요한서비스=동행서비스/원하는간병인경력=3년이상/보유질환=거동불편/중증도=경증/간병받을장소=아산병원/지불가능한금액=60,000원이하,\r\n"
-				+ "			환자번호=4/필요한서비스=병원돌봄/원하는간병인경력=5년이상/보유질환=외상환자/중증도=중증/입원병원=연세세브란스병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=5/필요한서비스=가정돌봄/원하는간병인경력=8년이상/보유질환=파킨슨/중증도=경증/입원병원=부여중앙병원/지불가능한금액=80,000원이하,\r\n"
-				+ "			환자번호=6/필요한서비스=동행서비스/원하는간병인경력=0년이상/보유질환=수면질환/중증도=중증/입원병원=삼성서울병원  /지불가능한금액=40,000원이하,\r\n"
-				+ "			환자번호=7/필요한서비스=병원돌봄/원하는간병인경력=1년이상/보유질환=정신질환/중증도=경증/입원병원=성북서울요양병원/지불가능한금액=80,000원이하,\r\n"
-				+ "			환자번호=8/필요한서비스=가정돌봄/원하는간병인경력=3년이상/보유질환=재활/중증도=중증/입원병원=서울대학교병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=9/필요한서비스=동행서비스/원하는간병인경력=5년이상/보유질환=치매/중증도=경증/입원병원=서울성모병원/지불가능한금액=50,000원이하,\r\n"
-				+ "			환자번호=10/필요한서비스=병원돌봄/원하는간병인경력=8년이상/보유질환=호흡기질환/중증도=중증/입원병원=연세세브란스병원/지불가능한금액=40,000원이하,\r\n"
-				+ "			환자번호=11/필요한서비스=가정돌봄/원하는간병인경력=0년이상/보유질환=거동불편/중증도=경증/입원병원=강북삼성병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=12/필요한서비스=동행서비스/원하는간병인경력=1년이상/보유질환=외상환자/중증도=중증/입원병원=반포서래여성의원/지불가능한금액=65,000원이하,\r\n"
-				+ "			환자번호=13/필요한서비스=가정돌봄/원하는간병인경력=3년이상/보유질환=재활/중증도=경증/입원병원=서울병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=14/필요한서비스=병원돌봄/원하는간병인경력=5년이상/보유질환=골절/중증도=중증/입원병원=서울중앙의원/지불가능한금액=80,000원이하,\r\n"
-				+ "		}";
-		
+//		HashMap<String, String> infoMap =  mService.getCaregiverInfo(memberNo); // {국적=내국인, 주소=제주시 첨단로 242 히히, 나이=29, 성별=남성}
+//		// 		INFO_CATEGORY : 서비스경험, 경력, 질환경험, 자격증, 중증도
+//		ArrayList<HashMap<String, String>> expList = mService.getCaregiverExp(memberNo); // [{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=0, L_CATEGORY=career}, {S_CATEGORY=호흡기 질환, L_CATEGORY=disase}, {S_CATEGORY=거동불편, L_CATEGORY=disase}, {S_CATEGORY=와상환자, L_CATEGORY=disase}, {S_CATEGORY=간병사, L_CATEGORY=license}]
+//		
+//		// 2. 간병인 정보 가공
+//		String service = "/"; // service
+//		String career = ""; // career
+//		String disease = "/"; // disease
+//		String license = "/"; // license
+//		for(HashMap<String, String> m : expList) {
+//			switch(m.get("L_CATEGORY")) {
+//			case "service" : service += m.get("S_CATEGORY") + "/"; break;
+//			case "career" : career = m.get("S_CATEGORY"); break;
+//			case "disease" : disease = m.get("S_CATEGORY") + "/"; break;
+//			case "license" : license = m.get("S_CATEGORY") + "/"; break;
+//			}
+//		}
+//		service = service.substring(0, service.lastIndexOf("/"));
+//		disease = disease.substring(0, disease.lastIndexOf("/"));
+//		license = license.substring(0, license.lastIndexOf("/"));
+//		
+//		infoMap.put("서비스경험", service);
+//		infoMap.put("경력", career);
+//		infoMap.put("돌봄질환경험", disease);
+//		infoMap.put("자격증", license); // 가공 종료!
+//		
+//		// 2. 환자 목록 조회
+//		
+//		
+//		
+//		// 2. 환자 목록 설정
+//		String pStr = "{\r\n"
+//				+ "			환자번호=1/필요한서비스=병원돌봄/원하는간병인경력=0년이상/보유질환=치매/중증도=경증/간병받을장소=성북서울요양병원/지불가능한금액=50,000원이하,\r\n"
+//				+ "			환자번호=2/필요한서비스=가정돌봄/원하는간병인경력=1년이상/보유질환=호흡기질환/중증도=중증/간병받을장소=종로구관철동19-19/지불가능한금액=100,000원이하,\r\n"
+//				+ "			환자번호=3/필요한서비스=동행서비스/원하는간병인경력=3년이상/보유질환=거동불편/중증도=경증/간병받을장소=아산병원/지불가능한금액=60,000원이하,\r\n"
+//				+ "			환자번호=4/필요한서비스=병원돌봄/원하는간병인경력=5년이상/보유질환=외상환자/중증도=중증/입원병원=연세세브란스병원/지불가능한금액=70,000원이하,\r\n"
+//				+ "			환자번호=5/필요한서비스=가정돌봄/원하는간병인경력=8년이상/보유질환=파킨슨/중증도=경증/입원병원=부여중앙병원/지불가능한금액=80,000원이하,\r\n"
+//				+ "			환자번호=6/필요한서비스=동행서비스/원하는간병인경력=0년이상/보유질환=수면질환/중증도=중증/입원병원=삼성서울병원  /지불가능한금액=40,000원이하,\r\n"
+//				+ "			환자번호=7/필요한서비스=병원돌봄/원하는간병인경력=1년이상/보유질환=정신질환/중증도=경증/입원병원=성북서울요양병원/지불가능한금액=80,000원이하,\r\n"
+//				+ "			환자번호=8/필요한서비스=가정돌봄/원하는간병인경력=3년이상/보유질환=재활/중증도=중증/입원병원=서울대학교병원/지불가능한금액=70,000원이하,\r\n"
+//				+ "			환자번호=9/필요한서비스=동행서비스/원하는간병인경력=5년이상/보유질환=치매/중증도=경증/입원병원=서울성모병원/지불가능한금액=50,000원이하,\r\n"
+//				+ "			환자번호=10/필요한서비스=병원돌봄/원하는간병인경력=8년이상/보유질환=호흡기질환/중증도=중증/입원병원=연세세브란스병원/지불가능한금액=40,000원이하,\r\n"
+//				+ "			환자번호=11/필요한서비스=가정돌봄/원하는간병인경력=0년이상/보유질환=거동불편/중증도=경증/입원병원=강북삼성병원/지불가능한금액=70,000원이하,\r\n"
+//				+ "			환자번호=12/필요한서비스=동행서비스/원하는간병인경력=1년이상/보유질환=외상환자/중증도=중증/입원병원=반포서래여성의원/지불가능한금액=65,000원이하,\r\n"
+//				+ "			환자번호=13/필요한서비스=가정돌봄/원하는간병인경력=3년이상/보유질환=재활/중증도=경증/입원병원=서울병원/지불가능한금액=70,000원이하,\r\n"
+//				+ "			환자번호=14/필요한서비스=병원돌봄/원하는간병인경력=5년이상/보유질환=골절/중증도=중증/입원병원=서울중앙의원/지불가능한금액=80,000원이하,\r\n"
+//				+ "		}";
+//		
 		// 3.
 //		String prompt = "간병인 정보는" + cMap.toString() + "환자 목록은 " + pStr + "간병인의 정보를 바탕으로 가장 적절한 환자번호 5개만 숫자로만 짧게 대답해줘.";
 //		
@@ -778,6 +784,43 @@ public class MemberController {
 		return "redirect:home.do";
 		
 	};
+	
+	@PostMapping("careGiverUpdate.me")
+	public String updateCareGiver(@ModelAttribute Member m,@ModelAttribute CareGiver cg,HttpSession session, @RequestParam("memInfo") String memInfo) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		m.setMemberNo(loginUser.getMemberNo());
+		cg.setMemberNo(loginUser.getMemberNo());
+		
+		System.out.println(m);
+		System.out.println(cg);
+		System.out.println(memInfo);
+		int result = mService.updateCareGiver(cg);	//간병인정보바꾸기
+		int result4 = mService.updateMemberVer2(m); //간병인은 같은 페이지에서 이름,나이,성별 세가지만 따로 바로 바꿀수있다!
+
+		if(result==0 || result4 ==0) {
+			throw new MemberException("에러!");
+		}
+		
+		
+		if(!memInfo.equals("fail")) {
+			
+			int result2 = mService.deleteMemberInfo(loginUser.getMemberNo()); //간병인인포정보 한번 다 지우기
+			String[] mis = memInfo.split(",");
+			
+			for(String mi : mis) {
+				HashMap<String,Integer> info = new HashMap<String,Integer>();
+				info.put("memberNo",loginUser.getMemberNo());
+				info.put("categoryNo",Integer.parseInt(mi));
+				int result3 = mService.insertMemberInfo(info);
+			}
+			
+		}
+		return "redirect:home.do";
+		
+	};
+	
+	
 	
 	@GetMapping("updatePwdView.me")
 	public String updatePwdView() {
