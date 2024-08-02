@@ -42,7 +42,6 @@ public class BoardController {
 	    String category = ((Member)session.getAttribute("loginUser")).getMemberCategory();
 	    // 회원이 간병인인지 피간병인인지구분
 
-	   
 	    HashMap<String, Object> map = new HashMap<>();
 	    map.put("category", category);
 	    map.put("categoryNo", categoryNo);
