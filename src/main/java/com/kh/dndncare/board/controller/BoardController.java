@@ -1,6 +1,5 @@
 package com.kh.dndncare.board.controller;
 
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -27,7 +25,6 @@ import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.member.model.vo.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -112,7 +109,6 @@ public class BoardController {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
 		int memberNo = loginUser.getMemberNo();
-		
 		Board board = bService.selectBoard(bId, memberNo);
 		// 게시글
 		
@@ -289,6 +285,7 @@ public class BoardController {
 	    HashMap<String, Integer> map = new HashMap<>();
 	    map.put("boardNo", boardNo);
 	    map.put("memberNo", memberNo);
+	    // 게시글번호와 접속한회원정보
 	    JSONObject json = new JSONObject();
 	    try {
 	        int result = bService.insertBoardLike(map);
@@ -309,6 +306,7 @@ public class BoardController {
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put("rId", rId);
 		map.put("memberNo", memberNo);
+		// 댓글번호와 접속한회원정보
 		
 		JSONObject json = new JSONObject();
 		try {

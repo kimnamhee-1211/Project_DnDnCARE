@@ -10,6 +10,33 @@
         font-weight: 400;
         font-style: normal;
     }
+    
+    @font-face {
+    font-family: 'SBAggroB';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+	}
+	    
+	@font-face {
+	    font-family: '양진체';
+	    src: url('https://fastly.jsdelivr.net/gh/supernovice-lab/font@0.9/yangjin.woff') format('woff');
+	    font-weight: normal;
+	    font-style: normal;
+	}    
+	@font-face {
+	     font-family: 'DungGeunMo';
+	     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+	     font-weight: normal;
+	     font-style: normal;
+	}
+	@font-face {
+	    font-family: 'Chosunilbo_myungjo';
+	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
+	    font-weight: normal;
+	    font-style: normal;
+	}
+	
     body {
         font-family: 'Pretendard-Regular', sans-serif;
         background-color: #f8f9fa;
@@ -133,12 +160,12 @@
         	['fontname', ['fontname']],
         	['fontsize', ['fontsize']],
             ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
+            ['font', ['bold', 'italic' , 'underline','strikethrough', 'clear']],
             ['color', ['color']],
             ['para', ['ul', 'ol', 'paragraph']],
             ['insert', ['link', 'picture']],
           ],
-          fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체'],
+          fontNames: ['sans-serif','Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체','SBAggroB','양진체','DungGeunMo','Chosunilbo_myungjo'],
           fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
          
         });

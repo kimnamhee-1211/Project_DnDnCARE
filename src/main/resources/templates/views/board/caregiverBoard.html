@@ -32,9 +32,9 @@
 	.btn-outline-area:active, 
 	.btn-outline-area:focus, 
 	.btn-outline-area.active {
-	    color: black; /* 텍스트 색상 */
-	    background-color: #8DD986; /* 배경색 */
-	    border-color: #8DD986; /* 테두리 색상 */
+	    color: black; 
+	    background-color: #8DD986;
+	    border-color: #8DD986;
 	}
 	
 	.btn-check:checked + .btn-outline-area {
@@ -132,6 +132,7 @@
 				    <input type="checkbox" class="btn-check" id="jeju" name="area" value="8" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 8)}">
 				    <label class="btn-outline-area btn-sm me-2" for="jeju">제주도</label>
+				    <!-- list가 비어있지않거나 리스트에 번호가 있으면 체크 -->
 				</form>
 
 			<div class="p-4">
@@ -250,7 +251,6 @@
 				td.addEventListener('click', function(){
 					const trTds = this.parentElement.querySelectorAll('td');
 					const boardId = trTds[0].innerText;
-					console.log(trTds)
 					/*<![CDATA[*/ 
 						location.href="selectBoard.bo?bId="+ boardId + "&page=" + /*[[${pi.currentPage}]]*/1
 					/*]]*/
@@ -258,17 +258,16 @@
 			}
     	}
     	
-    	 function selectCategory(categoryNo) {
-    	  		console.log(categoryNo)
+    	 function selectCategory(categoryNo) {	// 카테고리
     	        document.getElementById('categoryNo').value = categoryNo;
     	        document.getElementById('areaForm').submit();
     	    }
     	
-    	function submitForm() {
+    	function submitForm() {	//지역
             document.getElementById('areaForm').submit();
         }
         
-    	function searchBoard(){
+    	function searchBoard(){	// 검색
     		const searchForm = document.getElementById('searchBoardForm')
     		const searchType = document.getElementById('searchType').value;
 	        const searchText = document.getElementById('searchText').value;
@@ -277,8 +276,6 @@
 	            alert("검색어를 입력하세요.");
 	            return;
 	        }
-	        console.log(searchType);
-	        console.log(searchText);
 	        searchForm.submit();
 	        
 	        
