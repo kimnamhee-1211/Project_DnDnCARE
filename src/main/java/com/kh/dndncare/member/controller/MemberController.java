@@ -694,16 +694,20 @@ public class MemberController {
 	//무한스크롤 테스트 중 : 성공
 	@GetMapping("workInfoTest.me")
 	@ResponseBody
-	public void workInfoTest(HttpServletResponse response) {
+	public void workInfoTest(HttpServletResponse response, @RequestParam("page") int currentPage) {
 		
 		System.out.println("컨트롤러");
 		
 		Gson gson = new Gson();
 		ArrayList<String> list = new ArrayList<String>();
-		list.add("개나리");
-		list.add("나팔꽃");
-		list.add("수선화");
-		
+		list.add("1");
+		list.add("2");
+		list.add("3");
+		list.add("4");
+		list.add("5");
+		list.add("6");
+		list.add("7");
+		list.add("8");
 		response.setContentType("application/json; charset=UTF-8");
 		try {
 			gson.toJson(list, response.getWriter());
