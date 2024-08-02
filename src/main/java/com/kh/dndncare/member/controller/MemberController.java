@@ -691,6 +691,33 @@ public class MemberController {
 	}
 	
 	
+	//무한스크롤 테스트 중 : 성공
+	@GetMapping("workInfoTest.me")
+	@ResponseBody
+	public void workInfoTest(HttpServletResponse response) {
+		
+		System.out.println("컨트롤러");
+		
+		Gson gson = new Gson();
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("개나리");
+		list.add("나팔꽃");
+		list.add("수선화");
+		
+		response.setContentType("application/json; charset=UTF-8");
+		try {
+			gson.toJson(list, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }

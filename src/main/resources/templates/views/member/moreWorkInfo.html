@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<link href="css/moreWorkInfo.css" rel="stylesheet" type="text/css"/>
+	<title>일감 찾기 상세페이지</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+</head>
+<body>
+	<div th:replace="~{common/navbar :: navbar}">></div>
+	
+	<div id="contents">
+		<div><!-- 왼쪽 공백 --></div>
+		<div><!-- 컨텐츠 --> 
+			<div class="">
+				<span>나와 딱 맞는 간병일감을 찾아드려요.</span>
+				<img src="image/icon/refresh.gif" width="40px;" height="40px"/>	
+			</div>
+			
+			<br/>
+			
+			<div id="upperContents"><!-- 자동매칭 -->
+				<table class="table table-hover autoMatching" style="border-right: 1px solid gray;">
+                	<thead>
+                    	<tr class="text-center">
+                        	<th>성함</th>
+                        	<th>성별</th>
+                        	<th>나이</th>
+                        	<th>지역</th>
+                        	<th>질환</th>
+                        	<th>돌봄비</th>
+                     	</tr>
+                 	</thead>
+                 	<tbody>
+                    	<tr class="text-center">
+                        	<td>개나리님</td>
+	                        <td>남성</td>
+	                        <td>50</td>
+	                        <td>서울시 종로구</td>
+	                        <td>다리골절</td>
+	                        <td>80,000원</td>
+                     	</tr>
+                     	<tr class="text-center">
+	                        <td>개나리님</td>
+	                        <td>남성</td>
+	                        <td>50</td>
+	                        <td>서울시 종로구</td>
+	                        <td>다리골절</td>
+	                        <td>80,000원</td>
+	                    </tr>
+	                    <tr class="text-center">
+	                        <td>개나리님</td>
+	                        <td>남성</td>
+	                        <td>50</td>
+	                        <td>서울시 종로구</td>
+	                        <td>다리골절</td>
+	                        <td>80,000원</td>
+	                    </tr>
+	                    <tr class="text-center">
+	                        <td>개나리님</td>
+	                        <td>남성</td>
+	                        <td>50</td>
+	                        <td>서울시 종로구</td>
+	                        <td>다리골절</td>
+	                        <td>80,000원</td>
+	                    </tr>
+	                    <tr class="text-center">
+	                        <td>개나리님</td>
+	                        <td>남성</td>
+	                        <td>50</td>
+	                        <td>서울시 종로구</td>
+	                        <td>다리골절</td>
+	                        <td>80,000원</td>
+	                    </tr>
+                 	</tbody>
+             	</table>
+				
+				<table class="table table-hover autoMatching">
+                	<thead>
+                    	<tr class="text-center">
+                        	<th>성함</th>
+                        	<th>성별</th>
+                        	<th>나이</th>
+                        	<th>지역</th>
+                        	<th>질환</th>
+                        	<th>돌봄비</th>
+                     	</tr>
+                 	</thead>
+                 	<tbody>
+                    	<tr class="text-center">
+                        	<td>개나리님</td>
+	                        <td>남성</td>
+	                        <td>50</td>
+	                        <td>서울시 종로구</td>
+	                        <td>다리골절</td>
+	                        <td>80,000원</td>
+                     	</tr>
+                     	<tr class="text-center">
+	                        <td>개나리님</td>
+	                        <td>남성</td>
+	                        <td>50</td>
+	                        <td>서울시 종로구</td>
+	                        <td>다리골절</td>
+	                        <td>80,000원</td>
+	                    </tr>
+	                    <tr class="text-center">
+	                        <td>개나리님</td>
+	                        <td>남성</td>
+	                        <td>50</td>
+	                        <td>서울시 종로구</td>
+	                        <td>다리골절</td>
+	                        <td>80,000원</td>
+	                    </tr>
+	                    <tr class="text-center">
+	                        <td>개나리님</td>
+	                        <td>남성</td>
+	                        <td>50</td>
+	                        <td>서울시 종로구</td>
+	                        <td>다리골절</td>
+	                        <td>80,000원</td>
+	                    </tr>
+	                    <tr class="text-center">
+	                        <td>개나리님</td>
+	                        <td>남성</td>
+	                        <td>50</td>
+	                        <td>서울시 종로구</td>
+	                        <td>다리골절</td>
+	                        <td>80,000원</td>
+	                    </tr>
+                 	</tbody>
+             	</table>
+			</div>
+			
+			<br/>
+			
+			<div id="lowerContents"><!-- 검색목록 -->
+				<h2>제목을 적어보아요.</h2>
+				<div id="tagBtnDiv"> <!-- 각 태그의 value값이 ON/OFF인지에 따라서 어떤 검색조건을 선택하였는지 확인가능함 -->
+					<div>
+						<button type="button" class="btn btn-light">태그 전체</button>
+					</div>
+					<div>
+						<button type="button" class="btn btn-light" id="serviceChoice" value="OFF">서비스유형</button>
+						<br/><br/>
+						<button type="button" class="btn btn-light" style="display:none;">병원돌봄</button>
+						<button type="button" class="btn btn-light" style="display:none;">가정돌봄</button>
+						<button type="button" class="btn btn-light" style="display:none;">동행서비스</button>
+					</div>
+					<div>
+						<button type="button" class="btn btn-light" id="shareChoice" value="OFF">공동 유형</button>
+						<br/><br/>
+						<button type="button" class="btn btn-light" style="display:none;">개인</button>
+						<button type="button" class="btn btn-light" style="display:none;">공동</button>
+					</div>
+					<div>
+						<button type="button" class="btn btn-light">지역</button>
+					</div>
+					<div>
+						<button type="button" class="btn btn-light" id="genderChoice" value="OFF">성별</button>
+						<br/><br/>
+						<button type="button" class="btn btn-light" style="display:none;">남성</button>
+						<button type="button" class="btn btn-light" style="display:none;">여성</button>
+					</div>
+					<div>
+						<button type="button" class="btn btn-light" id="ageChoice" value="OFF">연령</button>
+						<br/><br/>
+						<button type="button" class="btn btn-light" style="display:none;">청년</button>
+						<button type="button" class="btn btn-light" style="display:none;">중년</button>
+						<button type="button" class="btn btn-light" style="display:none;">장년</button>
+					</div>
+					<div>
+						<button type="button" class="btn btn-light">질환</button>
+					</div>
+					<div>
+						<button type="button" class="btn btn-light" id="levelChoice" value="OFF">중증도</button>
+						<br/><br/>
+						<button type="button" class="btn btn-light" style="display:none;">경증</button>
+						<button type="button" class="btn btn-light" style="display:none;">중등증</button>
+						<button type="button" class="btn btn-light" style="display:none;">중증</button>
+					</div>
+					<div>
+						<button type="button" class="btn btn-light">돌봄비</button>
+					</div>
+					
+					<div>
+						<button type="button" class="btn btn-light">간병기간</button>
+					</div>
+				</div>
+				
+				<div class="row row-cols-md-4 g-2" id="root">
+	                <div class="col-sm-6">
+	                    <div class="card h-95 w-80">
+	                      <div class="card-body">
+	                        <h6 class="card-title">
+	                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+	                        	<img src="image/icon/hospital.png"/>
+	                       	</h6>
+	                        <p class="card-text">
+	                        	<span>병원이름</span>
+	                       	</p>
+	                        <button class="btn btn-success workInfo">정보 보기</button>
+	                      </div>
+	                    </div>
+	                  </div>
+	                <div class="col-sm-6">
+	                    <div class="card h-95 w-80">
+	                      <div class="card-body">
+	                        <h6 class="card-title">
+	                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+	                        	<img src="image/icon/home.png"/>
+	                       	</h6>
+	                        <p class="card-text">
+	                        	<span>집 주소(가사돌봄임)</span>
+	                       	</p>
+	                        <button class="btn btn-success workInfo">정보 보기</button>
+	                      </div>
+	                    </div>
+	                </div>
+	                
+	                <div class="col-sm-6">
+	                    <div class="card h-95 w-80">
+	                      <div class="card-body">
+	                        <h6 class="card-title">
+	                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+	                        	<img src="image/icon/users.png"/>
+	                       	</h6>
+	                        <p class="card-text">
+	                        	<span>병원명(공동간병버전)</span>
+	                       	</p>
+	                        <button class="btn btn-success workInfo">정보 보기</button>
+	                      </div>
+	                    </div>
+	                  </div>
+	                <div class="col-sm-6">
+	                    <div class="card h-95 w-80">
+	                      <div class="card-body">
+	                        <h6 class="card-title">
+	                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+	                        	<img src="image/icon/hospital.png"/>
+	                       	</h6>
+	                        <p class="card-text">
+	                        	<span>병원명</span>
+	                       	</p>
+	                        <button class="btn btn-success workInfo">정보 보기</button>
+	                      </div>
+	                    </div>
+	                </div>
+	
+	                <div class="col-sm-6">
+	                    <div class="card h-95 w-80">
+	                      <div class="card-body">
+	                        <h6 class="card-title">
+	                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+	                        	<img src="image/icon/hospital.png"/>
+	                       	</h6>
+	                        <p class="card-text">
+	                        	<span>병원명</span>
+	                       	</p>
+	                        <button class="btn btn-success workInfo">정보 보기</button>
+	                      </div>
+	                    </div>
+	                </div>
+	                <div class="col-sm-6">
+	                    <div class="card h-95 w-80">
+	                      <div class="card-body">
+	                        <h6 class="card-title">
+	                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+	                        	<img src="image/icon/hospital.png"/>
+	                       	</h6>
+	                        <p class="card-text">
+	                        	<span>병원명</span>
+	                       	</p>
+	                        <button class="btn btn-success workInfo">정보 보기</button>
+	                      </div>
+	                    </div>
+	                </div>
+	                <div class="col-sm-6">
+	                    <div class="card h-95 w-80">
+	                      <div class="card-body">
+	                        <h6 class="card-title">
+	                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+	                        	<img src="image/icon/hospital.png"/>
+	                       	</h6>
+	                        <p class="card-text">
+	                        	<span>병원명</span>
+	                       	</p>
+	                        <button class="btn btn-success workInfo">정보 보기</button>
+	                      </div>
+	                    </div>
+	                </div>
+	                <div class="col-sm-6">
+	                    <div class="card h-95 w-80">
+	                      <div class="card-body">
+	                        <h6 class="card-title">
+	                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+	                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+	                        	<img src="image/icon/hospital.png"/>
+	                       	</h6>
+	                        <p class="card-text">
+	                        	<span>병원명</span>
+	                       	</p>
+	                        <button class="btn btn-success workInfo">정보 보기</button>
+	                      </div>
+	                    </div>
+	                </div>
+	            </div>
+			</div>
+		<div><!-- 오른쪽 공백 --></div>
+		</div>
+	</div>
+	
+	<div th:replace="~{common/footer :: footer}"></div>
+	
+	
+	<script>
+		window.onload = () => {
+			// 일감목록의 태그 버튼 클릭시 하위 버튼을 보여주는 기능 (시작)
+			// == 서비스 유형 선택 ==
+			document.querySelector('#serviceChoice').addEventListener('click', function() {
+				const btnList = this.parentElement.querySelectorAll('button');
+				if(this.value == 'OFF'){
+					for(let b of btnList) {
+						if(b == this) {
+							b.classList.remove('btn-light');
+							b.classList.add('btn-success');
+						} else {
+							b.style.display = 'inline';
+						}
+					}
+					this.value = 'ON';
+				} else {
+					for(let b of btnList) {
+						if(b == this) {
+							b.classList.remove('btn-success');
+							b.classList.add('btn-light');
+						} else {
+							b.style.display = 'none';
+						}
+					}
+					this.value = 'OFF';
+				}
+			})
+			
+			// == 공동 간병 여부 ==
+			document.querySelector('#shareChoice').addEventListener('click', function() {
+				const btnList = this.parentElement.querySelectorAll('button');
+				if(btnList[0].className.includes('btn-light')) {
+					btnList[0].classList.remove('btn-light');
+					btnList[0].classList.add('btn-success');
+					btnList[0].value = 'ON';
+					btnList[1].style.display = 'inline';
+					btnList[2].style.display = 'inline';
+				} else {
+					btnList[0].classList.remove('btn-success');
+					btnList[0].classList.add('btn-light');
+					btnList[0].value = 'OFF';
+					btnList[1].style.display = 'none';
+					btnList[2].style.display = 'none';
+				}
+			})
+			
+			// == 성별 버튼 ==
+			document.querySelector('#genderChoice').addEventListener('click', function() {
+				const btnList = this.parentElement.querySelectorAll('button');
+				
+				if(btnList[0].className.includes('btn-light')) { // 성별 태그 : 클릭X => 클릭O
+					btnList[0].classList.remove('btn-light');
+					btnList[0].classList.add('btn-success');
+					btnList[0].value = 'ON';
+					btnList[1].style.display = 'inline';
+					btnList[2].style.display = 'inline';
+				} else { // 성별 태그 : 클릭O => 클릭X
+					btnList[0].classList.remove('btn-success');
+					btnList[0].classList.add('btn-light');
+					btnList[0].value = 'OFF';
+					btnList[1].style.display = 'none';
+					btnList[2].style.display = 'none';
+				}
+			})
+			
+			// == 연령 버튼 == 
+			document.querySelector('#ageChoice').addEventListener('click', function() {
+				const btnList = this.parentElement.querySelectorAll('button');
+				
+				if(btnList[0].className.includes('btn-light')) { // 태그 : 클릭X => 클릭O
+					btnList[0].classList.remove('btn-light');
+					btnList[0].classList.add('btn-success');
+					btnList[0].value = 'ON';
+					btnList[1].style.display = 'inline';
+					btnList[2].style.display = 'inline';
+					btnList[3].style.display = 'inline';
+				} else { // 태그 : 클릭O => 클릭X
+					btnList[0].classList.remove('btn-success');
+					btnList[0].classList.add('btn-light');
+					btnList[0].value = 'OFF';
+					btnList[1].style.display = 'none';
+					btnList[2].style.display = 'none';
+					btnList[3].style.display = 'none';
+				}
+			})
+			
+			// == 중증도 ==
+			document.querySelector('#levelChoice').addEventListener('click', function() {
+				const btnList = this.parentElement.querySelectorAll('button');
+				
+				if(this.value == 'OFF'){
+					for(let b of btnList) {
+						if(b == this) {
+							b.classList.remove('btn-light');
+							b.classList.add('btn-success');
+						} else {
+							b.style.display = 'inline';
+						}
+					}
+					this.value = 'ON';
+				} else {
+					for(let b of btnList) {
+						if(b == this) {
+							b.classList.remove('btn-success');
+							b.classList.add('btn-light');
+						} else {
+							b.style.display = 'none';
+						}
+					}
+					this.value = 'OFF';
+				}
+			})	
+			// 일감목록의 태그 버튼 클릭시 하위 버튼을 보여주는 기능 (끝)
+			
+			// 일감목록 검색 결과를 출력하는 무한스크롤 (시작)
+			// (1) 초기 데이터 출력 == page가 1인 상태
+			let currentPage = 1; // 현재 로드된 페이지의 번호를 나타내는 변수. 초기값은 1로 설정.
+			let isFetching = false; // 데이터를 가져오는 중인지 여부를 나타내는 변수. 초기값은 false로 설정.
+			let hasMore = true; // 가져올 더 많은 데이터가 있는지 여부를 나타내는 변수. 초기값은 true로 설정.
+			
+			let root = document.querySelector('#root'); // 검색결과를 출력할 div요소에 접근한다.
+			
+			async function fetchData() {
+				isFetching = true; // 데이터를 가져오는 중이라는 표현
+				//let response = await fetch(`https://jsonplaceholder.typicode.com/posts?_page=${currentPage}`);
+				let response = await fetch(`http://localhost:8090/workInfoTest.me`);
+				let data = await response.json();
+			    console.log(data);
+			    
+			    isFetching = false; // 데이터를 가져오고 있지 않는 중이라는 표현
+			    
+			    if (data.length === 0) {
+			        hasMore = false;
+			        return
+			    }
+			 	// DB에 삽입된 데이터가 없기 때문에 임의로 6개를 뿌리자
+			 	/*	반복적으로 넣어야할 요소
+				 	<div class="col-sm-6">
+	                    <div class="card h-95 w-80">
+	                    	<div class="card-body">
+	                        	<h6 class="card-title">
+		                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
+		                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
+		                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
+		                        	<img src="image/icon/hospital.png"/>
+	                       		</h6>
+	                        <p class="card-text">
+	                        	<span>병원명</span>
+	                       	</p>
+	                        <button class="btn btn-success workInfo">정보 보기</button>
+	                    	</div>
+	                    </div>
+	                </div>
+			 	*/
+			    for(let post of data) { // 가져온 데이터를 화면에 뿌리는 코드
+			        let div = document.createElement('div');
+			        div.className = 'col-sm-6';
+			    	let div2 = document.createElement('div');
+			    	div2.className = 'card h-95 w-80';
+			    	let div3 = document.createElement('div');
+			    	
+			    	
+			    	
+			    
+			        root.appendChild(div);
+			    }
+			    currentPage++;
+			}
+			
+			
+			fetchData();
+			
+			
+			
+			
+			// 일감목록 검색 결과를 출력하는 무한스크롤 (끝)
+		}
+	
+	
+	
+	
+	
+	
+	</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</body>
+</html>
