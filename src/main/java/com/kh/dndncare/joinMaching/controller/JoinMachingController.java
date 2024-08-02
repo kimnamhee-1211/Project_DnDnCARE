@@ -38,9 +38,16 @@ public class JoinMachingController {
 
 	
 	@GetMapping("joinMachingEnrollView.jm")
-	public String joinMachingMainEnroll() {
-		return "joinMachingEnroll1";
+	public String joinMachingEnrollView() {
+		return "joinMachingEnroll";
 	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
