@@ -134,4 +134,45 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.updatePassword(changeInfo);
 	}
 
+	@Override
+	public List<Integer> selectMemberInfo(int memberNo) {
+		return null;
+		/* return mMapper.selectMemberInfo(memberNo); */
+	}
+
+	@Override
+	public int deleteWantInfo(int memberNo) {
+		return mMapper.deleteWantInfo(memberNo);
+	}
+
+	@Override
+	public int insertWantInfo(HashMap<String, Integer> info) {
+		return mMapper.insertWantInfo(info);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> selectWantInfo(int memberNo) {
+		return mMapper.selectWantInfo(memberNo);
+	}
+
+	@Override
+	public int updatePatient(Patient p) {
+		return mMapper.updatePatient(p);
+	}
+
+	@Override
+	public int insertMemberInfo(HashMap<String, Integer> info) {
+		return mMapper.insertMemberInfo(info);
+	}
+
+	@Override
+	public int deleteMemberInfo(int memberNo) {
+		return mMapper.deleteMemberInfo(memberNo);
+	}
+
+	@Override
+	public int updateMember(Member m) {
+		return mMapper.updateMember(m);
+	}
+
 }

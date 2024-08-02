@@ -53,4 +53,18 @@ public interface MemberMapper {
 
 	int updatePassword(HashMap<String, String> changeInfo);
 
+	int deleteWantInfo(int memberNo);
+
+	int deleteMemberInfo(int memberNo);
+
+	int insertWantInfo(HashMap<String, Integer> info);
+
+	ArrayList<HashMap<String, String>> selectWantInfo(int memberNo);
+
+	int updatePatient(Patient p);
+
+	int insertMemberInfo(HashMap<String, Integer> info);
+
+	int updateMember(Member m);
+
 }

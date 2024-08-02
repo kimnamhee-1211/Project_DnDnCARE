@@ -15,7 +15,14 @@ public class JoinMachingController {
 	
 	@GetMapping("joinMachingMainView.jm")
 	public String joinMachingMainView() {
+			
 		return "joinMachingMain";
 	}
+	
+	
+
+	
+	
+	
 	
 }
