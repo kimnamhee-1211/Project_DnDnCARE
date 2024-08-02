@@ -22,6 +22,8 @@ public class Matching {
 	private int matType;
 	private int hospitalNo;
 	private int memberNo;	
+	private int ptCount;
+	
 }
 
 
