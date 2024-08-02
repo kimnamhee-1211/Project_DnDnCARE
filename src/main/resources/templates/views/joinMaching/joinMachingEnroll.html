@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link th:href="@{css/enroll.css}" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+	.table{font-size:22px;line-height:40px;
+		border: 1px solid lightgray;
+		border-radius: 15px;
+		padding: 20px;
+	}
+
+</style>
+
 
 </head>
 <body>
@@ -13,11 +22,9 @@
 			<div class="login-wrap">
 				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
 				<h1 class="h3 mb-3 fw-bold mb-5 text-center">공동간병 그룹 모집</h1>
-				<h5 class="h5 mb-1 fw-bold mb-1">아래 내용은 간병인 정보 입력 사항입니다.</h5>
-				<h5 class="h5 mb-3 fw-bold mb-5">이를 바탕으로 보다 정확한 매칭 서비스를 제공할 수 있습니다.</h5>
 				<div class="title2-content d-flex justify-content-center mx-auto">	
 					<div class="form-floating mb-3 fw-bold mb-5 mx-auto">	
-						<table class="table" style="font-size:22px;line-height:40px;" id="hoInfo">
+						<table class="table" id="hoInfo">
 						    <tr>
 						      <th scope="col" style="width:100px;">병원명</th>
 						      <td id="hospitalName" scope="col" style="width:600px;">[[${hospital.hospitalName}]]</td>
@@ -29,22 +36,42 @@
 						</table>	
 					</div>
 				</div>
+				<h5 class="h5 mb-1 fw-bold mb-5">기타 요청사항을 제외한 모든 내용은 필수 입력 사항입니다.</h5>
 																
 				<div class="login-input">
 					
-					<p class="info">그룹 인원을 선택해주세요</p>
-					<div class="form-floating mb-5">
-						<div class="form-check form-check-inline">
-							<span>
-					      		<input type="radio" class="btn-check" name="options-outlined" id="2p" autocomplete="off" checked>
-								<label class="btn btn-outline-success" for="success-outlined">2명</label>
-					      	</span>
-					      	<span>
-					      		<input type="radio" class="btn-check" name="options-outlined" id="3p" autocomplete="off">
-								<label class="btn btn-outline-success" for="success-outlined">3명</label>		
-					      	</span>
+					<div style="display:inline-block;margin-right:190px;">
+						<p class="info">그룹 인원을 선택해주세요</p>
+						<div class="form-floating mb-5">
+							<div class="form-check form-check-inline">
+								<div style="display:inline-block;margin-right:20px;">
+						      		<input type="radio" class="btn-check"  name="ptCount" value="2" id="2p">
+									<label class="btn btn-outline-success" for="2p">2명</label>
+						      	</div>
+						      	<div style="display:inline-block;">
+						      		<input type="radio" class="btn-check" name="ptCount" value="3" id="3p">
+									<label class="btn btn-outline-success" for="3p">3명</label>		
+						      	</div>
+							</div>
+						</div>		
+					</div>					
+					
+					
+					
+					<div style="display:inline-block">
+						<p class="info">1인당 1일 돌봄 비용을 입력해주세요.</p>
+						<div class="form-floating mb-5">
+							<div class="row">
+								 <div class="col">
+									<input type="number" class="form-control" min="0" id="idInput" name="memberId" >
+								</div>
+						 		<div class="col-md-1" style="font-size: 20px;">원</div>
+						 	</div>
 						</div>
-					</div>	
+					</div>
+					
+					
+					
 					
 					
 					<p class="info">기간을 선택해주세요.</p>
@@ -84,17 +111,12 @@
 						<label for="idInput" id="idInputLabel">상세 주소</label>
 					</div>
 					
-					<p class="info">1인당 1일 돌봄 비용을 입력해주세요.</p>
-					<div class="form-floating mb-5">
-						<input type="number" class="form-control" min="0" id="idInput" name="memberId" >
-						<label for="idInput" id="idInputLabel">상세 주소</label>
-					</div>
-					
+
 					
 					<p class="info">기타 요청사항을 100자 이내로 입력해주세요.</p>
 					<div class="form-floating mb-5">
 						<textarea class="form-control" id="careIntro" name="careIntro" rows="3" maxlength="100"></textarea>
-						<label for="careIntro">자기소개(100자 이내)</label>
+						<label for="careIntro">기타 요청사항(100자 이내)</label>
 					</div>									
 															
 				</div>
@@ -135,11 +157,13 @@
 			});	
 		}
 		
-		const input = document.getElementsByTagName('input');
+		const inputs = document.getElementsByTagName('input');
 		const ifCheck = document.querySelector('.ifCheck');
-				
+		console.log(inputs);
+		
+		
 		function inputCheck(){ 
-			for(const input of Object.values(inputs)){
+			for(const input of inputs){
 				if(input.value.trim() == ''){
 					if(ifCheck){
 						ifCheck.innerText = "필수 입력 사항을 빠짐없이 작성해주세요."

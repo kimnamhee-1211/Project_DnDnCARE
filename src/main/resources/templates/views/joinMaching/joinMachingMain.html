@@ -108,12 +108,15 @@
 	
 	
 	<script th:inline="javascript">	
+		
+		let admCode = null;
 	
 		window.onload=()=>{
-			const select = document.getElementById("addSelect");
-			const paths = document.querySelectorAll('path');	
 			let lastClickedPath = null;
 			let currentPath = null;
+			const select = document.getElementById("addSelect");
+			const paths = document.querySelectorAll('path');
+
 			for(const path of paths){
 				if(path != null){
 					path.addEventListener('mouseover', function(e) {
@@ -141,7 +144,7 @@
 						var hoInfo = document.getElementById("hoInfo");
 						hoInfo.style.display="inline-block"
 						let admCodeInfo = document.getElementById("admCodeInfo");
-						let admCode = this.getAttribute("id");
+						admCode = this.getAttribute("id");
 						admCodeInfo.innerHTML='';
 						admCodeInfo.innerHTML = admCode+'&nbsp;&nbsp;'						
 																
@@ -257,7 +260,12 @@
 			queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(page); /**/
 			if(selectedValue !== '선택'){
 				queryParams += '&' + encodeURIComponent('addr') + '=' + encodeURIComponent(selectedValue); /**/
+			}else{
+				
+				console.log("admCode" + admCode)
+				queryParams += '&' + encodeURIComponent('addr') + '=' + encodeURIComponent(admCode); /**/
 			}
+						
 			if(hospitalNm){
 				queryParams += '&' + encodeURIComponent('hospitalNm') + '=' + encodeURIComponent(hospitalNm);
 			}
