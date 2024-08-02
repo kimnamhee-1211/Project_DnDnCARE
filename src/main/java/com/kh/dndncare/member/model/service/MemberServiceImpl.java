@@ -13,7 +13,7 @@ import com.kh.dndncare.member.model.dao.MemberMapper;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 
 import com.kh.dndncare.member.model.vo.CareGiver;
-
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 import com.kh.dndncare.sms.SmsService;
@@ -132,6 +132,47 @@ public class MemberServiceImpl implements MemberService {
 
 	public int updatePassword(HashMap<String, String> changeInfo) {
 		return mMapper.updatePassword(changeInfo);
+	}
+
+	@Override
+	public List<Integer> selectMemberInfo(int memberNo) {
+		return null;
+		/* return mMapper.selectMemberInfo(memberNo); */
+	}
+
+	@Override
+	public int deleteWantInfo(int memberNo) {
+		return mMapper.deleteWantInfo(memberNo);
+	}
+
+	@Override
+	public int insertWantInfo(HashMap<String, Integer> info) {
+		return mMapper.insertWantInfo(info);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> selectWantInfo(int memberNo) {
+		return mMapper.selectWantInfo(memberNo);
+	}
+
+	@Override
+	public int updatePatient(Patient p) {
+		return mMapper.updatePatient(p);
+	}
+
+	@Override
+	public int insertMemberInfo(HashMap<String, Integer> info) {
+		return mMapper.insertMemberInfo(info);
+	}
+
+	@Override
+	public int deleteMemberInfo(int memberNo) {
+		return mMapper.deleteMemberInfo(memberNo);
+	}
+
+	@Override
+	public int updateMember(Member m) {
+		return mMapper.updateMember(m);
 	}
 
 }

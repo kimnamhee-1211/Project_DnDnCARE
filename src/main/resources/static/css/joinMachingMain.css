@@ -28,11 +28,11 @@ body {
     flex-grow: 1;
     min-width: 1200px;
     margin-top: 20px;
-    padding-bottom: 100px; /* footer와의 간격 */
+    padding-bottom: 120px; /* footer와의 간격 */
 }
 
 
-text{text-align: center; min-width: 60px}
+text{text-align: center; min-width: 60px;}
 textPath{text-align: center; min-width: 60px}
 
 .land{
@@ -45,21 +45,26 @@ textPath{text-align: center; min-width: 60px}
 }
 
 
+#admCodeInfo{font-size:25px;  font-weight: 600;}
 
 
 
-
-.sign-btn button {
-	height:60px;
-	font-size:18px;
-	border-radius:25px;
-	border:none;
+#hoInfo{font-size:20px;
+		
 }
 
-.signIn-btn {
+#before, #after{
 	background:#8dd986;
 	color:white;
+	height:40px;
+	font-size:20px;
+	border-radius:15px;
+	border:none;
+	padding:auto 35px;
 }
+
+
+
 
 .icon-section {
 	 list-style: none;

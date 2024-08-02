@@ -9,7 +9,7 @@ import java.util.List;
 
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
-
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
@@ -50,6 +50,22 @@ public interface MemberService {
 
 	int updatePassword(HashMap<String, String> changeInfo);
 	ArrayList<HashMap<String, String>> getCaregiverExp(int memberNo);
+
+	List<Integer> selectMemberInfo(int memberNo);
+
+	int deleteWantInfo(int i);
+
+	int insertWantInfo(HashMap<String, Integer> info);
+
+	ArrayList<HashMap<String, String>> selectWantInfo(int memberNo);
+
+	int updatePatient(Patient p);
+
+	int insertMemberInfo(HashMap<String, Integer> info);
+
+	int deleteMemberInfo(int memberNo);
+
+	int updateMember(Member m);
 
 
 }

@@ -3,8 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link th:href="@{css/publicMatching.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
- ㅋ
+	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+	<main class="inner-content d-flex justify-content-center">
+		<form class="w-50" action="login.me" method="post">		
+			<div class="publicMatching-wrap text-center">
+				<div class="w-100">
+					<a href="home.do"><img class="logo-image mb-4" src="image/logo-removebg.png" width="300"></a>
+					<h1 class="h3 mb-5 fw-bold mb-2 text-center">공개 매칭 신청</h1>
+					<div>
+						<p><em>*</em> 아래 정보는 가입 당시 입력한 정보들입니다.<br>
+						   <em>*</em> 아래 정보를 바탕으로 공개 매칭방이 생성됩니다.
+						</p>
+					</div>
+				</div>
+				<div class="text-start mb-2"><span class="mb-5">< <strong>김기룡</strong> 회원님의 정보 ></span></div>				
+				<div class="basic-info">
+					<table>
+	                    <tr>
+	                        <th>성별</th>
+	                        <th>생년월일</th>
+	                        <th>신장</th>
+	                        <th>몸무게</th>
+	                        <th>지역</th>
+	                    </tr>
+	                    <tr>
+	                        <td>
+						      <select name="gender" id="gender">
+						        <option value="">남성</option>
+						        <option value="male">남성</option>
+						        <option value="female">여성</option>
+						      </select>
+						    </td>
+						    <td>
+						      <input type="date" name="birthdate" id="birthdate">
+						    </td>
+						    <td>
+						      <input type="number" name="height" id="height" min="0" max="250" step="1"> cm
+						    </td>
+						    <td>
+						      <input type="number" name="weight" id="weight" min="0" max="250" step="1"> kg
+						    </td>
+						    <td>
+						   		<input type="text" name="address" id="address" th:value="PT_ADDRESS">
+						    </td>
+	                    </tr>
+               		</table>
+               		<div class="d-flex">
+               			<div class="me-5"><em>* </em><span class="mb-3">원하는 간병인 경력 </span><br></div>
+	               		<div class="btn-group-sm" role="group" aria-label="Basic example">
+		               			<button type="button" class="btn btn-outline-success">치매</button>
+								<button type="button" class="btn btn-outline-success">호흡기 질환</button>
+								<button type="button" class="btn btn-outline-success">거동 불편</button>
+								<button type="button" class="btn btn-outline-success">외상환자</button>
+								<button type="button" class="btn btn-outline-success">파킨슨</button>
+								<button type="button" class="btn btn-outline-success">수면질환</button>
+								<button type="button" class="btn btn-outline-success">정신질환</button>
+								<button type="button" class="btn btn-outline-success">기저귀 케어</button>
+								<button type="button" class="btn btn-outline-success">재활</button>
+						</div>
+               		</div>
+               		
+				</div>	
+			</div>
+			<div class="sign-btn mt-5 d-flex justify-content-center">
+				<button type="submit" class="apply-btn me-3"><span>다음</span></button>
+			</div>
+		</form>
+	</main>
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	
 </body>
 </html>

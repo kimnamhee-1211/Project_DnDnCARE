@@ -23,3 +23,5 @@ public class Matching {
 	private int hospitalNo;
 	private int memberNo;	
 }
+
+

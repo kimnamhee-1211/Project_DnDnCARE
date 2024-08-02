@@ -50,15 +50,15 @@
 					<p style="font-size:16px; color:red;" class="info">필수 입력사항입니다.</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="병원돌봄" name="ptService" id="expS1Input" checked>
+						  <input class="form-check-input" type="checkbox" value="1" name="memberInfo" id="expS1Input" checked>
 						  <label class="form-check-label" for="expS1Input">병원돌봄</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="가정돌봄" name="ptService" id="expS2Input">
+						  <input class="form-check-input" type="checkbox" value="2" name="memberInfo" id="expS2Input">
 						  <label class="form-check-label" for="expS2Input">가정돌봄</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="form-check-input" type="checkbox" value="동행서비스" name="ptService" id="expS3Input">
+						  <input class="form-check-input" type="checkbox" value="3" name="memberInfo" id="expS3Input">
 						  <label class="form-check-label" for="expS3Input">동행서비스</label>
 						</div>
 					</div>		
@@ -242,19 +242,22 @@
 				
 		function inputCheck(){ 
 			for(const input of Object.values(inputs)){
-				if(input.value.trim() == ''){
-					if(ifCheck){
-						ifCheck.innerText = "필수 입력 사항을 빠짐없이 작성해주세요."
-						ifCheck.style.color="red";
-						input.focus();
+				if(input){
+					if(input.value.trim() == ''){
+						if(ifCheck){
+							ifCheck.innerText = "필수 입력 사항을 빠짐없이 작성해주세요."
+							ifCheck.style.color="red";
+							input.focus();
+						}
+						return false;
+					}else{
+						if(ifCheck){
+							ifCheck.innerText = ""
+						}
+						return true;
 					}
-					return false;
-				}else{
-					if(ifCheck){
-						ifCheck.innerText = ""
-					}
-					return true;
 				}
+					
 			}	
 		}
 	
