@@ -63,7 +63,6 @@ public class MemberController {
 	@GetMapping("{memberType}.me")
 	public String selectMemberType(@PathVariable("memberType") String memberType,Model model) {
 		String tempMemberCategory;
-		
 		switch(memberType) {
 		case "patient" :
 				tempMemberCategory = "P";
@@ -374,6 +373,7 @@ public class MemberController {
 		
 		String memberPwd = bCrypt.encode(m.getMemberPwd().toLowerCase());
 		m.setMemberPwd(memberPwd);
+		
 		
 		String memberAddress = postcode +"//"+ roadAddress +"//"+ detailAddress;
 		m.setMemberAddress(memberAddress);
