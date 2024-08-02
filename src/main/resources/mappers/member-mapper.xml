@@ -84,7 +84,7 @@
 	  <insert id="enrollCareGiver">
 	  	insert into caregiver
 	  	values(#{memberNo}, #{careImg}, #{careIntro}, 
-	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService}, sysdate)	  
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, sysdate)	  
 	  </insert>
 	  
 	 <!-- 정보 입력-->
@@ -99,8 +99,8 @@
 	<insert id="enrollPatient">
 	  	insert into patient
 	  	values(seq_pid.nextval, #{memberNo}, #{ptName}, #{ptGender}, #{ptAge}, 
-	  			#{ptWeight}, #{ptHeight}, #{ptService}, #{ptAddress}, #{ptRequest}, sysdate)	  
-	</insert>
+	  			#{ptWeight}, #{ptHeight}, #{ptAddress}, #{ptRequest}, sysdate)	  
+	  </insert>
 	  
 	  <select id="findIdResult" resultType="Member">
 	  	select member_id,member_create_date,member_status,member_category,member_name
@@ -140,7 +140,56 @@
 		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
 		WHERE MEMBER_NO = ${memberNo}
 	</select>
-
 	
+	
+	<delete id="deleteWantInfo">		<!-- 내가원하는 상대매칭정보 -->
+		delete want_info
+		where member_no = #{memberNo}
+		
+	</delete>
+	<insert id="insertWantInfo">		<!-- 내가 원하는 상대매칭 정보 -->
+	insert into want_info values(
+		${memberNo},
+		${categoryNo}
+	)
+	
+	</insert>
+	<delete id="deleteMemberInfo">		<!-- 내 인포정보 -->
+		delete member_info
+		where member_no = #{memberNo}
+		
+	</delete>
+	<insert id="insertMemberInfo">		<!-- 내 인포정보 -->
+	insert into member_info values(
+		${memberNo},
+		${categoryNo}
+	)
+	</insert>
+	
+	<select id="selectWantInfo" resultType="map">
+		SELECT L_CATEGORY, S_CATEGORY
+		FROM MEMBER
+		        JOIN want_INFO USING(MEMBER_NO)
+		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
+	
+	<update id="updatePatient">
+		update patient
+		set pt_name = #{ptName}, pt_age = #{ptAge}, pt_weight = #{ptWeight}, pt_height = #{ptHeight}, pt_address = #{ptAddress}, pt_gender = #{ptGender}
+		where member_no = #{memberNo}
+	</update>
+	
+	<update id="updateMember">
+		update member
+		set member_Name = #{memberName}, member_gender = #{memberGender},
+		member_nickName = #{memberNickName}, member_age= #{memberAge},
+		member_phone = #{memberPhone},member_email = #{memberEmail},
+		member_address = #{memberAddress},member_national = #{memberNational},
+		member_update_date = sysdate
+		where member_no = #{memberNo}
+		
+	
+	</update>
 
 </mapper>
