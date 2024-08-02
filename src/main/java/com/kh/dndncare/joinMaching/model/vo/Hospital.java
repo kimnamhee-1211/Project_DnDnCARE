@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class Hospital {
 	
-	private String hospitalNo; 
+	private int hospitalNo; 
 	private String hospitalName;
 	private String hospitalAddress; 
 

@@ -1,6 +1,7 @@
 package com.kh.dndncare.matching.model.vo;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,8 @@ public class Matching {
 	private int hospitalNo;
 	private int memberNo;	
 	private int ptCount;
+	private String beginTime;
+	private String endTime;
 	
 }
 

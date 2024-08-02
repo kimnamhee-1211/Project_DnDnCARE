@@ -261,9 +261,14 @@
 			if(selectedValue !== '선택'){
 				queryParams += '&' + encodeURIComponent('addr') + '=' + encodeURIComponent(selectedValue); /**/
 			}else{
-				
-				console.log("admCode" + admCode)
-				queryParams += '&' + encodeURIComponent('addr') + '=' + encodeURIComponent(admCode); /**/
+				if(admCode == '경기도' || admCode == '강원도' || admCode.includes('시') || admCode.includes('특별') ){
+					admCode = admCode.substring(0, 2);
+					console.log("admCode" + admCode)
+					queryParams += '&' + encodeURIComponent('addr') + '=' + encodeURIComponent(admCode); /**/
+					
+				}else{
+					queryParams += '&' + encodeURIComponent('addr') + '=' + encodeURIComponent(admCode); /**/
+				}				
 			}
 						
 			if(hospitalNm){
