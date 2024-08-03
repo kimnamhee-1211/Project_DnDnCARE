@@ -23,4 +23,6 @@ public class Reply {
 	private String replyStatus;
 	private int refBoardNo;
 	private String memberNickName;
+	private String categoryName;
+	private String boardTitle;
 }

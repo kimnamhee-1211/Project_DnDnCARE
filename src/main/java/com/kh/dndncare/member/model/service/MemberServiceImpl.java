@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.dao.MemberMapper;
 
@@ -173,6 +177,52 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int updateMember(Member m) {
 		return mMapper.updateMember(m);
+	}
+
+	@Override
+	public ArrayList<Board> mySelectBoardList(PageInfo pi,int mNo) {
+		int offset = (pi.getCurrentPage() - 1)*pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
+		return mMapper.mySelectBoardList(mNo, rowBounds);
+	}
+
+	@Override
+	public int getBoardListCount(int mNo) {
+		return mMapper.getBoardListCount(mNo);
+	}
+
+	@Override
+	public int boardLikeCount(int boardNo) {
+		return mMapper.boardLikeCount(boardNo);
+	}
+
+	@Override
+	public int getReplyListCount(int mNo) {
+		return mMapper.getReplyListCount(mNo);
+	}
+
+	@Override
+	public ArrayList<Reply> mySelectReplyList(PageInfo replyPi, int mNo) {
+		int offset = (replyPi.getCurrentPage() - 1)*replyPi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, replyPi.getBoardLimit());
+		return mMapper.mySelectReplyList(mNo, rowBounds);
+	}
+
+	@Override
+	public int replyLikeCount(int replyNo) {
+		return mMapper.replyLikeCount(replyNo);
+	}
+
+	@Override
+	public int getLikeListCount(int mNo) {
+		return mMapper.getLikeListCount(mNo);
+	}
+
+	@Override
+	public ArrayList<Board> mySelectLikeList(PageInfo likePi, int mNo) {
+		int offset = (likePi.getCurrentPage() - 1)*likePi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, likePi.getBoardLimit());
+		return mMapper.mySelectLikeList(mNo, rowBounds);
 	}
 
 }

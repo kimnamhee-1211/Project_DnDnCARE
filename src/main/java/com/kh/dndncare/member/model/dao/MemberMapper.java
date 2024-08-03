@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.session.RowBounds;
 
+import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.matching.model.vo.Matching;
 
 import com.kh.dndncare.member.model.vo.CalendarEvent;
@@ -66,5 +69,21 @@ public interface MemberMapper {
 	int insertMemberInfo(HashMap<String, Integer> info);
 
 	int updateMember(Member m);
+
+	ArrayList<Board> mySelectBoardList(int mNo, RowBounds rowBounds);
+
+	int getBoardListCount(int mNo);
+
+	int boardLikeCount(int boardNo);
+
+	int getReplyListCount(int mNo);
+
+	ArrayList<Reply> mySelectReplyList(int mNo, RowBounds rowBounds);
+
+	int replyLikeCount(int replyNo);
+
+	int getLikeListCount(int mNo);
+
+	ArrayList<Board> mySelectLikeList(int mNo, RowBounds rowBounds);
 
 }

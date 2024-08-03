@@ -3,7 +3,6 @@ package com.kh.dndncare.member.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -25,7 +24,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
-import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
@@ -36,7 +38,6 @@ import com.kh.dndncare.member.model.vo.Patient;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.Session;
 
 
 @SessionAttributes({"loginUser", "tempMemberCategory", "enrollmember"})
@@ -443,7 +444,57 @@ public class MemberController {
 	}
 	
 	@GetMapping("myInfoBoardList.me")
-	public String myInfoBoardList() {		//마이페이지 보드작성 확인용
+	public String myInfoBoardList(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model, HttpSession session) {		//마이페이지 보드작성 확인용
+		
+	    
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		int mNo = loginUser.getMemberNo();
+
+		// 게시글페이지네이션
+		int boardListCount = mService.getBoardListCount(mNo); 
+	    PageInfo boardPi = Pagination.getPageInfo(currentPage, boardListCount, 5);
+	    
+		// 내 작성글 정보
+		ArrayList<Board> boardList = mService.mySelectBoardList(boardPi, mNo);
+		
+		// 내 작성글 좋아요
+		HashMap<Integer, Integer> boardLikeCounts = new HashMap<>();
+		for (Board board : boardList) {
+			int boardLikeCount = mService.boardLikeCount(board.getBoardNo());
+			boardLikeCounts.put(board.getBoardNo(), boardLikeCount);
+		}
+		
+		// 댓글 페이지네이션
+		int replyListCount = mService.getReplyListCount(mNo);
+		PageInfo replyPi = Pagination.getPageInfo(currentPage, replyListCount, 5);
+		
+		// 내 댓글 정보
+		ArrayList<Reply> replyList = mService.mySelectReplyList(replyPi, mNo);
+		
+		// 내 댓글 좋아요
+		HashMap<Integer, Integer> replyLikeCounts = new HashMap<>();
+		for(Reply reply : replyList) {
+			int replyLikeCount = mService.replyLikeCount(reply.getReplyNo());
+			replyLikeCounts.put(reply.getReplyNo(), replyLikeCount);
+		}
+		// 좋아요 페이지네이션
+		int likeListCount = mService.getLikeListCount(mNo);
+		PageInfo likePi = Pagination.getPageInfo(currentPage, likeListCount, 5);
+
+		// 좋아요한 글 목록
+		ArrayList<Board> likeList = mService.mySelectLikeList(likePi, mNo);
+		
+		model.addAttribute("boardPi", boardPi);
+		model.addAttribute("boardList", boardList);
+		model.addAttribute("boardLikeCounts", boardLikeCounts);
+		model.addAttribute("replyPi", replyPi);
+		model.addAttribute("replyList", replyList);
+		model.addAttribute("replyLikeCounts", replyLikeCounts);
+		model.addAttribute("likePi", likePi);
+		model.addAttribute("likeList", likeList);
+		
+		
+		
 		return "myInfoBoardList";
 	}
 	
@@ -503,11 +554,6 @@ public class MemberController {
 		}				
 
 	}
-	
-	
-	
-	
-	
 	
 	
 	

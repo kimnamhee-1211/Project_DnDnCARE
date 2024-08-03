@@ -7,6 +7,9 @@ import com.kh.dndncare.member.model.vo.CalendarEvent;
 
 import java.util.List;
 
+import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.matching.model.vo.Matching;
@@ -66,6 +69,22 @@ public interface MemberService {
 	int deleteMemberInfo(int memberNo);
 
 	int updateMember(Member m);
+
+	ArrayList<Board> mySelectBoardList(PageInfo pi, int mNo);
+
+	int getBoardListCount(int mNo);
+
+	int boardLikeCount(int boardNo);
+
+	int getReplyListCount(int mNo);
+
+	ArrayList<Reply> mySelectReplyList(PageInfo replyPi, int mNo);
+
+	int replyLikeCount(int replyNo);
+
+	int getLikeListCount(int mNo);
+
+	ArrayList<Board> mySelectLikeList(PageInfo likePi, int mNo);
 
 
 }

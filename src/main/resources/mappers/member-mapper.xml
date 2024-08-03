@@ -188,8 +188,62 @@
 		member_address = #{memberAddress},member_national = #{memberNational},
 		member_update_date = sysdate
 		where member_no = #{memberNo}
-		
-	
 	</update>
-
+	
+	<select id="mySelectBoardList" resultType="Board">
+		select board_no, category_name, board_title, area_name, board_create_date, board_count
+			from board
+				join b_category using(category_no)
+				join area using(area_no)
+				join member using(member_no)
+			where member_no = #{mNo}and board_status = 'Y'
+	</select>
+	
+	<select id="getBoardListCount" resultType="_int">
+		select count(*)
+        from board b
+   	    where b.board_status = 'Y' and member_no = #{mNo}
+   	   </select>
+	
+	<select id="boardLikeCount" resultType="_int">
+		select count(*)
+		from board_like
+		where board_no = #{boardNo}
+	</select>
+	
+	<select id="getReplyListCount" resultType="_int">
+		select count(*)
+		from reply r
+		where r.reply_status = 'Y' and member_no = #{mNo}
+	</select>
+	
+	<select id="mySelectReplyList" resultType="Reply">
+		select b.board_title,r.ref_board_no, c.category_name, r.reply_content, r.reply_create_date
+		from board b
+			join b_category c using(category_no)
+			join reply r on(board_no = ref_board_no)
+		where b.member_no = #{mNo} and r.reply_status = 'Y'
+	</select>
+	
+	<select id="replyLikeCount" resultType="_int">
+		select count(*)
+		from reply_like
+		where reply_no = #{replyNo}
+	</select>
+	
+	<select id="getLikeListCount" resultType="_int">
+		select count(*)
+		from board_like l
+			join board b on(b.board_no = l.board_no)
+		where b.board_status = 'Y' and l.member_no = #{mNo}
+	</select>
+	
+	<select id="mySelectLikeList" resultType="Board">
+		select b.board_no, c.category_name, b.board_title, a.area_name, b.board_create_date, b.board_count
+		from board b
+			join board_like l on(b.board_no = l.board_no)
+			join b_category c on(c.category_no = b.category_no)
+			join area a on(a.area_no = b.area_no)
+		where l.member_no = #{mNo} and b.board_status = 'Y'
+	</select>
 </mapper>
