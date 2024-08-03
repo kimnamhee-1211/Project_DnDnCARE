@@ -33,8 +33,8 @@
 		values(#{matNo}, #{ptNo}, #{antePay}, #{service}, #{matAddressInfo}, #{matRequest}, default, 'Y')
 	</insert>
 
-	<!-- 그룹 간병 리스트 get -->
-	<select id="gmMatMatptInfo">
+	<!-- 공동 간병 리스트 get -->
+	<select id="getGmList">
 		select *
 		from hospital
 			join matching using(hospital_no) 
@@ -42,9 +42,36 @@
 		where hospital_name = #{hospitalName} and group_leader = 'Y'
 	</select>
 
+	<!-- 공동 간병 정보 get -->
+	<select id="getMatMatptInfo">
+		select *
+		from hospital
+			join matching on(hospital.hospital_no = matching.hospital_no) 
+			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 			
+		where matching.mat_no = #{matNo} and mat_pt_info.group_leader = 'Y'
+	</select>
 
-
-
+	
+	<!-- MatNo로 get 공동 간병 참여자들 Patient -->
+	<select id="getPatientToMatNo">
+		select *
+		from patient
+		where patient.pt_no in (select pt_no
+								from mat_pt_info
+								where mat_no = #{mat_no})	
+	</select>
+	
+	<!-- get member info (대분류 : 소분류) -->
+	<select id="getInfo">
+		select l_category, s_category
+		from member_info 
+			join info_category using(category_no)
+		where member_no = #{memberNo}	
+	</select>
+	
+	
+	
+	
 
 
 

@@ -1,5 +1,7 @@
 package com.kh.dndncare.matching.model.service;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +10,7 @@ import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Patient;
 
 @Service
@@ -43,9 +46,26 @@ public class MatchingServiceImpl implements MatchingService {
 
 	//병원으로 get Matching & MatPtInfo
 	@Override
-	public MatMatptInfo gmMatMatptInfo(String hospitalName) {
+	public ArrayList<MatMatptInfo> getGmList(String hospitalName) {
 		
-		return mMapper.gmMatMatptInfo(hospitalName);
+		return mMapper.getGmList(hospitalName);
+	}
+
+	//matNo으로  get matching & ptinfo 테이블	
+	@Override
+	public MatMatptInfo getMatMatptInfo(int matNo) {
+		return mMapper.getMatMatptInfo(matNo);
+	}
+	
+	//matNo로 get 공동 간병 참여자들 Patient
+	@Override
+	public ArrayList<Patient> getPatientToMatNo(int matNo) {
+		return mMapper.getPatientToMatNo(matNo);
+	}
+
+	//get member info (대분류 : 소분류)
+	public ArrayList<InfoCategory> getInfo(int memberNo) {
+		return mMapper.getInfo(memberNo);
 	}
  
 

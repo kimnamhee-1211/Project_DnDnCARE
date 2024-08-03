@@ -1,5 +1,9 @@
 package com.kh.dndncare.matching.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,17 +11,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
 import com.kh.dndncare.matching.model.service.MatchingService;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.Exception.MemberException;
+import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @SessionAttributes("hospital")
@@ -49,15 +59,12 @@ public class MatchingController {
 		hospital.setHospitalAddress(hospitalAddress);
 		model.addAttribute("hospital", hospital);
 		
+		
 		//병원으로 list 뽑기 
-		MatMatptInfo list = mcService.gmMatMatptInfo(hospitalName);
+		ArrayList<MatMatptInfo> list = mcService.getGmList(hospitalName);
 		System.out.println(list);
 		
 		model.addAttribute("list", list);
-		
-		
-		
-		
 		return "joinMaching";
 	}
 
@@ -109,15 +116,61 @@ public class MatchingController {
 	
 	
 	//공동간병 상세 정보 
-	@GetMapping("joinMachingMy.jm")
-	public String joinMachingMy(HttpSession session) {
+	@PostMapping(value="getGmContent.jm", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public void getGmMatMatptInfo(@RequestParam("matNo") int matNo, HttpServletResponse response) {
 		
+		//get matching & ptinfo
+		MatMatptInfo gmMatMatptInfo = mcService.getMatMatptInfo(matNo);
 		
-		return "joinMachingMy";
-	
+		//MatNo로 get 공동간병 Patient
+		ArrayList<Patient> gmPts = mcService.getPatientToMatNo(matNo);		
+		
+		//공동간병 Patient에 member info set
+		for(Patient gmPt : gmPts) {
+			
+			//get member info (대분류 : 소분류)
+			ArrayList<InfoCategory> gmPtInfos =  mcService.getInfo(gmPt.getMemberNo());
+			System.out.println(gmPtInfos);
+			
+			ArrayList<String> disease =  new ArrayList<>();
+			String diseaseLevel = null;
+			if(gmPtInfos != null) {
+				for(InfoCategory gmPtInfo : gmPtInfos) {
+					if(gmPtInfo.getLCategory().equals("disease")) {
+						disease.add(gmPtInfo.getSCategory());					
+					}else if(gmPtInfo.getLCategory().equals("diseaseLevel")) {
+						
+						diseaseLevel = gmPtInfo.getSCategory();				
+					}	
+				}	
+				//공동 간병 참여자들 Patient에 member info set
+				gmPt.setDisease(disease);
+				gmPt.setDiseaseLevel(diseaseLevel);
+			}		
+
+		}		
+		
+		System.out.println("gmMatMatptInfo" + gmMatMatptInfo);
+		System.out.println("gmPts" + gmPts);
+		HashMap<String, Object> gmMacPt = new HashMap();
+		gmMacPt.put("gmMatMatptInfo", gmMatMatptInfo);
+		gmMacPt.put("gmPts", gmPts);
+				
+
+		response.setContentType("application/json; charset=UTF-8");
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
+		Gson gson = new Gson();
+		
+		try {
+			gson.toJson(gmMacPt, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
+		
 	
 	}
-	
+
 	
 	
 	

@@ -1,11 +1,14 @@
 package com.kh.dndncare.matching.model.dao;
 
+import java.util.ArrayList;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Patient;
 
 @Mapper
@@ -19,7 +22,13 @@ public interface MatchingMapper {
 
 	int enrollMatPtInfo(MatPtInfo gmPt);
 
-	MatMatptInfo gmMatMatptInfo(String hospitalName);
+	ArrayList<MatMatptInfo> getGmList(String hospitalName);
+
+	MatMatptInfo getMatMatptInfo(int matNo);
+
+	ArrayList<Patient> getPatientToMatNo(int matNo);
+
+	ArrayList<InfoCategory> getInfo(int memberNo);
 
 
 
