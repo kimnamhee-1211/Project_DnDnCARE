@@ -2,4 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kh.dndncare.matching.model.dao.MatchingMapper">
 
+	<!-- 병원 테이블 등록 -->
+	<insert id="enrollHospital" useGeneratedKeys="true">
+		<selectKey resultType="_int" keyProperty="hospitalNo" order="BEFORE">
+			select seq_hid.nextval from dual
+		</selectKey>	
+		insert into hospital
+		values(#{hospitalNo}, #{hospitalAddress}, #{hospitalName})
+	</insert>
+
+	<!-- 매칭 테이블 등록 -->
+	<insert id="enrollMatching" useGeneratedKeys="true">
+		<selectKey resultType="_int" keyProperty="matNo" order="BEFORE">
+			select seq_macid.nextval from dual
+		</selectKey>	
+		insert into matching
+		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{matType}, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime})
+	</insert>
+	
+	<!-- pt get -->
+	<select id="getPatient">
+		select *
+		from patient
+		where member_no = #{memberNo}
+	</select>
+	
+	<!-- 매칭 pt info 테이블 등록 -->	
+	<insert id="enrollMatPtInfo">	
+		insert into mat_pt_info
+		values(#{matNo}, #{ptNo}, #{antePay}, #{service}, #{matAddressInfo}, #{matRequest}, default, 'Y')
+	</insert>
+
+	<!-- 그룹 간병 리스트 get -->
+	<select id="gmMatMatptInfo">
+		select *
+		from hospital
+			join matching using(hospital_no) 
+			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 			
+		where hospital_name = #{hospitalName} and group_leader = 'Y'
+	</select>
+
+
+
+
+
+
+
+
 </mapper>

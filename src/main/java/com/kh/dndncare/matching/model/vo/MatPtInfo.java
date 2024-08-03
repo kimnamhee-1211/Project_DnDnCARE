@@ -1,5 +1,7 @@
 package com.kh.dndncare.matching.model.vo;
 
+import java.sql.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class MatPtInfo {
+	
 	private int matNo;
 	private int ptNo;
 	private int antePay;
@@ -19,6 +22,8 @@ public class MatPtInfo {
 	private String matAddressInfo;
 	private String matRequest;
 	private String deposit;
+	private String groupLeader;
+	
 	
 
 }

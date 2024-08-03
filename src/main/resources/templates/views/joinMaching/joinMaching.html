@@ -37,146 +37,119 @@
 		</div>
 	
 		<main class="container-xl  justify-content-center mx-auto" style="width:1600px; padding:0 auto">
-				<div class="tableDiv">
+			<th:block th:if="${list != null}">
+				<div class="tableDiv" th:each="gm : ${list}">
 					<table class="table room">
 						<thead>
 						    <tr>
 						      <th scope="col" >NO</th>
-						      <th scope="col" >1</th>
+						      <th scope="col" >[[${gm.matNo}]]</th>
 						      <th scope="col" >인원</th>
-						      <td scope="col" >2명</td>
+						      <td scope="col" >[[${gm.ptCount}]]명</td>
 						    </tr>
 						  </thead>
 						  <tbody>
 						    <tr>
 						      <th>시작날짜</th>
-						      <td>2024-02-01</td>
+						      <td>[[${gm.beginDt}]]</td>
 						      <th>종료날짜</th>
-						      <td>2024-02-01</td>
+						      <td>[[${gm.endDt}]]</td>
 						    </tr>
 						    <tr>
 						      <th>시작시간</th>
-						      <td>07시 00분</td>
+						      <td>[[${gm.beginTime}]]시</td>
 						      <th>종료시간</th>
-						      <td>13시 00븐</td>
+						      <td>[[${gm.endTime}]]시</td>
 						    </tr>
 						     <tr>
 						      <th>상세주소</th>
-						      <td colspan="3">000병원 000호,001호</td>
+						      <td colspan="3">[[${gm.matAddressInfo}]]</td>
 						    </tr>					
-						  </tbody>
 						  	<tr>
 						      <th colspan="2">1인당 1일 돌봄비용</th>
-						      <td colspan="2">1000원</td>
-						    </tr>		
+						      <td colspan="2">[[${gm.antePay}]]</td>
+						    </tr>
+						    <tr>
+						      <th colspan="2">요청사항</th>
+						      <td colspan="2">[[${gm.matRequest}]]</td>
+						    </tr>
+						</tbody>
 					</table>
 				</div>
-				<div class="tableDiv">
-					<table class="table room">
-						<thead>
-						    <tr>
-						      <th scope="col" >NO</th>
-						      <th scope="col" >1</th>
-						      <th scope="col" >인원</th>
-						      <td scope="col" >2명</td>
-						    </tr>
-						  </thead>
-						  <tbody>
-						    <tr>
-						      <th>시작날짜</th>
-						      <td>2024-02-01</td>
-						      <th>종료날짜</th>
-						      <td>2024-02-01</td>
-						    </tr>
-						    <tr>
-						      <th>시작시간</th>
-						      <td>07시 00분</td>
-						      <th>종료시간</th>
-						      <td>13시 00븐</td>
-						    </tr>
-						     <tr>
-						      <th>상세주소</th>
-						      <td colspan="3">000병원 000호,001호</td>
-						    </tr>					
-						  </tbody>
-						  	<tr>
-						      <th colspan="2">1인당 1일 돌봄비용</th>
-						      <td colspan="2">1000원</td>
-						    </tr>		
-					</table>
-				</div>
+			</th:block>	
+			<th:block th:if="${list == null}">
+				<h5 class="h5 mb-3 fw-bold mb-5">아직 개설된 공동간병 그룹이 없습니다.</h5>
+				<h5 class="h5 mb-3 fw-bold mb-5">새롭게 공동간병 그룹을 만들어보세요.</h5>
+			</th:block>
+
+
+			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered modal-xl">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			      	<div class="tableDiv" th:each="gm : ${list}">
+						<table class="table room">
+							<thead>
+							    <tr>
+							      <th scope="col" >NO</th>
+							      <th scope="col" >[[${gm.matNo}]]</th>
+							      <th scope="col" >인원</th>
+							      <td scope="col" >[[${gm.ptCount}]]명</td>
+							    </tr>
+							  </thead>
+							  <tbody>
+							    <tr>
+							      <th>시작날짜</th>
+							      <td>[[${gm.beginDt}]]</td>
+							      <th>종료날짜</th>
+							      <td>[[${gm.endDt}]]</td>
+							    </tr>
+							    <tr>
+							      <th>시작시간</th>
+							      <td>[[${gm.beginTime}]]시</td>
+							      <th>종료시간</th>
+							      <td>[[${gm.endTime}]]시</td>
+							    </tr>
+							     <tr>
+							      <th>상세주소</th>
+							      <td colspan="3">[[${gm.matAddressInfo}]]</td>
+							    </tr>					
+							  	<tr>
+							      <th colspan="2">1인당 1일 돌봄비용</th>
+							      <td colspan="2">[[${gm.antePay}]]</td>
+							    </tr>
+							    <tr>
+							      <th colspan="2">요청사항</th>
+							      <td colspan="2">[[${gm.matRequest}]]</td>
+							    </tr>
+							</tbody>
+						</table>
+					</div>			        
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			        <button type="button" class="btn btn-primary">Save changes</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
 			
 			
-				<div class="tableDiv">
-					<table class="table room">
-						<thead>
-						    <tr>
-						      <th scope="col" >NO</th>
-						      <th scope="col" >1</th>
-						      <th scope="col" >인원</th>
-						      <td scope="col" >2명</td>
-						    </tr>
-						  </thead>
-						  <tbody>
-						    <tr>
-						      <th>시작날짜</th>
-						      <td>2024-02-01</td>
-						      <th>종료날짜</th>
-						      <td>2024-02-01</td>
-						    </tr>
-						    <tr>
-						      <th>시작시간</th>
-						      <td>07시 00분</td>
-						      <th>종료시간</th>
-						      <td>13시 00븐</td>
-						    </tr>
-						     <tr>
-						      <th>상세주소</th>
-						      <td colspan="3">000병원 000호,001호</td>
-						    </tr>					
-						  </tbody>
-						  	<tr>
-						      <th colspan="2">1인당 1일 돌봄비용</th>
-						      <td colspan="2">1000원</td>
-						    </tr>		
-					</table>
-				</div>
-				
-			<div class="tableDiv">
-					<table class="table room">
-						<thead>
-						    <tr>
-						      <th scope="col" >NO</th>
-						      <th scope="col" >1</th>
-						      <th scope="col" >인원</th>
-						      <td scope="col" >2명</td>
-						    </tr>
-						  </thead>
-						  <tbody>
-						    <tr>
-						      <th>시작날짜</th>
-						      <td>2024-02-01</td>
-						      <th>종료날짜</th>
-						      <td>2024-02-01</td>
-						    </tr>
-						    <tr>
-						      <th>시작시간</th>
-						      <td>07시 00분</td>
-						      <th>종료시간</th>
-						      <td>13시 00븐</td>
-						    </tr>
-						     <tr>
-						      <th>상세주소</th>
-						      <td colspan="3">000병원 000호,001호</td>
-						    </tr>					
-						  </tbody>
-						  	<tr>
-						      <th colspan="2">1인당 1일 돌봄비용</th>
-						      <td colspan="2">1000원</td>
-						    </tr>		
-					</table>
-				</div>
-	
+			
+			
+			
+			
+			</div>
+			
+			
+			
+			
+			
+			
 					
 		</main>
 	</div>
@@ -187,7 +160,10 @@
 	
 	window.onload = function() {
 	    document.getElementById("insertGruop").addEventListener('click', function() {
-	        location.href = 'joinMachingEnrollView.jm';
+	    	const hospitalName = document.getElementById("hospitalName").innerText;
+	    	const hospitalAddress = document.getElementById("hospitalAddress").innerText;
+	    	
+	        location.href = 'joinMachingEnrollView.jm?hospitalName='+hospitalName+'&hospitalAddress='+hospitalAddress;
 	    });
 	};
 	

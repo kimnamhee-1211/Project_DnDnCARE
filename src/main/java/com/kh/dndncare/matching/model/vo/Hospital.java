@@ -1,4 +1,4 @@
-package com.kh.dndncare.joinMaching.model.vo;
+package com.kh.dndncare.matching.model.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
