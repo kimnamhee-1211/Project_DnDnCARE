@@ -893,6 +893,10 @@ public class MemberController {
 	}
 	
 	
+	@GetMapping("writeReviewView.re")
+	public String writeReview() {
+		return "writeReview";
+	}
 	
 }//클래스 끝
 
