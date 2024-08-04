@@ -9,7 +9,7 @@
 <body>
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
 	<main class="inner-content d-flex justify-content-center">
-		<form action="enrolljoinMaching.jm" method="post" id="enrollForm">
+		<form action="enrollJoinMatching.jm" method="post" id="enrollForm">
 			<div class="login-wrap">
 				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
 				<h1 class="h3 mb-3 fw-bold mb-5 text-center">공동간병 그룹 모집</h1>
@@ -57,9 +57,7 @@
 						 	</div>
 						</div>
 					</div>
-					
-					
-									
+														
 					<p class="info">기간을 선택해주세요.</p>
 					<div class="form-floating mb-5">
 						<div class="row">
@@ -89,16 +87,13 @@
 						  </div>
 						</div>
 					</div>		
-					 
-					
+					 					
 					<p class="info">돌봄 서비스를 진행할 구체적인 장소를 입력해주세요.</p>
 					<div class="form-floating mb-5">
 						<input type="text" class="form-control" id="matAddressInfo" name="matAddressInfo">
 						<label for="matAddressInfo">상세 주소</label>
 					</div>
-					
-
-					
+										
 					<p class="info">기타 요청사항을 100자 이내로 입력해주세요.</p>
 					<div class="form-floating mb-5">
 						<textarea class="form-control" id="matRequest" name="matRequest" rows="3" maxlength="100"></textarea>

@@ -30,11 +30,11 @@
 	<!-- 매칭 pt info 테이블 등록 -->	
 	<insert id="enrollMatPtInfo">	
 		insert into mat_pt_info
-		values(#{matNo}, #{ptNo}, #{antePay}, #{service}, #{matAddressInfo}, #{matRequest}, default, 'Y')
+		values(#{matNo}, #{ptNo}, #{antePay}, #{service}, #{matAddressInfo}, #{matRequest}, default, #{groupLeader})
 	</insert>
 
 	<!-- 공동 간병 리스트 get -->
-	<select id="getGmList">
+	<select id="getJmList">
 		select *
 		from hospital
 			join matching using(hospital_no) 

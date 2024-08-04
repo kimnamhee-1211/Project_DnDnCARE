@@ -18,10 +18,10 @@ public interface MatchingService {
 	//pt get
 	Patient getPatient(int memberNo);
 	//매칭 pt info 테이블 등록
-	int enrollMatPtInfo(MatPtInfo gmPt);
+	int enrollMatPtInfo(MatPtInfo jmPt);
 	
 	//병원으로 get matching & ptinfo 테이블 list
-	ArrayList<MatMatptInfo> getGmList(String hospitalName);
+	ArrayList<MatMatptInfo> getJmList(String hospitalName);
 	
 	//matNo으로  get matching & ptinfo 테이블
 	MatMatptInfo getMatMatptInfo(int matNo);

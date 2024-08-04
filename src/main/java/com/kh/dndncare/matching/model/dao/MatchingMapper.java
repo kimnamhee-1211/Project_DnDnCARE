@@ -20,9 +20,9 @@ public interface MatchingMapper {
 
 	Patient getPatient(int memberNo);
 
-	int enrollMatPtInfo(MatPtInfo gmPt);
+	int enrollMatPtInfo(MatPtInfo jmPt);
 
-	ArrayList<MatMatptInfo> getGmList(String hospitalName);
+	ArrayList<MatMatptInfo> getJmList(String hospitalName);
 
 	MatMatptInfo getMatMatptInfo(int matNo);
 

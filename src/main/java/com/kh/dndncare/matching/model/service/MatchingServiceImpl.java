@@ -40,15 +40,15 @@ public class MatchingServiceImpl implements MatchingService {
 	
 	//매칭 pt info 테이블 등록
 	@Override
-	public int enrollMatPtInfo(MatPtInfo gmPt) {
-		return mMapper.enrollMatPtInfo(gmPt);
+	public int enrollMatPtInfo(MatPtInfo jmPt) {
+		return mMapper.enrollMatPtInfo(jmPt);
 	}
 
 	//병원으로 get Matching & MatPtInfo
 	@Override
-	public ArrayList<MatMatptInfo> getGmList(String hospitalName) {
+	public ArrayList<MatMatptInfo> getJmList(String hospitalName) {
 		
-		return mMapper.getGmList(hospitalName);
+		return mMapper.getJmList(hospitalName);
 	}
 
 	//matNo으로  get matching & ptinfo 테이블	

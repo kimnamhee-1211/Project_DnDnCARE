@@ -73,7 +73,7 @@ public class TemplateResolverConfig {
 	@Bean
 	public ClassLoaderTemplateResolver dotJmResolver() {
 		ClassLoaderTemplateResolver dotJm = new ClassLoaderTemplateResolver();
-		dotJm.setPrefix("templates/views/joinMaching/");
+		dotJm.setPrefix("templates/views/joinMatching/");
 		dotJm.setSuffix(".html");
 		dotJm.setTemplateMode(TemplateMode.HTML);
 		dotJm.setCharacterEncoding("UTF-8");

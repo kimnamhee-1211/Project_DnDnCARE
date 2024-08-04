@@ -30,7 +30,6 @@ import com.kh.dndncare.member.model.vo.Patient;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@SessionAttributes("hospital")
 @Controller
 public class MatchingController {
 	
@@ -43,15 +42,15 @@ public class MatchingController {
 	}
 	
 	
-	@GetMapping("joinMachingMainView.jm")
-	public String joinMachingMainView() {
+	@GetMapping("joinMatchingMainView.jm")
+	public String joinMatchingMainView() {
 		
-		return "joinMachingMain";
+		return "joinMatchingMain";
 	}
 	
 	//공동간병 병원 선택
-	@GetMapping("joinMaching.jm")
-	public String joinMachingMain(@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,  Model model) {
+	@GetMapping("joinMatching.jm")
+	public String joinMatchinjmain(@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,  Model model) {
 		
 		//병원 정보 전달
 		Hospital hospital = new Hospital();
@@ -59,111 +58,110 @@ public class MatchingController {
 		hospital.setHospitalAddress(hospitalAddress);
 		model.addAttribute("hospital", hospital);
 		
-		
 		//병원으로 list 뽑기 
-		ArrayList<MatMatptInfo> list = mcService.getGmList(hospitalName);
+		ArrayList<MatMatptInfo> list = mcService.getJmList(hospitalName);
 		System.out.println(list);
 		
 		model.addAttribute("list", list);
-		return "joinMaching";
+		return "joinMatching";
 	}
 
 	
-	@GetMapping("joinMachingEnrollView.jm")
-	public String joinMachingEnrollView(@RequestParam("hospitalName") String hospitalName, 
+	@GetMapping("joinMatchingEnrollView.jm")
+	public String joinMatchingEnrollView(@RequestParam("hospitalName") String hospitalName, 
 										@RequestParam("hospitalAddress") String hospitalAddress, Model model) {
 		Hospital hospital = new Hospital();
 		hospital.setHospitalName(hospitalName);
 		hospital.setHospitalAddress(hospitalAddress);
 		model.addAttribute("hospital", hospital);
 	
-		return "joinMachingEnroll.jm";
+		return "joinMatchingEnroll.jm";
 	}
 	
 	
 	
 	//공동간병 등록
-	@PostMapping("enrolljoinMaching.jm")
-	public String enrolljoinMaching(@ModelAttribute Matching gm, @ModelAttribute MatPtInfo gmPt, @ModelAttribute Hospital ho,
+	@PostMapping("enrollJoinMatching.jm")
+	public String enrollJoinMatching(@ModelAttribute Matching jm, @ModelAttribute MatPtInfo jmPt, @ModelAttribute Hospital ho,
 									HttpSession session, Model model) {
 		
 		//병원등록
 		int result1 = mcService.enrollHospital(ho);
 		
 		//매칭 등록
-		gm.setMoney(gmPt.getAntePay() * gm.getPtCount());
-		gm.setMatType(2);
-		gm.setHospitalNo(ho.getHospitalNo());		
-		System.out.println("등록" + gm);
-		int result2 = mcService.enrollMatching(gm);
+		jm.setMoney(jmPt.getAntePay() * jm.getPtCount());
+		jm.setMatType(2);
+		jm.setHospitalNo(ho.getHospitalNo());		
+		System.out.println("등록" + jm);
+		int result2 = mcService.enrollMatching(jm);
 		
 		//매칭 환자 등록
-		gmPt.setMatNo(gm.getMatNo());
+		jmPt.setMatNo(jm.getMatNo());
 		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		Patient pt = mcService.getPatient(memberNo);		
-		gmPt.setPtNo(pt.getPtNo());
-		gmPt.setService("공동간병");
-		gmPt.setMatAddressInfo(gmPt.getMatAddressInfo());	
-		System.out.println("등록" + gmPt);
-		int result3 = mcService.enrollMatPtInfo(gmPt);
+		jmPt.setPtNo(pt.getPtNo());
+		jmPt.setService("공동간병");
+		jmPt.setMatAddressInfo(jmPt.getMatAddressInfo());
+		jmPt.setGroupLeader("Y");
+		System.out.println("등록" + jmPt);
+		int result3 = mcService.enrollMatPtInfo(jmPt);
 		
 		
 		if(result1>0 && result2>0 && result3>0) {
-			return "redirect:joinMachingMy.jm";
+			return "redirect:joinMatching.jm";
 		}
-		throw new MemberException("공동간병 매칭 실패");
+		throw new MemberException("공동간병 그룹 등록 실패");
 	}
 	
 	
 	//공동간병 상세 정보 
-	@PostMapping(value="getGmContent.jm", produces="application/json; charset=UTF-8")
+	@PostMapping(value="getJmContent.jm", produces="application/json; charset=UTF-8")
 	@ResponseBody
-	public void getGmMatMatptInfo(@RequestParam("matNo") int matNo, HttpServletResponse response) {
+	public void getjmMatMatptInfo(@RequestParam("matNo") int matNo, HttpServletResponse response) {
 		
 		//get matching & ptinfo
-		MatMatptInfo gmMatMatptInfo = mcService.getMatMatptInfo(matNo);
+		MatMatptInfo jmMatMatptInfo = mcService.getMatMatptInfo(matNo);
 		
 		//MatNo로 get 공동간병 Patient
-		ArrayList<Patient> gmPts = mcService.getPatientToMatNo(matNo);		
+		ArrayList<Patient> jmPts = mcService.getPatientToMatNo(matNo);		
 		
 		//공동간병 Patient에 member info set
-		for(Patient gmPt : gmPts) {
+		for(Patient jmPt : jmPts) {
 			
 			//get member info (대분류 : 소분류)
-			ArrayList<InfoCategory> gmPtInfos =  mcService.getInfo(gmPt.getMemberNo());
-			System.out.println(gmPtInfos);
+			ArrayList<InfoCategory> jmPtInfos =  mcService.getInfo(jmPt.getMemberNo());
+			System.out.println(jmPtInfos);
 			
 			ArrayList<String> disease =  new ArrayList<>();
 			String diseaseLevel = null;
-			if(gmPtInfos != null) {
-				for(InfoCategory gmPtInfo : gmPtInfos) {
-					if(gmPtInfo.getLCategory().equals("disease")) {
-						disease.add(gmPtInfo.getSCategory());					
-					}else if(gmPtInfo.getLCategory().equals("diseaseLevel")) {
+			if(jmPtInfos != null) {
+				for(InfoCategory jmPtInfo : jmPtInfos) {
+					if(jmPtInfo.getLCategory().equals("disease")) {
+						disease.add(jmPtInfo.getSCategory());					
+					}else if(jmPtInfo.getLCategory().equals("diseaseLevel")) {
 						
-						diseaseLevel = gmPtInfo.getSCategory();				
+						diseaseLevel = jmPtInfo.getSCategory();				
 					}	
 				}	
 				//공동 간병 참여자들 Patient에 member info set
-				gmPt.setDisease(disease);
-				gmPt.setDiseaseLevel(diseaseLevel);
+				jmPt.setDisease(disease);
+				jmPt.setDiseaseLevel(diseaseLevel);
 			}		
 
 		}		
 		
-		System.out.println("gmMatMatptInfo" + gmMatMatptInfo);
-		System.out.println("gmPts" + gmPts);
-		HashMap<String, Object> gmMacPt = new HashMap();
-		gmMacPt.put("gmMatMatptInfo", gmMatMatptInfo);
-		gmMacPt.put("gmPts", gmPts);
+		System.out.println("jmMatMatptInfo" + jmMatMatptInfo);
+		System.out.println("jmPts" + jmPts);
+		HashMap<String, Object> jmMacPt = new HashMap<String, Object>();
+		jmMacPt.put("jmMatMatptInfo", jmMatMatptInfo);
+		jmMacPt.put("jmPts", jmPts);
 				
-
 		response.setContentType("application/json; charset=UTF-8");
 		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
 		Gson gson = new Gson();
 		
 		try {
-			gson.toJson(gmMacPt, response.getWriter());
+			gson.toJson(jmMacPt, response.getWriter());
 		} catch (JsonIOException | IOException e) {
 			e.printStackTrace();
 		}
@@ -171,6 +169,36 @@ public class MatchingController {
 	
 	}
 
+	//공동간병 참여
+	@PostMapping("joinJoinMatching.jm")
+	public String joinJoinMatching(@RequestParam("matNo") int matNo, @RequestParam("matRequest") String matRequest,
+									HttpSession session) {
+		
+		MatPtInfo joinMatptInfo = new MatPtInfo();
+		
+		MatMatptInfo jmMatMatptInfo = mcService.getMatMatptInfo(matNo);	
+		joinMatptInfo.setMatNo(jmMatMatptInfo.getMatNo());
+		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		Patient joinPt = mcService.getPatient(memberNo);
+		joinMatptInfo.setPtNo(joinPt.getPtNo());
+		joinMatptInfo.setAntePay(jmMatMatptInfo.getAntePay());
+		joinMatptInfo.setService("공동간병");
+		joinMatptInfo.setMatAddressInfo(jmMatMatptInfo.getMatAddressInfo());
+		joinMatptInfo.setMatRequest(matRequest);
+		joinMatptInfo.setGroupLeader("N");
+		System.out.println(joinMatptInfo);
+		
+		int result = mcService.enrollMatPtInfo(joinMatptInfo);
+
+		if(result > 0) {
+			return "redirect:joinMatching.jm";
+		}
+		throw new MemberException("공동간병 그룹 등록 실패");
+	}
+	
+	
+	
+	
 	
 	
 	
