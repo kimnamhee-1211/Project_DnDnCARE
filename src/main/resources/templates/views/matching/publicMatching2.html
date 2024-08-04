@@ -4,11 +4,14 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link th:href="@{css/publicMatching2.css}" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 </head>
 <body>
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
 	<main class="inner-content d-flex justify-content-center">
-		<form class="w-50 text-center" action="publicMatching2.mc" method="post">		
+		<form class="w-50 text-center" action="publicMatching-apply.mc" method="post">		
 			<div class="publicMatching-wrap text-center">
 				<div class="w-100">
 					<a href="home.do"><img class="logo-image mb-4" src="image/logo-removebg.png" width="300"></a>
@@ -16,7 +19,6 @@
 					<div class="page-num mb-3">
 						<img src="image/icon/1page.png"></img>
 						<img src="image/icon/2page-color-green.png"></img>
-						<img src="image/icon/3page.png"></img>
 					</div>
 					<div class="mb-5">
 						<p><em>*</em> 아래 정보는 기존에 입력한 공개 매칭 설정 정보들입니다.<br>
@@ -24,174 +26,283 @@
 						</p>
 					</div>
 				</div>
-				<!-- <div class="text-start mb-3 text-center"><span class="mb-5">< <strong>김기룡</strong> 회원님의 정보 ></span></div> -->
-				<div class="icon-wrap d-flex justify-content-center">
-					<div class="icon-container d-flex flex-column" data-value="overDay" onclick="selectIcon(this)">
+				
+				<div class="icon-wrap d-flex justify-content-center mb-3">
+					<div class="icon-container d-flex flex-column" data-letue="overDay" onclick="selectIcon(this)">
 						   <img width="50" height="50" src="https://img.icons8.com/ios/50/calendar--v1.png" alt="calendar--v1"/>
+						   	<strong>기간제 간병</strong>
 						    <p class="fs-6">24시간 이상의<br>간병이 필요해요.</p>
 					</div>
-					<div class="icon-container d-flex flex-column" data-value="underDay" onclick="selectIcon(this)">
+					<div class="icon-container d-flex flex-column" data-letue="underDay" onclick="selectIcon(this)">
 	  						<img width="50" height="50" src="https://img.icons8.com/ios/50/time--v1.png" alt="time--v1"/>
-					   	 	<p class="fs-6">24시간 이상의<br>간병이 필요해요</p>
+	  						<strong>시간제 간병</strong>
+					   	 	<p class="fs-6">24시간 미만의<br>간병이 필요해요</p>
 					</div>
 				</div>
 				
-				<div id="overDayInput" class="input-field hidden d-flex">
-					<div class="d-flex">
-						<label for="startDate">시작 날짜 :&nbsp;&nbsp;&nbsp;</label>
-					    <input type="date" placeholder="시작 날짜를 선택해주세요" name="startDate" id="startDate">
-					</div>
-					<div class="d-flex">
-						<label for="startDate">종료 날짜 :&nbsp;&nbsp;&nbsp; </label>
-						<input type="date" placeholder="종료 날짜를 선택해주세요" name="endDate" id=endDate>
-					</div>
-					<div id="dateDifference" style="margin-top: 10px; font-size: 0.9em; color: #666;">
-				        날짜를 선택하면 기간이 표시됩니다.
+				<div id="overDayInput" class="input-field hidden">
+			        <div class="d-flex">
+			            <label for="overDayStart">시작 날짜 및 시간:&nbsp;&nbsp;&nbsp;</label>
+			            <input type="text" id="overDayStart" name="overDayStart" readonly>
+			        </div>
+			        <div class="d-flex mt-3">
+			            <label for="overDayEnd">종료 날짜 및 시간:&nbsp;&nbsp;&nbsp;</label>
+			            <input type="text" id="overDayEnd" name="overDayEnd" readonly>
+			        </div>
+			        <div id="overDaySummary" class="summary">
+			            시작 날짜와 종료 날짜를 선택해주세요
+			        </div>
+			    </div>
+				
+			    
+			    <div id="underDayInput" class="input-field hidden">
+			        <div class="d-flex">
+			            <label for="underDayPicker">간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
+			            <input type="text" id="underDayPicker" name="underDayPicker" readonly>
+			        </div>
+			        <div class="time-picker d-flex mt-3">
+			            <label for="underDayStartTime">하루 간병 시작 시간:&nbsp;&nbsp;&nbsp;</label>
+			            <input type="time" id="underDayStartTime" name="underDayStartTime">
+			            <label for="underDayEndTime">&nbsp;&nbsp;&nbsp;종료 시간:&nbsp;&nbsp;&nbsp;</label>
+			            <input type="time" id="underDayEndTime" name="underDayEndTime">
+			        </div>
+			        <div id="underDaySummary" class="summary">
+			            원하시는 날과 시간을 선택해주세요
+			        </div>
+    		 </div> 
+		</div>
+				
+			 <div class="symptom-selection-container">
+			    <div class="instruction-text">
+			        <p class="fw-bold fs-5"><img width="48" height="48" src="https://img.icons8.com/color/48/treatment-plan.png" alt="treatment-plan"/>&nbsp;&nbsp;환자에게 해당되는 증상을 선택해주세요<br>
+			        <span class="multiple-selection-note"><em>(중복 선택 가능)</em></span>
+			    </div>
+			    <div class="symptom-buttons">
+			        <div class="row mb-3">
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom1">치매</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom2">섬망</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom3">욕창</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom4">하반신 마비</button>
+			            </div>
+			        </div>
+  			        <div class="row mb-3">
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom5">전신 마비</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom6">와상 환자</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom7">기저귀 케어</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom8">의식 없음</button>
+			            </div>
+			        </div>
+   			        <div class="row mb-3">
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom9">석션</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom10">피딩</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom11">소변줄</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom12">장루</button>
+			            </div>
+			        </div>
+   			        <div class="row mb-3">
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom13">투석</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom14">전염성 질환</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom15">파킨슨</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="symptom16">정신 질환</button>
+			            </div>
+			        </div>
+		        </div>
+	        </div>
+		        <div class="mobility-button d-flex flex-column mt-5">
+				    <div class="instruction-text">
+				        <p class="fw-bold fs-5"><img width="48" height="48" src="https://img.icons8.com/color/48/walking--v1.png" alt="walking--v1"/>&nbsp;&nbsp;환자의 거동 상태를 선택해주세요</p>
+				    </div>
+				    <div class="row mb-3">
+				        <div class="col-3">
+				            <button type="button" class="btn-radio mobility-option" data-symptom="mobility1">자가 보행</button>
+				        </div>
+				        <div class="col-3">
+				            <button type="button" class="btn-radio mobility-option" data-symptom="mobility2">거동 불가</button>
+				        </div>
 				    </div>
 				</div>
-				
-				<div id="underDayInput" class="input-field-row hidden">
-					<div class="border-end ms-2">
-						<div class="d-flex me-3 mb-3">
-							<label for="startDate">시작 날짜 :&nbsp;&nbsp;</label>
-					    	<input type="date" placeholder="날짜를 선택해주세요" name="singleDate">
-					    </div>
-					    <div class="d-flex">
-					    	<label for="startDate">시작 시간 :&nbsp;&nbsp;</label>
-					    	<input type="time" placeholder="시작 시간을 선택해주세요" name="startTime">
+				<div class="gender-button d-flex flex-column mt-5">
+				    <div class="instruction-text">
+				        <p class="fw-bold fs-5"><img width="48" height="48" src="https://img.icons8.com/color/48/gender--v1.png" alt="gender--v1"/>&nbsp;&nbsp;선호하는 간병인의 성별을 선택해주세요.</p>
+				    </div>
+				    <div class="row mb-3">
+				        <div class="col-3">
+				            <button type="button" class="btn-radio gender-option" data-symptom="gender1">남성</button>
 				        </div>
-					</div>
-					<div class="ms-2">
-						<div class="d-flex me-3 mb-3">
-							<label for="startDate">종료 날짜 :&nbsp;&nbsp;</label>
-					    	<input type="date" placeholder="날짜를 선택해주세요" name="singleDate">
-					    </div>
-					    <div class="d-flex">
-					    	<label for="startDate">종료 시간 :&nbsp;&nbsp;</label>
-					    	<input type="time" placeholder="시작 시간을 선택해주세요" name="startTime">
+				        <div class="col-3">
+				            <button type="button" class="btn-radio gender-option" data-symptom="gender2">여성</button>
 				        </div>
-					</div>
-					
-			        
-				    
-				    
-				    
+				        <div class="col-3">
+				            <button type="button" class="btn-radio gender-option" data-symptom="gender3">성별 무관</button>
+				        </div>
+				    </div>
 				</div>
-				
-				<div class="basic-info-wrap d-flex justify-content-center">
-					<div class="basic-info">
-							<div class="form-floating mb-3">
-								<input type="text" class="form-control" id="floatingInput" name="memberId">
-								<label for="floatingInput">이름</label>
-							</div>
-							<div class="form-group mb-3">
-	                            <div class="radio-group">
-	                                <input type="radio" id="male" name="memberGender" value="남성" class="btn-check">
-	                                <label for="male" class="btn-radio">남성</label>
-	                                
-	                                <input type="radio" id="female" name="memberGender" value="여성" class="btn-check">
-	                                <label for="female" class="btn-radio">여성</label>
-	                            </div>
-                        	</div>
-							<div class="form-floating d-flex mb-3">
-								<input type="text" class="form-control" id="floatingPassword" name="memberAge">
-								<label for="floatingPassword">나이</label><p class="mt-2">세</p>
-							</div>
-							<div class="form-floating d-flex mb-3">
-								<input type="text" class="form-control" id="floatingPassword" name="memberHeight">
-								<label for="floatingPassword">키</label><p class="mt-2">cm</p>
-							</div>
-							<div class="form-floating d-flex mb-3">
-								<input type="text" class="form-control" id="floatingPassword" name="memberWeight">
-								<label for="floatingPassword">몸무게</label><p class="mt-2">kg</p>
-							</div>
-							<div class="form-floating mb-3">
-								<input type="text" class="form-control" id="floatingPassword" name="memberDisase">
-								<label for="floatingPassword">진단명</label>
-							</div>
-					</div>
-				</div>			
-				
-<!--                		<div class="d-flex">
-               			<div class="me-5"><em>* </em><span class="mb-3">원하는 간병인 경력 </span><br></div>
-	               		<div class="btn-group-sm" role="group" aria-label="Basic example">
-		               			<button type="button" class="btn btn-outline-success">치매</button>
-								<button type="button" class="btn btn-outline-success">호흡기 질환</button>
-								<button type="button" class="btn btn-outline-success">거동 불편</button>
-								<button type="button" class="btn btn-outline-success">외상환자</button>
-								<button type="button" class="btn btn-outline-success">파킨슨</button>
-								<button type="button" class="btn btn-outline-success">수면질환</button>
-								<button type="button" class="btn btn-outline-success">정신질환</button>
-								<button type="button" class="btn btn-outline-success">기저귀 케어</button>
-								<button type="button" class="btn btn-outline-success">재활</button>
-						</div>
-               		</div> -->
                	<div class="sign-btn mt-5 d-flex justify-content-center">
-					<button type="submit" class="apply-btn me-3"><span>다음</span></button>
-				</div>	
-			</div>	
+               		<button type="button" class="previous-btn me-3" th:onclick="history.back();"><span>이전</span></button>
+					<button type="submit" class="apply-btn me-3"><span>공개 매칭 신청</span></button>
+				</div>		
 		</form>
 	</main>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
-	<script>
-		function selectIcon(element) {
-		    // 모든 아이콘에서 'selected' 클래스 제거
-		    document.querySelectorAll('.icon-container').forEach(icon => {
-		        icon.classList.remove('selected');
-		    });
-		    
-		    // 클릭된 아이콘에 'selected' 클래스 추가
-		    element.classList.add('selected');
-	
-		    // 선택된 값 (예: 'overDay' 또는 'underDay')
-		    const selectedValue = element.getAttribute('data-value');	
-		    
-		    const overDayInput = document.getElementById('overDayInput');
-		    const underDayInput = document.getElementById('underDayInput');
-	
-		    // 모든 입력 필드 숨기기
-		    overDayInput.classList.add('hidden');
-		    underDayInput.classList.add('hidden');
-	
-		    // 선택된 입력 필드 표시
-		    if (selectedValue === 'overDay') {
-		        overDayInput.classList.remove('hidden');
-		    } else if (selectedValue === 'underDay') {
-		        underDayInput.classList.remove('hidden');
-		    }
-		}
+	    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
 
-	// 페이지 로드 시 실행
-	document.addEventListener('DOMContentLoaded', function() {
-	    const icons = document.querySelectorAll('.icon-container');
-	    icons.forEach(icon => {
-	        icon.addEventListener('click', function() {
-	            selectIcon(this);
-	        });
-	    });
-	    
-	    const startDateInput = document.getElementById('startDate');
-	    const endDateInput = document.getElementById('endDate');
-	    const dateDifferenceDiv = document.getElementById('dateDifference');
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+    <script>
+    
+    // 질병,성별 항목 중복안되게
+    function setupSingleSelection(className) {
+        const buttons = document.querySelectorAll(`.${className}`);
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                buttons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    }
+    setupSingleSelection('mobility-option');
+    setupSingleSelection('gender-option');
+    
+    //날짜 선택
+    function selectIcon(element) {
+        $('.icon-container').removeClass('selected');
+        $(element).addClass('selected');
+        const selectedletue = $(element).data('letue');
+        
+        $('#overDayInput, #underDayInput').addClass('hidden');
+        
+        if (selectedletue === 'overDay') {
+            $('#overDayInput').removeClass('hidden');
+        } else if (selectedletue === 'underDay') {
+            $('#underDayInput').removeClass('hidden');
+        }
+    }
+    
+    $(document).ready(function() {
+        flatpickr.localize(flatpickr.l10ns.ko);
 
-	    function updateDateDifference() {
-	        const startDate = new Date(startDateInput.value);
-	        const endDate = new Date(endDateInput.value);
+        // overDayInput 설정
+        let overDayStartPicker = flatpickr("#overDayStart", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minDate: "today",
+            locale: "ko",
+            minuteIncrement: 30,
+            onChange: updateOverDaySummary
+        });
 
-	        if (startDate && endDate && startDate <= endDate) {
-	            const diffTime = Math.abs(endDate - startDate);
-	            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include both start and end dates
-	            dateDifferenceDiv.innerHTML = `총 간병 기간<br> <span style="font-size: 1.5em; color: #2ecc71; font-weight: bold;">${diffDays}일</span>`;
-	        } else if (startDate > endDate) {
-	            dateDifferenceDiv.innerHTML = '<small style="color: red;">종료 날짜는 시작 날짜 이후여야 합니다.</small>';
-	        } else {
-	            dateDifferenceDiv.innerHTML = '<small>날짜를 선택하면 기간이 표시됩니다.</small>';
-	        }
-	    }
+        let overDayEndPicker = flatpickr("#overDayEnd", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            minDate: "today",
+            locale: "ko",
+            minuteIncrement: 30,
+            onChange: updateOverDaySummary
+        });
 
-	    startDateInput.addEventListener('change', updateDateDifference);
-	    endDateInput.addEventListener('change', updateDateDifference);
-	});
-	</script>
+        function updateOverDaySummary() {
+        	let start = overDayStartPicker.selectedDates[0];
+        	let end = overDayEndPicker.selectedDates[0];
+            
+            if (start && end) {
+                if (end <= start) {
+                    $('#overDaySummary').html('<span class="error-message">종료 날짜와 시간은 시작 날짜와 시간 이후여야 합니다.</span>');
+                    return;
+                }
+                
+                let diffTime = Math.abs(end - start);
+                let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                let diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                let diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+                
+                let result = '선택한 기간: ';
+                if (diffDays > 0) result += diffDays + '일 ';
+                if (diffHours > 0) result += diffHours + '시간 ';
+                if (diffMinutes > 0) result += diffMinutes + '분';
+                
+                $('#overDaySummary').text(result.trim());
+            } else {
+                $('#overDaySummary').text('날짜와 시간을 선택해주세요.');
+            }
+        }
+
+        // underDayInput 설정
+        flatpickr("#underDayPicker", {
+            mode: "multiple",
+            dateFormat: "Y년 m월 d일",
+            minDate: "today",
+            locale: "ko",
+            onChange: updateUnderDaySummary
+        });
+
+        $('#underDayStartTime, #underDayEndTime').flatpickr({
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            minuteIncrement: 30,
+            time_24hr: true,
+            onChange: updateUnderDaySummary
+        });
+
+        function updateUnderDaySummary() {
+            let startTime = $('#underDayStartTime').val();
+            let endTime = $('#underDayEndTime').val();
+            let selectedDates = $("#underDayPicker")[0]._flatpickr.selectedDates;
+            
+            let timeDiff = 0;
+            if (startTime && endTime) {
+                let start = new Date(`2000-01-01T${startTime}`);
+                let end = new Date(`2000-01-01T${endTime}`);
+                
+                if (end <= start) {
+                    end.setDate(end.getDate() + 1);  // 다음 날로 설정
+                }
+                
+                timeDiff = (end - start) / (1000 * 60 * 60);
+            }
+
+            let summaryText = `선택한 기간: 총 ${selectedDates.length}일`;
+            if (timeDiff > 0) {
+                summaryText += `, 하루 ${timeDiff}시간`;
+            }
+
+            $('#underDaySummary').text(summaryText);
+        }
+
+        // 아이콘 클릭 이벤트 설정
+        $('.icon-container').on('click', function() {
+            selectIcon(this);
+        });
+    });
+    </script>
 </body>
 </html>

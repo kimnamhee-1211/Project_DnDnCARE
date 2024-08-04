@@ -71,6 +71,26 @@ lable{
 	margin-right:5px;
 }
 
+ .selected-day {
+            background-color: #08c !important;
+            color: white !important;
+ }
+ .daterangepicker td.disabled {
+     text-decoration: none !important;
+     color: #999 !important;
+ }
+ .time-picker {
+     margin-top: 20px;
+ }
+ .summary {
+     margin-top: 20px;
+     font-weight: bold;
+ }
+ 
+  .hidden { display: none; }
+  .selected { background-color: #e0e0e0; }
+  .error-message { color: red; margin-top: 5px; }
+
 
 
 
@@ -86,12 +106,87 @@ lable{
 	background:#8dd986;
 	color:white;
 }
+.icon-wrap {
+            display: flex;
+            justify-content: center;
+            gap: 10px;  /* 아이콘 사이의 간격 */
+ }
 
-.radio-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+  .symptom-selection-container {
+      width: 80%;
+      margin-left:20%;
+      margin-top:50px;
+  }
+  .instruction-text  {
+      width: 50%;
+      white-space:nowrap;
+  }
+  
+  .instruction-text em {
+  	color:#ffc04d;
+  	font-style:normal;
+  	font-size:18px;
+  }
+  .multiple-selection-note {
+    display: inline-block;
+    margin-right:60px;
 }
+  .symptom-buttons {
+  	  margin-top:30px;
+      width: 70%;
+  }
+  
+  .mobility-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-top: 20px;
+    }
+    .mobility-button {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .instruction-text {
+    	margin-right:35%;
+    }
+    .mobility-button .row {
+        justify-content: center;
+        width: 100%;
+        max-width: 1200px; /* 또는 원하는 최대 너비 */
+    }
+    .mobility-button .col-3 {
+        flex: 0 0 auto;
+        width: auto;
+        padding: 0 10px;
+    }
+    .mobility-button .btn-radio {
+        width: 100%;
+        min-width: 300px; /* 버튼의 최소 너비 설정 */
+    }
+    
+    .gender-button {
+    	display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .gender-button .row {
+        justify-content: center;
+        width: 100%;
+        max-width: 1200px; /* 또는 원하는 최대 너비 */
+    }
+    .gender-button .col-3 {
+        flex: 0 0 auto;
+        width: auto;
+        padding: 0 10px;
+    }
+    .gender-button .btn-radio {
+        width: 100%;
+        min-width: 300px; /* 버튼의 최소 너비 설정 */
+    }
 
 .btn-check {
     position: absolute;
@@ -100,17 +195,22 @@ lable{
 }
 
 .btn-radio {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #495057;
-    background-color: #f8f9fa;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    width:50%;
-}
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #495057;
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        width: 100%;
+        text-align: center;
+    }
+    .btn-radio.selected {
+        background-color: #8dd986;
+        color: white;
+    }
 
 .btn-check:checked + .btn-radio {
     color: #fff;
@@ -125,11 +225,6 @@ lable{
 .btn-check:checked + .btn-radio:hover {
     background-color: #8dd986;
 }
- .icon-wrap {
-            display: flex;
-            justify-content: center;
-            gap: 10px;  /* 아이콘 사이의 간격 */
- }
  
  .input-field label {
  	white-space:nowrap;
@@ -215,6 +310,30 @@ lable{
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+    @media (min-width: 768px) {
+        .instruction-text {
+            width: 30%;
+            padding-right: 20px;
+            margin-bottom: 0;
+        }
+        .symptom-buttons {
+            width: 70%;
+        }
+        .btn-radio {
+            font-size: 16px;
+            padding: 10px 20px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .symptom-selection-container {
+            width: 95%;
+        }
+         .multiple-selection-note {
+        margin-left: 10px;
+    }
+    }
+
 
 /* JavaScript로 동적으로 표시/숨김을 제어하기 위한 클래스 */
 .input-field.hidden {
