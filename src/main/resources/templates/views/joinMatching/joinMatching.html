@@ -99,7 +99,7 @@
 						<h4 class="fw-bold mb-2" style="margin-bottom:0px;">공동간병 그룹 참여자</h4>
 						<div id="ptDiv" class="mx-auto"></div>
 			      		<div class="modal-footer">
-			      			<button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">참여하기</button>
+			      			<button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" id="join">참여하기</button>
 			       			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 			      		</div>
 			    	</div>
@@ -150,7 +150,7 @@
 		
 			
 		    //상세정보 노출
-			const tableDivs = document.querySelectorAll('.tableDiv')
+			const tableDivs = document.querySelectorAll('.tableDiv');
 
 			for(const tableDiv of tableDivs){
 				tableDiv.addEventListener('click', function(){
@@ -236,6 +236,7 @@
 									const ptAge = jmPt.ptAge
 									console.log(ptAge);
 									
+									//나이계산
 									const today = new Date();
 								    const birthDate = new Date(ptAge);
 								    let age = today.getFullYear() - birthDate.getFullYear();
@@ -290,9 +291,14 @@
 											</tbody>
 										</table>`;	
 								
-									tableDiv.innerHTML = tableDivInnerHTML;
+									tableDiv.innerHTML = tableDivInnerHTML;									
+									
+									//참여인원 다 차면 참여하기 버튼 숨기기									
+									if(jmPts.length == jmMatMatptInfo.ptCount){
+										document.getElementById('join').style.display = "none";
+									}
+									
 								}
-								
 								
 							},
 							error : data => {
