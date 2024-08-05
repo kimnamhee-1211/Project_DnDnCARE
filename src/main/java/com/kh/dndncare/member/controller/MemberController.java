@@ -705,8 +705,9 @@ public class MemberController {
 		}
 	}
 	
-	
-	
+	// 간병인 일감찾기 페이지에서의 검색 요청을 처리
+//	@PostMapping("searchPatientList.me")
+//	public 
 	
 	
 	

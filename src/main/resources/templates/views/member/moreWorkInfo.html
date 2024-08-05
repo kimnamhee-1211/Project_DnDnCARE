@@ -15,7 +15,7 @@
 		<div><!-- 왼쪽 공백 --></div>
 		<div><!-- 컨텐츠 --> 
 			<div class="">
-				<span>나와 딱 맞는 간병일감을 찾아드려요.</span>
+				<span class="badge rounded-pill bg-primary" style="font-size: 25px;">나와 딱 맞는 간병일감을 찾아드려요.</span>
 				<img src="image/icon/refresh.gif" width="40px;" height="40px"/>	
 			</div>
 			
@@ -139,7 +139,7 @@
 				<div style="position: sticky; top: 0px; z-index: 10; background:white; ">
 					<div id="lowerContentsTitle">
 						<div><span class="badge rounded-pill bg-primary" style="font-size: 25px;">간병일감 목록</span></div>
-						<div class="text-end"><button type="button" class="btn btn-light">검색하기</button></div>
+						<div class="text-end"><button type="button" class="btn btn-light goSearch">검색하기</button></div>
 					</div>
 					<br/>
 					<div id="tagBtnDiv"> <!-- 각 태그의 value값이 ON/OFF인지에 따라서 어떤 검색조건을 선택하였는지 확인가능함 -->
@@ -183,8 +183,8 @@
 						<button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">가정돌봄</button>
 						<button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">동행서비스</button>
 						<!-- 성별 유형에 대한 세부 버튼 -->
-						<button type="button" class="btn btn-light subBtn subMathcingBtn" style="display:none;">개인</button>
-						<button type="button" class="btn btn-light subBtn subMathcingBtn" style="display:none;">공동</button>
+						<button type="button" class="btn btn-light subBtn subShareBtn" style="display:none;">개인</button>
+						<button type="button" class="btn btn-light subBtn subShareBtn" style="display:none;">공동</button>
 						<!-- 지역에 대한 세부 버튼 -->
 						<button type="button" class="btn btn-light subBtn subAreaBtn" style="display:none;">전국</button>
 		    			<button type="button" class="btn btn-light subBtn subAreaBtn" style="display:none;">서울</button>
@@ -259,7 +259,7 @@
 	<div th:replace="~{common/footer :: footer}"></div>
 	
 	<!-- 태그 전체를 취사선택할 수 있는 모달창 -->
-	<div class="modal" tabindex="-1" id="AllTagModal">
+	<div class="modal" tabindex="-1" id="allTagModal">
 		<div class="modal-dialog">
 			<div class="modal-content">
 		   		<div class="modal-header">
@@ -268,106 +268,106 @@
 		    		</div>
 		    		<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
 		   		</div>
-		    	<div class="modal-body workInfo">
-		    		<form>
-		    			<div><span class="badge rounded-pill bg-warning">서비스 유형</span></div><br/>
-		    			<button type="button" class="btn btn-light searchServiceBtn" name="service">병원돌봄</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchServiceBtn" name="service">가정돌봄</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchServiceBtn" name="service">동행서비스</button>
+		    	<div class="modal-body" id="searchBtnDiv">
+		    		<form id="searchForm" action="searchPatientList.me" method="post">
+		    			<div><span class="badge rounded-pill bg-warning">서비스 유형</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<button type="button" class="btn btn-light searchServiceBtn" name="service" value="병원돌봄/OFF">병원돌봄</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchServiceBtn" name="service" value="가정돌봄/OFF">가정돌봄</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchServiceBtn" name="service" value="동행서비스/OFF">동행서비스</button>
+		    			 
+		    			<br/><br/>
+		    			
+		    			<div><span class="badge rounded-pill bg-warning">공동간병 유형</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<button type="button" class="btn btn-light searchShareBtn" name="share" value="personal/OFF">개인간병</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchShareBtn" name="share" value="share/OFF">공동간병</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning">공동간병 유형</span></div><br/>
-		    			<button type="button" class="btn btn-light">개인간병</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">공동간병</button>
+		    			<div><span class="badge rounded-pill bg-warning">지역 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="전국/OFF">전국</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="서울/OFF">서울</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="부산/OFF">부산</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="대구/OFF">대구</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="인천/OFF">인천</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="광주/OFF">광주</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="대전/OFF">대전</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="울산/OFF">울산</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="경기도/OFF">경기도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="강원도/OFF">강원도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="충청북도/OFF">충청북도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="충청남도/OFF">충청남도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="전라북도/OFF">전라북도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="전라남도/OFF">전라남도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="경상북도/OFF">경상북도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="경상남도/OFF">경상남도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="제주/OFF">제주</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAreaBtn" name="area" value="세종/OFF">세종</button>
+		    			
+		    			<div><span class="badge rounded-pill bg-warning">성별 선택</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<button type="button" class="btn btn-light searchGenderBtn" name="gender" value="남성/OFF">남성</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchGenderBtn" name="gender" value="여성/OFF">여성</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning">지역 선택</span></div><br/>
-		    			<button type="button" class="btn btn-light">전국</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">서울</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">부산</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">대구</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">인천</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">광주</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">대전</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">울산</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">경기도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">강원도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">충청북도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">충청남도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">전라북도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">전라남도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">경상북도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">경상남도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">제주</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">세종</button>
-		    			
-		    			<div><span class="badge rounded-pill bg-warning">성별 선택</span></div><br/>
-		    			<button type="button" class="btn btn-light">남성</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">여성</button>
+		    			<div><span class="badge rounded-pill bg-warning">연령 선택</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<button type="button" class="btn btn-light searchAgeBtn" name="age" value="청년/OFF">청년</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAgeBtn" name="age" value="중년/OFF">중년</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchAgeBtn" name="age" value="장년/OFF">장년</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning">연령 선택</span></div><br/>
-		    			<button type="button" class="btn btn-light">청년</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">중년</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">장년</button>
-		    			
-		    			<br/><br/>
-		    			
-		    			<div><span class="badge rounded-pill bg-warning">질환 선택</span></div><br/>
-		    			<button type="button" class="btn btn-light">치매</button>
-						<button type="button" class="btn btn-light">섬망</button>
-		    			<button type="button" class="btn btn-light">욕창</button>
-		    			<button type="button" class="btn btn-light">하반신 마비</button>
-		    			<button type="button" class="btn btn-light">전신 마비</button>
-		    			<button type="button" class="btn btn-light">와상환자</button>
-		    			<button type="button" class="btn btn-light">기저귀 케어</button>
-		    			<button type="button" class="btn btn-light">의식 없음</button>
-		    			<button type="button" class="btn btn-light">석션</button>
-		    			<button type="button" class="btn btn-light">피딩</button>
-		    			<button type="button" class="btn btn-light">소변줄</button>
-		    			<button type="button" class="btn btn-light">장루</button>
-		    			<button type="button" class="btn btn-light">투석</button>
-		    			<button type="button" class="btn btn-light">전염성 질환</button>
-		    			<button type="button" class="btn btn-light">파킨슨</button>
-		    			<button type="button" class="btn btn-light">정신질환</button>
+		    			<div><span class="badge rounded-pill bg-warning">질환 선택</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="치매/OFF">치매</button>
+						<button type="button" class="btn btn-light searchDisBtn" name="disease" value="섬망/OFF">섬망</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="욕창/OFF">욕창</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="하반신 마비/OFF">하반신 마비</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="전신 마비/OFF">전신 마비</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="와상환자/OFF">와상환자</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="기저귀 케어/OFF">기저귀 케어</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="의식 없음/OFF">의식 없음</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="석션/OFF">석션</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="피딩/OFF">피딩</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="소변줄/OFF">소변줄</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="장루/OFF">장루</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="투석/OFF">투석</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="전염성 질환/OFF">전염성 질환</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="파킨슨/OFF">파킨슨</button>
+		    			<button type="button" class="btn btn-light searchDisBtn" name="disease" value="정신질환/OFF">정신질환</button>
 					
 						<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning">중증도 선택</span></div><br/>
-		    			<button type="button" class="btn btn-light">경증</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">중등중</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">중증</button>&nbsp;&nbsp;
+		    			<div><span class="badge rounded-pill bg-warning">중증도 선택</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<button type="button" class="btn btn-light searchLevelBtn" name="level" value="경증/OFF">경증</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchLevelBtn" name="level" value="중등중/OFF">중등중</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchLevelBtn" name="level" value="중증/OFF">중증</button>&nbsp;&nbsp;
 
 						<br/><br/>
 	
-						<div><span class="badge rounded-pill bg-warning">거동여부 선택</span></div><br/>
-		    			<button type="button" class="btn btn-light">거동 가능</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">거동 불가능</button>&nbsp;&nbsp;
+						<div><span class="badge rounded-pill bg-warning">거동여부 선택</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<button type="button" class="btn btn-light searchWalkBtn" name="walk" value="거동 가능/OFF">거동 가능</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchWalkBtn" name="walk" value="거동 불가능/OFF">거동 불가능</button>&nbsp;&nbsp;
 		
 						<br/><br/>
 	
-						<div><span class="badge rounded-pill bg-warning">돌봄비 선택</span></div><br/>
-		    			<button type="button" class="btn btn-light">~30,000원</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">~50,000원</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">~80,000원</button>&nbsp;&nbsp;
-						<button type="button" class="btn btn-light">~100,000원</button>
+						<div><span class="badge rounded-pill bg-warning">돌봄비 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
+		    			<button type="button" class="btn btn-light searchCostBtn" name="cost" value="3/OFF">~30,000원</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchCostBtn" name="cost" value="5/OFF">~50,000원</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchCostBtn" name="cost" value="8/OFF">~80,000원</button>&nbsp;&nbsp;
+						<button type="button" class="btn btn-light searchCostBtn" name="cost" value="10/OFF">~100,000원</button>
 						
 						<br/><br/>
 						
-						<div><span class="badge rounded-pill bg-warning">간병기간 선택</span></div><br/>
-		    			<button type="button" class="btn btn-light">1일 미만</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">7일 미만</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light">15일 미만</button>&nbsp;&nbsp;
-						<button type="button" class="btn btn-light">15일 이상</button>
+						<div><span class="badge rounded-pill bg-warning">간병기간 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
+		    			<button type="button" class="btn btn-light searchTermBtn" name="term" value="1/OFF">1일 미만</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchTermBtn" name="term" value="7/OFF">7일 미만</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchTermBtn" name="term" value="15/OFF">15일 미만</button>&nbsp;&nbsp;
+						<button type="button" class="btn btn-light searchTermBtn" name="term" value="장기/OFF">15일 이상</button>
 		    			
 		    		</form>
 		    	</div>
 		    	<div class="modal-footer">
 	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">Close</button>
-	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">검색하기</button>
+	    			<button type="button" class="btn btn-primary goSearch" style="width:200px;">검색하기</button>
 		    	</div>
 		  	</div>
 		</div>
@@ -418,7 +418,7 @@
 			})
 			
 			// == 공동 간병 여부 ==
-			const subMathcingBtnList = document.querySelectorAll('.subMathcingBtn');// 공동 간병에 대한 세부 태그버튼	
+			const subShareBtnList = document.querySelectorAll('.subShareBtn');// 공동 간병에 대한 세부 태그버튼	
 			document.querySelector('#shareChoice').addEventListener('click', function() {
 				if(this.className.includes('btn-light')) {
 					for(let m of allMainBtnList) {
@@ -435,7 +435,7 @@
 					this.classList.remove('btn-light');
 					this.classList.add('btn-success');
 					
-					for(let s of subMathcingBtnList) {
+					for(let s of subShareBtnList) {
 						s.style.display = 'inline';
 					}
 				} else {
@@ -449,7 +449,7 @@
 						}
 					}
 					
-					for(let s of subMathcingBtnList) {
+					for(let s of subShareBtnList) {
 						s.style.display = 'none';
 					}
 				}
@@ -763,42 +763,442 @@
 			// 일감목록의 태그 버튼 클릭시 하위 버튼을 보여주는 기능 (끝)
 			
 			
-			// 대표태그의 하위 버튼을 클릭하였을 때 각 하위요소를 선택하였다는 스타일을 지정해주는 이벤트 (시작)
+			// 클릭 이벤트 상호작용 : 대표태그의 하위 버튼 <-> 검색조건의 하위 버튼 (시작)
+			// == 서비스 유형의 하위 버튼 ==
 			const searchServiceBtnList = document.querySelectorAll('.searchServiceBtn');
 			for(let i = 0; i< subServiceBtnList.length; i++) {
-				subServiceBtnList[i].addEventListener('click', () => {
-					console.log('클릭')
+				// 대표 태그의 하위 버튼을 클릭 => 검색 조건의 하위 버튼
+				subServiceBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						searchServiceBtnList[i].classList.remove('btn-light');					
+						searchServiceBtnList[i].classList.add('btn-success');
+						searchServiceBtnList[i].value = searchServiceBtnList[i].value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						searchServiceBtnList[i].classList.remove('btn-success');					
+						searchServiceBtnList[i].classList.add('btn-light');
+						searchServiceBtnList[i].value = searchServiceBtnList[i].value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+				// 검색 조건의 하위 버튼 => 대표 태그의 하위 버튼
+				searchServiceBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						subServiceBtnList[i].classList.remove('btn-light');					
+						subServiceBtnList[i].classList.add('btn-success');
+						this.value = this.value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						subServiceBtnList[i].classList.remove('btn-success');					
+						subServiceBtnList[i].classList.add('btn-light');
+						this.value = this.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
 				})
 			}
-			
-			
-			
-			
-			
-			
-/* 			for(let sb of subBtnList) {
-				sb.addEventListener('click', function() {
-					const mainBtn = this.parentElement.children[0]; // 클릭한 서브 버튼에 대한 대표 버튼에 접근
-					const childBtnList = mainBtn.parentElement.querySelectorAll('.subBtn');
-
-					if(mainBtn.className.includes('btn-success')) {
-						mainBtn.classList.remove('btn-light');
-						mainBtn.classList.add('btn-success');
-						
-					}
+			// == 공동 유형의 하위 버튼 ==
+			const searchShareBtnList = document.querySelectorAll('.searchShareBtn');
+			for(let i = 0; i< subShareBtnList.length; i++) {
+				// 대표 태그의 하위 버튼을 클릭 => 검색 조건의 하위 버튼 
+				subShareBtnList[i].addEventListener('click', function() {
 					if(this.className.includes('btn-light')) {
-						this.classList.remove('btn-light');
+						this.classList.remove('btn-light');					
 						this.classList.add('btn-success');
-					} else {
-						this.classList.remove('btn-success');
+						searchShareBtnList[i].classList.remove('btn-light');					
+						searchShareBtnList[i].classList.add('btn-success');
+						searchShareBtnList[i].value = searchShareBtnList[i].value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
 						this.classList.add('btn-light');
+						searchShareBtnList[i].classList.remove('btn-success');					
+						searchShareBtnList[i].classList.add('btn-light');
+						searchShareBtnList[i].value = searchShareBtnList[i].value.split('/')[0] + '/OFF'; // '서비스명/OFF'
 					}
 				})
-			} */
+				// 검색 조건의 하위 버튼 => 대표 태그의 하위 버튼
+				searchShareBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						subShareBtnList[i].classList.remove('btn-light');					
+						subShareBtnList[i].classList.add('btn-success');
+						this.value = this.value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						subShareBtnList[i].classList.remove('btn-success');					
+						subShareBtnList[i].classList.add('btn-light');
+						this.value = this.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+			}
+			// == 지역 유형의 하위 버튼 ==
+			const searchAreaBtnList = document.querySelectorAll('.searchAreaBtn');
+			for(let i = 0; i< subAreaBtnList.length; i++) {
+				// 대표 태그의 하위 버튼을 클릭 => 검색 조건의 하위 버튼
+				subAreaBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						for(let sub of subAreaBtnList) {
+							sub.classList.remove('btn-success');					
+							sub.classList.add('btn-light');
+						}
+						for(let search of searchAreaBtnList) {
+							search.classList.remove('btn-success');					
+							search.classList.add('btn-light');
+							search.value = search.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+						}
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						searchAreaBtnList[i].classList.remove('btn-light');					
+						searchAreaBtnList[i].classList.add('btn-success');
+						searchAreaBtnList[i].value = searchAreaBtnList[i].value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						searchAreaBtnList[i].classList.remove('btn-success');					
+						searchAreaBtnList[i].classList.add('btn-light');
+						searchAreaBtnList[i].value = searchAreaBtnList[i].value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+				// 검색 조건의 하위 버튼 => 대표 태그의 하위 버튼
+				searchAreaBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						for(let sub of subAreaBtnList) {
+							sub.classList.remove('btn-success');					
+							sub.classList.add('btn-light');
+						}
+						for(let search of searchAreaBtnList) {
+							search.classList.remove('btn-success');					
+							search.classList.add('btn-light');
+							search.value = search.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+						}
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						subAreaBtnList[i].classList.remove('btn-light');					
+						subAreaBtnList[i].classList.add('btn-success');
+						this.value = this.value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						subAreaBtnList[i].classList.remove('btn-success');					
+						subAreaBtnList[i].classList.add('btn-light');
+						this.value = this.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+			}
+			// == 성별 유형의 하위 버튼 == 
+			const searchGenderBtnList = document.querySelectorAll('.searchGenderBtn');
+			for(let i = 0; i< subGenderBtnList.length; i++) {
+				// 대표 태그의 하위 버튼을 클릭 => 검색 조건의 하위 버튼
+				subGenderBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						searchGenderBtnList[i].classList.remove('btn-light');					
+						searchGenderBtnList[i].classList.add('btn-success');
+						searchGenderBtnList[i].value = searchGenderBtnList[i].value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						searchGenderBtnList[i].classList.remove('btn-success');					
+						searchGenderBtnList[i].classList.add('btn-light');
+						searchGenderBtnList[i].value = searchGenderBtnList[i].value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+				// 검색 조건의 하위 버튼 => 대표 태그의 하위 버튼
+				searchGenderBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						subGenderBtnList[i].classList.remove('btn-light');					
+						subGenderBtnList[i].classList.add('btn-success');
+						this.value = this.value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						subGenderBtnList[i].classList.remove('btn-success');					
+						subGenderBtnList[i].classList.add('btn-light');
+						this.value = this.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+			}	
+			// == 연령 유형의 하위 버튼 ==
+			const searchAgeBtnList = document.querySelectorAll('.searchAgeBtn');
+			for(let i = 0; i< subAgeBtnList.length; i++) {
+				// 대표 태그의 하위 버튼을 클릭 => 검색 조건의 하위 버튼
+				subAgeBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						searchAgeBtnList[i].classList.remove('btn-light');					
+						searchAgeBtnList[i].classList.add('btn-success');
+						searchAgeBtnList[i].value = searchAgeBtnList[i].value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						searchAgeBtnList[i].classList.remove('btn-success');					
+						searchAgeBtnList[i].classList.add('btn-light');
+						searchAgeBtnList[i].value = searchAgeBtnList[i].value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+				// 검색 조건의 하위 버튼 => 대표 태그의 하위 버튼
+				searchAgeBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						subAgeBtnList[i].classList.remove('btn-light');					
+						subAgeBtnList[i].classList.add('btn-success');
+						this.value = this.value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						subAgeBtnList[i].classList.remove('btn-success');					
+						subAgeBtnList[i].classList.add('btn-light');
+						this.value = this.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+			}
+			// == 질환 유형의 하위 버튼 ==
+			const searchDisBtnList = document.querySelectorAll('.searchDisBtn');
+			for(let i = 0; i< subDisBtnList.length; i++) {
+				// 대표 태그의 하위 버튼을 클릭 => 검색 조건의 하위 버튼
+				subDisBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						searchDisBtnList[i].classList.remove('btn-light');					
+						searchDisBtnList[i].classList.add('btn-success');
+						searchDisBtnList[i].value = searchDisBtnList[i].value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						searchDisBtnList[i].classList.remove('btn-success');					
+						searchDisBtnList[i].classList.add('btn-light');
+						searchDisBtnList[i].value = searchDisBtnList[i].value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+				// 검색 조건의 하위 버튼 => 대표 태그의 하위 버튼
+				searchDisBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						subDisBtnList[i].classList.remove('btn-light');					
+						subDisBtnList[i].classList.add('btn-success');
+						this.value = this.value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						subDisBtnList[i].classList.remove('btn-success');					
+						subDisBtnList[i].classList.add('btn-light');
+						this.value = this.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+			}
+			// == 중증도 유형의 하위 버튼 ==
+			const searchLevelBtnList = document.querySelectorAll('.searchLevelBtn');
+			for(let i = 0; i< subLevelBtnList.length; i++) {
+				// 대표 태그의 하위 버튼을 클릭 => 검색 조건의 하위 버튼
+				subLevelBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						searchLevelBtnList[i].classList.remove('btn-light');					
+						searchLevelBtnList[i].classList.add('btn-success');
+						searchLevelBtnList[i].value = searchLevelBtnList[i].value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						searchLevelBtnList[i].classList.remove('btn-success');					
+						searchLevelBtnList[i].classList.add('btn-light');
+						searchLevelBtnList[i].value = searchLevelBtnList[i].value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+				// 검색 조건의 하위 버튼 => 대표 태그의 하위 버튼
+				searchLevelBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						subLevelBtnList[i].classList.remove('btn-light');					
+						subLevelBtnList[i].classList.add('btn-success');
+						this.value = this.value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						subLevelBtnList[i].classList.remove('btn-success');					
+						subLevelBtnList[i].classList.add('btn-light');
+						this.value = this.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+			}
+			// == 거동 여부 유형의 하위 버튼 == 
+			const searchWalkBtnList = document.querySelectorAll('.searchWalkBtn');
+			for(let i = 0; i< subWalkBtnList.length; i++) {
+				// 대표 태그의 하위 버튼을 클릭 => 검색 조건의 하위 버튼
+				subWalkBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						searchWalkBtnList[i].classList.remove('btn-light');					
+						searchWalkBtnList[i].classList.add('btn-success');
+						searchWalkBtnList[i].value = searchWalkBtnList[i].value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						searchWalkBtnList[i].classList.remove('btn-success');					
+						searchWalkBtnList[i].classList.add('btn-light');
+						searchWalkBtnList[i].value = searchWalkBtnList[i].value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+				// 검색 조건의 하위 버튼 => 대표 태그의 하위 버튼
+				searchWalkBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						subWalkBtnList[i].classList.remove('btn-light');					
+						subWalkBtnList[i].classList.add('btn-success');
+						this.value = this.value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						subWalkBtnList[i].classList.remove('btn-success');					
+						subWalkBtnList[i].classList.add('btn-light');
+						this.value = this.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+			}
+			// == 돌봄비 유형의 하위 버튼 ==	
+			const searchCostBtnList = document.querySelectorAll('.searchCostBtn');
+			for(let i = 0; i< subCostBtnList.length; i++) {
+				// 대표 태그의 하위 버튼을 클릭 => 검색 조건의 하위 버튼
+				subCostBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						for(let sub of subCostBtnList) {
+							sub.classList.remove('btn-success');					
+							sub.classList.add('btn-light');
+						}
+						for(let search of searchCostBtnList) {
+							search.classList.remove('btn-success');					
+							search.classList.add('btn-light');
+							search.value = search.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+						}
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						searchCostBtnList[i].classList.remove('btn-light');					
+						searchCostBtnList[i].classList.add('btn-success');
+						searchCostBtnList[i].value = searchCostBtnList[i].value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						searchCostBtnList[i].classList.remove('btn-success');					
+						searchCostBtnList[i].classList.add('btn-light');
+						searchCostBtnList[i].value = searchCostBtnList[i].value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+				// 검색 조건의 하위 버튼 => 대표 태그의 하위 버튼
+				searchCostBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						for(let sub of subCostBtnList) {
+							sub.classList.remove('btn-success');					
+							sub.classList.add('btn-light');
+						}
+						for(let search of searchCostBtnList) {
+							search.classList.remove('btn-success');					
+							search.classList.add('btn-light');
+							search.value = search.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+						}
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						subCostBtnList[i].classList.remove('btn-light');					
+						subCostBtnList[i].classList.add('btn-success');
+						this.value = this.value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						subCostBtnList[i].classList.remove('btn-success');					
+						subCostBtnList[i].classList.add('btn-light');
+						this.value = this.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+			}	
+			// == 간병기간 유형의 하위 버튼 ==
+			const searchTermBtnList = document.querySelectorAll('.searchTermBtn');
+			for(let i = 0; i< subTermBtnList.length; i++) {
+				// 대표 태그의 하위 버튼을 클릭 => 검색 조건의 하위 버튼
+				subTermBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						for(let sub of subTermBtnList) {
+							sub.classList.remove('btn-success');					
+							sub.classList.add('btn-light');
+						}
+						for(let search of searchTermBtnList) {
+							search.classList.remove('btn-success');					
+							search.classList.add('btn-light');
+							search.value = search.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+						}
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						searchTermBtnList[i].classList.remove('btn-light');					
+						searchTermBtnList[i].classList.add('btn-success');
+						searchTermBtnList[i].value = searchTermBtnList[i].value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						searchTermBtnList[i].classList.remove('btn-success');					
+						searchTermBtnList[i].classList.add('btn-light');
+						searchTermBtnList[i].value = searchTermBtnList[i].value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+				// 검색 조건의 하위 버튼 => 대표 태그의 하위 버튼
+				searchTermBtnList[i].addEventListener('click', function() {
+					if(this.className.includes('btn-light')) {
+						for(let sub of subTermBtnList) {
+							sub.classList.remove('btn-success');					
+							sub.classList.add('btn-light');
+						}
+						for(let search of searchTermBtnList) {
+							search.classList.remove('btn-success');					
+							search.classList.add('btn-light');
+							search.value = search.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+						}
+						this.classList.remove('btn-light');					
+						this.classList.add('btn-success');
+						subTermBtnList[i].classList.remove('btn-light');					
+						subTermBtnList[i].classList.add('btn-success');
+						this.value = this.value.split('/')[0] + '/ON'; // '서비스명/ON'
+					} else if(this.className.includes('btn-success')) {
+						this.classList.remove('btn-success');					
+						this.classList.add('btn-light');
+						subTermBtnList[i].classList.remove('btn-success');					
+						subTermBtnList[i].classList.add('btn-light');
+						this.value = this.value.split('/')[0] + '/OFF'; // '서비스명/OFF'
+					}
+				})
+			}
+			// 클릭 이벤트 상호작용 : 대표태그의 하위 버튼 <-> 검색조건의 하위 버튼 (끝)
 			
-			// 대표태그의 하위 버튼을 클릭하였을 때 각 하위요소를 선택하였다는 스타일을 지정해주는 이벤트 (끝)
-			
-			
+			// 태그 조건으로 검색하기 (시작)
+			const goSearchBtnList = document.querySelectorAll('.goSearch');
+			let form = document.querySelector('#searchForm');
+			for(let go of goSearchBtnList) {
+				go.addEventListener('click', e => {
+					// 조졌는데?
+					e.preventDefault(); // form태그의 실행을 제어	
+					form = $('form#searchForm');
+					let formData = $(form).serialize();
+					console.log($(form).serialize());
+							
+				})
+			}
+			// 태그 조건으로 검색하기 (끝)	
+				
+				
+				
+				
+				
 			
 			
 			// 일감목록 검색 결과를 출력하는 무한스크롤 (시작)
@@ -812,7 +1212,7 @@
 			async function fetchData() {
 				isFetching = true; // 데이터를 가져오는 중이라는 표현
 				//let response = await fetch(`https://jsonplaceholder.typicode.com/posts?_page=${currentPage}`);
-				let response = await fetch(`http://localhost:8090/workInfoTest.me?page=${currentPage}`);
+				let response = await fetch(`http://localhost:8096/workInfoTest.me?page=${currentPage}`);
 				let data = await response.json();
 			    console.log(data);
 			    
@@ -877,8 +1277,7 @@
 			
 			// 태그 전체 모달창 출력
 			document.querySelector('#allTagBtn').addEventListener('click', () => {
-				console.log('클릭')
-				$('#AllTagModal').modal('show');
+				$('#allTagModal').modal('show');
 			})
 			
 			
