@@ -569,6 +569,7 @@ public class MemberController {
 		throw new MemberException("로그인없음. 인터셉터설정");
 	}
 	
+	// 내 작성글 보기
 	@GetMapping("myInfoBoardList.me")
 	public String myInfoBoardList(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model, HttpSession session) {		//마이페이지 보드작성 확인용
 		

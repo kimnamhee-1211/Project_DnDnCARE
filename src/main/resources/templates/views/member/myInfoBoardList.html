@@ -192,7 +192,6 @@
 			const tds = document.querySelectorAll('td');
 			for (const td of tds) {
 				td.addEventListener('click', function() {
-					console.log(123);
 					const trTds = this.parentElement.querySelectorAll('td');
 					const boardId = trTds[0].innerText;
 					const currentPage = /*[[${boardPi.currentPage}]]*/ 1;
