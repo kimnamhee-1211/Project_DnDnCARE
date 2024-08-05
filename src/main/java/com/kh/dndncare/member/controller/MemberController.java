@@ -196,6 +196,8 @@ public class MemberController {
 			
 			if(loginUser.getMemberCategory().equalsIgnoreCase("C")) {
 				return "redirect:caregiverMain.me";
+			} else if(loginUser.getMemberCategory().equalsIgnoreCase("P")) {
+				return "redirect:patientMain.me";
 			}
 			
 			
