@@ -53,7 +53,7 @@
 	
 	<select id="selectBoard" resultType="Board">
 		select b.board_No, c.category_Name, b.board_Title, m.member_NickName, a.area_Name, b.board_create_date,
-			   b.board_update_date, b.board_count, b.board_content, b.category_No, b.area_no
+			   b.board_update_date, b.board_count, b.board_content, b.category_No, b.area_no, m.member_no
 		from board b
 			join b_category c on(c.category_no=b.category_no)
 			join member m on(m.member_no=b.member_no)

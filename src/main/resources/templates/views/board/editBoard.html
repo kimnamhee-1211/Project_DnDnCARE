@@ -12,6 +12,32 @@
         font-weight: 400;
         font-style: normal;
     }
+    @font-face {
+    font-family: 'SBAggroB';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+	}
+	    
+	@font-face {
+	    font-family: '양진체';
+	    src: url('https://fastly.jsdelivr.net/gh/supernovice-lab/font@0.9/yangjin.woff') format('woff');
+	    font-weight: normal;
+	    font-style: normal;
+	}    
+	@font-face {
+	     font-family: 'DungGeunMo';
+	     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+	     font-weight: normal;
+	     font-style: normal;
+	}
+	@font-face {
+	    font-family: 'Chosunilbo_myungjo';
+	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
+	    font-weight: normal;
+	    font-style: normal;
+	}
+	
     body {
         font-family: 'Pretendard-Regular', sans-serif;
         background-color: #f8f9fa;
@@ -46,6 +72,7 @@
     input[readonly] {
         background-color: gray;
     }
+    
 </style>
 </head>
 <body>
@@ -67,7 +94,7 @@
                     <div class="col-md-4">
                         <label for="category" class="form-label">카테고리 : </label>
                         <select class="form-select" id="categoryNo" name="categoryNo" required>
-                            <option disabled>카테고리 선택</option>
+                            <option value="" disabled>카테고리 선택</option>
                             <th:block th:if="${session.loginUser.memberCategory} == 'A'">
                                 <option value="0" th:selected="${b.category == null}">공지사항</option>
                             </th:block>
@@ -86,7 +113,7 @@
                     <div class="col-md-2 mb-3">
                         <label for="area" class="form-label">지역</label>
                         <select class="form-select" id="areaNo" name="areaNo" required>
-                            <option disabled th:selected="${b.areaNo == null}">지역 선택</option>
+                            <option value="" disabled th:selected="${b.areaNo == null}">지역 선택</option>
                             <option value="1" th:selected="${b.areaNo == 1}">서울</option>
                             <option value="2" th:selected="${b.areaNo == 2}">경기</option>
                             <option value="3" th:selected="${b.areaNo == 3}">인천</option>
@@ -112,9 +139,9 @@
                     </div>
                 </div>
                 <hr>
-                <div class="mb-5 col-md-12">
+                <div class="mb-3 col-md-9"style="width: 100%;">
                     <label for="content" class="form-label">내용 : </label>
-					 <textarea class="form-control" id="boardContent" name="boardContent" rows="15" th:text="${b.boardContent}" required></textarea>
+					 <textarea class="form-control" id="boardContent" name="boardContent" style="width:100%; min-height:100%"  th:text="${b.boardContent}" required></textarea>
                 </div>
 
                 <div class="d-flex justify-content-center">
@@ -130,20 +157,27 @@
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
     <script>
+    // 게시글작성 툴바 API
       $(document).ready(function() {
         $('#boardContent').summernote({
           placeholder: '내용을 입력해주세요',
           tabsize: 2,
           height: 300,
           toolbar: [
+       		['fontname', ['fontname']],
+          	['fontsize', ['fontsize']],
             ['style', ['style']],
             ['font', ['bold', 'underline', 'clear']],
             ['color', ['color']],
             ['para', ['ul', 'ol', 'paragraph']],
             ['insert', ['link', 'picture']]
-          ]
+          ],
+          fontNames: ['sans-serif','Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋움체','바탕체','SBAggroB','양진체','DungGeunMo','Chosunilbo_myungjo'],
+          fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
+         
         });
       });
+      
     </script>
 </body>
 </html>
