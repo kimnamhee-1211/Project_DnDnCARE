@@ -47,6 +47,13 @@ public interface MemberMapper {
 	HashMap<String, String> getCaregiverInfo(int memberNo);
 
 	ArrayList<HashMap<String, String>> getCaregiverExp(int memberNo);
+
+	ArrayList<Patient> selectPatientList(String caregiverCity);
+
+	ArrayList<HashMap<String, String>> getPatientExp(ArrayList<Integer> pNoList);
+
+	ArrayList<Patient> choicePatientList(ArrayList<Integer> choiceNoList);
+
 	
 
 	Patient selectPatient(int memberNo);
@@ -70,6 +77,11 @@ public interface MemberMapper {
 
 	int updateMember(Member m);
 
+	CareGiver selectCareGiver(int memberNo);
+
+	int updateCareGiver(CareGiver cg);
+
+	int updateMemberVer2(Member m);
 	ArrayList<Board> mySelectBoardList(int mNo, RowBounds rowBounds);
 
 	int getBoardListCount(int mNo);

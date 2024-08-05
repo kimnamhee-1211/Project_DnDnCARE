@@ -69,6 +69,18 @@ public interface MemberService {
 	int deleteMemberInfo(int memberNo);
 
 	int updateMember(Member m);
+	ArrayList<Patient> selectPatientList(String caregiverCity);
+
+	ArrayList<HashMap<String, String>> getPatientExp(ArrayList<Integer> pNoList);
+
+	ArrayList<Patient> choicePatientList(ArrayList<Integer> choiceNoList);
+
+
+	CareGiver selectCareGiver(int memberNo);
+
+	int updateCareGiver(CareGiver cg);
+
+	int updateMemberVer2(Member m);
 
 	ArrayList<Board> mySelectBoardList(PageInfo pi, int mNo);
 

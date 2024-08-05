@@ -24,7 +24,7 @@ public class CalendarEvent {
 	private Date start; // 캘린더 API 이벤트를 지정하기 위한 필드
 	private Date end; // 캘린더 API 이벤트를 지정하기 위한 필드
 	private int money;
-	private int hosptalNo; 
-	private String hosptalAddress;
+	private int hospitalNo; 
+	private String hospitalAddress;
 	private String hospitalName;
 }

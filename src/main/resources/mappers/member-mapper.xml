@@ -120,6 +120,12 @@
 	  	set member_pwd = #{newPwd}
 	  	where member_id = #{memberId}
 	  </update>
+	  <!-- 간병인정보 가져오기 -->
+	  <select id="selectCareGiver" resultType="CareGiver">
+	  	select *
+	  	from CAREGIVER
+	  	where member_no = #{memberNo}
+	  </select>
 	  
 	  
 	  
@@ -132,7 +138,7 @@
 		FROM MEMBER
 		WHERE MEMBER_NO = ${memberNo}
 	</select>
-
+	<!-- 간병인 메인페이지에서의 자동 추천을 위한 간병인 본인 정보 조회 : 2번 -->
 	<select id="getCaregiverExp" resultType="map">
 		SELECT L_CATEGORY, S_CATEGORY
 		FROM MEMBER
@@ -141,6 +147,23 @@
 		WHERE MEMBER_NO = ${memberNo}
 	</select>
 	
+	<!-- 간병인 메인페이지에서의 자동 추천을 위한 환자 후보군의 정보 조회 : 1번 -->
+	<select id="selectPatientList" resultType="Patient">
+		<![CDATA[
+		SELECT *
+		FROM   (SELECT  MEMBER.MEMBER_NO, PT_NAME, PT_GENDER, TRUNC(SYSDATE - PT_AGE) AS PT_REAL_AGE, 
+						SUBSTR(REPLACE(PT_ADDRESS, '//', ' ') , INSTR(REPLACE(PT_ADDRESS, '//', ' '), ' ')+1) as PT_ADDRESS,
+						MEMBER_NATIONAL, PT_WEIGHT, PT_HEIGHT, PT_REQUEST, 
+						BEGIN_DT, END_DT, MONEY, MAT_TYPE
+		       FROM MATCHING 
+		            JOIN MAT_PT_INFO USING(MAT_NO)
+		            JOIN PATIENT USING(PT_NO)
+		            JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
+		       WHERE MEMBER_STATUS = 'Y' AND MAT_TYPE='N' AND PT_ADDRESS LIKE '%${caregiverCity}%'
+		       ORDER BY DBMS_RANDOM.RANDOM)
+		WHERE ROWNUM < 10
+		]]>
+	</select>
 	
 	<delete id="deleteWantInfo">		<!-- 내가원하는 상대매칭정보 -->
 		delete want_info
@@ -190,6 +213,19 @@
 		where member_no = #{memberNo}
 	</update>
 	
+	<update id="updateCareGiver">
+		update caregiver
+		set care_intro = #{careIntro}, min_money = #{minMoney}, max_money = ${maxMoney},care_Update_Date = sysdate, care_join_status = #{careJoinStatus}
+		where member_no = #{memberNo}
+	</update>
+	
+	<update id="updateMemberVer2">
+		update member
+		set member_name = #{memberName}, member_gender = #{memberGender},member_age = #{memberAge}
+		where member_no =#{memberNo}	
+
+	</update>
+
 	<select id="mySelectBoardList" resultType="Board">
 		select board_no, category_name, board_title, area_name, board_create_date, board_count
 			from board

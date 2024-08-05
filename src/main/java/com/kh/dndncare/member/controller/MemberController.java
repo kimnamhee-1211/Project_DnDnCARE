@@ -1,6 +1,7 @@
 package com.kh.dndncare.member.controller;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,20 +91,24 @@ public class MemberController {
 		
 		
 		if(loginUser != null) {
-			Patient p = mService.selectPatient(loginUser.getMemberNo());
-			//List<Integer> memberInfo =  mService.selectMemberInfo(loginUser.getMemberNo());
+			
+			
+			Info memberInfo = categoryFunction(loginUser.getMemberNo(),true);	//내정보
+			Info wantInfo = categoryFunction(loginUser.getMemberNo(),false);	//원하는간병인정보
+			model.addAttribute("memberInfo",memberInfo);
+			model.addAttribute("wantInfo",wantInfo);
+
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch(check) {
 				case 'C':
+					CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+					model.addAttribute("cg",cg);
 					return "myInfo";
 				
 				case 'P':
-					Info memberInfo = categoryFunction(loginUser.getMemberNo(),true);	//내정보
-					Info wantInfo = categoryFunction(loginUser.getMemberNo(),false);	//원하는간병인정보
+					Patient p = mService.selectPatient(loginUser.getMemberNo());
 					model.addAttribute("p",p);
-					model.addAttribute("memberInfo",memberInfo);
-					model.addAttribute("wantInfo",wantInfo);
-					System.out.println(wantInfo.getInfoDisease());
+					//System.out.println(wantInfo.getInfoDisease());
 					
 					//Patient pWant = categoryFunction()
 					
@@ -136,6 +141,7 @@ public class MemberController {
 			for(HashMap<String,String> m : category) {
 				 switch(m.get("L_CATEGORY")) {
 					 case "service" : memberInfo.getInfoService().add(0,m.get("S_CATEGORY")); break;
+					 case "serviceCareer" : memberInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "career" : memberInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "disease" : memberInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
 					 case "license" : memberInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;
@@ -164,6 +170,7 @@ public class MemberController {
 			for(HashMap<String,String> m : category) {
 				 switch(m.get("L_CATEGORY")) {
 					 case "service" : wantInfo.getInfoService().add(0,m.get("S_CATEGORY")); break;
+					 case "serviceCareer" : wantInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "career" : wantInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "disease" : wantInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
 					 case "license" : wantInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;
@@ -188,7 +195,6 @@ public class MemberController {
 			
 			
 			if(loginUser.getMemberCategory().equalsIgnoreCase("C")) {
-				ra.addAttribute("memberNo", loginUser.getMemberNo());
 				return "redirect:caregiverMain.me";
 			}
 			
@@ -218,27 +224,30 @@ public class MemberController {
 		return "redirect:home.do";
 	}
 	
-	// 임시버튼 : 간병인 메인페이지로 가기 
-	@GetMapping("caregiverMain.me")
-	public String caregiverMain(@RequestParam("memberNo") int memberNo) {
+	// ai추천 로직 메소드
+	public ArrayList<Patient> openAiChoice(int memberNo) {
 		// (1) 자동추천 기능구현 : 간병인이라 가정하고 테스트
 		// 1. 간병인 정보 조회 
 		// 		MEMBER : 성별, 나이, 주소, 국적
-		HashMap<String, String> infoMap =  mService.getCaregiverInfo(memberNo); // {국적=내국인, 주소=제주시 첨단로 242 히히, 나이=29, 성별=남성}
+		
+		
+		/*
+		
+		HashMap<String, String> infoMap =  mService.getCaregiverInfo(memberNo); // {국적=내국인, 주소=제주특별자치도 제주시 첨단로 242 히히, 나이=30, 성별=남성}
 		// 		INFO_CATEGORY : 서비스경험, 경력, 질환경험, 자격증, 중증도
-		ArrayList<HashMap<String, String>> expList = mService.getCaregiverExp(memberNo); // [{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=0, L_CATEGORY=career}, {S_CATEGORY=호흡기 질환, L_CATEGORY=disase}, {S_CATEGORY=거동불편, L_CATEGORY=disase}, {S_CATEGORY=와상환자, L_CATEGORY=disase}, {S_CATEGORY=간병사, L_CATEGORY=license}]
+		ArrayList<HashMap<String, String>> cExpList = mService.getCaregiverExp(memberNo); // [{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=0, L_CATEGORY=career}, {S_CATEGORY=호흡기 질환, L_CATEGORY=disase}, {S_CATEGORY=거동불편, L_CATEGORY=disase}, {S_CATEGORY=와상환자, L_CATEGORY=disase}, {S_CATEGORY=간병사, L_CATEGORY=license}]
 		
 		// 2. 간병인 정보 가공
 		String service = ""; // service
 		String career = ""; // career
 		String disease = ""; // disease
 		String license = ""; // license
-		for(HashMap<String, String> m : expList) {
+		for(HashMap<String, String> m : cExpList) {
 			switch(m.get("L_CATEGORY")) {
 			case "service" : service += m.get("S_CATEGORY") + "/"; break;
 			case "career" : career = m.get("S_CATEGORY"); break;
-			case "disease" : disease = m.get("S_CATEGORY") + "/"; break;
-			case "license" : license = m.get("S_CATEGORY") + "/"; break;
+			case "disease" : disease += m.get("S_CATEGORY") + "/"; break;
+			case "license" : license += m.get("S_CATEGORY") + "/"; break;
 			}
 		}
 		service = service.substring(0, service.lastIndexOf("/"));
@@ -248,42 +257,136 @@ public class MemberController {
 		infoMap.put("서비스경험", service);
 		infoMap.put("경력", career);
 		infoMap.put("돌봄질환경험", disease);
-		infoMap.put("자격증", license); // 가공 종료!
+		infoMap.put("자격증", license); // 가공 종료! => infoMap
 		
-		// 2. 환자 목록 조회
+		// 3. 환자 목록 조회
+		ArrayList<HashMap<String, Object>> promptPatientList = new ArrayList<HashMap<String, Object>>(); // 프롬프트에 던질 후보군 리스트
+		// 가) 환자 목록을 조회하기 위한 조건절에 쓰일 간병인 정보
+		String[] addressArr = infoMap.get("주소").split(" ");
+		String caregiverCity = addressArr[0] + addressArr[1]; // 간병인 주소 중 "xx도 xx시"의 정보만 선택
 		
+		// 나) 환자 기본정보 조회 : 회원번호, 이름, 성별, 나이, 간병장소, 국적, 키, 몸무게, 요청서비스, 요청사항, 요청장소, 매칭 시작일, 매칭 종료일, 금액
+		ArrayList<Patient> pList = mService.selectPatientList(caregiverCity); // 길이 : 0~10
+		ArrayList<HashMap<String, String>> pExpList = null;
 		
+		if(pList.size() != 0) {
+			ArrayList<Integer> pNoList = new ArrayList<Integer>();
+			for(Patient p : pList) {
+				pNoList.add(p.getMemberNo());
+			}
+			// 다) 환자 질병정보 조회 (INFO_CATEGORY) : 보유질환, 중증도
+			pExpList = mService.getPatientExp(pNoList);
+			
+			// 4. 환자 정보의 목록을 가공
+			// 회원번호, 성별, 나이, 간병장소, 국적, 키, 몸무게, 요청서비스, 요청사항, 요청장소, 매칭 시작일, 매칭 종료일, 금액
+			// 보유질환, 중증도
+			for(int i = 0; i < pList.size(); i++) {
+				Patient p = pList.get(i);
+				
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("회원번호", p.getMemberNo());
+				map.put("성별", p.getPtGender().equalsIgnoreCase("M") ? "남성" : "여성");
+				map.put("나이", p.getPtRealAge());
+				map.put("간병장소", p.getPtAddress());
+				map.put("국적", p.getMemberNational());
+				map.put("키", p.getPtHeight() + "cm");
+				map.put("몸무게", p.getPtWeight() + "kg");
+				map.put("요청서비스", p.getPtService());
+				map.put("요청사항", p.getPtRequest());
+				map.put("간병 시작일", p.getBeginDt());
+				map.put("간병 종료일", p.getEndDt());
+				map.put("지급가능한 비용", p.getMoney());
+				
+				String pDisease = ""; // 환자 보유 질환
+				String pDiseaseLevel = ""; // 환자 보유 중증도
+				if(pExpList != null) {
+					for(HashMap<String, String> m : pExpList) {
+						switch(m.get("L_CATEGORY")) {
+						case "disease" : pDisease += m.get("S_CATEGORY") + "/"; break;
+						case "diseaseLevel" : pDiseaseLevel = m.get("S_CATEGORY"); break;
+						}
+					}
+					pDisease = pDisease.substring(0, pDisease.lastIndexOf("/"));
+				}
+				
+				map.put("보유질환", pDisease);
+				map.put("중증도", pDiseaseLevel);
+				
+				promptPatientList.add(map);
+			} // 후보군 가공 종료! => promptPatientList
+			
+			// 5. 프롬프트 작성
+			String prompt = "간병인 정보는" + infoMap.toString() + "이고" + "환자 목록은" + promptPatientList.toString() + "이다."
+							+ "간병인의 정보를 바탕으로 가장 적절한 회원번호 5개만 숫자로만 짧게 대답해줘.";
+			
+			// 6. 프롬프트를 전달하고 결과값 받아오기
+			String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
+			ArrayList<Integer> choiceNoList = new ArrayList<Integer>();
+			for(int i = 0; i < choiceNoList.size(); i++) {
+				choiceNoList.add(Integer.parseInt(result.split(", ")[i]));
+			} // [2, 5, 8, 10, 14] 
+			
+			// 7. View로 전달한 결과값만 추리기
+			// 이름, 성별, 나이, 지역, 질환, 금액
+			ArrayList<Patient> completeList = mService.choicePatientList(choiceNoList);
+			ArrayList<HashMap<String, String>> diseaseList = mService.getPatientExp(choiceNoList);
+			
+			if(!diseaseList.isEmpty()) {
+				for(Patient p : completeList) {
+					String temp = "";
+					for(HashMap<String, String> m : diseaseList) {
+						if(p.getMemberNo() == Integer.parseInt(m.get("L_CATEGORY"))) {
+							temp = m.get("S_L_CATEGORY") + "/";
+						}
+					}
+					temp = temp.substring(0, temp.lastIndexOf("/"));
+					p.setPtDisease(temp);
+				}
+			}
+			
+			return completeList;
+		} else {
+			return null;
+		}
+		*/
+		return null;
+	}
+	
+	// 임시 : 메인페이지 이동시 캘린더 이벤트 조회
+	// 메인페이지 이동 후에 환자 메인페이지 렌더링 도중에 캘린더 이벤트를 조회하게 된다.
+	@GetMapping("caregiverCalendarEvent.me")
+	@ResponseBody
+	public void calendarEvent(Model model, HttpServletResponse response) {
+		Member loginUser = (Member)model.getAttribute("loginUser");
 		
-		// 2. 환자 목록 설정
-		String pStr = "{\r\n"
-				+ "			환자번호=1/필요한서비스=병원돌봄/원하는간병인경력=0년이상/보유질환=치매/중증도=경증/간병받을장소=성북서울요양병원/지불가능한금액=50,000원이하,\r\n"
-				+ "			환자번호=2/필요한서비스=가정돌봄/원하는간병인경력=1년이상/보유질환=호흡기질환/중증도=중증/간병받을장소=종로구관철동19-19/지불가능한금액=100,000원이하,\r\n"
-				+ "			환자번호=3/필요한서비스=동행서비스/원하는간병인경력=3년이상/보유질환=거동불편/중증도=경증/간병받을장소=아산병원/지불가능한금액=60,000원이하,\r\n"
-				+ "			환자번호=4/필요한서비스=병원돌봄/원하는간병인경력=5년이상/보유질환=외상환자/중증도=중증/입원병원=연세세브란스병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=5/필요한서비스=가정돌봄/원하는간병인경력=8년이상/보유질환=파킨슨/중증도=경증/입원병원=부여중앙병원/지불가능한금액=80,000원이하,\r\n"
-				+ "			환자번호=6/필요한서비스=동행서비스/원하는간병인경력=0년이상/보유질환=수면질환/중증도=중증/입원병원=삼성서울병원  /지불가능한금액=40,000원이하,\r\n"
-				+ "			환자번호=7/필요한서비스=병원돌봄/원하는간병인경력=1년이상/보유질환=정신질환/중증도=경증/입원병원=성북서울요양병원/지불가능한금액=80,000원이하,\r\n"
-				+ "			환자번호=8/필요한서비스=가정돌봄/원하는간병인경력=3년이상/보유질환=재활/중증도=중증/입원병원=서울대학교병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=9/필요한서비스=동행서비스/원하는간병인경력=5년이상/보유질환=치매/중증도=경증/입원병원=서울성모병원/지불가능한금액=50,000원이하,\r\n"
-				+ "			환자번호=10/필요한서비스=병원돌봄/원하는간병인경력=8년이상/보유질환=호흡기질환/중증도=중증/입원병원=연세세브란스병원/지불가능한금액=40,000원이하,\r\n"
-				+ "			환자번호=11/필요한서비스=가정돌봄/원하는간병인경력=0년이상/보유질환=거동불편/중증도=경증/입원병원=강북삼성병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=12/필요한서비스=동행서비스/원하는간병인경력=1년이상/보유질환=외상환자/중증도=중증/입원병원=반포서래여성의원/지불가능한금액=65,000원이하,\r\n"
-				+ "			환자번호=13/필요한서비스=가정돌봄/원하는간병인경력=3년이상/보유질환=재활/중증도=경증/입원병원=서울병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=14/필요한서비스=병원돌봄/원하는간병인경력=5년이상/보유질환=골절/중증도=중증/입원병원=서울중앙의원/지불가능한금액=80,000원이하,\r\n"
-				+ "		}";
+		// 일정 조회 
+		ArrayList<CalendarEvent> eList = mService.caregiverCalendarEvent(loginUser);
 		
-		// 3.
-//		String prompt = "간병인 정보는" + cMap.toString() + "환자 목록은 " + pStr + "간병인의 정보를 바탕으로 가장 적절한 환자번호 5개만 숫자로만 짧게 대답해줘.";
-//		
-//		String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
-//		
-//		
-//		ArrayList<Integer> list = new ArrayList<Integer>();
-//		for(int i = 0; i < 5; i++) {
-//			list.add(Integer.parseInt(result.split(", ")[i]));
-//		} // [2, 5, 8, 10, 14] 
-		
-		
+		// GSON
+		response.setContentType("application/json; charset=UTF-8");
+		GsonBuilder gb = new GsonBuilder().setDateFormat("YYYY-MM-DD");
+		Gson gson = gb.create();
+		try {
+			gson.toJson(eList, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	// 간병인 메인페이지로 가기 
+	@GetMapping("caregiverMain.me")
+	public String caregiverMain(HttpSession session, Model model) {
+		// 1. 자동 추천 목록 받아오기
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		int memberNo = 0;
+		if(loginUser != null) {
+			memberNo = loginUser.getMemberNo(); 
+			ArrayList<Patient> completeList = openAiChoice(memberNo); // 추천목록이 없으면 null로 넘어옴
+			
+			model.addAttribute("completeList", completeList);
+		}
 		
 		
 		
@@ -294,6 +397,27 @@ public class MemberController {
 		
 		return "caregiverMain";
 	}
+	
+	// 자동추천을 비동기 통신으로 요청
+	@GetMapping("refreshChoice.me")
+	@ResponseBody
+	public void refreshChoice(@RequestParam("memberNo") int memberNo, HttpServletResponse response) {
+		// 후보군이 있을 때만 새로고침 버튼이 활성화 되기 때문에 null로 넘어오는 경우는 배제함
+		ArrayList<Patient> completeList = openAiChoice(memberNo); 
+
+		Gson gson = new Gson();
+		response.setContentType("application/json; charset=UTF-8;");
+		try {
+			gson.toJson(completeList, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
 	
 	// 임시버튼 : 환자 메인페이지로 가기
 	@GetMapping("patientMain.me")
@@ -570,12 +694,7 @@ public class MemberController {
 	}
 	
 
-	// 메인페이지 이동 후에 간병인 메인페이지 렌더링 도중에 캘린더 이벤트를 조회하게 된다.
-	@GetMapping("caregiverCalendarEvent.me")
-	@ResponseBody
-	public void calendarEvent(Model model, HttpServletResponse response, @RequestParam("memberNo") int memberNo) {
 	
-	}	
 		
 		
 		@PostMapping("findIdResult.me")
@@ -609,7 +728,7 @@ public class MemberController {
 	    return response;
 	}
 	// 임시 : 메인페이지 이동시 캘린더 이벤트 조회	
-	public void calendarEvent(Model model, HttpServletResponse response) {
+	/*public void calendarEvent(Model model, HttpServletResponse response) {
 		Member loginUser = (Member)model.getAttribute("loginUser");
 		
 		// 일정 조회 
@@ -624,70 +743,10 @@ public class MemberController {
 		} catch (JsonIOException | IOException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	
 	// 메인페이지 이동 후에 환자 메인페이지 렌더링 도중에 캘린더 이벤트를 조회하게 된다.
-	
-	
-	
-	
-	// 자동추천을 비동기 통신으로 요청
-	@GetMapping("refreshChoice.me")
-	@ResponseBody
-	public void refreshChoice(HttpServletResponse response) {
-		// 1. 로그인한 회원 정보를 조회한다.
-		HashMap<String, String> cMap = new HashMap<String, String>();
-		//서비스경험=병원돌봄/경력=2년/환자유형=치매,재활/자격증=요양보호사/환자중증도=경증/거주지=서울시종로구/지불받기를바라는최소간병비용=60,000원이상
-		cMap.put("서비스경험", "병원돌봄");
-		cMap.put("경력", "2년");
-		cMap.put("환자유형", "치매");
-		cMap.put("자격증", "요양보호사");
-		cMap.put("환자중증도", "경증");
-		cMap.put("거주지", "서울시 종로구");
-		cMap.put("지불받기를 바라는 최소 간병비용", "60,000원 이상");
-		
-		// 2. 후보 대상을 조회한다.
-		String pStr = "{\r\n"
-				+ "			환자번호=1/필요한서비스=병원돌봄/원하는간병인경력=0년이상/보유질환=치매/중증도=경증/간병받을장소=성북서울요양병원/지불가능한금액=50,000원이하,\r\n"
-				+ "			환자번호=2/필요한서비스=가정돌봄/원하는간병인경력=1년이상/보유질환=호흡기질환/중증도=중증/간병받을장소=종로구관철동19-19/지불가능한금액=100,000원이하,\r\n"
-				+ "			환자번호=3/필요한서비스=동행서비스/원하는간병인경력=3년이상/보유질환=거동불편/중증도=경증/간병받을장소=아산병원/지불가능한금액=60,000원이하,\r\n"
-				+ "			환자번호=4/필요한서비스=병원돌봄/원하는간병인경력=5년이상/보유질환=외상환자/중증도=중증/입원병원=연세세브란스병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=5/필요한서비스=가정돌봄/원하는간병인경력=8년이상/보유질환=파킨슨/중증도=경증/입원병원=부여중앙병원/지불가능한금액=80,000원이하,\r\n"
-				+ "			환자번호=6/필요한서비스=동행서비스/원하는간병인경력=0년이상/보유질환=수면질환/중증도=중증/입원병원=삼성서울병원  /지불가능한금액=40,000원이하,\r\n"
-				+ "			환자번호=7/필요한서비스=병원돌봄/원하는간병인경력=1년이상/보유질환=정신질환/중증도=경증/입원병원=성북서울요양병원/지불가능한금액=80,000원이하,\r\n"
-				+ "			환자번호=8/필요한서비스=가정돌봄/원하는간병인경력=3년이상/보유질환=재활/중증도=중증/입원병원=서울대학교병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=9/필요한서비스=동행서비스/원하는간병인경력=5년이상/보유질환=치매/중증도=경증/입원병원=서울성모병원/지불가능한금액=50,000원이하,\r\n"
-				+ "			환자번호=10/필요한서비스=병원돌봄/원하는간병인경력=8년이상/보유질환=호흡기질환/중증도=중증/입원병원=연세세브란스병원/지불가능한금액=40,000원이하,\r\n"
-				+ "			환자번호=11/필요한서비스=가정돌봄/원하는간병인경력=0년이상/보유질환=거동불편/중증도=경증/입원병원=강북삼성병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=12/필요한서비스=동행서비스/원하는간병인경력=1년이상/보유질환=외상환자/중증도=중증/입원병원=반포서래여성의원/지불가능한금액=65,000원이하,\r\n"
-				+ "			환자번호=13/필요한서비스=가정돌봄/원하는간병인경력=3년이상/보유질환=재활/중증도=경증/입원병원=서울병원/지불가능한금액=70,000원이하,\r\n"
-				+ "			환자번호=14/필요한서비스=병원돌봄/원하는간병인경력=5년이상/보유질환=골절/중증도=중증/입원병원=서울중앙의원/지불가능한금액=80,000원이하,\r\n"
-				+ "		}";
-		
-		// 3. GPT에게서 추천목록을 받아온다.
-		String prompt = "간병인 정보는" + cMap.toString() + "환자 목록은 " + pStr + "간병인의 정보를 바탕으로 가장 적절한 환자번호 5개만 숫자로만 짧게 대답해줘.";
-		
-		String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
-		
-		// 4. GPT에게서 받은 추천목록에서 회원번호를 추출한다.
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		for(int i = 0; i < 5; i++) {
-			list.add(Integer.parseInt(result.split(", ")[i]));
-		} // [2, 5, 8, 10, 14] 
-		
-		// 5. 추출된 회원번호를 통해 회원 정보를 조회해온다. => List<Member>의 형식일 것이다.
-		ArrayList<Member> resultList = new ArrayList<Member>();  // 회원정보를 받아왔다고 가정
-		Gson gson = new Gson();
-		response.setContentType("application/json; charset=UTF-8;");
-		try {
-			gson.toJson(resultList, response.getWriter());
-		} catch (JsonIOException | IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
 	
 	
 	
@@ -795,6 +854,40 @@ public class MemberController {
 //		mService.selectwantInfo(wantInfo);
 		return "redirect:myInfo.me";
 	}
+	@GetMapping("moreWorkInfo.me")
+	public String moreWorkInfo() {
+		return "moreWorkInfo";
+	}
+	
+	
+	//무한스크롤 테스트 중 : 성공
+	@GetMapping("workInfoTest.me")
+	@ResponseBody
+	public void workInfoTest(HttpServletResponse response, @RequestParam("page") int currentPage) {
+		
+		System.out.println("컨트롤러");
+		
+		Gson gson = new Gson();
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("1");
+		list.add("2");
+		list.add("3");
+		list.add("4");
+		list.add("5");
+		list.add("6");
+		list.add("7");
+		list.add("8");
+		response.setContentType("application/json; charset=UTF-8");
+		try {
+			gson.toJson(list, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
 
 	
 	@PostMapping("patientUpdate.me")
@@ -824,6 +917,43 @@ public class MemberController {
 		return "redirect:home.do";
 		
 	};
+	
+	@PostMapping("careGiverUpdate.me")
+	public String updateCareGiver(@ModelAttribute Member m,@ModelAttribute CareGiver cg,HttpSession session, @RequestParam("memInfo") String memInfo) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		m.setMemberNo(loginUser.getMemberNo());
+		cg.setMemberNo(loginUser.getMemberNo());
+		
+		System.out.println(m);
+		System.out.println(cg);
+		System.out.println(memInfo);
+		int result = mService.updateCareGiver(cg);	//간병인정보바꾸기
+		int result4 = mService.updateMemberVer2(m); //간병인은 같은 페이지에서 이름,나이,성별 세가지만 따로 바로 바꿀수있다!
+
+		if(result==0 || result4 ==0) {
+			throw new MemberException("에러!");
+		}
+		
+		
+		if(!memInfo.equals("fail")) {
+			
+			int result2 = mService.deleteMemberInfo(loginUser.getMemberNo()); //간병인인포정보 한번 다 지우기
+			String[] mis = memInfo.split(",");
+			
+			for(String mi : mis) {
+				HashMap<String,Integer> info = new HashMap<String,Integer>();
+				info.put("memberNo",loginUser.getMemberNo());
+				info.put("categoryNo",Integer.parseInt(mi));
+				int result3 = mService.insertMemberInfo(info);
+			}
+			
+		}
+		return "redirect:home.do";
+		
+	};
+	
+	
 	
 	@GetMapping("updatePwdView.me")
 	public String updatePwdView() {
@@ -896,22 +1026,13 @@ public class MemberController {
 	}
 	
 	
+	@GetMapping("writeReviewView.re")
+	public String writeReview() {
+		return "writeReview";
+	}
 	
 }//클래스 끝
 
 	
 	
-
-	
-
-
-
-
-
-
-
-
-
-
-
 

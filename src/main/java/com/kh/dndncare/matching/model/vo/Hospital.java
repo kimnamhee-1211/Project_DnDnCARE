@@ -1,4 +1,4 @@
-package com.kh.dndncare.joinMaching.model.vo;
+package com.kh.dndncare.matching.model.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class Hospital {
 	
-	private String hospitalNo; 
+	private int hospitalNo; 
 	private String hospitalName;
 	private String hospitalAddress; 
 

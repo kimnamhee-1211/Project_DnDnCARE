@@ -39,7 +39,7 @@
 		      			<div><button class="myInfo-btn m-2" onclick="location.href='updatePwdView.me'"style="height:50px">비밀번호 변경하기</button></div>
 		      		</div>
 		      		<div  class="col-3 d-flex align-items-center">
-		      			<div>???님! 어서오세요!</div>
+		      			<div>[[${session.loginUser.memberName}]]님! 어서오세요!</div>
 		      		</div>
 		      		<div  class="col-3 d-flex align-items-center">
 		      			<div>
@@ -107,7 +107,7 @@
 			      									<button type="button"class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
 			      									<div id="disase"class="selectUpdateDiv select-hidden m-1">
 			      										<div>치매</div>
-			      										<div>호흡기질환</div>
+			      										<div>호흡기 질환</div>
 			      										<div>거동불편</div>
 			      										<div>와상환자</div>
 			      										<div>파킨슨</div>
@@ -141,8 +141,8 @@
 											<div style="position: relative;">
 		      									<button type="button"class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
 		      									<div id="gender"class="selectUpdateDiv select-hidden m-1">
-		      										<div>남성</div>
-		      										<div>여성</div>
+		      										<div>남자</div>
+		      										<div>여자</div>
 		      									</div>
 		      									
 		      								</div>
@@ -596,7 +596,7 @@
 			
 			const loadWantInfo = [[${wantInfo}]];
 			
-			
+			console.log(loadWantInfo);
 			for(i of click){
 				
 				//좀 길지만, 이전에 내가 선택한 것들을 불러와보자
@@ -768,3 +768,25 @@
 	
 </body>
 </html>
+
+
+
+<!-- * 카카오맵 - 지도퍼가기 -->
+<!-- 1. 지도 노드 -->
+<div id="daumRoughmapContainer1722825356250" class="root_daum_roughmap root_daum_roughmap_landing"></div>
+
+<!--
+	2. 설치 스크립트
+	* 지도 퍼가기 서비스를 2개 이상 넣을 경우, 설치 스크립트는 하나만 삽입합니다.
+-->
+<script charset="UTF-8" class="daum_roughmap_loader_script" src="https://ssl.daumcdn.net/dmaps/map_js_init/roughmapLoader.js"></script>
+
+<!-- 3. 실행 스크립트 -->
+<script charset="UTF-8">
+	new daum.roughmap.Lander({
+		"timestamp" : "1722825356250",
+		"key" : "2k9cv",
+		"mapWidth" : "640",
+		"mapHeight" : "360"
+	}).render();
+</script>

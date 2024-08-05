@@ -125,6 +125,22 @@ public class MemberServiceImpl implements MemberService {
 	public ArrayList<HashMap<String, String>> getCaregiverExp(int memberNo) {
 		return mMapper.getCaregiverExp(memberNo);
 	}
+
+	@Override
+	public ArrayList<Patient> selectPatientList(String caregiverCity) {
+		return mMapper.selectPatientList(caregiverCity);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> getPatientExp(ArrayList<Integer> pNoList) {
+		return mMapper.getPatientExp(pNoList);
+	}
+
+	@Override
+	public ArrayList<Patient> choicePatientList(ArrayList<Integer> choiceNoList) {
+		return mMapper.choicePatientList(choiceNoList);
+	}
+
 	
 
 
@@ -180,6 +196,20 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public CareGiver selectCareGiver(int memberNo) {
+		return mMapper.selectCareGiver(memberNo);
+	}
+
+	@Override
+	public int updateCareGiver(CareGiver cg) {
+		return mMapper.updateCareGiver(cg);
+	}
+
+	@Override
+	public int updateMemberVer2(Member m) {
+		return mMapper.updateMemberVer2(m);
+	}
+	
 	public ArrayList<Board> mySelectBoardList(PageInfo pi,int mNo) {
 		int offset = (pi.getCurrentPage() - 1)*pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());

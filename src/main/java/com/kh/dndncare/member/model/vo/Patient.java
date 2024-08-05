@@ -20,14 +20,15 @@ import lombok.ToString;
 @ToString
 public class Patient {
 	private int ptNo;
-	private int memberNo;
+	private int memberNo; // MEMBER.MEMBER_NO
 	private String ptName;
-	private String ptGender;
-	private Date ptAge;
-	private int ptWeight;
-	private int ptHeight;
-	private String ptAddress;
-	private String ptRequest;
+	private String ptGender; // PT_GENDER
+	private Date ptAge; // PT_AGE
+	private int ptWeight; // PT_WEIGHT
+	private int ptHeight; // PT_HEIGHT
+	private String ptService; // PT_SERVICE
+	private String ptAddress; // PT_ADDRESS
+	private String ptRequest; // PT_REQUEST
 	private Date ptUpdateDate;
 	
 	private List<Integer> memberInfo;
@@ -37,4 +38,16 @@ public class Patient {
 	private String diseaseLevel;
 	
 	
+	private List<Integer> infoCategory;
+	
+	// 자동추천 후보에 대한 정보 조회를 위한 필드값 추가(시작)
+	private int ptRealAge;
+	private int matType;
+	private int hosInfo; // HOS_INFO
+	private String memberNational; // MEMBER_NATIONAL
+	private Date beginDt; // BEGIN_DT
+	private Date endDt; // END_DT
+	private int money; // MONEY
+	private String ptDisease;
+	// 자동추천 후보에 대한 정보 조회를 위한 필드값 추가(끝)
 }
