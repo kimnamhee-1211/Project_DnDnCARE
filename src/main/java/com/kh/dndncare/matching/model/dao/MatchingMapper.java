@@ -31,4 +31,8 @@ public interface MatchingMapper {
 
 	ArrayList<InfoCategory> getInfo(int memberNo);
 
+	int insertMatchingDate(int matNo, String matchingDate);
+
+	int getHospitalCount(Hospital ho);
+
 }

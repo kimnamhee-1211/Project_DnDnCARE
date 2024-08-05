@@ -1,5 +1,6 @@
 package com.kh.dndncare.matching.model.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import com.kh.dndncare.matching.model.vo.Hospital;
@@ -31,6 +32,13 @@ public interface MatchingService {
 	
 	//get member info (대분류 : 소분류)
 	ArrayList<InfoCategory> getInfo(int memberNo);
+	
+	//insert MatchingDate
+	int insertMatchingDate(int matNo, String matchingDate);
+	
+	//병원  데이터 Count  get
+	int getHospitalCount(Hospital ho);
+
 	
 
 }

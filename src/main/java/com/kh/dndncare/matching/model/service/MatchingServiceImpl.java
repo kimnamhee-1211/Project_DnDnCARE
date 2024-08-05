@@ -66,6 +66,18 @@ public class MatchingServiceImpl implements MatchingService {
 	public ArrayList<InfoCategory> getInfo(int memberNo) {
 		return mMapper.getInfo(memberNo);
 	}
+	
+	//insert MatchingDate
+	@Override
+	public int insertMatchingDate(int matNo, String matchingDate) {
+		return mMapper.insertMatchingDate(matNo, matchingDate);
+	}
+	
+	//병원  데이터 Count  get
+	@Override
+	public int getHospitalCount(Hospital ho) {
+		return mMapper.getHospitalCount(ho);
+	}
  
 
 }

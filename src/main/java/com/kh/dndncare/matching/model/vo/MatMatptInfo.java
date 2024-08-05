@@ -35,12 +35,12 @@ public class MatMatptInfo {
 	private Date endDt;
 	private int money;
 	private String matConfirm;
-	private int matType;
 	private int hospitalNo;
 	private int memberNo;	
 	private int ptCount;
 	private String beginTime;
 	private String endTime;
+	private int matMode;
 	
 
 }
