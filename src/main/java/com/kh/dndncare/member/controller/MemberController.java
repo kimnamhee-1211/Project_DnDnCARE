@@ -228,6 +228,10 @@ public class MemberController {
 		// (1) 자동추천 기능구현 : 간병인이라 가정하고 테스트
 		// 1. 간병인 정보 조회 
 		// 		MEMBER : 성별, 나이, 주소, 국적
+		
+		
+		/*
+		
 		HashMap<String, String> infoMap =  mService.getCaregiverInfo(memberNo); // {국적=내국인, 주소=제주특별자치도 제주시 첨단로 242 히히, 나이=30, 성별=남성}
 		// 		INFO_CATEGORY : 서비스경험, 경력, 질환경험, 자격증, 중증도
 		ArrayList<HashMap<String, String>> cExpList = mService.getCaregiverExp(memberNo); // [{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=0, L_CATEGORY=career}, {S_CATEGORY=호흡기 질환, L_CATEGORY=disase}, {S_CATEGORY=거동불편, L_CATEGORY=disase}, {S_CATEGORY=와상환자, L_CATEGORY=disase}, {S_CATEGORY=간병사, L_CATEGORY=license}]
@@ -343,6 +347,8 @@ public class MemberController {
 		} else {
 			return null;
 		}
+		*/
+		return null;
 	}
 	
 	// 임시 : 메인페이지 이동시 캘린더 이벤트 조회
