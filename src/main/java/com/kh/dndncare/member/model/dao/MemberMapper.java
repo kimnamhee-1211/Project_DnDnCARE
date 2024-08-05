@@ -98,4 +98,6 @@ public interface MemberMapper {
 
 	ArrayList<Board> mySelectLikeList(int mNo, RowBounds rowBounds);
 
+	int likeLikeCount(int boardNo);
+
 }

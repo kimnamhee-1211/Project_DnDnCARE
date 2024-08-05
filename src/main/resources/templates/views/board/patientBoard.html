@@ -137,27 +137,56 @@
 				    <input type="checkbox" class="btn-check" id="seoul" name="area" value="1" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 1)}">
 				    <label class="btn-outline-area btn-sm me-2" for="seoul">서울</label>
-				    <input type="checkbox" class="btn-check" id="gynggi" name="area" value="2" autocomplete="off" onchange="submitForm()"
+				    <input type="checkbox" class="btn-check" id="busan" name="area" value="2" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 2)}">
-				    <label class="btn-outline-area btn-sm me-2" for="gynggi">경기</label>
-				    <input type="checkbox" class="btn-check" id="incheon" name="area" value="3" autocomplete="off" onchange="submitForm()"
+				    <label class="btn-outline-area btn-sm me-2" for="busan">부산</label>
+				    <input type="checkbox" class="btn-check" id="daegu" name="area" value="3" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 3)}">
-				    <label class="btn-outline-area btn-sm me-2" for="incheon">인천</label>
-				    <input type="checkbox" class="btn-check" id="chungcheong" name="area" value="4" autocomplete="off" onchange="submitForm()"
+				    <label class="btn-outline-area btn-sm me-2" for="daegu">대구</label>
+				    <input type="checkbox" class="btn-check" id="inchon" name="area" value="4" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains	(areas, 4)}">
-				    <label class="btn-outline-area btn-sm me-2" for="chungcheong">충청도</label>
-				    <input type="checkbox" class="btn-check" id="jeolla" name="area" value="5" autocomplete="off" onchange="submitForm()"
+				    <label class="btn-outline-area btn-sm me-2" for="inchon">인천</label>
+				    <input type="checkbox" class="btn-check" id="gwangju" name="area" value="5" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 5)}">
-				    <label class="btn-outline-area btn-sm me-2" for="jeolla">전라도</label>
-				    <input type="checkbox" class="btn-check" id="gyeongsang" name="area" value="6" autocomplete="off" onchange="submitForm()"
+				    <label class="btn-outline-area btn-sm me-2" for="gwangju">광주</label>
+				    <input type="checkbox" class="btn-check" id="daejeon" name="area" value="6" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 6)}">
-				    <label class="btn-outline-area btn-sm me-2" for="gyeongsang">경상도</label>
-				    <input type="checkbox" class="btn-check" id="gangwon" name="area" value="7" autocomplete="off" onchange="submitForm()"
+				    <label class="btn-outline-area btn-sm me-2" for="daegeon">대전</label>
+				    <input type="checkbox" class="btn-check" id="ulsan" name="area" value="7" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 7)}">
-				    <label class="btn-outline-area btn-sm me-2" for="gangwon">강원도</label>
-				    <input type="checkbox" class="btn-check" id="jeju" name="area" value="8" autocomplete="off" onchange="submitForm()"
+				    <label class="btn-outline-area btn-sm me-2" for="ulsan">울산</label>
+				    <input type="checkbox" class="btn-check" id="gyeongi" name="area" value="8" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 8)}">
-				    <label class="btn-outline-area btn-sm me-2" for="jeju">제주도</label>
+				    <label class="btn-outline-area btn-sm me-2" for="gyeongi">경기도</label>
+				    <input type="checkbox" class="btn-check" id="gangwon" name="area" value="9" autocomplete="off" onchange="submitForm()"
+				           th:checked="${areas != null and #lists.contains(areas, 9)}">
+				    <label class="btn-outline-area btn-sm me-2 mb-2" for="gangwon">강원도</label>
+				    <br>
+				    <input type="checkbox" class="btn-check" id="chungcheongbuk" name="area" value="10" autocomplete="off" onchange="submitForm()"
+				           th:checked="${areas != null and #lists.contains(areas, 10)}">
+				    <label class="btn-outline-area btn-sm me-2" for="chungcheongbuk">충청북도</label>
+				    <input type="checkbox" class="btn-check" id="chungcheongnam" name="area" value="11" autocomplete="off" onchange="submitForm()"
+				           th:checked="${areas != null and #lists.contains(areas, 11)}">
+				    <label class="btn-outline-area btn-sm me-2" for="chungcheongnam">충청남도</label>
+				    <input type="checkbox" class="btn-check" id="jeollabuk" name="area" value="12" autocomplete="off" onchange="submitForm()"
+				           th:checked="${areas != null and #lists.contains(areas, 12)}">
+				    <label class="btn-outline-area btn-sm me-2" for="jeollabuk">전라북도</label>
+				    <input type="checkbox" class="btn-check" id="jeollanam" name="area" value="13" autocomplete="off" onchange="submitForm()"
+				           th:checked="${areas != null and #lists.contains(areas, 13)}">
+				    <label class="btn-outline-area btn-sm me-2" for="jeollanam">전라남도</label>
+				    <input type="checkbox" class="btn-check" id="gyongsangbuk" name="area" value="14" autocomplete="off" onchange="submitForm()"
+				           th:checked="${areas != null and #lists.contains(areas, 14)}">
+				    <label class="btn-outline-area btn-sm me-2" for="gyongsangbuk">경상북도</label>
+				    <input type="checkbox" class="btn-check" id="gyongsangnam" name="area" value="15" autocomplete="off" onchange="submitForm()"
+				           th:checked="${areas != null and #lists.contains(areas, 15)}">
+				    <label class="btn-outline-area btn-sm me-2" for="gyongsangnam">경상남도</label>
+				    <input type="checkbox" class="btn-check" id="jeju" name="area" value="16" autocomplete="off" onchange="submitForm()"
+				           th:checked="${areas != null and #lists.contains(areas, 16)}">
+				    <label class="btn-outline-area btn-sm me-2" for="jeju">제주</label>
+				    <input type="checkbox" class="btn-check" id="sejong" name="area" value="17" autocomplete="off" onchange="submitForm()"
+				           th:checked="${areas != null and #lists.contains(areas, 17)}">
+				    <label class="btn-outline-area btn-sm me-2" for="sejong">세종</label>
+				    <!-- list가 비어있지않거나 리스트에 번호가 있으면 체크 -->
 				</form>
 
 			<div class="p-4">

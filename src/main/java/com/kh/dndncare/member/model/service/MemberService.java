@@ -98,5 +98,7 @@ public interface MemberService {
 
 	ArrayList<Board> mySelectLikeList(PageInfo likePi, int mNo);
 
+	int likeLikeCount(int boardNo);
+
 
 }

@@ -608,6 +608,14 @@ public class MemberController {
 		// 좋아요한 글 목록
 		ArrayList<Board> likeList = mService.mySelectLikeList(likePi, mNo);
 		
+		// 좋아요한 글 좋아요
+		HashMap<Integer, Integer> likeLikeCounts = new HashMap<>();
+		for (Board board : likeList) {
+			int likeLikeCount = mService.likeLikeCount(board.getBoardNo());
+			likeLikeCounts.put(board.getBoardNo(), likeLikeCount);
+		}
+		
+		
 		model.addAttribute("boardPi", boardPi);
 		model.addAttribute("boardList", boardList);
 		model.addAttribute("boardLikeCounts", boardLikeCounts);
@@ -616,6 +624,7 @@ public class MemberController {
 		model.addAttribute("replyLikeCounts", replyLikeCounts);
 		model.addAttribute("likePi", likePi);
 		model.addAttribute("likeList", likeList);
+		model.addAttribute("likeLikeCounts", likeLikeCounts);
 		
 		
 		

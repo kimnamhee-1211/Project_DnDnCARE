@@ -255,4 +255,9 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.mySelectLikeList(mNo, rowBounds);
 	}
 
+	@Override
+	public int likeLikeCount(int boardNo) {
+		return mMapper.likeLikeCount(boardNo);
+	}
+
 }
