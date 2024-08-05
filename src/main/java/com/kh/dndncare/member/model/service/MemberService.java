@@ -66,6 +66,12 @@ public interface MemberService {
 	int deleteMemberInfo(int memberNo);
 
 	int updateMember(Member m);
+	ArrayList<Patient> selectPatientList(String caregiverCity);
+
+	ArrayList<HashMap<String, String>> getPatientExp(ArrayList<Integer> pNoList);
+
+	ArrayList<Patient> choicePatientList(ArrayList<Integer> choiceNoList);
+
 
 
 }
