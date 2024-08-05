@@ -84,12 +84,12 @@
 	  <insert id="enrollCareGiver">
 	  	insert into caregiver
 	  	values(#{memberNo}, #{careImg}, #{careIntro}, 
-	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, sysdate)	  
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService}, sysdate)	  
 	  </insert>
 	  
 	 <!-- 정보 입력-->
 	<insert id="enrollInfoCategory">
-		<foreach collection="memberInfo" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
+		<foreach collection="infoCategory" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
 			into member_Info values(#{memberNo}, #{item})
 		</foreach>
 	</insert>
@@ -99,30 +99,14 @@
 	<insert id="enrollPatient">
 	  	insert into patient
 	  	values(seq_pid.nextval, #{memberNo}, #{ptName}, #{ptGender}, #{ptAge}, 
-	  			#{ptWeight}, #{ptHeight}, #{ptAddress}, #{ptRequest}, sysdate)	  
-	  </insert>
+	  			#{ptWeight}, #{ptHeight}, #{ptService}, #{ptAddress}, #{ptRequest}, sysdate)	  
+	</insert>
 	  
 	  <select id="findIdResult" resultType="Member">
 	  	select member_id,member_create_date,member_status,member_category,member_name
 	  	from member
 	  	where member_id=#{memberId} and member_phone=#{memberPhone}
 	  </select>
-	  
-	  <!-- 환자정보 가져오기 -->
-	  <select id="selectPatient" resultType="Patient">
-	  	select *
-	  	from patient
-	  	where member_no = #{memberNo}
-	  </select>
-	  <!-- 환자 인포카테고리 -->
-	  <update id="updatePassword">
-	  	update member
-	  	set member_pwd = #{newPwd}
-	  	where member_id = #{memberId}
-	  </update>
-	  
-	  
-	  
 	
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 간병인 본인 정보 조회 : 1번 -->
 	<select id="getCaregiverInfo" resultType="map">
@@ -141,57 +125,6 @@
 		WHERE MEMBER_NO = ${memberNo}
 	</select>
 	
-	
-	<delete id="deleteWantInfo">		<!-- 내가원하는 상대매칭정보 -->
-		delete want_info
-		where member_no = #{memberNo}
-		
-	</delete>
-	<insert id="insertWantInfo">		<!-- 내가 원하는 상대매칭 정보 -->
-	insert into want_info values(
-		${memberNo},
-		${categoryNo}
-	)
-	
-	</insert>
-	<delete id="deleteMemberInfo">		<!-- 내 인포정보 -->
-		delete member_info
-		where member_no = #{memberNo}
-		
-	</delete>
-	<insert id="insertMemberInfo">		<!-- 내 인포정보 -->
-	insert into member_info values(
-		${memberNo},
-		${categoryNo}
-	)
-	</insert>
-	
-	<select id="selectWantInfo" resultType="map">
-		SELECT L_CATEGORY, S_CATEGORY
-		FROM MEMBER
-		        JOIN want_INFO USING(MEMBER_NO)
-		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
-		WHERE MEMBER_NO = ${memberNo}
-	</select>
-	
-	<update id="updatePatient">
-		update patient
-		set pt_name = #{ptName}, pt_age = #{ptAge}, pt_weight = #{ptWeight}, pt_height = #{ptHeight}, pt_address = #{ptAddress}, pt_gender = #{ptGender}
-		where member_no = #{memberNo}
-	</update>
-	
-	<update id="updateMember">
-		update member
-		set member_Name = #{memberName}, member_gender = #{memberGender},
-		member_nickName = #{memberNickName}, member_age= #{memberAge},
-		member_phone = #{memberPhone},member_email = #{memberEmail},
-		member_address = #{memberAddress},member_national = #{memberNational},
-		member_update_date = sysdate
-		where member_no = #{memberNo}
-		
-	
-	</update>
-
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 환자 후보군의 정보 조회 : 1번 -->
 	<select id="selectPatientList" resultType="Patient">
 		<![CDATA[
