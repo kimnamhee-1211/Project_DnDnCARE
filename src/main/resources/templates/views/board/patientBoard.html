@@ -10,6 +10,32 @@
     font-weight: 400;
     font-style: normal;
 	}
+	@font-face {
+    font-family: 'SBAggroB';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+	}
+	    
+	@font-face {
+	    font-family: '양진체';
+	    src: url('https://fastly.jsdelivr.net/gh/supernovice-lab/font@0.9/yangjin.woff') format('woff');
+	    font-weight: normal;
+	    font-style: normal;
+	}    
+	@font-face {
+	     font-family: 'DungGeunMo';
+	     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+	     font-weight: normal;
+	     font-style: normal;
+	}
+	@font-face {
+	    font-family: 'Chosunilbo_myungjo';
+	    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
+	    font-weight: normal;
+	    font-style: normal;
+	}
+	
 	
 	body{
 		font-family: 'Pretendard-Regular';
@@ -101,7 +127,7 @@
     <div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
     <main class="bg-board-main container p-5">
         <div class="row h-50 p-3">
-            <h1 class="text-center" id="target">간병인 커뮤니티</h1>
+            <h1 class="text-center" id="target">피간병인 커뮤니티</a></h1>
             <br>
             <hr>
             <div class="col-md-9 p-4" align="center">
@@ -139,7 +165,7 @@
                     <thead align="center">
                         <tr>
                             <th width="4%">번호</th>
-                            <th width="8%">카테고리</th>
+                            <th width="10%">카테고리</th>
                             <th width="20%">제목</th>
                             <th width="10%">작성자</th>
                             <th width="6%">지역</th>
@@ -189,7 +215,7 @@
                     </nav>
                 </div>
                 <div class="d-flex justify-content-center align-items-center mb-5">
-				    <div class="input-group" style="width: 60%;">
+				    <div class="input-group" style="width: 70%;">
 				        <form id="searchBoardForm" action="searchBoard.bo" method="get" class="d-flex w-100">
 				            <select id="searchType" name="searchType" class="form-select form-select-sm" aria-label="Small select example" style="max-width: 15%;">
 				                <option th:value="boardTitle" selected>제목</option>
@@ -212,7 +238,7 @@
                 <div class="sidebar-section">
 				    <div class="bg-category-list p-4 border mt-4">
 				        <ul class="list-group">
-				            <li class="list-group-item fs-5 fw-bold">간병인 게시판</li>
+				            <li class="list-group-item fs-5 fw-bold">피간병인 게시판</li>
 				            <li class="list-group-item"><a href="#" class="text-dark" onclick="selectCategory(-1)">전체글보기</a></li>
 				            <hr/>
 				            <li class="list-group-item fs-5 fw-bold">공지사항</li>
@@ -224,7 +250,7 @@
 				            <hr/>
 				            <li class="list-group-item fs-5 fw-bold">보호자 나눔방</li>
 				            <li class="list-group-item"><a href="#" class="text-dark" onclick="selectCategory(5)">간병 가족 정보</a></li>
-				            <li class="list-group-item"><a href="#" class="text-dark" onclick="selectCategory(6)">간병 일지</a></li>
+				            <li class="list-group-item"><a href="#" class="text-dark" onclick="selectCategory(6)">보호자 간병 일지</a></li>
 				        </ul>
 				    </div>
 				</div>
@@ -277,8 +303,6 @@
 	            alert("검색어를 입력하세요.");
 	            return;
 	        }
-	        console.log(searchType);
-	        console.log(searchText);
 	        searchForm.submit();
 	        
 	        

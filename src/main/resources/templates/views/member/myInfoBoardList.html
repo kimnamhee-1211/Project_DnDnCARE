@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -9,16 +9,10 @@
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	
-	
-	
-	<div class="container" >
-	
+	<div class="container">
 		 <div class="row">
-			<div class="col" >
-				
-			
-			
-	     		<div align="center"class="myInfo-Border m-4">
+			<div class="col">
+	     		<div align="center" class="myInfo-Border m-4">
 	     			<div class="m-4" style="border-bottom:2px solid #8dd986;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatching.me">현재 매칭 정보</a></div>
@@ -28,27 +22,23 @@
 	     		</div>
 	    	</div>
 	    	
-	    	<div class="col" >
-	      		
-	      		<div class="row m-4" style="width:950px"> <!-- 여기로규격정햇다 -->
-		      		<div class="m-3 h1 menu-name" >내가 쓴 게시글</div>
+	    	<div class="col">
+	      		<div class="row m-4" style="width:950px">
+		      		<div class="m-3 h1 menu-name">내가 쓴 게시글</div>
 	      		</div>
 	      		<div class="row m-4">
 	      			<div class="m-4 col">
-					  <button type="button" class="btn-outline-maincolor-2">내가 쓴 게시글 보기</button>
-					  <button type="button" class="btn-outline-maincolor-2">내가 단 댓글 보기</button>
+					  <button type="button" class="btn-outline-maincolor-2" onclick="showContent('boards')">내가 쓴 게시글 보기</button>
+					  <button type="button" class="btn-outline-maincolor-2" onclick="showContent('replys')">내가 단 댓글 보기</button>
+					  <button type="button" class="btn-outline-maincolor-2" onclick="showContent('likeBoards')">내가 좋아요 한 글 보기</button>
 	      			</div>
 	      		</div>
 	      		
-	      		
-	      		
-	      		
-	      		<div class="row m-4">
+	      		<div id="boards-section" class="row m-4">
 	      			<div class="col m-3">
 						<div class="myInfo-Border-maincolor mt-2 mb-3">
 							<div class="m-2 d-flex justify-content-between">
 								<div class="h3 myInfo-title">내가 쓴 글</div>
-							
 							</div>
       						<table class="m-2">
       							<tr>
@@ -60,84 +50,174 @@
 		                            <th width="15%">작성일</th>
 			                        <th width="10%">조회수</th>
 		                        </tr>
-		                        <tr>
-		                        	<td>100</td>
-		                        	<td>자유게시판</td>
-		                        	<td>우리집 아들 자랑 *^^*</td>
-		                        	<td>24</td>
-		                        	<td>서울</td>
-		                        	<td>2020-12-23</td>
-		                        	<td>1532</td>
-		                        </tr>
-		                        <tr>
-		                        	<td>101</td>
-		                        	<td>자유게시판</td>
-		                        	<td>우리집 웬수색기</td>
-		                        	<td>99</td>
-		                        	<td>서울</td>
-		                        	<td>2020-12-24</td>
-		                        	<td>8959</td>
+		                        <tr th:each="b:${boardList}">
+		                        	<td>[[${b.boardNo}]]</td>
+		                        	<td>[[${b.categoryName}]]</td>
+		                        	<td>[[${b.boardTitle}]]</td>
+		                        	<td>[[${boardLikeCounts[b.boardNo]}]]</td>
+		                        	<td>[[${b.areaName}]]</td>
+		                        	<td>[[${b.boardCreateDate}]]</td>
+		                        	<td>[[${b.boardCount}]]</td>
 		                        </tr>
       						</table>
-			      				
 						</div>
-						<div class="myInfo-Border-maincolor mt-2 mb-3">
-							<div class="m-2 d-flex justify-content-between">
-								<div class="h3 myInfo-title">내가 쓴 댓글</div>
-							
-							</div>
-      						<table class="m-2">
-      							<tr>
-		                            <th width="8%">글 번호</th>
-		                            <th width="15%">글 제목</th>
-		                            <th width="40%">댓글 내용</th>
-		                            <th width="8%">추천</th>
-		                            <th width="15%">작성일</th>
-		                            <th width="15%">대댓글..?</th>
-		                        </tr>
-		                        <tr>
-		                        	<td>100</td>
-		                        	<td>자유게시판</td>
-		                        	<td>우리집 아들 자랑 *^^*</td>
-		                        	<td>24</td>
-		                        	<td>서울</td>
-		                        </tr>
-		                        <tr>
-		                        	<td>101</td>
-		                        	<td>자유게시판</td>
-		                        	<td>우리집 웬수색기</td>
-		                        	<td>99</td>
-		                        	<td>서울</td>
-		                        </tr>
-      						</table>
-			      				
-						</div>
-						
-						
-	      			</div>
-	      		</div>
+			      				<!-- 페이지네이션 -->
+					                <div class="d-flex justify-content-end align-items-center mb-5">
+					                    <nav aria-label="Standard pagination example">
+					                        <ul class="pagination mb-3" th:with="loc=${loc}">
+					                            <li class="page-item">
+					                                <a class="page-link" th:href="@{${loc}(page=${boardPi.currentPage-1})}" aria-label="Previous">
+					                                    <span aria-hidden="true">&laquo;</span>
+					                                </a>
+					                            </li>
+					                            <li class="page-item" th:each="p : ${#numbers.sequence(boardPi.startPage, boardPi.endPage)}">
+					                                <a class="page-link" th:href="@{${loc}(page=${p})}">[[${ p }]]</a>
+					                            </li>
+					                            <li class="page-item">
+					                                <a class="page-link" th:href="@{${loc}(page=${boardPi.currentPage+1})}" aria-label="Next">
+					                                    <span aria-hidden="true">&raquo;</span>
+					                                </a>
+					                            </li>
+					                        </ul>
+					                    </nav>
+					                </div>
+								</div>
+				      		</div>
 	      		
-	    	</div>
-    	</div>
-	
-	
-	</div>
+				      		<div id="replys-section" class="row m-4" style="display: none;">
+				      			<div class="col m-3">
+									<div class="myInfo-Border-maincolor mt-2 mb-3">
+										<div class="m-2 d-flex justify-content-between">
+											<div class="h3 myInfo-title">내가 쓴 댓글</div>
+										</div>
+			      						<table class="m-2">
+			      							<tr>
+					                            <th width="8%">글 번호</th>
+					                            <th width="15%">글 제목</th>
+					                            <th width="40%">댓글 내용</th>
+					                            <th width="8%">추천</th>
+					                            <th width="15%">작성일</th>
+					                        </tr>
+					                        <tr th:each="r:${replyList}">
+					                        	<td>[[${r.refBoardNo}]]</td>
+					                        	<td>[[${r.boardTitle}]]</td>
+					                        	<td>[[${r.replyContent}]]</td>
+					                        	<td>[[${replyLikeCounts[r.replyNo]}]]</td>
+					                        	<td>[[${r.replyCreateDate}]]</td>
+					                        </tr>
+			      						</table>
+					                </div>
+									<div class="d-flex justify-content-end align-items-center mb-5">
+					                    <nav aria-label="Standard pagination example">
+					                        <ul class="pagination mb-3" th:with="loc=${loc}">
+					                            <li class="page-item">
+					                                <a class="page-link" th:href="@{${loc}(page=${replyPi.currentPage-1})}" aria-label="Previous">
+					                                    <span aria-hidden="true">&laquo;</span>
+					                                </a>
+					                            </li>
+					                            <li class="page-item" th:each="p : ${#numbers.sequence(replyPi.startPage, replyPi.endPage)}">
+					                                <a class="page-link" th:href="@{${loc}(page=${p})}">[[${ p }]]</a>
+					                            </li>
+					                            <li class="page-item">
+					                                <a class="page-link" th:href="@{${loc}(page=${replyPi.currentPage+1})}" aria-label="Next">
+					                                    <span aria-hidden="true">&raquo;</span>
+					                                </a>
+					                            </li>
+					                        </ul>
+					                    </nav>
+									</div>
+								</div>
+				      		</div>
+				      		<div id="likeBoards-section" class="row m-4" style="display: none;">
+				      			<div class="col m-3">
+									<div class="myInfo-Border-maincolor mt-2 mb-3">
+										<div class="m-2 d-flex justify-content-between">
+											<div class="h3 myInfo-title">내가 좋아요한 글</div>
+										</div>
+			      						<table class="m-2">
+			      							<tr>
+					                            <th width="8%">번호</th>
+					                            <th width="15%">카테고리</th>
+					                            <th width="40%">제목</th>
+					                            <th width="8%">추천</th>
+					                            <th width="9%">지역</th>
+					                            <th width="15%">작성일</th>
+						                        <th width="10%">조회수</th>
+					                        </tr>
+					                        <tr th:each="l:${likeList}">
+					                        	<td>[[${l.boardNo}]]</td>
+					                        	<td>[[${l.categoryName}]]</td>
+					                        	<td>[[${l.boardTitle}]]</td>
+					                        	<td>[[${boardLikeCounts[l.boardNo]}]]</td>
+					                        	<td>[[${l.areaName}]]</td>
+					                        	<td>[[${l.boardCreateDate}]]</td>
+					                        	<td>[[${l.boardCount}]]</td>
+					                        </tr>
+			      						</table>
+					                </div>
+									<div class="d-flex justify-content-end align-items-center mb-5">
+					                    <nav aria-label="Standard pagination example">
+					                        <ul class="pagination mb-3" th:with="loc=${loc}">
+					                            <li class="page-item">
+					                                <a class="page-link" th:href="@{${loc}(page=${likePi.currentPage-1})}" aria-label="Previous">
+					                                    <span aria-hidden="true">&laquo;</span>
+					                                </a>
+					                            </li>
+					                            <li class="page-item" th:each="p : ${#numbers.sequence(likePi.startPage, likePi.endPage)}">
+					                                <a class="page-link" th:href="@{${loc}(page=${p})}">[[${ p }]]</a>
+					                            </li>
+					                            <li class="page-item">
+					                                <a class="page-link" th:href="@{${loc}(page=${likePi.currentPage+1})}" aria-label="Next">
+					                                    <span aria-hidden="true">&raquo;</span>
+					                                </a>
+					                            </li>
+					                        </ul>
+					                    </nav>
+									</div>
+								</div>
+				      		</div>
+				      	</div>
+					</div>
+				</div>
 	
 	<script th:inline="javascript">
-		
-		window.onload =() =>{
+		window.onload = () => {
 			const menuAtag = document.getElementsByClassName('my-menu');
 			const menuName = document.getElementsByClassName('menu-name')[0];
-			for(i of menuAtag){
-				if(i.innerText == menuName.innerText){
-					i.innerHTML= '<span style="border-bottom:2px solid #8dd986; font-weight:bold;">'+i.innerText+'</span>';
+			for (let i of menuAtag) {
+				if (i.innerText === menuName.innerText) {
+					i.innerHTML = '<span style="border-bottom:2px solid #8dd986; font-weight:bold;">' + i.innerText + '</span>';
 				}
-			};
-			
+			}
+			const tds = document.querySelectorAll('td');
+			for (const td of tds) {
+				td.addEventListener('click', function() {
+					console.log(123);
+					const trTds = this.parentElement.querySelectorAll('td');
+					const boardId = trTds[0].innerText;
+					const currentPage = /*[[${boardPi.currentPage}]]*/ 1;
+					location.href = `selectBoard.bo?bId=${boardId}&page=${currentPage}`;
+				});
+			}
 		}
-	
+		
+		function showContent(type) {
+			if (type === 'boards') {
+				document.getElementById('boards-section').style.display = 'block';
+				document.getElementById('replys-section').style.display = 'none';
+				document.getElementById('likeBoards-section').style.display = 'none';
+			} else if (type === 'replys') {
+				document.getElementById('boards-section').style.display = 'none';
+				document.getElementById('replys-section').style.display = 'block';
+				document.getElementById('likeBoards-section').style.display = 'none';
+			} else if (type === 'likeBoards') {
+				document.getElementById('boards-section').style.display = 'none';
+				document.getElementById('replys-section').style.display = 'none';
+				document.getElementById('likeBoards-section').style.display = 'block';
+			}
+		}
+		
+		
 	</script>
-	
-	
 </body>
 </html>
