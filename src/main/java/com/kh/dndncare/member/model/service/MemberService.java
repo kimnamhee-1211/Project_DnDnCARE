@@ -73,5 +73,11 @@ public interface MemberService {
 	ArrayList<Patient> choicePatientList(ArrayList<Integer> choiceNoList);
 
 
+	CareGiver selectCareGiver(int memberNo);
+
+	int updateCareGiver(CareGiver cg);
+
+	int updateMemberVer2(Member m);
+
 
 }

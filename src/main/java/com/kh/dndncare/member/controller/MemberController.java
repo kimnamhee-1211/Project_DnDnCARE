@@ -90,20 +90,24 @@ public class MemberController {
 		
 		
 		if(loginUser != null) {
-			Patient p = mService.selectPatient(loginUser.getMemberNo());
-			//List<Integer> memberInfo =  mService.selectMemberInfo(loginUser.getMemberNo());
+			
+			
+			Info memberInfo = categoryFunction(loginUser.getMemberNo(),true);	//내정보
+			Info wantInfo = categoryFunction(loginUser.getMemberNo(),false);	//원하는간병인정보
+			model.addAttribute("memberInfo",memberInfo);
+			model.addAttribute("wantInfo",wantInfo);
+
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch(check) {
 				case 'C':
+					CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+					model.addAttribute("cg",cg);
 					return "myInfo";
 				
 				case 'P':
-					Info memberInfo = categoryFunction(loginUser.getMemberNo(),true);	//내정보
-					Info wantInfo = categoryFunction(loginUser.getMemberNo(),false);	//원하는간병인정보
+					Patient p = mService.selectPatient(loginUser.getMemberNo());
 					model.addAttribute("p",p);
-					model.addAttribute("memberInfo",memberInfo);
-					model.addAttribute("wantInfo",wantInfo);
-					System.out.println(wantInfo.getInfoDisease());
+					//System.out.println(wantInfo.getInfoDisease());
 					
 					//Patient pWant = categoryFunction()
 					
@@ -136,6 +140,7 @@ public class MemberController {
 			for(HashMap<String,String> m : category) {
 				 switch(m.get("L_CATEGORY")) {
 					 case "service" : memberInfo.getInfoService().add(0,m.get("S_CATEGORY")); break;
+					 case "serviceCareer" : memberInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "career" : memberInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "disease" : memberInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
 					 case "license" : memberInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;
@@ -164,6 +169,7 @@ public class MemberController {
 			for(HashMap<String,String> m : category) {
 				 switch(m.get("L_CATEGORY")) {
 					 case "service" : wantInfo.getInfoService().add(0,m.get("S_CATEGORY")); break;
+					 case "serviceCareer" : wantInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "career" : wantInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "disease" : wantInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
 					 case "license" : wantInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;
@@ -860,6 +866,43 @@ public class MemberController {
 		
 	};
 	
+	@PostMapping("careGiverUpdate.me")
+	public String updateCareGiver(@ModelAttribute Member m,@ModelAttribute CareGiver cg,HttpSession session, @RequestParam("memInfo") String memInfo) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		m.setMemberNo(loginUser.getMemberNo());
+		cg.setMemberNo(loginUser.getMemberNo());
+		
+		System.out.println(m);
+		System.out.println(cg);
+		System.out.println(memInfo);
+		int result = mService.updateCareGiver(cg);	//간병인정보바꾸기
+		int result4 = mService.updateMemberVer2(m); //간병인은 같은 페이지에서 이름,나이,성별 세가지만 따로 바로 바꿀수있다!
+
+		if(result==0 || result4 ==0) {
+			throw new MemberException("에러!");
+		}
+		
+		
+		if(!memInfo.equals("fail")) {
+			
+			int result2 = mService.deleteMemberInfo(loginUser.getMemberNo()); //간병인인포정보 한번 다 지우기
+			String[] mis = memInfo.split(",");
+			
+			for(String mi : mis) {
+				HashMap<String,Integer> info = new HashMap<String,Integer>();
+				info.put("memberNo",loginUser.getMemberNo());
+				info.put("categoryNo",Integer.parseInt(mi));
+				int result3 = mService.insertMemberInfo(info);
+			}
+			
+		}
+		return "redirect:home.do";
+		
+	};
+	
+	
+	
 	@GetMapping("updatePwdView.me")
 	public String updatePwdView() {
 		return "updatePwd";
@@ -931,6 +974,10 @@ public class MemberController {
 	}
 	
 	
+	@GetMapping("writeReviewView.re")
+	public String writeReview() {
+		return "writeReview";
+	}
 	
 }//클래스 끝
 

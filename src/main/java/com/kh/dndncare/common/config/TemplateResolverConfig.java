@@ -78,10 +78,24 @@ public class TemplateResolverConfig {
 		dotJm.setTemplateMode(TemplateMode.HTML);
 		dotJm.setCharacterEncoding("UTF-8");
 		dotJm.setCacheable(false);
-		dotJm.setOrder(4);
+		dotJm.setOrder(5);
 		dotJm.setCheckExistence(true);
 		
 		return dotJm;
+	}
+	
+	@Bean
+	public ClassLoaderTemplateResolver dotReResolver() {
+		ClassLoaderTemplateResolver dotRe = new ClassLoaderTemplateResolver();
+		dotRe.setPrefix("templates/views/review/");
+		dotRe.setSuffix(".html");
+		dotRe.setTemplateMode(TemplateMode.HTML);
+		dotRe.setCharacterEncoding("UTF-8");
+		dotRe.setCacheable(false);
+		dotRe.setOrder(6);
+		dotRe.setCheckExistence(true);
+		
+		return dotRe;
 	}
 	
 	

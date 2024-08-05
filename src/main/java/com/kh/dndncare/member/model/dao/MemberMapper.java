@@ -74,4 +74,10 @@ public interface MemberMapper {
 
 	int updateMember(Member m);
 
+	CareGiver selectCareGiver(int memberNo);
+
+	int updateCareGiver(CareGiver cg);
+
+	int updateMemberVer2(Member m);
+
 }
