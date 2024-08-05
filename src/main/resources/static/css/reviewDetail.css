@@ -120,5 +120,42 @@ input {
    border:3px solid #8dd986;
 }
 
+.icon-star{
+	background-image:url(../image/icon_star.svg);
+	background-size: 167px 167px;
+	padding:0px;
+}
 
+.btn-star{
+	background: transparent;
+	border:0px solid black;
+	width:20px;
+	height:43px;
+	padding:0;
+	margin-left:0px;
+	margin-right:-1.5px;
+}
+.btn-star-right{
+	background: transparent;
+	border:0px solid black;
+	width:20px;
+	height:43px;
+	padding:0;
+	margin-left:-3px;
+	margin-right:-1.5px;
+}
 
+.btn-icon-star-left{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 167px 167px;
+	padding:0px;
+	background-repeat: no-repeat;	
+}
+
+.btn-icon-star-right{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 167px 167px;
+	padding:0px;
+	background-position: -19.5px 0px;
+	background-repeat: no-repeat;	
+}
