@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/enroll.css}" rel="stylesheet" type="text/css"/>
+
+</head>
+<body>
+	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+	<main class="inner-content d-flex justify-content-center">
+		<form action="enrollJoinMatching.jm" method="post" id="enrollForm">
+			<div class="login-wrap">
+				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
+				<h1 class="h3 mb-3 fw-bold mb-5 text-center">공동간병 그룹 모집</h1>
+				<div class="title2-content d-flex justify-content-center mx-auto">	
+					<div class="form-floating mb-3 fw-bold mb-5 mx-auto">
+						<input type="hidden" th:value="${hospital}">	
+						<table class="table" id="hoInfo" style="font-size:22px;line-height:40px;">
+						    <tr>
+						      <th scope="col" style="width:100px;">병원명</th>
+						      <td id="hospitalName" scope="col" style="width:600px;">[[${hospital.hospitalName}]]</td>
+						    </tr>	
+						    <tr>
+						      <th scope="col" style="width:100px;">주소</th>
+						      <td scope="col"id="hospitalAddress" style="width:600px;font-size:16px;">[[${hospital.hospitalAddress}]]</td>
+						    </tr>		
+						</table>	
+					</div>
+				</div>
+				<h5 class="h5 mb-1 fw-bold mb-4">기타 요청사항을 제외한 모든 내용은 필수 입력 사항입니다.</h5>
+																
+				<div class="login-input">
+					
+					<div style="display:inline-block;margin-right:150px;">
+						<p class="info">그룹 구성 인원을 선택해주세요.</p>
+						<div class="form-floating mb-5">
+							<div class="form-check form-check-inline">
+					      		<input type="radio" class="btn-check"  name="ptCount" value='2' id="2p">
+								<label class="btn btn-outline-success" for="2p">&nbsp;&nbsp;2명&nbsp;&nbsp;</label>
+								<div style="display:inline-block;width:10px;"></div>
+					      		<input type="radio" class="btn-check" name="ptCount" value='3' id="3p">
+								<label class="btn btn-outline-success" for="3p">&nbsp;&nbsp;3명&nbsp;&nbsp;</label>		
+							</div>
+						</div>		
+					</div>					
+					
+									
+					<div style="display:inline-block">
+						<p class="info">1인당 1일 돌봄 비용을 입력해주세요.</p>
+						<div class="form-floating mb-5">
+							<div class="row">
+								 <div class="col">
+									<input type="number" class="form-control" min="0" name="antePay" >
+								</div>
+						 		<div class="col-md-1" style="font-size: 20px;">원</div>
+						 	</div>
+						</div>
+					</div>
+														
+					<p class="info">기간을 선택해주세요.</p>
+					<div class="form-floating mb-5">
+						<div class="row">
+						  <div class="col">
+						    <input type="date" class="form-control" name="beginDt">
+						  </div>
+						  <div class="col-md-1" style="font-size: 20px;">~</div>
+						  <div class="col">
+						    <input type="date" class="form-control" name="endDt">
+						  </div>
+						</div>
+					</div>					
+					
+					<p class="info">시간을 선택해주세요.</p>
+					<div class="form-floating mb-5">
+						<div class="row">
+						  <div class="col">
+						   <select class="form-select" aria-label="Default select example" name="beginTime">
+								  <option th:each="num : ${#numbers.sequence(00, 24)}" th:value="${num}">[[${num}]] 시</option>
+							</select>
+						  </div>
+						  <div class="col-md-1" style="font-size: 20px;">~</div>
+						  <div class="col">
+						    <select class="form-select" aria-label="Default select example" name="endTime">
+								  <option th:each="num : ${#numbers.sequence(00, 24)}" th:value="${num}">[[${num}]] 시</option>
+							</select>
+						  </div>
+						</div>
+					</div>		
+					 					
+					<p class="info">돌봄 서비스를 진행할 구체적인 장소를 입력해주세요.</p>
+					<div class="form-floating mb-5">
+						<input type="text" class="form-control" id="matAddressInfo" name="matAddressInfo">
+						<label for="matAddressInfo">상세 주소</label>
+					</div>
+										
+					<p class="info">기타 요청사항을 100자 이내로 입력해주세요.</p>
+					<div class="form-floating mb-5">
+						<textarea class="form-control" id="matRequest" name="matRequest" rows="3" maxlength="100"></textarea>
+						<label for="matRequest">기타 요청사항(100자 이내)</label>
+					</div>									
+															
+				</div>
+			</div>
+			
+			<div class="sns-section d-flex flex-column justify-content-center mt-3 fs-5">
+				<p class="text-center">버튼을 누르면<br>공동간병 모집 신청이 완료됩니다.</p>
+			</div>
+			<div class="sign-btn d-flex flex-column">
+				<p class="text-center ifCheck" style="font-size:20px"> </p>
+				<button type="button" class="signIn-btn mt-4" id="nextButton"><span>공동간병 모집</span></button>
+			</div>
+
+							
+			
+		</form>
+	</main>
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	
+	
+	<script th:inline="javascript">
+		
+		window.onload=()=>{
+			const nextButton = document.getElementById('nextButton');
+			const form = document.getElementById('enrollForm');
+			nextButton.addEventListener('click', ()=>{
+				let isValid = true;
+				
+				//입력사항 모두 입력했는지 확인
+				const inputs = document.getElementsByTagName('input');
+				const ifCheck = document.getElementsByClassName("ifCheck")[0];
+				for(const input of inputs){
+					if(input.value.trim() == ''){
+							ifCheck.innerText = "모든 내용을 빠짐없이 입력해주세요."
+							ifCheck.style.color="red";
+						isValid = false;
+					}else{
+						ifCheck.innerText = ""
+					}	
+					
+				}			
+			
+				if(isValid){
+					form.submit();
+				}
+									
+			});	
+		}
+		
+	
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	</script>
+		
+		
+</body>
+</html>

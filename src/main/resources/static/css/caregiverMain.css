@@ -177,3 +177,8 @@ a {
   background-color: #8dd986; 
   border-color: green;
 }
+
+/* 일감찾기의 정보를 보는 모달박스 */
+.workInfo {
+	display:grid; grid-template-columns: 1fr 1fr;
+}
