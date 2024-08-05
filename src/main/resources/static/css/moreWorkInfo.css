@@ -8,7 +8,7 @@
 }
 
 #tagBtnDiv {
-	display:grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* grid-template-rows: 100px; */
+	display:grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* grid-template-rows: 100px; */
 } 
 
 .autoMatching tr {height: 40px;}
@@ -17,4 +17,7 @@
 /* table 효과 */
 .autoMatching {box-shadow: 0 2px 3px #8dd986;}
 
-
+/* 일감목록에서 제목행에 대한 스타일 속성*/
+#lowerContentsTitle{
+	display:grid; grid-template-columns: 1fr 1fr;
+}
