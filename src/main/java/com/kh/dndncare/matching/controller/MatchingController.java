@@ -75,7 +75,7 @@ public class MatchingController {
 		hospital.setHospitalAddress(hospitalAddress);
 		model.addAttribute("hospital", hospital);
 	
-		return "joinMatchingEnroll.jm";
+		return "joinMatchingEnroll";
 	}
 	
 	
