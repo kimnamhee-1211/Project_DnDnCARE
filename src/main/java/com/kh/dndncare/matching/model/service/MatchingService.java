@@ -1,6 +1,5 @@
 package com.kh.dndncare.matching.model.service;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
 
 import com.kh.dndncare.matching.model.vo.Hospital;
@@ -8,8 +7,6 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.InfoCategory;
-=======
->>>>>>> refs/remotes/origin/Kiryong
 import com.kh.dndncare.member.model.vo.Patient;
 
 public interface MatchingService {
@@ -35,8 +32,5 @@ public interface MatchingService {
 	//get member info (대분류 : 소분류)
 	ArrayList<InfoCategory> getInfo(int memberNo);
 	
-
-
-	Patient selectPatient(int memberNo);
 
 }

@@ -71,17 +71,5 @@
 	</select>
 	
 	
-	
-	
 
-
-
-
-=======
-	<select id="selectPatient" resultType="Patient">
-		select *
-		from patient
-		where member_no = 48
-	</select>
->>>>>>> refs/remotes/origin/Kiryong
 </mapper>
