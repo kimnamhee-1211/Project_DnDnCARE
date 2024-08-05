@@ -158,7 +158,7 @@ public class MatchingController {
 				
 		response.setContentType("application/json; charset=UTF-8");
 		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
-		Gson gson = new Gson();
+		Gson gson = gb.create();
 		
 		try {
 			gson.toJson(jmMacPt, response.getWriter());
