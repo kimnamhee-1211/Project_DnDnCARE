@@ -1,21 +1,28 @@
 package com.kh.dndncare.matching.model.service;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 
+=======
+>>>>>>> refs/remotes/origin/Kiryong
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.dndncare.matching.model.dao.MatchingMapper;
+<<<<<<< HEAD
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.InfoCategory;
+=======
+>>>>>>> refs/remotes/origin/Kiryong
 import com.kh.dndncare.member.model.vo.Patient;
 
 @Service
 public class MatchingServiceImpl implements MatchingService {
 	@Autowired
+<<<<<<< HEAD
 	private MatchingMapper mMapper;
 
 	//병원 테이블 등록
@@ -68,5 +75,12 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.getInfo(memberNo);
 	}
  
+=======
+	MatchingMapper mcMapper;
+	@Override
+	public Patient selectPatient(int memberNo) {
+		return mcMapper.selectPatient(memberNo);
+	}
+>>>>>>> refs/remotes/origin/Kiryong
 
 }

@@ -4,11 +4,14 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Mapper;
 
+<<<<<<< HEAD
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.InfoCategory;
+=======
+>>>>>>> refs/remotes/origin/Kiryong
 import com.kh.dndncare.member.model.vo.Patient;
 
 @Mapper
@@ -31,5 +34,7 @@ public interface MatchingMapper {
 	ArrayList<InfoCategory> getInfo(int memberNo);
 
 
+
+	Patient selectPatient(int memberNo);
 
 }
