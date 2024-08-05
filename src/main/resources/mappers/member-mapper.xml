@@ -48,17 +48,17 @@
 		<result column="BEGIN_DT" property="start"/>
 		<result column="END_DT" property="end"/>
 		<result column="MONEY" property="money"/>
-		<result column="HOSPITAL_NO" property="hosptialNo"/>
-		<result column="HOSPITAL_ADDRESS" property="hospitalAddress"/>
-		<result column="HOSPITAL_NAME" property="hospitalName"/>
+		<result column="HOSPTAL_NO" property="hosptalNo"/>
+		<result column="HOSPTAL_ADDRESS" property="hosptalAddress"/>
+		<result column="HOSPTAL_NAME" property="hosptalName"/>
 	</resultMap>
 	  
 	  
-	<!-- 캘린더 이벤트 정보 조회 --> 
+	  
 	<select id="caregiverCalendarEvent" resultMap="calendarResultMap">
-		SELECT MAT_NO, '간병하기' AS TITLE, BEGIN_DT, END_DT, MONEY, HOSPITAL_NO, HOSPITAL_ADDRESS, HOSPITAL_NAME 
+		SELECT MAT_NO, '간병하기' AS TITLE, BEGIN_DT, END_DT, MONEY, HOSPTAL_NO, HOSPTAL_ADDRESS, HOSPTAL_NAME 
 		FROM MATCHING
-		        JOIN HOSPITAL USING(HOSPITAL_NO)
+		        JOIN HOSPTAL USING(HOSPTAL_NO)
 		WHERE MEMBER_NO = #{memberNo}
 	</select>
 
@@ -84,12 +84,12 @@
 	  <insert id="enrollCareGiver">
 	  	insert into caregiver
 	  	values(#{memberNo}, #{careImg}, #{careIntro}, 
-	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, #{careService}, sysdate)	  
+	  			#{minMoney}, #{maxMoney}, #{careJoinStatus}, sysdate)	  
 	  </insert>
 	  
 	 <!-- 정보 입력-->
 	<insert id="enrollInfoCategory">
-		<foreach collection="infoCategory" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
+		<foreach collection="memberInfo" item="item"  open="INSERT ALL" close="SELECT * FROM DUAL">
 			into member_Info values(#{memberNo}, #{item})
 		</foreach>
 	</insert>
@@ -99,15 +99,14 @@
 	<insert id="enrollPatient">
 	  	insert into patient
 	  	values(seq_pid.nextval, #{memberNo}, #{ptName}, #{ptGender}, #{ptAge}, 
-	  			#{ptWeight}, #{ptHeight}, #{ptService}, #{ptAddress}, #{ptRequest}, sysdate)	  
-	</insert>
+	  			#{ptWeight}, #{ptHeight}, #{ptAddress}, #{ptRequest}, sysdate)	  
+	  </insert>
 	  
 	  <select id="findIdResult" resultType="Member">
 	  	select member_id,member_create_date,member_status,member_category,member_name
 	  	from member
 	  	where member_id=#{memberId} and member_phone=#{memberPhone}
 	  </select>
-
 	  
 	  <!-- 환자정보 가져오기 -->
 	  <select id="selectPatient" resultType="Patient">
@@ -131,11 +130,11 @@
 	  
 	  
 	
-	<!-- 간병인 메인페이지에서의 자동 추천을 위한 간병인 본인 정보 조회 : 1번 -->
+	<!-- 간병인 메인페이지에서의 자동 추천을 위한 간병인 본인 정보 조회 -->
 	<select id="getCaregiverInfo" resultType="map">
-		SELECT 	DECODE(MEMBER_GENDER, 'M', '남성', 'F', '여성') AS "성별", TRUNC(SYSDATE - MEMBER_AGE) AS "나이", 
-		        SUBSTR(REPLACE(MEMBER_ADDRESS, '//', ' ') , INSTR(REPLACE(MEMBER_ADDRESS, '//', ' '), ' ')+1) AS "주소",
-				MEMBER_NATIONAL AS "국적"
+		SELECT DECODE(MEMBER_GENDER, 'M', '남성', 'F', '여성') AS "성별", TRUNC(SYSDATE - MEMBER_AGE) AS "나이", 
+        SUBSTR(REPLACE(MEMBER_ADDRESS, '//', ' ') , INSTR(MEMBER_ADDRESS, ' ') ) AS "주소",
+		        MEMBER_NATIONAL AS "국적"
 		FROM MEMBER
 		WHERE MEMBER_NO = ${memberNo}
 	</select>
@@ -166,30 +165,55 @@
 		]]>
 	</select>
 	
-	<!-- 간병인 메인페이지에서의 자동 추천을 위한 환자 후보군의 정보 조회 : 2번 -->
-	<select id="getPatientExp" resultType="map">
-		SELECT MEMBER_NO, L_CATEGORY, S_CATEGORY
+	<delete id="deleteWantInfo">		<!-- 내가원하는 상대매칭정보 -->
+		delete want_info
+		where member_no = #{memberNo}
+		
+	</delete>
+	<insert id="insertWantInfo">		<!-- 내가 원하는 상대매칭 정보 -->
+	insert into want_info values(
+		${memberNo},
+		${categoryNo}
+	)
+	
+	</insert>
+	<delete id="deleteMemberInfo">		<!-- 내 인포정보 -->
+		delete member_info
+		where member_no = #{memberNo}
+		
+	</delete>
+	<insert id="insertMemberInfo">		<!-- 내 인포정보 -->
+	insert into member_info values(
+		${memberNo},
+		${categoryNo}
+	)
+	</insert>
+	
+	<select id="selectWantInfo" resultType="map">
+		SELECT L_CATEGORY, S_CATEGORY
 		FROM MEMBER
-		        JOIN MEMBER_INFO USING(MEMBER_NO)
+		        JOIN want_INFO USING(MEMBER_NO)
 		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
-		WHERE MEMBER_NO IN  
-		<foreach collection="list" item="item" open="(" close=")" separator=", ">${item}</foreach>
+		WHERE MEMBER_NO = ${memberNo}
 	</select>
 	
-	<!-- 추천된 환자 정보조회 : 이름, 성별, 나이, 지역, 금액 -->
-	<select id="choicePatientList" resultType="Patient">
-		SELECT  PATIENT.MEMBER_NO, PT_NAME, PT_GENDER, TRUNC(SYSDATE - PT_AGE) AS PT_REAL_AGE, MONEY,
-				SUBSTR(REPLACE(PT_ADDRESS, '//', ' ') , INSTR(REPLACE(PT_ADDRESS, '//', ' '), ' ')+1) as PT_ADDRESS
-		FROM MATCHING 
-		        JOIN MAT_PT_INFO USING(MAT_NO)
-		        JOIN PATIENT USING(PT_NO)
-		WHERE PATIENT.MEMBER_NO IN
-		<foreach collection="list" item="item" open="(" close=")" separator=", ">
-			${item}
-		</foreach>
-	</select>
+	<update id="updatePatient">
+		update patient
+		set pt_name = #{ptName}, pt_age = #{ptAge}, pt_weight = #{ptWeight}, pt_height = #{ptHeight}, pt_address = #{ptAddress}, pt_gender = #{ptGender}
+		where member_no = #{memberNo}
+	</update>
 	
+	<update id="updateMember">
+		update member
+		set member_Name = #{memberName}, member_gender = #{memberGender},
+		member_nickName = #{memberNickName}, member_age= #{memberAge},
+		member_phone = #{memberPhone},member_email = #{memberEmail},
+		member_address = #{memberAddress},member_national = #{memberNational},
+		member_update_date = sysdate
+		where member_no = #{memberNo}
+		
 	
+	</update>
 	
 	<update id="updateCareGiver">
 		update caregiver
