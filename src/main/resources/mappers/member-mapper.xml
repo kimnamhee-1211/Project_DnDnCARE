@@ -282,4 +282,13 @@
 			join area a on(a.area_no = b.area_no)
 		where l.member_no = #{mNo} and b.board_status = 'Y'
 	</select>
+	
+	<select id="selectMatList" resultType="MatMatptInfo">	<!-- 환자번호로 mat_pt테이블의 매칭번호를 뽑아온다. -->
+		select *
+		from mat_pt_info
+    		join matching using(mat_no)
+		where pt_no = (select pt_no
+						from patient
+						where member_no = #{memberNo})
+	</select>
 </mapper>

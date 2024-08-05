@@ -26,6 +26,7 @@ public class Matching {
 	private int ptCount;
 	private String beginTime;
 	private String endTime;
+	private int matMode;
 	
 }
 

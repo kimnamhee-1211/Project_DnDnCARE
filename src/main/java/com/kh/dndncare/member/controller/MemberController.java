@@ -2,6 +2,7 @@ package com.kh.dndncare.member.controller;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,7 @@ import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.Pagination;
+import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
@@ -534,16 +536,26 @@ public class MemberController {
 	}
 	
 	@GetMapping("myInfoMatchingHistory.me")
-	public String myInfoMatchingHistory(HttpSession session) {		//마이페이지 매칭 이력 확인용
-		
+	public String myInfoMatchingHistory(HttpSession session,Model model) {		//마이페이지 매칭 이력 확인용
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
+		
 		
 		if(loginUser != null) {
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch(check) {
 				case 'C': return "myInfoMatchingHistory";
-				case 'P': return "myInfoMatchingHistoryP";
+				
+				case 'P':
+					ArrayList<MatMatptInfo> mciList = mService.selectMatList(loginUser.getMemberNo());	//환자측 매칭방번호 리스트.ptNo가들어가서무조건
+					for(MatMatptInfo i : mciList) {
+						System.out.println(i);
+						i.setAfterDate(LocalDate.now().isAfter(i.getBeginDt().toLocalDate()));
+						
+					}
+					model.addAttribute("mciList",mciList);
+					model.addAttribute("today", LocalDate.now());
+					return "myInfoMatchingHistoryP";
 				case 'A': return null;
 			}
 		}
@@ -1026,10 +1038,7 @@ public class MemberController {
 	}
 	
 	
-	@GetMapping("writeReviewView.re")
-	public String writeReview() {
-		return "writeReview";
-	}
+	
 	
 }//클래스 끝
 
