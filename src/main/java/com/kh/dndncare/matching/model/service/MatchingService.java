@@ -37,7 +37,7 @@ public interface MatchingService {
 	int insertMatchingDate(int matNo, String matchingDate);
 	
 	//병원  데이터 Count  get
-	int getHospitalCount(Hospital ho);
+	Hospital getHospital(Hospital hospital);
 
 	
 

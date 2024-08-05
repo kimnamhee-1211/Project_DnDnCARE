@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -55,7 +56,7 @@ public class MatchingController {
 	
 	//공동간병 병원 선택
 	@GetMapping("joinMatching.jm")
-	public String joinMatchinjmain(@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,  Model model) {
+	public String joinMatchinjmain(@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress, Model model) {
 		
 		//병원 정보 전달
 		Hospital hospital = new Hospital();
@@ -87,55 +88,68 @@ public class MatchingController {
 	
 	//공동간병 등록
 	@PostMapping("enrollJoinMatching.jm")
-	public String enrollJoinMatching(@ModelAttribute Matching jm, @ModelAttribute MatPtInfo jmPt, @ModelAttribute Hospital ho,
-									HttpSession session, Model model,
-									@RequestParam("day") Date[] day, 
-									@RequestParam("begin") Date begin, @RequestParam("end") Date end,
+	public String enrollJoinMatching(@ModelAttribute Matching jm, @ModelAttribute MatPtInfo jmPt, @ModelAttribute Hospital hospital,
+									HttpSession session, RedirectAttributes re,
+									@RequestParam("day") String[] day, 
+									@RequestParam("begin") String begin, @RequestParam("end") String end,
 									@RequestParam("beginTime") String beginTime, @RequestParam("endTime") String endTime) {
-		System.out.println("시간제" + Arrays.toString(day));
-		System.out.println("기간제" + begin);
-		System.out.println("기간제 시간" + beginTime);
 		
+		beginTime = beginTime.replace(",", "");
+		endTime = endTime.replace(",", "");	
 		
-		//병원이 테이블에 없을 경우 등록
-		int result0 = mcService.getHospitalCount(ho);
-		if(result0 == 0) {
-			int result1 = mcService.enrollHospital(ho);
+		//병원이 테이블에 없을 경우 등록 && 매칭 테이블 병원 셋
+		Hospital ho = mcService.getHospital(hospital);
+		if(ho == null) {
+			int result1 = mcService.enrollHospital(hospital);
+			jm.setHospitalNo(hospital.getHospitalNo());
+		}else {
+			jm.setHospitalNo(ho.getHospitalNo());
 		}
-		
 		
 		//매칭 등록
-		jm.setMoney(jmPt.getAntePay() * jm.getPtCount());
-		jm.setHospitalNo(ho.getHospitalNo());			
+		jm.setMoney(jmPt.getAntePay() * jm.getPtCount());		
 		
 		//날짜-시간 변환
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date utilDate = null;
+        Date sqlDate = null;
 		//기간제
 		if(jm.getMatMode() == 1) {
-			jm.setBeginDt(begin);
-			jm.setBeginDt(end);			
-			
+		    try {
+	        	utilDate = dateFormat.parse(begin);
+	            sqlDate = new Date(utilDate.getTime());
+	            jm.setBeginDt(sqlDate);
+	            utilDate = dateFormat.parse(end);
+	            sqlDate = new Date(utilDate.getTime());
+	            jm.setEndDt(sqlDate);
+	         } catch (ParseException e) {
+	            e.printStackTrace();
+	         }	
 		//시간제
 		} else if(jm.getMatMode() == 2) {
-			Arrays.sort(day);
-			jm.setBeginDt(day[0]);
-			jm.setEndDt(day[day.length]);				
+	         Arrays.sort(day);
+	         try {
+	        	utilDate = dateFormat.parse(day[0]);
+	            sqlDate = new Date(utilDate.getTime());
+	            jm.setBeginDt(sqlDate);
+	            utilDate = dateFormat.parse(day[day.length-1]);
+	            sqlDate = new Date(utilDate.getTime());
+	            jm.setEndDt(sqlDate);
+	         } catch (ParseException e) {
+	            e.printStackTrace();
+	         }	
 		}
-		
 		jm.setBeginTime(beginTime);
 		jm.setEndTime(endTime);
 		
-		
-		
 		System.out.println("등록" + jm);
 		int result2 = mcService.enrollMatching(jm);
-		
 		System.out.println("등록 후" + jm);
-		if(jm.getMatMode() == 2) {
-			String MatchingDate = day.toString();
-			int result4 = mcService.insertMatchingDate(jm.getMatNo(), MatchingDate);
-		}
 		
-				
+		if(jm.getMatMode() == 2) {
+			String matchingDate = Arrays.toString(day);
+			mcService.insertMatchingDate(jm.getMatNo(), matchingDate);
+		}
 		
 		//매칭 환자 등록
 		jmPt.setMatNo(jm.getMatNo());
@@ -143,16 +157,18 @@ public class MatchingController {
 		Patient pt = mcService.getPatient(memberNo);		
 		jmPt.setPtNo(pt.getPtNo());
 		jmPt.setService("공동간병");
-		jmPt.setMatAddressInfo(ho.getHospitalAddress() +" // "+ jmPt.getMatAddressInfo());
+		jmPt.setMatAddressInfo(hospital.getHospitalAddress() +" // "+ jmPt.getMatAddressInfo());
 		jmPt.setGroupLeader("Y");
 		System.out.println("등록" + jmPt);
 		int result3 = mcService.enrollMatPtInfo(jmPt);
 		
-		
 		if(result2>0 && result3>0) {
+			re.addAttribute("hospitalName", hospital.getHospitalName());
+			re.addAttribute("hospitalAddress", hospital.getHospitalAddress());
 			return "redirect:joinMatching.jm";
 		}
 		throw new MemberException("공동간병 그룹 등록 실패");
+
 
 	}
 	

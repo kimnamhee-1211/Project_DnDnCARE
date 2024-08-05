@@ -77,10 +77,10 @@
 	</insert>
 	
 	
-	<select id="getHospitalCount">
-		select count(*)
+	<select id="getHospital">
+		select *
 		from hospital
-		where hospital_no = #{hospitalNo} and hospital_address = #{hospitalAddress}	
+		where hospital_name = #{hospitalName} and hospital_address = #{hospitalAddress}	
 	</select>
 	
 	

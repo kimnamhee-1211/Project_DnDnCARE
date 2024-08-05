@@ -19,7 +19,8 @@
 				<h1 class="h3 mb-3 fw-bold mb-5 text-center">공동간병 그룹 모집</h1>
 				<div class="title2-content d-flex justify-content-center mx-auto">	
 					<div class="form-floating mb-3 fw-bold mb-5 mx-auto">
-						<input type="hidden" th:value="${hospital}">	
+						<input type="hidden" th:value="${hospital.hospitalName}" name="hospitalName">
+						<input type="hidden" th:value="${hospital.hospitalAddress}" name="hospitalAddress">
 						<table class="table" id="hoInfo" style="font-size:22px;line-height:40px;">
 						    <tr>
 						      <th scope="col" style="width:100px;">병원명</th>
@@ -55,7 +56,7 @@
 						<div class="form-floating mb-5">
 							<div class="row">
 								 <div class="col">
-									<input type="number" class="form-control" min="0" name="antePay" >
+									<input type="number" class="form-control" min="0" step="100" name="antePay" >
 								</div>
 						 		<div class="col-md-1" style="font-size: 20px;">원</div>
 						 	</div>
@@ -82,13 +83,13 @@
 						<div id="overDayInput" class="input-field hidden mb-5" style="margin:0 auto;padding:30px;">
 					        <div class="d-flex">
 					            <label for="overDayStart">시작날짜:&nbsp;&nbsp;&nbsp;</label>
-					            <input type="date" id="overDayStart" name="begin" readonly>
+					            <input type="text" id="overDayStart" name="begin" readonly>
 					            <label for="underDayStartTime">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;시작시간:&nbsp;&nbsp;&nbsp;</label>
 					            <input type="text" class="underDayStartTime" name="beginTime">
 					         </div>
 					        <div class="d-flex mt-3">
 					            <label for="overDayEnd">종료날짜:&nbsp;&nbsp;&nbsp;</label>
-					            <input type="date" id="overDayEnd" name="end" readonly>
+					            <input type="text" id="overDayEnd" name="end" readonly>
 					       		<label for="underDayEndTime">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;종료시간:&nbsp;&nbsp;&nbsp;</label>
 					            <input type="text" class="underDayEndTime" name="endTime">
 					        </div>
@@ -102,7 +103,7 @@
 					    	<div id="plus">
 						        <div class="d-flex" style="width:400px;">
 						            <label for="underDayPicker">간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
-						            <input type="date" class="underDayPicker" name="day" readonly>
+						            <input type="text" class="underDayPicker" name="day" readonly>
 						            <button type="button" class="btn btn-secondary" id="plusunderDayPicker">
 							          	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
 	 									 	<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
@@ -322,7 +323,7 @@
 	        	div.className="d-flex";
 	        	div.style.margin="5px 0";
 	        	div.innerHTML=`<label for="underDayPicker">간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
-	        					<input type="date" class="underDayPicker" name="day" readonly>
+	        					<input type="text" class="underDayPicker" name="day" readonly>
 	        					<button type="button" class="btn btn-secondary delPlus">
 	        						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">
 	        					 	 <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1"/>
@@ -355,16 +356,8 @@
 				}
 			});
 	        
-	        
-	        
-	        
-	        
-	        
-			
 
 	    }
-		
-		
 		
 		
 		  //날짜 선택
@@ -381,7 +374,7 @@
 	            $('#underDayInput').removeClass('hidden');
 	        }
 	    }
-
+		
 	
 	
 	

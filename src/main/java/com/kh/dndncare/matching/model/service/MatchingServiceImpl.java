@@ -75,8 +75,8 @@ public class MatchingServiceImpl implements MatchingService {
 	
 	//병원  데이터 Count  get
 	@Override
-	public int getHospitalCount(Hospital ho) {
-		return mMapper.getHospitalCount(ho);
+	public Hospital getHospital(Hospital hospital) {
+		return mMapper.getHospital(hospital);
 	}
  
 

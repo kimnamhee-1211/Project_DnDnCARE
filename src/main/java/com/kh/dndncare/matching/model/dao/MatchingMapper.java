@@ -3,6 +3,7 @@ package com.kh.dndncare.matching.model.dao;
 import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
@@ -31,8 +32,8 @@ public interface MatchingMapper {
 
 	ArrayList<InfoCategory> getInfo(int memberNo);
 
-	int insertMatchingDate(int matNo, String matchingDate);
+	int insertMatchingDate(@Param("matNo") int matNo, @Param("matchingDate") String matchingDate);
 
-	int getHospitalCount(Hospital ho);
+	Hospital getHospital(Hospital hospital);
 
 }
