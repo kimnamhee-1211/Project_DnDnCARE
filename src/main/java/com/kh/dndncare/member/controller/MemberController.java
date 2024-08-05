@@ -1,7 +1,6 @@
 package com.kh.dndncare.member.controller;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -615,16 +614,6 @@ public class MemberController {
 	    
 	    return response;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	@PostMapping("/api/send-auth-code") // 인증번호 전송
