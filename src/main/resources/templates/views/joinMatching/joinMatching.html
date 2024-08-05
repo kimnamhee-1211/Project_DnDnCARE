@@ -150,7 +150,8 @@
 		
 			
 		    //상세정보 노출
-			const tableDivs = document.querySelectorAll('.tableDiv')
+			const tableDivs = document.querySelectorAll('.tableDiv');
+			const joinJmButton = document.getElementById('joinJmButton');
 
 			for(const tableDiv of tableDivs){
 				tableDiv.addEventListener('click', function(){
@@ -290,7 +291,15 @@
 											</tbody>
 										</table>`;	
 								
-									tableDiv.innerHTML = tableDivInnerHTML;
+									tableDiv.innerHTML = tableDivInnerHTML;									
+									
+									//참여인원 다 차면 참여하기 버튼 숨기기									
+									if(${jmPts.length == jmMatMatptInfo.ptCount}){
+										joinJmButton.style.display = "none";
+									}
+									
+									
+									
 								}
 								
 								
@@ -303,7 +312,7 @@
 					
 					
 					//개설자가 아닌 멤버가 참여했을 때
-					document.getElementById('joinJmButton').addEventListener('click', ()=>{
+					joinJmButton.addEventListener('click', ()=>{
 						const joinJoinMatching = document.getElementById('joinJoinMatching');
 						
 						joinJoinMatching.submit();						
