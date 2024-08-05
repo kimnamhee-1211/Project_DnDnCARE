@@ -198,6 +198,10 @@ public class MatchingController {
 	
 	
 	
+	@GetMapping("reviewDetail.mc")
+	public String getMethodName() {
+		return "reviewDetail";
+	}
 	
 	
 	
