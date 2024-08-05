@@ -669,7 +669,6 @@ public class MemberController {
 	    
 	    return response;
 	}
-<<<<<<< HEAD
 	// 임시 : 메인페이지 이동시 캘린더 이벤트 조회	
 	/*public void calendarEvent(Model model, HttpServletResponse response) {
 		Member loginUser = (Member)model.getAttribute("loginUser");
@@ -692,8 +691,6 @@ public class MemberController {
 	// 메인페이지 이동 후에 환자 메인페이지 렌더링 도중에 캘린더 이벤트를 조회하게 된다.
 	
 	
-=======
->>>>>>> refs/remotes/origin/myunghun
 	
 	
 	@PostMapping("/api/send-auth-code") // 인증번호 전송
@@ -754,7 +751,6 @@ public class MemberController {
 	    }
 	}
 	
-<<<<<<< HEAD
 	@PostMapping("updatePassword.me")
 	public String updatePassword(@RequestParam("memberId") String memberId,@RequestParam("memberPwd") String memberPwd) {
 		HashMap<String,String> changeInfo = new HashMap<String,String>();
