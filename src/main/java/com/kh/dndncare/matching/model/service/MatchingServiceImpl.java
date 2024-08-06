@@ -87,6 +87,16 @@ public class MatchingServiceImpl implements MatchingService {
 	public ArrayList<CareReview> selectReviewList(int memberNo) {
 		return mMapper.selectReviewList(memberNo);
 	}
+
+	@Override
+	public int reviewCount(int memberNo) {
+		return mMapper.reviewCount(memberNo);
+	}
+
+	@Override
+	public int avgReviewScore(int memberNo) {
+		return mMapper.avgReviewScore(memberNo);
+	}
  
 
 }

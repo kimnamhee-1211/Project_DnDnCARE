@@ -34,9 +34,13 @@ public interface MatchingMapper {
 	ArrayList<InfoCategory> getInfo(int memberNo);
 
 	int insertMatchingDate(@Param("matNo") int matNo, @Param("matchingDate") String matchingDate);
+	
 	ArrayList<CareReview> selectReviewList(int memberNo);
 
-
 	Hospital getHospital(Hospital hospital);
+
+	int reviewCount(int memberNo);
+
+	int avgReviewScore(int memberNo);
 
 }

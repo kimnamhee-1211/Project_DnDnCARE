@@ -40,7 +40,12 @@ public interface MatchingService {
 	
 	//병원  데이터 Count  get
 	Hospital getHospital(Hospital hospital);
+	
 	ArrayList<CareReview> selectReviewList(int memberNo);
+	
+	int reviewCount(int memberNo);
+	
+	int avgReviewScore(int memberNo);
 	
 
 
