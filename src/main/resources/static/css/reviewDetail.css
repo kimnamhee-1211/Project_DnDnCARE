@@ -259,3 +259,29 @@ input {
 	padding:10px;
 }
 
+/* 리뷰에나오는별쓰자*/
+
+
+.btn-icon-star-review{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 90px 90px;
+	padding:0px;
+	margin-left:0px;
+	background-repeat: no-repeat;	
+}
+
+.btn-icon-star-review-half{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 90px 90px;
+	padding:0px;
+	margin-left:0px;
+	background-repeat: no-repeat;
+	width:11px;
+}
+
+.icon-star-review{
+	background-image:url(../image/icon_star.svg);
+	background-size: 90px 90px;
+	padding:0px;
+	width:26px; height:27px;
+}

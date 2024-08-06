@@ -80,38 +80,34 @@
 			
 			
 				
-				<!-- Button trigger modal -->
-			<button type="button" id="test"class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-			  Launch demo modal
-			</button>
 			
 			<!-- Modal -->
 			<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
 				<div class="modal-dialog modal-dialog-centered" role="document">
 		    		<div class="modal-content rounded-3 shadow">
 		    			<div align="center" class="m-2 mt-2 h2"id="modalScore" style="margin-top:30px;">10</div>
-		    			<div align="center" id="reviewScore" class="d-flex justify-content-center m-3" >
-		    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left-modal" value="1"></button>
-								<button class="btn-star-right btn-icon-star-right-modal "value="2"></button>
-			      			</div>
-		    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left-modal"value="3"></button>
-								<button class="btn-star-right btn-icon-star-right-modal"value="4"></button>
-			      			</div>
-		    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left-modal"value="5"></button>
-								<button class="btn-star-right btn-icon-star-right-modal"value="6"></button>
-			      			</div>
-		    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left-modal"value="7"></button>
-								<button class="btn-star-right btn-icon-star-right-modal"value="8"></button>
-			      			</div>
-		    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left-modal"value="9"></button>
-								<button class="btn-star-right btn-icon-star-right-modal"value="10"></button>
-			      			</div>
-		    			</div>
+			    			<div align="center" id="reviewScore" class="d-flex justify-content-center m-3" >
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button class="btn-star btn-icon-star-left-modal" value="1"></button>
+									<button class="btn-star-right btn-icon-star-right-modal "value="2"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button class="btn-star btn-icon-star-left-modal"value="3"></button>
+									<button class="btn-star-right btn-icon-star-right-modal"value="4"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button class="btn-star btn-icon-star-left-modal"value="5"></button>
+									<button class="btn-star-right btn-icon-star-right-modal"value="6"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button class="btn-star btn-icon-star-left-modal"value="7"></button>
+									<button class="btn-star-right btn-icon-star-right-modal"value="8"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button class="btn-star btn-icon-star-left-modal"value="9"></button>
+									<button class="btn-star-right btn-icon-star-right-modal"value="10"></button>
+				      			</div>
+			    			</div>
 		    			<div align="center">별을 클릭하세요</div>
 						<div class="m-4 review-content"contenteditable=true></div>		    				
 		      			<div class="modal-footer  p-0">
@@ -180,11 +176,35 @@
 			
 		</div>
 		<div class="row m-5 testBorder"><!-- each -->
-			<div class="col m-4 testBorder">
-				<span>[[${rList.ptName}]]님이 쓰신 후기</span>
+			<div class="col m-4 testBorder" >
+				<span class=" p-4">[[${rList.ptName}]]님 [[${rList.reviewScore}]]</span>
 			</div>
-			<div class="col m-4 testBorder">
-			<th:block th:if="${(rList.reviewScore%2)==0}"> 
+			<div class="col m-4 testBorder" >
+				<div align="center"  class="d-flex justify-content-left" style="min-width:600px;">
+	      			<div align="left"class="icon-star-review">
+						<button th:if="${1 == rList.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+						<button th:if="${1 < rList.reviewScore}" class="btn-star btn-icon-star-review"></button>
+	      			</div>
+	      			<div align="left"class="icon-star-review">
+						<button th:if="${3 == rList.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+						<button th:if="${3< rList.reviewScore}" class="btn-star btn-icon-star-review"></button>
+	      			</div>
+	      			<div align="left"class="icon-star-review">
+						<button th:if="${5 == rList.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+						<button th:if="${5 < rList.reviewScore}" class="btn-star btn-icon-star-review"></button>
+	      			</div>
+	      			<div align="left"class="icon-star-review">
+						<button th:if="${7 == rList.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+						<button th:if="${7 < rList.reviewScore}" class="btn-star btn-icon-star-review"></button>
+	      			</div>
+	      			<div align="left"class="icon-star-review">
+						<button th:if="${9 == rList.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+						<button th:if="${9 < rList.reviewScore}" class="btn-star btn-icon-star-review"></button>
+	      			</div>
+	      			<span >([[${rList.reviewScore}]])</span>
+	      			
+    			</div>
+			<!-- <th:block th:if="${(rList.reviewScore%2)==0}"> 
 				<th:block th:each="i : ${#numbers.sequence(1, rList.reviewScore/2)}">
 					<div class="col rating-icon-star" style="width:46px; height:46px;padding:0px;">
 	                    <div class="rating-star rating-icon-star-left"></div> 
@@ -194,7 +214,7 @@
             </th:block>
             <th:block th:if="${(rList.reviewScore%2)==1}"> 
             	<th:block th:each="i : ${#numbers.sequence(1, #numbers.floor(rList.reviewScore/2))}">
-                <div class="row m-2 rating-icon-star" style="width:46px; height:46px;padding:0px;">
+                <div class="col m-2 rating-icon-star" style="width:46px; height:46px;padding:0px;">
       				<div class="rating-star rating-icon-star-left"></div> 
                     <div class="rating-star-right rating-icon-star-right"></div>
       			</div>
@@ -203,7 +223,11 @@
 					<div class="rating-star rating-icon-star-left"></div>
 					<div class="rating-star-right "></div>
 				</div>
-             </th:block>
+				<div class="col rating-icon-star" style="width:46px; height:46px;padding:0px;">
+					<div class="rating-star rating-icon-star-left"></div>
+					<div class="rating-star-right "></div>
+				</div>
+             </th:block> -->
 		    </div>
 			<div class="col m-4 testBorder">
 				<span>작성날짜 : [[${rList.reviewUpdateDate}]]</span>
