@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
-	<link href="css/moreWorkInfo.css" rel="stylesheet" type="text/css"/>
-	<title>일감 찾기 상세페이지</title>
+	<link href="css/moreCaregiverInfo.css" rel="stylesheet" type="text/css"/>
+	<title>간병인 찾기 상세페이지</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
@@ -15,7 +15,7 @@
 		<div><!-- 왼쪽 공백 --></div>
 		<div><!-- 컨텐츠 --> 
 			<div class="">
-				<span class="badge rounded-pill bg-primary" style="font-size: 25px;">나와 딱 맞는 간병일감을 찾아드려요.</span>
+				<span class="badge rounded-pill bg-primary" style="font-size: 25px;">나와 딱 맞는 간병인을 찾아드려요.</span>
 				<img src="image/icon/refresh.gif" width="40px;" height="40px"/>	
 			</div>
 			
@@ -29,7 +29,7 @@
                         	<th>성별</th>
                         	<th>나이</th>
                         	<th>지역</th>
-                        	<th>질환</th>
+                        	<th>경력</th>
                         	<th>돌봄비</th>
                      	</tr>
                  	</thead>
@@ -39,7 +39,7 @@
 	                        <td>남성</td>
 	                        <td>50</td>
 	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
+	                        <td>1년이하</td>
 	                        <td>80,000원</td>
                      	</tr>
                      	<tr class="text-center">
@@ -47,7 +47,7 @@
 	                        <td>남성</td>
 	                        <td>50</td>
 	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
+	                        <td>3년이하</td>
 	                        <td>80,000원</td>
 	                    </tr>
 	                    <tr class="text-center">
@@ -55,7 +55,7 @@
 	                        <td>남성</td>
 	                        <td>50</td>
 	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
+	                        <td>5년이하</td>
 	                        <td>80,000원</td>
 	                    </tr>
 	                    <tr class="text-center">
@@ -63,7 +63,7 @@
 	                        <td>남성</td>
 	                        <td>50</td>
 	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
+	                        <td>5년이상</td>
 	                        <td>80,000원</td>
 	                    </tr>
 	                    <tr class="text-center">
@@ -71,7 +71,7 @@
 	                        <td>남성</td>
 	                        <td>50</td>
 	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
+	                        <td>없음</td>
 	                        <td>80,000원</td>
 	                    </tr>
                  	</tbody>
@@ -84,7 +84,7 @@
                         	<th>성별</th>
                         	<th>나이</th>
                         	<th>지역</th>
-                        	<th>질환</th>
+                        	<th>경력</th>
                         	<th>돌봄비</th>
                      	</tr>
                  	</thead>
@@ -94,7 +94,7 @@
 	                        <td>남성</td>
 	                        <td>50</td>
 	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
+	                        <td>없음</td>
 	                        <td>80,000원</td>
                      	</tr>
                      	<tr class="text-center">
@@ -102,7 +102,7 @@
 	                        <td>남성</td>
 	                        <td>50</td>
 	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
+	                        <td>1년이하</td>
 	                        <td>80,000원</td>
 	                    </tr>
 	                    <tr class="text-center">
@@ -110,7 +110,7 @@
 	                        <td>남성</td>
 	                        <td>50</td>
 	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
+	                        <td>3년이하</td>
 	                        <td>80,000원</td>
 	                    </tr>
 	                    <tr class="text-center">
@@ -118,7 +118,7 @@
 	                        <td>남성</td>
 	                        <td>50</td>
 	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
+	                        <td>5년이하</td>
 	                        <td>80,000원</td>
 	                    </tr>
 	                    <tr class="text-center">
@@ -126,7 +126,7 @@
 	                        <td>남성</td>
 	                        <td>50</td>
 	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
+	                        <td>5년이상</td>
 	                        <td>80,000원</td>
 	                    </tr>
                  	</tbody>
@@ -138,7 +138,7 @@
 			<div id="lowerContents"><!-- 검색목록 -->
 				<div style="position: sticky; top: 0px; z-index: 10; background:white; ">
 					<div id="lowerContentsTitle">
-						<div><span class="badge rounded-pill bg-primary" style="font-size: 25px;">간병일감 목록</span></div>
+						<div><span class="badge rounded-pill bg-primary" style="font-size: 25px;">간병인 목록</span></div>
 						<div class="text-end">
 							<button type="button" class="btn btn-light" id="goClear">검색조건 초기화하기</button>
 							<button type="button" class="btn btn-light goSearch">검색하기</button>

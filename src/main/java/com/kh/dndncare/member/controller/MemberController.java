@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
@@ -110,6 +113,8 @@ public class MemberController {
 			
 			if(loginUser.getMemberCategory().equalsIgnoreCase("C")) {
 				return "redirect:caregiverMain.me";
+			} else if(loginUser.getMemberCategory().equalsIgnoreCase("P")) {
+				return "redirect:patientMain.me";
 			}
 			
 			
@@ -681,22 +686,21 @@ public class MemberController {
 	
 	
 	//무한스크롤 테스트 중 : 성공
-	@GetMapping("workInfoTest.me")
+	@PostMapping("workInfoTest.me")
 	@ResponseBody
-	public void workInfoTest(HttpServletResponse response, @RequestParam("page") int currentPage) {
-		
-		System.out.println("컨트롤러");
+	public void workInfoTest(HttpServletResponse response, @RequestParam(value="page", defaultValue="1") int currentPage) {
+		// 페이지 첫 로드시 또는 검색조건이 하나도 없이 검색버튼을 눌렀을 때 이곳으로 요청이 들어옴
 		
 		Gson gson = new Gson();
 		ArrayList<String> list = new ArrayList<String>();
-		list.add("1");
-		list.add("2");
-		list.add("3");
-		list.add("4");
-		list.add("5");
-		list.add("6");
-		list.add("7");
-		list.add("8");
+		list.add("기본1");
+		list.add("기본2");
+		list.add("기본3");
+		list.add("기본4");
+		list.add("기본5");
+		list.add("기본6");
+		list.add("기본7");
+		list.add("기본8");
 		response.setContentType("application/json; charset=UTF-8");
 		try {
 			gson.toJson(list, response.getWriter());
@@ -706,11 +710,47 @@ public class MemberController {
 	}
 	
 	// 간병인 일감찾기 페이지에서의 검색 요청을 처리
-//	@PostMapping("searchPatientList.me")
-//	public 
+	@PostMapping("searchPatientList.me")
+	@ResponseBody
+	public void searchPatientList(@RequestParam("condition") String obj, @RequestParam(value="page", defaultValue="1") int page,
+									HttpServletResponse response) {
+		// 검색 조건이 하나라도 있는 경우만 이곳으로 들어온다
+		
+		System.out.println(obj);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			Map<String, String> map =
+			               mapper.readValue(obj, new TypeReference<Map<String, String>>(){});
+			
+			// 검색조건과 페이지에 맞게 조회해와야함
+			
+			Gson gson = new Gson();
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("search1");
+			list.add("search2");
+			list.add("search3");
+			list.add("search4");
+			list.add("search5");
+			list.add("search6");
+			list.add("search7");
+			list.add("search8");
+			response.setContentType("application/json; charset=UTF-8");
+			gson.toJson(list, response.getWriter());
+			
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		} catch (JsonIOException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	
-	
+	@GetMapping("moreCaregiverInfo.me")
+	public String moreCaregiverInfo(@RequestParam(value = "page", defaultValue="1") int page ) {
+		return "moreCaregiverInfo";
+	}
 	
 	
 	
