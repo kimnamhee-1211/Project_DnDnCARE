@@ -753,6 +753,70 @@ public class MemberController {
 	}
 	
 	
+	// 간병인 일감찾기 페이지에서의 검색 요청을 처리
+		@PostMapping("searchCaregiverList.me")
+		@ResponseBody
+		public void searchCaregiverList(@RequestParam("condition") String obj, @RequestParam(value="page", defaultValue="1") int page,
+										HttpServletResponse response) {
+			// 검색 조건이 하나라도 있는 경우만 이곳으로 들어온다
+			System.out.println(obj);
+			
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				Map<String, String> map =
+				               mapper.readValue(obj, new TypeReference<Map<String, String>>(){});
+				
+				// 검색조건과 페이지에 맞게 조회해와야함
+				
+				Gson gson = new Gson();
+				ArrayList<String> list = new ArrayList<String>();
+				list.add("search1");
+				list.add("search2");
+				list.add("search3");
+				list.add("search4");
+				list.add("search5");
+				list.add("search6");
+				list.add("search7");
+				list.add("search8");
+				response.setContentType("application/json; charset=UTF-8");
+				gson.toJson(list, response.getWriter());
+				
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			} catch (JsonIOException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	
+	
+		@PostMapping("moreCaregiverInfo.me")
+		@ResponseBody
+		public void moreCaregiverInfo(HttpServletResponse response, @RequestParam(value="page", defaultValue="1") int currentPage) {
+			// 페이지 첫 로드시 또는 검색조건이 하나도 없이 검색버튼을 눌렀을 때 이곳으로 요청이 들어옴
+			
+			Gson gson = new Gson();
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("기본1");
+			list.add("기본2");
+			list.add("기본3");
+			list.add("기본4");
+			list.add("기본5");
+			list.add("기본6");
+			list.add("기본7");
+			list.add("기본8");
+			response.setContentType("application/json; charset=UTF-8");
+			try {
+				gson.toJson(list, response.getWriter());
+			} catch (JsonIOException | IOException e) {
+				e.printStackTrace();
+			}
+		}
+	
+	
+	
+	
 	
 }
 
