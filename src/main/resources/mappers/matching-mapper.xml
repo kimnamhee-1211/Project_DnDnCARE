@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.dndncare.matching.model.dao.MatchingMapper">
 
+
 	<!-- 병원 테이블 등록 -->
 	<insert id="enrollHospital" useGeneratedKeys="true">
 		<selectKey resultType="_int" keyProperty="hospitalNo" order="BEFORE">
@@ -17,7 +18,7 @@
 			select seq_macid.nextval from dual
 		</selectKey>	
 		insert into matching
-		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{matType}, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime})
+		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime}, #{matMode})
 	</insert>
 	
 	<!-- pt get -->
@@ -68,5 +69,20 @@
 			join info_category using(category_no)
 		where member_no = #{memberNo}	
 	</select>
+	
+	
+	<insert id="insertMatchingDate">
+		insert into matching_date
+		values(#{matNo}, #{matchingDate})	
+	</insert>
+	
+	
+	<select id="getHospital">
+		select *
+		from hospital
+		where hospital_name = #{hospitalName} and hospital_address = #{hospitalAddress}	
+	</select>
+	
+
 
 </mapper>

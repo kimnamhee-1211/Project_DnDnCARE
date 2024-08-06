@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link th:href="@{css/enroll.css}" rel="stylesheet" type="text/css"/>
+<link th:href="@{css/publicMatching2.css}" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 
 </head>
 <body>
@@ -15,7 +19,8 @@
 				<h1 class="h3 mb-3 fw-bold mb-5 text-center">공동간병 그룹 모집</h1>
 				<div class="title2-content d-flex justify-content-center mx-auto">	
 					<div class="form-floating mb-3 fw-bold mb-5 mx-auto">
-						<input type="hidden" th:value="${hospital}">	
+						<input type="hidden" th:value="${hospital.hospitalName}" name="hospitalName">
+						<input type="hidden" th:value="${hospital.hospitalAddress}" name="hospitalAddress">
 						<table class="table" id="hoInfo" style="font-size:22px;line-height:40px;">
 						    <tr>
 						      <th scope="col" style="width:100px;">병원명</th>
@@ -28,7 +33,7 @@
 						</table>	
 					</div>
 				</div>
-				<h5 class="h5 mb-1 fw-bold mb-4">기타 요청사항을 제외한 모든 내용은 필수 입력 사항입니다.</h5>
+				<h5 class="h5 mb-1 fw-bold mb-5">기타 요청사항을 제외한 모든 내용은 필수 입력 사항입니다.</h5>
 																
 				<div class="login-input">
 					
@@ -51,42 +56,74 @@
 						<div class="form-floating mb-5">
 							<div class="row">
 								 <div class="col">
-									<input type="number" class="form-control" min="0" name="antePay" >
+									<input type="number" class="form-control" min="0" step="100" name="antePay" >
 								</div>
 						 		<div class="col-md-1" style="font-size: 20px;">원</div>
 						 	</div>
 						</div>
 					</div>
-														
-					<p class="info">기간을 선택해주세요.</p>
-					<div class="form-floating mb-5">
-						<div class="row">
-						  <div class="col">
-						    <input type="date" class="form-control" name="beginDt">
-						  </div>
-						  <div class="col-md-1" style="font-size: 20px;">~</div>
-						  <div class="col">
-						    <input type="date" class="form-control" name="endDt">
-						  </div>
-						</div>
-					</div>					
 					
-					<p class="info">시간을 선택해주세요.</p>
-					<div class="form-floating mb-5">
-						<div class="row">
-						  <div class="col">
-						   <select class="form-select" aria-label="Default select example" name="beginTime">
-								  <option th:each="num : ${#numbers.sequence(00, 24)}" th:value="${num}">[[${num}]] 시</option>
-							</select>
-						  </div>
-						  <div class="col-md-1" style="font-size: 20px;">~</div>
-						  <div class="col">
-						    <select class="form-select" aria-label="Default select example" name="endTime">
-								  <option th:each="num : ${#numbers.sequence(00, 24)}" th:value="${num}">[[${num}]] 시</option>
-							</select>
-						  </div>
+					<div class="form-floating mb-5">									
+						<p class="info">돌봄 서비스를 진행할 기간을 선택해주세요.</p>
+						<div class="icon-wrap d-flex justify-content-center mb-3" style="margin:30px;">
+							<input type="hidden" name="matMode" id="matMode">
+							<div class="icon-container d-flex flex-column" data-letue="overDay" onclick="selectIcon(this)"  style="padding:30px;" id='1'>
+							   <img width="50" height="50" src="https://img.icons8.com/ios/50/calendar--v1.png" alt="calendar--v1"/>
+							   	<strong>기간제 간병</strong>
+							    <p class="fs-6">24시간 이상의<br>간병이 필요해요.</p>
+							</div>							
+							
+							<div class="icon-container d-flex flex-column" data-letue="underDay" onclick="selectIcon(this)" style="padding:30px;" id='2'>
+		  						<img width="50" height="50" src="https://img.icons8.com/ios/50/time--v1.png" alt="time--v1"/>
+		  						<strong>시간제 간병</strong>
+						   	 	<p class="fs-6">24시간 미만의<br>간병이 필요해요</p>
+							</div>
 						</div>
-					</div>		
+						
+						<div id="overDayInput" class="input-field hidden mb-5" style="margin:0 auto;padding:30px;">
+					        <div class="d-flex">
+					            <label for="overDayStart">시작날짜:&nbsp;&nbsp;&nbsp;</label>
+					            <input type="text" id="overDayStart" name="begin" readonly>
+					            <label for="underDayStartTime">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;시작시간:&nbsp;&nbsp;&nbsp;</label>
+					            <input type="text" class="underDayStartTime" name="beginTime">
+					         </div>
+					        <div class="d-flex mt-3">
+					            <label for="overDayEnd">종료날짜:&nbsp;&nbsp;&nbsp;</label>
+					            <input type="text" id="overDayEnd" name="end" readonly>
+					       		<label for="underDayEndTime">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;종료시간:&nbsp;&nbsp;&nbsp;</label>
+					            <input type="text" class="underDayEndTime" name="endTime">
+					        </div>
+					        
+					        <div id="overDaySummary" class="summary">
+					            시작 날짜와 종료 날짜를 선택해주세요
+					        </div>
+					    </div>
+						
+					    <div id="underDayInput" class="input-field hidden mb-5" style="margin:0 auto;padding:30px;">
+					    	<div id="plus">
+						        <div class="d-flex" style="width:400px;">
+						            <label for="underDayPicker">간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
+						            <input type="text" class="underDayPicker" name="day" readonly>
+						            <button type="button" class="btn btn-secondary" id="plusunderDayPicker">
+							          	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+	 									 	<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+										</svg>			            
+						            </button>
+						        </div>
+					        </div>
+					        
+					        <div class="time-picker d-flex mt-3">
+					            <label for="underDayStartTime">시작시간:&nbsp;&nbsp;&nbsp;</label>
+					            <input type="text" class="underDayStartTime" name="beginTime">
+					            <label for="underDayEndTime">&nbsp;&nbsp;&nbsp;종료시간:&nbsp;&nbsp;&nbsp;</label>
+					            <input type="text" class="underDayEndTime" name="endTime">
+					        </div>
+					        <div id="underDaySummary" class="summary">
+					            원하시는 날과 시간을 선택해주세요
+					        </div>
+		    		 	</div> 
+		    		 </div>
+		
 					 					
 					<p class="info">돌봄 서비스를 진행할 구체적인 장소를 입력해주세요.</p>
 					<div class="form-floating mb-5">
@@ -107,7 +144,7 @@
 				<p class="text-center">버튼을 누르면<br>공동간병 모집 신청이 완료됩니다.</p>
 			</div>
 			<div class="sign-btn d-flex flex-column">
-				<p class="text-center ifCheck" style="font-size:20px"> </p>
+				<p class="text-center ifCheck" style="font-size:20px"></p>
 				<button type="button" class="signIn-btn mt-4" id="nextButton"><span>공동간병 모집</span></button>
 			</div>
 
@@ -117,7 +154,9 @@
 	</main>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	
-	
+	 <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 	<script th:inline="javascript">
 		
 		window.onload=()=>{
@@ -127,36 +166,215 @@
 				let isValid = true;
 				
 				//입력사항 모두 입력했는지 확인
-				const inputs = document.getElementsByTagName('input');
-				const ifCheck = document.getElementsByClassName("ifCheck")[0];
-				for(const input of inputs){
-					if(input.value.trim() == ''){
-							ifCheck.innerText = "모든 내용을 빠짐없이 입력해주세요."
-							ifCheck.style.color="red";
-						isValid = false;
-					}else{
-						ifCheck.innerText = ""
-					}	
+//				const inputs = document.getElementsByTagName('input');
+//				const ifCheck = document.getElementsByClassName("ifCheck")[0];
+//				for(const input of inputs){
+//					if(input.value.trim() == ''){
+//							ifCheck.innerText = "모든 내용을 빠짐없이 입력해주세요."
+//							ifCheck.style.color="red";
+//						isValid = false;
+//					}else{
+//						ifCheck.innerText = ""
+//					}	
 					
-				}			
+//				}			
 			
 				if(isValid){
+					
 					form.submit();
 				}
 									
 			});	
-		}
+			
+			
+			
+			
+			
+			
+			
+			//flatpickr
+	        flatpickr.localize(flatpickr.l10ns.ko);
+
+	        // overDayInput 설정
+	        let overDayStartPicker = flatpickr("#overDayStart", {
+	        	mode: "single",
+	            dateFormat: "Y-m-d",
+	            minDate: "today",
+	            locale: "ko",
+	            onChange: updateOverDaySummary
+	        });
+
+	        let overDayEndPicker = flatpickr("#overDayEnd", {
+	        	mode: "single",
+	            dateFormat: "Y-m-d",
+	            minDate: "today",
+	            locale: "ko",
+	            onChange: updateOverDaySummary
+	        });
+
+	        function updateOverDaySummary() {
+	            let startDate = overDayStartPicker.selectedDates[0];
+	            let endDate = overDayEndPicker.selectedDates[0];
+	            let startTimeStr = $('.underDayStartTime').eq(0).val();
+	            let endTimeStr = $('.underDayEndTime').eq(0).val();
+
+	            if (startDate && endDate) {
+	                if (endDate <= startDate) {
+	                    $('#overDaySummary').html('<span class="error-message">종료 날짜와 시간은 시작 날짜와 시간 이후여야 합니다.</span>');
+	                    return;
+	                }
+
+	                // 날짜와 시간을 결합하여 Date 객체 생성
+	                let startDateTime = new Date(startDate);
+	                let endDateTime = new Date(endDate);
+
+	                // 시작 및 종료 시간 설정
+	                if (startTimeStr) {
+	                    let [startHours, startMinutes] = startTimeStr.split(':').map(Number);
+	                    startDateTime.setHours(startHours, startMinutes);
+	                }
+	                if (endTimeStr) {
+	                    let [endHours, endMinutes] = endTimeStr.split(':').map(Number);
+	                    endDateTime.setHours(endHours, endMinutes);
+	                }
+
+	                // 기간 계산
+	                let diffTime = Math.abs(endDateTime - startDateTime);
+	                let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+	                let diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	                let diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+
+	                // 결과 문자열 생성
+	                let result = '선택한 기간: ';
+	                if (diffDays > 0) result += diffDays + '일 ';
+	                if (diffHours > 0) result += diffHours + '시간 ';
+
+	                $('#overDaySummary').text(result.trim());
+	            } else {
+	                $('#overDaySummary').text('날짜와 시간을 선택해주세요.');
+	            }
+	        }
+
+	        
+	        // underDayInput 설정
+	        function underDayInputSet() {
+		        flatpickr(".underDayPicker", {
+		            mode: "single",
+		            dateFormat: "Y-m-d",
+		            minDate: "today",
+		            locale: "ko",
+		            onChange: updateUnderDaySummary
+		        });
+	        }
+	        underDayInputSet()
+	        
+
+	        $('.underDayStartTime, .underDayEndTime').flatpickr({
+	            enableTime: true,
+	            noCalendar: true,
+	            dateFormat: "H:i",
+	            minuteIncrement: 00,
+	            time_24hr: true,
+	            onChange: updateUnderDaySummary
+	        });
+
+	        function updateUnderDaySummary() {
+	            let startTime = $('.underDayStartTime').eq(1).val();
+	            let endTime = $('.underDayEndTime').eq(1).val();
+	            let selectedDates = $(".underDayPicker")
+	            
+	            let timeDiff = 0;
+	            if (startTime && endTime) {
+	                let start = new Date(`2000-01-01T${startTime}`);
+	                let end = new Date(`2000-01-01T${endTime}`);
+	                
+	                if (end <= start) {
+	                    end.setDate(end.getDate() + 1);  // 다음 날로 설정
+	                }
+	                
+	                timeDiff = (end - start) / (1000 * 60 * 60);
+	            }
+
+	            let summaryText = `선택한 기간: 총 ${selectedDates.length}일`;
+	            if (timeDiff > 0) {
+	                summaryText += `, 하루 ${timeDiff}시간`;
+	            }
+
+	            $('#underDaySummary').text(summaryText);
+	        }
+
+	        // 아이콘 클릭 이벤트 설정
+	        $('.icon-container').on('click', function() {
+	            selectIcon(this);
+	            if($(this).attr('id') == '1'){
+	            	$('#matMode').val(1);
+	            	
+	            }else{
+	            	$('#matMode').val(2);
+	            }	            
+	        });
+			
+			
+	        
+	        //날짜 추가
+	        $('#plusunderDayPicker').on('click', function() {
+	        	
+	        	const div = document.createElement('div'); 
+	        	div.className="d-flex";
+	        	div.style.margin="5px 0";
+	        	div.innerHTML=`<label for="underDayPicker">간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
+	        					<input type="text" class="underDayPicker" name="day" readonly>
+	        					<button type="button" class="btn btn-secondary delPlus">
+	        						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">
+	        					 	 <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1"/>
+	        						</svg>
+	        					</button>`			
+	        	
+	            $('#plus').append(div);
+	        					
+	        	underDayInputSet()
+	        					
+	            
+	        });
+	        
+	        if($('.delPlus')){
+	        	  $(document).on('click', '.delPlus', function() {
+	        	        $(this).parent().remove();
+	        	    });	        	
+	        };
+	        
+	        
+			$('#underDayInput').on('focusout', function(){
+				const underDayPickers = document.getElementsByClassName("underDayPicker")
+				for(const underDayPicker1 of underDayPickers){
+					let value1 = underDayPicker1.value
+					for(const underDayPicker2 of underDayPickers){
+						if(value1 === underDayPicker2.value && underDayPicker1 !== underDayPicker2){
+							underDayPicker2.parentNode.remove();
+						}
+					}
+				}
+			});
+	        
+
+	    }
 		
-	
 		
-	
-	
-	
-	
-	
-	
-	
-	
+		  //날짜 선택
+	    function selectIcon(element) {
+	        $('.icon-container').removeClass('selected');
+	        $(element).addClass('selected');
+	        const selectedletue = $(element).data('letue');
+	        
+	        $('#overDayInput, #underDayInput').addClass('hidden');
+	        
+	        if (selectedletue === 'overDay') {
+	            $('#overDayInput').removeClass('hidden');
+	        } else if (selectedletue === 'underDay') {
+	            $('#underDayInput').removeClass('hidden');
+	        }
+	    }
+		
 	
 	
 	

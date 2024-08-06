@@ -1,7 +1,11 @@
 package com.kh.dndncare.matching.controller;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,8 +41,7 @@ public class MatchingController {
 	
 	@Autowired
 	private MatchingService mcService;
-
-	//patient정보 들고 공개 구인 페이지 이동
+	
 	@GetMapping("publicMatching.mc")
 	public String publicMatchingView(HttpSession session,Model model) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
@@ -73,9 +78,9 @@ public class MatchingController {
 			matching.setMemberNo(patient.getMemberNo());
 			matching.setPtCount(1);
 			if(selectDays == null) {
-				matching.setMat_mode(1);
+				matching.setMatMode(1);
 			} else {
-				matching.setMat_mode(2);
+				matching.setMatMode(2);
 			}
 			
 		}
@@ -96,7 +101,7 @@ public class MatchingController {
 	
 	//공동간병 병원 선택
 	@GetMapping("joinMatching.jm")
-	public String joinMatchinjmain(@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,  Model model) {
+	public String joinMatchinjmain(@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress, Model model) {
 		
 		//병원 정보 전달
 		Hospital hospital = new Hospital();
@@ -128,17 +133,71 @@ public class MatchingController {
 	
 	//공동간병 등록
 	@PostMapping("enrollJoinMatching.jm")
-	public String enrollJoinMatching(@ModelAttribute Matching jm, @ModelAttribute MatPtInfo jmPt, @ModelAttribute Hospital ho,
-									HttpSession session, Model model) {
+	public String enrollJoinMatching(@ModelAttribute Matching jm, @ModelAttribute MatPtInfo jmPt, @ModelAttribute Hospital hospital,
+									HttpSession session, RedirectAttributes re,
+									@RequestParam("day") String[] day, 
+									@RequestParam("begin") String begin, @RequestParam("end") String end,
+									@RequestParam("beginTime") String beginTime, @RequestParam("endTime") String endTime) {
 		
-		//병원등록
-		int result1 = mcService.enrollHospital(ho);
+		//병원이 테이블에 없을 경우 등록 && 매칭 테이블 병원 셋
+		Hospital ho = mcService.getHospital(hospital);
+		if(ho == null) {
+			 mcService.enrollHospital(hospital);
+			jm.setHospitalNo(hospital.getHospitalNo());
+		}else {
+			jm.setHospitalNo(ho.getHospitalNo());
+		}
 		
 		//매칭 등록
-		jm.setMoney(jmPt.getAntePay() * jm.getPtCount());
-		jm.setHospitalNo(ho.getHospitalNo());		
+		jm.setMoney(jmPt.getAntePay() * jm.getPtCount());		
+		
+		//날짜-시간 변환
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date utilDate = null;
+        Date sqlDate = null;
+		//기간제
+		if(jm.getMatMode() == 1) {
+		    try {
+	        	utilDate = dateFormat.parse(begin);
+	            sqlDate = new Date(utilDate.getTime());
+	            jm.setBeginDt(sqlDate);
+	            utilDate = dateFormat.parse(end);
+	            sqlDate = new Date(utilDate.getTime());
+	            jm.setEndDt(sqlDate);
+	         } catch (ParseException e) {
+	            e.printStackTrace();
+	         }	
+		//시간제
+		} else if(jm.getMatMode() == 2) {
+	         Arrays.sort(day);
+	         try {
+	        	utilDate = dateFormat.parse(day[0]);
+	            sqlDate = new Date(utilDate.getTime());
+	            jm.setBeginDt(sqlDate);
+	            utilDate = dateFormat.parse(day[day.length-1]);
+	            sqlDate = new Date(utilDate.getTime());
+	            jm.setEndDt(sqlDate);
+	         } catch (ParseException e) {
+	            e.printStackTrace();
+	         }	
+		}
+		
+		//시간 set (불필요한 , 뺴기)
+		beginTime = beginTime.replace(",", "");
+		endTime = endTime.replace(",", "");	
+		jm.setBeginTime(beginTime);
+		jm.setEndTime(endTime);
+		
+		
 		System.out.println("등록" + jm);
 		int result2 = mcService.enrollMatching(jm);
+		System.out.println("등록 후" + jm);
+		
+		
+		if(jm.getMatMode() == 2) {
+			String matchingDate = Arrays.toString(day);
+			mcService.insertMatchingDate(jm.getMatNo(), matchingDate);
+		}
 		
 		//매칭 환자 등록
 		jmPt.setMatNo(jm.getMatNo());
@@ -146,16 +205,19 @@ public class MatchingController {
 		Patient pt = mcService.getPatient(memberNo);		
 		jmPt.setPtNo(pt.getPtNo());
 		jmPt.setService("공동간병");
-		jmPt.setMatAddressInfo(jmPt.getMatAddressInfo());
+		jmPt.setMatAddressInfo(hospital.getHospitalAddress() +" // "+ jmPt.getMatAddressInfo());
 		jmPt.setGroupLeader("Y");
 		System.out.println("등록" + jmPt);
 		int result3 = mcService.enrollMatPtInfo(jmPt);
 		
 		
-		if(result1>0 && result2>0 && result3>0) {
+		if(result2>0 && result3>0) {
+			re.addAttribute("hospitalName", hospital.getHospitalName());
+			re.addAttribute("hospitalAddress", hospital.getHospitalAddress());
 			return "redirect:joinMatching.jm";
 		}
 		throw new MemberException("공동간병 그룹 등록 실패");
+
 	}
 	
 	

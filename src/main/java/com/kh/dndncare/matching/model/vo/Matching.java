@@ -1,7 +1,6 @@
 package com.kh.dndncare.matching.model.vo;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Matching {
+	
 	private int matNo;
 	private Date beginDt;
 	private Date endDt;
@@ -25,7 +25,8 @@ public class Matching {
 	private int ptCount;
 	private String beginTime;
 	private String endTime;
-	private int mat_mode;
+	private int matMode;
+
 }
 
 

@@ -69,5 +69,18 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.getInfo(memberNo);
 	}
 
+	
+	//insert MatchingDate
+	@Override
+	public int insertMatchingDate(int matNo, String matchingDate) {
+		return mMapper.insertMatchingDate(matNo, matchingDate);
+	}
+	
+	//병원  데이터 get
+	@Override
+	public Hospital getHospital(Hospital hospital) {
+		return mMapper.getHospital(hospital);
+	}
+
 
 }

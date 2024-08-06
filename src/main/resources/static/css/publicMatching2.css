@@ -109,7 +109,7 @@ lable{
 .icon-wrap {
             display: flex;
             justify-content: center;
-            gap: 10px;  /* 아이콘 사이의 간격 */
+            gap: 50px;  /* 아이콘 사이의 간격 */
  }
 
   .symptom-selection-container {
@@ -238,7 +238,7 @@ lable{
         
 .icon-container {
             width: 200px;
-            height: 150px;  /* 높이를 명시적으로 지정 */
+            height: 170px;  /* 높이를 명시적으로 지정 */
             padding: 20px;
             display: flex;
             flex-direction: column;
