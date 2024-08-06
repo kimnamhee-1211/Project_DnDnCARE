@@ -257,6 +257,10 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public int likeLikeCount(int boardNo) {
+		return mMapper.likeLikeCount(boardNo);
+	}
+	@Override
 	public ArrayList<MatMatptInfo> selectMatList(int memberNo) {
 		return mMapper.selectMatList(memberNo);
 	}
