@@ -100,7 +100,7 @@ public class MatchingController {
 		//병원이 테이블에 없을 경우 등록 && 매칭 테이블 병원 셋
 		Hospital ho = mcService.getHospital(hospital);
 		if(ho == null) {
-			int result1 = mcService.enrollHospital(hospital);
+			 mcService.enrollHospital(hospital);
 			jm.setHospitalNo(hospital.getHospitalNo());
 		}else {
 			jm.setHospitalNo(ho.getHospitalNo());
