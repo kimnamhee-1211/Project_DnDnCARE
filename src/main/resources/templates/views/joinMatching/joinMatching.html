@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link th:href="@{css/joinMatching.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+	<div class="wrap">
+		<div class="title-content d-flex justify-content-center mx-auto">
+			<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="130"></a>	
+			<h1 class="h1 mb-1 fw-bold mb-1 text-center">공동간병</h1><br>
+		</div>
+		<div class="title2-content d-flex justify-content-center mx-auto">	
+			<div class="form-floating mb-3 fw-bold mb-2 mx-auto">	
+				<table class="table" style="font-size:22px;line-height:40px;" id="hoInfo">
+				    <tr>
+				      <th scope="col" style="width:100px;">병원명</th>
+				      <td id="hospitalName" scope="col" style="width:600px;">[[${hospital.hospitalName}]]</td>
+				      <th scope="col" rowspan="2" style="width:400px; border:none;'">
+						<div class="sign-btn  flex-column">
+							<button type="button" id="insertGruop" class="signIn-btn mt-1">
+								공동간병 모집
+							</button>
+				      	</div>
+				      </th>
+				    </tr>	
+				    <tr>
+				      <th scope="col" style="width:100px;">주소</th>
+				      <td scope="col"id="hospitalAddress" style="width:600px;font-size:16px;">[[${hospital.hospitalAddress}]]</td>
+				    </tr>		
+				</table>	
+			</div>
+		</div>
+		
+		<!-- 공동간병 그룹 리스트 -->
+		<main class="container-xl  justify-content-center mx-auto" style="width:1600px; padding:0 auto">
+			<th:block th:if="${list != null}">
+				<div class="tableDiv" th:each="gm : ${list}">
+					<table class="table room">
+						<thead>
+						    <tr>
+						      <th scope="col" >NO</th>
+						      <th scope="col" >[[${gm.matNo}]]</th>
+						      <th scope="col" >인원</th>
+						      <td scope="col" >[[${gm.ptCount}]]명</td>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr>
+						      <th>시작날짜</th>
+						      <td>[[${gm.beginDt}]]</td>
+						      <th>종료날짜</th>
+						      <td>[[${gm.endDt}]]</td>
+						    </tr>
+						    <tr>
+						      <th>시작시간</th>
+						      <td>[[${gm.beginTime}]]시</td>
+						      <th>종료시간</th>
+						      <td>[[${gm.endTime}]]시</td>
+						    </tr>
+						     <tr>
+						      <th>상세주소</th>
+						      <td colspan="3">[[${gm.matAddressInfo}]]</td>
+						    </tr>					
+						  	<tr>
+						      <th colspan="2">1인당 1일 돌봄비용</th>
+						      <td colspan="2">[[${gm.antePay}]]</td>
+						    </tr>
+						    <tr>
+						      <th>요청사항</th>
+						      <td colspan="3">[[${gm.matRequest}]]</td>
+						    </tr>
+						</tbody>
+					</table>
+				</div>
+			</th:block>	
+			<th:block th:if="${list == null}">
+				<h5 class="h5 mb-3 fw-bold mb-5">아직 개설된 공동간병 그룹이 없습니다.</h5>
+				<h5 class="h5 mb-3 fw-bold mb-5">새롭게 공동간병 그룹을 만들어보세요.</h5>
+			</th:block>
+		</main>
+
+		<!-- 공동간병 그룹 상세 정보 -->
+		<div class="modal fade modal-xl" id="gmContentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-xl" >
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">공동간병 그룹</h1>
+		       			 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		     		</div>
+		     		<div class="modal-body">
+		      			<h3 class="h3 fw-bold mb-4"  style="margin:30px;">공동간병 그룹 상세 정보</h3>
+						<table class="table" id="gmInfo" style="margin-bottom:40px;"></table>										
+						<h4 class="fw-bold mb-2" style="margin:10px 30px;">공동간병 그룹 참여자</h4>
+						<div id="ptDiv" class="align-items-center"></div>
+			      		<div class="modal-footer">
+			      			<button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" id="join">참여하기</button>
+			       			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			      		</div>
+			    	</div>
+			 	 </div>
+			</div>
+		</div>
+		
+		<!-- 참여 시 -->
+		<div class="modal fade modal-lg" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+		  <div class="modal-dialog modal-dialog-centered modal-lg" >
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel2">공동간병 그룹 참여</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body mx-auto">
+		      	<form action="joinJoinMatching.jm" method="post" id="joinJoinMatching">
+			      	<h3 class="h3 fw-bold mb-1" style="margin-top:30px;">해당 공동간병 그룹에 참여하시겠습니까?</h3>
+			        <h4 class="h4 fw-bold mb-5" style="margin-top:30px;">아래 버튼을 누르면 공동간병 그룹에 참여하실 수 있습니다.</h4>
+			        <h5 class="h5 mb-4" style="margin-top:30px;">만약 관련 요청사항이 있다면 100자 이내로 입력해주세요.</h5>
+			        <input type="text" class="form-control mb-5" maxlength="100" placeholder="요청사항" name="matRequest">
+		      		<input type="hidden" name="matNo" id="jmMatMatptInfoInput">
+		      	</form>
+		      </div>
+		      <div class="modal-footer">
+		      	<button class="btn btn-primary" type="button" id="joinJmButton">참여하기</button>
+		        <button class="btn btn-primary" data-bs-target="#gmContentModal" data-bs-toggle="modal">뒤로 가기</button>
+		      	<button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</div>	
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	
+	
+	<script th:inline="javascript">
+	
+		window.onload = function(){
+			
+			//공동간병그룹 등록
+		    document.getElementById("insertGruop").addEventListener('click', function() {
+		    	const hospitalName = document.getElementById("hospitalName").innerText;
+		    	const hospitalAddress = document.getElementById("hospitalAddress").innerText;
+		    	
+		        location.href = 'joinMatchingEnrollView.jm?hospitalName='+hospitalName+'&hospitalAddress='+hospitalAddress;
+		    });
+		
+			
+		    //상세정보 노출
+			const tableDivs = document.querySelectorAll('.tableDiv');
+
+			for(const tableDiv of tableDivs){
+				tableDiv.addEventListener('click', function(){
+					
+					$('#gmContentModal').modal('show');
+					
+					const matNoTd = this.querySelector('th').nextElementSibling;
+					if(matNoTd){
+						let matNo = '';  /*반복 위해 비우기*/
+						matNo = matNoTd.innerText;
+						
+						$.ajax({
+							url : 'getJmContent.jm',
+							type : 'post',
+							data : {'matNo' : matNo},
+							dataType : 'json',
+							success : data => {
+								const jmMatMatptInfo = data.jmMatMatptInfo;
+								const jmPts = data.jmPts;
+
+								
+								//참여신청을 클릭하는 경우를 위해 데이터 전달
+								const jmMatMatptInfoInput = document.getElementById('jmMatMatptInfoInput');
+		               			if (jmMatMatptInfoInput) {
+		               				const matNoInput = `${jmMatMatptInfo.matNo}`
+		               				jmMatMatptInfoInput.value = matNoInput
+		               			}
+								
+	
+								//jmMatMatptInfo
+								const tableGmInfoInnerHTML = `
+								    <thead>
+								        <tr>
+								            <th scope="col">NO</th>
+								            <th scope="col" colspan="3">${jmMatMatptInfo.matNo}</th>
+								        </tr>
+								        <tr>
+								            <th scope="col">총 인원</th>
+								            <td scope="col">${jmMatMatptInfo.ptCount}명</td>
+								            <th scope="col">현재 참여 인원</th>
+								            <td scope="col">${jmPts.length}명</td>
+								        </tr>
+								    </thead>
+								    <tbody>
+								        <tr>
+								            <th>시작날짜</th>
+								            <td>${jmMatMatptInfo.beginDt}</td>
+								            <th>종료날짜</th>
+								            <td>${jmMatMatptInfo.endDt}</td>
+								        </tr>
+								        <tr>
+								            <th>시작시간</th>
+								            <td>${jmMatMatptInfo.beginTime}시</td>
+								            <th>종료시간</th>
+								            <td>${jmMatMatptInfo.endTime}시</td>
+								        </tr>
+								        <tr>
+								            <th>상세주소</th>
+								            <td colspan="3">${jmMatMatptInfo.matAddressInfo}</td>
+								        </tr>					
+								        <tr>
+								            <th colspan="2">1인당 1일 돌봄비용</th>
+								            <td colspan="2">${jmMatMatptInfo.antePay}원</td>
+								        </tr>
+								        <tr>
+								            <th>요청사항</th>
+								            <td colspan="3">${jmMatMatptInfo.matRequest}</td>
+								        </tr>
+								    </tbody>
+								`;
+								
+								const tableGmInfo = document.querySelector('#gmInfo');
+								tableGmInfo.innerHTML = '';	/*반복 위해 비우기*/
+								if(tableGmInfo){
+									tableGmInfo.innerHTML = tableGmInfoInnerHTML;								
+								}
+														
+								
+								//jmPts 
+								const ptDiv = document.getElementById("ptDiv");
+								ptDiv.innerHTML=''; /*반복 위해 비우기*/
+								for(const jmPt of jmPts){
+									const ptAge = jmPt.ptAge
+									console.log(ptAge);
+									
+									//나이계산
+									const today = new Date();
+								    const birthDate = new Date(ptAge);
+								    let age = today.getFullYear() - birthDate.getFullYear();
+								    const monthDifference = today.getMonth() - birthDate.getMonth();
+							
+								    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+								        age--;
+								    }
+									
+									const tableDiv = document.createElement('div');
+									tableDiv.className = "tableDiv";
+									tableDiv.style.margin = "10px 25px"; 
+									tableDiv.style.width = "500px"; 
+									ptDiv.append(tableDiv);
+									
+									const tableDivInnerHTML=`
+										<table class="table pt">
+											<thead>
+											    <tr>
+											      <th scope="col" >이름</th>
+											      <th colspan="3" scope="col" >${jmPt.ptName}</th>
+											    </tr>
+											  </thead>
+											  <tbody>
+											    <tr>
+											      <th>성별</th>
+											      <td>${jmPt.ptGender == 'F' ? '여성':'남성'}</td>
+											      <th>나이</th>
+											      <td>${age}</td>
+											    </tr>
+											    <tr>
+											      <th>키</th>
+											      <td>${jmPt.ptHeight}cm</td>
+											      <th>몸무게</th>
+											      <td>${jmPt.ptWeight}kg</td>
+											    </tr>
+											     <tr>
+											      <th>질환</th>
+											      <td colspan="3">${jmPt.disease}</td>
+											    </tr>					
+											  	<tr>
+											     <th>중증도</th>
+											      <td colspan="3">${jmPt.diseaseLevel}</td>
+											    </tr>
+											    <tr>
+											      <th >요청사항</th>
+											      <td colspan="3" >${jmPt.ptRequest}</td>
+											    </tr>										    
+											    <tr>
+											      <th colspan="2">그룹 개설 여부</th>
+											      <td colspan="2">${jmMatMatptInfo.ptNo == jmPt.ptNo ? 'Y' : 'N'}</td>
+											    </tr>
+											</tbody>
+										</table>`;	
+								
+									tableDiv.innerHTML = tableDivInnerHTML;									
+									
+									//참여인원 다 차면 참여하기 버튼 숨기기									
+									if(jmPts.length == jmMatMatptInfo.ptCount){
+										document.getElementById('join').style.display = "none";
+									}
+									
+								}
+								
+							},
+							error : data => {
+								console.log(data)
+							}										
+						});
+					}
+					
+					
+					//개설자가 아닌 멤버가 참여했을 때
+					document.getElementById('joinJmButton').addEventListener('click', ()=>{
+						const joinJoinMatching = document.getElementById('joinJoinMatching');
+						
+						joinJoinMatching.submit();						
+					});
+					
+				});
+			}
+			
+			
+			
+		}
+		
+		
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	function calculateAge(birthdate) {
+	    const today = new Date();
+	    const birthDate = new Date(birthdate);
+	    let age = today.getFullYear() - birthDate.getFullYear();
+	    const monthDifference = today.getMonth() - birthDate.getMonth();
+
+	    // 생일이 지나지 않았거나 같은 달이지만 생일이 지나지 않은 경우
+	    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+	        age--;
+	    }
+	    return age;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	</script>
+		
+		
+</body>
+</html>

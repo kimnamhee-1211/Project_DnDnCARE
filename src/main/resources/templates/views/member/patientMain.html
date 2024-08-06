@@ -16,7 +16,26 @@
     </style>
 </head>
 <body>
-	<div th:replace="../common/navbar"></div>
+	<div th:replace="~{common/navbar :: navbar}"></div>
+	
+	<div id="patientBtn">
+		<div><!-- 왼쪽 공백 --></div>
+		<div class="btn-group" role="group" aria-label="Basic radio toggle button group" >
+		
+		  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+		  <label class="btn btn-outline-primary" for="btnradio1">Radio 1</label>
+		
+		  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+		  <label class="btn btn-outline-primary" for="btnradio2">Radio 2</label>
+		
+		  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+		  <label class="btn btn-outline-primary" for="btnradio3">Radio 3</label>
+		</div>
+		<div><!-- 오른쪽 공백 --></div>
+	</div>
+	
+	
+	<br/><br/><br/>
 	<div id="upperContents">
 		<div><!-- 왼쪽 공백 --></div>
 		<div id="upperLeftContents">
@@ -32,8 +51,7 @@
 				</table>
 			</div>
 			<div id="upperContentsBtn" class="align-middle text-center" style="height:200px;"><!-- 메뉴판 -->
-				<div><button class="custom-btn btn-14"  th:onclick="|location.href='@{publicMatching.mc}'|" style="width:600px; height:100px;">간병인 공개 매칭 신청</button></div>
-				
+				<div><button class="custom-btn btn-14" th:onclick="'location.href=\'' + @{/publicMatching.mc} + '\''" style="width:600px; height:100px;">간병인 공개 매칭 신청</button></div>
 				<div>
 					<div><!-- 테이블 왼쪽 공백 --></div>
 					<table>
@@ -285,18 +303,9 @@
         </a>
     </div>
     
-    <th:block th:replace="../common/footer"></th:block>
+    <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     <script>
-
-	    document.addEventListener('DOMContentLoaded', function() {
-	      var calendarEl = document.getElementById('calendar');
-	      var calendar = new FullCalendar.Calendar(calendarEl, {
-	        initialView: 'dayGridMonth'
-	      });
-	      calendar.render();
-	    });
-
     // 캘린더 객체 생성
     // 이벤트 : 이벤트 정보를 담아서 객체를 생성해야 한다. 문법은 json을 따른다.
     	document.addEventListener('DOMContentLoaded', function() {
@@ -322,7 +331,6 @@
         	});
         	calendar.render();
       	});
-
     </script>    
 </body>
 </html>

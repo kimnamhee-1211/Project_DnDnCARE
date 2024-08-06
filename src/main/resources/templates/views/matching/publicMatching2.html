@@ -11,7 +11,7 @@
 <body>
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
 	<main class="inner-content d-flex justify-content-center">
-		<form class="w-50 text-center" action="publicMatching-apply.mc" method="post">		
+		<form class="w-50 text-center" action="publicMatchingApply.mc" method="post">		
 			<div class="publicMatching-wrap text-center">
 				<div class="w-100">
 					<a href="home.do"><img class="logo-image mb-4" src="image/logo-removebg.png" width="300"></a>
@@ -44,10 +44,15 @@
 			        <div class="d-flex">
 			            <label for="overDayStart">시작 날짜 및 시간:&nbsp;&nbsp;&nbsp;</label>
 			            <input type="text" id="overDayStart" name="overDayStart" readonly>
+			            <input type="hidden" id="beginDt" name="beginDt">
+			            <input type="hidden" id="beginTime" name="beginTime">
+			       
 			        </div>
 			        <div class="d-flex mt-3">
 			            <label for="overDayEnd">종료 날짜 및 시간:&nbsp;&nbsp;&nbsp;</label>
 			            <input type="text" id="overDayEnd" name="overDayEnd" readonly>
+			            <input type="hidden" id="endDt" name="endDt">
+			            <input type="hidden" id="endTime" name="endTime">
 			        </div>
 			        <div id="overDaySummary" class="summary">
 			            시작 날짜와 종료 날짜를 선택해주세요
@@ -58,13 +63,16 @@
 			    <div id="underDayInput" class="input-field hidden">
 			        <div class="d-flex">
 			            <label for="underDayPicker">간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
-			            <input type="text" id="underDayPicker" name="underDayPicker" readonly>
+			            <input type="text" id="underDayPicker" name="selectedDays" readonly>
+			            <input type="hidden" id="selectedFirst" name="selectedFirst">
+			            <input type="hidden" id="selectedLast" name="selectedLast">
+			            <button type="button" id="confirm">확인</button>
 			        </div>
 			        <div class="time-picker d-flex mt-3">
-			            <label for="underDayStartTime">하루 간병 시작 시간:&nbsp;&nbsp;&nbsp;</label>
-			            <input type="time" id="underDayStartTime" name="underDayStartTime">
+			            <label for="underDayStartTime">시작 시간:&nbsp;&nbsp;&nbsp;</label>
+			            <input type="time" id="underDayStartTime" name="beginTime">
 			            <label for="underDayEndTime">&nbsp;&nbsp;&nbsp;종료 시간:&nbsp;&nbsp;&nbsp;</label>
-			            <input type="time" id="underDayEndTime" name="underDayEndTime">
+			            <input type="time" id="underDayEndTime" name="endTime">
 			        </div>
 			        <div id="underDaySummary" class="summary">
 			            원하시는 날과 시간을 선택해주세요
@@ -80,61 +88,62 @@
 			    <div class="symptom-buttons">
 			        <div class="row mb-3">
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom1">치매</button>
+			                <button type="button" class="btn-radio" data-symptom="21">치매</button>
 			            </div>
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom2">섬망</button>
+			                <button type="button" class="btn-radio" data-symptom="22">섬망</button>
 			            </div>
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom3">욕창</button>
+			                <button type="button" class="btn-radio" data-symptom="23">욕창</button>
 			            </div>
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom4">하반신 마비</button>
+			                <button type="button" class="btn-radio" data-symptom="24">하반신 마비</button>
 			            </div>
 			        </div>
   			        <div class="row mb-3">
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom5">전신 마비</button>
+			                <button type="button" class="btn-radio" data-symptom="25">전신 마비</button>
 			            </div>
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom6">와상 환자</button>
+			                <button type="button" class="btn-radio" data-symptom="26">와상 환자</button>
 			            </div>
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom7">기저귀 케어</button>
+			                <button type="button" class="btn-radio" data-symptom="27">기저귀 케어</button>
 			            </div>
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom8">의식 없음</button>
-			            </div>
-			        </div>
-   			        <div class="row mb-3">
-			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom9">석션</button>
-			            </div>
-			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom10">피딩</button>
-			            </div>
-			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom11">소변줄</button>
-			            </div>
-			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom12">장루</button>
+			                <button type="button" class="btn-radio" data-symptom="28">의식 없음</button>
 			            </div>
 			        </div>
    			        <div class="row mb-3">
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom13">투석</button>
+			                <button type="button" class="btn-radio" data-symptom="29">석션</button>
 			            </div>
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom14">전염성 질환</button>
+			                <button type="button" class="btn-radio" data-symptom="30">피딩</button>
 			            </div>
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom15">파킨슨</button>
+			                <button type="button" class="btn-radio" data-symptom="31">소변줄</button>
 			            </div>
 			            <div class="col-3">
-			                <button type="button" class="btn-radio" data-symptom="symptom16">정신 질환</button>
+			                <button type="button" class="btn-radio" data-symptom="32">장루</button>
+			            </div>
+			        </div>
+   			        <div class="row mb-3">
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="33">투석</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="34">전염성 질환</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="35">파킨슨</button>
+			            </div>
+			            <div class="col-3">
+			                <button type="button" class="btn-radio" data-symptom="36">정신 질환</button>
 			            </div>
 			        </div>
 		        </div>
+		        <input type="hidden" id="selectedSymptoms" name="selectedSymptoms" value="">
 	        </div>
 		        <div class="mobility-button d-flex flex-column mt-5">
 				    <div class="instruction-text">
@@ -142,11 +151,12 @@
 				    </div>
 				    <div class="row mb-3">
 				        <div class="col-3">
-				            <button type="button" class="btn-radio mobility-option" data-symptom="mobility1">자가 보행</button>
+				            <button type="button" class="btn-radio mobility-option" data-symptom="40">자가 보행</button>
 				        </div>
 				        <div class="col-3">
-				            <button type="button" class="btn-radio mobility-option" data-symptom="mobility2">거동 불가</button>
+				            <button type="button" class="btn-radio mobility-option" data-symptom="41">거동 불가</button>
 				        </div>
+				        <input type="hidden" id="selectedMobility" name="selectedMobility">
 				    </div>
 				</div>
 				<div class="gender-button d-flex flex-column mt-5">
@@ -155,14 +165,15 @@
 				    </div>
 				    <div class="row mb-3">
 				        <div class="col-3">
-				            <button type="button" class="btn-radio gender-option" data-symptom="gender1">남성</button>
+				            <button type="button" class="btn-radio gender-option" data-symptom="71">남성</button>
 				        </div>
 				        <div class="col-3">
-				            <button type="button" class="btn-radio gender-option" data-symptom="gender2">여성</button>
+				            <button type="button" class="btn-radio gender-option" data-symptom="72">여성</button>
 				        </div>
-				        <div class="col-3">
-				            <button type="button" class="btn-radio gender-option" data-symptom="gender3">성별 무관</button>
+				        <div class="col-3 w-25">
+				            <button type="button" class="btn-radio gender-option" data-symptom="70">성별 무관</button>
 				        </div>
+				        <input type="hidden" id="selectedGender" name="selectedGender">
 				    </div>
 				</div>
                	<div class="sign-btn mt-5 d-flex justify-content-center">
@@ -174,135 +185,288 @@
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
-    <script>
-    
-    // 질병,성별 항목 중복안되게
-    function setupSingleSelection(className) {
-        const buttons = document.querySelectorAll(`.${className}`);
-        buttons.forEach(button => {
-            button.addEventListener('click', function() {
-                buttons.forEach(btn => btn.classList.remove('selected'));
-                this.classList.add('selected');
-            });
-        });
+<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+<script>
+$(document).ready(function() {
+    // 상수 및 설정
+    const LOCALE = 'ko';
+    const DATE_FORMAT = {
+        fullDateTime: "Y-m-d H:i",
+        dateOnly: "Y년 m월 d일",
+        timeOnly: "H:i"
+    };
+
+    // 증상 버튼 클릭 이벤트
+    $('.symptom-buttons .btn-radio').click(function() {
+        $(this).toggleClass('selected');
+        updateSelectedSymptoms();
+    });
+
+    // 선택된 증상 업데이트 함수
+    function updateSelectedSymptoms() {
+    	
+        var selectedSymptoms = $('.symptom-buttons .btn-radio.selected')
+            .map(function() {
+                return $(this).data('symptom');
+            }).get().join(',');
+        $('#selectedSymptoms').val(selectedSymptoms);
+        console.log('선택된 증상:', typeof(selectedSymptoms));
     }
-    setupSingleSelection('mobility-option');
-    setupSingleSelection('gender-option');
+
+    // 유틸리티 함수
+    function formatDate(date) {
+        if (!(date instanceof Date) || isNaN(date)) {
+            console.error('Invalid date object:', date);
+            return '';
+        }
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    }
+
+    function checkElementsExist(...ids) {
+        const missingElements = ids.filter(id => !document.getElementById(id));
+        if (missingElements.length > 0) {
+            console.error('Missing elements:', missingElements.join(', '));
+            return false;
+        }
+        return true;
+    }
     
-    //날짜 선택
-    function selectIcon(element) {
+    window.selectIcon = function(element) {
         $('.icon-container').removeClass('selected');
         $(element).addClass('selected');
-        const selectedletue = $(element).data('letue');
+        const selectedValue = $(element).data('letue');
         
         $('#overDayInput, #underDayInput').addClass('hidden');
         
-        if (selectedletue === 'overDay') {
+        if (selectedValue === 'overDay') {
             $('#overDayInput').removeClass('hidden');
-        } else if (selectedletue === 'underDay') {
+            resetInputs('under');
+        } else if (selectedValue === 'underDay') {
             $('#underDayInput').removeClass('hidden');
+            resetInputs('over');
         }
     }
-    
-    $(document).ready(function() {
-        flatpickr.localize(flatpickr.l10ns.ko);
 
-        // overDayInput 설정
-        let overDayStartPicker = flatpickr("#overDayStart", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minDate: "today",
-            locale: "ko",
-            minuteIncrement: 30,
-            onChange: updateOverDaySummary
-        });
 
-        let overDayEndPicker = flatpickr("#overDayEnd", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minDate: "today",
-            locale: "ko",
-            minuteIncrement: 30,
-            onChange: updateOverDaySummary
-        });
+    // 초기화 함수
+    function initializeFlatpickr() {
+        flatpickr.localize(flatpickr.l10ns[LOCALE]);
 
-        function updateOverDaySummary() {
-        	let start = overDayStartPicker.selectedDates[0];
-        	let end = overDayEndPicker.selectedDates[0];
-            
-            if (start && end) {
-                if (end <= start) {
-                    $('#overDaySummary').html('<span class="error-message">종료 날짜와 시간은 시작 날짜와 시간 이후여야 합니다.</span>');
-                    return;
-                }
-                
-                let diffTime = Math.abs(end - start);
-                let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                let diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                let diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
-                
-                let result = '선택한 기간: ';
-                if (diffDays > 0) result += diffDays + '일 ';
-                if (diffHours > 0) result += diffHours + '시간 ';
-                if (diffMinutes > 0) result += diffMinutes + '분';
-                
-                $('#overDaySummary').text(result.trim());
-            } else {
-                $('#overDaySummary').text('날짜와 시간을 선택해주세요.');
-            }
+        if (!checkElementsExist('overDayStart', 'overDayEnd', 'underDayPicker', 'underDayStartTime', 'underDayEndTime')) {
+            alert('페이지 로딩 중 오류가 발생했습니다. 페이지를 새로고침 해주세요.');
+            return;
         }
 
-        // underDayInput 설정
+        // 기간제 간병 설정
+        const overDayConfig = {
+            enableTime: true,
+            dateFormat: DATE_FORMAT.fullDateTime,
+            minDate: "today",
+            locale: LOCALE,
+            minuteIncrement: 30,
+            onChange: (selectedDates, dateStr, instance) => {
+                updateDateTimeFields();
+                updateOverDaySummary();
+            }
+        };
+        
+        flatpickr("#overDayStart", overDayConfig);
+        flatpickr("#overDayEnd", overDayConfig);
+
+        // 시간제 간병 설정
         flatpickr("#underDayPicker", {
             mode: "multiple",
-            dateFormat: "Y년 m월 d일",
+            dateFormat: DATE_FORMAT.dateOnly,
             minDate: "today",
-            locale: "ko",
-            onChange: updateUnderDaySummary
+            locale: LOCALE,
+            onChange: (selectedDates, dateStr) => {
+                updateSelectedDateRange();
+                updateUnderDaySummary();
+            }
         });
 
-        $('#underDayStartTime, #underDayEndTime').flatpickr({
+        flatpickr("#underDayStartTime, #underDayEndTime", {
             enableTime: true,
             noCalendar: true,
-            dateFormat: "H:i",
+            dateFormat: DATE_FORMAT.timeOnly,
             minuteIncrement: 30,
             time_24hr: true,
             onChange: updateUnderDaySummary
         });
+    }
 
-        function updateUnderDaySummary() {
-            let startTime = $('#underDayStartTime').val();
-            let endTime = $('#underDayEndTime').val();
-            let selectedDates = $("#underDayPicker")[0]._flatpickr.selectedDates;
-            
-            let timeDiff = 0;
-            if (startTime && endTime) {
-                let start = new Date(`2000-01-01T${startTime}`);
-                let end = new Date(`2000-01-01T${endTime}`);
-                
-                if (end <= start) {
-                    end.setDate(end.getDate() + 1);  // 다음 날로 설정
-                }
-                
-                timeDiff = (end - start) / (1000 * 60 * 60);
+    // 업데이트 함수
+    function updateDateTimeFields() {
+        ['overDayStart', 'overDayEnd'].forEach(id => {
+            const value = $(`#${id}`).val();
+            if (value) {
+                const [date, time] = value.split(' ');
+                $(`#${id === 'overDayStart' ? 'beginDt' : 'endDt'}`).val(date);
+                $(`#${id === 'overDayStart' ? 'beginTime' : 'endTime'}`).val(time);
             }
+        });
+    }
 
-            let summaryText = `선택한 기간: 총 ${selectedDates.length}일`;
-            if (timeDiff > 0) {
-                summaryText += `, 하루 ${timeDiff}시간`;
-            }
-
-            $('#underDaySummary').text(summaryText);
+    function updateSelectedDateRange() {
+        if (!checkElementsExist('underDayPicker', 'selectedFirst', 'selectedLast')) {
+            console.error('Required elements for date range update are missing.');
+            return;
         }
 
-        // 아이콘 클릭 이벤트 설정
-        $('.icon-container').on('click', function() {
-            selectIcon(this);
+        const underDayPicker = document.getElementById('underDayPicker');
+        const selectedFirst = document.getElementById('selectedFirst');
+        const selectedLast = document.getElementById('selectedLast');
+        
+        console.log("underDayPicker value:", underDayPicker.value);
+
+        if (underDayPicker.value) {
+            const dates = underDayPicker.value.split(',').map(date => date.trim());
+            console.log("Parsed dates:", dates);
+
+            if (dates.length > 0) {
+                const parsedDates = dates.map(date => {
+                    const match = date.match(/(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일/);
+                    if (match) {
+                        const [, year, month, day] = match;
+                        return new Date(year, parseInt(month) - 1, parseInt(day));
+                    }
+                    console.error('Invalid date format:', date);
+                    return null;
+                }).filter(date => date !== null);
+
+                console.log("Parsed date objects:", parsedDates);
+
+                if (parsedDates.length > 0) {
+                    selectedFirst.value = formatDate(new Date(Math.min(...parsedDates)));
+                    selectedLast.value = formatDate(new Date(Math.max(...parsedDates)));
+                } else {
+                    console.error('No valid dates found');
+                    selectedFirst.value = selectedLast.value = '';
+                }
+            } else {
+                console.log('No dates selected');
+                selectedFirst.value = selectedLast.value = '';
+            }
+        } else {
+            console.log('underDayPicker is empty');
+            selectedFirst.value = selectedLast.value = '';
+        }
+
+        console.log("Final selectedFirst:", selectedFirst.value);
+        console.log("Final selectedLast:", selectedLast.value);
+    }
+
+    function updateOverDaySummary() {
+        const start = $("#overDayStart")[0]._flatpickr.selectedDates[0];
+        const end = $("#overDayEnd")[0]._flatpickr.selectedDates[0];
+        
+        if (start && end) {
+            if (end <= start) {
+                $('#overDaySummary').html('<span class="error-message">종료 시간은 시작 시간 이후여야 합니다.</span>');
+                return;
+            }
+            
+            const diffTime = Math.abs(end - start);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+            
+            let result = '선택한 기간: ';
+            if (diffDays > 0) result += `${diffDays}일 `;
+            if (diffHours > 0) result += `${diffHours}시간 `;
+            if (diffMinutes > 0) result += `${diffMinutes}분`;
+            
+            $('#overDaySummary').text(result.trim());
+        } else {
+            $('#overDaySummary').text('날짜와 시간을 선택해주세요.');
+        }
+    }
+
+    function updateUnderDaySummary() {
+        const startTime = $('#underDayStartTime').val();
+        const endTime = $('#underDayEndTime').val();
+        const selectedDates = $("#underDayPicker")[0]._flatpickr.selectedDates;
+        
+        let timeDiff = 0;
+        if (startTime && endTime) {
+            let start = new Date(`2000-01-01T${startTime}`);
+            let end = new Date(`2000-01-01T${endTime}`);
+            
+            if (end <= start) {
+                end.setDate(end.getDate() + 1);
+            }
+            
+            timeDiff = (end - start) / (1000 * 60 * 60);
+        }
+
+        let summaryText = `선택한 기간: 총 ${selectedDates.length}일`;
+        if (timeDiff > 0) {
+            summaryText += `, 하루 ${timeDiff}시간`;
+        }
+
+        $('#underDaySummary').text(summaryText);
+    }
+
+    // 이벤트 핸들러
+    function setupSingleSelection(className, hiddenInputId) {
+        $(`.${className}`).on('click', function() {
+            $(`.${className}`).removeClass('selected');
+            $(this).addClass('selected');
+            $(`#${hiddenInputId}`).val($(this).data('symptom'));
+            console.log(`선택된 ${hiddenInputId}:`, $(`#${hiddenInputId}`).val());
         });
-    });
-    </script>
+    }
+
+    function handleIconClick() {
+        // ... (기존 코드 유지)
+    }
+
+    function handleFormSubmit() {
+        $('form').on('submit', function(e) {
+            e.preventDefault();
+            const selectedCareType = $('.icon-container.selected').data('letue');
+            
+            $('#overDayInput input, #underDayInput input').prop('disabled', false);
+            if (selectedCareType === 'overDay') {
+                $('#underDayInput input').prop('disabled', true);
+            } else if (selectedCareType === 'underDay') {
+                $('#overDayInput input').prop('disabled', true);
+            }
+
+            updateSelectedSymptoms();
+
+            if (!$('#selectedMobility').val()) {
+                alert('거동 상태를 선택해주세요.');
+                return false;
+            }
+
+            if (!$('#selectedGender').val()) {
+                alert('선호하는 간병인의 성별을 선택해주세요.');
+                return false;
+            }
+
+            this.submit();
+        });
+    }
+
+    // 보조 함수
+    function resetInputs(type) {
+        // ... (기존 코드 유지)
+    }
+
+    // 초기화 및 이벤트 바인딩
+    initializeFlatpickr();
+    setupSingleSelection('mobility-option', 'selectedMobility');
+    setupSingleSelection('gender-option', 'selectedGender');
+    handleIconClick();
+    handleFormSubmit();
+
+    // 초기 업데이트
+    updateDateTimeFields();
+    updateSelectedDateRange();
+});
+</script>
 </body>
 </html>

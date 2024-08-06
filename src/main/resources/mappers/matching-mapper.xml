@@ -1,9 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.dndncare.matching.model.dao.MatchingMapper">
-	<select id="selectPatient" resultType="Patient">
+
+	<!-- 병원 테이블 등록 -->
+	<insert id="enrollHospital" useGeneratedKeys="true">
+		<selectKey resultType="_int" keyProperty="hospitalNo" order="BEFORE">
+			select seq_hid.nextval from dual
+		</selectKey>	
+		insert into hospital
+		values(#{hospitalNo}, #{hospitalAddress}, #{hospitalName})
+	</insert>
+
+	<!-- 매칭 테이블 등록 -->
+	<insert id="enrollMatching" useGeneratedKeys="true">
+		<selectKey resultType="_int" keyProperty="matNo" order="BEFORE">
+			select seq_macid.nextval from dual
+		</selectKey>	
+		insert into matching
+		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{matType}, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime})
+	</insert>
+	
+	<!-- pt get -->
+	<select id="getPatient">
 		select *
 		from patient
-		where member_no = 48
+		where member_no = #{memberNo}
 	</select>
+	
+	<!-- 매칭 pt info 테이블 등록 -->	
+	<insert id="enrollMatPtInfo">	
+		insert into mat_pt_info
+		values(#{matNo}, #{ptNo}, #{antePay}, #{service}, #{matAddressInfo}, #{matRequest}, default, #{groupLeader})
+	</insert>
+
+	<!-- 공동 간병 리스트 get -->
+	<select id="getJmList">
+		select *
+		from hospital
+			join matching using(hospital_no) 
+			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 			
+		where hospital_name = #{hospitalName} and group_leader = 'Y'
+	</select>
+
+	<!-- 공동 간병 정보 get -->
+	<select id="getMatMatptInfo">
+		select *
+		from hospital
+			join matching on(hospital.hospital_no = matching.hospital_no) 
+			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 			
+		where matching.mat_no = #{matNo} and mat_pt_info.group_leader = 'Y'
+	</select>
+
+	
+	<!-- MatNo로 get 공동 간병 참여자들 Patient -->
+	<select id="getPatientToMatNo">
+		select *
+		from patient
+		where patient.pt_no in (select pt_no
+								from mat_pt_info
+								where mat_no = #{mat_no})	
+	</select>
+	
+	<!-- get member info (대분류 : 소분류) -->
+	<select id="getInfo">
+		select l_category, s_category
+		from member_info 
+			join info_category using(category_no)
+		where member_no = #{memberNo}	
+	</select>
+
 </mapper>

@@ -36,61 +36,43 @@
 				</div>
 				
 				<div id="homeInput" class="input-field" style="display: none;">
-				    <input type="text" placeholder="집 주소를 확인해주세요" name="homeAddress">
+				    <input type="text" placeholder="집 주소를 확인해주세요" name="ptAddress" th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]} + '-' + ${#strings.arraySplit(patient.ptAddress, '//')[2]}">
 				</div>
 				
 				<div id="hospitalInput" class="input-field" style="display: none;">
-				    <input type="text" placeholder="병원의 이름을 입력해주세요" name="hospitalAddress">
+				    <input type="text" placeholder="병원의 이름을 확인해주세요" name="ptAddress" th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]} + '-' + ${#strings.arraySplit(patient.ptAddress, '//')[2]}">
 				</div>
 				
 				<div class="basic-info-wrap d-flex justify-content-center">
 					<div class="basic-info">
 							<div class="form-floating mb-3">
-								<input type="text" class="form-control" id="floatingInput" name="memberId" th:value="${patient.ptName}">
+								<input type="text" class="form-control" id="floatingInput" name="ptName" th:value="${patient.ptName}">
 								<label for="floatingInput">[[${patient.ptName}]]</label>
 							</div>
 							<div class="form-group mb-3">
 	                            <div class="radio-group">
-	                                <input type="radio" id="male" name="memberGender" value="남성" class="btn-check">
+	                                <input type="radio" id="male" name="ptGender" value="M" class="btn-check" th:checked="${patient.ptGender == 'M'}">
 	                                <label for="male" class="btn-radio">남성</label>
 	                                
-	                                <input type="radio" id="female" name="memberGender" value="여성" class="btn-check">
+	                                <input type="radio" id="female" name="ptGender" value="F" class="btn-check" th:checked="${patient.ptGender == 'F'}">
 	                                <label for="female" class="btn-radio">여성</label>
 	                            </div>
                         	</div>
 							<div class="form-floating d-flex mb-3">
-								<input type="text" class="form-control" id="floatingPassword" name="memberAge" th:value="${patient.ptAge}">
-								<label for="floatingPassword">나이</label><p class="mt-2">세</p>
+								<input type="text" class="form-control" id="floatingPassword" name="ptAge" th:value="${patient.ptAge}">
+								<label for="floatingPassword">생년월일</label>
 							</div>
 							<div class="form-floating d-flex mb-3">
-								<input type="text" class="form-control" id="floatingPassword" name="memberHeight" th:value="${patient.ptHeight}">
+								<input type="text" class="form-control" id="floatingPassword" name="ptHeight" th:value="${patient.ptHeight}">
 								<label for="floatingPassword">키</label><p class="mt-2">cm</p>
 							</div>
 							<div class="form-floating d-flex mb-3">
-								<input type="text" class="form-control" id="floatingPassword" name="memberWeight" th:value="${patient.ptWeight}">
+								<input type="text" class="form-control" id="floatingPassword" name="ptWeight" th:value="${patient.ptWeight}">
 								<label for="floatingPassword">몸무게</label><p class="mt-2">kg</p>
-							</div>
-							<div class="form-floating mb-3">
-								<input type="text" class="form-control" id="floatingPassword" name="memberDisase">
-								<label for="floatingPassword">진단명</label>
 							</div>
 					</div>
 				</div>			
 				
-<!--                		<div class="d-flex">
-               			<div class="me-5"><em>* </em><span class="mb-3">원하는 간병인 경력 </span><br></div>
-	               		<div class="btn-group-sm" role="group" aria-label="Basic example">
-		               			<button type="button" class="btn btn-outline-success">치매</button>
-								<button type="button" class="btn btn-outline-success">호흡기 질환</button>
-								<button type="button" class="btn btn-outline-success">거동 불편</button>
-								<button type="button" class="btn btn-outline-success">외상환자</button>
-								<button type="button" class="btn btn-outline-success">파킨슨</button>
-								<button type="button" class="btn btn-outline-success">수면질환</button>
-								<button type="button" class="btn btn-outline-success">정신질환</button>
-								<button type="button" class="btn btn-outline-success">기저귀 케어</button>
-								<button type="button" class="btn btn-outline-success">재활</button>
-						</div>
-               		</div> -->
                	<div class="sign-btn mt-5 d-flex justify-content-center">
 					<button type="submit" class="apply-btn me-3"><span>다음</span></button>
 				</div>	
