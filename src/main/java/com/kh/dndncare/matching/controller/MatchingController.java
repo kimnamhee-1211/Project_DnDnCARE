@@ -94,9 +94,6 @@ public class MatchingController {
 									@RequestParam("begin") String begin, @RequestParam("end") String end,
 									@RequestParam("beginTime") String beginTime, @RequestParam("endTime") String endTime) {
 		
-		beginTime = beginTime.replace(",", "");
-		endTime = endTime.replace(",", "");	
-		
 		//병원이 테이블에 없을 경우 등록 && 매칭 테이블 병원 셋
 		Hospital ho = mcService.getHospital(hospital);
 		if(ho == null) {
@@ -139,12 +136,18 @@ public class MatchingController {
 	            e.printStackTrace();
 	         }	
 		}
+		
+		//시간 set (불필요한 , 뺴기)
+		beginTime = beginTime.replace(",", "");
+		endTime = endTime.replace(",", "");	
 		jm.setBeginTime(beginTime);
 		jm.setEndTime(endTime);
+		
 		
 		System.out.println("등록" + jm);
 		int result2 = mcService.enrollMatching(jm);
 		System.out.println("등록 후" + jm);
+		
 		
 		if(jm.getMatMode() == 2) {
 			String matchingDate = Arrays.toString(day);
@@ -162,13 +165,13 @@ public class MatchingController {
 		System.out.println("등록" + jmPt);
 		int result3 = mcService.enrollMatPtInfo(jmPt);
 		
+		
 		if(result2>0 && result3>0) {
 			re.addAttribute("hospitalName", hospital.getHospitalName());
 			re.addAttribute("hospitalAddress", hospital.getHospitalAddress());
 			return "redirect:joinMatching.jm";
 		}
 		throw new MemberException("공동간병 그룹 등록 실패");
-
 
 	}
 	
