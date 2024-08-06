@@ -70,7 +70,7 @@
 					</div>
 					<div align="center" class="col m-3">
 						<button type="button" class="m-4 btn-maincolor">간병 신청하기</button>
-						<button type="button" class="m-4 btn-outline-maincolor">후기 작성하기</button>
+						<button type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton">후기 작성하기</button>
 					</div>
 				</div>
 			</div>
@@ -89,27 +89,27 @@
 			<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
 				<div class="modal-dialog modal-dialog-centered" role="document">
 		    		<div class="modal-content rounded-3 shadow">
-		    			<div align="center" class="m-3 h2">스코어</div>
-		    			<div align="center" class="d-flex justify-content-center m-3" >
+		    			<div align="center" class="m-2 mt-2 h2"id="modalScore" style="margin-top:30px;">10</div>
+		    			<div align="center" id="reviewScore" class="d-flex justify-content-center m-3" >
 		    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left-modal"></button>
-								<button class="btn-star-right btn-icon-star-right-modal"></button>
+								<button class="btn-star btn-icon-star-left-modal" value="1"></button>
+								<button class="btn-star-right btn-icon-star-right-modal "value="2"></button>
 			      			</div>
 		    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left-modal"></button>
-								<button class="btn-star-right btn-icon-star-right-modal"></button>
+								<button class="btn-star btn-icon-star-left-modal"value="3"></button>
+								<button class="btn-star-right btn-icon-star-right-modal"value="4"></button>
 			      			</div>
 		    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left-modal"></button>
-								<button class="btn-star-right btn-icon-star-right-modal"></button>
+								<button class="btn-star btn-icon-star-left-modal"value="5"></button>
+								<button class="btn-star-right btn-icon-star-right-modal"value="6"></button>
 			      			</div>
 		    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left-modal"></button>
-								<button class="btn-star-right btn-icon-star-right-modal"></button>
+								<button class="btn-star btn-icon-star-left-modal"value="7"></button>
+								<button class="btn-star-right btn-icon-star-right-modal"value="8"></button>
 			      			</div>
 		    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left-modal"></button>
-								<button class="btn-star-right btn-icon-star-right-modal"></button>
+								<button class="btn-star btn-icon-star-left-modal"value="9"></button>
+								<button class="btn-star-right btn-icon-star-right-modal"value="10"></button>
 			      			</div>
 		    			</div>
 		    			<div align="center">별을 클릭하세요</div>
@@ -117,19 +117,56 @@
 		      			<div class="modal-footer  p-0">
 		      				<div class="d-flex justify-content-evenly">
 			      				<button type="button" class="btn btn-success">후기남기기</button>
-			      				<button type="button" class="btn btn-light">취소</button>
+			      				<button type="button" class="btn btn-light"data-bs-dismiss="modal">취소</button>
 		      				</div>
 		      				
 		      			</div>
 		    		</div>
-		  		</div>
+		  		</div>	
 			</div>
 			
 			<script>
-				document.getElementById('test').addEventListener('click',()=>{
+				document.getElementById('reviewWriteButton').addEventListener('click',()=>{
 					console.log('확인');
 					$('#modalChoice').modal('show');	
 				})
+				
+				const reviewScore = document.getElementById('reviewScore');
+				const bts = reviewScore.querySelectorAll('button');
+				for(bt of bts){
+						bt.addEventListener('click',function(){
+							document.getElementById('modalScore').innerText = this.value;
+							
+							for(let i = 0 ; i < this.value ; i++){	//색칠하기
+								if(i % 2 == 0){
+									if(!bts[i].classList.contains('btn-icon-star-left-modal')){
+										bts[i].classList.add('btn-icon-star-left-modal');
+									}
+									
+								}else{
+									if(!bts[i].classList.contains('btn-icon-star-right-modal')){
+										console.log('체크')
+										console.log(i)
+										bts[i].classList.add('btn-icon-star-right-modal');
+									}
+								}
+							}
+							for(let i = 9 ; i >= this.value ; i--){ //색지우기
+								if(i % 2 == 0){
+									if(bts[i].classList.contains('btn-icon-star-left-modal')){
+										bts[i].classList.remove('btn-icon-star-left-modal');
+										
+									}
+									
+								}else{
+									if(bts[i].classList.contains('btn-icon-star-right-modal')){
+										bts[i].classList.remove('btn-icon-star-right-modal');
+										
+									}
+								}
+							}
+						})
+				}
 			</script>
 			
 			
