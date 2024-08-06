@@ -78,10 +78,14 @@
 	<select id="selectReviewList" resultType="CareReview">
 		select *
 		from care_review r
-			join patient p on(p.pt_no = r.pt_no)
-        	join mat_pt_info mpi on(mpi.pt_no = p.pt_no)
-       		join matching m on(m.mat_no = mpi.mat_no)
-       	where review_status = 'Y'
+		        left join patient p on(p.pt_no = r.pt_no)
+		        left join mat_pt_info mpi on(mpi.pt_no = p.pt_no)
+		        left join matching mc on(mc.mat_no = mpi.mat_no)
+		        left join caregiver cg on(mc.member_no = cg.member_no)
+		        left join member m on(m.member_no = mc.member_no)
+		        left join matching mc on(mc.member_no = cg.member_no)
+		        left join member m on(m.member_no = cg.member_no)
+		where review_status ='Y'; 
        	<!-- and m.member_no = #{memberNo} -->
 	</select>
 	

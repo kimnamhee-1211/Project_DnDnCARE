@@ -183,39 +183,53 @@ input {
 
 
 ** 밑에 점수
+.rating-icon-star{
+	background-image:url(../image/icon_star.svg);
+	background-size: 100px 100px;
+	padding:0px;
+	display:inline-block;
+	vertical-align: top;
+}
+
 .rating-star {
         background: transparent;
         border: 0px solid black;
-        width: 20px;
-        height: 20px;
+        width: 46px;
+        height: 46px;
         padding: 0;
         margin-left: 0px;
         margin-right: -1.5px;
-        display: inline-block;
+        display: flex;
+        float:none;
         
 }
 .rating-star-right {
 	   background: transparent;
 	   border: 0px solid black;
-	   width: 20px;
-	   height: 20px;
+	   width: 23px;
+	   height: 46px;
 	   padding: 0;
 	   margin-left: -3px;
 	   margin-right: -1.5px;
-	   
+	   display: flex;
+	   float:none;
 }
+
 .rating-icon-star-left {
     background-image: url('../image/icon_star2.svg');
-    background-size: contain;
-    padding: 0px;
-    background-repeat: no-repeat;
+    background-size: 100px 100px;
+   	padding:0px;
+   	background-repeat: no-repeat;	
+   	
+    
 }
+
 .rating-icon-star-right {
     background-image: url('../image/icon_star2.svg');
-    background-size: contain;
-    padding: 0px;
-    background-position: -19.5px 0px;
-    background-repeat: no-repeat;
+    background-size: 100px 100px;
+   	padding:0;
+   	background-position: -19.5px 0px;
+	background-repeat: no-repeat;
 }
 
 
