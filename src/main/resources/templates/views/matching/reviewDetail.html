@@ -5,6 +5,9 @@
 <title>Insert title here</title>
 <link th:href="@{css/reviewDetail.css}" rel="stylesheet" type="text/css"/>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<style>
+	
+    </style>
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
@@ -78,55 +81,25 @@
 
 			
 		</div>
-		<div class="row m-5 testBorder"><!-- each -->
+		<div class="row m-5 testBorder" th:each="rList:${reviewList}"><!-- each -->
 			<div class="col m-4 testBorder">
-				<span>환자1님이 쓰신 후기</span>
+				<span>[[${rList.ptName}]]님이 쓰신 후기</span>
 			</div>
 			<div class="col m-4 testBorder">
-				<span>든든지수 :  ★★★☆☆</span>
-			</div>
+				<th:block th:each="i : ${#numbers.sequence(1, rList.reviewScore)}">
+                    <div class="rating-star rating-icon-star-left">1</div> 
+                    <div class="rating-star-right rating-icon-star-right"></div>
+                </th:block>
+			    <span th:text="${rList.reviewScore}"></span>
+		    </div>
 			<div class="col m-4 testBorder">
-				<span>작성날짜 : 2024.08.05</span>
+				<span>작성날짜 : [[${rList.reviewUpdateDate}]]</span>
 			</div>
 				<hr>
 				<div class="col m-4 testBorder">
-					<div>후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-					</div>
+					<div>[[${rList.reviewContent}]]</div>
 				</div>
 			</div>
-			<div class="row m-5 testBorder">
-			<div class="col m-4 testBorder">
-				<span>[[ptName]]님이 쓰신 후기</span>
-			</div>
-			<div class="col m-4 testBorder">
-				<span>든든지수 :  ★★★★★ reviewScore </span>
-			</div>
-			<div class="col m-4 testBorder">
-				<span>작성날짜 : 2024.08.06 reviewUpdateDate</span>
-			</div>
-				<hr>
-				<div class="col m-4 testBorder">
-					<div>후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기후기
-						 reviewContent
-					</div>
-				</div>
-			</div>	
 	
 	</main>
 </body>

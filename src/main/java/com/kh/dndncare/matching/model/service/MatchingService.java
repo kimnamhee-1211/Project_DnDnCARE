@@ -2,6 +2,7 @@ package com.kh.dndncare.matching.model.service;
 
 import java.util.ArrayList;
 
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
@@ -31,6 +32,8 @@ public interface MatchingService {
 	
 	//get member info (대분류 : 소분류)
 	ArrayList<InfoCategory> getInfo(int memberNo);
+	
+	ArrayList<CareReview> selectReviewList(int memberNo);
 	
 
 

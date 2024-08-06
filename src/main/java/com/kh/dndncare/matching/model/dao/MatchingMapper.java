@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
@@ -29,6 +30,8 @@ public interface MatchingMapper {
 	ArrayList<Patient> getPatientToMatNo(int matNo);
 
 	ArrayList<InfoCategory> getInfo(int memberNo);
+
+	ArrayList<CareReview> selectReviewList(int memberNo);
 
 
 

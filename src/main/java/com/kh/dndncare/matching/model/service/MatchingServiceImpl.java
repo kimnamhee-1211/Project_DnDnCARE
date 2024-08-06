@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.dndncare.matching.model.dao.MatchingMapper;
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
@@ -66,6 +67,11 @@ public class MatchingServiceImpl implements MatchingService {
 	//get member info (대분류 : 소분류)
 	public ArrayList<InfoCategory> getInfo(int memberNo) {
 		return mMapper.getInfo(memberNo);
+	}
+
+	@Override
+	public ArrayList<CareReview> selectReviewList(int memberNo) {
+		return mMapper.selectReviewList(memberNo);
 	}
  
 

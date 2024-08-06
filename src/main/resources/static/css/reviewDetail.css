@@ -159,3 +159,41 @@ input {
 	background-position: -19.5px 0px;
 	background-repeat: no-repeat;	
 }
+
+
+
+
+** 밑에 점수
+.rating-star {
+        background: transparent;
+        border: 0px solid black;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        margin-left: 0px;
+        margin-right: -1.5px;
+        display: inline-block;
+        
+}
+.rating-star-right {
+	   background: transparent;
+	   border: 0px solid black;
+	   width: 20px;
+	   height: 20px;
+	   padding: 0;
+	   margin-left: -3px;
+	   margin-right: -1.5px;
+}
+.rating-icon-star-left {
+    background-image: url('../image/icon_star2.svg');
+    background-size: contain;
+    padding: 0px;
+    background-repeat: no-repeat;
+}
+.rating-icon-star-right {
+    background-image: url('../image/icon_star2.svg');
+    background-size: contain;
+    padding: 0px;
+    background-position: -19.5px 0px;
+    background-repeat: no-repeat;
+}
