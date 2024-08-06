@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
+import com.kh.dndncare.matching.model.exception.MatchingException;
 import com.kh.dndncare.matching.model.service.MatchingService;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
@@ -35,10 +35,56 @@ public class MatchingController {
 	
 	@Autowired
 	private MatchingService mcService;
-	
+
+	//patient정보 들고 공개 구인 페이지 이동
 	@GetMapping("publicMatching.mc")
-	public String publicMatchingView() {
-		return "publicMatching";
+	public String publicMatchingView(HttpSession session,Model model) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		if(loginUser !=null) {
+			int memberNo = loginUser.getMemberNo();
+			Patient patient = mcService.getPatient(memberNo);
+			model.addAttribute("patient",patient);
+			return "publicMatching";
+			
+		}
+		throw new MatchingException("하하");
+	}
+	
+	//2번째 페이지로 정보 전달 및 이동
+	@PostMapping("publicMatching2.mc")
+	public String publicMatching2(@ModelAttribute Patient patient,Model model,HttpSession session) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		if(loginUser !=null && patient !=null) {
+			patient.setMemberNo(loginUser.getMemberNo());
+			session.setAttribute("tempPatient", patient);
+			return "publicMatching2";
+		} else {
+			throw new MatchingException("다음 페이지로 이동하는중 오류가 발생하였습니다.");
+		}				
+	}
+	
+	@PostMapping("publicMatchingApply.mc")
+	public String publicMatchingApply(HttpSession session,@ModelAttribute Matching matching,@RequestParam("selectedSymptoms") String selectedSymptoms,
+										@RequestParam("selectedMobility") String selectedMobility,@RequestParam("selectedGender") String selectedGender,
+										@RequestParam(value="selectedDays",required =false) String selectDays) {
+		Patient patient = (Patient)session.getAttribute("tempPatient");
+		if(patient != null && matching != null && selectedSymptoms !=null
+				&& selectedMobility !=null && selectedGender !=null) {
+			matching.setMemberNo(patient.getMemberNo());
+			matching.setPtCount(1);
+			if(selectDays == null) {
+				matching.setMat_mode(1);
+			} else {
+				matching.setMat_mode(2);
+			}
+			
+		}
+		System.out.println(patient);
+		System.out.println("매칭 : " + matching);
+		System.out.println("질병 : " + selectedSymptoms);
+		System.out.println("거동 : " + selectedMobility);
+		System.out.println("성별 : " + selectedGender);
+		return null;
 	}
 	
 	
@@ -75,7 +121,7 @@ public class MatchingController {
 		hospital.setHospitalAddress(hospitalAddress);
 		model.addAttribute("hospital", hospital);
 	
-		return "joinMatchingEnroll.jm";
+		return "joinMatchingEnroll";
 	}
 	
 	
@@ -90,7 +136,6 @@ public class MatchingController {
 		
 		//매칭 등록
 		jm.setMoney(jmPt.getAntePay() * jm.getPtCount());
-		jm.setMatType(2);
 		jm.setHospitalNo(ho.getHospitalNo());		
 		System.out.println("등록" + jm);
 		int result2 = mcService.enrollMatching(jm);

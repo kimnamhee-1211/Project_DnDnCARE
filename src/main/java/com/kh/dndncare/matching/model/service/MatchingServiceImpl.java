@@ -15,6 +15,7 @@ import com.kh.dndncare.member.model.vo.Patient;
 
 @Service
 public class MatchingServiceImpl implements MatchingService {
+
 	@Autowired
 	private MatchingMapper mMapper;
 
@@ -67,6 +68,6 @@ public class MatchingServiceImpl implements MatchingService {
 	public ArrayList<InfoCategory> getInfo(int memberNo) {
 		return mMapper.getInfo(memberNo);
 	}
- 
+
 
 }

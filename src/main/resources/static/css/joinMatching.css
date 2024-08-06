@@ -27,6 +27,7 @@ body {
 .title-content{margin-top: 100px; margin-bottom: 10px;}
 .title2-content{margin-top: 10px; margin-bottom: 10px;}
 
+#gmInfo{width:900px; margin : 0 auto;}
 
 .tableDiv{
 	display : inline-block; width:550px;
@@ -36,6 +37,8 @@ body {
 	border-radius: 15px;
 	padding: 20px;
 }
+
+
 
 
 .sign-btn button {
