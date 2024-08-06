@@ -107,6 +107,33 @@
 	</select>
 	
 	
+	<!--MatPtInfo del  -->
+	<delete id="delMatPtInfo">
+		delete mat_pt_info
+		where mat_no = #{matNo} and pt_no = #{ptNo}
+	</delete>
+	
+
+	<!-- 매칭에 참여하고 잇는 인원이 몇인지 => 매칭 table 한 튜플에 따른 matPtInfo 테이블 튜플 수 -->
+	<select id="joinPtCount">
+		select count(*)
+		from mat_pt_info
+		where mat_no = #{matNo}	
+	</select>
+	
+	<!--매칭 테이블 del  -->
+	<delete id="delMatching">
+		delete matching
+		where mat_no = #{matNo}
+	</delete>
+	
+	<!-- 매칭date 테이블 del -->
+	<delete id="delMatchingDate">
+		delete matching_date
+		where mat_no = #{matNo}
+	</delete>
+	
+	
 	
 
 

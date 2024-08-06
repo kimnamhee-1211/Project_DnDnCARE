@@ -44,20 +44,24 @@
 					<table class="table room">
 						<thead>
 						    <tr>
-						      <th scope="col" >NO</th>
-						      <th scope="col" >[[${gm.matNo}]]</th>
-						      <th:block th:each="loginMatNo : ${loginMatNos}">
-						      	<th scope="col" colspan="2">[[${gm.matNo ==  loginMatNo ? '현재 참여중입니다.' : ''}]]</th>
+						      <th scope="col">NO</th>
+						      <th scope="col">[[${gm.matNo}]]</th>
+						      <th:block th:each="loginMatNo : ${loginMatNos}"  th:if="${gm.matNo == loginMatNo}">
+						      	<th scope="col" th:if="${gm.matNo == loginMatNo}" colspan="2">참여중</th>
+						      	<th scope="col" th:if="${gm.matNo != loginMatNo}" colspan="2"> </th>
 						      </th:block>
+						      
 						    </tr>
 						  </thead>
 						  <tbody>
 						  	<tr>
 							  <th>인원</th>
-						      <td>[[${gm.ptCount}]]명</td>
-							  <th>1인당 1일 돌봄비용</th>
-						      <td>[[${gm.antePay}]]</td>
+						      <td colspan="3">[[${gm.ptCount}]]명</td>
 						    </tr>
+						    <tr>
+						      <th colspan="2">1인당 1일 돌봄비용</th>
+						      <td colspan="2">[[${gm.antePay}]]</td>
+						     </tr>
 						    <tr>
 						      <th>시작날짜</th>
 						      <td>[[${gm.beginDt}]]</td>
@@ -66,13 +70,13 @@
 						    </tr>
 						    <tr>
 						      <th>시작시간</th>
-						      <td>[[${gm.beginTime}]]시</td>
+						      <td>[[${gm.beginTime}]]</td>
 						      <th>종료시간</th>
-						      <td>[[${gm.endTime}]]시</td>
+						      <td>[[${gm.endTime}]]</td>
 						    </tr>
 						     <tr>
 						      <th>상세주소</th>
-						      <td colspan="3">[[${gm.matAddressInfo}]]</td>
+						      <td colspan="3">[[${gm.matAddressInfo.split(' // ')[1]}]]</td>
 						    </tr>					
 						    <tr>
 						      <th>요청사항</th>
@@ -83,8 +87,8 @@
 				</div>
 			</th:block>	
 			<th:block th:if="${list == null}">
-				<h5 class="h5 mb-3 fw-bold mb-5">아직 개설된 공동간병 그룹이 없습니다.</h5>
-				<h5 class="h5 mb-3 fw-bold mb-5">새롭게 공동간병 그룹을 만들어보세요.</h5>
+				<h2 class="h2 mb-3 fw-bold mb-5">아직 개설된 공동간병 그룹이 없습니다.</h2>
+				<h2 class="h2 mb-3 fw-bold mb-5">새롭게 공동간병 그룹을 만들어보세요.</h2>
 			</th:block>
 		</main>
 
@@ -125,7 +129,9 @@
 			        <h4 class="h4 fw-bold mb-5" style="margin-top:30px;">아래 버튼을 누르면 공동간병 그룹 참여가 완료됩니다.</h4>
 			        <h5 class="h5 mb-4" style="margin-top:30px;">만약 관련 요청사항이 있다면 100자 이내로 입력해주세요.</h5>
 			        <input type="text" class="form-control mb-5" maxlength="100" placeholder="요청사항" name="matRequest">
-		      		<input type="hidden" name="matNo" id="jmMatMatptInfoInput">
+		      		<input type="hidden" name="matNo" id="joinMatNo">
+		      		<input type="hidden" name="hospitalName" id="joinHospitalName">
+		      		<input type="hidden" name="hospitalAddress" id="joinHospitalAddress">
 		      	</form>
 		      </div>
 		      <div class="modal-footer">
@@ -148,11 +154,15 @@
 		      </div>
 		      <div class="modal-body mx-auto">
 		      	<form action="outJoinMatching.jm" method="post" id="outJoinMatching">
-			      	<h3 class="h3 fw-bold mb-1" style="margin-top:30px;">공동간병 그룹 참여를 취소하시겠습니까?</h3>
-			        <h4 class="h4 fw-bold mb-5" style="margin-top:30px;">아래 버튼을 누르면 공동간병 그룹 참여가 취소됩니다.</h4>
-			        <h4 class="h4 fw-bold mb-5" style="margin-top:30px;">공동간병 그룹 참여 취소가 완료되면 회복이 불가능합니다.</h4>
-			        <h4 class="h4 fw-bold mb-5" style="margin-top:30px;">취소 후 재참여를 원하실 경우 새롭게 다시 참여 신청을 해주시기 바랍니다.</h4>
+			      	<h3 class="h3 fw-bold mb-4" style="margin:20px 30px;">공동간병 그룹 참여를 취소하시겠습니까?</h3>
+			        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">아래 버튼을 누르면 공동간병 그룹 참여가 취소됩니다.</h5>
+			        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">공동간병 그룹 참여 취소가 완료되면 회복이 불가능합니다.</h5>
+			        <h5 class="h5 fw-bold mb-4" style="margin:0 30px;">취소 후 재참여를 원하실 경우 새롭게 다시 참여 신청을 해주시기 바랍니다.</h5>
+			        <h5 id="joinLeaderMsg" class="h5 fw-bold mb-4" style="margin:0 40px;display:none;color:red;">그룹 개설 회원은 현재 그룹에 참여 중인 회원이 있는 경우 그룹 참여를 취소할 수 없습니다.</h5>
 		      		<input type="hidden" name="matNo" id="outMatNo">
+		      		<input type="hidden" name="matMode" id="outMatMode">
+		      		<input type="hidden" name="hospitalName" id="outHospitalName">
+		      		<input type="hidden" name="hospitalAddress" id="outHospitalAddress">
 		      	</form>
 		      </div>
 		      <div class="modal-footer">
@@ -169,6 +179,12 @@
 	
 	
 	<script th:inline="javascript">
+	
+		const msg = /*[[${msg}]]*/'msg';
+		if(msg != null){
+			alert(msg);
+		}
+		
 	
 		window.onload = function(){
 			
@@ -204,15 +220,18 @@
 								const jmPts = data.jmPts;
 								const jmMatDate = data.jmMatDate;
 								const loginPt = data.loginPt;
-
 								
-								//참여신청을 클릭하는 경우를 위해 데이터 전달
-								const jmMatMatptInfoInput = document.getElementById('jmMatMatptInfoInput');
-		               			if (jmMatMatptInfoInput) {
-		               				const matNoInput = `${jmMatMatptInfo.matNo}`
-		               				jmMatMatptInfoInput.value = matNoInput
-		               			}
-								
+								const matAddressInfo = jmMatMatptInfo.matAddressInfo.split(' // ')[1]
+							
+								//참여신청 & 참여취소 클릭하는 경우를 위해 데이터 전달
+	               			
+								document.getElementById('joinMatNo').value = jmMatMatptInfo.matNo;
+								document.getElementById('outMatNo').value = jmMatMatptInfo.matNo;
+								document.getElementById('outMatMode').value = jmMatMatptInfo.matMode;
+								document.getElementById('joinHospitalName').value = jmMatMatptInfo.hospitalName;
+								document.getElementById('joinHospitalAddress').value = jmMatMatptInfo.hospitalAddress;
+								document.getElementById('outHospitalName').value = jmMatMatptInfo.hospitalName;
+								document.getElementById('outHospitalAddress').value = jmMatMatptInfo.hospitalAddress;				
 	
 								//jmMatMatptInfo
 								let jmMatDateInnerHTML = '';
@@ -224,22 +243,22 @@
 					                </tr>`;
 								}								
 								
-								
-								
 								const tableGmInfoInnerHTML = `
 								    <thead>
 								        <tr>
-								            <th scope="col">NO</th>
-								            <th scope="col" colspan="3">${jmMatMatptInfo.matNo}</th>
-								        </tr>
-								        <tr>
-								            <th scope="col">총 인원</th>
-								            <td scope="col">${jmMatMatptInfo.ptCount}명</td>
-								            <th scope="col">현재 참여 인원</th>
-								            <td scope="col">${jmPts.length}명</td>
+								            <th scope="col" style="width:20%;">NO</th>
+								            <th scope="col" style="width:30%;" >${jmMatMatptInfo.matNo}</th>
+								            <th scope="col" style="width:20%;">1인당 1일 돌봄비</th>
+								            <td scope="col" style="width:30%;">${jmMatMatptInfo.antePay}원</td>
 								        </tr>
 								    </thead>
 								    <tbody>
+								        <tr>
+								            <th>총 인원</th>
+								            <td>${jmMatMatptInfo.ptCount}명</td>
+								            <th>현재 참여 인원</th>
+								            <td>${jmPts.length}명</td>
+								        </tr>
 								        <tr>
 								            <th>시작날짜</th>
 								            <td>${jmMatMatptInfo.beginDt}</td>
@@ -255,12 +274,8 @@
 								        </tr>
 								        <tr>
 								            <th>상세주소</th>
-								            <td colspan="3">${jmMatMatptInfo.matAddressInfo}</td>
+								            <td colspan="3">${matAddressInfo}</td>
 								        </tr>					
-								        <tr>
-								            <th colspan="2">1인당 1일 돌봄비용</th>
-								            <td colspan="2">${jmMatMatptInfo.antePay}원</td>
-								        </tr>
 								        <tr>
 								            <th>요청사항</th>
 								            <td colspan="3">${jmMatMatptInfo.matRequest == undefined ? "-" : jmMatMatptInfo.matRequest}</td>
@@ -329,11 +344,11 @@
 											      <td colspan="3">${jmPt.diseaseLevel == undefined ? '-' : jmPt.diseaseLevel}</td>
 											    </tr>
 											    <tr>
-											      <th >요청사항</th>
-											      <td colspan="3" >${jmPt.ptRequest == 	undefined ? '-' : jmPt.ptRequest}</td>
+											      <th>요청사항</th>
+											      <td colspan="3">${jmPt.ptRequest == 	undefined ? '-' : jmPt.ptRequest}</td>
 											    </tr>										    
 											    <tr>
-											      <th colspan="2">그룹 개설 여부</th>
+											      <th colspan="2">그룹 개설 회원</th>
 											      <td colspan="2">${jmMatMatptInfo.ptNo == jmPt.ptNo ? 'Y' : 'N'}</td>
 											    </tr>
 											</tbody>
@@ -368,9 +383,11 @@
 								document.getElementById('outJmButton').addEventListener('click', ()=>{
 									const outJoinMatching = document.getElementById('outJoinMatching');
 									if(jmMatMatptInfo.ptNo == loginPt.ptNo && jmPts.length > 0){
-											alert("그룹 개설 회원은 현재 그룹에 참여 중인 회원이 있는 경우 그룹 참여 취소를 할 수 없습니다.");
+										document.getElementById('joinLeaderMsg').style.display = "block";
+									}else{
+										document.getElementById('joinLeaderMsg').style.display = "none";
+										outJoinMatching.submit();
 									}										
-									outJoinMatching.submit();						
 								});	
 
 								
@@ -382,13 +399,11 @@
 					}
 					
 				});
-			}
-			
-			
-			
+			}			
 		}
 		
 	
+	//참여버튼 보이기
 	function showJoin(showJoinButton){
 		if(showJoinButton){
 			document.getElementById('join').style.display = "block";
@@ -407,7 +422,7 @@
 	
 	
 	
-	
+	//참여 취소버튼 보이기
 	function calculateAge(birthdate) {
 	    const today = new Date();
 	    const birthDate = new Date(birthdate);

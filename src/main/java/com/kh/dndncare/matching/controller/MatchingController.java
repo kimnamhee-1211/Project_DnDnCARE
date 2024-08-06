@@ -149,8 +149,10 @@ public class MatchingController {
 		//병원이 테이블에 없을 경우 등록 && 매칭 테이블 병원 셋
 		Hospital ho = mcService.getHospital(hospital);
 		if(ho == null) {
-			 mcService.enrollHospital(hospital);
-			jm.setHospitalNo(hospital.getHospitalNo());
+			int result = mcService.enrollHospital(hospital);
+			if(result > 0) {
+				jm.setHospitalNo(hospital.getHospitalNo());
+			}
 		}else {
 			jm.setHospitalNo(ho.getHospitalNo());
 		}
@@ -201,7 +203,8 @@ public class MatchingController {
 		//macthing date set(불필요한 괄호 빼기)
 		if(jm.getMatMode() == 2) {
 			String matchingDate = Arrays.toString(day).replace("[", "").replace("]", "");
-			mcService.insertMatchingDate(jm.getMatNo(), matchingDate);
+			@SuppressWarnings("unused")
+			int result4 = mcService.insertMatchingDate(jm.getMatNo(), matchingDate);
 		}
 		
 		//매칭 환자 등록
@@ -294,7 +297,8 @@ public class MatchingController {
 	//공동간병 참여
 	@PostMapping("joinJoinMatching.jm")
 	public String joinJoinMatching(@RequestParam("matNo") int matNo, @RequestParam("matRequest") String matRequest,
-									HttpSession session) {
+								@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,
+								HttpSession session, RedirectAttributes  re) {
 		
 		MatPtInfo joinMatptInfo = new MatPtInfo();
 		
@@ -313,13 +317,50 @@ public class MatchingController {
 		int result = mcService.enrollMatPtInfo(joinMatptInfo);
 
 		if(result > 0) {
+			re.addAttribute("hospitalName", hospitalName);
+			re.addAttribute("hospitalAddress", hospitalAddress);
+			re.addAttribute("msg", "그룹간병 참여가 완료되었습니다.");
 			return "redirect:joinMatching.jm";
 		}
 		throw new MemberException("공동간병 그룹 등록 실패");
 	}
 	
-	
-	
+	//공동간병 참여 취소
+	@PostMapping("outJoinMatching.jm")
+	public String outJoinMatching(@RequestParam("matNo") int matNo, @RequestParam("matMode") int matMode, HttpSession session, 
+								@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,
+								RedirectAttributes re) {
+		
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		int ptNo = mcService.getPtNo(loginUser.getMemberNo());
+		
+		//loginUser의 해당 매칭방에 대한 MatPtInfo 삭제
+		int result = mcService.delMatPtInfo(matNo, ptNo);
+		
+		if(result > 0) {
+			
+			//매칭방에 참여하는 환자(MatPtInfo) 있는지 확인
+			int joinPtCount =  mcService.joinPtCount(matNo);
+			
+			//매칭방에 참여하는 환자(MatPtInfo)가 없다면 매칭방 삭제
+			if(joinPtCount < 1) {
+				//매칭방 삭제 전 시간제일 경우 MatchingDate부터 삭제
+				if(matMode == 2) {
+					@SuppressWarnings("unused")
+					int result1 = mcService.delMatchingDate(matNo);
+				}
+				@SuppressWarnings("unused")
+				int result2 = mcService.delMatching(matNo);
+			}
+			
+			re.addAttribute("hospitalName", hospitalName);
+			re.addAttribute("hospitalAddress", hospitalAddress);
+			re.addAttribute("msg", "그룹간병 참여 취소가 완료되었습니다.");
+			return "redirect:joinMatching.jm";			
+		}
+		throw new MemberException("공동간병 그룹 등록 실패");
+
+	}
 	
 	
 	

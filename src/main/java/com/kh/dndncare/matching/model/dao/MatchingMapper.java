@@ -42,4 +42,12 @@ public interface MatchingMapper {
 
 	String getMatDate(int matNo);
 
+	int delMatPtInfo(@Param("matNo") int matNo, @Param("ptNo") int ptNo);
+
+	int joinPtCount(int matNo);
+
+	int delMatching(int matNo);
+
+	int delMatchingDate(int matNo);
+
 }

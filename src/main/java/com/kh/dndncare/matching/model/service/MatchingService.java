@@ -48,5 +48,18 @@ public interface MatchingService {
 	
 	//시간제일 경우 선택한 날짜 get
 	String getMatDate(int matNo);
+	
+	//MatPtInfo del
+	int delMatPtInfo(int matNo, int ptNo);
+	
+	//매칭에 참여하고 잇는 인원이 몇인지 => 매칭 table 한 튜플에 따른 matPtInfo 테이블 튜플 수
+	int joinPtCount(int matNo);
+	
+	//매칭 테이블 del
+	int delMatching(int matNo);
+	
+	
+	//매칭date 테이블 del
+	int delMatchingDate(int matNo);
 
 }

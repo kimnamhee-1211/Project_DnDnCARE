@@ -100,5 +100,28 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.getMatDate(matNo);
 	}
 
+	//MatPtInfo del
+	@Override
+	public int delMatPtInfo(int matNo, int ptNo) {
+		return mMapper.delMatPtInfo(matNo, ptNo);
+	}
+
+	//매칭에 참여하고 잇는 인원이 몇인지 => 매칭 table 한 튜플에 따른 matPtInfo 테이블 튜플 수
+	public int joinPtCount(int matNo) {
+		return mMapper.joinPtCount(matNo);
+	}
+
+	//매칭 테이블 del
+	@Override
+	public int delMatching(int matNo) {
+		return mMapper.delMatching(matNo);
+	}
+	
+	//매칭date  테이블 del
+	@Override
+	public int delMatchingDate(int matNo) {
+		return mMapper.delMatchingDate(matNo);
+	}
+
 
 }
