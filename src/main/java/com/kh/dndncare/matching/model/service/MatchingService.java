@@ -25,7 +25,7 @@ public interface MatchingService {
 	//병원으로 get matching & ptinfo 테이블 list
 	ArrayList<MatMatptInfo> getJmList(String hospitalName);
 	
-	//matNo으로  get matching & ptinfo 테이블
+	//matNo으로 get matching & ptinfo 테이블
 	MatMatptInfo getMatMatptInfo(int matNo);
 	
 	//matNo로 get 공동 간병 참여자들 Patient
@@ -39,5 +39,14 @@ public interface MatchingService {
 	
 	//병원  데이터 Count  get
 	Hospital getHospital(Hospital hospital);
+	
+	//loginUser-MatNo get
+	int[] getloginMatNo(int memberNo);
+	
+	//loginUser-PtNo get
+	int getPtNo(int memberNo);
+	
+	//시간제일 경우 선택한 날짜 get
+	String getMatDate(int matNo);
 
 }

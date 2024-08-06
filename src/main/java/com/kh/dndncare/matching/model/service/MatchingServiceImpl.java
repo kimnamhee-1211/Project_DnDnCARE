@@ -82,5 +82,23 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.getHospital(hospital);
 	}
 
+	//loginUser-MatNo get
+	@Override
+	public int[] getloginMatNo(int memberNo) {
+		return mMapper.getloginMatNo(memberNo);
+	}
+	
+	//loginUser-PtNo get
+	@Override
+	public int getPtNo(int memberNo) {
+		return mMapper.getPtNo(memberNo);
+	}
+	
+	//시간제일 경우 선택한 날짜 get
+	@Override
+	public String getMatDate(int matNo) {
+		return mMapper.getMatDate(matNo);
+	}
+
 
 }

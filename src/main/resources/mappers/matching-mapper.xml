@@ -70,18 +70,43 @@
 		where member_no = #{memberNo}	
 	</select>
 	
-	
+	<!--MatchingDate insert  -->
 	<insert id="insertMatchingDate">
 		insert into matching_date
 		values(#{matNo}, #{matchingDate})	
 	</insert>
 	
-	
+	<!-- 병원 get : 병원 존재 유무 확인-->
 	<select id="getHospital">
 		select *
 		from hospital
 		where hospital_name = #{hospitalName} and hospital_address = #{hospitalAddress}	
 	</select>
+	
+	<!-- loginUser-MatNo get -->
+	<select id="getloginMatNo" resultType="_int">
+		select mat_no
+		from mat_pt_info
+			join patient on(mat_pt_info.pt_no = patient.pt_no)
+		where patient.member_no = #{memberNo}	
+	</select>
+	
+	<!-- loginUser-PtNo get-->
+	<select id="getPtNo" resultType="_int">
+		select pt_no
+		from patient
+		where member_no = #{memberNo}
+	</select>
+	
+	
+	<!-- 시간제일 경우 선택한 날짜 get -->	
+	<select id="getMatDate">
+		select mat_date
+		from matching_date
+		where mat_no = #{matNo}	
+	</select>
+	
+	
 	
 
 

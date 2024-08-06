@@ -36,4 +36,10 @@ public interface MatchingMapper {
 
 	Hospital getHospital(Hospital hospital);
 
+	int[] getloginMatNo(int memberNo);
+
+	int getPtNo(int memberNo);
+
+	String getMatDate(int matNo);
+
 }

@@ -101,7 +101,8 @@ public class MatchingController {
 	
 	//공동간병 병원 선택
 	@GetMapping("joinMatching.jm")
-	public String joinMatchinjmain(@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress, Model model) {
+	public String joinMatchinjmain(@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress, 
+								Model model, HttpSession session) {
 		
 		//병원 정보 전달
 		Hospital hospital = new Hospital();
@@ -112,7 +113,13 @@ public class MatchingController {
 		//병원으로 list 뽑기 
 		ArrayList<MatMatptInfo> list = mcService.getJmList(hospitalName);
 		System.out.println(list);
+				
 		
+		//loginUser-MatNo get
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		int[] loginMatNos = mcService.getloginMatNo(loginUser.getMemberNo());
+		
+		model.addAttribute("loginMatNos", loginMatNos);
 		model.addAttribute("list", list);
 		return "joinMatching";
 	}
@@ -183,19 +190,17 @@ public class MatchingController {
 		}
 		
 		//시간 set (불필요한 , 뺴기)
-		beginTime = beginTime.replace(",", "");
-		endTime = endTime.replace(",", "");	
-		jm.setBeginTime(beginTime);
-		jm.setEndTime(endTime);
+		jm.setBeginTime(beginTime.replace(",", ""));
+		jm.setEndTime(endTime.replace(",", ""));
 		
 		
 		System.out.println("등록" + jm);
 		int result2 = mcService.enrollMatching(jm);
 		System.out.println("등록 후" + jm);
 		
-		
+		//macthing date set(불필요한 괄호 빼기)
 		if(jm.getMatMode() == 2) {
-			String matchingDate = Arrays.toString(day);
+			String matchingDate = Arrays.toString(day).replace("[", "").replace("]", "");
 			mcService.insertMatchingDate(jm.getMatNo(), matchingDate);
 		}
 		
@@ -224,20 +229,23 @@ public class MatchingController {
 	//공동간병 상세 정보 
 	@PostMapping(value="getJmContent.jm", produces="application/json; charset=UTF-8")
 	@ResponseBody
-	public void getjmMatMatptInfo(@RequestParam("matNo") int matNo, HttpServletResponse response) {
+	public void getjmMatMatptInfo(@RequestParam("matNo") int matNo, HttpServletResponse response, HttpSession session) {
 		
 		//get matching & ptinfo
 		MatMatptInfo jmMatMatptInfo = mcService.getMatMatptInfo(matNo);
 		
 		//MatNo로 get 공동간병 Patient
-		ArrayList<Patient> jmPts = mcService.getPatientToMatNo(matNo);		
+		ArrayList<Patient> jmPts = mcService.getPatientToMatNo(matNo);
 		
+		//loginUser-get ptNo
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		Patient loginPt = mcService.getPatient(loginUser.getMemberNo());
+				
 		//공동간병 Patient에 member info set
 		for(Patient jmPt : jmPts) {
 			
 			//get member info (대분류 : 소분류)
 			ArrayList<InfoCategory> jmPtInfos =  mcService.getInfo(jmPt.getMemberNo());
-			System.out.println(jmPtInfos);
 			
 			ArrayList<String> disease =  new ArrayList<>();
 			String diseaseLevel = null;
@@ -254,15 +262,22 @@ public class MatchingController {
 				jmPt.setDisease(disease);
 				jmPt.setDiseaseLevel(diseaseLevel);
 			}		
-
 		}		
-		
+				
 		System.out.println("jmMatMatptInfo" + jmMatMatptInfo);
-		System.out.println("jmPts" + jmPts);
+		System.out.println("jmPts1" + jmPts);
 		HashMap<String, Object> jmMacPt = new HashMap<String, Object>();
 		jmMacPt.put("jmMatMatptInfo", jmMatMatptInfo);
 		jmMacPt.put("jmPts", jmPts);
-				
+		jmMacPt.put("jmPts", jmPts);
+		jmMacPt.put("loginPt", loginPt);
+		
+		//시간제일 경우 선택한 날짜 get + 전송
+		if(jmMatMatptInfo.getMatMode() == 2) {
+			String jmMatDate = mcService.getMatDate(jmMatMatptInfo.getMatNo());
+			jmMacPt.put("jmMatDate", jmMatDate);
+		}
+		
 		response.setContentType("application/json; charset=UTF-8");
 		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
 		Gson gson = gb.create();
