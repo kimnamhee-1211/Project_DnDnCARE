@@ -134,6 +134,7 @@ input {
 	padding:0;
 	margin-left:0px;
 	margin-right:-1.5px;
+	background-repeat: no-repeat;
 }
 .btn-star-right{
 	background: transparent;
@@ -143,12 +144,14 @@ input {
 	padding:0;
 	margin-left:-3px;
 	margin-right:-1.5px;
+	background-repeat: no-repeat;
 }
 
 .btn-icon-star-left{
 	background-image:url(../image/icon_star2.svg);
 	background-size: 167px 167px;
 	padding:0px;
+	margin-left:0px;
 	background-repeat: no-repeat;	
 }
 
@@ -158,4 +161,86 @@ input {
 	padding:0px;
 	background-position: -19.5px 0px;
 	background-repeat: no-repeat;	
+}
+
+.btn-icon-star-left-modal{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 167px 167px;
+	padding:0px;
+	margin-left:-8px;
+	background-repeat: no-repeat;	
+}
+
+.btn-icon-star-right-modal{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 167px 167px;
+	padding:0px;
+	background-position: -19.5px 0px;
+	background-repeat: no-repeat;	
+}
+
+
+
+
+** 밑에 점수
+.rating-star {
+        background: transparent;
+        border: 0px solid black;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        margin-left: 0px;
+        margin-right: -1.5px;
+        display: inline-block;
+        
+}
+.rating-star-right {
+	   background: transparent;
+	   border: 0px solid black;
+	   width: 20px;
+	   height: 20px;
+	   padding: 0;
+	   margin-left: -3px;
+	   margin-right: -1.5px;
+	   
+}
+.rating-icon-star-left {
+    background-image: url('../image/icon_star2.svg');
+    background-size: contain;
+    padding: 0px;
+    background-repeat: no-repeat;
+}
+.rating-icon-star-right {
+    background-image: url('../image/icon_star2.svg');
+    background-size: contain;
+    padding: 0px;
+    background-position: -19.5px 0px;
+    background-repeat: no-repeat;
+}
+
+
+.btn-maincolor {
+	background:#8dd986;
+	border:0;
+	border-radius:10px;
+	color:white;
+	width:150px;
+	height:100px;
+	font-size:24px;
+}
+.btn-outline-maincolor {
+	background:white;
+	border:1px solid #8dd986;
+	border-radius:10px;
+	color:#8dd986;
+	width:150px;
+	height:100px;
+	font-size:24px;
+}
+
+.review-content{
+	min-height:150px;
+	background: #EFEFEF;
+	border-radius:10px;
+	padding:10px;
 }

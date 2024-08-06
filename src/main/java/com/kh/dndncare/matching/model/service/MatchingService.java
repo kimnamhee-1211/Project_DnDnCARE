@@ -4,6 +4,7 @@ package com.kh.dndncare.matching.model.service;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
@@ -39,5 +40,8 @@ public interface MatchingService {
 	
 	//병원  데이터 Count  get
 	Hospital getHospital(Hospital hospital);
+	ArrayList<CareReview> selectReviewList(int memberNo);
+	
+
 
 }

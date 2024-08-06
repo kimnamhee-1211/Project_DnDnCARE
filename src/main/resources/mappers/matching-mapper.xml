@@ -75,6 +75,15 @@
 		insert into matching_date
 		values(#{matNo}, #{matchingDate})	
 	</insert>
+	<select id="selectReviewList" resultType="CareReview">
+		select *
+		from care_review r
+			join patient p on(p.pt_no = r.pt_no)
+        	join mat_pt_info mpi on(mpi.pt_no = p.pt_no)
+       		join matching m on(m.mat_no = mpi.mat_no)
+       	where review_status = 'Y'
+       	<!-- and m.member_no = #{memberNo} -->
+	</select>
 	
 	
 	<select id="getHospital">
