@@ -1,8 +1,12 @@
 package com.kh.dndncare.matching.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -66,26 +70,58 @@ public class MatchingController {
 	@PostMapping("publicMatchingApply.mc")
 	public String publicMatchingApply(HttpSession session,@ModelAttribute Matching matching,@RequestParam("selectedSymptoms") String selectedSymptoms,
 										@RequestParam("selectedMobility") String selectedMobility,@RequestParam("selectedGender") String selectedGender,
-										@RequestParam(value="selectedDays",required =false) String selectDays) {
+										@RequestParam(value="selectedDays",required =false) String selectDays,@RequestParam("selectedCareer") String selectedCareer
+										,@RequestParam("selectedLocal") String selectedLocal,@RequestParam("selectedAge") String selectedAge) {
 		Patient patient = (Patient)session.getAttribute("tempPatient");
+		String formattedDates = null;
+		
+		
 		if(patient != null && matching != null && selectedSymptoms !=null
-				&& selectedMobility !=null && selectedGender !=null) {
+				&& selectedMobility !=null && selectedGender !=null
+				&& selectedCareer !=null && selectedLocal !=null && selectedAge !=null) {
+			
+			Patient previousPatient = mcService.getPatient(patient.getMemberNo());
+			patient.setMemberNo(previousPatient.getMemberNo());
+			//patient 정보 update
+			int patientResult = mcService.updatePatient(patient);
+			
 			matching.setMemberNo(patient.getMemberNo());
-			matching.setPtCount(1);
+			matching.setPtCount(1);					
 			if(selectDays == null) {
-				matching.setMat_mode(1);
+				matching.setMatMode(1);
 			} else {
-				matching.setMat_mode(2);
+				matching.setMatMode(2);
+				formattedDates = convertDates(selectDays);
+				 
+				//Matching_date 테이블 insert
+				int dateResult = mcService.insertMatchingDate(formattedDates);
 			}
+			//Matching 정보 삽입 드디어
+			int matchingResult = mcService.enrollMatching(matching);
 			
 		}
-		System.out.println(patient);
-		System.out.println("매칭 : " + matching);
-		System.out.println("질병 : " + selectedSymptoms);
-		System.out.println("거동 : " + selectedMobility);
-		System.out.println("성별 : " + selectedGender);
+
 		return null;
+				
 	}
+	
+	//selectDays 타입 변환 메소드
+	private String convertDates(String selectDays) {
+	    if (selectDays == null || selectDays.trim().isEmpty()) {
+	        return "";
+	    }
+	
+	    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+	    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	
+	    return Arrays.stream(selectDays.split(", "))
+	            .map(String::trim)
+	            .map(date -> LocalDate.parse(date, inputFormatter))
+	            .map(date -> date.format(outputFormatter))
+	            .collect(Collectors.joining(","));
+	}
+	
+	
 	
 	
 	@GetMapping("joinMatchingMainView.jm")

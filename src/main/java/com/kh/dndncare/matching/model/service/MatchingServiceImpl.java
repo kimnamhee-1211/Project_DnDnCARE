@@ -69,5 +69,17 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.getInfo(memberNo);
 	}
 
+	@Override
+	public int updatePatient(Patient patient) {
+		return mMapper.updatePatient(patient);
+	}
+
+	@Override
+	public int insertMatchingDate(String formattedDates) {
+		return mMapper.insertMatchingDate(formattedDates);
+	}
+
+
+
 
 }

@@ -31,5 +31,11 @@ public interface MatchingMapper {
 
 	ArrayList<InfoCategory> getInfo(int memberNo);
 
+	int updatePatient(Patient patient);
+
+	int insertMatching(Matching matching);
+
+	int insertMatchingDate(String formattedDates);
+
 
 }

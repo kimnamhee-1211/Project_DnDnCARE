@@ -32,5 +32,8 @@ public interface MatchingService {
 	
 	//get member info (대분류 : 소분류)
 	ArrayList<InfoCategory> getInfo(int memberNo);
+	int updatePatient(Patient patient);
+	int insertMatchingDate(String formattedDates);
+	
 
 }

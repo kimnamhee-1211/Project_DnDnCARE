@@ -68,5 +68,34 @@
 			join info_category using(category_no)
 		where member_no = #{memberNo}	
 	</select>
+	
+	<!-- 받아온 patient정보로 수정 -->
+	<update id="updatePatient">
+		update patient
+		set pt_name = #{ptName}
+			pt_gender= #{ptGender}
+			pt_age = #{ptAge}
+			pt_weight=#{ptWeight}
+			pt_height=#{ptHeight}
+			pt_address=#{ptAddress}
+			pt_update_date=sysdate
+	</update>
+	
+	<!-- matching_date insert -->
+	<
+	<insert id="insertMatchingDate">
+		insert into matching_date
+		values(#{hospitalNo}, #{hospitalAddress}, #{hospitalName})
+	</insert>
+
+
+
+
+
+
+
+
+
+
 
 </mapper>

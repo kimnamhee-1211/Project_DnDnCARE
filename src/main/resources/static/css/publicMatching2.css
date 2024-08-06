@@ -288,6 +288,14 @@ lable{
     max-width: 500px;  /* 최대 너비 제한 */
 }
 
+.wantMoney-section {
+	margin-left:190px;
+}
+
+#money-input {
+	margin-left:100px;
+}
+
 .input-field-row {
     display: flex;
      /* 가로 방향 중앙 정렬 */
@@ -334,6 +342,9 @@ lable{
     }
     }
 
+.career-button .col-3 {
+	width:250px;
+}
 
 /* JavaScript로 동적으로 표시/숨김을 제어하기 위한 클래스 */
 .input-field.hidden {
@@ -342,6 +353,11 @@ lable{
 
 .input-field-row.hidden {
     display: none !important;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 

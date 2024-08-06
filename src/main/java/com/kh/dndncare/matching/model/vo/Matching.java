@@ -25,7 +25,7 @@ public class Matching {
 	private int ptCount;
 	private String beginTime;
 	private String endTime;
-	private int mat_mode;
+	private int matMode;
 }
 
 
