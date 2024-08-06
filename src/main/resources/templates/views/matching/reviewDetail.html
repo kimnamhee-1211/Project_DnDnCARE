@@ -86,11 +86,26 @@
 				<span>[[${rList.ptName}]]님이 쓰신 후기</span>
 			</div>
 			<div class="col m-4 testBorder">
-				<th:block th:each="i : ${#numbers.sequence(1, rList.reviewScore)}">
-                    <div class="rating-star rating-icon-star-left">1</div> 
+			<th:block th:if="${(rList.reviewScore%2)==0}"> 
+				<th:block th:each="i : ${#numbers.sequence(1, rList.reviewScore/2)}">
+					<div class="col rating-icon-star" style="width:23px; height:46px;padding:0px;">
+	                    <div class="rating-star rating-icon-star-left"></div> 
+	                    <div class="rating-star-right rating-icon-star-right"></div>
+	                </div>
+                </th:each>
+            </th:block>
+            <th:block th:if="${(rList.reviewScore%2)==1}"> 
+            	<th:block th:each="i : ${#numbers.sequence(1, #numbers.floor(rList.reviewScore/2))}">
+                <div class="row m-2 rating-icon-star" style="width:46px; height:46px;padding:0px;">
+      				<div class="rating-star rating-icon-star-left"></div> 
                     <div class="rating-star-right rating-icon-star-right"></div>
-                </th:block>
-			    <span th:text="${rList.reviewScore}"></span>
+      			</div>
+				</th:block>
+				<div class="col rating-icon-star" style="width:46px; height:46px;padding:0px;">
+					<div class="rating-star rating-icon-star-left"></div>
+					<div class="rating-star-right "></div>
+				</div>
+             </th:block>
 		    </div>
 			<div class="col m-4 testBorder">
 				<span>작성날짜 : [[${rList.reviewUpdateDate}]]</span>
