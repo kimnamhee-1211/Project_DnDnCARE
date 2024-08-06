@@ -22,7 +22,7 @@
 	</insert>
 	
 	<!-- pt get -->
-	<select id="getPatient">
+	<select id="getPatient" resultType="Patient">
 		select *
 		from patient
 		where member_no = #{memberNo}
@@ -35,7 +35,7 @@
 	</insert>
 
 	<!-- 공동 간병 리스트 get -->
-	<select id="getJmList">
+	<select id="getJmList" resultType="MatMatptInfo">
 		select *
 		from hospital
 			join matching using(hospital_no) 
@@ -44,7 +44,7 @@
 	</select>
 
 	<!-- 공동 간병 정보 get -->
-	<select id="getMatMatptInfo">
+	<select id="getMatMatptInfo" resultType="MatMatptInfo">
 		select *
 		from hospital
 			join matching on(hospital.hospital_no = matching.hospital_no) 
@@ -54,7 +54,7 @@
 
 	
 	<!-- MatNo로 get 공동 간병 참여자들 Patient -->
-	<select id="getPatientToMatNo">
+	<select id="getPatientToMatNo" resultType="Patient">
 		select *
 		from patient
 		where patient.pt_no in (select pt_no
@@ -63,7 +63,7 @@
 	</select>
 	
 	<!-- get member info (대분류 : 소분류) -->
-	<select id="getInfo">
+	<select id="getInfo" resultType="InfoCategory">
 		select l_category, s_category
 		from member_info 
 			join info_category using(category_no)
@@ -77,7 +77,7 @@
 	</insert>
 	
 	<!-- 병원 get : 병원 존재 유무 확인-->
-	<select id="getHospital">
+	<select id="getHospital" resultType="Hospital">
 		select *
 		from hospital
 		where hospital_name = #{hospitalName} and hospital_address = #{hospitalAddress}	
@@ -100,7 +100,7 @@
 	
 	
 	<!-- 시간제일 경우 선택한 날짜 get -->	
-	<select id="getMatDate">
+	<select id="getMatDate" resultType="string"> 
 		select mat_date
 		from matching_date
 		where mat_no = #{matNo}	
@@ -115,7 +115,7 @@
 	
 
 	<!-- 매칭에 참여하고 잇는 인원이 몇인지 => 매칭 table 한 튜플에 따른 matPtInfo 테이블 튜플 수 -->
-	<select id="joinPtCount">
+	<select id="joinPtCount" resultType="_int">
 		select count(*)
 		from mat_pt_info
 		where mat_no = #{matNo}	
