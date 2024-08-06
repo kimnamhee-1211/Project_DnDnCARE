@@ -8,72 +8,102 @@
 <body>
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
 	<main class="inner-content d-flex justify-content-center">
-		<form class="w-50" action="login.me" method="post">		
+		<form class="w-50" action="publicMatching2.mc" method="post">		
 			<div class="publicMatching-wrap text-center">
 				<div class="w-100">
 					<a href="home.do"><img class="logo-image mb-4" src="image/logo-removebg.png" width="300"></a>
-					<h1 class="h3 mb-5 fw-bold mb-2 text-center">공개 매칭 신청</h1>
-					<div>
-						<p><em>*</em> 아래 정보는 가입 당시 입력한 정보들입니다.<br>
-						   <em>*</em> 아래 정보를 바탕으로 공개 매칭방이 생성됩니다.
+					<h1 class="h3 mb-2 fw-bold text-center">공개 매칭 신청</h1>
+					<div class="page-num mb-3">
+						<img src="image/icon/1page-color-deepGreen.png"></img>
+						<img src="image/icon/2page.png"></img>
+					</div>
+					<div class="mb-5">
+						<p><em>*</em> 아래 정보는 기존에 입력한 공개 매칭 설정 정보들입니다.<br>
+						   <em>*</em> 아래 정보를 바탕으로 공개 매칭방이 생성됩니다. 정확하게 입력해주세요
 						</p>
 					</div>
 				</div>
-				<div class="text-start mb-2"><span class="mb-5">< <strong>김기룡</strong> 회원님의 정보 ></span></div>				
-				<div class="basic-info">
-					<table>
-	                    <tr>
-	                        <th>성별</th>
-	                        <th>생년월일</th>
-	                        <th>신장</th>
-	                        <th>몸무게</th>
-	                        <th>지역</th>
-	                    </tr>
-	                    <tr>
-	                        <td>
-						      <select name="gender" id="gender">
-						        <option value="">남성</option>
-						        <option value="male">남성</option>
-						        <option value="female">여성</option>
-						      </select>
-						    </td>
-						    <td>
-						      <input type="date" name="birthdate" id="birthdate">
-						    </td>
-						    <td>
-						      <input type="number" name="height" id="height" min="0" max="250" step="1"> cm
-						    </td>
-						    <td>
-						      <input type="number" name="weight" id="weight" min="0" max="250" step="1"> kg
-						    </td>
-						    <td>
-						   		<input type="text" name="address" id="address" th:value="PT_ADDRESS">
-						    </td>
-	                    </tr>
-               		</table>
-               		<div class="d-flex">
-               			<div class="me-5"><em>* </em><span class="mb-3">원하는 간병인 경력 </span><br></div>
-	               		<div class="btn-group-sm" role="group" aria-label="Basic example">
-		               			<button type="button" class="btn btn-outline-success">치매</button>
-								<button type="button" class="btn btn-outline-success">호흡기 질환</button>
-								<button type="button" class="btn btn-outline-success">거동 불편</button>
-								<button type="button" class="btn btn-outline-success">외상환자</button>
-								<button type="button" class="btn btn-outline-success">파킨슨</button>
-								<button type="button" class="btn btn-outline-success">수면질환</button>
-								<button type="button" class="btn btn-outline-success">정신질환</button>
-								<button type="button" class="btn btn-outline-success">기저귀 케어</button>
-								<button type="button" class="btn btn-outline-success">재활</button>
-						</div>
-               		</div>
-               		
+				<!-- <div class="text-start mb-3 text-center"><span class="mb-5">< <strong>김기룡</strong> 회원님의 정보 ></span></div> -->
+				<div class="icon-wrap d-flex justify-content-center">
+					<div class="icon-container d-flex flex-column" data-value="home" onclick="selectIcon(this)">
+						    <img width="50" height="50" src="https://img.icons8.com/ios/50/home--v1.png" alt="home--v1"/>
+						    <p class="fs-3">집</p>
+					</div>
+					<div class="icon-container" data-value="hospital" onclick="selectIcon(this)">
+	  						<img width="64" height="64" src="https://img.icons8.com/pastel-glyph/64/hospital--v3.png" alt="hospital--v3"/>
+					   	 	<p class="fs-3">병,의원</p>
+					</div>
+				</div>
+				
+				<div id="homeInput" class="input-field" style="display: none;">
+				    <input type="text" placeholder="집 주소를 확인해주세요" name="ptAddress" th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]} + '-' + ${#strings.arraySplit(patient.ptAddress, '//')[2]}">
+				</div>
+				
+				<div id="hospitalInput" class="input-field" style="display: none;">
+				    <input type="text" placeholder="병원의 이름을 확인해주세요" name="ptAddress" th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]} + '-' + ${#strings.arraySplit(patient.ptAddress, '//')[2]}">
+				</div>
+				
+				<div class="basic-info-wrap d-flex justify-content-center">
+					<div class="basic-info">
+							<div class="form-floating mb-3">
+								<input type="text" class="form-control" id="floatingInput" name="ptName" th:value="${patient.ptName}">
+								<label for="floatingInput">[[${patient.ptName}]]</label>
+							</div>
+							<div class="form-group mb-3">
+	                            <div class="radio-group">
+	                                <input type="radio" id="male" name="ptGender" value="M" class="btn-check" th:checked="${patient.ptGender == 'M'}">
+	                                <label for="male" class="btn-radio">남성</label>
+	                                
+	                                <input type="radio" id="female" name="ptGender" value="F" class="btn-check" th:checked="${patient.ptGender == 'F'}">
+	                                <label for="female" class="btn-radio">여성</label>
+	                            </div>
+                        	</div>
+							<div class="form-floating d-flex mb-3">
+								<input type="text" class="form-control" id="floatingPassword" name="ptAge" th:value="${patient.ptAge}">
+								<label for="floatingPassword">생년월일</label>
+							</div>
+							<div class="form-floating d-flex mb-3">
+								<input type="text" class="form-control" id="floatingPassword" name="ptHeight" th:value="${patient.ptHeight}">
+								<label for="floatingPassword">키</label><p class="mt-2">cm</p>
+							</div>
+							<div class="form-floating d-flex mb-3">
+								<input type="text" class="form-control" id="floatingPassword" name="ptWeight" th:value="${patient.ptWeight}">
+								<label for="floatingPassword">몸무게</label><p class="mt-2">kg</p>
+							</div>
+					</div>
+				</div>			
+				
+               	<div class="sign-btn mt-5 d-flex justify-content-center">
+					<button type="submit" class="apply-btn me-3"><span>다음</span></button>
 				</div>	
-			</div>
-			<div class="sign-btn mt-5 d-flex justify-content-center">
-				<button type="submit" class="apply-btn me-3"><span>다음</span></button>
-			</div>
+			</div>	
 		</form>
 	</main>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
-	
+	<script>
+		function selectIcon(element) {
+	        // 모든 아이콘에서 'selected' 클래스 제거
+	        document.querySelectorAll('.icon-container').forEach(icon => {
+	            icon.classList.remove('selected');
+	        });
+	        
+	        // 클릭된 아이콘에 'selected' 클래스 추가
+	        element.classList.add('selected');
+
+	        
+	        // 선택된 값 (예: 'home' 또는 'hospital')
+	        const selectedValue = element.getAttribute('data-value');	
+	        
+	        document.getElementById('homeInput').style.display = 'none';
+	        document.getElementById('hospitalInput').style.display = 'none';
+
+	        // Show the appropriate input field
+	        if (selectedValue === 'home') {
+	            document.getElementById('homeInput').style.display = 'block';
+	        } else if (selectedValue === 'hospital') {
+	            document.getElementById('hospitalInput').style.display = 'block';
+	        }
+	    }
+	</script>
 </body>
 </html>
