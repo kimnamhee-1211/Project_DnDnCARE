@@ -73,7 +73,7 @@
 						    </tr>
 						    <tr>
 						      <th>요청사항</th>
-						      <td colspan="3">[[${gm.matRequest}]]</td>
+						      <td colspan="3">[[${gm.matRequest == 	undefined ? "-" : gm.matRequest}]]</td>
 						    </tr>
 						</tbody>
 					</table>
@@ -87,17 +87,17 @@
 
 		<!-- 공동간병 그룹 상세 정보 -->
 		<div class="modal fade modal-xl" id="gmContentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered modal-xl">
+			<div class="modal-dialog modal-dialog-centered modal-xl" >
 		    	<div class="modal-content">
 		      		<div class="modal-header">
 		        		<h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">공동간병 그룹</h1>
 		       			 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		     		</div>
-		     		<div class="modal-body mx-auto">
-		      			<h3 class="h3 fw-bold mb-4"  style="margin-top:30px;">공동간병 그룹 상세 정보</h3>
+		     		<div class="modal-body">
+		      			<h3 class="h3 fw-bold mb-4"  style="margin:30px;">공동간병 그룹 상세 정보</h3>
 						<table class="table" id="gmInfo" style="margin-bottom:40px;"></table>										
-						<h4 class="fw-bold mb-2" style="margin-bottom:0px;">공동간병 그룹 참여자</h4>
-						<div id="ptDiv" class="mx-auto"></div>
+						<h4 class="fw-bold mb-2" style="margin:10px 30px;">공동간병 그룹 참여자</h4>
+						<div id="ptDiv" class="align-items-center"></div>
 			      		<div class="modal-footer">
 			      			<button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" id="join">참여하기</button>
 			       			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -109,7 +109,7 @@
 		
 		<!-- 참여 시 -->
 		<div class="modal fade modal-lg" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-		  <div class="modal-dialog modal-dialog-centered modal-lg">
+		  <div class="modal-dialog modal-dialog-centered modal-lg" >
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel2">공동간병 그룹 참여</h1>
@@ -203,9 +203,9 @@
 								        </tr>
 								        <tr>
 								            <th>시작시간</th>
-								            <td>${jmMatMatptInfo.beginTime}시</td>
+								            <td>${jmMatMatptInfo.beginTime}</td>
 								            <th>종료시간</th>
-								            <td>${jmMatMatptInfo.endTime}시</td>
+								            <td>${jmMatMatptInfo.endTime}</td>
 								        </tr>
 								        <tr>
 								            <th>상세주소</th>
@@ -217,7 +217,7 @@
 								        </tr>
 								        <tr>
 								            <th>요청사항</th>
-								            <td colspan="3">${jmMatMatptInfo.matRequest}</td>
+								            <td colspan="3">${jmMatMatptInfo.matRequest == undefined ? "-" : jmMatMatptInfo.matRequest}</td>
 								        </tr>
 								    </tbody>
 								`;
@@ -247,8 +247,9 @@
 								    }
 									
 									const tableDiv = document.createElement('div');
-									tableDiv.className = "tableDiv pt";
-									tableDiv.style.marginTop = "15px"; 
+									tableDiv.className = "tableDiv";
+									tableDiv.style.margin = "10px 25px"; 
+									tableDiv.style.width = "500px"; 
 									ptDiv.append(tableDiv);
 									
 									const tableDivInnerHTML=`
@@ -256,7 +257,7 @@
 											<thead>
 											    <tr>
 											      <th scope="col" >이름</th>
-											      <th colspan="3" scope="col" >${jmPt.ptName}</th>
+											      <th colspan="3" scope="col">${jmPt.ptName}</th>
 											    </tr>
 											  </thead>
 											  <tbody>
@@ -274,19 +275,19 @@
 											    </tr>
 											     <tr>
 											      <th>질환</th>
-											      <td colspan="3">${jmPt.disease}</td>
+											      <td colspan="3">${jmPt.disease == undefined ? '-' : jmPt.disease}</td>
 											    </tr>					
 											  	<tr>
 											     <th>중증도</th>
-											      <td colspan="3">${jmPt.diseaseLevel}</td>
+											      <td colspan="3">${jmPt.diseaseLevel == undefined ? '-' : jmPt.diseaseLevel}</td>
 											    </tr>
 											    <tr>
 											      <th >요청사항</th>
-											      <td colspan="3" >${jmPt.ptRequest}</td>
+											      <td colspan="3" >${jmPt.ptRequest == 	undefined ? '-' : jmPt.ptRequest}</td>
 											    </tr>										    
 											    <tr>
-											      <th >그룹 개설 여부</th>
-											      <td colspan="3">${jmMatMatptInfo.ptNo == jmPt.ptNo ? 'Y' : 'N'}</td>
+											      <th colspan="2">그룹 개설 여부</th>
+											      <td colspan="2">${jmMatMatptInfo.ptNo == jmPt.ptNo ? 'Y' : 'N'}</td>
 											    </tr>
 											</tbody>
 										</table>`;	

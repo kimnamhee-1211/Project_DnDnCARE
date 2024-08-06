@@ -16,6 +16,7 @@ import com.kh.dndncare.member.model.vo.Patient;
 
 @Service
 public class MatchingServiceImpl implements MatchingService {
+
 	@Autowired
 	private MatchingMapper mMapper;
 
@@ -67,6 +68,19 @@ public class MatchingServiceImpl implements MatchingService {
 	//get member info (대분류 : 소분류)
 	public ArrayList<InfoCategory> getInfo(int memberNo) {
 		return mMapper.getInfo(memberNo);
+	}
+
+	
+	//insert MatchingDate
+	@Override
+	public int insertMatchingDate(int matNo, String matchingDate) {
+		return mMapper.insertMatchingDate(matNo, matchingDate);
+	}
+	
+	//병원  데이터 get
+	@Override
+	public Hospital getHospital(Hospital hospital) {
+		return mMapper.getHospital(hospital);
 	}
 
 	@Override

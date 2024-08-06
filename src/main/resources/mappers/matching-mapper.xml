@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.dndncare.matching.model.dao.MatchingMapper">
+
 
 	<!-- 병원 테이블 등록 -->
 	<insert id="enrollHospital" useGeneratedKeys="true">
@@ -17,7 +18,7 @@
 			select seq_macid.nextval from dual
 		</selectKey>	
 		insert into matching
-		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{matType}, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime})
+		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime}, #{matMode})
 	</insert>
 	
 	<!-- pt get -->
@@ -69,19 +70,32 @@
 		where member_no = #{memberNo}	
 	</select>
 	
+	
+	<insert id="insertMatchingDate">
+		insert into matching_date
+		values(#{matNo}, #{matchingDate})	
+	</insert>
 	<select id="selectReviewList" resultType="CareReview">
 		select *
 		from care_review r
-			join patient p on(p.pt_no = r.pt_no)
-        	join mat_pt_info mpi on(mpi.pt_no = p.pt_no)
-       		join matching m on(m.mat_no = mpi.mat_no)
-       	where review_status = 'Y'
+		        left join patient p on(p.pt_no = r.pt_no)
+		        left join mat_pt_info mpi on(mpi.pt_no = p.pt_no)
+		        left join matching mc on(mc.mat_no = mpi.mat_no)
+		        left join caregiver cg on(mc.member_no = cg.member_no)
+		        left join member m on(m.member_no = mc.member_no)
+		        left join matching mc on(mc.member_no = cg.member_no)
+		        left join member m on(m.member_no = cg.member_no)
+		where review_status ='Y'; 
        	<!-- and m.member_no = #{memberNo} -->
 	</select>
 	
 	
-
-
+	<select id="getHospital">
+		select *
+		from hospital
+		where hospital_name = #{hospitalName} and hospital_address = #{hospitalAddress}	
+	</select>
+	
 
 
 </mapper>
