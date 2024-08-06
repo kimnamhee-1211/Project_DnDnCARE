@@ -1,6 +1,8 @@
 package com.kh.dndncare.matching.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -35,7 +37,15 @@ public interface MatchingMapper {
 
 	int insertMatching(Matching matching);
 
-	int insertMatchingDate(String formattedDates);
+	int insertMatchingDate(HashMap<String, Object> map);
+
+	int getMatNo(int ptNo);
+
+	int insertWantInfo(Map<String, Object> params);
+
+	int insertMatPtInfo(MatPtInfo matPtInfo);
+
+	int deleteWantInfo(int memberNo);
 
 
 }

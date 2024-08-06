@@ -1,6 +1,8 @@
 package com.kh.dndncare.matching.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,9 +77,36 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	@Override
-	public int insertMatchingDate(String formattedDates) {
-		return mMapper.insertMatchingDate(formattedDates);
+	public int insertMatchingDate(HashMap<String, Object> map) {
+		return mMapper.insertMatchingDate(map);
 	}
+
+	@Override
+	public int getMatNo(int ptNo) {
+		return mMapper.getMatNo(ptNo);
+	}
+
+	@Override
+	public int insertMatching(Matching matching) {
+		return mMapper.insertMatching(matching);
+	}
+
+	@Override
+	public int insertWantInfo(Map<String, Object> params) {
+		return mMapper.insertWantInfo(params);
+	}
+
+	@Override
+	public int insertMatPtInfo(MatPtInfo matPtInfo) {
+		return mMapper.insertMatPtInfo(matPtInfo);
+	}
+
+	@Override
+	public int deleteWantInfo(int memberNo) {
+		return mMapper.deleteWantInfo(memberNo);
+	}
+
+
 
 
 

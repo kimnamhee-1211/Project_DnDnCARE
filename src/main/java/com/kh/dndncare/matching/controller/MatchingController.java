@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,35 +74,84 @@ public class MatchingController {
 										@RequestParam(value="selectedDays",required =false) String selectDays,@RequestParam("selectedCareer") String selectedCareer
 										,@RequestParam("selectedLocal") String selectedLocal,@RequestParam("selectedAge") String selectedAge) {
 		Patient patient = (Patient)session.getAttribute("tempPatient");
+		int memberNo = patient.getMemberNo();
 		String formattedDates = null;
+		int dateResult = 0;
+		// 문자열을 Integer 리스트로 변환
+		Map<String, Object> params = new HashMap<>();
+        params.put("symptoms", Arrays.stream(selectedSymptoms.split(","))
+                                     .map(Integer::parseInt)
+                                     .collect(Collectors.toList()));
+        System.out.println(params);
+        // 단일 값들도 Integer로 변환
+        params.put("mobility", selectedMobility != null ? Integer.parseInt(selectedMobility) : null);
+        params.put("gender", selectedGender != null ? Integer.parseInt(selectedGender) : null);
+        params.put("career", selectedCareer != null ? Integer.parseInt(selectedCareer) : null);
+        params.put("local", selectedLocal != null ? Integer.parseInt(selectedLocal) : null);
+        params.put("age", selectedAge != null ? Integer.parseInt(selectedAge) : null);
+        params.put("memberNo",memberNo);
+        
+        //원래있던 memberNo에 해당하는 want-info 삭제후 want_info insert
+        int deleteWantInfo = mcService.deleteWantInfo(memberNo);
+        int wantInfoResult = mcService.insertWantInfo(params);
+
+        
 		
 		
 		if(patient != null && matching != null && selectedSymptoms !=null
 				&& selectedMobility !=null && selectedGender !=null
 				&& selectedCareer !=null && selectedLocal !=null && selectedAge !=null) {
 			
-			Patient previousPatient = mcService.getPatient(patient.getMemberNo());
-			patient.setMemberNo(previousPatient.getMemberNo());
+			Patient previousPatient = mcService.getPatient(memberNo);
+			int ptNo = previousPatient.getPtNo();
+			patient.setPtNo(ptNo);
 			//patient 정보 update
 			int patientResult = mcService.updatePatient(patient);
-			
-			matching.setMemberNo(patient.getMemberNo());
-			matching.setPtCount(1);					
+
+
+			matching.setPtCount(1);
+			matching.setHospitalNo(99);
 			if(selectDays == null) {
 				matching.setMatMode(1);
 			} else {
 				matching.setMatMode(2);
-				formattedDates = convertDates(selectDays);
-				 
-				//Matching_date 테이블 insert
-				int dateResult = mcService.insertMatchingDate(formattedDates);
 			}
-			//Matching 정보 삽입 드디어
+			System.out.println("matching : " + matching);
+			//Matching 정보 삽입
 			int matchingResult = mcService.enrollMatching(matching);
 			
-		}
+			int matNo = matching.getMatNo();
+			
+			//시간제일 때 Matching_date 테이블 insert
+			if(matching.getMatMode() == 2 && selectDays != null) {
+				formattedDates = convertDates(selectDays);
+				HashMap<String,Object> map = new HashMap<String,Object>();
+				map.put("formattedDates", formattedDates);
+				map.put("matNo", matNo);
+				dateResult = mcService.insertMatchingDate(map);
+			}
 
-		return null;
+			//mat_pt_info insert
+			MatPtInfo matPtInfo = new MatPtInfo();
+			matPtInfo.setMatNo(matNo);
+			matPtInfo.setPtNo(ptNo);
+			matPtInfo.setAntePay(matching.getMoney());
+			matPtInfo.setService("개인간병");
+			matPtInfo.setMatAddressInfo(patient.getPtAddress());
+			matPtInfo.setMatRequest("일단없음");
+			matPtInfo.setGroupLeader("N");
+
+			int ptInfoResult = mcService.enrollMatPtInfo(matPtInfo);
+			int finalResult = wantInfoResult + patientResult + ptInfoResult + dateResult + matchingResult + deleteWantInfo;
+			
+			if(finalResult!=0) {
+				return "redirect:myInfo.me";
+			} else {
+				throw new MatchingException("공개구인 신청에 실패하였습니다");
+			}
+		}
+		throw new MatchingException("하하");
+		
 				
 	}
 	

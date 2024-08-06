@@ -2,6 +2,8 @@ package com.kh.dndncare.matching.model.service;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
@@ -33,7 +35,12 @@ public interface MatchingService {
 	//get member info (대분류 : 소분류)
 	ArrayList<InfoCategory> getInfo(int memberNo);
 	int updatePatient(Patient patient);
-	int insertMatchingDate(String formattedDates);
+	int insertMatchingDate(HashMap<String, Object> map);
+	int getMatNo(int ptNo);
+	int insertMatching(Matching matching);
+	int insertWantInfo(Map<String, Object> params);
+	int insertMatPtInfo(MatPtInfo matPtInfo);
+	int deleteWantInfo(int memberNo);
 	
 
 }
