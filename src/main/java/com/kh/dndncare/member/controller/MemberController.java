@@ -23,6 +23,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
@@ -284,10 +287,27 @@ public class MemberController {
 	}
 
 	
-	// ai추천 로직 메소드
-	public ArrayList<Patient> openAiChoice(int memberNo) {
-
+	// ai추천 : 간병인의 입장 : 환자 추천 목록 조회
+	public ArrayList<Patient> openAiPatientChoice(int memberNo) {
 		// 1. 간병인 정보 조회 
+//		조회할 항목
+//			필수입력 : 원하는 서비스, 공동간병 참여여부, 경력, 적정비용, 성별, 나이, 주소
+//			선택입력 : 서비스 경험, 돌봄경험, 자격증
+//		항목의 출처
+//			WANT_INFO : 원하는 서비스(필수),
+//			CAREGIVER : 공동간병 희망여부(필수,CARE_JOIN_STATUS), 적정비용(필수, MIN_MONEY, MAX_MONEY), 
+//			MEMBER_INFO : 경력기간(필수), 서비스경험(선택), 돌봄경험(선택), 자격증(선택)
+//			MEMBER: 성별(필수, MEMBER_GENDER), 나이(필수, MEMBER_AGE), 주소(필수, MEMBER_ADDRESS), 국적(필수, MEMBER_NATIONAL)
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		// 		MEMBER : 성별, 나이, 주소, 국적
 		
 		
@@ -297,6 +317,7 @@ public class MemberController {
 		// 		INFO_CATEGORY : 서비스경험, 경력, 질환경험, 자격증, 중증도
 		ArrayList<HashMap<String, String>> cExpList = mService.getCaregiverExp(memberNo); // [{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=0, L_CATEGORY=career}, {S_CATEGORY=호흡기 질환, L_CATEGORY=disase}, {S_CATEGORY=거동불편, L_CATEGORY=disase}, {S_CATEGORY=와상환자, L_CATEGORY=disase}, {S_CATEGORY=간병사, L_CATEGORY=license}]
 		
+<<<<<<< HEAD
 =======
 		// 1. 간병인 정보 조회
 		// MEMBER : 성별, 나이, 주소, 국적
@@ -317,6 +338,28 @@ public class MemberController {
 																							// L_CATEGORY=license}]
 
 >>>>>>> refs/remotes/origin/Kiryong
+=======
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+>>>>>>> refs/remotes/origin/myunghun
 		// 2. 간병인 정보 가공
 		String service = ""; // service
 		String career = ""; // career
@@ -463,7 +506,7 @@ public class MemberController {
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo(); 
-			ArrayList<Patient> completeList = openAiChoice(memberNo); // 추천목록이 없으면 null로 넘어옴
+			ArrayList<Patient> completeList = openAiPatientChoice(memberNo); // 추천목록이 없으면 null로 넘어옴
 			
 			model.addAttribute("completeList", completeList);
 		}
@@ -512,7 +555,14 @@ public class MemberController {
 
 		return "caregiverMain";
 	}
-
+	
+	// 자동추천을 비동기 통신으로 요청
+//	@GetMapping("refreshChoice.me")
+//	@ResponseBody
+//	public void refreshChoice(@RequestParam("memberNo") int memberNo, HttpServletResponse response) {
+//		// 후보군이 있을 때만 새로고침 버튼이 활성화 되기 때문에 null로 넘어오는 경우는 배제함
+//		ArrayList<Patient> completeList = openAiPatientChoice(memberNo); 
+//	}
 	
 	
 	
@@ -1051,22 +1101,21 @@ public class MemberController {
 	
 	
 	//무한스크롤 테스트 중 : 성공
-	@GetMapping("workInfoTest.me")
+	@PostMapping("workInfoTest.me")
 	@ResponseBody
-	public void workInfoTest(HttpServletResponse response, @RequestParam("page") int currentPage) {
-		
-		System.out.println("컨트롤러");
+	public void workInfoTest(HttpServletResponse response, @RequestParam(value="page", defaultValue="1") int currentPage) {
+		// 페이지 첫 로드시 또는 검색조건이 하나도 없이 검색버튼을 눌렀을 때 이곳으로 요청이 들어옴
 		
 		Gson gson = new Gson();
 		ArrayList<String> list = new ArrayList<String>();
-		list.add("1");
-		list.add("2");
-		list.add("3");
-		list.add("4");
-		list.add("5");
-		list.add("6");
-		list.add("7");
-		list.add("8");
+		list.add("기본1");
+		list.add("기본2");
+		list.add("기본3");
+		list.add("기본4");
+		list.add("기본5");
+		list.add("기본6");
+		list.add("기본7");
+		list.add("기본8");
 		response.setContentType("application/json; charset=UTF-8");
 		try {
 			gson.toJson(list, response.getWriter());
@@ -1075,8 +1124,86 @@ public class MemberController {
 		}
 	}
 	
+	// 간병인 일감찾기 페이지에서의 검색 요청을 처리
+	@PostMapping("searchPatientList.me")
+	@ResponseBody
+	public void searchPatientList(@RequestParam("condition") String obj, @RequestParam(value="page", defaultValue="1") int page,
+									HttpServletResponse response) {
+		// 검색 조건이 하나라도 있는 경우만 이곳으로 들어온다
+		
+		System.out.println(obj);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			Map<String, String> map =
+			               mapper.readValue(obj, new TypeReference<Map<String, String>>(){});
+			
+			// 검색조건과 페이지에 맞게 조회해와야함
+			
+			Gson gson = new Gson();
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("search1");
+			list.add("search2");
+			list.add("search3");
+			list.add("search4");
+			list.add("search5");
+			list.add("search6");
+			list.add("search7");
+			list.add("search8");
+			response.setContentType("application/json; charset=UTF-8");
+			gson.toJson(list, response.getWriter());
+			
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		} catch (JsonIOException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@GetMapping("moreCaregiverInfo.me")
+	public String moreCaregiverInfo(@RequestParam(value = "page", defaultValue="1") int page ) {
+		return "moreCaregiverInfo";
+	}
 	
 	
+	// 간병인 일감찾기 페이지에서의 검색 요청을 처리
+		@PostMapping("searchCaregiverList.me")
+		@ResponseBody
+		public void searchCaregiverList(@RequestParam("condition") String obj, @RequestParam(value="page", defaultValue="1") int page,
+										HttpServletResponse response) {
+			// 검색 조건이 하나라도 있는 경우만 이곳으로 들어온다
+			System.out.println(obj);
+			
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				Map<String, String> map =
+				               mapper.readValue(obj, new TypeReference<Map<String, String>>(){});
+				
+				// 검색조건과 페이지에 맞게 조회해와야함
+				
+				Gson gson = new Gson();
+				ArrayList<String> list = new ArrayList<String>();
+				list.add("search1");
+				list.add("search2");
+				list.add("search3");
+				list.add("search4");
+				list.add("search5");
+				list.add("search6");
+				list.add("search7");
+				list.add("search8");
+				response.setContentType("application/json; charset=UTF-8");
+				gson.toJson(list, response.getWriter());
+				
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			} catch (JsonIOException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	
 
 	@PostMapping("patientUpdate.me")
@@ -1142,6 +1269,29 @@ public class MemberController {
 		return "redirect:home.do";
 		
 	};
+	
+		@PostMapping("moreCaregiverInfo.me")
+		@ResponseBody
+		public void moreCaregiverInfo(HttpServletResponse response, @RequestParam(value="page", defaultValue="1") int currentPage) {
+			// 페이지 첫 로드시 또는 검색조건이 하나도 없이 검색버튼을 눌렀을 때 이곳으로 요청이 들어옴
+			
+			Gson gson = new Gson();
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("기본1");
+			list.add("기본2");
+			list.add("기본3");
+			list.add("기본4");
+			list.add("기본5");
+			list.add("기본6");
+			list.add("기본7");
+			list.add("기본8");
+			response.setContentType("application/json; charset=UTF-8");
+			try {
+				gson.toJson(list, response.getWriter());
+			} catch (JsonIOException | IOException e) {
+				e.printStackTrace();
+			}
+		}
 	
 	
 	

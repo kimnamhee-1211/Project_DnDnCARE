@@ -11,7 +11,7 @@
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
-	<main class="container whdrb testBorder">
+	<main class="container whdrb testBorder"th:each="rList:${reviewList}">
 		<div class="row m-4 sssss">
 			<div class="m-4 h1">간병사 <span style="color:#8dd986">정보</span></div>
 			
@@ -121,7 +121,6 @@
 			
 			<script>
 				document.getElementById('reviewWriteButton').addEventListener('click',()=>{
-					console.log('확인');
 					$('#modalChoice').modal('show');	
 				})
 				

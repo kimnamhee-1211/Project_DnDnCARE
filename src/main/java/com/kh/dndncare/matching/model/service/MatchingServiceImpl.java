@@ -1,6 +1,8 @@
 package com.kh.dndncare.matching.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,6 +85,47 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.getHospital(hospital);
 	}
 
+	//loginUser-MatNo get
+	@Override
+	public int[] getloginMatNo(int memberNo) {
+		return mMapper.getloginMatNo(memberNo);
+	}
+	
+	//loginUser-PtNo get
+	@Override
+	public int getPtNo(int memberNo) {
+		return mMapper.getPtNo(memberNo);
+	}
+	
+	//시간제일 경우 선택한 날짜 get
+	@Override
+	public String getMatDate(int matNo) {
+		return mMapper.getMatDate(matNo);
+	}
+
+	//MatPtInfo del
+	@Override
+	public int delMatPtInfo(int matNo, int ptNo) {
+		return mMapper.delMatPtInfo(matNo, ptNo);
+	}
+
+	//매칭에 참여하고 잇는 인원이 몇인지 => 매칭 table 한 튜플에 따른 matPtInfo 테이블 튜플 수
+	public int joinPtCount(int matNo) {
+		return mMapper.joinPtCount(matNo);
+	}
+
+	//매칭 테이블 del
+	@Override
+	public int delMatching(int matNo) {
+		return mMapper.delMatching(matNo);
+	}
+	
+	//매칭date  테이블 del
+	@Override
+	public int delMatchingDate(int matNo) {
+		return mMapper.delMatchingDate(matNo);
+	}
+
 	@Override
 	public ArrayList<CareReview> selectReviewList(int memberNo) {
 		return mMapper.selectReviewList(memberNo);
@@ -98,5 +141,44 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.avgReviewScore(memberNo);
 	}
  
+	@Override
+	public int updatePatient(Patient patient) {
+		return mMapper.updatePatient(patient);
+	}
+
+	@Override
+	public int insertMatchingDate(HashMap<String, Object> map) {
+		return mMapper.insertMatchingDate(map);
+	}
+
+	@Override
+	public int getMatNo(int ptNo) {
+		return mMapper.getMatNo(ptNo);
+	}
+
+	@Override
+	public int insertMatching(Matching matching) {
+		return mMapper.insertMatching(matching);
+	}
+
+	@Override
+	public int insertWantInfo(Map<String, Object> params) {
+		return mMapper.insertWantInfo(params);
+	}
+
+	@Override
+	public int insertMatPtInfo(MatPtInfo matPtInfo) {
+		return mMapper.insertMatPtInfo(matPtInfo);
+	}
+
+	@Override
+	public int deleteWantInfo(int memberNo) {
+		return mMapper.deleteWantInfo(memberNo);
+	}
+
+
+
+
+
 
 }

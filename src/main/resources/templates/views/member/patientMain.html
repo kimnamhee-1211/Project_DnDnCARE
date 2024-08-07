@@ -10,6 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>	<!-- 결제 -->
     <style>
     	.fc{width:500px !important; height:500px !important; } 
     </style>
@@ -28,17 +29,13 @@
 					<thead>
 						<tr class="align-middle">
 							<th>개나리님과의 매칭이 성사되었습니다.</th>
-							<td><button class="btn btn-success">결제하기</button></td>
+							<td><button class="btn btn-success payButton">결제하기</button></td>
 						</tr>
 					</thead>
 				</table>
 			</div>
 			<div id="upperContentsBtn" class="align-middle text-center" style="height:200px;"><!-- 메뉴판 -->
 				<div><button class="custom-btn btn-14" th:onclick="'location.href=\'' + @{/publicMatching.mc} + '\''" style="width:600px; height:100px;">간병인 공개 매칭 신청</button></div>
-<<<<<<< HEAD
-=======
-				
->>>>>>> refs/remotes/origin/namhee
 				<div>
 					<div><!-- 테이블 왼쪽 공백 --></div>
 					<table>
@@ -290,6 +287,26 @@
         </a>
     </div>
     
+	<!-- Modal -->
+	<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+    		<div class="modal-content rounded-3 shadow">
+    			<div class="m-4 text-center h2">결제 정보</div>
+    			<div class="m-4" style="border-bottom:1px solid #8dd986;">매칭 번호 : th</div>
+    			<div class="m-4">뭐쓸까 </div>
+    			
+    			<div align="center" class="m-4">별을 클릭하세요</div>
+      			<div class="modal-footer  p-0">
+      				<div class="d-flex justify-content-evenly">
+	      				<button type="button" class="btn btn-success payApply" onclick="requestPay()">결제하기</button>
+	      				<button type="button" class="btn btn-light"data-bs-dismiss="modal">취소</button>
+      				</div>
+      				
+      			</div>
+    		</div>
+  		</div>	
+	</div>
+    
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     <script>
@@ -318,6 +335,66 @@
         	});
         	calendar.render();
       	});
-    </script>    
+    </script>   
+    
+    <script>//종규삽입
+    document.getElementsByClassName('payButton')[0].addEventListener('click',()=>{
+		$('#modalChoice').modal('show');	
+	})
+	
+	
+	//포트원 api
+    	
+    		
+	    IMP.init("imp25707021");		//내가생성한 가짜 스토어번호임
+    	
+    	const now = new Date();
+		
+    	const year = now.getFullYear();
+    	
+    	const month = (now.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더함
+    	const day = now.getDate().toString().padStart(2, '0');
+    	const hours = now.getHours().toString().padStart(2, '0');
+    	const minutes = now.getMinutes().toString().padStart(2, '0');
+    	const seconds = now.getSeconds().toString().padStart(2, '0');
+
+    	const formattedTime = year+month+day+hours+minutes+seconds;
+    	const form = document.getElementById('form');
+    	
+	    function requestPay() {
+	    	//const money = document.getElementById('customAmountInput').value;
+			
+	    	/* if(money >=1000){ */  //테스트 중에만 주석, 실제입력은 다르게!
+		    	IMP.request_pay({
+			        pg: "html5_inicis.INIpayTest",
+			        pay_method: "card",
+			        merchant_uid: formattedTime,
+			        name: "HomeWork후원결제",
+			        amount: 100,
+			        buyer_tel: "000",
+		    	},function(response){
+		    	  console.log(response);
+		    	  console.log(response.success);
+		    	  if(response.success){
+		    		  alert('결제 성공');
+		    		  /* document.getElementById('payCheck').value = response.success;
+		    		  document.getElementsByName('merchantUid')[0].value = response.merchant_uid;
+		    		  form.action = '${contextPath}/successPay.su';
+		  	    	  form.submit(); */
+		    		  
+		    		  
+		    	  }else{
+		    		  alert('결제 실패하였습니다');
+		    		  alert(response.error_msg);
+		    		  
+		    		  /* form.action = '${contextPath}/successPay.su';
+		  	    	  form.submit(); */
+		    	  }
+		     	});
+	    	/* }else{
+	    		alert('후원 최소 금액은 1,000원입니다');
+	    	} */
+	    }
+    </script> 
 </body>
 </html>
