@@ -34,6 +34,7 @@ import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
@@ -510,12 +511,19 @@ public class MemberController {
 			
 			model.addAttribute("completeList", completeList);
 		}
+				
+		
+		//남희 - 환자정보 불러오기
+		//MatMatptInfoPt 16개 뽑기 
+		ArrayList<MatMatptInfoPt> matMatptInfoPtListBefore = mService.getMatMatptInfoPt();		
+		ArrayList<MatMatptInfoPt> matMatptInfoPtList = new ArrayList<MatMatptInfoPt>();
+		
+		for(int i = 0; i < 16; i++) {
+			matMatptInfoPtList.add(matMatptInfoPtListBefore.get(i));			
+		}
 		
 		
-		
-		
-		
-		
+		model.addAttribute("MatMatptInfoPtList", matMatptInfoPtList);
 		
 		
 

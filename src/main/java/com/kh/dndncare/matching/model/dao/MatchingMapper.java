@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Param;
 import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.InfoCategory;
@@ -71,6 +72,8 @@ public interface MatchingMapper {
 	int insertMatPtInfo(MatPtInfo matPtInfo);
 
 	int deleteWantInfo(int memberNo);
+
+	ArrayList<MatMatptInfoPt> getMatMatptInfoPt();
 
 
 }

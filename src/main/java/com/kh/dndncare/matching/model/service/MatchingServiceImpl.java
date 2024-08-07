@@ -12,6 +12,7 @@ import com.kh.dndncare.matching.model.dao.MatchingMapper;
 import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.InfoCategory;
@@ -175,6 +176,12 @@ public class MatchingServiceImpl implements MatchingService {
 	@Override
 	public int deleteWantInfo(int memberNo) {
 		return mMapper.deleteWantInfo(memberNo);
+	}
+	
+	//MatMatptInfoPt list get
+	@Override
+	public ArrayList<MatMatptInfoPt> getMatMatptInfoPt() {
+		return mMapper.getMatMatptInfoPt();
 	}
 
 

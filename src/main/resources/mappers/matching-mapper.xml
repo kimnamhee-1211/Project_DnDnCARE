@@ -41,6 +41,7 @@
 			join matching using(hospital_no) 
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 			
 		where hospital_name = #{hospitalName} and group_leader = 'Y'
+		order by matching.begin_dt desc
 	</select>
 
 	<!-- 공동 간병 정보 get -->
@@ -230,8 +231,15 @@
 	</insert>
 
 
-
-
+	<select id="getMatMatptInfo" resultType="MatMatptInfoPt">
+		select *
+		from matching
+			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
+			join patient on(mat_pt_info.pt_no = patient.pt_no)		
+		where matching.mat_confirm = 'N' and mat_pt_info.group_leader = 'Y'
+		order by matching.begin_dt desc
+	</select>
+	
 
 
 

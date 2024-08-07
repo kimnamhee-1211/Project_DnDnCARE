@@ -11,6 +11,7 @@ import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.matching.model.vo.Matching;
@@ -102,6 +103,8 @@ public interface MemberService {
 	int likeLikeCount(int boardNo);
 
 	ArrayList<MatMatptInfo> selectMatList(int i);
+
+	ArrayList<MatMatptInfoPt> getMatMatptInfoPt();
 
 
 }

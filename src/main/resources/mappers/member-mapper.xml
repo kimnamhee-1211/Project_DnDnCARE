@@ -114,12 +114,14 @@
 	  	from patient
 	  	where member_no = #{memberNo}
 	  </select>
+	  
 	  <!-- 환자 인포카테고리 -->
 	  <update id="updatePassword">
 	  	update member
 	  	set member_pwd = #{newPwd}
 	  	where member_id = #{memberId}
 	  </update>
+	  
 	  <!-- 간병인정보 가져오기 -->
 	  <select id="selectCareGiver" resultType="CareGiver">
 	  	select *
@@ -170,6 +172,7 @@
 		where member_no = #{memberNo}
 		
 	</delete>
+	
 	<insert id="insertWantInfo">		<!-- 내가 원하는 상대매칭 정보 -->
 	insert into want_info values(
 		${memberNo},
@@ -177,11 +180,13 @@
 	)
 	
 	</insert>
+	
 	<delete id="deleteMemberInfo">		<!-- 내 인포정보 -->
 		delete member_info
 		where member_no = #{memberNo}
 		
 	</delete>
+	
 	<insert id="insertMemberInfo">		<!-- 내 인포정보 -->
 	insert into member_info values(
 		${memberNo},
@@ -299,4 +304,39 @@
 						from patient
 						where member_no = #{memberNo})
 	</select>
+	
+	
+	<!--  -->
+	<select id="getMatMatptInfoPt" resultType="MatMatptInfoPt">
+		select *
+		from matching
+			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
+			join patient on(mat_pt_info.pt_no = patient.pt_no)		
+		where matching.mat_confirm = 'N' and mat_pt_info.group_leader = 'Y'
+		order by matching.begin_dt desc
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </mapper>
