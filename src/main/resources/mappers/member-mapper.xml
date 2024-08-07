@@ -301,7 +301,8 @@
 	</select>
 	
 	
-	<select id="selectCareGiverList" resultType="CareGiver">
+	
+	<select id="selectCareGiverList" resultType="CareGiver">	<!-- 간병인정보를 모두 불러온다.(재가공할거지만) -->
 		select *
 		from careGiver
 			join member using(member_no)
