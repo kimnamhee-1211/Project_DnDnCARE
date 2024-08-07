@@ -119,8 +119,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<Patient> selectPatientList(String caregiverCity) {
-		return mMapper.selectPatientList(caregiverCity);
+	public ArrayList<Patient> selectPatientList(HashMap<String, Object> condition) {
+		return mMapper.selectPatientList(condition);
 	}
 
 	@Override
@@ -136,6 +136,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public ArrayList<HashMap<String, String>> getCaregiverWant(int memberNo) {
 		return mMapper.getCaregiverWant(memberNo);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> getPatientInfo(ArrayList<Integer> mNoList) {
+		return mMapper.getPatientInfo(mNoList);
 	}
 
 

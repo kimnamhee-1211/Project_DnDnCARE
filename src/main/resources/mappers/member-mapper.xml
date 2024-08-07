@@ -130,24 +130,29 @@
 	
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 환자 후보군의 정보 조회 : 1번 -->
 	<select id="selectPatientList" resultType="Patient">
-		<![CDATA[
+		
 		SELECT *
-		FROM   (SELECT  MEMBER.MEMBER_NO, PT_NAME, PT_GENDER, TRUNC(SYSDATE - PT_AGE) AS PT_REAL_AGE, 
-						SUBSTR(REPLACE(PT_ADDRESS, '//', ' ') , INSTR(REPLACE(PT_ADDRESS, '//', ' '), ' ')+1) as PT_ADDRESS,
-						MEMBER_NATIONAL, PT_WEIGHT, PT_HEIGHT, MAT_REQUEST, 
-						BEGIN_DT, END_DT, MONEY, MAT_CONFIRM
-		       FROM MATCHING 
-		            JOIN MAT_PT_INFO USING(MAT_NO)
-		            JOIN PATIENT USING(PT_NO)
-		            JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
-		       WHERE MEMBER_STATUS = 'Y' AND MAT_CONFIRM='N' AND PT_ADDRESS LIKE '%${caregiverCity}%'
-		       ORDER BY DBMS_RANDOM.RANDOM)
-		WHERE ROWNUM < 10
-		]]>
+		FROM   (SELECT  MEMBER.MEMBER_NO, PT_NAME, PT_GENDER,  
+		                EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS PT_REAL_AGE, 
+		                MEMBER_NATIONAL, PT_WEIGHT, PT_HEIGHT,
+		                MAT_NO, BEGIN_DT, END_DT, MONEY,
+		                SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) as PT_ADDRESS, 
+		                SERVICE, MAT_REQUEST
+		   FROM MATCHING 
+		        JOIN MAT_PT_INFO USING(MAT_NO)
+		        JOIN PATIENT USING(PT_NO)
+		        JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
+		   WHERE MEMBER_STATUS = 'N' AND MAT_CONFIRM='N' AND MAT_ADDRESS_INFO LIKE '%${address}%'
+		   <if test='joinStatus.equals("N")'>
+		   			AND PT_COUNT = 1
+		   </if>
+		   ORDER BY DBMS_RANDOM.RANDOM)
+		WHERE ROWNUM <![CDATA[<]]> ${selectNum}
+		
 	</select>
 	
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 환자 후보군의 정보 조회 : 2번 -->
-	<select id="getPatientExp" resultType="map">
+	<select id="getPatientInfo" resultType="map">
 		SELECT MEMBER_NO, L_CATEGORY, S_CATEGORY
 		FROM MEMBER
 		        JOIN MEMBER_INFO USING(MEMBER_NO)
@@ -169,6 +174,7 @@
 		</foreach>
 	</select>
 	
+	<!-- 간병인이 원하는 정보조회 -->
 	<select id="getCaregiverWant" resultType="map">
 		SELECT L_CATEGORY, S_CATEGORY
 		FROM MEMBER M

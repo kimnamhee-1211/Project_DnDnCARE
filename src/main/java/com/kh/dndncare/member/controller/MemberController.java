@@ -144,7 +144,7 @@ public class MemberController {
 	}
 	
 	// ai추천 : 간병인의 입장 : 환자 추천 목록 조회
-	public ArrayList<Patient> openAiPatientChoice(int memberNo) {
+	public ArrayList<Patient> openAiPatientChoice(int memberNo, int selectNum) {
 		// 1. 간병인 본인 정보 조회 
 //		조회할 항목
 //			필수입력 : 원하는 서비스, 공동간병 참여여부, 경력, 적정비용, 성별, 나이, 주소
@@ -209,38 +209,104 @@ public class MemberController {
 		
 		if(!cWantList.isEmpty()) {
 			String wantService = ""; // 선택, 0~3개
-			String wantCareer = ""; // 선택, 1개
 			String wantDisease = ""; // 선택, 0~10개
-			String wantLicense = ""; // 선택, 0~3개
 			
+			for(HashMap<String, String> m : cWantList) {
+				switch(m.get("L_CATEGORY")) {
+				case "service" : wantService += m.get("S_CATEGORY") + "/"; break;
+				case "disease" : wantDisease += m.get("S_CATEGORY") + "/"; break;
+				}
+			}
 			
+			if(wantService.length() > 0) { // 간병인이 원하는 서비스
+				wantService = wantService.substring(0, wantService.lastIndexOf("/"));
+				infoMap.put("제공하고 싶은 서비스", wantService);
+			}
 			
-			
+			if(wantDisease.length() > 0) { // 간병인이 원하는 돌봄질환
+				wantDisease = wantDisease.substring(0, wantDisease.lastIndexOf("/"));
+				infoMap.put("돌보고 싶은 질환", wantDisease);
+			}
 		}
-				
-		
-		
-		
-		
-		
-		
-		
 		// 가공 종료! => infoMap
-		
 		// {국적=내국인, 자격증=간병사/요양보호사, 서비스경험=병원돌봄/가정돌봄/동행서비스, 주소=경기 성남시, CARE_JOIN_STATUS=Y, 돌봄질환경험=3/섬망/기저귀 케어, 나이=69, 성별=남성, 경력=3년미만, 최소금액=50000}
 		
 		
-		
-		
 		// 3. 환자 목록 조회
-		ArrayList<HashMap<String, Object>> promptPatientList = new ArrayList<HashMap<String, Object>>(); // 프롬프트에 던질 후보군 리스트
-		// 가) 환자 목록을 조회하기 위한 조건절에 쓰일 간병인 정보
-		String[] addressArr = infoMap.get("주소").split(" ");
-		String caregiverCity = addressArr[0] + addressArr[1]; // 간병인 주소 중 "xx도 xx시"의 정보만 선택
+		ArrayList<HashMap<String, Object>> promptPatientList = new ArrayList<HashMap<String, Object>>(); // 프롬프트에 전달할 최종 후보군 리스트
+		String joinStatus = infoMap.remove("CARE_JOIN_STATUS"); // 공동 간병 참여여부
+		String careGiverAddress = infoMap.get("주소").contains("서울") ? "서울" : (infoMap.get("주소").contains("제주") ? "제주" : infoMap.get("주소"));
+		// 환자 기본정보 조회 : 회원번호, 이름, 성별, 나이, 간병장소, 국적, 키, 몸무게, 요청서비스, 요청사항, 요청장소, 매칭 시작일, 매칭 종료일, 금액
+//		PATIENT : 멤버번호(PT_NO), 이름(PT_NAME), 성별(PT_GENDER), 나이(PT_GENDER), 국적, 키(PT_HEIGHT), 몸무게(PT_WEIGHT)
+//		MATCHING: 매칭번호(MAT_NO), 시작날짜(BEGIN_DT), 종료날짜(END_DT), 지불가능한 금액(MONEY)  
+//		MAT_PT_INFO: 신청서비스(SERVICE), 매칭장소(MAT_ADDRESS_INFO), 매칭종류(MAT_MODE)
 		
-		// 나) 환자 기본정보 조회 : 회원번호, 이름, 성별, 나이, 간병장소, 국적, 키, 몸무게, 요청서비스, 요청사항, 요청장소, 매칭 시작일, 매칭 종료일, 금액
-		ArrayList<Patient> pList = mService.selectPatientList(caregiverCity); // 길이 : 0~10
-		ArrayList<HashMap<String, String>> pExpList = null;
+		HashMap<String, Object> condition = new HashMap<String, Object>();
+		condition.put("address", careGiverAddress);
+		condition.put("selectNum", selectNum*2);
+		condition.put("joinStatus", joinStatus);
+		ArrayList<Patient> pList = mService.selectPatientList(condition); // 길이 : 0~10
+		//[Patient(ptNo=0, memberNo=15, ptName=서은호, ptGender=M, ptAge=null, ptWeight=79, ptHeight=180, ptService=null, 
+		//ptAddress=서울 동대문구 망우로 82 202호777, ptRequest=null, ptUpdateDate=null, infoCategory=null, ptRealAge=52, matNo=51, 
+		//matType=0, hosInfo=0, memberNational=내국인, service=개인간병, matRequest=일단없음, beginDt=2024-08-14, endDt=2024-08-14, 
+		//money=50000, ptDisease=null), 
+		
+		ArrayList<Integer> mNoList = new ArrayList<Integer>();
+		for(Patient p : pList) {
+			mNoList.add(p.getMemberNo());
+		}
+		
+		ArrayList<HashMap<String, String>> pExpList = mService.getPatientInfo(mNoList);
+//		[{S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=55}, {S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=15}, {S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=54}, {S_CATEGORY=가정돌봄, L_CATEGORY=service, MEMBER_NO=15}, {S_CATEGORY=치매, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=치매, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=욕창, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=하반신 마비, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=와상 환자, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=55}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=의식 없음, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=중증, L_CATEGORY=diseaseLevel, MEMBER_NO=55}, {S_CATEGORY=중증, L_CATEGORY=diseaseLevel, MEMBER_NO=54}, {S_CATEGORY=경증, L_CATEGORY=diseaseLevel, MEMBER_NO=15}]
+		
+		// ArrayList<HashMap<String, Object>> promptPatientList 에 담아야함
+		for(Patient p : pList) {
+			HashMap<String, Object> m = new HashMap<String, Object>(); 
+			m.put("회원번호", p.getMemberNo());
+			m.put("성별", p.getPtGender().equals("M") ? "남자" : "여자");
+			m.put("나이", p.getPtRealAge()+"세");
+			String[] add = p.getPtAddress().split(" ");
+			m.put("간병장소", add[0] + " " + add[1]);
+			m.put("국적", p.getMemberNational());
+			m.put("키", p.getPtHeight()+"cm");
+			m.put("몸무게", p.getPtWeight()+"kg");
+			m.put("요청서비스", p.getService());
+			m.put("요청사항", p.getMatRequest());
+			m.put("간병시작일", p.getBeginDt());
+			m.put("간병종료일", p.getEndDt());
+			m.put("간병비용", p.getMoney());
+			
+			
+			// 여기서부터 작업
+			for(HashMap<String, String> info : pExpList) {
+				if(Integer.parseInt(info.get("MEMBER_NO")) == p.getMemberNo()) {
+					switch(info.get("L_CATEGORY")) {
+					case "disease" : break;
+					
+					
+					
+					}
+					
+					
+					
+					
+					
+					
+				}
+				
+				
+				
+			}
+			
+			
+			
+			
+			
+			promptPatientList.add(m);
+		}
+		
+		
+		
 		
 		if(pList.size() != 0) {
 			ArrayList<Integer> pNoList = new ArrayList<Integer>();
@@ -354,15 +420,10 @@ public class MemberController {
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo(); 
-			ArrayList<Patient> completeList = openAiPatientChoice(memberNo); // 추천목록이 없으면 null로 넘어옴
+			ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
 			
 			model.addAttribute("completeList", completeList);
 		}
-		
-		
-		
-		
-		
 		
 		
 		
@@ -374,7 +435,7 @@ public class MemberController {
 	@ResponseBody
 	public void refreshChoice(@RequestParam("memberNo") int memberNo, HttpServletResponse response) {
 		// 후보군이 있을 때만 새로고침 버튼이 활성화 되기 때문에 null로 넘어오는 경우는 배제함
-		ArrayList<Patient> completeList = openAiPatientChoice(memberNo); 
+		ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); 
 
 		Gson gson = new Gson();
 		response.setContentType("application/json; charset=UTF-8;");
