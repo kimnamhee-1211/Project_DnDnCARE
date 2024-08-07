@@ -24,4 +24,7 @@ public class CareReview {
 	private Date reviewUpdateDate;
 	private String reviewStatus;
 	private String ptName;
+	private String memberName;
+	private String careIntro;
+	
 }

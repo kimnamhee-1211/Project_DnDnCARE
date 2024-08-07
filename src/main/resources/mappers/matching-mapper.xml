@@ -85,7 +85,7 @@
 		        left join member m on(m.member_no = mc.member_no)
 		        left join matching mc on(mc.member_no = cg.member_no)
 		        left join member m on(m.member_no = cg.member_no)
-		where review_status ='Y' 
+		where review_status ='Y'; 
        	<!-- and m.member_no = #{memberNo} -->
 	</select>
 	
@@ -148,6 +148,18 @@
 	
 	
 	
+	<select id="reviewCount" resultType="_int">
+		select count(*)
+		from care_review
+			join matching using(mat_no)
+		<!-- where member_no=#{memberNo}   -->
+	</select>
+	
+	<select id="avgReviewScore" resultType="_int">
+		select avg(review_score)
+		from care_review
+		<!-- where member_no=#{memberNo} -->
+	</select>
 
 
 </mapper>

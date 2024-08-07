@@ -367,8 +367,19 @@ public class MatchingController {
 	@GetMapping("reviewDetail.mc")
 	public String getMethodName(HttpSession session, Model model) {
 		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		
+		// 정보
 		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
+		
+		// 후기개수
+		int reviewCount = mcService.reviewCount(memberNo);
+		
+		// 평점
+		int avgReviewScore = mcService.avgReviewScore(memberNo);
+		
 		model.addAttribute("reviewList", reviewList);
+		model.addAttribute("reviewCount", reviewCount);
+		model.addAttribute("avgReviewScore",avgReviewScore);
 		return "reviewDetail";
 	}
 	
