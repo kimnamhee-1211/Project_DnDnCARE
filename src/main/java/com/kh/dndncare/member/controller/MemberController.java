@@ -971,11 +971,8 @@ public class MemberController {
 		HashMap<String, Object> condition = new HashMap<String, Object>();
 		condition.put("address", myAddress);
 		condition.put("selectNum", selectNum*2);
-		ArrayList<Patient> cList = mService.selectCaregiverList(condition); // 길이 : 0~10
-		
-		System.out.println(cList);
-		
-		
+		ArrayList<HashMap<String, Object>> cList = mService.selectCaregiverList(condition); // 길이 : 0~10
+		//[{연령=58, 국적=내국인, 최소요구금액=10000, 주소=서울 강북구 삼양로22길 4 102호, 성별=남성, 회원번호=49},
 		
 		if(cList.isEmpty()) { // 조건에 맞는 후보 환자가 없을 땐 null로 넘겨야 한다.
 			return null;
@@ -983,49 +980,54 @@ public class MemberController {
 		
 		
 		ArrayList<Integer> mNoList = new ArrayList<Integer>();
-		for(Patient p : cList) {
-			mNoList.add(p.getMemberNo());
-		}
+		for(HashMap<String,Object> m : cList) {
+			int age = Integer.parseInt(m.get("연령").toString());
+			if(age < 0) {
+				m.put("연령", age+100); // 연령 계산 오류났을 때 재조정시킴
+			}
+			mNoList.add(Integer.parseInt(m.get("회원번호").toString()));
+		} // 79, 42, 22, 49, 50, 46, 23, 14, 83, 84]
 		
-		ArrayList<HashMap<String, Object>> pExpList = mService.getPatientInfo(mNoList);
+		
+		ArrayList<HashMap<String, Object>> pExpList = mService.selectCaregiverInfo(mNoList);
 //		[{S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=55}, {S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=15}, {S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=54}, {S_CATEGORY=가정돌봄, L_CATEGORY=service, MEMBER_NO=15}, {S_CATEGORY=치매, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=치매, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=욕창, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=하반신 마비, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=와상 환자, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=55}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=의식 없음, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=중증, L_CATEGORY=diseaseLevel, MEMBER_NO=55}, {S_CATEGORY=중증, L_CATEGORY=diseaseLevel, MEMBER_NO=54}, {S_CATEGORY=경증, L_CATEGORY=diseaseLevel, MEMBER_NO=15}]
 		
 		// ArrayList<HashMap<String, Object>> promptPatientList 에 담아야함
 		
-		for(Patient p : cList) {
-			HashMap<String, Object> m = new HashMap<String, Object>(); 
-			m.put("매칭번호", p.getMatNo());
-			m.put("회원번호", p.getMemberNo());
-			m.put("성별", p.getPtGender().equals("M") ? "남자" : "여자");
-			m.put("나이", p.getPtRealAge()+"세");
-			String[] add = p.getPtAddress().split(" ");
-			m.put("간병장소", add[0] + " " + add[1]);
-			m.put("국적", p.getMemberNational());
-			m.put("키", p.getPtHeight()+"cm");
-			m.put("몸무게", p.getPtWeight()+"kg");
-			m.put("요청서비스", p.getService());
-			m.put("요청사항", p.getMatRequest());
-			m.put("간병시작일", p.getBeginDt());
-			m.put("간병종료일", p.getEndDt());
-			m.put("간병비용", p.getMoney());
-			
-			String pDisease = "";
-			String pDiseaseLevel = "";
-			if(!pExpList.isEmpty()) {
-				for(HashMap<String, Object> info : pExpList) {
-					String mNo = info.get("MEMBER_NO").toString();
-					if(Integer.parseInt(mNo) == p.getMemberNo()) {
-						switch((String)info.get("L_CATEGORY")) {
-						case "disease" : pDisease +=  (String)info.get("S_CATEGORY") + "/"; break;
-						case "diseaseLevel": pDiseaseLevel += (String)info.get("S_CATEGORY") + "/"; break;
-						}
-					}
-				}
-				m.put("보유질환", pDisease.substring(0, pDisease.lastIndexOf("/")));	
-				m.put("중증도", pDiseaseLevel.substring(0, pDiseaseLevel.lastIndexOf("/")));	
-			}	
-			promptCaregiverList.add(m);
-		}// 후보에 대한 정보 가공 끝
+//		for(Patient p : cList) {
+//			HashMap<String, Object> m = new HashMap<String, Object>(); 
+//			m.put("매칭번호", p.getMatNo());
+//			m.put("회원번호", p.getMemberNo());
+//			m.put("성별", p.getPtGender().equals("M") ? "남자" : "여자");
+//			m.put("나이", p.getPtRealAge()+"세");
+//			String[] add = p.getPtAddress().split(" ");
+//			m.put("간병장소", add[0] + " " + add[1]);
+//			m.put("국적", p.getMemberNational());
+//			m.put("키", p.getPtHeight()+"cm");
+//			m.put("몸무게", p.getPtWeight()+"kg");
+//			m.put("요청서비스", p.getService());
+//			m.put("요청사항", p.getMatRequest());
+//			m.put("간병시작일", p.getBeginDt());
+//			m.put("간병종료일", p.getEndDt());
+//			m.put("간병비용", p.getMoney());
+//			
+//			String pDisease = "";
+//			String pDiseaseLevel = "";
+//			if(!pExpList.isEmpty()) {
+//				for(HashMap<String, Object> info : pExpList) {
+//					String mNo = info.get("MEMBER_NO").toString();
+//					if(Integer.parseInt(mNo) == p.getMemberNo()) {
+//						switch((String)info.get("L_CATEGORY")) {
+//						case "disease" : pDisease +=  (String)info.get("S_CATEGORY") + "/"; break;
+//						case "diseaseLevel": pDiseaseLevel += (String)info.get("S_CATEGORY") + "/"; break;
+//						}
+//					}
+//				}
+//				m.put("보유질환", pDisease.substring(0, pDisease.lastIndexOf("/")));	
+//				m.put("중증도", pDiseaseLevel.substring(0, pDiseaseLevel.lastIndexOf("/")));	
+//			}	
+//			promptCaregiverList.add(m);
+//		}// 후보에 대한 정보 가공 끝
 		
 			
 		// 5. 프롬프트 작성

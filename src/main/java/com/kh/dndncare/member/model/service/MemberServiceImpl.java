@@ -159,7 +159,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<Patient> selectCaregiverList(HashMap<String, Object> condition) {
+	public ArrayList<HashMap<String, Object>> selectCaregiverList(HashMap<String, Object> condition) {
 		return mMapper.selectCaregiverList(condition);
 	}
 

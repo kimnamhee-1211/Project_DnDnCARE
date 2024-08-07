@@ -61,7 +61,7 @@ public interface MemberService {
 
 	ArrayList<HashMap<String, String>> getCaregiverMyWant(int memberNo);
 
-	ArrayList<Patient> selectCaregiverList(HashMap<String, Object> condition);
+	ArrayList<HashMap<String, Object>> selectCaregiverList(HashMap<String, Object> condition);
 
 
 

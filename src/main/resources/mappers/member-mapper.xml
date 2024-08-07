@@ -146,7 +146,7 @@
 		   			AND PT_COUNT = 1
 		   </if>
 		   ORDER BY DBMS_RANDOM.RANDOM)
-		WHERE ROWNUM <![CDATA[<]]> ${selectNum}
+		WHERE ROWNUM <![CDATA[<]]> ${selectNum}+1
 	</select>
 	
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 환자 후보군의 정보 조회 : 2번 -->
@@ -212,8 +212,17 @@
 		WHERE MEMBER_NO = ${memberNo}
 	</select>
 	
-	<select id="selectCaregiverList" resultType="Caregiver">
-		
+	<select id="selectCaregiverList" resultType="map">
+		SELECT *
+		FROM (  SELECT MEMBER_NO AS "회원번호", DECODE(MEMBER_GENDER, 'M', '남성', '여성') AS "성별", 
+		                EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS "연령", 
+		                SUBSTR(REPLACE(MEMBER_ADDRESS, '//', ' ') , INSTR(REPLACE(MEMBER_ADDRESS, '//', ' '), ' ')+1) as "주소",
+		                MEMBER_NATIONAL AS 국적, MIN_MONEY AS "최소요구금액"
+		        FROM MEMBER
+		                JOIN CAREGIVER USING(MEMBER_NO)
+		        WHERE MEMBER_STATUS = 'N' AND MEMBER_ADDRESS LIKE '%${address}%'
+		        ORDER BY DBMS_RANDOM.RANDOM)
+		WHERE ROWNUM <![CDATA[<]]> ${selectNum}+1
 	</select>
 	
 	
