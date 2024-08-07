@@ -310,7 +310,7 @@ public class MatchingController {
 	public String getMethodName(HttpSession session, Model model) {
 		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		
-		// 정보
+		// 후기내역
 		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
 		
 		// 후기개수
@@ -318,6 +318,9 @@ public class MatchingController {
 		
 		// 평점
 		int avgReviewScore = mcService.avgReviewScore(memberNo);
+		
+		// 간병인 정보
+		
 		
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("reviewCount", reviewCount);

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .chat-container {
+            width: 95%;
+            max-width: 800px;
+            height: 95%;
+            background: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            background: #007bff;
+            color: #fff;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .chat-body {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .chat-footer {
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+        }
+        .message {
+            max-width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .message.sent {
+            background: #007bff;
+            align-self: flex-end;
+        }
+        .message.received {
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="chat-container">
+        <div class="chat-header">
+            <div>
+                <div class="font-weight-bold">채팅방명</div>
+                <div class="small">??</div>
+            </div>
+            <div>
+                ...
+            </div>
+        </div>
+        <div class="chat-body">
+            <div class="text-center text-muted small mb-4">날짜?</div>
+            <div class="d-flex justify-content-end mb-4">
+                <div class="message sent">송신</div>
+            </div>
+            <div class="d-flex justify-content-start mb-4">
+                <div class="message received">수신</div>
+                <div class="small text-muted ml-2 align-self-end"></div>
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" placeholder="메시지를 입력하세요." class="form-control flex-grow-1">
+            <button class="btn btn-light btn-sm">전송</button>
+        </div>
+    </div>
+
+</body>
+</html>

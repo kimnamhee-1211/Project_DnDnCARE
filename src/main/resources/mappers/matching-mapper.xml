@@ -79,14 +79,10 @@
 	<select id="selectReviewList" resultType="CareReview">
 		select *
 		from care_review r
-		        left join patient p on(p.pt_no = r.pt_no)
-		        left join mat_pt_info mpi on(mpi.pt_no = p.pt_no)
-		        left join matching mc on(mc.mat_no = mpi.mat_no)
-		        left join caregiver cg on(mc.member_no = cg.member_no)
-		        left join member m on(m.member_no = mc.member_no)
-		
-		where review_status ='Y'
-       	<!-- and m.member_no = #{memberNo} -->
+			join patient using(pt_no)
+			join caregiver using(member_no)
+		where review_status ='Y' 
+       	and r.member_no = #{memberNo}
 	</select>
 	
 	
@@ -99,14 +95,13 @@
 	<select id="reviewCount" resultType="_int">
 		select count(*)
 		from care_review
-			join matching using(mat_no)
-		<!-- where member_no=#{memberNo}   -->
+		where member_no=#{memberNo} 
 	</select>
 	
 	<select id="avgReviewScore" resultType="_int">
 		select avg(review_score)
 		from care_review
-		<!-- where member_no=#{memberNo} -->
+		where member_no=#{memberNo}
 	</select>
 
 
