@@ -46,8 +46,10 @@
 						    <tr>
 						      <th scope="col">NO</th>
 						      <th scope="col">[[${gm.matNo}]]</th>
-						      <th scope="col" th:if="${loginMatNos.contains(gm.matNo)}" colspan="2">참여중</th>
-              				  <th scope="col" th:if="${!loginMatNos.contains(gm.matNo)}" colspan="2">&nbsp;&nbsp;</th>			      
+						     <th:bolck  th:each="loginMatNo : ${loginMatNos}">
+						      <th scope="col" th:if="${loginMatNo == gm.matNo}" colspan="2">참여중</th>
+              				  <th scope="col" th:if="${!loginMatNo != gm.matNo}" colspan="2"></th>			      
+						   	</th:bolck>
 						    </tr>
 						  </thead>
 						  <tbody>
@@ -128,8 +130,8 @@
 			        <h5 class="h5 mb-4" style="margin-top:30px;">만약 관련 요청사항이 있다면 100자 이내로 입력해주세요.</h5>
 			        <input type="text" class="form-control mb-5" maxlength="100" placeholder="요청사항" name="matRequest">
 		      		<input type="hidden" name="matNo" id="joinMatNo">
-		      		<input type="hidden" name="hospitalName" id="joinHospitalName">
-		      		<input type="hidden" name="hospitalAddress" id="joinHospitalAddress">
+		      		<input type="hidden" name="hospitalName" id="joinHospitalName" th:value="${hospital.hospitalName}">
+		      		<input type="hidden" name="hospitalAddress" id="joinHospitalAddress" th:value="${hospital.hospitalAddress}">
 		      	</form>
 		      </div>
 		      <div class="modal-footer">
@@ -159,8 +161,8 @@
 			        <h5 id="joinLeaderMsg" class="h5 fw-bold mb-4" style="margin:0 40px;display:none;color:red;">그룹 개설 회원은 현재 그룹에 참여 중인 회원이 있는 경우 그룹 참여를 취소할 수 없습니다.</h5>
 		      		<input type="hidden" name="matNo" id="outMatNo">
 		      		<input type="hidden" name="matMode" id="outMatMode">
-		      		<input type="hidden" name="hospitalName" id="outHospitalName">
-		      		<input type="hidden" name="hospitalAddress" id="outHospitalAddress">
+		      		<input type="hidden" name="hospitalName" id="outHospitalName" th:value="${hospital.hospitalName}">
+		      		<input type="hidden" name="hospitalAddress" id="outHospitalAddress" th:value="${hospital.hospitalAddress}">
 		      	</form>
 		      </div>
 		      <div class="modal-footer">
@@ -190,8 +192,8 @@
 			        <h5 id="walkoutrMsg" class="h5 fw-bold mb-4" style="margin:0 40px;display:none;color:red;"></h5>
 		      		<input type="hidden" name="matNo" id="walkoutMatNo">
 		      		<input type="hidden" name="matMode" id="walkoutMatMode">
-		      		<input type="hidden" name="hospitalName" id="walkoutHospitalName">
-		      		<input type="hidden" name="hospitalAddress" id="walkoutHospitalAddress">
+		      		<input type="hidden" name="hospitalName" id="walkoutHospitalName" th:value="${hospital.hospitalName}">
+		      		<input type="hidden" name="hospitalAddress" id="walkoutHospitalAddress" th:value="${hospital.hospitalAddress}">
 		      	</form>
 		      </div>
 		      <div class="modal-footer">
@@ -255,16 +257,9 @@
 							
 								//참여신청 & 참여취소 클릭하는 경우를 위해 데이터 전달
 								document.getElementById('joinMatNo').value = jmMatMatptInfo.matNo;
-								document.getElementById('joinHospitalName').value = jmMatMatptInfo.hospitalName;
-								document.getElementById('joinHospitalAddress').value = jmMatMatptInfo.hospitalAddress;
 								document.getElementById('outMatNo').value = jmMatMatptInfo.matNo;
 								document.getElementById('outMatMode').value = jmMatMatptInfo.matMode;
-								document.getElementById('outHospitalName').value = jmMatMatptInfo.hospitalName;
-								document.getElementById('outHospitalAddress').value = jmMatMatptInfo.hospitalAddress;				
 								document.getElementById('walkoutMatNo').value = jmMatMatptInfo.matNo;
-								document.getElementById('walkoutHospitalName').value = jmMatMatptInfo.hospitalName;
-								document.getElementById('walkoutHospitalAddress').value = jmMatMatptInfo.hospitalAddress;
-								
 								
 								//jmMatMatptInfo
 								let jmMatDateInnerHTML = '';
