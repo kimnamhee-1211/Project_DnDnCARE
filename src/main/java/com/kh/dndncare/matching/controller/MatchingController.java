@@ -405,10 +405,10 @@ public class MatchingController {
 		if(result > 0) {
 			re.addAttribute("hospitalName", hospitalName);
 			re.addAttribute("hospitalAddress", hospitalAddress);
-			re.addAttribute("msg", "그룹간병 참여가 완료되었습니다.");
+			re.addAttribute("msg", "공동간병 참여가 완료되었습니다.");
 			return "redirect:joinMatching.jm";
 		}
-		throw new MemberException("공동간병 그룹 등록 실패");
+		throw new MemberException("공동간병 그룹 참여 실패");
 	}
 	
 	//공동간병 참여 취소
@@ -441,12 +441,12 @@ public class MatchingController {
 			
 			re.addAttribute("hospitalName", hospitalName);
 			re.addAttribute("hospitalAddress", hospitalAddress);
-			re.addAttribute("msg", "그룹간병 참여 취소가 완료되었습니다.");
+			re.addAttribute("msg", "공동간병 참여 취소가 완료되었습니다.");
 			return "redirect:joinMatching.jm";			
+		}else {
+			throw new MemberException("공동간병 그룹 참여 취소 실패");
 		}
-		throw new MemberException("공동간병 그룹 등록 실패");
 	}
-
 	
 	
 	@GetMapping("reviewDetail.mc")
@@ -469,6 +469,22 @@ public class MatchingController {
 	}
 	
 	
+	@PostMapping("walkoutJoinMatching.jm")
+	public String walkoutJoinMatching(@RequestParam("matNo") int matNo, @RequestParam("ptNo") int ptNo,
+									@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,
+									RedirectAttributes re) {
+		int result = mcService.delMatPtInfo(matNo, ptNo);
+		if(result > 0) {
+			re.addAttribute("hospitalName", hospitalName);
+			re.addAttribute("hospitalAddress", hospitalAddress);
+			re.addAttribute("msg", "공동간병 참여자 퇴장이 완료되었습니다.");
+			return "redirect:joinMatching.jm";
+		}else {
+			throw new MemberException("공동간병 참여자 퇴장 실패");
+		}
+
+
+	}
 	
 	
 	
