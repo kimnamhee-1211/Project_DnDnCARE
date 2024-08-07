@@ -8,7 +8,7 @@
 }
 
 #tagBtnDiv {
-	display:grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* grid-template-rows: 100px; */
+	display:grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* grid-template-rows: 100px; */
 } 
 
 .autoMatching tr {height: 40px;}

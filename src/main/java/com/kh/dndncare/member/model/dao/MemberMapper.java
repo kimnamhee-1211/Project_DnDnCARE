@@ -45,11 +45,16 @@ public interface MemberMapper {
 
 	ArrayList<HashMap<String, String>> getCaregiverExp(int memberNo);
 
-	ArrayList<Patient> selectPatientList(String caregiverCity);
+	ArrayList<Patient> selectPatientList(HashMap<String, Object> condition);
 
 	ArrayList<HashMap<String, String>> getPatientExp(ArrayList<Integer> pNoList);
 
 	ArrayList<Patient> choicePatientList(ArrayList<Integer> choiceNoList);
+
+	ArrayList<HashMap<String, String>> getCaregiverWant(int memberNo);
+
+	ArrayList<HashMap<String, String>> getPatientInfo(ArrayList<Integer> mNoList);
+
 
 	
 
