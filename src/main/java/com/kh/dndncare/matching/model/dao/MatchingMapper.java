@@ -1,6 +1,8 @@
 package com.kh.dndncare.matching.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -55,5 +57,19 @@ public interface MatchingMapper {
 	int reviewCount(int memberNo);
 
 	int avgReviewScore(int memberNo);
+	int updatePatient(Patient patient);
+
+	int insertMatching(Matching matching);
+
+	int insertMatchingDate(HashMap<String, Object> map);
+
+	int getMatNo(int ptNo);
+
+	int insertWantInfo(Map<String, Object> params);
+
+	int insertMatPtInfo(MatPtInfo matPtInfo);
+
+	int deleteWantInfo(int memberNo);
+
 
 }

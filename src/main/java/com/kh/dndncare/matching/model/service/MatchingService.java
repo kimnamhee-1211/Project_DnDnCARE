@@ -3,6 +3,8 @@ package com.kh.dndncare.matching.model.service;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
@@ -69,5 +71,13 @@ public interface MatchingService {
 	int avgReviewScore(int memberNo);
 	
 
+	int updatePatient(Patient patient);
+	int insertMatchingDate(HashMap<String, Object> map);
+	int getMatNo(int ptNo);
+	int insertMatching(Matching matching);
+	int insertWantInfo(Map<String, Object> params);
+	int insertMatPtInfo(MatPtInfo matPtInfo);
+	int deleteWantInfo(int memberNo);
+	
 
 }

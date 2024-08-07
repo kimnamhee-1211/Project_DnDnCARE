@@ -64,9 +64,8 @@
 			        <div class="d-flex">
 			            <label for="underDayPicker">간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
 			            <input type="text" id="underDayPicker" name="selectedDays" readonly>
-			            <input type="hidden" id="selectedFirst" name="selectedFirst">
-			            <input type="hidden" id="selectedLast" name="selectedLast">
-			            <button type="button" id="confirm">확인</button>
+			            <input type="hidden" id="selectedFirst" name="beginDt">
+			            <input type="hidden" id="selectedLast" name="endDt">
 			        </div>
 			        <div class="time-picker d-flex mt-3">
 			            <label for="underDayStartTime">시작 시간:&nbsp;&nbsp;&nbsp;</label>
@@ -77,9 +76,20 @@
 			        <div id="underDaySummary" class="summary">
 			            원하시는 날과 시간을 선택해주세요
 			        </div>
-    		 	</div> 
-			</div>
-				
+    		 </div> 
+		</div>
+			 <div class="wantMoney-section d-flex flex-column justify-content-center">
+			 	<div class="instruction-text">
+			        <p class="fw-bold fs-5"><img width="50" height="50" src="https://img.icons8.com/ios/50/get-cash--v2.png" alt="get-cash--v2"/>&nbsp;&nbsp;원하시는 금액을 입력해주세요<br>
+			        <span class="multiple-selection-note ms-5">
+			        	<em class="fs-6">작성하시는 금액은 하루일당 기준이며 <br>최종 금액은 매칭된 간병인과의 협의를 통해 결정됩니다.</em>
+			        </span>
+			    </div>
+				<div class="form-floating d-flex mb-3 w-50" id="money-input">
+					<input type="number" class="form-control" id="money" name="money">
+					<label for="money">일당</label><p class="mt-3 ms-2">원</p>
+				</div>
+			 </div>
 			 <div class="symptom-selection-container">
 			    <div class="instruction-text">
 			        <p class="fw-bold fs-5"><img width="48" height="48" src="https://img.icons8.com/color/48/treatment-plan.png" alt="treatment-plan"/>&nbsp;&nbsp;환자에게 해당되는 증상을 선택해주세요<br>
@@ -159,23 +169,86 @@
 				        <input type="hidden" id="selectedMobility" name="selectedMobility">
 				    </div>
 				</div>
-				<div class="gender-button d-flex flex-column mt-5">
+				<div class="gender-button d-flex flex-column align-items-center w-100 mt-5">
 				    <div class="instruction-text">
 				        <p class="fw-bold fs-5"><img width="48" height="48" src="https://img.icons8.com/color/48/gender--v1.png" alt="gender--v1"/>&nbsp;&nbsp;선호하는 간병인의 성별을 선택해주세요.</p>
 				    </div>
-				    <div class="row mb-3">
+				    <div class="row mb-3 gap-0.5 w-100 d-flex justify-content-center">
 				        <div class="col-3">
 				            <button type="button" class="btn-radio gender-option" data-symptom="71">남성</button>
 				        </div>
 				        <div class="col-3">
 				            <button type="button" class="btn-radio gender-option" data-symptom="72">여성</button>
 				        </div>
-				        <div class="col-3 w-25">
-				            <button type="button" class="btn-radio gender-option" data-symptom="70">성별 무관</button>
-				        </div>
-				        <input type="hidden" id="selectedGender" name="selectedGender">
 				    </div>
+				    <div class="col-3 w-50">
+			            <button type="button" class="btn-radio gender-option w-50" data-symptom="70">상관 없음</button>
+		        	</div>
+				    <input type="hidden" id="selectedGender" name="selectedGender">
 				</div>
+				
+				<div class="career-button d-flex flex-column align-items-center text-nowrap mt-5">
+				    <div class="instruction-text">
+				        <p class="fw-bold fs-5"><img width="64" height="64" src="https://img.icons8.com/cotton/64/scroll--v1.png" alt="scroll--v1"/>&nbsp;&nbsp;선호하는 간병인의 경력을 선택해주세요.</p>
+				    </div>
+				    <div class="row mb-3 w-100 d-flex justify-content-center">
+				        <div class="col-3">
+				            <button type="button" class="btn-radio career-option" data-symptom="12">1년 이상</button>
+				        </div>
+				        <div class="col-3">
+				            <button type="button" class="btn-radio career-option" data-symptom="13">3년 이상</button>
+				        </div>
+				    </div>
+				    <div class="row mb-3 w-100 d-flex justify-content-center">
+				        <div class="col-3">
+				            <button type="button" class="btn-radio career-option" data-symptom="14">5년 이상</button>
+				        </div>
+				        <div class="col-3">
+				            <button type="button" class="btn-radio career-option" data-symptom="11">상관 없음</button>
+				        </div>
+				    </div>
+				    <input type="hidden" id="selectedCareer" name="selectedCareer">
+				</div>
+				
+				<div class="local-button d-flex flex-column align-items-center w-100 mt-5">
+				    <div class="instruction-text">
+				        <p class="fw-bold fs-5"><img width="50" height="50" src="https://img.icons8.com/ios/50/passport.png" alt="passport"/>&nbsp;&nbsp;선호하는 간병인의 국적을 선택해주세요.</p>
+				    </div>
+				    <div class="row mb-3 gap-0.5 w-100 d-flex justify-content-center">
+				        <div class="col-3">
+				            <button type="button" class="btn-radio local-option" data-symptom="73">내국인</button>
+				        </div>
+				        <div class="col-3">
+				            <button type="button" class="btn-radio local-option" data-symptom="74">외국인</button>
+				        </div>
+				    </div>
+				    <div class="col-3 w-50">
+			            <button type="button" class="btn-radio local-option w-50" data-symptom="75">상관 없음</button>
+		        	</div>
+				    <input type="hidden" id="selectedLocal" name="selectedLocal">
+				</div>
+				<div class="age-button d-flex flex-column align-items-center w-100 mt-5">
+				    <div class="instruction-text mb-2">
+				        <p class="fw-bold fs-5"><img width="64" height="64" src="https://img.icons8.com/external-flat-wichaiwi/64/external-life-ageing-society-flat-wichaiwi.png" alt="external-life-ageing-society-flat-wichaiwi"/>&nbsp;&nbsp;&nbsp;선호하는 간병인의 연령대를 선택해주세요.</p>
+				    </div>
+				    <div class="row mb-3 gap-0.5 w-100 d-flex justify-content-center">
+				        <div class="col-3">
+				            <button type="button" class="btn-radio age-option" data-symptom="81">청년층</button>
+				        </div>
+				        <div class="col-3">
+				            <button type="button" class="btn-radio age-option" data-symptom="82">중년층</button>
+				        </div>
+				        <div class="col-3">
+				            <button type="button" class="btn-radio age-option" data-symptom="83">노년층</button>
+				        </div>
+				    </div>
+				    <div class="col-3 w-50">
+			            <button type="button" class="btn-radio age-option w-50" data-symptom="84">상관 없음</button>
+		        	</div>
+				    <input type="hidden" id="selectedAge" name="selectedAge">
+				</div>
+				
+				
                	<div class="sign-btn mt-5 d-flex justify-content-center">
                		<button type="button" class="previous-btn me-3" th:onclick="history.back();"><span>이전</span></button>
 					<button type="submit" class="apply-btn me-3"><span>공개 매칭 신청</span></button>
@@ -420,7 +493,21 @@ $(document).ready(function() {
     }
 
     function handleIconClick() {
-        // ... (기존 코드 유지)
+        $('.icon-container').on('click', function() {
+            $('.icon-container').removeClass('selected');
+            $(this).addClass('selected');
+            const selectedValue = $(this).data('letue');
+            
+            $('#overDayInput, #underDayInput').addClass('hidden');
+            
+            if (selectedValue === 'overDay') {
+                $('#overDayInput').removeClass('hidden');
+                resetInputs('under');
+            } else if (selectedValue === 'underDay') {
+                $('#underDayInput').removeClass('hidden');
+                resetInputs('over');
+            }
+        });
     }
 
     function handleFormSubmit() {
@@ -437,13 +524,26 @@ $(document).ready(function() {
 
             updateSelectedSymptoms();
 
-            if (!$('#selectedMobility').val()) {
+            if (!$('#selectedMobility').val()) { // 거동 검증
                 alert('거동 상태를 선택해주세요.');
                 return false;
             }
 
-            if (!$('#selectedGender').val()) {
+            if (!$('#selectedGender').val()) { // 성별 검증
                 alert('선호하는 간병인의 성별을 선택해주세요.');
+                return false;
+            }
+            
+            if (!$('#selectedCareer').val()) {  // 경력 선택 검증 추가
+                alert('선호하는 간병인의 경력을 선택해주세요.');
+                return false;
+            }
+            if (!$('#selectedLocal').val()) {  // 경력 선택 검증 추가
+                alert('선호하는 간병인의 국적을 선택해주세요.');
+                return false;
+            }
+            if (!$('#selectedAge').val()) {  // 경력 선택 검증 추가
+                alert('선호하는 간병인의 연령대를 선택해주세요.');
                 return false;
             }
 
@@ -451,15 +551,28 @@ $(document).ready(function() {
         });
     }
 
-    // 보조 함수
     function resetInputs(type) {
-        // ... (기존 코드 유지)
+        if (type === 'over') {
+            // 기간제 간병 입력 초기화
+            $('#overDayStart, #overDayEnd').val('');
+            $('#beginDt, #endDt, #beginTime, #endTime').val('');
+            $('#overDaySummary').text('날짜와 시간을 선택해주세요.');
+        } else if (type === 'under') {
+            // 시간제 간병 입력 초기화
+            $('#underDayPicker').val('');
+            $('#selectedFirst, #selectedLast').val('');
+            $('#underDayStartTime, #underDayEndTime').val('');
+            $('#underDaySummary').text('날짜와 시간을 선택해주세요.');
+        }
     }
 
     // 초기화 및 이벤트 바인딩
     initializeFlatpickr();
     setupSingleSelection('mobility-option', 'selectedMobility');
     setupSingleSelection('gender-option', 'selectedGender');
+    setupSingleSelection('career-option', 'selectedCareer');
+    setupSingleSelection('local-option', 'selectedLocal');
+    setupSingleSelection('age-option', 'selectedAge');
     handleIconClick();
     handleFormSubmit();
 
