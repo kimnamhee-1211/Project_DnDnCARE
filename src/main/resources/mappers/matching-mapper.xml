@@ -85,7 +85,7 @@
 		        left join member m on(m.member_no = mc.member_no)
 		        left join matching mc on(mc.member_no = cg.member_no)
 		        left join member m on(m.member_no = cg.member_no)
-		where review_status ='Y'; 
+		where review_status ='Y' 
        	<!-- and m.member_no = #{memberNo} -->
 	</select>
 	
