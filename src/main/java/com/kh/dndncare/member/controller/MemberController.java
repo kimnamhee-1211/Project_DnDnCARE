@@ -145,71 +145,92 @@ public class MemberController {
 	
 	// ai추천 : 간병인의 입장 : 환자 추천 목록 조회
 	public ArrayList<Patient> openAiPatientChoice(int memberNo) {
-		// 1. 간병인 정보 조회 
+		// 1. 간병인 본인 정보 조회 
 //		조회할 항목
 //			필수입력 : 원하는 서비스, 공동간병 참여여부, 경력, 적정비용, 성별, 나이, 주소
 //			선택입력 : 서비스 경험, 돌봄경험, 자격증
 //		항목의 출처
-//			WANT_INFO : 원하는 서비스(필수),
-//			CAREGIVER : 공동간병 희망여부(필수,CARE_JOIN_STATUS), 적정비용(필수, MIN_MONEY, MAX_MONEY), 
-//			MEMBER_INFO : 경력기간(필수), 서비스경험(선택), 돌봄경험(선택), 자격증(선택)
+//			CAREGIVER : 공동간병 희망여부(필수,CARE_JOIN_STATUS), 최소비용(필수, MIN_MONEY), 
+//			MEMBER_INFO : 경력기간(필수,1개), 서비스경험(선택, 0~3개), 돌봄경험(선택, 0~10개), 자격증(선택, 0~3개), 원하는 서비스(필수, 1~3개)
 //			MEMBER: 성별(필수, MEMBER_GENDER), 나이(필수, MEMBER_AGE), 주소(필수, MEMBER_ADDRESS), 국적(필수, MEMBER_NATIONAL)
+		HashMap<String, String> infoMap =  mService.getCaregiverInfo(memberNo); 
+							// {국적=내국인, 주소=경기 성남시 분당구 내정로 54 3동 301호, CARE_JOIN_STATUS=Y, 나이=69, 성별=남성, 최소금액=50000}
 		
+		ArrayList<HashMap<String, String>> cExpList = mService.getCaregiverExp(memberNo); 
+		//[{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=가정돌봄, L_CATEGORY=service}, 
+		//	{S_CATEGORY=동행서비스, L_CATEGORY=service}, {S_CATEGORY=3, L_CATEGORY=career}, 
+		//	{S_CATEGORY=섬망, L_CATEGORY=disease}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease}, 
+		//	{S_CATEGORY=간병사, L_CATEGORY=license}, {S_CATEGORY=요양보호사, L_CATEGORY=license}]
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		// 		MEMBER : 성별, 나이, 주소, 국적
-		HashMap<String, String> infoMap =  mService.getCaregiverInfo(memberNo); // {국적=내국인, 주소=제주특별자치도 제주시 첨단로 242 히히, 나이=30, 성별=남성}
-		// 		INFO_CATEGORY : 서비스경험, 경력, 질환경험, 자격증, 중증도
-		ArrayList<HashMap<String, String>> cExpList = mService.getCaregiverExp(memberNo); // [{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=0, L_CATEGORY=career}, {S_CATEGORY=호흡기 질환, L_CATEGORY=disase}, {S_CATEGORY=거동불편, L_CATEGORY=disase}, {S_CATEGORY=와상환자, L_CATEGORY=disase}, {S_CATEGORY=간병사, L_CATEGORY=license}]
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		ArrayList<HashMap<String, String>> cWantList = mService.getCaregiverWant(memberNo); // 마이페이지에서 선택적으로 입력
 		
 		
 		// 2. 간병인 정보 가공
-		String service = ""; // service
-		String career = ""; // career
-		String disease = ""; // disease
-		String license = ""; // license
+		String[] address = infoMap.get("주소").split(" ");
+		infoMap.put("주소", address[0] + " " + address[1]);
+		String service = ""; // 선택, 0~3개
+		String career = ""; // 필수, 1개
+		String disease = ""; // 선택, 0~10개
+		String license = ""; // 선택, 0~3개
+		
 		for(HashMap<String, String> m : cExpList) {
 			switch(m.get("L_CATEGORY")) {
 			case "service" : service += m.get("S_CATEGORY") + "/"; break;
-			case "career" : career = m.get("S_CATEGORY"); break;
+			case "career" : 
+				switch(m.get("S_CATEGORY")) {
+				case "0" : career = "없음"; break;
+				case "1" : career = "1년미만"; break;
+				case "3" : career = "3년미만"; break;
+				case "5" : career = "5년미만"; break;
+				case "8" : career = "5년이상"; break;
+				}
 			case "disease" : disease += m.get("S_CATEGORY") + "/"; break;
 			case "license" : license += m.get("S_CATEGORY") + "/"; break;
 			}
 		}
-		service = service.substring(0, service.lastIndexOf("/"));
-		disease = disease.substring(0, disease.lastIndexOf("/"));
-		license = license.substring(0, license.lastIndexOf("/"));
 		
-		infoMap.put("서비스경험", service);
-		infoMap.put("경력", career);
-		infoMap.put("돌봄질환경험", disease);
-		infoMap.put("자격증", license); // 가공 종료! => infoMap
+		if(service.length() > 0) { // 간병인의 서비스 경력이 존재하는 경우를 가르킴
+			service = service.substring(0, service.lastIndexOf("/"));
+			infoMap.put("서비스경험", service);
+		}
+		if(disease.length() > 0) {
+			disease = disease.substring(0, disease.lastIndexOf("/"));
+			infoMap.put("돌봄질환경험", disease);
+		}
+		if(!license.isEmpty()) { // isEmpty연습하기
+			license = license.substring(0, license.lastIndexOf("/"));
+			infoMap.put("자격증", license); 
+		}
+		if(!career.isEmpty()) {
+			infoMap.put("경력", career); 
+		} else {
+			throw new MemberException("OpenAi요청을 위한 필수항목(경력) 조회에 실패하였습니다.");
+		} 
+		
+		if(!cWantList.isEmpty()) {
+			String wantService = ""; // 선택, 0~3개
+			String wantCareer = ""; // 선택, 1개
+			String wantDisease = ""; // 선택, 0~10개
+			String wantLicense = ""; // 선택, 0~3개
+			
+			
+			
+			
+		}
+				
+		
+		
+		
+		
+		
+		
+		
+		// 가공 종료! => infoMap
+		
+		// {국적=내국인, 자격증=간병사/요양보호사, 서비스경험=병원돌봄/가정돌봄/동행서비스, 주소=경기 성남시, CARE_JOIN_STATUS=Y, 돌봄질환경험=3/섬망/기저귀 케어, 나이=69, 성별=남성, 경력=3년미만, 최소금액=50000}
+		
+		
+		
 		
 		// 3. 환자 목록 조회
 		ArrayList<HashMap<String, Object>> promptPatientList = new ArrayList<HashMap<String, Object>>(); // 프롬프트에 던질 후보군 리스트

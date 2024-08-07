@@ -110,11 +110,14 @@
 	
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 간병인 본인 정보 조회 : 1번 -->
 	<select id="getCaregiverInfo" resultType="map">
-		SELECT 	DECODE(MEMBER_GENDER, 'M', '남성', 'F', '여성') AS "성별", TRUNC(SYSDATE - MEMBER_AGE) AS "나이", 
+		SELECT 	DECODE(MEMBER_GENDER, 'M', '남성', 'F', '여성') AS "성별", 
+		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS "나이",
 		        SUBSTR(REPLACE(MEMBER_ADDRESS, '//', ' ') , INSTR(REPLACE(MEMBER_ADDRESS, '//', ' '), ' ')+1) AS "주소",
-				MEMBER_NATIONAL AS "국적"
-		FROM MEMBER
-		WHERE MEMBER_NO = ${memberNo}
+		        MEMBER_NATIONAL AS "국적",
+		        CARE_JOIN_STATUS, MIN_MONEY AS "최소금액"
+		FROM MEMBER M
+		        JOIN CAREGIVER C ON(M.MEMBER_NO = C.MEMBER_NO) 
+		WHERE M.MEMBER_NO = ${memberNo}
 	</select>
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 간병인 본인 정보 조회 : 2번 -->
 	<select id="getCaregiverExp" resultType="map">
@@ -166,7 +169,13 @@
 		</foreach>
 	</select>
 	
-	
+	<select id="getCaregiverWant" resultType="map">
+		SELECT L_CATEGORY, S_CATEGORY
+		FROM MEMBER M
+		        JOIN WANT_INFO W ON(M.MEMBER_NO = W.MEMBER_NO)
+		        JOIN INFO_CATEGORY I ON(W.CATEGORY_NO = I.CATEGORY_NO)
+		WHERE M.MEMBER_NO = ${memberNo}
+	</select>	
 	
 	
 	

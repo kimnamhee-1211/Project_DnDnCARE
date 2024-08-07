@@ -133,6 +133,12 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.choicePatientList(choiceNoList);
 	}
 
+	@Override
+	public ArrayList<HashMap<String, String>> getCaregiverWant(int memberNo) {
+		return mMapper.getCaregiverWant(memberNo);
+	}
+
+
 	
 
 
