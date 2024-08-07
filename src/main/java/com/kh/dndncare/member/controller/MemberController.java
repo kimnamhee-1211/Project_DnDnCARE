@@ -228,6 +228,10 @@ public class MemberController {
 				infoMap.put("돌보고 싶은 질환", wantDisease);
 			}
 		}
+		if(Integer.parseInt(infoMap.get("나이")) < 0) {
+			infoMap.put("나이", (Integer.parseInt(infoMap.get("나이"))+100)+"");
+		}
+		
 		// 가공 종료! => infoMap
 		// {국적=내국인, 자격증=간병사/요양보호사, 서비스경험=병원돌봄/가정돌봄/동행서비스, 주소=경기 성남시, CARE_JOIN_STATUS=Y, 돌봄질환경험=3/섬망/기저귀 케어, 나이=69, 성별=남성, 경력=3년미만, 최소금액=50000}
 		
@@ -896,7 +900,9 @@ public class MemberController {
 //			MEMBER : 국적(필수, MEMBER_NATIONAL)
 		HashMap<String, String> infoMap =  mService.getPatientMyInfo(memberNo); 
 					//{연령=40, 국적=내국인, 키=180, 몸무게=79, 주소=서울 동대문구 망우로 82 202호777, 성별=여성}
-		
+		if(Integer.parseInt(infoMap.get("연령")) < 0) {
+			infoMap.put("연령", (Integer.parseInt(infoMap.get("연령") + 100)) + "");
+		}
 		
 		ArrayList<HashMap<String, String>> myExpList = mService.getPatientMyExp(memberNo); 
 //		[{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=섬망, L_CATEGORY=disease}, 
@@ -957,6 +963,7 @@ public class MemberController {
 		}
 		// 가공 종료! => infoMap
 		// {연령=40, 국적=내국인, 중증도=경증, 키=180, 몸무게=79, 보유질환=섬망, 주소=서울 동대문구, 성별=여성, 원하는 서비스=병원돌봄}
+		
 		
 		// 3. 간병인 목록 조회
 		ArrayList<HashMap<String, Object>> promptCaregiverList = new ArrayList<HashMap<String, Object>>(); // 프롬프트에 전달할 최종 후보군 리스트
