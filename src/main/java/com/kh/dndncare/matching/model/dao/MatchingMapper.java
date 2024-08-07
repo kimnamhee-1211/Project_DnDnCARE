@@ -3,6 +3,7 @@ package com.kh.dndncare.matching.model.dao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -41,7 +42,7 @@ public interface MatchingMapper {
 
 	Hospital getHospital(Hospital hospital);
 
-	int[] getloginMatNo(int memberNo);
+	Set<Integer> getloginMatNo(int memberNo);
 
 	int getPtNo(int memberNo);
 

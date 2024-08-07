@@ -3,6 +3,7 @@ package com.kh.dndncare.matching.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,7 +88,7 @@ public class MatchingServiceImpl implements MatchingService {
 
 	//loginUser-MatNo get
 	@Override
-	public int[] getloginMatNo(int memberNo) {
+	public Set<Integer> getloginMatNo(int memberNo) {
 		return mMapper.getloginMatNo(memberNo);
 	}
 	
