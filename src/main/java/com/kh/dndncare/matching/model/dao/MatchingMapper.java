@@ -71,5 +71,9 @@ public interface MatchingMapper {
 
 	int deleteWantInfo(int memberNo);
 
+	int mergeMemberInfo1(Map<String, Object> memberInfoParams);
+
+	int mergeMemberInfo2(Map<String, Object> memberInfoParams2);
+
 
 }

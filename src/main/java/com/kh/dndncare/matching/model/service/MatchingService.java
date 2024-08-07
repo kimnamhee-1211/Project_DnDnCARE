@@ -78,6 +78,8 @@ public interface MatchingService {
 	int insertWantInfo(Map<String, Object> params);
 	int insertMatPtInfo(MatPtInfo matPtInfo);
 	int deleteWantInfo(int memberNo);
+	int mergeMemberInfo1(Map<String, Object> memberInfoParams);
+	int mergeMemberInfo2(Map<String, Object> memberInfoParams2);
 	
 
 }

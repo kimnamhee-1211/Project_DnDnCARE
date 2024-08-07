@@ -176,6 +176,17 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.deleteWantInfo(memberNo);
 	}
 
+	@Override
+	public int mergeMemberInfo1(Map<String, Object> memberInfoParams) {
+		return mMapper.mergeMemberInfo1(memberInfoParams);
+	}
+
+	@Override
+	public int mergeMemberInfo2(Map<String, Object> memberInfoParams2) {
+		// TODO Auto-generated method stub
+		return mMapper.mergeMemberInfo2(memberInfoParams2);
+	}
+
 
 
 

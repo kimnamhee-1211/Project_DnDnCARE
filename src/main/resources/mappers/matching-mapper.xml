@@ -190,15 +190,7 @@
 	
 	<!-- want_info insert -->
 	<insert id="insertWantInfo">
-	    INSERT ALL
-	    <if test="symptoms != null and symptoms.size() > 0">
-	        <foreach collection="symptoms" item="symptom">
-	            INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{symptom})
-	        </foreach>
-	    </if>
-	    <if test="mobility != null">
-	        INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{mobility})
-	    </if>
+    	INSERT ALL
 	    <if test="gender != null">
 	        INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{gender})
 	    </if>
@@ -214,6 +206,30 @@
 	    SELECT * FROM DUAL
 	</insert>
 	
+	<!-- member_info Merge -->
+<insert id="mergeMemberInfo1">
+    <foreach collection="symptoms" item="symptom" separator=";">
+        MERGE INTO member_info mi
+        USING (SELECT #{memberNo} as member_no, #{symptom} as category_no FROM DUAL) incoming
+        ON (mi.member_no = incoming.member_no AND mi.category_no = incoming.category_no)
+        WHEN MATCHED THEN
+            UPDATE SET mi.category_no = incoming.category_no
+        WHEN NOT MATCHED THEN
+            INSERT (member_no, category_no)
+            VALUES (incoming.member_no, incoming.category_no)
+    </foreach>
+</insert>
+
+<insert id="mergeMemberInfo2">
+    MERGE INTO member_info mi
+    USING (SELECT #{memberNo} as member_no, #{mobility} as category_no FROM DUAL) incoming
+    ON (mi.member_no = incoming.member_no AND mi.category_no = incoming.category_no)
+    WHEN MATCHED THEN
+        UPDATE SET mi.category_no = incoming.category_no
+    WHEN NOT MATCHED THEN
+        INSERT (member_no, category_no)
+        VALUES (incoming.member_no, incoming.category_no)
+</insert>
 	<!-- want-info 삭제 -->
 	<delete id="deleteWantInfo">
 		delete from want_info

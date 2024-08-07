@@ -62,11 +62,13 @@ public class MatchingController {
 	
 	//2번째 페이지로 정보 전달 및 이동
 	@PostMapping("publicMatching2.mc")
-	public String publicMatching2(@ModelAttribute Patient patient,Model model,HttpSession session) {
+	public String publicMatching2(@ModelAttribute Patient patient,HttpSession session,@RequestParam("service") String service) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
+		System.out.println(service);
 		if(loginUser !=null && patient !=null) {
 			patient.setMemberNo(loginUser.getMemberNo());
 			session.setAttribute("tempPatient", patient);
+			session.setAttribute("service", service);
 			return "publicMatching2";
 		} else {
 			throw new MatchingException("다음 페이지로 이동하는중 오류가 발생하였습니다.");
@@ -82,23 +84,37 @@ public class MatchingController {
 	      int memberNo = patient.getMemberNo();
 	      String formattedDates = null;
 	      int dateResult = 0;
-	      // 문자열을 Integer 리스트로 변환
-	      Map<String, Object> params = new HashMap<>();
-	        params.put("symptoms", Arrays.stream(selectedSymptoms.split(","))
+	        // member_Info에 들어갈 값 맵에 넣기
+	      	Map<String,Object> memberInfoParams1 = new HashMap<>();
+	      
+	      	memberInfoParams1.put("symptoms", Arrays.stream(selectedSymptoms.split(","))
 	                                     .map(Integer::parseInt)
 	                                     .collect(Collectors.toList()));
-	        System.out.println(params);
-	        // 단일 값들도 Integer로 변환
-	        params.put("mobility", selectedMobility != null ? Integer.parseInt(selectedMobility) : null);
-	        params.put("gender", selectedGender != null ? Integer.parseInt(selectedGender) : null);
-	        params.put("career", selectedCareer != null ? Integer.parseInt(selectedCareer) : null);
-	        params.put("local", selectedLocal != null ? Integer.parseInt(selectedLocal) : null);
-	        params.put("age", selectedAge != null ? Integer.parseInt(selectedAge) : null);
-	        params.put("memberNo",memberNo);
+	        
+	      	
+	      	memberInfoParams1.put("memberNo",memberNo);
+	      	
+	      	Map<String,Object> memberInfoParams2 = new HashMap<>();
+	      	memberInfoParams2.put("mobility", selectedMobility != null ? Integer.parseInt(selectedMobility) : null);
+	      	memberInfoParams2.put("memberNo",memberNo);
+	      	
+	      	//merge문 사용해서 memberInfo 업데이트 , 인설트 동시 진행
+	        int memberInfoResult1 = mcService.mergeMemberInfo1(memberInfoParams1);
+	        int memberInfoResult2 = mcService.mergeMemberInfo2(memberInfoParams2);
+	      	
+	        // want_info에 들어갈 값 맵에 넣기
+	        Map<String, Object> wantInfoparams = new HashMap<>();
+	        wantInfoparams.put("gender", selectedGender != null ? Integer.parseInt(selectedGender) : null);
+	        wantInfoparams.put("career", selectedCareer != null ? Integer.parseInt(selectedCareer) : null);
+	        wantInfoparams.put("local", selectedLocal != null ? Integer.parseInt(selectedLocal) : null);
+	        wantInfoparams.put("age", selectedAge != null ? Integer.parseInt(selectedAge) : null);
+	        wantInfoparams.put("memberNo",memberNo);
+	        
+	        
 	        
 	        //원래있던 memberNo에 해당하는 want-info 삭제후 want_info insert
 	        int deleteWantInfo = mcService.deleteWantInfo(memberNo);
-	        int wantInfoResult = mcService.insertWantInfo(params);
+	        int wantInfoResult = mcService.insertWantInfo(wantInfoparams);
 
 	        
 	      
@@ -121,7 +137,7 @@ public class MatchingController {
 	         } else {
 	            matching.setMatMode(2);
 	         }
-	         System.out.println("matching : " + matching);
+	         
 	         //Matching 정보 삽입
 	         int matchingResult = mcService.enrollMatching(matching);
 	         
@@ -137,11 +153,17 @@ public class MatchingController {
 	         }
 
 	         //mat_pt_info insert
+	         
 	         MatPtInfo matPtInfo = new MatPtInfo();
 	         matPtInfo.setMatNo(matNo);
 	         matPtInfo.setPtNo(ptNo);
 	         matPtInfo.setAntePay(matching.getMoney());
-	         matPtInfo.setService("개인간병");
+	         if (session.getAttribute("service").equals("hospital")) {
+        	    matPtInfo.setService("병원돌봄");
+	         } else {
+	    	    matPtInfo.setService("가정돌봄");
+	         }
+	         
 	         matPtInfo.setMatAddressInfo(patient.getPtAddress());
 	         matPtInfo.setMatRequest("일단없음");
 	         matPtInfo.setGroupLeader("N");
@@ -150,6 +172,7 @@ public class MatchingController {
 	         int finalResult = wantInfoResult + patientResult + ptInfoResult + dateResult + matchingResult + deleteWantInfo;
 	         
 	         if(finalResult!=0) {
+	        	session.removeAttribute("tempPatient"); // 세션에 담아놨던 patient 객체 삭제 
 	            return "redirect:myInfo.me";
 	         } else {
 	            throw new MatchingException("공개구인 신청에 실패하였습니다");
