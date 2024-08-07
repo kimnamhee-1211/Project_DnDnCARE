@@ -265,4 +265,9 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectMatList(memberNo);
 	}
 
+	@Override
+	public ArrayList<CareGiver> selectCareGiverList() {
+		return mMapper.selectCareGiverList();
+	}
+
 }

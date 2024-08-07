@@ -103,5 +103,7 @@ public interface MemberService {
 
 	ArrayList<MatMatptInfo> selectMatList(int i);
 
+	ArrayList<CareGiver> selectCareGiverList();
+
 
 }

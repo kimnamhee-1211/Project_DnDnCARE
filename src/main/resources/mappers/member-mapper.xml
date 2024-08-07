@@ -299,4 +299,13 @@
 						from patient
 						where member_no = #{memberNo})
 	</select>
+	
+	
+	<select id="selectCareGiverList" resultType="CareGiver">
+		select *
+		from careGiver
+			join member using(member_no)
+		where member_status = 'N'
+	</select>
+	
 </mapper>

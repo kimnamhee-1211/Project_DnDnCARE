@@ -166,3 +166,29 @@ a {
   background-color: #8dd986; 
   border-color: green;
 }
+
+.btn-select{
+	background-color:#8dd986;
+	border: 0;
+	color:white;
+	width:40%;
+	height:40px;
+}
+
+.testBorder{
+	border:1px solid #dee2e6;
+	border-radius: 5px;
+}
+
+.btn-test{
+	background:black;
+	color: black;
+	border:3px solid yellow;
+}
+.testDiv{
+	position: absolute;
+	border-radius: 3px;
+}
+/* .carousel-indicators [data-bs-target]{ */
+/* 	background-color:yellow; */
+/* } */

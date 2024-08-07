@@ -263,6 +263,17 @@ public class MemberController {
 
 				return "redirect:caregiverMain.me";
 			} else if(loginUser.getMemberCategory().equalsIgnoreCase("P")) {
+				//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--
+				
+				//Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 간병인 멤퍼인포정보
+				ArrayList<CareGiver> cg = mService.selectCareGiverList(); // 간병인 정보
+				
+				model.addAttribute("cg",cg);
+				
+				
+				
+				//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --up--
+				
 				return "redirect:patientMain.me";
 			}
 
