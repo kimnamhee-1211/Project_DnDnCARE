@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.dao.MemberMapper;
 
@@ -253,6 +254,15 @@ public class MemberServiceImpl implements MemberService {
 		int offset = (likePi.getCurrentPage() - 1)*likePi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, likePi.getBoardLimit());
 		return mMapper.mySelectLikeList(mNo, rowBounds);
+	}
+
+	@Override
+	public int likeLikeCount(int boardNo) {
+		return mMapper.likeLikeCount(boardNo);
+	}
+	@Override
+	public ArrayList<MatMatptInfo> selectMatList(int memberNo) {
+		return mMapper.selectMatList(memberNo);
 	}
 
 }

@@ -42,5 +42,6 @@ public class MatMatptInfo {
 	private String endTime;
 	private int matMode;
 	
-
+	//endDT를 지난 날짜 체크
+	private boolean isAfterDate;
 }

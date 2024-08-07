@@ -69,29 +69,22 @@
 							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
 								<table class="m-2">
 		      						<tr>
-										<th width="300px">간호 일자</th>
-										<th width="820px">정보</th>
+										<th width="170px">간호 시작일</th>
+										<th width="10"> </th>
+										<th width="170px">간호 끝</th>
+										<th width="820px">간병인 정보</th>
 										<th width="150px">매칭 상태</th>
 										<th width="120px">후기 작성</th>
 		      						</tr>
-		      						<tr>
-		      							<td>2020.11.12 ~ 2020.11.13</td>
-		      							<td>나간병님 여자 60세 서울 </td>
-		      							<td>진행중</td>
-		      							<td><button class="myInfo-btn btn-sm" onclick='location.href="writeReviewView.re"'>후기 남기기</button></td>
-		      						</tr>	
-		      						<tr>
-		      							<td>2020.11.12 ~ 2020.11.13</td>
-		      							<td>나간병님 여자 60세 서울 </td>
-		      							<td>완료</td>
-		      							<td><button class="myInfo-btn btn-sm">후기 남기기</button></td>
-		      						</tr>	
-		      						<tr>
-		      							<td>2020.11.12 ~ 2020.11.13</td>
-		      							<td>나간병님 여자 60세 서울 </td>
-		      							<td>완료</td>
-		      							<td><button class="myInfo-btn btn-sm">후기 남기기</button></td>
-		      						</tr>	
+		      						<tr th:each="i : ${mciList}">
+		      							<td>[[${i.beginDt}]]</td>
+		      							 <td>~</td>
+		      							 <td>[[${i.endDt}]]</td>
+		      							<td> 간병인 정보 따로 맵퍼에서 불러오기 1.성함2.별점 </td>
+		      							<td><span th:if="${!i.isAfterDate}">진행 중</span><span th:if="${i.isAfterDate}">완료</span></td>
+		      							<td><button class="myInfo-btn btn-sm" onclick='location.href="reviewDetail.mc"'>후기 가능</button></td>
+		      						</tr>
+		      						
 		      					
 		      						
 	      						</table>
@@ -121,6 +114,7 @@
 			};
 			
 		}
+		
 	
 	</script>
 	

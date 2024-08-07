@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/reviewDetail.css}" rel="stylesheet" type="text/css"/>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<style>
+	
+    </style>
+</head>
+<body>
+	<div th:replace="~{common/navbar :: navbar}"></div>
+	<main class="container whdrb testBorder"th:each="rList:${reviewList}">
+		<div class="row m-4 sssss">
+			<div class="m-4 h1">간병사 <span style="color:#8dd986">정보</span></div>
+			
+			<div class="col m-4 testBorder">
+				<div class="row">
+					<div align="center"class="col m-3 testBorder" >
+			      		<img id="profile-image" src="image/icon_profile.png"/>
+			      		<div class="h3">OOO님</div>
+			      		<div class="h6">경력 14년, 내국인</div>
+		      		</div>
+		      		<div class="col m-3 testBorder">
+			      		<div class="row m-2">
+			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
+								<button class="btn-star btn-icon-star-left"></button>
+								<button class="btn-star-right btn-icon-star-right"></button>
+			      			</div>
+			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
+								<button class="btn-star btn-icon-star-left"></button>
+								<button class="btn-star-right btn-icon-star-right"></button>
+			      			</div>
+			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
+								<button class="btn-star btn-icon-star-left"></button>
+								<button class="btn-star-right btn-icon-star-right"></button>
+			      			</div>
+			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
+								<button class="btn-star btn-icon-star-left"></button>
+								<button class="btn-star-right btn-icon-star-right"></button>
+			      			</div>
+			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
+								<button class="btn-star btn-icon-star-left"></button>
+								<button class="btn-star-right "></button>
+			      			</div>
+			      				
+			      		</div>
+			      		<div class="d-flex justify-content-between" style="margin-top:-10px">
+							<span>총 후기 (10)</span>			      		
+							<span>9점</span>			      		
+			      		</div>
+			      		<div class="col m-3 testBorder">
+			      			자기소개 내용 작성
+			      		</div>
+			      		<div class="col m-3 testBorder">
+			      			자격증 있으면 쓰기
+			      		</div>
+			      		
+		      		</div>
+	      		</div>
+			</div>
+			<div class="col m-4 testBorder">
+				<div class="row">
+					<div class="col m-3">
+						<span class="row">매칭 기록</span>
+						<img style="width:250px;"src="image/icon_PieChart.png"/>
+					</div>
+					<div align="center" class="col m-3">
+						<button type="button" class="m-4 btn-maincolor">간병 신청하기</button>
+						<button type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton">후기 작성하기</button>
+					</div>
+				</div>
+			</div>
+			
+			
+			
+			
+			
+				
+			
+			<!-- Modal -->
+			<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+		    		<div class="modal-content rounded-3 shadow">
+		    			<div align="center" class="m-2 mt-2 h2"id="modalScore" style="margin-top:30px;">10</div>
+			    			<div align="center" id="reviewScore" class="d-flex justify-content-center m-3" >
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button class="btn-star btn-icon-star-left-modal" value="1"></button>
+									<button class="btn-star-right btn-icon-star-right-modal "value="2"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button class="btn-star btn-icon-star-left-modal"value="3"></button>
+									<button class="btn-star-right btn-icon-star-right-modal"value="4"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button class="btn-star btn-icon-star-left-modal"value="5"></button>
+									<button class="btn-star-right btn-icon-star-right-modal"value="6"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button class="btn-star btn-icon-star-left-modal"value="7"></button>
+									<button class="btn-star-right btn-icon-star-right-modal"value="8"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button class="btn-star btn-icon-star-left-modal"value="9"></button>
+									<button class="btn-star-right btn-icon-star-right-modal"value="10"></button>
+				      			</div>
+			    			</div>
+		    			<div align="center">별을 클릭하세요</div>
+						<div class="m-4 review-content"contenteditable=true></div>		    				
+		      			<div class="modal-footer  p-0">
+		      				<div class="d-flex justify-content-evenly">
+			      				<button type="button" class="btn btn-success">후기남기기</button>
+			      				<button type="button" class="btn btn-light"data-bs-dismiss="modal">취소</button>
+		      				</div>
+		      				
+		      			</div>
+		    		</div>
+		  		</div>	
+			</div>
+			
+			<script>
+				document.getElementById('reviewWriteButton').addEventListener('click',()=>{
+					$('#modalChoice').modal('show');	
+				})
+				
+				const reviewScore = document.getElementById('reviewScore');
+				const bts = reviewScore.querySelectorAll('button');
+				for(bt of bts){
+						bt.addEventListener('click',function(){
+							document.getElementById('modalScore').innerText = this.value;
+							
+							for(let i = 0 ; i < this.value ; i++){	//색칠하기
+								if(i % 2 == 0){
+									if(!bts[i].classList.contains('btn-icon-star-left-modal')){
+										bts[i].classList.add('btn-icon-star-left-modal');
+									}
+									
+								}else{
+									if(!bts[i].classList.contains('btn-icon-star-right-modal')){
+										console.log('체크')
+										console.log(i)
+										bts[i].classList.add('btn-icon-star-right-modal');
+									}
+								}
+							}
+							for(let i = 9 ; i >= this.value ; i--){ //색지우기
+								if(i % 2 == 0){
+									if(bts[i].classList.contains('btn-icon-star-left-modal')){
+										bts[i].classList.remove('btn-icon-star-left-modal');
+										
+									}
+									
+								}else{
+									if(bts[i].classList.contains('btn-icon-star-right-modal')){
+										bts[i].classList.remove('btn-icon-star-right-modal');
+										
+									}
+								}
+							}
+						})
+				}
+			</script>
+			
+			
+			
+			<!-- 종규 -->
+			<!-- 재영 -->
+			<!--  review pt_no >> patient pt_no
+				  review matching >> mat_no 
+			 -->
+
+			
+		</div>
+		<div class="row m-5 testBorder"><!-- each -->
+			<div class="col m-4 testBorder" >
+				<span class=" p-4">[[${rList.ptName}]]님 [[${rList.reviewScore}]]</span>
+			</div>
+			<div class="col m-4 testBorder" >
+				<div align="center"  class="d-flex justify-content-left" style="min-width:600px;">
+	      			<div align="left"class="icon-star-review">
+						<button th:if="${1 == rList.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+						<button th:if="${1 < rList.reviewScore}" class="btn-star btn-icon-star-review"></button>
+	      			</div>
+	      			<div align="left"class="icon-star-review">
+						<button th:if="${3 == rList.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+						<button th:if="${3< rList.reviewScore}" class="btn-star btn-icon-star-review"></button>
+	      			</div>
+	      			<div align="left"class="icon-star-review">
+						<button th:if="${5 == rList.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+						<button th:if="${5 < rList.reviewScore}" class="btn-star btn-icon-star-review"></button>
+	      			</div>
+	      			<div align="left"class="icon-star-review">
+						<button th:if="${7 == rList.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+						<button th:if="${7 < rList.reviewScore}" class="btn-star btn-icon-star-review"></button>
+	      			</div>
+	      			<div align="left"class="icon-star-review">
+						<button th:if="${9 == rList.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+						<button th:if="${9 < rList.reviewScore}" class="btn-star btn-icon-star-review"></button>
+	      			</div>
+	      			<span >([[${rList.reviewScore}]])</span>
+	      			
+    			</div>
+			<!-- <th:block th:if="${(rList.reviewScore%2)==0}"> 
+				<th:block th:each="i : ${#numbers.sequence(1, rList.reviewScore/2)}">
+					<div class="col rating-icon-star" style="width:46px; height:46px;padding:0px;">
+	                    <div class="rating-star rating-icon-star-left"></div> 
+	                    <div class="rating-star-right rating-icon-star-right"></div>
+	                </div>
+                </th:each>
+            </th:block>
+            <th:block th:if="${(rList.reviewScore%2)==1}"> 
+            	<th:block th:each="i : ${#numbers.sequence(1, #numbers.floor(rList.reviewScore/2))}">
+                <div class="col m-2 rating-icon-star" style="width:46px; height:46px;padding:0px;">
+      				<div class="rating-star rating-icon-star-left"></div> 
+                    <div class="rating-star-right rating-icon-star-right"></div>
+      			</div>
+				</th:block>
+				<div class="col rating-icon-star" style="width:46px; height:46px;padding:0px;">
+					<div class="rating-star rating-icon-star-left"></div>
+					<div class="rating-star-right "></div>
+				</div>
+				<div class="col rating-icon-star" style="width:46px; height:46px;padding:0px;">
+					<div class="rating-star rating-icon-star-left"></div>
+					<div class="rating-star-right "></div>
+				</div>
+             </th:block> -->
+		    </div>
+			<div class="col m-4 testBorder">
+				<span>작성날짜 : [[${rList.reviewUpdateDate}]]</span>
+			</div>
+				<hr>
+				<div class="col m-4 testBorder">
+					<div>[[${rList.reviewContent}]]</div>
+				</div>
+			</div>
+	
+	</main>
+</body>
+</html>

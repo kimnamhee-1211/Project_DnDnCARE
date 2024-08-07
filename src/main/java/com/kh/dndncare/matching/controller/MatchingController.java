@@ -24,6 +24,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.kh.dndncare.matching.model.exception.MatchingException;
 import com.kh.dndncare.matching.model.service.MatchingService;
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
@@ -359,7 +360,16 @@ public class MatchingController {
 			return "redirect:joinMatching.jm";			
 		}
 		throw new MemberException("공동간병 그룹 등록 실패");
+	}
 
+	
+	
+	@GetMapping("reviewDetail.mc")
+	public String getMethodName(HttpSession session, Model model) {
+		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
+		model.addAttribute("reviewList", reviewList);
+		return "reviewDetail";
 	}
 	
 	

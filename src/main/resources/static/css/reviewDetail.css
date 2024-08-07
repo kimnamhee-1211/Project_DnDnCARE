@@ -1,0 +1,287 @@
+@charset "UTF-8";
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.inner-content {
+    font-family: 'Pretendard-Regular';
+    flex-grow: 1;
+    min-width: 1200px;
+    margin-top: 100px;
+    padding-bottom: 100px; /* footer와의 간격 */
+}
+
+.logo-image {
+	margin-left:20px;
+}
+
+.publicMatching-wrap {
+	
+}
+.publicMatching-wrap p {
+	padding:10px;
+	font-size:15px;
+}
+
+.publicMatching-wrap h1 {
+	font-size:40px;
+}
+
+.publicMatching-wrap em {
+	color:orange;
+}
+
+select {
+	border-radius:10px;
+}
+
+input {
+	text-align:center;
+	white-space:nowrap;
+}
+.basic-info table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.btn {
+	margin-left:5px;
+	margin-right:5px;
+}
+
+.basic-info tr {
+	
+}
+
+.basic-info th {
+    padding: 10px;
+    text-align: center;
+
+}
+
+.basic-info td {
+	padding: 10px;
+    text-align: center;
+}
+
+.basic-info th {
+    background-color: white;
+    width: 20%;
+
+}
+
+
+.sign-btn button {
+	width:150px;
+	height:60px;
+	font-size:18px;
+	border-radius:20px;
+	border:none;
+}
+
+.apply-btn {
+	background:#8dd986;
+	color:white;
+}
+
+
+
+
+.container{
+		position: relative;
+		min-width:1280px;
+		margin: 0 auto;
+		margin-top: 50px;
+		font-family: 'Pretendard-Regular';
+		
+}
+
+
+.testBorder{
+	border:1px solid #dee2e6;
+	border-radius: 5px;
+}
+
+#profile-image {
+   width: 200px; /* 원하는 크기로 설정 */
+   height: 200px; /* 원하는 크기로 설정 */
+   border-radius: 50%; /* 이미지를 동그랗게 만듦 */
+   object-fit: cover; /* 이미지 비율을 유지하며 잘라냄 */
+   border:3px solid #8dd986;
+}
+
+.icon-star{
+	background-image:url(../image/icon_star.svg);
+	background-size: 167px 167px;
+	padding:0px;
+}
+
+.btn-star{
+	background: transparent;
+	border:0px solid black;
+	width:20px;
+	height:43px;
+	padding:0;
+	margin-left:0px;
+	margin-right:-1.5px;
+	background-repeat: no-repeat;
+}
+.btn-star-right{
+	background: transparent;
+	border:0px solid black;
+	width:20px;
+	height:43px;
+	padding:0;
+	margin-left:-3px;
+	margin-right:-1.5px;
+	background-repeat: no-repeat;
+}
+
+.btn-icon-star-left{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 167px 167px;
+	padding:0px;
+	margin-left:0px;
+	background-repeat: no-repeat;	
+}
+
+.btn-icon-star-right{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 167px 167px;
+	padding:0px;
+	background-position: -19.5px 0px;
+	background-repeat: no-repeat;	
+}
+
+.btn-icon-star-left-modal{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 167px 167px;
+	padding:0px;
+	margin-left:-8px;
+	background-repeat: no-repeat;	
+}
+
+.btn-icon-star-right-modal{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 167px 167px;
+	padding:0px;
+	background-position: -19.5px 0px;
+	background-repeat: no-repeat;	
+}
+
+
+
+
+** 밑에 점수
+.rating-icon-star{
+	background-image:url(../image/icon_star.svg);
+	background-size: 100px 100px;
+	padding:0px;
+	display:inline-block;
+	vertical-align: top;
+}
+
+.rating-star {
+        background: transparent;
+        border: 0px solid black;
+        width: 46px;
+        height: 46px;
+        padding: 0;
+        margin-left: 0px;
+        margin-right: -1.5px;
+        display: flex;
+        float:none;
+        
+}
+.rating-star-right {
+	   background: transparent;
+	   border: 0px solid black;
+	   width: 23px;
+	   height: 46px;
+	   padding: 0;
+	   margin-left: -3px;
+	   margin-right: -1.5px;
+	   display: flex;
+	   float:none;
+}
+
+.rating-icon-star-left {
+    background-image: url('../image/icon_star2.svg');
+    background-size: 100px 100px;
+   	padding:0px;
+   	background-repeat: no-repeat;	
+   	
+    
+}
+
+.rating-icon-star-right {
+    background-image: url('../image/icon_star2.svg');
+    background-size: 100px 100px;
+   	padding:0;
+   	background-position: -19.5px 0px;
+	background-repeat: no-repeat;
+}
+
+
+.btn-maincolor {
+	background:#8dd986;
+	border:0;
+	border-radius:10px;
+	color:white;
+	width:150px;
+	height:100px;
+	font-size:24px;
+}
+.btn-outline-maincolor {
+	background:white;
+	border:1px solid #8dd986;
+	border-radius:10px;
+	color:#8dd986;
+	width:150px;
+	height:100px;
+	font-size:24px;
+}
+
+.review-content{
+	min-height:150px;
+	background: #EFEFEF;
+	border-radius:10px;
+	padding:10px;
+}
+
+/* 리뷰에나오는별쓰자*/
+
+
+.btn-icon-star-review{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 90px 90px;
+	padding:0px;
+	margin-left:0px;
+	background-repeat: no-repeat;	
+}
+
+.btn-icon-star-review-half{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 90px 90px;
+	padding:0px;
+	margin-left:0px;
+	background-repeat: no-repeat;
+	width:11px;
+}
+
+.icon-star-review{
+	background-image:url(../image/icon_star.svg);
+	background-size: 90px 90px;
+	padding:0px;
+	width:26px; height:27px;
+}
