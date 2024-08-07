@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,14 +199,20 @@ public class MatchingController {
 		
 		//병원으로 list 뽑기 
 		ArrayList<MatMatptInfo> list = mcService.getJmList(hospitalName);
-		System.out.println(list);
-				
 		
+		//loginUser가 그룹에 참여중인지 아닌지 확인 => view 표시용
 		//loginUser-MatNo get
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		int[] loginMatNos = mcService.getloginMatNo(loginUser.getMemberNo());
+		Set<Integer> loginMatNos = mcService.getloginMatNo(loginUser.getMemberNo());
+		for (MatMatptInfo l : list) {
+		    if (loginMatNos.contains(l.getMatNo())) {
+		        l.setJoin("Y");
+		    } else {
+		        l.setJoin("N");
+		    }
+		}
 		
-		model.addAttribute("loginMatNos", loginMatNos);
+		
 		model.addAttribute("list", list);
 		return "joinMatching";
 	}
