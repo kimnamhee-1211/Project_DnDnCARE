@@ -4,9 +4,14 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +29,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.kh.dndncare.matching.model.exception.MatchingException;
 import com.kh.dndncare.matching.model.service.MatchingService;
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
@@ -69,28 +75,109 @@ public class MatchingController {
 	}
 	
 	@PostMapping("publicMatchingApply.mc")
-	public String publicMatchingApply(HttpSession session,@ModelAttribute Matching matching,@RequestParam("selectedSymptoms") String selectedSymptoms,
-										@RequestParam("selectedMobility") String selectedMobility,@RequestParam("selectedGender") String selectedGender,
-										@RequestParam(value="selectedDays",required =false) String selectDays) {
-		Patient patient = (Patient)session.getAttribute("tempPatient");
-		if(patient != null && matching != null && selectedSymptoms !=null
-				&& selectedMobility !=null && selectedGender !=null) {
-			matching.setMemberNo(patient.getMemberNo());
-			matching.setPtCount(1);
-			if(selectDays == null) {
-				matching.setMatMode(1);
-			} else {
-				matching.setMatMode(2);
-			}
-			
-		}
-		System.out.println(patient);
-		System.out.println("매칭 : " + matching);
-		System.out.println("질병 : " + selectedSymptoms);
-		System.out.println("거동 : " + selectedMobility);
-		System.out.println("성별 : " + selectedGender);
-		return null;
+	   public String publicMatchingApply(HttpSession session,@ModelAttribute Matching matching,@RequestParam("selectedSymptoms") String selectedSymptoms,
+	                              @RequestParam("selectedMobility") String selectedMobility,@RequestParam("selectedGender") String selectedGender,
+	                              @RequestParam(value="selectedDays",required =false) String selectDays,@RequestParam("selectedCareer") String selectedCareer
+	                              ,@RequestParam("selectedLocal") String selectedLocal,@RequestParam("selectedAge") String selectedAge) {
+	      Patient patient = (Patient)session.getAttribute("tempPatient");
+	      int memberNo = patient.getMemberNo();
+	      String formattedDates = null;
+	      int dateResult = 0;
+	      // 문자열을 Integer 리스트로 변환
+	      Map<String, Object> params = new HashMap<>();
+	        params.put("symptoms", Arrays.stream(selectedSymptoms.split(","))
+	                                     .map(Integer::parseInt)
+	                                     .collect(Collectors.toList()));
+	        System.out.println(params);
+	        // 단일 값들도 Integer로 변환
+	        params.put("mobility", selectedMobility != null ? Integer.parseInt(selectedMobility) : null);
+	        params.put("gender", selectedGender != null ? Integer.parseInt(selectedGender) : null);
+	        params.put("career", selectedCareer != null ? Integer.parseInt(selectedCareer) : null);
+	        params.put("local", selectedLocal != null ? Integer.parseInt(selectedLocal) : null);
+	        params.put("age", selectedAge != null ? Integer.parseInt(selectedAge) : null);
+	        params.put("memberNo",memberNo);
+	        
+	        //원래있던 memberNo에 해당하는 want-info 삭제후 want_info insert
+	        int deleteWantInfo = mcService.deleteWantInfo(memberNo);
+	        int wantInfoResult = mcService.insertWantInfo(params);
+
+	        
+	      
+	      
+	      if(patient != null && matching != null && selectedSymptoms !=null
+	            && selectedMobility !=null && selectedGender !=null
+	            && selectedCareer !=null && selectedLocal !=null && selectedAge !=null) {
+	         
+	         Patient previousPatient = mcService.getPatient(memberNo);
+	         int ptNo = previousPatient.getPtNo();
+	         patient.setPtNo(ptNo);
+	         //patient 정보 update
+	         int patientResult = mcService.updatePatient(patient);
+
+
+	         matching.setPtCount(1);
+	         matching.setHospitalNo(99);
+	         if(selectDays == null) {
+	            matching.setMatMode(1);
+	         } else {
+	            matching.setMatMode(2);
+	         }
+	         System.out.println("matching : " + matching);
+	         //Matching 정보 삽입
+	         int matchingResult = mcService.enrollMatching(matching);
+	         
+	         int matNo = matching.getMatNo();
+	         
+	         //시간제일 때 Matching_date 테이블 insert
+	         if(matching.getMatMode() == 2 && selectDays != null) {
+	            formattedDates = convertDates(selectDays);
+	            HashMap<String,Object> map = new HashMap<String,Object>();
+	            map.put("formattedDates", formattedDates);
+	            map.put("matNo", matNo);
+	            dateResult = mcService.insertMatchingDate(map);
+	         }
+
+	         //mat_pt_info insert
+	         MatPtInfo matPtInfo = new MatPtInfo();
+	         matPtInfo.setMatNo(matNo);
+	         matPtInfo.setPtNo(ptNo);
+	         matPtInfo.setAntePay(matching.getMoney());
+	         matPtInfo.setService("개인간병");
+	         matPtInfo.setMatAddressInfo(patient.getPtAddress());
+	         matPtInfo.setMatRequest("일단없음");
+	         matPtInfo.setGroupLeader("N");
+
+	         int ptInfoResult = mcService.enrollMatPtInfo(matPtInfo);
+	         int finalResult = wantInfoResult + patientResult + ptInfoResult + dateResult + matchingResult + deleteWantInfo;
+	         
+	         if(finalResult!=0) {
+	            return "redirect:myInfo.me";
+	         } else {
+	            throw new MatchingException("공개구인 신청에 실패하였습니다");
+	         }
+	      }
+	      throw new MatchingException("하하");
+	      
+	            
+	   }
+	
+	//selectDays 타입 변환 메소드
+	private String convertDates(String selectDays) {
+	    if (selectDays == null || selectDays.trim().isEmpty()) {
+	        return "";
+	    }
+	
+	    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+	    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	
+	    return Arrays.stream(selectDays.split(", "))
+	            .map(String::trim)
+	            .map(date -> LocalDate.parse(date, inputFormatter))
+	            .map(date -> date.format(outputFormatter))
+	            .collect(Collectors.joining(","));
 	}
+	
+	
 	
 	
 	@GetMapping("joinMatchingMainView.jm")
@@ -112,14 +199,20 @@ public class MatchingController {
 		
 		//병원으로 list 뽑기 
 		ArrayList<MatMatptInfo> list = mcService.getJmList(hospitalName);
-		System.out.println(list);
-				
 		
+		//loginUser가 그룹에 참여중인지 아닌지 확인 => view 표시용
 		//loginUser-MatNo get
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		int[] loginMatNos = mcService.getloginMatNo(loginUser.getMemberNo());
+		Set<Integer> loginMatNos = mcService.getloginMatNo(loginUser.getMemberNo());
+		for (MatMatptInfo l : list) {
+		    if (loginMatNos.contains(l.getMatNo())) {
+		        l.setJoin("Y");
+		    } else {
+		        l.setJoin("N");
+		    }
+		}
 		
-		model.addAttribute("loginMatNos", loginMatNos);
+		
 		model.addAttribute("list", list);
 		return "joinMatching";
 	}
@@ -360,7 +453,26 @@ public class MatchingController {
 		}else {
 			throw new MemberException("공동간병 그룹 참여 취소 실패");
 		}
-
+	}
+	
+	
+	@GetMapping("reviewDetail.mc")
+	public String getMethodName(HttpSession session, Model model) {
+		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		
+		// 정보
+		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
+		
+		// 후기개수
+		int reviewCount = mcService.reviewCount(memberNo);
+		
+		// 평점
+		int avgReviewScore = mcService.avgReviewScore(memberNo);
+		
+		model.addAttribute("reviewList", reviewList);
+		model.addAttribute("reviewCount", reviewCount);
+		model.addAttribute("avgReviewScore",avgReviewScore);
+		return "reviewDetail";
 	}
 	
 	

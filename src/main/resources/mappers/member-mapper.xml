@@ -154,12 +154,12 @@
 		FROM   (SELECT  MEMBER.MEMBER_NO, PT_NAME, PT_GENDER, TRUNC(SYSDATE - PT_AGE) AS PT_REAL_AGE, 
 						SUBSTR(REPLACE(PT_ADDRESS, '//', ' ') , INSTR(REPLACE(PT_ADDRESS, '//', ' '), ' ')+1) as PT_ADDRESS,
 						MEMBER_NATIONAL, PT_WEIGHT, PT_HEIGHT, MAT_REQUEST, 
-						BEGIN_DT, END_DT, MONEY, MAT_TYPE
+						BEGIN_DT, END_DT, MONEY, MAT_CONFIRM
 		       FROM MATCHING 
 		            JOIN MAT_PT_INFO USING(MAT_NO)
 		            JOIN PATIENT USING(PT_NO)
 		            JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
-		       WHERE MEMBER_STATUS = 'Y' AND MAT_TYPE='N' AND PT_ADDRESS LIKE '%${caregiverCity}%'
+		       WHERE MEMBER_STATUS = 'Y' AND MAT_CONFIRM='N' AND PT_ADDRESS LIKE '%${caregiverCity}%'
 		       ORDER BY DBMS_RANDOM.RANDOM)
 		WHERE ROWNUM < 10
 		]]>
@@ -244,7 +244,8 @@
 	<select id="boardLikeCount" resultType="_int">
 		select count(*)
 		from board_like
-		where board_no = #{boardNo}
+			join board using(board_no)
+		where board_no = #{boardNo} and board_status = 'Y'
 	</select>
 	
 	<select id="getReplyListCount" resultType="_int">
@@ -254,17 +255,18 @@
 	</select>
 	
 	<select id="mySelectReplyList" resultType="Reply">
-		select b.board_title,r.ref_board_no, c.category_name, r.reply_content, r.reply_create_date
+		select b.board_title,r.ref_board_no, c.category_name, r.reply_content, r.reply_create_date, r.reply_no
 		from board b
-			join b_category c using(category_no)
+			join b_category c on(c.category_no = b.category_no)
 			join reply r on(board_no = ref_board_no)
 		where b.member_no = #{mNo} and r.reply_status = 'Y'
 	</select>
 	
 	<select id="replyLikeCount" resultType="_int">
 		select count(*)
-		from reply_like
-		where reply_no = #{replyNo}
+		from reply_like l
+			join reply r on(r.reply_No = l.reply_No)
+		where l.reply_no = #{replyNo} and r.reply_status = 'Y'
 	</select>
 	
 	<select id="getLikeListCount" resultType="_int">
@@ -281,5 +283,20 @@
 			join b_category c on(c.category_no = b.category_no)
 			join area a on(a.area_no = b.area_no)
 		where l.member_no = #{mNo} and b.board_status = 'Y'
+	</select>
+	
+	<select id="likeLikeCount" resultType="_int">
+		select count(*)
+		from board_like l
+			join board b on(l.board_no = b.board_No)
+		where l.board_no = #{boardNo} and b.board_status = 'Y'
+	</select>
+	<select id="selectMatList" resultType="MatMatptInfo">	<!-- 환자번호로 mat_pt테이블의 매칭번호를 뽑아온다. -->
+		select *
+		from mat_pt_info
+    		join matching using(mat_no)
+		where pt_no = (select pt_no
+						from patient
+						where member_no = #{memberNo})
 	</select>
 </mapper>

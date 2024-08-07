@@ -46,10 +46,15 @@
 						    <tr>
 						      <th scope="col">NO</th>
 						      <th scope="col">[[${gm.matNo}]]</th>
+<<<<<<< HEAD
 						     <th:bolck  th:each="loginMatNo : ${loginMatNos}">
 						      <th scope="col" th:if="${loginMatNo == gm.matNo}" colspan="2">참여중</th>
               				  <th scope="col" th:if="${!loginMatNo != gm.matNo}" colspan="2"></th>			      
 						   	</th:bolck>
+=======
+						      <th scope="col" th:if="${gm.join == 'Y'}" colspan="2">참여중</th>
+              				  <th scope="col" th:if="${gm.join == 'N'}" colspan="2"> </th>			      
+>>>>>>> refs/heads/master
 						    </tr>
 						  </thead>
 						  <tbody>
@@ -319,7 +324,7 @@
 														
 								
 								//버튼 보이기 조건용 변수
-								let showJoinButton = false;
+								let showJoinButton = true;
 								let showOutButton = false;
 								let showWalkoutButton = false;
 								//jmPts 
@@ -403,8 +408,8 @@
 										
 										
 									//참여인원 다 차거나 이미 참여중인 경우가 아니면 참여버튼 보이기								
-									if(jmPts.length < jmMatMatptInfo.ptCount && jmPt.memberNo != loginPt.memberNo){
-										showJoinButton = true;
+									if(jmPts.length >= jmMatMatptInfo.ptCount || jmPt.memberNo == loginPt.memberNo){
+										showJoinButton = false;
 									}
 									console.log('showJoinButton' + showJoinButton);
 									//이미 참여중인 경우 참여 취소 버튼 보이기

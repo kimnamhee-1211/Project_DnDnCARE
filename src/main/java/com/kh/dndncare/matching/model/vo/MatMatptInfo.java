@@ -42,5 +42,9 @@ public class MatMatptInfo {
 	private String endTime;
 	private int matMode;
 	
-
+	//endDT를 지난 날짜 체크
+	private boolean isAfterDate;
+	
+	//loginUser의 그룹 간병 참여 여부 확인용
+	private String join;
 }

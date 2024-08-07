@@ -1,10 +1,14 @@
 package com.kh.dndncare.matching.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
@@ -33,10 +37,12 @@ public interface MatchingMapper {
 	ArrayList<InfoCategory> getInfo(int memberNo);
 
 	int insertMatchingDate(@Param("matNo") int matNo, @Param("matchingDate") String matchingDate);
+	
+	ArrayList<CareReview> selectReviewList(int memberNo);
 
 	Hospital getHospital(Hospital hospital);
 
-	int[] getloginMatNo(int memberNo);
+	Set<Integer> getloginMatNo(int memberNo);
 
 	int getPtNo(int memberNo);
 
@@ -49,5 +55,22 @@ public interface MatchingMapper {
 	int delMatching(int matNo);
 
 	int delMatchingDate(int matNo);
+	int reviewCount(int memberNo);
+
+	int avgReviewScore(int memberNo);
+	int updatePatient(Patient patient);
+
+	int insertMatching(Matching matching);
+
+	int insertMatchingDate(HashMap<String, Object> map);
+
+	int getMatNo(int ptNo);
+
+	int insertWantInfo(Map<String, Object> params);
+
+	int insertMatPtInfo(MatPtInfo matPtInfo);
+
+	int deleteWantInfo(int memberNo);
+
 
 }

@@ -1,11 +1,15 @@
 package com.kh.dndncare.matching.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.dndncare.matching.model.dao.MatchingMapper;
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
@@ -84,7 +88,7 @@ public class MatchingServiceImpl implements MatchingService {
 
 	//loginUser-MatNo get
 	@Override
-	public int[] getloginMatNo(int memberNo) {
+	public Set<Integer> getloginMatNo(int memberNo) {
 		return mMapper.getloginMatNo(memberNo);
 	}
 	
@@ -122,6 +126,60 @@ public class MatchingServiceImpl implements MatchingService {
 	public int delMatchingDate(int matNo) {
 		return mMapper.delMatchingDate(matNo);
 	}
+
+	@Override
+	public ArrayList<CareReview> selectReviewList(int memberNo) {
+		return mMapper.selectReviewList(memberNo);
+	}
+
+	@Override
+	public int reviewCount(int memberNo) {
+		return mMapper.reviewCount(memberNo);
+	}
+
+	@Override
+	public int avgReviewScore(int memberNo) {
+		return mMapper.avgReviewScore(memberNo);
+	}
+ 
+	@Override
+	public int updatePatient(Patient patient) {
+		return mMapper.updatePatient(patient);
+	}
+
+	@Override
+	public int insertMatchingDate(HashMap<String, Object> map) {
+		return mMapper.insertMatchingDate(map);
+	}
+
+	@Override
+	public int getMatNo(int ptNo) {
+		return mMapper.getMatNo(ptNo);
+	}
+
+	@Override
+	public int insertMatching(Matching matching) {
+		return mMapper.insertMatching(matching);
+	}
+
+	@Override
+	public int insertWantInfo(Map<String, Object> params) {
+		return mMapper.insertWantInfo(params);
+	}
+
+	@Override
+	public int insertMatPtInfo(MatPtInfo matPtInfo) {
+		return mMapper.insertMatPtInfo(matPtInfo);
+	}
+
+	@Override
+	public int deleteWantInfo(int memberNo) {
+		return mMapper.deleteWantInfo(memberNo);
+	}
+
+
+
+
 
 
 }

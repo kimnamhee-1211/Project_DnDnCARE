@@ -35,12 +35,36 @@
 					</div>
 				</div>
 				
-				<div id="homeInput" class="input-field" style="display: none;">
-				    <input type="text" placeholder="집 주소를 확인해주세요" name="ptAddress" th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]} + '-' + ${#strings.arraySplit(patient.ptAddress, '//')[2]}">
+				<div id="homeInput" class="input-field hidden">
+				    <div class="address-row w-50 mb-2">
+				        <label for="addressCode">우편번호</label>
+				        <input type="text" id="addressCode" placeholder="우편번호"  th:value="${#strings.arraySplit(patient.ptAddress, '//')[0]}" class="adressCode">
+				    </div>
+				    <div class="address-row w-75 mb-2">
+				        <label for="address">주소</label>
+				        <input type="text" id="address" placeholder="주소"  th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]}">
+				    </div>
+				    <div class="address-row w-75 mb-2">
+				        <label for="detailAddress">상세주소</label>
+				        <input type="text" id="detailAddress" placeholder="상세주소" th:value="${#strings.arraySplit(patient.ptAddress, '//')[2]}">
+				    </div>
+				    <input type="hidden" id=ptAddress>
 				</div>
 				
-				<div id="hospitalInput" class="input-field" style="display: none;">
-				    <input type="text" placeholder="병원의 이름을 확인해주세요" name="ptAddress" th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]} + '-' + ${#strings.arraySplit(patient.ptAddress, '//')[2]}">
+				<div id="hospitalInput" class="input-field hidden">
+				   <div class="address-row w-50 mb-2">
+				        <label for="addressCode">우편번호</label>
+				        <input type="text" id="addressCode" placeholder="우편번호"  th:value="${#strings.arraySplit(patient.ptAddress, '//')[0]}" class="adressCode">
+				    </div>
+				    <div class="address-row w-75 mb-2">
+				        <label for="address">주소</label>
+				        <input type="text" id="address" placeholder="주소"  th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]}">
+				    </div>
+				    <div class="address-row w-75 mb-2">
+				        <label for="detailAddress">상세주소</label>
+				        <input type="text" id="detailAddress" placeholder="상세주소"  th:value="${#strings.arraySplit(patient.ptAddress, '//')[2]}">
+				    </div>
+				    <input type="hidden" id=ptAddress>
 				</div>
 				
 				<div class="basic-info-wrap d-flex justify-content-center">
@@ -81,29 +105,74 @@
 	</main>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	<script>
+		function combineAddress(inputId) {
+		    const container = document.getElementById(inputId);
+		    const addressCode = container.querySelector('#addressCode').value;
+		    const address = container.querySelector('#address').value;
+		    const detailAddress = container.querySelector('#detailAddress').value;
+	
+		    // 주소 조합
+		    const combinedAddress = `${addressCode}//${address}//${detailAddress}`;
+	
+		    // hidden input에 값 설정
+		    container.querySelector('#ptAddress').value = combinedAddress;
+		}
+		
+		function handleFormSubmit(event) {
+		    event.preventDefault();
+
+		    // 선택된 아이콘 확인
+		    const selectedIcon = document.querySelector('.icon-container.selected');
+		    if (!selectedIcon) {
+		        alert('주소 유형(집 또는 병원)을 선택해주세요.');
+		        return;
+		    }
+
+		    const selectedType = selectedIcon.getAttribute('data-value');
+		    const inputId = selectedType === 'home' ? 'homeInput' : 'hospitalInput';
+			
+		    // 선택된 입력 필드의 주소 조합
+		    combineAddress(inputId);
+		    const selectedPtAddress = document.getElementById(inputId).querySelector('#ptAddress').value;
+		    let hiddenInput = document.querySelector('input[name="ptAddress"]');
+		    if (!hiddenInput) {
+		        hiddenInput = document.createElement('input');
+		        hiddenInput.type = 'hidden';
+		        hiddenInput.name = 'ptAddress';
+		        event.target.appendChild(hiddenInput);
+		    }
+		    hiddenInput.value = selectedPtAddress;
+
+		    // 폼 제출
+		    event.target.submit();
+		}
+
 		function selectIcon(element) {
-	        // 모든 아이콘에서 'selected' 클래스 제거
-	        document.querySelectorAll('.icon-container').forEach(icon => {
-	            icon.classList.remove('selected');
-	        });
-	        
-	        // 클릭된 아이콘에 'selected' 클래스 추가
-	        element.classList.add('selected');
+		    // 모든 아이콘에서 'selected' 클래스 제거
+		    document.querySelectorAll('.icon-container').forEach(icon => {
+		        icon.classList.remove('selected');
+		    });
+		    
+		    // 클릭된 아이콘에 'selected' 클래스 추가
+		    element.classList.add('selected');
+		    
+		    // 선택된 값 (예: 'home' 또는 'hospital')
+		    const selectedValue = element.getAttribute('data-value');	
+		    
+		    // 두 입력 필드 모두 숨김
+		    document.getElementById('homeInput').classList.add('hidden');
+		    document.getElementById('hospitalInput').classList.add('hidden');
 
-	        
-	        // 선택된 값 (예: 'home' 또는 'hospital')
-	        const selectedValue = element.getAttribute('data-value');	
-	        
-	        document.getElementById('homeInput').style.display = 'none';
-	        document.getElementById('hospitalInput').style.display = 'none';
+		    // 선택된 입력 필드만 표시
+		    if (selectedValue === 'home') {
+		        document.getElementById('homeInput').classList.remove('hidden');
+		    } else if (selectedValue === 'hospital') {
+		        document.getElementById('hospitalInput').classList.remove('hidden');
+		    }
+		}
 
-	        // Show the appropriate input field
-	        if (selectedValue === 'home') {
-	            document.getElementById('homeInput').style.display = 'block';
-	        } else if (selectedValue === 'hospital') {
-	            document.getElementById('hospitalInput').style.display = 'block';
-	        }
-	    }
+		// 폼에 이벤트 리스너 추가
+		document.querySelector('form').addEventListener('submit', handleFormSubmit);
 	</script>
 </body>
 </html>

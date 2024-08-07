@@ -264,6 +264,7 @@ public class BoardController {
 	    }
 	}
 	
+	// 댓글 수정
 	@GetMapping("updateReply.bo")
 	@ResponseBody
 	public String updateReply(@ModelAttribute Reply r) {
@@ -271,6 +272,7 @@ public class BoardController {
 		return result == 1 ? "success" : "fail";
 	}
 	
+	// 댓글 삭제
 	@GetMapping("deleteReply.bo")
 	@ResponseBody
 	public String deleteReply(@RequestParam("rId") int rId) {
@@ -278,6 +280,7 @@ public class BoardController {
 		return result == 1 ? "success" : "fail";
 	}
 	
+	// 게시글 좋아요
 	@PostMapping("boardLike.bo")
 	@ResponseBody
 	public String boardLike(@RequestParam("boardNo") int boardNo, @RequestParam("memberNo") int memberNo) {
@@ -299,6 +302,7 @@ public class BoardController {
 	    return json.toString();
 	}
 	
+	// 댓글 좋아요
 	@PostMapping("replyLike.bo")
 	@ResponseBody
 	public String reply(@RequestParam("rId") int rId, @RequestParam("memberNo") int memberNo) {
@@ -319,6 +323,7 @@ public class BoardController {
 		}
 		return json.toString();
 	}
+	
 
 
 	

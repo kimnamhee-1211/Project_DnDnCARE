@@ -18,7 +18,7 @@
 			select seq_macid.nextval from dual
 		</selectKey>	
 		insert into matching
-		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime}, #{matMode})
+		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime},#{matMode})
 	</insert>
 	
 	<!-- pt get -->
@@ -70,11 +70,19 @@
 		where member_no = #{memberNo}	
 	</select>
 	
-	<!--MatchingDate insert  -->
-	<insert id="insertMatchingDate">
-		insert into matching_date
-		values(#{matNo}, #{matchingDate})	
-	</insert>
+	<select id="selectReviewList" resultType="CareReview">
+		select *
+		from care_review r
+		        left join patient p on(p.pt_no = r.pt_no)
+		        left join mat_pt_info mpi on(mpi.pt_no = p.pt_no)
+		        left join matching mc on(mc.mat_no = mpi.mat_no)
+		        left join caregiver cg on(mc.member_no = cg.member_no)
+		        left join member m on(m.member_no = mc.member_no)
+		        left join matching mc on(mc.member_no = cg.member_no)
+		        left join member m on(m.member_no = cg.member_no)
+		where review_status ='Y' 
+       	<!-- and m.member_no = #{memberNo} -->
+	</select>
 	
 	<!-- 병원 get : 병원 존재 유무 확인-->
 	<select id="getHospital" resultType="Hospital">
@@ -135,6 +143,100 @@
 	
 	
 	
+	<select id="reviewCount" resultType="_int">
+		select count(*)
+		from care_review
+			join matching using(mat_no)
+		<!-- where member_no=#{memberNo}   -->
+	</select>
+	
+	<select id="avgReviewScore" resultType="_int">
+		select avg(review_score)
+		from care_review
+		<!-- where member_no=#{memberNo} -->
+	</select>
+	<!-- 받아온 patient정보로 수정 -->
+	<update id="updatePatient">
+		update patient
+		set pt_name = #{ptName},
+			pt_gender= #{ptGender},
+			pt_age = #{ptAge},
+			pt_weight=#{ptWeight},
+			pt_height=#{ptHeight},
+			pt_address=#{ptAddress},
+			pt_update_date=sysdate
+		where pt_no = #{ptNo}
+	</update>
+	
+	<!-- matching_date insert -->
+	
+	<insert id="insertMatchingDate">
+		insert into matching_date
+		values(#{matNo},#{formattedDates})
+	</insert>
+	
+	<!-- mat_no 얻어오기 -->
+	<select id="getMatNo" resultType="_int">
+		select mat_no
+		from mat_pt_info
+		where pt_no = #{ptNo}
+	</select>
+	
+	<!-- 매칭 정보 삽입 -->
+	<insert id="insertMatching">		
+		insert into matching
+		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime})
+	</insert>
+	
+	<!-- want_info insert -->
+	<insert id="insertWantInfo">
+	    INSERT ALL
+	    <if test="symptoms != null and symptoms.size() > 0">
+	        <foreach collection="symptoms" item="symptom">
+	            INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{symptom})
+	        </foreach>
+	    </if>
+	    <if test="mobility != null">
+	        INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{mobility})
+	    </if>
+	    <if test="gender != null">
+	        INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{gender})
+	    </if>
+	    <if test="career != null">
+	        INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{career})
+	    </if>
+	    <if test="local != null">
+	        INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{local})
+	    </if>
+	    <if test="age != null">
+	        INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{age})
+	    </if>
+	    SELECT * FROM DUAL
+	</insert>
+	
+	<!-- want-info 삭제 -->
+	<delete id="deleteWantInfo">
+		delete from want_info
+		where member_no = #{memberNo}
+	</delete>
+	
+	<!-- mat_pt_info등록 -->
+	<insert id="insertMatPtInfo" useGeneratedKeys="true">	
+		<selectKey resultType="_int" keyProperty="matNo" order="BEFORE">
+			select seq_macid.nextval from dual
+		</selectKey>	
+		insert into mat_pt_info
+		values(#{matNo}, #{ptNo}, #{antePay}, #{service}, #{matAddressInfo}, #{matRequest}, default, #{groupLeader})
+	</insert>
+
+
+
+
+
+
+
+
+
 
 
 </mapper>
