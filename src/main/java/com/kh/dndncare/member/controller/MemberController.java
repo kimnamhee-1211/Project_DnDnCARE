@@ -143,14 +143,51 @@ public class MemberController {
 		return "redirect:home.do";
 	}
 	
-	// ai추천 로직 메소드
-	public ArrayList<Patient> openAiChoice(int memberNo) {
-		// (1) 자동추천 기능구현 : 간병인이라 가정하고 테스트
+	// ai추천 : 간병인의 입장 : 환자 추천 목록 조회
+	public ArrayList<Patient> openAiPatientChoice(int memberNo) {
 		// 1. 간병인 정보 조회 
+//		조회할 항목
+//			필수입력 : 원하는 서비스, 공동간병 참여여부, 경력, 적정비용, 성별, 나이, 주소
+//			선택입력 : 서비스 경험, 돌봄경험, 자격증
+//		항목의 출처
+//			WANT_INFO : 원하는 서비스(필수),
+//			CAREGIVER : 공동간병 희망여부(필수,CARE_JOIN_STATUS), 적정비용(필수, MIN_MONEY, MAX_MONEY), 
+//			MEMBER_INFO : 경력기간(필수), 서비스경험(선택), 돌봄경험(선택), 자격증(선택)
+//			MEMBER: 성별(필수, MEMBER_GENDER), 나이(필수, MEMBER_AGE), 주소(필수, MEMBER_ADDRESS), 국적(필수, MEMBER_NATIONAL)
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		// 		MEMBER : 성별, 나이, 주소, 국적
 		HashMap<String, String> infoMap =  mService.getCaregiverInfo(memberNo); // {국적=내국인, 주소=제주특별자치도 제주시 첨단로 242 히히, 나이=30, 성별=남성}
 		// 		INFO_CATEGORY : 서비스경험, 경력, 질환경험, 자격증, 중증도
 		ArrayList<HashMap<String, String>> cExpList = mService.getCaregiverExp(memberNo); // [{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=0, L_CATEGORY=career}, {S_CATEGORY=호흡기 질환, L_CATEGORY=disase}, {S_CATEGORY=거동불편, L_CATEGORY=disase}, {S_CATEGORY=와상환자, L_CATEGORY=disase}, {S_CATEGORY=간병사, L_CATEGORY=license}]
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		// 2. 간병인 정보 가공
 		String service = ""; // service
@@ -296,7 +333,7 @@ public class MemberController {
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo(); 
-			ArrayList<Patient> completeList = openAiChoice(memberNo); // 추천목록이 없으면 null로 넘어옴
+			ArrayList<Patient> completeList = openAiPatientChoice(memberNo); // 추천목록이 없으면 null로 넘어옴
 			
 			model.addAttribute("completeList", completeList);
 		}
@@ -316,7 +353,7 @@ public class MemberController {
 	@ResponseBody
 	public void refreshChoice(@RequestParam("memberNo") int memberNo, HttpServletResponse response) {
 		// 후보군이 있을 때만 새로고침 버튼이 활성화 되기 때문에 null로 넘어오는 경우는 배제함
-		ArrayList<Patient> completeList = openAiChoice(memberNo); 
+		ArrayList<Patient> completeList = openAiPatientChoice(memberNo); 
 
 		Gson gson = new Gson();
 		response.setContentType("application/json; charset=UTF-8;");
