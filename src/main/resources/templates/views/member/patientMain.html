@@ -194,12 +194,40 @@
 			  <div class="carousel-inner">
 			    <div class="carousel-item active">
 			      <div class="row row-cols-md-2 g-2	">
-			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(1, 6)}">
+			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(0, 5)}">
 			            <div class="card h-95 w-80">
 			              <div class="card-body">
-			                <h5 class="card-title">다람쥐님</h5>
-			                <p class="card-text">남성 8 서울시 노원구</p>
-			                <a href="#" class="btn btn-success">정보 보기</a>
+			              	<div class="row m-2">
+			              		<div align="left" class="col-3 test-left" >
+			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
+			              		</div>
+			              		<div align="left"class="col text-left" >
+			              			<div class="d-flex justify-content-between">
+				                		<h5 class="card-title">[[${cg[num].memberName}]]님</h5>
+				                		<div align="center"  class="d-flex justify-content-left" >
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<span style="margin-top:-4px">10</span>
+						    			</div>
+			                		</div>
+			                		<p class="card-text">[[${cg[num].memberGender == "M" ? "남" : "여"}]] [[${cg[num].age}]]세 [[${cg[num].memberNational}]]</p>
+			                		
+			                	</div>
+			                </div>
+			                <button class="btn-select-info">정보 보기</button>
 			              </div>
 			            </div>
 			          </div>
@@ -207,12 +235,40 @@
 			    </div>
 			    <div class="carousel-item">
 			      <div class="row row-cols-md-2 g-2	">
-			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(1, 6)}">
+			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(6, 11)}">
 			            <div class="card h-95 w-80">
 			              <div class="card-body">
-			                <h5 class="card-title">다람쥐님</h5>
-			                <p class="card-text">남성 8 서울시 노원구</p>
-			                <a href="#" class="btn btn-success">정보 보기</a>
+			              	<div class="row m-2">
+			              		<div align="left" class="col-3 test-left" >
+			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
+			              		</div>
+			              		<div align="left"class="col text-left" >
+			              			<div class="d-flex justify-content-between">
+				                		<h5 class="card-title">[[${cg[num].memberName}]]님</h5>
+				                		<div align="center"  class="d-flex justify-content-left" >
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<span style="margin-top:-4px">10</span>
+						    			</div>
+			                		</div>
+			                		<p class="card-text">[[${cg[num].memberGender == "M" ? "남" : "여"}]] [[${cg[num].age}]]세 [[${cg[num].memberNational}]]</p>
+			                		
+			                	</div>
+			                </div>
+			                <button class="btn-select-info">정보 보기</button>
 			              </div>
 			            </div>
 			          </div>
@@ -220,12 +276,40 @@
 			    </div>
 			    <div class="carousel-item">
 			      <div class="row row-cols-md-2 g-2	">
-			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(1, 6)}">
+			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(12, 17)}">
 			            <div class="card h-95 w-80">
 			              <div class="card-body">
-			                <h5 class="card-title">다람쥐님</h5>
-			                <p class="card-text">남성 8 서울시 노원구</p>
-			                <a href="#" class="btn btn-success">정보 보기</a>
+			              	<div class="row m-2">
+			              		<div align="left" class="col-3 test-left" >
+			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
+			              		</div>
+			              		<div align="left"class="col text-left" >
+			              			<div class="d-flex justify-content-between">
+				                		<h5 class="card-title">[[${cg[num].memberName}]]님</h5>
+				                		<div align="center"  class="d-flex justify-content-left" >
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<span style="margin-top:-4px">10</span>
+						    			</div>
+			                		</div>
+			                		<p class="card-text">[[${cg[num].memberGender == "M" ? "남" : "여"}]] [[${cg[num].age}]]세 [[${cg[num].memberNational}]]</p>
+			                		
+			                	</div>
+			                </div>
+			                <button class="btn-select-info">정보 보기</button>
 			              </div>
 			            </div>
 			          </div>

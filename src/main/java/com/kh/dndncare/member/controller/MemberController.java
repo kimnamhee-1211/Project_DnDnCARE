@@ -1,8 +1,8 @@
 package com.kh.dndncare.member.controller;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,10 +29,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
-import com.kh.dndncare.board.model.vo.Board;
-import com.kh.dndncare.board.model.vo.PageInfo;
-import com.kh.dndncare.board.model.vo.Reply;
-import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
@@ -263,16 +259,7 @@ public class MemberController {
 
 				return "redirect:caregiverMain.me";
 			} else if(loginUser.getMemberCategory().equalsIgnoreCase("P")) {
-				//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--
 				
-				//Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 간병인 멤퍼인포정보
-				ArrayList<CareGiver> cg = mService.selectCareGiverList(); // 간병인 정보
-				
-				model.addAttribute("cg",cg);
-				
-				
-				
-				//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --up--
 				
 				return "redirect:patientMain.me";
 			}
@@ -584,7 +571,23 @@ public class MemberController {
 
 	// 임시버튼 : 환자 메인페이지로 가기
 	@GetMapping("patientMain.me")
-	public String patientMain() {
+	public String patientMain(Model model) {
+		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--
+		
+		//Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 간병인 멤퍼인포정보
+		ArrayList<CareGiver> cg = mService.selectCareGiverList(); // 간병인 정보
+		model.addAttribute("cg",cg);
+		
+		for(CareGiver c : cg) {
+			LocalDate birthDateParsed = c.getMemberAge().toLocalDate();
+			LocalDate today = LocalDate.now();
+			
+			c.setAge(Period.between(birthDateParsed, today).getYears());
+			System.out.println(c);
+			System.out.println(c.getAge());
+		}
+		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --up--
+		
 		return "patientMain";
 	}
 

@@ -175,6 +175,15 @@ a {
 	height:40px;
 }
 
+.btn-select-info{
+	background-color:#8dd986;
+	border: 0;
+	color:white;
+	width:40%;
+	height:40px;
+	border-radius:7px;
+}
+
 .testBorder{
 	border:1px solid #dee2e6;
 	border-radius: 5px;
@@ -192,3 +201,48 @@ a {
 /* .carousel-indicators [data-bs-target]{ */
 /* 	background-color:yellow; */
 /* } */
+
+#profile-image {
+   width: 60px; /* 원하는 크기로 설정 */
+   height: 60px; /* 원하는 크기로 설정 */
+   border-radius: 50%; /* 이미지를 동그랗게 만듦 */
+   object-fit: cover; /* 이미지 비율을 유지하며 잘라냄 */
+   border:3px solid #8dd986;
+}
+
+/* 리뷰에나오는별쓰자*/
+
+.btn-star{
+	background: transparent;
+	border:0px solid black;
+	width:20px;
+	height:20px;
+	padding:0;
+	margin-left:0px;
+	margin-right:-1.5px;
+	background-repeat: no-repeat;
+}
+
+.btn-icon-star-review{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 70px 70px;
+	padding:0px;
+	margin-left:0px;
+	background-repeat: no-repeat;
+}
+
+.btn-icon-star-review-half{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 90px 90px;
+	padding:0px;
+	margin-left:0px;
+	background-repeat: no-repeat;
+	width:11px;
+}
+
+.icon-star-review{
+	background-image:url(../image/icon_star.svg);
+	background-size: 70px 70px;
+	padding:0px;
+	width:16px; height:16px;
+}
