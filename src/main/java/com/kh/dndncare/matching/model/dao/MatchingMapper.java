@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
@@ -33,6 +34,8 @@ public interface MatchingMapper {
 	ArrayList<InfoCategory> getInfo(int memberNo);
 
 	int insertMatchingDate(@Param("matNo") int matNo, @Param("matchingDate") String matchingDate);
+	
+	ArrayList<CareReview> selectReviewList(int memberNo);
 
 	Hospital getHospital(Hospital hospital);
 
@@ -49,5 +52,8 @@ public interface MatchingMapper {
 	int delMatching(int matNo);
 
 	int delMatchingDate(int matNo);
+	int reviewCount(int memberNo);
+
+	int avgReviewScore(int memberNo);
 
 }

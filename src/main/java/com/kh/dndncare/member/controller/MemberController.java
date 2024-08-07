@@ -2,6 +2,7 @@ package com.kh.dndncare.member.controller;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,7 @@ import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.Pagination;
+import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
@@ -320,29 +322,12 @@ public class MemberController {
 		String career = ""; // career
 		String disease = ""; // disease
 		String license = ""; // license
-<<<<<<< HEAD
 		for(HashMap<String, String> m : cExpList) {
 			switch(m.get("L_CATEGORY")) {
 			case "service" : service += m.get("S_CATEGORY") + "/"; break;
 			case "career" : career = m.get("S_CATEGORY"); break;
 			case "disease" : disease += m.get("S_CATEGORY") + "/"; break;
 			case "license" : license += m.get("S_CATEGORY") + "/"; break;
-=======
-		for (HashMap<String, String> m : expList) {
-			switch (m.get("L_CATEGORY")) {
-			case "service":
-				service += m.get("S_CATEGORY") + "/";
-				break;
-			case "career":
-				career = m.get("S_CATEGORY");
-				break;
-			case "disease":
-				disease = m.get("S_CATEGORY") + "/";
-				break;
-			case "license":
-				license = m.get("S_CATEGORY") + "/";
-				break;
->>>>>>> refs/remotes/origin/Kiryong
 			}
 		}
 		service = service.substring(0, service.lastIndexOf("/"));
@@ -352,7 +337,6 @@ public class MemberController {
 		infoMap.put("서비스경험", service);
 		infoMap.put("경력", career);
 		infoMap.put("돌봄질환경험", disease);
-<<<<<<< HEAD
 		infoMap.put("자격증", license); // 가공 종료! => infoMap
 		
 		// 3. 환자 목록 조회
@@ -638,19 +622,27 @@ public class MemberController {
 	}
 
 	@GetMapping("myInfoMatchingHistory.me")
-	public String myInfoMatchingHistory(HttpSession session) { // 마이페이지 매칭 이력 확인용
-
-		Member loginUser = (Member) session.getAttribute("loginUser");
-
-		if (loginUser != null) {
+	public String myInfoMatchingHistory(HttpSession session,Model model) {		//마이페이지 매칭 이력 확인용
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		
+		if(loginUser != null) {
 			char check = loginUser.getMemberCategory().charAt(0);
-			switch (check) {
-			case 'C':
-				return "myInfoMatchingHistory";
-			case 'P':
-				return "myInfoMatchingHistoryP";
-			case 'A':
-				return null;
+			switch(check) {
+				case 'C': return "myInfoMatchingHistory";
+				
+				case 'P':
+					ArrayList<MatMatptInfo> mciList = mService.selectMatList(loginUser.getMemberNo());	//환자측 매칭방번호 리스트.ptNo가들어가서무조건
+					for(MatMatptInfo i : mciList) {
+						System.out.println(i);
+						i.setAfterDate(LocalDate.now().isAfter(i.getBeginDt().toLocalDate()));
+						
+					}
+					model.addAttribute("mciList",mciList);
+					model.addAttribute("today", LocalDate.now());
+					return "myInfoMatchingHistoryP";
+				case 'A': return null;
 			}
 		}
 
@@ -675,6 +667,14 @@ public class MemberController {
 		}
 		throw new MemberException("로그인없음. 인터셉터설정");
 	}
+	
+	// 내 작성글 보기
+	@GetMapping("myInfoBoardList.me")
+	public String myInfoBoardList(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model, HttpSession session) {		//마이페이지 보드작성 확인용
+		
+	    
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		int mNo = loginUser.getMemberNo();
 
 	// 내 작성글 보기
 //	   @GetMapping("myInfoBoardList.me")
@@ -737,9 +737,30 @@ public class MemberController {
 //	      model.addAttribute("likeLikeCounts", likeLikeCounts);
 //	      return "myInfoBoardList";
 //	   }
-
-
-	// 간병인 회원가입(간병인 정보 입력)
+	/*
+	 * // 좋아요한 글 목록 ArrayList<Board> likeList = mService.mySelectLikeList(likePi,
+	 * mNo);
+	 * 
+	 * // 좋아요한 글 좋아요 HashMap<Integer, Integer> likeLikeCounts = new HashMap<>(); for
+	 * (Board board : likeList) { int likeLikeCount =
+	 * mService.likeLikeCount(board.getBoardNo());
+	 * likeLikeCounts.put(board.getBoardNo(), likeLikeCount); }
+	 * 
+	 * 
+	 * model.addAttribute("boardPi", boardPi); model.addAttribute("boardList",
+	 * boardList); model.addAttribute("boardLikeCounts", boardLikeCounts);
+	 * model.addAttribute("replyPi", replyPi); model.addAttribute("replyList",
+	 * replyList); model.addAttribute("replyLikeCounts", replyLikeCounts);
+	 * model.addAttribute("likePi", likePi); model.addAttribute("likeList",
+	 * likeList); model.addAttribute("likeLikeCounts", likeLikeCounts);
+	 */
+		
+		
+		return "myInfoBoardList";
+	}
+	
+	
+	//간병인 회원가입(간병인 정보 입력)
 	@PostMapping("enrollCaregiver.me")
 	public String enrollCaregiver(@ModelAttribute CareGiver cg, HttpSession session) {
 		System.out.println("데이터 확인" + cg);
@@ -1189,10 +1210,7 @@ public class MemberController {
 	}
 
 	
-	@GetMapping("writeReviewView.re")
-	public String writeReview() {
-		return "writeReview";
-	}
+	
 	
 }//클래스 끝
 
