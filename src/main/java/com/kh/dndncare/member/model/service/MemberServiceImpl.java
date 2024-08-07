@@ -139,8 +139,28 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<HashMap<String, String>> getPatientInfo(ArrayList<Integer> mNoList) {
+	public ArrayList<HashMap<String, Object>> getPatientInfo(ArrayList<Integer> mNoList) {
 		return mMapper.getPatientInfo(mNoList);
+	}
+
+	@Override
+	public HashMap<String, String> getPatientMyInfo(int memberNo) {
+		return mMapper.getPatientMyInfo(memberNo);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> getPatientMyExp(int memberNo) {
+		return mMapper.getPatientMyExp(memberNo);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> getCaregiverMyWant(int memberNo) {
+		return mMapper.getCaregiverMyWant(memberNo);
+	}
+
+	@Override
+	public ArrayList<Patient> selectCaregiverList(HashMap<String, Object> condition) {
+		return mMapper.selectCaregiverList(condition);
 	}
 
 

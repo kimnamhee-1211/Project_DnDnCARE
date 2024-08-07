@@ -137,18 +137,16 @@
 		                MAT_NO, BEGIN_DT, END_DT, MONEY,
 		                SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) as PT_ADDRESS, 
 		                SERVICE, MAT_REQUEST, PT_COUNT
-		   FROM MATCHING 
-		        JOIN MAT_PT_INFO USING(MAT_NO)
-		        JOIN PATIENT USING(PT_NO)
-		        JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
+			   FROM MATCHING 
+			        JOIN MAT_PT_INFO USING(MAT_NO)
+			        JOIN PATIENT USING(PT_NO)
+			        JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
 		   WHERE MEMBER_STATUS = 'N' AND MAT_CONFIRM='N' AND MAT_ADDRESS_INFO LIKE '%${address}%'
 		   <if test='joinStatus.equals("N")'>
 		   			AND PT_COUNT = 1
 		   </if>
 		   ORDER BY DBMS_RANDOM.RANDOM)
 		WHERE ROWNUM <![CDATA[<]]> ${selectNum}
-		
->>>>>>> branch 'myunghun' of https://github.com/JONGGYU94/dndncare.git
 	</select>
 	
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 환자 후보군의 정보 조회 : 2번 -->
@@ -163,12 +161,15 @@
 	
 	<!-- 추천된 환자 정보조회 : 이름, 성별, 나이, 지역, 금액 -->
 	<select id="choicePatientList" resultType="Patient">
-		SELECT  PATIENT.MEMBER_NO, PT_NAME, PT_GENDER, TRUNC(SYSDATE - PT_AGE) AS PT_REAL_AGE, MONEY,
-				SUBSTR(REPLACE(PT_ADDRESS, '//', ' ') , INSTR(REPLACE(PT_ADDRESS, '//', ' '), ' ')+1) as PT_ADDRESS
+		SELECT  PATIENT.MEMBER_NO, PT_NAME, PT_GENDER, PT_NO,  
+		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) AS PT_REAL_AGE, 
+		        MAT_NO, BEGIN_DT, END_DT, MONEY,
+		        SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) as PT_ADDRESS, 
+		        SERVICE, MAT_REQUEST, PT_COUNT
 		FROM MATCHING 
-		        JOIN MAT_PT_INFO USING(MAT_NO)
-		        JOIN PATIENT USING(PT_NO)
-		WHERE PATIENT.MEMBER_NO IN
+		    JOIN MAT_PT_INFO USING(MAT_NO)
+		    JOIN PATIENT USING(PT_NO)
+	    WHERE MAT_NO IN 
 		<foreach collection="list" item="item" open="(" close=")" separator=", ">
 			${item}
 		</foreach>
@@ -183,6 +184,37 @@
 		WHERE M.MEMBER_NO = ${memberNo}
 	</select>	
 	
+	<!-- 환자 메인 : 환자 본인 정보 조회 1번 -->
+	<select id="getPatientMyInfo" resultType="map">
+		select DECODE(pt_gender, 'M', '남성', '여성') AS "성별", 
+				EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS "연령",
+		        SUBSTR(REPLACE(PT_ADDRESS, '//', ' ') , INSTR(REPLACE(PT_ADDRESS, '//', ' '), ' ')+1) as "주소",
+		        pt_height AS "키", pt_weight AS "몸무게",
+		        member_national AS "국적"
+		from member 
+		        join patient using(member_no)
+		where member_no = ${memberNo}
+	</select>
+	
+	<select id="getPatientMyExp" resultType="map">
+		SELECT L_CATEGORY, S_CATEGORY
+		FROM MEMBER
+		        JOIN MEMBER_INFO USING(MEMBER_NO)
+		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
+	
+	<select id="getCaregiverMyWant" resultType="map">
+		SELECT L_CATEGORY, S_CATEGORY
+		FROM MEMBER
+		        JOIN WANT_INFO USING(MEMBER_NO)
+		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
+	
+	<select id="selectCaregiverList" resultType="Caregiver">
+		
+	</select>
 	
 	
 </mapper>

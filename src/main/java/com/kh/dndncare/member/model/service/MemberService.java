@@ -53,7 +53,15 @@ public interface MemberService {
 
 	ArrayList<HashMap<String, String>> getCaregiverWant(int memberNo);
 
-	ArrayList<HashMap<String, String>> getPatientInfo(ArrayList<Integer> mNoList);
+	ArrayList<HashMap<String, Object>> getPatientInfo(ArrayList<Integer> mNoList);
+
+	HashMap<String, String> getPatientMyInfo(int memberNo);
+
+	ArrayList<HashMap<String, String>> getPatientMyExp(int memberNo);
+
+	ArrayList<HashMap<String, String>> getCaregiverMyWant(int memberNo);
+
+	ArrayList<Patient> selectCaregiverList(HashMap<String, Object> condition);
 
 
 

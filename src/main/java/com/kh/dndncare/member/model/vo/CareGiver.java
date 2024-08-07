@@ -25,4 +25,16 @@ public class CareGiver {
 	private Date careUpdateDate;
 	
 	private List<Integer> infoCategory;
+	
+	
+	// ai추천용 필드 (시작)
+	
+	
+	
+	// ai추천용 필드 (끝)
+	
+	
+	
+	
+	
 }

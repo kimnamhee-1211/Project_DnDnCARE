@@ -43,5 +43,6 @@ public class Patient {
 	private Date endDt; // END_DT
 	private int money; // MONEY
 	private String ptDisease;
+	private int ptCount;
 	// 자동추천 후보에 대한 정보 조회를 위한 필드값 추가(끝)
 }
