@@ -51,6 +51,8 @@ public class MatMatptInfoPt {
 	private String ptAddress; // PT_ADDRESS
 	private String ptRequest; // PT_REQUEST
 	private Date ptUpdateDate;
+	
+	//나이계산
 	private int ptRealAge;
 	
 	//노출 위한 주소 (시까지만 노출)

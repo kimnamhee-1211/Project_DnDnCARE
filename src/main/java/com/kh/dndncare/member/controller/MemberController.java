@@ -32,6 +32,7 @@ import com.google.gson.JsonIOException;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.common.AgeCalculator;
 import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
@@ -518,7 +519,16 @@ public class MemberController {
 		ArrayList<MatMatptInfoPt> matMatptInfoPtListBefore = mService.getMatMatptInfoPt();		
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList = new ArrayList<MatMatptInfoPt>();
 		
-		for(int i = 0; i < 16; i++) {
+		for(int i = 0; i < 18; i++) {
+			//나이 계산
+			int ptRealAge = AgeCalculator.calculateAge(matMatptInfoPtListBefore.get(i).getPtAge());
+			matMatptInfoPtListBefore.get(i).setPtRealAge(ptRealAge);
+			
+			//노출 주소
+			String[] addr = matMatptInfoPtListBefore.get(i).getMatAddressInfo().split(" ");
+			String addressMin = addr[0] + " " +  addr[1];  //00도 00시//
+			matMatptInfoPtListBefore.get(i).setPtAddressMin(addressMin);
+						
 			matMatptInfoPtList.add(matMatptInfoPtListBefore.get(i));			
 		}
 		

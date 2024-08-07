@@ -131,164 +131,69 @@
             </table>
         </div>
         <div><!--공백 --></div>
+        
+        
+        
+        
+        <!-- 남희 -->
         <div id="findWorkList" class="text-center"><!--대상검색 : 가로 700, 세로 700-->
 			<h5>조건 검색을 활용해 원하는 환자 정보를 확인하시려면 더보기를 눌러주세요.</h5>
-            <button type="button" class="btn btn-link" onclick="location.href='moreWorkInfo.me'">더 보기</button>
-			
-			
+            <button type="button" class="btn btn-link" onclick="location.href='moreWorkInfo.me'">더 보기</button>			
 			<div id="carouselExampleIndicators" class="carousel slide">
-			  <div class="carousel-indicators">
-			    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-			    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-			    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-			  </div>
-			  <div class="carousel-inner">
-			    <div class="carousel-item active">
-					<div class="row row-cols-md-2 g-2 ptDiv" th:each="mat : ${matMatptInfoPtList}">
-					
-					
-		                <div class="col-sm-6">
-		                    <div class="card h-95 w-80">
-		                      <div class="card-body">
-		                        <h6 class="card-title">
-		                        	<span style="background:skyblue; color:blue;">[[${mat.beginDt}]]</span>
-		                        	<span style="background:lightgrey;">~</span>
-		                        	<span style="background:lightgrey;">[[${mat.endDt}]]</span>
-		                        	<img th:if="${mat.ptCount > }"  src="image/icon/users.png"/>
-		                        	<img th:if="${mat.ptCount == 1 && mat.service =='병원돌봄'}" src="image/icon/hospital.png"/>
-		                        	<img th:if="${mat.ptCount == 1 && mat.service =='가정돌봄'}"  src="image/icon/home.png"/>
-		                       	</h6>
-		                        <p class="card-text">
-		                        	<span th:text="${mat.ptGender == 'M' ? '남성' : '여성'}"></span>
-		                        	<span>[[mat.ptRealAge]]</span>
-		                       	</p>
-		                       	 <p class="card-text">
-		                        	<span th:text="${mat.ptGender == 'M' ? '남성' : '여성'}"></span>
-		                        	<span>[[mat.ptRealAge]]</span>
-		                       	</p>
-		                       	
-		                       	
-		                       	
-		                        <button class="btn btn-success workInfo">정보 보기</button>
-		                      </div>
-		                    </div>
-		                  </div>
-		                  
-		                  
-		                <div class="col-sm-6">
-		                    <div class="card h-95 w-80">
-		                      <div class="card-body">
-		                        <h6 class="card-title">
-		                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
-		                        	<img src="image/icon/home.png"/>
-		                       	</h6>
-		                        <p class="card-text">
-		                        	<span>집 주소(가사돌봄임)</span>
-		                       	</p>
-		                        <button class="btn btn-success workInfo">정보 보기</button>
-		                      </div>
-		                    </div>
-		                </div>
-		                
-		                <div class="col-sm-6">
-		                    <div class="card h-95 w-80">
-		                      <div class="card-body">
-		                        <h6 class="card-title">
-		                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
-		                        	<img src="image/icon/users.png"/>
-		                       	</h6>
-		                        <p class="card-text">
-		                        	<span>병원명(공동간병버전)</span>
-		                       	</p>
-		                        <button class="btn btn-success workInfo">정보 보기</button>
-		                      </div>
-		                    </div>
-		                  </div>
-		                <div class="col-sm-6">
-		                    <div class="card h-95 w-80">
-		                      <div class="card-body">
-		                        <h6 class="card-title">
-		                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
-		                        	<img src="image/icon/hospital.png"/>
-		                       	</h6>
-		                        <p class="card-text">
-		                        	<span>병원명</span>
-		                       	</p>
-		                        <button class="btn btn-success workInfo">정보 보기</button>
-		                      </div>
-		                    </div>
-		                </div>
-		
-		                <div class="col-sm-6">
-		                    <div class="card h-95 w-80">
-		                      <div class="card-body">
-		                        <h6 class="card-title">
-		                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
-		                        	<img src="image/icon/hospital.png"/>
-		                       	</h6>
-		                        <p class="card-text">
-		                        	<span>병원명</span>
-		                       	</p>
-		                        <button class="btn btn-success workInfo">정보 보기</button>
-		                      </div>
-		                    </div>
-		                </div>
-		                <div class="col-sm-6">
-		                    <div class="card h-95 w-80">
-		                      <div class="card-body">
-		                        <h6 class="card-title">
-		                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
-		                        	<img src="image/icon/hospital.png"/>
-		                       	</h6>
-		                        <p class="card-text">
-		                        	<span>병원명</span>
-		                       	</p>
-		                        <button class="btn btn-success workInfo">정보 보기</button>
-		                      </div>
-		                    </div>
-		                </div>
-		            </div>
-			    </div>
-			    <div class="carousel-item">
-			      <div class="row row-cols-md-2 g-2 ptDiv"></div>
-			    </div>
-			    <div class="carousel-item">
-			      <div class="row row-cols-md-2 g-2 ptDiv"></div>
-			    </div>
-			  </div>
-			    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-			  	  	<span class="carousel-control-prev-icon" ></span>
-			    	<span style="background:skyblue; color:black;">Previous</span>
-			 	</button>
-			    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-			    	<span class="carousel-control-next-icon" aria-hidden="true"></span>
-			    	<span style="background:skyblue; color:black;">Next</span>
-			  	</button>
-			  
+				<div class="carousel-indicators">
+				  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+				  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+				  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+				</div>
+				<div class="carousel-inner">
+					<div class="carousel-item active" th:each="i : ${#numbers.sequence(0, 2)}">
+						<div class="row row-cols-md-2 g-2 ptDiv">
+               				<div class="col-sm-6" th:each="mat, iterStat : ${#lists.slice(matMatptInfoPtList, i * 6, i * 6 + 6)}">
+                   				<div class="card h-95 w-80">
+                   					<div class="card-body">
+                     					<h6 class="card-title">
+                       						<span th:if="${mat.ptCount == 1}">[[${mat.ptName}]]</span>
+                       						<span th:if="${mat.ptCount > 1}">[[${mat.ptName}]] 외</span>
+                       						<img th:if="${mat.ptCount > 1}"  src="image/icon/users.png"/>
+                       						<img th:if="${mat.ptCount == 1 && mat.service =='병원돌봄'}" src="image/icon/hospital.png"/>
+                       						<img th:if="${mat.ptCount == 1 && mat.service =='가정돌봄'}"  src="image/icon/home.png"/>
+                      					</h6>
+                      					<p class="card-text">
+                       						<span>[[${mat.beginDt}]]</span>
+                       						<span>~</span>
+                       						<span>[[${mat.endDt}]]</span>
+                      					</p>
+                      					<p class="card-text" th:if="${mat.ptCount == 1}">
+                       						<span th:text="${mat.ptGender == 'M' ? '남성' : '여성'}"></span>
+                       						<span>[[${mat.ptRealAge}]]</span>	                        	
+                      					</p>
+                      					<p class="card-text">
+                       						<span>[[${mat.ptAddressMin}]]</span>                        	
+                      					</p>
+                      					<p class="card-text" th:if="${mat.ptCount > 1}">>
+                     						<span>[[${mat.hospitalName}]]</span> 
+                      					</p>		                       	
+                       					<button class="btn btn-success workInfo">정보 보기</button>
+									</div>
+								</div>
+							</div>
+                		</div>
+					</div>
+		 		</div>		 	
+		    	<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+		  	  		<span class="carousel-control-prev-icon" ></span>
+		    		<span style="background:skyblue; color:black;">Previous</span>
+		 		</button>
+		    	<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+		    		<span class="carousel-control-next-icon" aria-hidden="true"></span>
+		    		<span style="background:skyblue; color:black;">Next</span>
+		  		</button>
 			</div>
-            <!-- 페이징 버튼 -->
-            <div class="pt-0">
-                
-			  
-            </div>
         </div>
-        <div><!--오른쪽 공백--></div>
-    </div>
-    
-    
-    
-    
-    
+       	<div><!--오른쪽 공백--></div>
+	</div>
+
+
     
     <div id="myPresentMatching">
         <a class="navbar-brand align-middle" href="#">
