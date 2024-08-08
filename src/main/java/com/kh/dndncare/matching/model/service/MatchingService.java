@@ -40,7 +40,7 @@ public interface MatchingService {
 	ArrayList<InfoCategory> getInfo(int memberNo);
 	
 	//insert MatchingDate
-	int insertMatchingDate(int matNo, String matchingDate);
+	int insertMatDate(int matNo, String matDate);
 	
 	//병원  데이터 Count  get
 	Hospital getHospital(Hospital hospital);
@@ -78,12 +78,11 @@ public interface MatchingService {
 	int getMatNo(int ptNo);
 	int insertMatching(Matching matching);
 	int insertWantInfo(Map<String, Object> params);
-	int insertMatPtInfo(MatPtInfo matPtInfo);
 	int deleteWantInfo(int memberNo);
 	
 	
-	//MatMatptInfoPt list get
-	ArrayList<MatMatptInfoPt> getMatMatptInfoPt();
-	
+	//매칭/매칭인포/환자/병원 한번에 가져오기
+	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo);
+
 
 }

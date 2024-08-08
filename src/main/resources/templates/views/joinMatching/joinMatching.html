@@ -46,15 +46,8 @@
 						    <tr>
 						      <th scope="col">NO</th>
 						      <th scope="col">[[${gm.matNo}]]</th>
-<<<<<<< HEAD
-						     <th:bolck  th:each="loginMatNo : ${loginMatNos}">
-						      <th scope="col" th:if="${loginMatNo == gm.matNo}" colspan="2">참여중</th>
-              				  <th scope="col" th:if="${!loginMatNo != gm.matNo}" colspan="2"></th>			      
-						   	</th:bolck>
-=======
 						      <th scope="col" th:if="${gm.join == 'Y'}" colspan="2">참여중</th>
               				  <th scope="col" th:if="${gm.join == 'N'}" colspan="2"> </th>			      
->>>>>>> refs/heads/master
 						    </tr>
 						  </thead>
 						  <tbody>

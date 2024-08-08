@@ -515,11 +515,13 @@ public class MemberController {
 				
 		
 		//남희 - 환자정보 불러오기
-		//MatMatptInfoPt 16개 뽑기 
+		//MatMatptInfoPt 18개 뽑기 
 		ArrayList<MatMatptInfoPt> matMatptInfoPtListBefore = mService.getMatMatptInfoPt();		
-		ArrayList<MatMatptInfoPt> matMatptInfoPtList = new ArrayList<MatMatptInfoPt>();
+		ArrayList<MatMatptInfoPt> matMatptInfoPtList1 = new ArrayList<MatMatptInfoPt>();
+		ArrayList<MatMatptInfoPt> matMatptInfoPtList2 = new ArrayList<MatMatptInfoPt>();
+		ArrayList<MatMatptInfoPt> matMatptInfoPtList3 = new ArrayList<MatMatptInfoPt>();
 		
-		for(int i = 0; i < 18; i++) {
+		for(int i = 0; i < matMatptInfoPtListBefore.size(); i++) {
 			//나이 계산
 			int ptRealAge = AgeCalculator.calculateAge(matMatptInfoPtListBefore.get(i).getPtAge());
 			matMatptInfoPtListBefore.get(i).setPtRealAge(ptRealAge);
@@ -527,14 +529,21 @@ public class MemberController {
 			//노출 주소
 			String[] addr = matMatptInfoPtListBefore.get(i).getMatAddressInfo().split(" ");
 			String addressMin = addr[0] + " " +  addr[1];  //00도 00시//
-			matMatptInfoPtListBefore.get(i).setPtAddressMin(addressMin);
-						
-			matMatptInfoPtList.add(matMatptInfoPtListBefore.get(i));			
+			matMatptInfoPtListBefore.get(i).setMatAddressMin(addressMin);
+			
+			if(i < 6 ){			
+			matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
+			}else if(i<12) {
+				matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
+			}else if(i<18) {
+				matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
+			}			
+			
 		}
 		
-		
-		model.addAttribute("MatMatptInfoPtList", matMatptInfoPtList);
-		
+		model.addAttribute("matMatptInfoPtList1", matMatptInfoPtList1);
+		model.addAttribute("matMatptInfoPtList2", matMatptInfoPtList2);
+		model.addAttribute("matMatptInfoPtList3", matMatptInfoPtList3);
 		
 
 		//infoMap.put("자격증", license); // 가공 종료!
@@ -1377,6 +1386,43 @@ public class MemberController {
 		throw new MemberException("정보변경을 실패했습니다");
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

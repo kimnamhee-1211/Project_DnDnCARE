@@ -156,6 +156,7 @@
 		from care_review
 		<!-- where member_no=#{memberNo} -->
 	</select>
+	
 	<!-- 받아온 patient정보로 수정 -->
 	<update id="updatePatient">
 		update patient
@@ -171,9 +172,9 @@
 	
 	<!-- matching_date insert -->
 	
-	<insert id="insertMatchingDate">
+	<insert id="insertMatDate">
 		insert into matching_date
-		values(#{matNo},#{formattedDates})
+		values(#{matNo},#{matDate})
 	</insert>
 	
 	<!-- mat_no 얻어오기 -->
@@ -183,11 +184,7 @@
 		where pt_no = #{ptNo}
 	</select>
 	
-	<!-- 매칭 정보 삽입 -->
-	<insert id="insertMatching">		
-		insert into matching
-		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime})
-	</insert>
+
 	
 	<!-- want_info insert -->
 	<insert id="insertWantInfo">
@@ -221,25 +218,44 @@
 		where member_no = #{memberNo}
 	</delete>
 	
-	<!-- mat_pt_info등록 -->
-	<insert id="insertMatPtInfo" useGeneratedKeys="true">	
-		<selectKey resultType="_int" keyProperty="matNo" order="BEFORE">
-			select seq_macid.nextval from dual
-		</selectKey>	
-		insert into mat_pt_info
-		values(#{matNo}, #{ptNo}, #{antePay}, #{service}, #{matAddressInfo}, #{matRequest}, default, #{groupLeader})
-	</insert>
 
-
-	<select id="getMatMatptInfo" resultType="MatMatptInfoPt">
+	<!-- 매칭/매칭인포/환자/병원 한번에 가져오기  -->
+	<select id="matPtInfoToCaregiver" resultType="MatMatptInfoPt">
 		select *
 		from matching
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
-			join patient on(mat_pt_info.pt_no = patient.pt_no)		
-		where matching.mat_confirm = 'N' and mat_pt_info.group_leader = 'Y'
+			join patient on(mat_pt_info.pt_no = patient.pt_no)	
+			join hospital on(hospital.hospital_no = matching.hospital_no)
+			left join matching_date on(matching.mat_no = matching_date.mat_no) 		
+		where matching.mat_confirm = 'N' and matching.mat_no = #{matNo}
 		order by matching.begin_dt desc
 	</select>
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

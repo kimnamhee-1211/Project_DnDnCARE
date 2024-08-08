@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
+import com.kh.dndncare.common.AgeCalculator;
 import com.kh.dndncare.matching.model.exception.MatchingException;
 import com.kh.dndncare.matching.model.service.MatchingService;
 import com.kh.dndncare.matching.model.vo.CareReview;
@@ -296,9 +297,9 @@ public class MatchingController {
 		
 		//macthing date set(불필요한 괄호 빼기)
 		if(jm.getMatMode() == 2) {
-			String matchingDate = Arrays.toString(day).replace("[", "").replace("]", "");
+			String matDate = Arrays.toString(day).replace("[", "").replace("]", "");
 			@SuppressWarnings("unused")
-			int result4 = mcService.insertMatchingDate(jm.getMatNo(), matchingDate);
+			int result4 = mcService.insertMatDate(jm.getMatNo(), matDate);
 		}
 		
 		//매칭 환자 등록
@@ -307,7 +308,7 @@ public class MatchingController {
 		Patient pt = mcService.getPatient(memberNo);		
 		jmPt.setPtNo(pt.getPtNo());
 		jmPt.setService("공동간병");
-		jmPt.setMatAddressInfo(hospital.getHospitalAddress() +" // "+ jmPt.getMatAddressInfo());
+		jmPt.setMatAddressInfo(hospital.getHospitalAddress() +"//"+ jmPt.getMatAddressInfo());
 		jmPt.setGroupLeader("Y");
 		System.out.println("등록" + jmPt);
 		int result3 = mcService.enrollMatPtInfo(jmPt);
@@ -476,7 +477,7 @@ public class MatchingController {
 		return "reviewDetail";
 	}
 	
-	
+	//공동간병 참여자 퇴장
 	@PostMapping("walkoutJoinMatching.jm")
 	public String walkoutJoinMatching(@RequestParam("matNo") int matNo, @RequestParam("ptNo") int ptNo,
 									@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,
@@ -495,6 +496,67 @@ public class MatchingController {
 	}
 	
 	
+	//간병인 메인에서 환자 정보 페이지로 
+	@GetMapping("goCaregiverPtInfo.mc")
+	public String goCaregiverPtInfo(@RequestParam("matNo") int matNo, Model model) {
+				
+		ArrayList<MatMatptInfoPt> mPI = mcService.matPtInfoToCaregiver(matNo);
+		ArrayList<String> diseaseArr = new ArrayList<String>();
+		ArrayList<String> diseaseLevel = new ArrayList<String>();
+		String mobilityStatus = null;
+		
+		for(int i = 0; i < mPI.size(); i++) {
+			//나이 계산
+			int ptRealAge = AgeCalculator.calculateAge(mPI.get(i).getPtAge());
+			mPI.get(i).setPtRealAge(ptRealAge);
+			
+			//노출 주소
+			String[] addr = mPI.get(i).getMatAddressInfo().split(" ");
+			String addressMin = addr[0] + " " +  addr[1];  //00도 00시//
+			mPI.get(i).setMatAddressMin(addressMin);
+			
+			//주소 full (//제외)
+			String address = mPI.get(i).getMatAddressInfo().replace("//", " "); 
+			mPI.get(i).setMatAddressInfo(address);
+			
+			int memberNo = mPI.get(i).getMemberNo();
+									
+			//memberInfo 뽑기
+			ArrayList <InfoCategory> info = mcService.getInfo(memberNo);
+			System.out.println(info);
+			
+			for(int l = 0; l < info.size(); l++) {
+				
+				if(info.get(l).getLCategory().equals("disease")) {
+					 diseaseArr.add(info.get(l).getSCategory());
+				}else if(info.get(l).getLCategory().equals("diseaseLevel")) {
+					diseaseLevel.add(info.get(l).getSCategory());
+				}else if(info.get(l).getLCategory().equals("mobilityStatus")) {
+					mobilityStatus = info.get(l).getSCategory();
+				}
+			}
+			
+			
+			System.out.println(diseaseArr);
+			System.out.println(diseaseLevel);
+			System.out.println(mobilityStatus);
+			
+			
+			mPI.get(i).setDisease(diseaseArr.toString().replace("[", "").replace("]", ""));
+			
+			mPI.get(i).setDiseaseLevel(diseaseLevel.toString().replace("[", "").replace("]", ""));
+			
+			mPI.get(i).setMobilityStatus(mobilityStatus);
+		
+			
+		}
+		
+		System.out.println(mPI);
+		model.addAttribute("mPI", mPI);
+		
+		return "caregiverPtInfo";
+		
+	}
 	
 	
 	

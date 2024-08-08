@@ -9,6 +9,9 @@
 body { font-family: 'Pretendard-Regular'; background-color:white; color: #333; }
 
 
+#wrap{padding-top:100px; padding-bottom:100px;}
+
+
 /* #mainContainer {display:grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows:500px;} */
 #upperLeftContents {display:grid; grid-template-rows: 250px 250px;}
 #upperContents {display: grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows: 500px;}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link th:href="@{css/joinMatching.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+	<div class="wrap">
+		<div class="title-content d-flex justify-content-center mx-auto">
+			<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="130"></a>	
+			<h1 class="h1 mb-1 fw-bold mb-1 text-center">매칭 정보</h1><br>
+		</div>
+		<div class="title2-content d-flex justify-content-center mx-auto">	
+			<div class="form-floating mb-3 fw-bold mb-5 mx-auto">	
+				<table class="table" style="font-size:20px;line-height:40px;">
+				    <tr>
+				      <th scope="col" th:if="${mPI[0].ptCount == 1}" colspan="2">[[${mPI[0].matAddressMin}]]</th>
+				      <th scope="col" th:if="${mPI[0].ptCount > 1}" colspan="2">[[${mPI[0].matAddressMin}]]&nbsp;&nbsp;&nbsp;[[${mPI[0].hospitalName}]]</th>
+				      <th scope="col" colspan="2">[[${mPI[0].service}]]</th>
+				    </tr>	
+				    <tr>
+				      <th scope="col">1일 돌봄비용</th>
+				      <td scope="col" colspan="3">[[${mPI[0].money}]]</td>
+				    </tr>				    
+				    <tr th:if="${mPI[0].ptCount > 1}">
+				      <th scope="col">총 인원</th>
+				      <td scope="col">[[${mPI[0].ptCount}]]</td>
+				      <th scope="col">현재 인원</th>
+				      <td scope="col">[[${mPI.size()}]]</td>	
+				    <tr>
+				      <th scope="col">간병 시작일</th>
+				      <td scope="col">[[${mPI[0].beginDt}]]</td>
+				  	  <th scope="col">간병 종료일</th>
+				      <td scope="col">[[${mPI[0].endDt}]]</td>
+				    </tr>
+				    <tr th:if="${mPI[0].matMode == 2}">
+				      <th scope="col">선택 일자</th>
+				      <td scope="col" colspan="3">[[${mPI[0].matDate}]]</td>
+				    </tr>
+		    		<tr>
+				      <th scope="col">시작시간</th>
+				      <td scope="col">[[${mPI[0].beginTime}]]</td>
+				  	  <th scope="col">종료시간</th>
+				      <td scope="col">[[${mPI[0].endTime}]]</td>
+				    <tr>
+				      <th scope="col">상세 주소</th>
+				      <td scope="col" colspan="3">[[${mPI[0].matAddressInfo}]]</td>
+				    </tr>			
+				</table>	
+			</div>
+		</div>
+	
+		<main class="container-xl justify-content-center mx-auto" style="width:1600px; padding:0 auto">
+				<h1 class="h1 mb-1 fw-bold mb-1 text-center">환자 정보</h1><br>
+				<div class="tableDiv" th:each="onePt : ${mPI}">
+					<table class="table room">
+						<thead>
+						    <tr>
+						      <th scope="col" >이름</th>
+						      <th scope="col" colspan="3">[[${onePt.ptName}]]</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr>
+						      <th>성별</th>
+						      <td>[[${onePt.ptGender == 'M' ? '남성' : '여성'}]]</td>
+						      <th>나이</th>
+						      <td>[[${onePt.ptRealAge}]]</td>
+						    </tr>
+						    <tr>
+						      <th>신장</th>
+						      <td>[[${onePt.ptHeight}]]</td>
+						      <th>체중</th>
+						      <td>[[${onePt.ptWeight}]]</td>
+						    </tr>
+						     <tr>
+						      <th>질병</th>
+						      <td colspan="3">[[${onePt.disease}]]</td>
+						    </tr>											  
+						  	<tr>
+						      <th>중증도</th>
+						      <td >[[${onePt.diseaseLevel}]]</td>
+						      <th>거동 상태</th>
+						      <td>[[${onePt.mobilityStatus}]]</td>
+						    </tr>
+						</tbody>		
+					</table>
+				</div>
+				
+	
+					
+		</main>
+	</div>
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	
+	
+	<script th:inline="javascript">
+	
+	window.onload = function() {
+
+	};
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	</script>
+		
+		
+</body>
+</html>

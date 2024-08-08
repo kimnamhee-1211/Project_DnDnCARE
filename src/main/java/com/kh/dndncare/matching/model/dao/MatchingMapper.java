@@ -37,7 +37,7 @@ public interface MatchingMapper {
 
 	ArrayList<InfoCategory> getInfo(int memberNo);
 
-	int insertMatchingDate(@Param("matNo") int matNo, @Param("matchingDate") String matchingDate);
+	int insertMatDate(@Param("matNo") int matNo, @Param("matDate") String matDate);
 	
 	ArrayList<CareReview> selectReviewList(int memberNo);
 
@@ -69,11 +69,9 @@ public interface MatchingMapper {
 
 	int insertWantInfo(Map<String, Object> params);
 
-	int insertMatPtInfo(MatPtInfo matPtInfo);
-
 	int deleteWantInfo(int memberNo);
 
-	ArrayList<MatMatptInfoPt> getMatMatptInfoPt();
+	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo);
 
 
 }

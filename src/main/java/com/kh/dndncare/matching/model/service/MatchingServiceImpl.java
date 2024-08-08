@@ -77,8 +77,8 @@ public class MatchingServiceImpl implements MatchingService {
 	
 	//insert MatchingDate
 	@Override
-	public int insertMatchingDate(int matNo, String matchingDate) {
-		return mMapper.insertMatchingDate(matNo, matchingDate);
+	public int insertMatDate(int matNo, String matDate) {
+		return mMapper.insertMatDate(matNo, matDate);
 	}
 	
 	//병원  데이터 get
@@ -168,23 +168,19 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.insertWantInfo(params);
 	}
 
-	@Override
-	public int insertMatPtInfo(MatPtInfo matPtInfo) {
-		return mMapper.insertMatPtInfo(matPtInfo);
-	}
 
 	@Override
 	public int deleteWantInfo(int memberNo) {
 		return mMapper.deleteWantInfo(memberNo);
 	}
+
 	
-	//MatMatptInfoPt list get
+	//매칭/매칭인포/환자/병원 한번에 가져오기
 	@Override
-	public ArrayList<MatMatptInfoPt> getMatMatptInfoPt() {
-		return mMapper.getMatMatptInfoPt();
+	public ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo) {
+		return mMapper.matPtInfoToCaregiver(matNo);
 	}
-
-
+	
 
 
 
