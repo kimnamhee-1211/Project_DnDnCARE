@@ -7,10 +7,11 @@
     <link href="css/patientMain.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>	<!-- 결제 -->
+    
     <style>
     	.fc{width:500px !important; height:500px !important; } 
     </style>
@@ -369,7 +370,7 @@
 <!--             </div> -->
         </div>
         <div><!--오른쪽 공백--></div>
-    </div>
+    
     
     <div id="myPresentMatching">
         <a class="navbar-brand align-middle" href="#">
@@ -406,7 +407,12 @@
       				<div align="center"class="d-flex justify-content-center">
 	      				<button type="button" class="btn btn-lg btn-success payApply h1 m-4 resultPay" onclick="requestPay()">100,000원 결제하기</button>
       				</div>
-      				
+      				<form id="payForm" method="post">
+      					<input type="hidden" name="matNo"/>
+      					<input type="hidden" name="payMoney"/>
+      					<input type="hidden" name="payService">
+      					<input type="hidden" name="mercharnt_uid">
+      				</form>
       			</div>
     		</div>
   		</div>	
@@ -483,17 +489,14 @@
 					document.getElementsByClassName('resultPay')[1].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원 결제하기';
 					
 					document.getElementById('careName').innerText = data.memberName;
+					//결재최종금액도 너핮
+					//	document.getElementsByName('payMoney')[0].value = data.money * data.days / data.ptCount;
 				},
 				error:data=>console.log(data)
 			})
     	})		
     };
 	
-//     <div class="m-4" id="payService"></div>
-// 	<div class="m-4" id="payPtCount"></div>
-// 	<div class="m-4" id="payMatDate"></div>
-// 	<div class="m-4" id="payAddress"></div>
-// 	<div class="m-4" id="payAddress"></div>
 	
 	
 	//포트원 api
@@ -530,10 +533,12 @@
 		    	  console.log(response.success);
 		    	  if(response.success){
 		    		  alert('결제 성공');
-		    		  /* document.getElementById('payCheck').value = response.success;
 		    		  document.getElementsByName('merchantUid')[0].value = response.merchant_uid;
-		    		  form.action = '${contextPath}/successPay.su';
-		  	    	  form.submit(); */
+		    		  document.getElementsByName('matNo')[0].value = payBt.nextElementSibling.value;
+		    		  //document.getElementsByName('payMoney')[0].value = response.merchant_uid; 위에서미리넘기자
+		    		  document.getElementsByName('payService')[0].value = response.merchant_uid;
+		    		  //form.action = 'successPay.mc';
+		  	    	  //form.submit();
 		    		  
 		    		  
 		    	  }else{
@@ -548,6 +553,7 @@
 	    		alert('후원 최소 금액은 1,000원입니다');
 	    	} */
 	    }
+	    
 	    
 	    
     </script> 
