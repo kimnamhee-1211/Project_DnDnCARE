@@ -236,6 +236,13 @@
 		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
 	</select>
 	
-	
+	<select id="getPatientEvent" resultType="map">
+		SELECT MATCHING.MAT_NO, MATCHING.MEMBER_NO
+		FROM MATCHING 
+		        JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
+		        JOIN PATIENT ON(MAT_PT_INFO.PT_NO = PATIENT.PT_NO)
+		        JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
+		WHERE MAT_CONFIRM = 'Y' AND MEMBER.MEMBER_NO = ${memberNo}
+	</select>
 	
 </mapper>

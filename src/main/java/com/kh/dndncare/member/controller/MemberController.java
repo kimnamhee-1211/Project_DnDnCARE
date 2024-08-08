@@ -1,7 +1,9 @@
 package com.kh.dndncare.member.controller;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -343,55 +345,89 @@ public class MemberController {
 		return completeList;
 	}
 	
-	// 임시 : 메인페이지 이동시 캘린더 이벤트 조회
 	// 메인페이지 이동 후에 환자 메인페이지 렌더링 도중에 캘린더 이벤트를 조회하게 된다.
-	@GetMapping("caregiverCalendarEvent.me")
+	@GetMapping(value="caregiverCalendarEvent.me", produces="application/json; charset=UTF-8")
 	@ResponseBody
-	public void caregiverCalendarEvent(Model model, HttpServletResponse response) {
+	public String caregiverCalendarEvent(Model model, HttpServletResponse response) {
 		Member loginUser = (Member)model.getAttribute("loginUser");
 		
 		// 일정 조회 
 		ArrayList<CalendarEvent> eList = new ArrayList<CalendarEvent>();
 		if(loginUser != null) {
 			eList = mService.caregiverCalendarEvent(loginUser.getMemberNo());
-			//[CalendarEvent(matNo=69, title=null, start=null, end=null, money=150000, hospitalNo=0, hospitalAddress=null, hospitalName=null, beginTime=12:00, endTime=15:00, matMode=2, matchingType=null, ptCount=1, matAddressInfo=서울 동대문구 망우로 82 202호777, ptNo=61, matDate=2024-08-09,2024-08-16,2024-08-15,2024-08-22,2024-08-23, beginDt=2024-08-09, endDt=2024-08-23)]
+			
 		}
-//		for(CalendarEvent c : eList) {
-//			c.setStart(c.getBeginDt());
-//			c.setEnd(c.getEndDt());
-//			
-//			if(c.getPtCount() > 1) {
-//				if(c.getMatMode() == 1) c.setTitle("개인 기간제 간병");
-//				else c.setTitle("개인 시간제 간병");
-//			} else {
-//				if(c.getMatMode() == 1) c.setTitle("공동 기간제 간병");
-//				else c.setTitle("공동 시간제 간병");
-//			}
-//		}
 		
 		JSONArray array = new JSONArray();
 		
 		for(CalendarEvent c : eList) {
-			JSONObject obj = new JSONObject();
-			obj.put("start", c.getBeginDt());
-			obj.put("end", c.getEndDt());
-			obj.put("title", "테스트");
+			int matNo = c.getMatNo();
+			int money = c.getMoney();
+			String beginTime = c.getBeginTime();
+			String endTime = c.getEndTime();
+			String matAddressInfo = c.getMatAddressInfo();
+			Date beginDate = c.getBeginDt();
+			Date endDate = c.getEndDt();
+			
+			if(c.getPtCount() == 1) {
+				if(c.getMatMode() == 1) {
+					JSONObject obj = new JSONObject();
+					obj.put("title", "개인 기간제 간병");
+					obj.put("start", c.getBeginDt());
+					obj.put("end", c.getEndDt());
+					obj.put("matNo", matNo);
+					obj.put("money", money);
+					obj.put("matAddressInfo", matAddressInfo);
+					obj.put("beginDate", beginDate);
+					obj.put("endDate", endDate);
+					array.put(obj);
+				} else {
+					String[] strArr = c.getMatDate().split(",");
+					System.out.println(Arrays.toString(strArr));
+					for(int i = 0; i < strArr.length; i++) {
+						JSONObject obj = new JSONObject();
+						obj.put("title", "개인 시간제 간병");
+						obj.put("start", strArr[i]);
+						obj.put("end", strArr[i]);
+						obj.put("matNo", matNo);
+						obj.put("money", money);
+						obj.put("matAddressInfo", matAddressInfo);
+						obj.put("beginDate", beginDate);
+						obj.put("endDate", endDate);
+						array.put(obj);
+					}
+				}
+			} else {
+				if(c.getMatMode() == 1) {
+					JSONObject obj = new JSONObject();
+					obj.put("title", "공동 기간제 간병");
+					obj.put("start", c.getBeginDt());
+					obj.put("end", c.getEndDt());
+					obj.put("matNo", matNo);
+					obj.put("money", money);
+					obj.put("matAddressInfo", matAddressInfo);
+					obj.put("beginDate", beginDate);
+					obj.put("endDate", endDate);
+					array.put(obj);
+				} else {
+					String[] strArr = c.getMatDate().split(",");
+					for(int i = 0; i < strArr.length; i++) {
+						JSONObject obj = new JSONObject();
+						obj.put("title", "공동 시간제 간병");
+						obj.put("start", strArr[i]);
+						obj.put("end", strArr[i]);
+						obj.put("matNo", matNo);
+						obj.put("money", money);
+						obj.put("matAddressInfo", matAddressInfo);
+						obj.put("beginDate", beginDate);
+						obj.put("endDate", endDate);
+						array.put(obj);
+					}
+				}
+			}
+			
 		}
-		
-		
-		
-		
-		
-		
-		// GSON
-		response.setContentType("application/json; charset=UTF-8");
-		//GsonBuilder gb = new GsonBuilder().setDateFormat("YYYY-MM-DD");
-		Gson gson = new Gson();
-		try {
-			gson.toJson(eList, response.getWriter());
-		} catch (JsonIOException | IOException e) {
-			e.printStackTrace();
-		}
+		return array.toString();
 	}
 	
 	
@@ -1185,7 +1221,97 @@ public class MemberController {
 		}
 	}
 	
-	
+	@GetMapping(value="caregiverPatientEvent.me", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public String caregiverPatientEvent(Model model, HttpServletResponse response,
+											@RequestParam("memberNo") int memberNo) {
+		Member loginUser = (Member)model.getAttribute("loginUser");
+		
+		// 일정 조회 
+		ArrayList<CalendarEvent> eList = new ArrayList<CalendarEvent>();
+		if(loginUser != null) {
+			// 환자에 대한 성사된 매칭번호와 해당 간병인의 회원번호 조회
+			ArrayList<HashMap<String, Integer>> list = mService.getPatientEvent(memberNo); // [{MAT_NO=69, MEMBER_NO=85}]
+			
+			// 해당 간병인에 대한 정보 조회 : 멤버번호, 간병인이름, 성별, 연령
+			
+			// 해당 매칭에 대한 정보 조회 : 시작날짜, 종료날짜, 시작시간, 종료시간, 비용,
+			
+			//eList = mService.caregiverCalendarEvent(loginUser.getMemberNo());
+			
+		}
+		
+		JSONArray array = new JSONArray();
+		
+		for(CalendarEvent c : eList) {
+			int matNo = c.getMatNo();
+			int money = c.getMoney();
+			String beginTime = c.getBeginTime();
+			String endTime = c.getEndTime();
+			String matAddressInfo = c.getMatAddressInfo();
+			Date beginDate = c.getBeginDt();
+			Date endDate = c.getEndDt();
+			
+			if(c.getPtCount() == 1) {
+				if(c.getMatMode() == 1) {
+					JSONObject obj = new JSONObject();
+					obj.put("title", "개인 기간제 간병");
+					obj.put("start", c.getBeginDt());
+					obj.put("end", c.getEndDt());
+					obj.put("matNo", matNo);
+					obj.put("money", money);
+					obj.put("matAddressInfo", matAddressInfo);
+					obj.put("beginDate", beginDate);
+					obj.put("endDate", endDate);
+					array.put(obj);
+				} else {
+					String[] strArr = c.getMatDate().split(",");
+					System.out.println(Arrays.toString(strArr));
+					for(int i = 0; i < strArr.length; i++) {
+						JSONObject obj = new JSONObject();
+						obj.put("title", "개인 시간제 간병");
+						obj.put("start", strArr[i]);
+						obj.put("end", strArr[i]);
+						obj.put("matNo", matNo);
+						obj.put("money", money);
+						obj.put("matAddressInfo", matAddressInfo);
+						obj.put("beginDate", beginDate);
+						obj.put("endDate", endDate);
+						array.put(obj);
+					}
+				}
+			} else {
+				if(c.getMatMode() == 1) {
+					JSONObject obj = new JSONObject();
+					obj.put("title", "공동 기간제 간병");
+					obj.put("start", c.getBeginDt());
+					obj.put("end", c.getEndDt());
+					obj.put("matNo", matNo);
+					obj.put("money", money);
+					obj.put("matAddressInfo", matAddressInfo);
+					obj.put("beginDate", beginDate);
+					obj.put("endDate", endDate);
+					array.put(obj);
+				} else {
+					String[] strArr = c.getMatDate().split(",");
+					for(int i = 0; i < strArr.length; i++) {
+						JSONObject obj = new JSONObject();
+						obj.put("title", "공동 시간제 간병");
+						obj.put("start", strArr[i]);
+						obj.put("end", strArr[i]);
+						obj.put("matNo", matNo);
+						obj.put("money", money);
+						obj.put("matAddressInfo", matAddressInfo);
+						obj.put("beginDate", beginDate);
+						obj.put("endDate", endDate);
+						array.put(obj);
+					}
+				}
+			}
+			
+		}
+		return array.toString();
+	}
 	
 	
 	

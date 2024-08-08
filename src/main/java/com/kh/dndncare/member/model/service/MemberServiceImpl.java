@@ -167,6 +167,11 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.choiceCaregiverList(choiceNoList);
 	}
 
+	@Override
+	public ArrayList<HashMap<String, Integer>> getPatientEvent(int memberNo) {
+		return mMapper.getPatientEvent(memberNo);
+	}
+
 
 
 	

@@ -67,6 +67,8 @@ public interface MemberMapper {
 
 	ArrayList<CareGiver> choiceCaregiverList(ArrayList<Integer> choiceNoList);
 
+	ArrayList<HashMap<String, Integer>> getPatientEvent(int memberNo);
+
 
 
 	

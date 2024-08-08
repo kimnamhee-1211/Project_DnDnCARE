@@ -295,12 +295,12 @@
 			<div class="modal-content">
 		   		<div class="modal-header">
 		    		<div class="modal-title workInfo">
-		    			<div>
+		    			<div class="infomation">
 			    			<span class="badge bg-danger"><img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음</span><br/>
 			    			<span>혜민병원</span><br/>
 			    			<span>서울특별시 광진구</span>
 		    			</div>
-		    			<div class="text-end align-middle">
+		    			<div class="text-end align-middle imgDiv">
 		    				<br/>
 				    		<img src="image/icon/hospital.png" aria-label="Close" style="width:60px; height:60px;">
 		    			</div>
@@ -309,19 +309,18 @@
 		   		</div>
 		    	<div class="modal-body workInfo">
 		    		<div>
-		    			<span>환자 성별</span><br/>
-		    			<span>간병 시작일</span><br/>
-		    			<span>총 간병 기간</span><br/>
-		    			<span>예상 일 간병비</span><br/>
+		    			<span>시작 시간</span><br/>
+		    			<span>종료 시간</span><br/>
+		    			<span>일 간병비</span><br/>
 		    		</div>
-		    		<div class="text-end fw-bold">
-		    			<span>남성</span><br/>
-		    			<span>08월 01일 16시</span><br/>
-		    			<span>17일</span><br/>
-		    			<span>152,000원</span>
+		    		<div class="text-end fw-bold infoDetail">
+		    			<span></span><br/>
+		    			<span></span><br/>
+		    			<span></span>
 		    		</div>
 		    	</div>
 		    	<div class="modal-footer">
+		    		<input type="hidden" name="matNo"/>
 	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">Close</button>
 	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">자세히 보기</button>
 		    	</div>
@@ -345,14 +344,40 @@
         		data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0},
         	})
         	
+        	const getTimeFormat = (date) => {
+        		const hour = date.getHours();
+        		const minutes = date.getMinutes();
+        		const seconds = date.getSeconds();
+        		return hour + "시간 " + minutes + "분 " + seconds +"초" ;
+        	}
+        	const getDateFormat = (date) => {
+        		const year = (date.getFullYear()+"").slice(-2);
+        		const month = ('0' + (date.getMonth()+1)).slice(-2);
+        		const day = ('0' + date.getDate()).slice(-2);
+        		
+        		return year + '-' + month + '-' + day;
+        	}
+        	
         	request.done(function(data) {
         		console.log(data);
         		var calendar = new FullCalendar.Calendar(calendarEl, {
   		          initialView: 'dayGridMonth',
   		          events : data,
   		          eventColor: '#8dd986',
-  		          eventClick: function(info) {
-  		        	    alert('Event: ' + info.event.title + '\n' + '금액: ' + '80,000원\n' + '장소 :' + '세브란스 병원' );
+  		          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
+  		        		let d = new Date(info.event.start - new Date())
+  		        	   	let infomation = document.querySelector('.infomation').children;
+ 		          		console.log(infomation);
+  		          		infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + getTimeFormat(d) + '남음';
+						infomation[2].innerHTML = '병원명이 들어올 자리';
+ 		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
+ 		          		
+ 		          		let infoDetail = document.querySelector('.infoDetail').children;
+ 		          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
+ 		          		infoDetail[2].innerHTML = info.event.extendedProps.endDate;
+ 		          		infoDetail[4].innerHTML = info.event.extendedProps.money + '원';
+ 		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
+  		        	  	$('.modal').modal('show');
   		        	  }
   		        });
   		        calendar.render();
