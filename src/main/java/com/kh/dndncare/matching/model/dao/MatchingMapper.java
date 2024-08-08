@@ -2,6 +2,7 @@ package com.kh.dndncare.matching.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -71,9 +72,13 @@ public interface MatchingMapper {
 
 	int deleteWantInfo(int memberNo);
 
-	int mergeMemberInfo1(Map<String, Object> memberInfoParams);
+	int insertMemberInfo(Map<String, Object> memberInfoParams);
 
-	int mergeMemberInfo2(Map<String, Object> memberInfoParams2);
+	int deleteMemberInfo(Map<String, Object> memberInfoParams);
+
+	List<Integer> getCategoryNo(int memberNo);
+
+	
 
 
 }

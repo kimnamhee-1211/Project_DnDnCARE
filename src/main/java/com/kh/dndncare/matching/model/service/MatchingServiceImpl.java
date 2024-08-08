@@ -2,6 +2,7 @@ package com.kh.dndncare.matching.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,15 +178,20 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	@Override
-	public int mergeMemberInfo1(Map<String, Object> memberInfoParams) {
-		return mMapper.mergeMemberInfo1(memberInfoParams);
+	public int insertMemberInfo(Map<String, Object> memberInfoParams) {
+		return mMapper.insertMemberInfo(memberInfoParams);
 	}
 
 	@Override
-	public int mergeMemberInfo2(Map<String, Object> memberInfoParams2) {
-		// TODO Auto-generated method stub
-		return mMapper.mergeMemberInfo2(memberInfoParams2);
+	public int deleteMemberInfo(Map<String, Object> memberInfoParams) {
+		return mMapper.deleteMemberInfo(memberInfoParams);
 	}
+
+	@Override
+	public List<Integer> getCategoryNo(int memberNo) {
+		return mMapper.getCategoryNo(memberNo);
+	}
+
 
 
 

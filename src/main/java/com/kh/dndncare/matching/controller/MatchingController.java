@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
@@ -50,22 +50,28 @@ public class MatchingController {
 	@GetMapping("publicMatching.mc")
 	public String publicMatchingView(HttpSession session,Model model) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		if(loginUser !=null) {
+		
+		
+		if(loginUser !=null) {			
 			int memberNo = loginUser.getMemberNo();
 			Patient patient = mcService.getPatient(memberNo);
 			model.addAttribute("patient",patient);
 			return "publicMatching";
 			
 		}
-		throw new MatchingException("하하");
+		throw new MatchingException("페이지 이동에 실패하였습니다.");
 	}
 	
 	//2번째 페이지로 정보 전달 및 이동
 	@PostMapping("publicMatching2.mc")
-	public String publicMatching2(@ModelAttribute Patient patient,HttpSession session,@RequestParam("service") String service) {
+	public String publicMatching2(@ModelAttribute Patient patient,HttpSession session,@RequestParam("service") String service,Model model) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		System.out.println(service);
+		int memberNo = loginUser.getMemberNo();
+		List<Integer> categoryList= mcService.getCategoryNo(memberNo);
 		if(loginUser !=null && patient !=null) {
+			if(categoryList !=null) {
+				model.addAttribute("categoryList",categoryList);
+			}
 			patient.setMemberNo(loginUser.getMemberNo());
 			session.setAttribute("tempPatient", patient);
 			session.setAttribute("service", service);
@@ -79,28 +85,33 @@ public class MatchingController {
 	   public String publicMatchingApply(HttpSession session,@ModelAttribute Matching matching,@RequestParam("selectedSymptoms") String selectedSymptoms,
 	                              @RequestParam("selectedMobility") String selectedMobility,@RequestParam("selectedGender") String selectedGender,
 	                              @RequestParam(value="selectedDays",required =false) String selectDays,@RequestParam("selectedCareer") String selectedCareer
-	                              ,@RequestParam("selectedLocal") String selectedLocal,@RequestParam("selectedAge") String selectedAge) {
+	                              ,@RequestParam("selectedLocal") String selectedLocal,
+	                              @RequestParam("selectedAge") String selectedAge,@RequestParam("selectedDiseaseLevels") String selectedDiseaseLevels) {
 	      Patient patient = (Patient)session.getAttribute("tempPatient");
 	      int memberNo = patient.getMemberNo();
 	      String formattedDates = null;
 	      int dateResult = 0;
 	        // member_Info에 들어갈 값 맵에 넣기
-	      	Map<String,Object> memberInfoParams1 = new HashMap<>();
+	      	Map<String,Object> memberInfoParams= new HashMap<>();
 	      
-	      	memberInfoParams1.put("symptoms", Arrays.stream(selectedSymptoms.split(","))
+	      	memberInfoParams.put("symptoms", Arrays.stream(selectedSymptoms.split(","))
 	                                     .map(Integer::parseInt)
 	                                     .collect(Collectors.toList()));
+	      	memberInfoParams.put("selectedDiseaseLevels", Arrays.stream(selectedDiseaseLevels.split(","))
+					                    .map(Integer::parseInt)
+					                    .collect(Collectors.toList()));
+	      	memberInfoParams.put("mobility", selectedMobility != null ? Integer.parseInt(selectedMobility) : null);
+	      	memberInfoParams.put("memberNo",memberNo);
+	      	memberInfoParams.put("service", session.getAttribute("service").equals("hospital") ? 1 : 2);
+	  
+	      	
+	      	
+	      	// memberInfo 삭제 및 인설트
+	      	int deleteMemberInfoResult = mcService.deleteMemberInfo(memberInfoParams);
+	        int memberInfoResult = mcService.insertMemberInfo(memberInfoParams);
 	        
-	      	
-	      	memberInfoParams1.put("memberNo",memberNo);
-	      	
-	      	Map<String,Object> memberInfoParams2 = new HashMap<>();
-	      	memberInfoParams2.put("mobility", selectedMobility != null ? Integer.parseInt(selectedMobility) : null);
-	      	memberInfoParams2.put("memberNo",memberNo);
-	      	
-	      	//merge문 사용해서 memberInfo 업데이트 , 인설트 동시 진행
-	        int memberInfoResult1 = mcService.mergeMemberInfo1(memberInfoParams1);
-	        int memberInfoResult2 = mcService.mergeMemberInfo2(memberInfoParams2);
+
+	       
 	      	
 	        // want_info에 들어갈 값 맵에 넣기
 	        Map<String, Object> wantInfoparams = new HashMap<>();
@@ -169,10 +180,11 @@ public class MatchingController {
 	         matPtInfo.setGroupLeader("N");
 
 	         int ptInfoResult = mcService.enrollMatPtInfo(matPtInfo);
-	         int finalResult = wantInfoResult + patientResult + ptInfoResult + dateResult + matchingResult + deleteWantInfo;
+	         int finalResult = wantInfoResult + patientResult + ptInfoResult + dateResult + matchingResult + deleteWantInfo + deleteMemberInfoResult + memberInfoResult;
 	         
 	         if(finalResult!=0) {
 	        	session.removeAttribute("tempPatient"); // 세션에 담아놨던 patient 객체 삭제 
+	        	session.removeAttribute("service");
 	            return "redirect:myInfo.me";
 	         } else {
 	            throw new MatchingException("공개구인 신청에 실패하였습니다");
@@ -221,7 +233,7 @@ public class MatchingController {
 		
 		//병원으로 list 뽑기 
 		ArrayList<MatMatptInfo> list = mcService.getJmList(hospitalName);
-		System.out.println(list);
+	
 				
 		
 		//loginUser-MatNo get
