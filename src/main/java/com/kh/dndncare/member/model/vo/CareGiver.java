@@ -28,9 +28,16 @@ public class CareGiver {
 	
 	
 	// ai추천용 필드 (시작)
-	
-	
-	
+	private int caregiverRealAge;
+	private String caregiverNational;
+	private String haveLicense;
+	private String caregiverAddress;
+	private String haveDisease;
+	private String memberGender;
+	private String wantService;
+	private String haveService;
+	private String career;
+	private String memberName;
 	// ai추천용 필드 (끝)
 	
 	

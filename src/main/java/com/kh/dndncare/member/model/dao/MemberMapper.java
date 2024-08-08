@@ -63,6 +63,11 @@ public interface MemberMapper {
 
 	ArrayList<HashMap<String, Object>> selectCaregiverList(HashMap<String, Object> condition);
 
+	ArrayList<HashMap<String, Object>> selectCaregiverInfo(ArrayList<Integer> mNoList);
+
+	ArrayList<CareGiver> choiceCaregiverList(ArrayList<Integer> choiceNoList);
+
+
 
 	
 

@@ -16,7 +16,7 @@
 		<div><!-- 컨텐츠 --> 
 			<div class="">
 				<span class="badge rounded-pill bg-primary" style="font-size: 25px;">나와 딱 맞는 간병일감을 찾아드려요.</span>
-				<img src="image/icon/refresh.gif" width="40px;" height="40px"/>	
+				<img src="image/icon/refresh.gif" id="refreshChoice" width="40px;" height="40px"/>	
 			</div>
 			
 			<br/>
@@ -34,46 +34,14 @@
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center">
-                        	<td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-                     	</tr>
-                     	<tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-	                    </tr>
+                    	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index < 5}" >
+	                         <td>[[${l.ptName}]]*</td>
+	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
+	                         <td>[[${l.ptRealAge}]]</td>
+	                         <td>[[${l.ptAddress}]]</td>
+	                         <td>[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]</td>
+	                         <td>[[${l.money}]] 원</td>
+                    	 </tr>
                  	</tbody>
              	</table>
 				
@@ -89,46 +57,14 @@
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center">
-                        	<td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-                     	</tr>
-                     	<tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-	                    </tr>
+                    	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index >= 5}" >
+	                         <td>[[${l.ptName}]]</td>
+	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
+	                         <td>[[${l.ptRealAge}]]</td>
+	                         <td>[[${l.ptAddress}]]</td>
+	                         <td>[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]</td>
+	                         <td>[[${l.money}]] 원</td>
+                    	 </tr>
                  	</tbody>
              	</table>
 			</div>
@@ -376,7 +312,7 @@
 		</div>
 	</div>
 	
-	<script>
+	<script th:inline="javascript">
 		window.onload = () => {
 			// 일감목록의 태그 버튼 클릭시 하위 버튼을 보여주는 기능 (시작)
 			const allSubBtnList = document.querySelectorAll('.subBtn');	// 임의의 세부 태그 버튼
@@ -1416,74 +1352,6 @@
 			
 			})
 			
-			
-			
-			
-			
-			
-			
-			
-			// 일감목록 검색 결과를 출력하는 무한스크롤 (시작)
-			// (1) 초기 데이터 출력 == page가 1인 상태
-			/* let currentPage = 1; // 현재 로드된 페이지의 번호를 나타내는 변수. 초기값은 1로 설정.
-			let isFetching = false; // 데이터를 가져오는 중인지 여부를 나타내는 변수. 초기값은 false로 설정.
-			let hasMore = true; // 가져올 더 많은 데이터가 있는지 여부를 나타내는 변수. 초기값은 true로 설정.
-			
-			let root = document.querySelector('#root'); // 검색결과를 출력할 div요소에 접근한다.
-			
-			async function fetchData() {
-				isFetching = true; // 데이터를 가져오는 중이라는 표현
-				//let response = await fetch(`https://jsonplaceholder.typicode.com/posts?_page=${currentPage}`);
-				let response = await fetch(`http://localhost:8096/workInfoTest.me?page=${currentPage}`);
-				let data = await response.json();
-			    console.log(data);
-			    
-			    isFetching = false; // 데이터를 가져오고 있지 않는 중이라는 표현
-			    
-			    if (data.length === 0) {
-			        hasMore = false;
-			        return
-			    } */
-			 	// DB에 삽입된 데이터가 없기 때문에 임의로 6개를 뿌리자
-			 	/*	반복적으로 넣어야할 요소
-				 	<div class="col-sm-6">
-	                    <div class="card h-95 w-80">
-	                    	<div class="card-body">
-	                        	<h6 class="card-title">
-		                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
-		                        	<img src="image/icon/hospital.png"/>
-	                       		</h6>
-	                        <p class="card-text">
-	                        	<span>병원명</span>
-	                       	</p>
-	                        <button class="btn btn-success workInfo">정보 보기</button>
-	                    	</div>
-	                    </div>
-	                </div>
-			 	*/
-			    /* for(let post of data) { // 가져온 데이터를 화면에 뿌리는 코드
-			        root.innerHTML += '<div class="col-sm-6">\
-	                    				<div class="card h-95 w-80">\
-                							<div class="card-body">\
-                    						<h6 class="card-title">\
-                        						<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;\
-                        						<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;\
-                        						<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;\
-                        						<img src="image/icon/hospital.png"/>\
-                   							</h6>\
-						                    <p class="card-text">\
-						                    	<span>병원명</span>\
-						                   	</p>\
-						                    <button class="btn btn-success workInfo">정보 보기</button>\
-					                		</div>\
-               							</div>\
-           							</div>';
-			    }
-			    currentPage++;
-			} */
-			
 			window.addEventListener('scroll', () => {
 				/* if(isFetching || !hasMore) {
 					return;
@@ -1505,6 +1373,97 @@
 			document.querySelector('#allTagBtn').addEventListener('click', () => {
 				$('#allTagModal').modal('show');
 			})
+			
+			
+			
+			// 자동추천 새로고침 비동기 요청 (시작)
+    		const refreshChoice = document.querySelector('#refreshChoice');
+    		refreshChoice.addEventListener('mouseenter', function() {
+    			this.style.cursor= 'pointer';
+    		})
+    		/*<![CDATA[*/
+    		refreshChoice.addEventListener('click', function() {
+    			if(/*[[${completeList}]]*/'arrList' != null) {
+    				const tbody = this.parentElement.parentElement.parentElement.nextElementSibling;
+    				const tbodyList = document.querySelectorAll('.autoMatching tbody');
+    				
+    				$.ajax({
+	    				url: 'refreshPatientChoice.me',
+	    				data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0, selectNum: 10},
+	    				success: data => { // 배열로 넘어옴
+	    					// 새로 추천받은 목록으로 교체(시작)
+	    					console.log(data);
+	    					tbodyList[0].innerHTML = '';
+	    					tbodyList[1].innerHTML = '';
+	    					for(let i = 0; i < data.length; i++) {
+	    						let d = data[i];
+	    						
+	    						if(i < 5) {
+	    							const tr = document.createElement('tr');
+		    						tr.classList.add('text-center');
+		    						const td0 = document.createElement('td');
+		    						td0.innerText = d.ptName;
+		    						const td1 = document.createElement('td');
+		    						td1.innerText = d.ptGender == 'M' ? '남' : '여';
+		    						const td2 = document.createElement('td');
+		    						td2.innerText = d.ptRealAge;
+		    						const td3 = document.createElement('td');
+		    						td3.innerText = d.ptAddress;
+		    						const td4 = document.createElement('td');
+		    						td4.innerText = d.ptDisease.split('/')[0];
+		    						const td5 = document.createElement('td');
+		    						td5.innerText = d.money + '원';
+		    						
+		    						tbodyList[0].appendChild(tr);
+		    						tr.appendChild(td0);
+		    						tr.appendChild(td1);
+		    						tr.appendChild(td2);
+		    						tr.appendChild(td3);
+		    						tr.appendChild(td4);
+		    						tr.appendChild(td5);	
+	    						} else {
+	    							const tr = document.createElement('tr');
+		    						tr.classList.add('text-center');
+		    						const td0 = document.createElement('td');
+		    						td0.innerText = d.ptName;
+		    						const td1 = document.createElement('td');
+		    						td1.innerText = d.ptGender == 'M' ? '남' : '여';
+		    						const td2 = document.createElement('td');
+		    						td2.innerText = d.ptRealAge;
+		    						const td3 = document.createElement('td');
+		    						td3.innerText = d.ptAddress;
+		    						const td4 = document.createElement('td');
+		    						td4.innerText = d.ptDisease.split('/')[0];
+		    						const td5 = document.createElement('td');
+		    						td5.innerText = d.money + '원';
+		    						
+		    						tbodyList[1].appendChild(tr);
+		    						tr.appendChild(td0);
+		    						tr.appendChild(td1);
+		    						tr.appendChild(td2);
+		    						tr.appendChild(td3);
+		    						tr.appendChild(td4);
+		    						tr.appendChild(td5);
+	    						}
+	    						
+	    						// 새로 추천받은 목록으로 교체(끝)
+	    					}
+	    					alert('새고운 추천목록으로 갱신되었습니다.');
+	    				},
+	    				error: data => {
+	    					console.log('에러')
+	    				}
+	    			})
+    			} else {
+    				alert('추천 후보가 존재하지 않습니다.');
+    			}
+    		})
+			/*]]>*/
+    		// 자동추천 새로고침 비동기 요청 (끝)
+			
+			
+			
+			
 			
 			
 			

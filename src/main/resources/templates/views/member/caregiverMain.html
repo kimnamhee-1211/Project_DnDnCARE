@@ -377,8 +377,8 @@
     				
     				
     				$.ajax({
-	    				url: 'refreshChoice.me',
-	    				data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0},
+	    				url: 'refreshPatientChoice.me',
+	    				data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0, selectNum: 5},
 	    				success: data => { // 배열로 넘어옴
 	    					// 새로 추천받은 목록으로 교체(시작)
 	    					console.log(data);

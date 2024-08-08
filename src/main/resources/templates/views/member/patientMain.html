@@ -53,43 +53,20 @@
 				<table class="table mainTable" style="height:200px;">
                 	<thead>
                     	<tr>
-                        	<th colspan="5">나와 딱 맞는 일감을 찾아드려요.</th>
-                        	<th class="text-center"><img src="image/icon/refresh.png" style="width:30px; height:30px;"></th>
+                        	<th colspan="5">나와 딱 맞는 간병인을 찾아드려요.</th>
+                        	<th class="text-center"><img src="image/icon/refresh.png" id="refreshChoice" style="width:30px; height:30px;"></th>
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center">
-                        	<td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
+                    	<tr class="text-center" th:each="c : ${completeList}">
+                        	<td>[[${c.memberName}]]</td>
+	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
+	                        <td>[[${c.caregiverRealAge}]]</td>
+	                        <td>[[${c.caregiverAddress}]]</td>
+	                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
+	                        <td>[[${c.minMoney}]]원</td>
                      	</tr>
-                     	<tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td>80,000원</td>
-	                    </tr>
+                     	
                  	</tbody>
              	</table>
 			</div>
@@ -289,7 +266,7 @@
     
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
-    <script>
+    <script th:inline="javascript">
     // 캘린더 객체 생성
     // 이벤트 : 이벤트 정보를 담아서 객체를 생성해야 한다. 문법은 json을 따른다.
     	document.addEventListener('DOMContentLoaded', function() {
@@ -315,6 +292,81 @@
         	});
         	calendar.render();
       	});
+    
+    	/*<![CDATA[*/
+    	window.onload = () => {
+    		// 자동추천 새로고침 비동기 요청 (시작)
+    		const refreshChoice = document.querySelector('#refreshChoice');
+    		refreshChoice.addEventListener('mouseenter', function() {
+    			this.style.cursor= 'pointer';
+    		})
+    		
+    		refreshChoice.addEventListener('click', function() {
+    			if(/*[[${completeList}]]*/'arrList' != null) {
+    				const tbody = this.parentElement.parentElement.parentElement.nextElementSibling;
+    				
+    				$.ajax({
+	    				url: 'refreshCaregiverChoice.me',
+	    				data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0, selectNum: 5},
+	    				success: data => { // 배열로 넘어옴
+	    					// 새로 추천받은 목록으로 교체(시작)
+	    					console.log(data);
+	    					tbody.innerText = '';
+	    					for(let d of data) {
+	    						const tr = document.createElement('tr');
+	    						tr.classList.add('text-center');
+	    						const td0 = document.createElement('td');
+	    						td0.innerText = d.memberName;
+	    						const td1 = document.createElement('td');
+	    						td1.innerText = d.memberGender == 'M' ? '남' : '여';
+	    						const td2 = document.createElement('td');
+	    						td2.innerText = d.caregiverRealAge;
+	    						const td3 = document.createElement('td');
+	    						td3.innerText = d.caregiverAddress;
+	    						const td4 = document.createElement('td');
+	    						td4.innerText = d.haveLicense;
+	    						const td5 = document.createElement('td');
+	    						td5.innerText = d.minMoney + '원';
+	    						
+	    						tbody.appendChild(tr);
+	    						tr.appendChild(td0);
+	    						tr.appendChild(td1);
+	    						tr.appendChild(td2);
+	    						tr.appendChild(td3);
+	    						tr.appendChild(td4);
+	    						tr.appendChild(td5);
+	    						// 새로 추천받은 목록으로 교체(끝)
+	    					}
+	    					alert('새로운 추천목록으로 갱신되었습니다.');
+	    				},
+	    				error: data => {
+	    					console.log('에러')
+	    				}
+	    			})
+    			} else {
+    				alert('추천 후보가 존재하지 않습니다.');
+    			}
+    		})
+    		// 자동추천 새로고침 비동기 요청 (끝)
+    	}
+    	/*]]>*/
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     </script>    
 </body>
 </html>

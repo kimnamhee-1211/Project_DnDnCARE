@@ -225,5 +225,26 @@
 		WHERE ROWNUM <![CDATA[<]]> ${selectNum}+1
 	</select>
 	
+	<select id="selectCaregiverInfo" resultType="map">
+		SELECT MEMBER_NO, L_CATEGORY, S_CATEGORY
+		FROM MEMBER
+		        JOIN MEMBER_INFO USING(MEMBER_NO)
+		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
+		WHERE MEMBER_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+	
+	<select id="choiceCaregiverList" resultType="Caregiver">
+		SELECT MEMBER_NO, MEMBER_GENDER, MEMBER_NAME,
+		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS "caregiverRealAge",
+		        SUBSTR(REPLACE(MEMBER_ADDRESS, '//', ' ') , INSTR(REPLACE(MEMBER_ADDRESS, '//', ' '), ' ')+1) as "caregiverAddress",
+		        MEMBER_NATIONAL AS "caregiverNational", MIN_MONEY
+		FROM MEMBER
+		        JOIN CAREGIVER USING(MEMBER_NO)
+		WHERE MEMBER_NO IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+	
+	
 	
 </mapper>

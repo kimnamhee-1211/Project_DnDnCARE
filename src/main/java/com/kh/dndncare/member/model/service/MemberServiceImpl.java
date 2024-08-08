@@ -163,6 +163,17 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectCaregiverList(condition);
 	}
 
+	@Override
+	public ArrayList<HashMap<String, Object>> selectCaregiverInfo(ArrayList<Integer> mNoList) {
+		return mMapper.selectCaregiverInfo(mNoList);
+	}
+
+	@Override
+	public ArrayList<CareGiver> choiceCaregiverList(ArrayList<Integer> choiceNoList) {
+		return mMapper.choiceCaregiverList(choiceNoList);
+	}
+
+
 
 	
 
