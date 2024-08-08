@@ -500,7 +500,7 @@ public class MatchingController {
 	@GetMapping("goCaregiverPtInfo.mc")
 	public String goCaregiverPtInfo(@RequestParam("matNo") int matNo, Model model) {
 				
-		ArrayList<MatMatptInfoPt> mPI = mcService.matPtInfoToCaregiver(matNo);
+		ArrayList<MatMatptInfoPt> mPI = mcService.matPtInfoToCaregiver("N", matNo);
 		ArrayList<String> diseaseArr = new ArrayList<String>();
 		ArrayList<String> diseaseLevel = new ArrayList<String>();
 		String mobilityStatus = null;
@@ -536,26 +536,19 @@ public class MatchingController {
 				}
 			}
 			
-			
 			System.out.println(diseaseArr);
 			System.out.println(diseaseLevel);
 			System.out.println(mobilityStatus);
 			
-			
 			mPI.get(i).setDisease(diseaseArr.toString().replace("[", "").replace("]", ""));
-			
 			mPI.get(i).setDiseaseLevel(diseaseLevel.toString().replace("[", "").replace("]", ""));
-			
 			mPI.get(i).setMobilityStatus(mobilityStatus);
-		
-			
 		}
 		
 		System.out.println(mPI);
 		model.addAttribute("mPI", mPI);
 		
 		return "caregiverPtInfo";
-		
 	}
 	
 	

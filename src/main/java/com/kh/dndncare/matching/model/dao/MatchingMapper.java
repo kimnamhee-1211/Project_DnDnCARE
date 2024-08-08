@@ -71,7 +71,7 @@ public interface MatchingMapper {
 
 	int deleteWantInfo(int memberNo);
 
-	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo);
+	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(@Param("matConfirm") String matConfirm, @Param("matNo") int matNo);
 
 
 }

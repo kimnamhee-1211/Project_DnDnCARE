@@ -227,7 +227,7 @@
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
 			join hospital on(hospital.hospital_no = matching.hospital_no)
 			left join matching_date on(matching.mat_no = matching_date.mat_no) 		
-		where matching.mat_confirm = 'N' and matching.mat_no = #{matNo}
+		where matching.mat_confirm = #{matConfirm} and matching.mat_no = #{matNo}
 		order by matching.begin_dt desc
 	</select>
 

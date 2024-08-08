@@ -145,18 +145,17 @@
 					  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
 					  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
 					</div>
-					<div class="carousel-inner">
-					
+					<div class="carousel-inner">					
 						<div class="carousel-item active" th:if="${matMatptInfoPtList1 != null}">
 							<div class="row row-cols-md-2 g-2 ptDiv">
 	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList1}">
 	               					<div style="display:none" th:text="${mat.matNo}"></div>
 	                   				<div class="card h-95 w-80">
 	                   					<div class="card-body">
-	                     					<h6 class="card-title">
+	                     					<h6 class="card-title" style="font-weight:700">
 	                       						<span th:if="${mat.ptCount == 1}">[[${mat.ptName}]]</span>
 	                       						<span th:if="${mat.ptCount > 1}">[[${mat.ptName}]] 외</span>&nbsp;&nbsp;
-	                       						<img th:if="${mat.ptCount > 1}"  src="image/icon/users.png"/>
+	                       						<img th:if="${mat.ptCount > 1}" src="image/icon/users.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='병원돌봄'}" src="image/icon/hospital.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='가정돌봄'}"  src="image/icon/home.png"/>
 	                      					</h6>
@@ -402,6 +401,15 @@
 	        	})
 	
 	    	} 
+	    	
+	    	
+    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
 
     	}
     	

@@ -177,8 +177,8 @@ public class MatchingServiceImpl implements MatchingService {
 	
 	//매칭/매칭인포/환자/병원 한번에 가져오기
 	@Override
-	public ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo) {
-		return mMapper.matPtInfoToCaregiver(matNo);
+	public ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(String matConfirm, int matNo) {
+		return mMapper.matPtInfoToCaregiver(matConfirm, matNo);
 	}
 	
 

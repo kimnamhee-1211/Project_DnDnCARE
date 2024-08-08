@@ -82,7 +82,7 @@ public interface MatchingService {
 	
 	
 	//매칭/매칭인포/환자/병원 한번에 가져오기
-	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo);
+	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(String matConfirm, int matNo);
 
 
 }
