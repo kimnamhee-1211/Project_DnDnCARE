@@ -330,7 +330,19 @@ $(document).ready(function() {
                 return $(this).data('symptom');
             }).get().join(',');
         $('#selectedSymptoms').val(selectedSymptoms);
-        console.log('선택된 증상:', typeof(selectedSymptoms));
+        console.log('선택된 증상:', selectedSymptoms);
+    }
+    
+    //현재 선택된 단일 항목들 업데이트
+    function updateSelectedSingleSection(className, hiddenInputId) {
+        // 현재 선택된 항목을 찾음
+        let selectedElement = $(`.${className}.selected`).data('symptom');
+        
+        // 해당 값을 hidden input에 설정
+        $(`#${hiddenInputId}`).val(selectedElement);
+
+        // 콘솔에 선택된 값을 출력
+        console.log(`선택된 ${hiddenInputId}:`, $(`#${hiddenInputId}`).val());
     }
 
     // 유틸리티 함수
@@ -636,6 +648,11 @@ $(document).ready(function() {
     // 초기 업데이트
     updateDateTimeFields();
     updateSelectedDateRange();
+    updateSelectedSingleSection('mobility-option', 'selectedMobility');
+    updateSelectedSingleSection('gender-option', 'selectedGender');
+    updateSelectedSingleSection('career-option', 'selectedCareer');
+    updateSelectedSingleSection('local-option', 'selectedLocal');
+    updateSelectedSingleSection('age-option', 'selectedAge');
     updateSelectedSymptoms(); // 페이지 로드 시 초기 상태 업데이트
     updateSelectedDiseaseLevel(); // 페이지 로드 시 초기 상태 업데이트
      }})
