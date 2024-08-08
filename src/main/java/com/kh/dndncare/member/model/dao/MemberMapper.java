@@ -26,7 +26,7 @@ public interface MemberMapper {
 	
 	int nickNameCheck(String nickName);
 
-	ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser);
+	ArrayList<CalendarEvent> caregiverCalendarEvent(Integer memberNo);
 
 	ArrayList<Member> selectAllMember();
 	

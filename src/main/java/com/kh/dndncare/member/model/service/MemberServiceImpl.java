@@ -58,8 +58,8 @@ public class MemberServiceImpl implements MemberService {
 	
 
 	@Override
-	public ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser) {
-		return mMapper.caregiverCalendarEvent(loginUser);
+	public ArrayList<CalendarEvent> caregiverCalendarEvent(Integer memberNo) {
+		return mMapper.caregiverCalendarEvent(memberNo);
 	}
 	
 	public ArrayList<Member> selectAllMember() {
@@ -100,12 +100,6 @@ public class MemberServiceImpl implements MemberService {
 	        e.printStackTrace();
 	        return false;
 	    }
-	}
-
-	@Override
-	public ArrayList<Matching> calendarEvent(Member loginUser) {
-		// TODO Auto-generated method stub 이거 뭐여
-		return null;
 	}
 
 	@Override

@@ -39,27 +39,18 @@
 	  </select>
 	  
 	  
-	  
-
-	<!-- ResultMap : 캘린더에 적합도록 매핑 -->
-	<resultMap type="CalendarEvent" id="calendarResultMap">
-		<id column="MAT_NO" property="matNo"/>
-	  	<result column="TITLE" property="title"/>
-		<result column="BEGIN_DT" property="start"/>
-		<result column="END_DT" property="end"/>
-		<result column="MONEY" property="money"/>
-		<result column="HOSPITAL_NO" property="hosptialNo"/>
-		<result column="HOSPITAL_ADDRESS" property="hospitalAddress"/>
-		<result column="HOSPITAL_NAME" property="hospitalName"/>
-	</resultMap>
-	  
-	  
-	<!-- 캘린더 이벤트 정보 조회 --> 
-	<select id="caregiverCalendarEvent" resultMap="calendarResultMap">
-		SELECT MAT_NO, '간병하기' AS TITLE, BEGIN_DT, END_DT, MONEY, HOSPITAL_NO, HOSPITAL_ADDRESS, HOSPITAL_NAME 
-		FROM MATCHING
-		        JOIN HOSPITAL USING(HOSPITAL_NO)
-		WHERE MEMBER_NO = #{memberNo}
+	<!-- 캘린더 이벤트 정보 조회 
+		, , 
+	--> 
+	<select id="caregiverCalendarEvent" resultType="CalendarEvent">
+		SELECT 	M.MAT_NO, MONEY, BEGIN_TIME, END_TIME, MAT_MODE, BEGIN_DT, END_DT,
+		        PT_NO, 
+		        SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) AS MAT_ADDRESS_INFO, 
+		        PT_COUNT, MAT_DATE
+		FROM MATCHING M
+		        JOIN MAT_PT_INFO I ON(M.MAT_NO = I.MAT_NO)
+		        JOIN MATCHING_DATE D ON(I.MAT_NO = D.MAT_NO)
+		WHERE MEMBER_NO = ${memberNo}
 	</select>
 
 	  <select id="selectAllMember" resultType="Member">		<!-- 멤버좀 확인할라구요 -->

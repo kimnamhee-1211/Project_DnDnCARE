@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -25,7 +27,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
@@ -346,16 +347,46 @@ public class MemberController {
 	// 메인페이지 이동 후에 환자 메인페이지 렌더링 도중에 캘린더 이벤트를 조회하게 된다.
 	@GetMapping("caregiverCalendarEvent.me")
 	@ResponseBody
-	public void calendarEvent(Model model, HttpServletResponse response) {
+	public void caregiverCalendarEvent(Model model, HttpServletResponse response) {
 		Member loginUser = (Member)model.getAttribute("loginUser");
 		
 		// 일정 조회 
-		ArrayList<CalendarEvent> eList = mService.caregiverCalendarEvent(loginUser);
+		ArrayList<CalendarEvent> eList = new ArrayList<CalendarEvent>();
+		if(loginUser != null) {
+			eList = mService.caregiverCalendarEvent(loginUser.getMemberNo());
+			//[CalendarEvent(matNo=69, title=null, start=null, end=null, money=150000, hospitalNo=0, hospitalAddress=null, hospitalName=null, beginTime=12:00, endTime=15:00, matMode=2, matchingType=null, ptCount=1, matAddressInfo=서울 동대문구 망우로 82 202호777, ptNo=61, matDate=2024-08-09,2024-08-16,2024-08-15,2024-08-22,2024-08-23, beginDt=2024-08-09, endDt=2024-08-23)]
+		}
+//		for(CalendarEvent c : eList) {
+//			c.setStart(c.getBeginDt());
+//			c.setEnd(c.getEndDt());
+//			
+//			if(c.getPtCount() > 1) {
+//				if(c.getMatMode() == 1) c.setTitle("개인 기간제 간병");
+//				else c.setTitle("개인 시간제 간병");
+//			} else {
+//				if(c.getMatMode() == 1) c.setTitle("공동 기간제 간병");
+//				else c.setTitle("공동 시간제 간병");
+//			}
+//		}
+		
+		JSONArray array = new JSONArray();
+		
+		for(CalendarEvent c : eList) {
+			JSONObject obj = new JSONObject();
+			obj.put("start", c.getBeginDt());
+			obj.put("end", c.getEndDt());
+			obj.put("title", "테스트");
+		}
+		
+		
+		
+		
+		
 		
 		// GSON
 		response.setContentType("application/json; charset=UTF-8");
-		GsonBuilder gb = new GsonBuilder().setDateFormat("YYYY-MM-DD");
-		Gson gson = gb.create();
+		//GsonBuilder gb = new GsonBuilder().setDateFormat("YYYY-MM-DD");
+		Gson gson = new Gson();
 		try {
 			gson.toJson(eList, response.getWriter());
 		} catch (JsonIOException | IOException e) {

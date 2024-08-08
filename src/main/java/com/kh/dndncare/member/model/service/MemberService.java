@@ -24,7 +24,7 @@ public interface MemberService {
 	int nickNameCheck(String nickName);
 
 
-	ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser);
+	ArrayList<CalendarEvent> caregiverCalendarEvent(Integer memberNo);
 
 	ArrayList<Member> selectAllMember();
 	int enroll(Member m);
@@ -39,7 +39,6 @@ public interface MemberService {
 	Member findIdResult(Member member);
 
 	boolean sendSms(String phoneNumber, String string);
-	ArrayList<Matching> calendarEvent(Member loginUser);
 
 	HashMap<String, String> getCaregiverInfo(int memberNo);
 
