@@ -182,6 +182,11 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.selectMatching(matNo);
 	}
 
+	@Override
+	public MatMatptInfo selecMatPtInfo(int matNo, int memberNo) {
+		return mMapper.selecMatPtInfo(matNo,memberNo);
+	}
+
 
 
 

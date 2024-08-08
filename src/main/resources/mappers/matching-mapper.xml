@@ -233,11 +233,15 @@
 	<select id="selectMatching" resultType="MatMatptInfo">
 		select *
 		from matching
-			
+			join member using(member_no)
 		where mat_no = #{matNo}
 	</select>
 
-
+	<select id="selecMatPtInfo" resultType="MatMatptInfo">
+		select *
+		from mat_pt_info
+		where mat_no = #{matNo} and pt_no = (select pt_no from patient where member_no = #{memberNo})
+	</select>
 
 
 

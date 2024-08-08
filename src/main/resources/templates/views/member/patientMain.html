@@ -380,30 +380,31 @@
     
 	<!-- Modal -->
 	<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-    		<div class="modal-content rounded-3 shadow">
-    			<div class="m-4 text-center h2">결제 정보</div>
-    			<div class="m-4 h3" style="border-bottom:1px solid #8dd986;">OOO님과 매칭되었습니다!</div>
+		<div class="modal-dialog modal-dialog-centered" role="document" style="max-width:700px;">
+    		<div class="modal-content rounded-3 shadow" style="min-width:700px;">
+    			<div class="m-5 text-center h2">결제 정보</div>
+    			<div class="m-4 h5" style="border-bottom:1px solid #8dd986;"><span class="h2" id="careName"></span>님과 매칭되었습니다!</div>
 				<div class="d-flex justify-content-start">    			
 	    			<div >
 	    				<div class="m-4 text-center">매칭 서비스</div>
 	    				<div class="m-4 text-center">공동간병 여부</div>
 	    				<div class="m-4 text-center">간병 날짜</div>
-	    				<div class="m-4 text-center">주소 </div>
 	    				<div class="m-4 text-center">일당 금액</div>
+	    				<div class="m-4 text-center">주소 </div>
 	    			</div>
 	    			<div>
-	    				<div class="m-4">가정돌봄? </div>
-	    				<div class="m-4">가정돌봄? </div>
-	    				<div class="m-4">가정돌봄? </div>
-	    				<div class="m-4">가정돌봄? </div>
+	    				<div class="m-4" id="payService"></div>
+	    				<div class="m-4" id="payPtCount"></div>
+	    				<div class="m-4" id="payMatDate"></div>
+	    				<div class="m-4" id="payMoney"></div>
+	    				<div class="m-4" id="payAddress"></div>
 	    			</div>
     			</div>
     			
-    			<div align="right" class="m-4 h">총 금액 100,000원</div>
+    			<div align="right" class="m-4 h3 resultPay"></div>
       			<div align="center"class="modal-footer d-flex justify-content-center p-0">
       				<div align="center"class="d-flex justify-content-center">
-	      				<button type="button" class="btn btn-lg btn-success payApply h1 m-4" onclick="requestPay()">100,000원 결제하기</button>
+	      				<button type="button" class="btn btn-lg btn-success payApply h1 m-4 resultPay" onclick="requestPay()">100,000원 결제하기</button>
       				</div>
       				
       			</div>
@@ -461,6 +462,8 @@
 // 		$('#modalChoice').modal('show');	
 // 	})
 	
+	
+	
 	const payBts = document.getElementsByClassName('payButton');
     for(payBt of payBts){
     	payBt.addEventListener('click',function(){
@@ -470,15 +473,27 @@
 				url:'payInfo.mc',
 				data: {matNo:payBt.nextElementSibling.value },
 				success:data=>{
-					console.log('굳');
 					console.log(data);
+					document.getElementById('payService').innerText = data.service;
+					document.getElementById('payPtCount').innerText = data.ptCount == 1 ? '개인' : '공동';
+					document.getElementById('payMatDate').innerText = data.beginDt +' '+ data.beginTime + ' ~ ' + data.endDt + ' '+ data.endTime + ' 총' + data.days +'일 ' + data.times +'시간';
+					document.getElementById('payMoney').innerText = data.money.toLocaleString() + '원';
+					document.getElementById('payAddress').innerText = data.matAddressInfo.split('//')[1] + ' '+data.matAddressInfo.split('//')[2];
+					document.getElementsByClassName('resultPay')[0].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원';
+					document.getElementsByClassName('resultPay')[1].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원 결제하기';
+					
+					document.getElementById('careName').innerText = data.memberName;
 				},
 				error:data=>console.log(data)
 			})
     	})		
     };
 	
-	
+//     <div class="m-4" id="payService"></div>
+// 	<div class="m-4" id="payPtCount"></div>
+// 	<div class="m-4" id="payMatDate"></div>
+// 	<div class="m-4" id="payAddress"></div>
+// 	<div class="m-4" id="payAddress"></div>
 	
 	
 	//포트원 api
@@ -507,7 +522,7 @@
 			        pg: "html5_inicis.INIpayTest",
 			        pay_method: "card",
 			        merchant_uid: formattedTime,
-			        name: "HomeWork후원결제",
+			        name: "든든케어간병신청",
 			        amount: 100,
 			        buyer_tel: "000",
 		    	},function(response){

@@ -74,5 +74,7 @@ public interface MatchingMapper {
 
 	MatMatptInfo selectMatching(int matNo);
 
+	MatMatptInfo selecMatPtInfo(@Param("matNo")int matNo,@Param("memberNo") int memberNo);
+
 
 }

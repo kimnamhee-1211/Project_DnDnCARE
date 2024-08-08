@@ -50,4 +50,7 @@ public class MatMatptInfo {
 	
 	//간병인이름도 같이담기
 	private String memberName;
+	//기간제 계산 자바스크립트에서안하려구만듬
+	private long days;
+	private long times;
 }

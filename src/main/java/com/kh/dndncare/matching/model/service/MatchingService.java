@@ -80,6 +80,7 @@ public interface MatchingService {
 	int insertMatPtInfo(MatPtInfo matPtInfo);
 	int deleteWantInfo(int memberNo);
 	MatMatptInfo selecMatching(int matNo);
+	MatMatptInfo selecMatPtInfo(int matNo, int i);
 	
 
 }
