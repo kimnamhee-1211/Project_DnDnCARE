@@ -11,38 +11,38 @@
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
-	<main class="container whdrb testBorder"th:each="rList:${reviewList}">
-		<div class="row m-4 sssss">
+	<main class="container whdrb testBorder">
+		<div class="row m-4">
 			<div class="m-4 h1">간병사 <span style="color:#8dd986">정보</span></div>
-			
 			<div class="col m-4 testBorder">
 				<div class="row">
 					<div align="center"class="col m-3 testBorder" >
 			      		<img id="profile-image" src="image/icon_profile.png"/>
 			      		<div class="h3">[[${session.loginUser.memberName}]]님</div>
-			      		<div class="h6">경력 14년, 내국인</div>
+			      		<div class="h6">경력:[[${caregiverInfoList.career}]]년</div>
+			      		<div class="h6">국적:[[${caregiverIntro.memberNational}]]</div>
 		      		</div>
 		      		<div class="col m-3 testBorder">
 			      		<div class="row m-2">
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left"></button>
-								<button class="btn-star-right btn-icon-star-right"></button>
+								<button th:if="${1 <= avgReviewScore}" class="btn-star btn-icon-star-left"></button>
+								<button th:if="${2 <= avgReviewScore}" class="btn-star-right btn-icon-star-right"></button>
 			      			</div>
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left"></button>
-								<button class="btn-star-right btn-icon-star-right"></button>
+								<button th:if="${3 <= avgReviewScore}" class="btn-star btn-icon-star-left"></button>
+								<button th:if="${4 <= avgReviewScore}" class="btn-star-right btn-icon-star-right"></button>
 			      			</div>
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left"></button>
-								<button class="btn-star-right btn-icon-star-right"></button>
+								<button th:if="${5 <= avgReviewScore}" class="btn-star btn-icon-star-left"></button>
+								<button th:if="${6 <= avgReviewScore}" class="btn-star-right btn-icon-star-right"></button>
 			      			</div>
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left"></button>
-								<button class="btn-star-right btn-icon-star-right"></button>
+								<button th:if="${7 <= avgReviewScore}" class="btn-star btn-icon-star-left"></button>
+								<button th:if="${8 <= avgReviewScore}" class="btn-star-right btn-icon-star-right"></button>
 			      			</div>
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
-								<button class="btn-star btn-icon-star-left"></button>
-								<button class="btn-star-right "></button>
+								<button th:if="${9 <= avgReviewScore}" class="btn-star btn-icon-star-left"></button>
+								<button th:if="${10 <= avgReviewScore}" class="btn-star-right "></button>
 			      			</div>
 			      				
 			      		</div>
@@ -51,10 +51,10 @@
 							<span>[[${avgReviewScore}]]점</span>			      		
 			      		</div>
 			      		<div class="col m-3 testBorder">
-			      			자기소개 내용 작성
+			      			[[${caregiverIntro.careIntro}]]
 			      		</div>
 			      		<div class="col m-3 testBorder">
-			      			자격증 있으면 쓰기
+			      			자격증 : [[${caregiverInfoList.license}]]
 			      		</div>
 			      		
 		      		</div>
@@ -75,46 +75,48 @@
 			
 			
 			
-			
-			
 				
 			
 			<!-- Modal -->
 			<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
 				<div class="modal-dialog modal-dialog-centered" role="document">
 		    		<div class="modal-content rounded-3 shadow">
-		    			<div align="center" class="m-2 mt-2 h2"id="modalScore" style="margin-top:30px;">10</div>
+		    		 <form id="writeReviewForm" method="post">
+		    			<div align="center" class="m-2 mt-2 h2" id="modalScore" style="margin-top:30px;">10</div>
 			    			<div align="center" id="reviewScore" class="d-flex justify-content-center m-3" >
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-									<button class="btn-star btn-icon-star-left-modal" value="1"></button>
-									<button class="btn-star-right btn-icon-star-right-modal "value="2"></button>
+									<button type="button" class="btn-star btn-icon-star-left-modal" value="1"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal "value="2"></button>
 				      			</div>
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-									<button class="btn-star btn-icon-star-left-modal"value="3"></button>
-									<button class="btn-star-right btn-icon-star-right-modal"value="4"></button>
+									<button type="button" class="btn-star btn-icon-star-left-modal"value="3"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="4"></button>
 				      			</div>
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-									<button class="btn-star btn-icon-star-left-modal"value="5"></button>
-									<button class="btn-star-right btn-icon-star-right-modal"value="6"></button>
+									<button type="button" class="btn-star btn-icon-star-left-modal"value="5"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="6"></button>
 				      			</div>
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-									<button class="btn-star btn-icon-star-left-modal"value="7"></button>
-									<button class="btn-star-right btn-icon-star-right-modal"value="8"></button>
+									<button type="button" class="btn-star btn-icon-star-left-modal"value="7"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="8"></button>
 				      			</div>
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-									<button class="btn-star btn-icon-star-left-modal"value="9"></button>
-									<button class="btn-star-right btn-icon-star-right-modal"value="10"></button>
+									<button type="button" class="btn-star btn-icon-star-left-modal"value="9"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="10"></button>
 				      			</div>
 			    			</div>
 		    			<div align="center">별을 클릭하세요</div>
 						<div class="m-4 review-content"contenteditable=true></div>		    				
 		      			<div class="modal-footer  p-0">
 		      				<div class="d-flex justify-content-evenly">
-			      				<button type="button" class="btn btn-success">후기남기기</button>
+		      				 <input type="hidden" name="reviewScore" id="hiddenScore" value="10">
+               				 <input type="hidden" name="reviewContent" id="hiddenReview">		
+			      				<button type="button" class="btn btn-success" id="modalReviewWrite">후기남기기</button>
 			      				<button type="button" class="btn btn-light"data-bs-dismiss="modal">취소</button>
 		      				</div>
-		      				
 		      			</div>
+			    		</form>
+		      				
 		    		</div>
 		  		</div>	
 			</div>
@@ -160,9 +162,26 @@
 							}
 						})
 				}
+				    
+				
+				document.getElementById('modalReviewWrite').addEventListener('click', () => {
+					const reviewScore = document.getElementById('reviewScore');
+					const btns = reviewScore.querySelectorAll('button');
+			        
+					
+					const reviewContent = document.querySelector('.review-content').innerText;
+				    document.getElementById('hiddenReview').value = reviewContent;
+				        
+				    	const form = document.getElementById('writeReviewForm');
+				    	console.log(form)
+				        form.action = 'writeReview.mc';
+				        form.submit();
+			    });
 			</script>
 			
-			
+			<!-- 
+			 랠릿 도메인 알고리즘 김영학 스프링부트강의 시큐어코딩 코딩테스트
+			 -->
 			
 			<!-- 종규 -->
 			<!-- 재영 -->

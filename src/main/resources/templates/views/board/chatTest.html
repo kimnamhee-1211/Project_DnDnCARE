@@ -29,8 +29,8 @@
             flex-direction: column;
         }
         .chat-header {
-            background: #007bff;
-            color: #fff;
+            background: #8DD986;
+            color: #2E2E2E;
             padding: 15px;
             display: flex;
             justify-content: space-between;
@@ -55,12 +55,18 @@
             border-radius: 10px;
             margin-bottom: 10px;
         }
-        .message.sent {
-            background: #007bff;
+        .message.send {
+            background: #8DD986;
             align-self: flex-end;
         }
         .message.received {
             background: #e9ecef;
+        }
+        .moreBtn{
+        	background: #8DD986;
+        	border: none;
+        	width: 30px;
+        	height: 40px;
         }
     </style>
 </head>
@@ -69,25 +75,37 @@
         <div class="chat-header">
             <div>
                 <div class="font-weight-bold">채팅방명</div>
-                <div class="small">??</div>
+                <div class="small">참여자명</div>
             </div>
             <div>
-                ...
+            	<button class="moreBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-justify" viewBox="0 0 16 16">
+				  <path fill-rule="evenodd" d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+				</svg>
+            	</button>
             </div>
         </div>
         <div class="chat-body">
-            <div class="text-center text-muted small mb-4">날짜?</div>
+            <div class="text-center text-muted small mb-4">날짜 2024.08.07</div>
+            <div class="text-center text-muted small mb-4">ㅇㅇㅇ님의 매칭방</div>
             <div class="d-flex justify-content-end mb-4">
-                <div class="message sent">송신</div>
+            	<div class="small text-muted ml-3 align-self-end">2024.08.07</div>
+                <div class="message send" id="sendMessage">송신</div>
+            	<div class="small ml-2 align-self-end"><b>나</b></div>
             </div>
             <div class="d-flex justify-content-start mb-4">
-                <div class="message received">수신</div>
-                <div class="small text-muted ml-2 align-self-end"></div>
+                <div class="small ml-2 align-self-end"><b>상대</b></div>
+                <div class="message received" id="receiveMessage">수신</div>
+                <div class="small text-muted ml-3 align-self-end">2024.08.07</div>
             </div>
         </div>
         <div class="chat-footer">
-            <input type="text" placeholder="메시지를 입력하세요." class="form-control flex-grow-1">
-            <button class="btn btn-light btn-sm">전송</button>
+	            <input type="text" placeholder="메시지를 입력하세요." class="form-control flex-grow-1" id="chatContent">
+	            <button class="btn btn-light">
+	            	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-square" viewBox="0 0 16 16">
+					  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.5 9.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z"/>
+					</svg>
+	            </button>
         </div>
     </div>
 

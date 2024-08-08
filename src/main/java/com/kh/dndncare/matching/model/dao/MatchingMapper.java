@@ -12,6 +12,7 @@ import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 
 import com.kh.dndncare.member.model.vo.Patient;
@@ -56,7 +57,8 @@ public interface MatchingMapper {
 	int delMatchingDate(int matNo);
 	int reviewCount(int memberNo);
 
-	int avgReviewScore(int memberNo);
+	double avgReviewScore(int memberNo);
+	
 	int updatePatient(Patient patient);
 
 	int insertMatching(Matching matching);
@@ -70,6 +72,8 @@ public interface MatchingMapper {
 	int insertMatPtInfo(MatPtInfo matPtInfo);
 
 	int deleteWantInfo(int memberNo);
+
+	CareGiver selectIntro(int memberNo);
 
 
 }

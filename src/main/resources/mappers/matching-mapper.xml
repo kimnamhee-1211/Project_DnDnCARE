@@ -136,18 +136,20 @@
 	</delete>
 	
 	
-	
+	<!-- 간병인 후기수 -->
 	<select id="reviewCount" resultType="_int">
 		select count(*)
 		from care_review
 		where member_no=#{memberNo} 
 	</select>
 	
-	<select id="avgReviewScore" resultType="_int">
+	<!-- 간병인 평점 -->
+	<select id="avgReviewScore" resultType="_double">
 		select avg(review_score)
 		from care_review
 		where member_no=#{memberNo}
 	</select>
+	
 	<!-- 받아온 patient정보로 수정 -->
 	<update id="updatePatient">
 		update patient
@@ -223,7 +225,12 @@
 	</insert>
 
 
-
+	<select id="selectIntro" resultType="Caregiver">
+		select care_intro, member_national
+		from caregiver
+			join member using(member_no)
+		where member_no = #{memberNo}
+	</select>
 
 
 

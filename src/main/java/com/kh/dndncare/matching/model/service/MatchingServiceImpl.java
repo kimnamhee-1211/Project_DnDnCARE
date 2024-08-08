@@ -13,6 +13,7 @@ import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Patient;
 
@@ -137,7 +138,7 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	@Override
-	public int avgReviewScore(int memberNo) {
+	public double avgReviewScore(int memberNo) {
 		return mMapper.avgReviewScore(memberNo);
 	}
  
@@ -174,6 +175,12 @@ public class MatchingServiceImpl implements MatchingService {
 	@Override
 	public int deleteWantInfo(int memberNo) {
 		return mMapper.deleteWantInfo(memberNo);
+	}
+
+	// 간병인 소개
+	@Override
+	public CareGiver selectIntro(int memberNo) {
+		return mMapper.selectIntro(memberNo);
 	}
 
 

@@ -11,6 +11,7 @@ import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Patient;
 
@@ -68,7 +69,7 @@ public interface MatchingService {
 	
 	int reviewCount(int memberNo);
 	
-	int avgReviewScore(int memberNo);
+	double avgReviewScore(int memberNo);
 	
 
 	int updatePatient(Patient patient);
@@ -78,6 +79,7 @@ public interface MatchingService {
 	int insertWantInfo(Map<String, Object> params);
 	int insertMatPtInfo(MatPtInfo matPtInfo);
 	int deleteWantInfo(int memberNo);
+	CareGiver selectIntro(int memberNo);
 	
 
 }

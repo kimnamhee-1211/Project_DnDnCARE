@@ -34,6 +34,8 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.Exception.MemberException;
+import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.Info;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
@@ -345,7 +347,7 @@ public class MatchingController {
 					}else if(jmPtInfo.getLCategory().equals("diseaseLevel")) {
 						
 						diseaseLevel = jmPtInfo.getSCategory();				
-					}	
+					}	 
 				}	
 				//공동 간병 참여자들 Patient에 member info set
 				jmPt.setDisease(disease);
@@ -448,10 +450,11 @@ public class MatchingController {
 		}
 	}
 	
-	
+	// 간병인 페이지
 	@GetMapping("reviewDetail.mc")
 	public String getMethodName(HttpSession session, Model model) {
 		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		// 일단 로그인 유저로 진행 정보보기페이지에서 넘어올때 memberNo받아옴
 		
 		// 후기내역
 		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
@@ -460,14 +463,31 @@ public class MatchingController {
 		int reviewCount = mcService.reviewCount(memberNo);
 		
 		// 평점
-		int avgReviewScore = mcService.avgReviewScore(memberNo);
+		double avgReviewScore = mcService.avgReviewScore(memberNo);
 		
-		// 간병인 정보
+		// 간병인 소개
+		CareGiver caregiverIntro = mcService.selectIntro(memberNo);
+		
+		// 간병인 정보(국적, 경력, 자격증)
+		ArrayList<InfoCategory> caregiverInfo = mcService.getInfo(memberNo);
+		HashMap<String, Object> caregiverInfoList = new HashMap<String, Object>();
+		for(InfoCategory info:caregiverInfo) {
+			switch(info.getLCategory()) {
+			case "career" : caregiverInfoList.put("career", info.getSCategory()); break;
+			case "license" : 
+				if (!caregiverInfoList.containsKey("license")) {
+                caregiverInfoList.put("license", new ArrayList<String>());
+            }
+            ((ArrayList<String>)caregiverInfoList.get("license")).add(info.getSCategory());
+			}
+		}
 		
 		
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("reviewCount", reviewCount);
 		model.addAttribute("avgReviewScore",avgReviewScore);
+		model.addAttribute("caregiverIntro",caregiverIntro);
+		model.addAttribute("caregiverInfoList", caregiverInfoList);
 		return "reviewDetail";
 	}
 	
@@ -489,7 +509,18 @@ public class MatchingController {
 
 	}
 	
-	
+	@PostMapping("writeReview.mc")
+	public String insertReview(@RequestParam("reviewScore") int reviewScore,@RequestParam("reviewContent") String reviewContent, HttpSession session) {
+		int ptNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		System.out.println(reviewScore);
+		map.put("ptNo", ptNo);
+		map.put("reviewScore", reviewScore);
+		map.put("reviewContent", reviewContent);
+		//int result = mcService.insertReview();
+		return null;
+				
+	}
 	
 	
 	
