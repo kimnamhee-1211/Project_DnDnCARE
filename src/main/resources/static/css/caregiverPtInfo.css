@@ -21,14 +21,14 @@ body {
 }
 
 
-.wrap{padding-bottom:130px;}
+.wrap{padding-bottom:140px;}
 
 .title-content{margin-top: 80px; margin-bottom: 10px;}
 .title2-content{margin-top: 10px; margin-bottom: 10px;}
 
 .tableDiv{
 	display: inline-block;
-	width:600px;
+	width:700px;
 	margin : 20px auto;
 	margin-bottom :40px; 
 	font-size:20px; 
@@ -39,12 +39,12 @@ body {
 
 
 .sign-btn button {
-	height:80px;
+	height:70px;
 	font-size:26px;
 	font-weight: 600;
 	border-radius:25px;
 	border:none;
-	margin-top: 60px;
+	margin-top:70px;
 }
 
 .signIn-btn {

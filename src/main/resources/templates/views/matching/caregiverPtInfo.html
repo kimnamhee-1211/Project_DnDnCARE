@@ -18,7 +18,7 @@
 			<div class="form-floating mb-3 mx-auto">	
 				<table class="table" style="font-size:20px;line-height:40px;width:1000px;">
 				    <tr style="font-size:22px;">
-				      <th scope="col" th:if="${mPI[0].ptCount == 1}" colspan="3">&nbsp;[[${mPI[0].matAddressMin}]]</th>
+				      <th scope="col" th:if="${mPI[0].ptCount == 1}" colspan="3">&nbsp;&nbsp;&nbsp;[[${mPI[0].matAddressMin}]]</th>
 				      <th scope="col" th:if="${mPI[0].ptCount > 1}" colspan="3">&nbsp;[[${mPI[0].matAddressMin}]]&nbsp;&nbsp;&nbsp;&nbsp;[[${mPI[0].hospitalName}]]</th>
 				      <th scope="col" colspan="1">[[${mPI[0].service}]]</th>
 				    </tr>	
@@ -58,9 +58,9 @@
 			</div>
 		</div>
 	
-		<main class="container-xl align-items-center mx-auto">
+		<main class="container-xxl align-items-center mx-auto">
 			<div class="mx-auto d-flex align-items-center">
-				<div class="tableDiv mx-auto align-items-center" th:each="onePt : ${mPI}">
+				<div class="tableDiv mx-auto align-items-center" style="margin:0 10px;" th:each="onePt : ${mPI}">
 					<table class="table mx-auto">
 						<thead>
 						    <tr>
@@ -70,10 +70,10 @@
 						  </thead>
 						  <tbody>
 						    <tr>
-						      <th style="width:40px;">성별</th>
-						      <td style="width:60px;">[[${onePt.ptGender == 'M' ? '남성' : '여성'}]]</td>
-						      <th style="width:40px;">나이</th>
-						      <td style="width:60px;">[[${onePt.ptRealAge}]]</td>
+						      <th style="width:50px;">성별</th>
+						      <td style="width:90px;">[[${onePt.ptGender == 'M' ? '남성' : '여성'}]]</td>
+						      <th style="width:50px;">나이</th>
+						      <td style="width:90px;">[[${onePt.ptRealAge}]]</td>
 						    </tr>
 						    <tr>
 						      <th>신장</th>
@@ -101,18 +101,49 @@
 			</div>	
 
 			<div class="sign-btn d-flex justify-content-center mx-auto" style="weight:300px;">
-				<button type="button" class="signIn-btn mt-4" id="nextButton2"><span>매칭 신청</span></button>
-				<button type="button" class="signUp-btn mt-4" id="nextButton2"><span>이전으로</span></button>
+				<button type="button" class="signIn-btn mt-4" id="nextButton" data-bs-toggle="modal" data-bs-target="#exampleModal"><span>매칭 신청</span></button>
+				<button type="button" class="signUp-btn mt-4" id="backButton"><span>이전으로</span></button>
 			</div>
 		</main>
 	</div>
+	
+	
+	<!-- 매칭 신청 모달 -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="exampleModalLabel">매칭 신청</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        <h3 class="h3 mb-4 fw-bold text-center" th:each="onePt : ${mPI}" th:if="${onePt.ptCount > 1 && onePt.groupLeader == 'Y'}">
+	        	[[${onePt.ptName}]] 등 [[${onePt.ptCount}]]명의 공동간병 그룹과의 매칭을 신청하시겠습니까?
+	        </h3>
+	        <h3 class="h3 mb-4 fw-bold text-center" th:if="${mPI[0].ptCount == 1}">
+	        	[[${mPI[0].ptName}]]와의 매칭을 신청하시겠습니까?
+	        </h3>	        
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary">매칭 신청</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	
+	
+	
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	
 	
 	<script th:inline="javascript">
 	
 	window.onload = function() {
-
+		//document.querySelector('#nextButton').addEventListener('click', ()=>{
+		//	modal.show();
+		//})
 	};
 	
 	
