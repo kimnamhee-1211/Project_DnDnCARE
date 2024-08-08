@@ -26,18 +26,20 @@
 		<div id="upperLeftContents">
 			<div style="height:100px;"><!-- 결제 요청 카드 -->
 				<br/>
-				<table class="table">
-					<thead>
-						<tr class="align-middle">
-							<th>개나리님과의 매칭이 성사되었습니다.</th>
-							<td>
-							<button class="btn btn-success payButton">결제하기</button>
-							<input type="hidden" value="68"/> <!-- 이걸 쓸진 모르겠지만 만들어둠 -->
-							</td>
-								
-						</tr>
-					</thead>
-				</table>
+				<th:block th:each="m : ${mc}" th:if="${m.matConfirm == 'W'}">
+					<table class="table" >
+						<thead>
+							<tr class="align-middle">
+								<th>개나리님과의 매칭이 성사되었습니다.</th>
+								<td>
+								<button class="btn btn-success payButton">결제하기</button>
+								<input type="hidden" value="68"/> <!-- 이걸 쓸진 모르겠지만 만들어둠 -->
+								</td>
+									
+							</tr>
+						</thead>
+					</table>
+				</th:block>
 			</div>
 			<div id="upperContentsBtn" class="align-middle text-center" style="height:200px;"><!-- 메뉴판 -->
 				<div><button class="custom-btn btn-14" th:onclick="'location.href=\'' + @{/publicMatching.mc} + '\''" style="width:600px; height:100px;">간병인 공개 매칭 신청</button></div>
@@ -411,7 +413,7 @@
       					<input type="hidden" name="matNo"/>
       					<input type="hidden" name="payMoney"/>
       					<input type="hidden" name="payService">
-      					<input type="hidden" name="mercharnt_uid">
+      					<input type="hidden" name="merchantUid">
       				</form>
       			</div>
     		</div>
@@ -485,12 +487,17 @@
 					document.getElementById('payMatDate').innerText = data.beginDt +' '+ data.beginTime + ' ~ ' + data.endDt + ' '+ data.endTime + ' 총' + data.days +'일 ' + data.times +'시간';
 					document.getElementById('payMoney').innerText = data.money.toLocaleString() + '원';
 					document.getElementById('payAddress').innerText = data.matAddressInfo.split('//')[1] + ' '+data.matAddressInfo.split('//')[2];
-					document.getElementsByClassName('resultPay')[0].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원';
-					document.getElementsByClassName('resultPay')[1].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원 결제하기';
-					
 					document.getElementById('careName').innerText = data.memberName;
 					//결재최종금액도 너핮
-					//	document.getElementsByName('payMoney')[0].value = data.money * data.days / data.ptCount;
+					if(data.matMode != 1){
+						document.getElementsByClassName('resultPay')[0].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원';
+						document.getElementsByClassName('resultPay')[1].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원 결제하기';
+						document.getElementsByName('payMoney')[0].value = data.money / data.ptCount;
+					}else{
+						document.getElementsByClassName('resultPay')[0].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원';
+						document.getElementsByClassName('resultPay')[1].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원 결제하기';
+						document.getElementsByName('payMoney')[0].value = data.money * data.days / data.ptCount;
+					}
 				},
 				error:data=>console.log(data)
 			})
@@ -515,7 +522,8 @@
     	const seconds = now.getSeconds().toString().padStart(2, '0');
 
     	const formattedTime = year+month+day+hours+minutes+seconds;
-    	const form = document.getElementById('form');
+    	const form = document.getElementById('payForm');
+    	console.log(document.getElementsByName('merchantUid')[0]);
     	
 	    function requestPay() {
 	    	//const money = document.getElementById('customAmountInput').value;
@@ -533,12 +541,13 @@
 		    	  console.log(response.success);
 		    	  if(response.success){
 		    		  alert('결제 성공');
+		    		  console.log(response.merchant_uid);
 		    		  document.getElementsByName('merchantUid')[0].value = response.merchant_uid;
 		    		  document.getElementsByName('matNo')[0].value = payBt.nextElementSibling.value;
 		    		  //document.getElementsByName('payMoney')[0].value = response.merchant_uid; 위에서미리넘기자
 		    		  document.getElementsByName('payService')[0].value = response.merchant_uid;
-		    		  //form.action = 'successPay.mc';
-		  	    	  //form.submit();
+		    		  form.action = 'successPay.mc';
+		  	    	  form.submit();
 		    		  
 		    		  
 		    	  }else{

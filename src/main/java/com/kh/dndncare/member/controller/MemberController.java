@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
@@ -571,20 +572,21 @@ public class MemberController {
 
 	// 임시버튼 : 환자 메인페이지로 가기
 	@GetMapping("patientMain.me")
-	public String patientMain(Model model) {
+	public String patientMain(Model model, HttpSession session) {
 		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--
-		
+		Member loginUser = (Member)session.getAttribute("loginUser");
 		//Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 간병인 멤퍼인포정보
 		ArrayList<CareGiver> cg = mService.selectCareGiverList(); // 간병인 정보
 		model.addAttribute("cg",cg);
-		
+		ArrayList<MatMatptInfo> mc = mService.selectMatList(loginUser.getMemberNo());
+		model.addAttribute("mc",mc);
+		System.out.println(mc);
 		for(CareGiver c : cg) {
 			LocalDate birthDateParsed = c.getMemberAge().toLocalDate();
 			LocalDate today = LocalDate.now();
 			
 			c.setAge(Period.between(birthDateParsed, today).getYears());
-			System.out.println(c);
-			System.out.println(c.getAge());
+			//System.out.println(c);
 		}
 		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --up--
 		

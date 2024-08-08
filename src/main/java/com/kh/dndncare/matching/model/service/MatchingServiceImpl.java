@@ -14,7 +14,9 @@ import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
+import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
 @Service
@@ -185,6 +187,11 @@ public class MatchingServiceImpl implements MatchingService {
 	@Override
 	public MatMatptInfo selecMatPtInfo(int matNo, int memberNo) {
 		return mMapper.selecMatPtInfo(matNo,memberNo);
+	}
+
+	@Override
+	public int insertPay(Member loginUser, Pay p) {
+		return mMapper.insertPay(loginUser,p);
 	}
 
 

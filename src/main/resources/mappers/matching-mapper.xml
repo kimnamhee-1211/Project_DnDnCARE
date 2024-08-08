@@ -243,7 +243,20 @@
 		where mat_no = #{matNo} and pt_no = (select pt_no from patient where member_no = #{memberNo})
 	</select>
 
-
+	<insert id="insertPay">
+		insert into pay values(
+			seq_pay.nextval,
+			#{p.matNo},
+			#{loginUser.memberNo},
+			sysdate,
+			#{p.payMoney},
+			#{loginUser.memberName},
+			#{loginUser.memberPhone},
+			#{loginUser.memberEmail},
+			#{p.merchantUid},
+			#{p.payService}
+		)
+	</insert>
 
 
 

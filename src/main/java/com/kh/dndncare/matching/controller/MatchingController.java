@@ -35,6 +35,7 @@ import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
@@ -547,6 +548,21 @@ public class MatchingController {
 			e.printStackTrace();
 		}
 		
+	}
+
+	
+	
+	@PostMapping("successPay.mc")
+	public String insertPay(@ModelAttribute Pay p,
+							HttpSession session) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		int result1 = mcService.insertPay(loginUser,p);
+		
+		
+		
+		return "redirect:patientMain.me";
 	}
 	
 	
