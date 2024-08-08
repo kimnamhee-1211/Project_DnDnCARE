@@ -47,4 +47,7 @@ public class MatMatptInfo {
 	
 	//loginUser의 그룹 간병 참여 여부 확인용
 	private String join;
+	
+	//간병인이름도 같이담기
+	private String memberName;
 }

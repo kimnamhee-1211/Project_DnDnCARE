@@ -29,7 +29,11 @@
 					<thead>
 						<tr class="align-middle">
 							<th>개나리님과의 매칭이 성사되었습니다.</th>
-							<td><button class="btn btn-success payButton">결제하기</button></td>
+							<td>
+							<button class="btn btn-success payButton">결제하기</button>
+							<input type="hidden" value="68"/> <!-- 이걸 쓸진 모르겠지만 만들어둠 -->
+							</td>
+								
 						</tr>
 					</thead>
 				</table>
@@ -228,6 +232,7 @@
 			                	</div>
 			                </div>
 			                <button class="btn-select-info">정보 보기</button>
+			                <input type="hidden" th:value="${cg[num].memberNo}">	<!-- 네임안썻음 -->
 			              </div>
 			            </div>
 			          </div>
@@ -269,6 +274,7 @@
 			                	</div>
 			                </div>
 			                <button class="btn-select-info">정보 보기</button>
+			                <input type="hidden" th:value="${cg[num].memberNo}">	<!-- 네임안썻음 -->
 			              </div>
 			            </div>
 			          </div>
@@ -310,6 +316,7 @@
 			                	</div>
 			                </div>
 			                <button class="btn-select-info">정보 보기</button>
+			                <input type="hidden" th:value="${cg[num].memberNo}">	<!-- 네임안썻음 -->
 			              </div>
 			            </div>
 			          </div>
@@ -376,14 +383,27 @@
 		<div class="modal-dialog modal-dialog-centered" role="document">
     		<div class="modal-content rounded-3 shadow">
     			<div class="m-4 text-center h2">결제 정보</div>
-    			<div class="m-4" style="border-bottom:1px solid #8dd986;">매칭 번호 : th</div>
-    			<div class="m-4">뭐쓸까 </div>
+    			<div class="m-4 h3" style="border-bottom:1px solid #8dd986;">OOO님과 매칭되었습니다!</div>
+				<div class="d-flex justify-content-start">    			
+	    			<div >
+	    				<div class="m-4 text-center">매칭 서비스</div>
+	    				<div class="m-4 text-center">공동간병 여부</div>
+	    				<div class="m-4 text-center">간병 날짜</div>
+	    				<div class="m-4 text-center">주소 </div>
+	    				<div class="m-4 text-center">일당 금액</div>
+	    			</div>
+	    			<div>
+	    				<div class="m-4">가정돌봄? </div>
+	    				<div class="m-4">가정돌봄? </div>
+	    				<div class="m-4">가정돌봄? </div>
+	    				<div class="m-4">가정돌봄? </div>
+	    			</div>
+    			</div>
     			
-    			<div align="center" class="m-4">별을 클릭하세요</div>
-      			<div class="modal-footer  p-0">
-      				<div class="d-flex justify-content-evenly">
-	      				<button type="button" class="btn btn-success payApply" onclick="requestPay()">결제하기</button>
-	      				<button type="button" class="btn btn-light"data-bs-dismiss="modal">취소</button>
+    			<div align="right" class="m-4 h">총 금액 100,000원</div>
+      			<div align="center"class="modal-footer d-flex justify-content-center p-0">
+      				<div align="center"class="d-flex justify-content-center">
+	      				<button type="button" class="btn btn-lg btn-success payApply h1 m-4" onclick="requestPay()">100,000원 결제하기</button>
       				</div>
       				
       			</div>
@@ -424,15 +444,39 @@
     <script>//종규삽입
     
     
-    //
+    //폼 태그없이 memberNo만 넘기자. 간병인 리뷰디테일 페이지로 memberNo
+    const infoBts = document.getElementsByClassName('btn-select-info');
+    
+    for(infoBt of infoBts){
+    	infoBt.addEventListener('click',function(){
+    		location.href = 'reviewDetail.mc?memberNo=' + this.nextElementSibling.value;
+    	})
+    }
     
     
     
     
-    //모달
-    document.getElementsByClassName('payButton')[0].addEventListener('click',()=>{
-		$('#modalChoice').modal('show');	
-	})
+    //모달.지금은하난데 for문돌려야겟지?
+//     document.getElementsByClassName('payButton')[0].addEventListener('click',()=>{
+// 		$('#modalChoice').modal('show');	
+// 	})
+	
+	const payBts = document.getElementsByClassName('payButton');
+    for(payBt of payBts){
+    	payBt.addEventListener('click',function(){
+			$('#modalChoice').modal('show');
+			
+			$.ajax({
+				url:'payInfo.mc',
+				data: {matNo:payBt.nextElementSibling.value },
+				success:data=>{
+					console.log('굳');
+					console.log(data);
+				},
+				error:data=>console.log(data)
+			})
+    	})		
+    };
 	
 	
 	

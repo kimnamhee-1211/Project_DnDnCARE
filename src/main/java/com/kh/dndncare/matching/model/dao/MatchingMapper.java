@@ -72,5 +72,7 @@ public interface MatchingMapper {
 
 	int deleteWantInfo(int memberNo);
 
+	MatMatptInfo selectMatching(int matNo);
+
 
 }

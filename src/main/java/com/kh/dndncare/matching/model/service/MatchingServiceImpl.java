@@ -177,6 +177,11 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.deleteWantInfo(memberNo);
 	}
 
+	@Override
+	public MatMatptInfo selecMatching(int matNo) {
+		return mMapper.selectMatching(matNo);
+	}
+
 
 
 

@@ -229,8 +229,13 @@
 		values(#{matNo}, #{ptNo}, #{antePay}, #{service}, #{matAddressInfo}, #{matRequest}, default, #{groupLeader})
 	</insert>
 
-
-
+	<!-- 결제정보가져오려는 셀렉트 매칭 정보 -->
+	<select id="selectMatching" resultType="MatMatptInfo">
+		select *
+		from matching
+			
+		where mat_no = #{matNo}
+	</select>
 
 
 

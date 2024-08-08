@@ -79,6 +79,7 @@ public interface MatchingService {
 	int insertWantInfo(Map<String, Object> params);
 	int insertMatPtInfo(MatPtInfo matPtInfo);
 	int deleteWantInfo(int memberNo);
+	MatMatptInfo selecMatching(int matNo);
 	
 
 }

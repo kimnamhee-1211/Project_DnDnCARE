@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
@@ -456,9 +455,10 @@ public class MatchingController {
 	}
 	
 	
-	@GetMapping("reviewDetail.mc")
-	public String getMethodName(HttpSession session, Model model) {
-		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+	@GetMapping("reviewDetail.mc")												
+	public String getMethodName(HttpSession session, Model model,@RequestParam("memberNo")int memberNo) {
+		
+		//int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		
 		// 정보
 		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
@@ -468,6 +468,8 @@ public class MatchingController {
 		
 		// 평점
 		int avgReviewScore = mcService.avgReviewScore(memberNo);
+		
+		
 		
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("reviewCount", reviewCount);
@@ -493,7 +495,29 @@ public class MatchingController {
 
 	}
 	
-	
+	//비동기로 환자측에서 결제할때 간병인 정보 가져오기
+	@GetMapping("payInfo.mc")
+	@ResponseBody
+	public void payInfo(@RequestParam("matNo") int matNo,HttpServletResponse response) {
+		// 보낼때, 매칭번호가 필수다
+		MatMatptInfo matInfo = mcService.selecMatching(matNo);
+		
+		
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");	
+		//내 date형식 포멧을 변경해준다.
+		Gson gson = gb.create();
+		response.setContentType("application/json; charset=UTF-8");
+		try {
+			gson.toJson(matInfo, response.getWriter());
+		} catch (JsonIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	
 	
