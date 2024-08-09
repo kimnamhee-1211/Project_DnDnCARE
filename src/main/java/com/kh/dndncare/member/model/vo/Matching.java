@@ -20,5 +20,13 @@ public class Matching {
 	private int money;//MONEY
 	private String matConfirm;//MAT_CONFIRM
 	private int matType;//MAT_TYPE
-	private int hosptalNo;//HOSPTAL_NO
+	private int hospitalNo;//HOSPTAL_NO
+	private String hospitalName;
+	
+	private String beginTime;
+	private String endTime;
+	private int ptCount;
+	
+	
+	
 }

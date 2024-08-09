@@ -35,4 +35,6 @@ public class Member {
 	private int memberRealAge; // 나이 계산용 필드 추가
 	private String career;
 	private String license;
+	private int matNo;
+	private String groupLeader;
 }

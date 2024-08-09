@@ -2,18 +2,17 @@ package com.kh.dndncare.member.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.member.model.dao.MemberMapper;
-
 import com.kh.dndncare.member.model.vo.CalendarEvent;
-
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.MatPtInfo;
 import com.kh.dndncare.member.model.vo.Matching;
-
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 import com.kh.dndncare.sms.SmsService;
@@ -180,6 +179,27 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public ArrayList<Member> selectMemberList(ArrayList<Integer> memberNoList) {
 		return mMapper.selectMemberList(memberNoList);
+	}
+
+	@Override
+	public ArrayList<Matching> selectMatchingList(PageInfo pi, HashMap<String, Object> searchOption) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return mMapper.selectMatchingList(rowBounds, searchOption);
+	}
+
+	@Override
+	public int getMatchingListCount(HashMap<String, Object> searchOption) {
+		return mMapper.getMatchingListCount(searchOption);
+	}
+
+	@Override
+	public ArrayList<Member> selectMatchingMemberList(ArrayList<Integer> matNoList) {
+		return mMapper.selectMatchingMemberList(matNoList);
+	}
+
+	@Override
+	public ArrayList<MatPtInfo> selectMatchingPTInfoList(ArrayList<Integer> matNoList) {
+		return mMapper.selectMatchingPTInfoList(matNoList);
 	}
 
 

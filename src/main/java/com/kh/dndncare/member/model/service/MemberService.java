@@ -3,11 +3,13 @@ package com.kh.dndncare.member.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 
 import java.util.List;
 
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.MatPtInfo;
 import com.kh.dndncare.member.model.vo.Matching;
 
 import com.kh.dndncare.member.model.vo.Member;
@@ -71,6 +73,14 @@ public interface MemberService {
 	ArrayList<CalendarEvent> patientCalendarEvent(ArrayList<Integer> matNoList);
 
 	ArrayList<Member> selectMemberList(ArrayList<Integer> memberNoList);
+
+	ArrayList<Matching> selectMatchingList(PageInfo pi, HashMap<String, Object> searchOption);
+
+	int getMatchingListCount(HashMap<String, Object> searchOption);
+
+	ArrayList<Member> selectMatchingMemberList(ArrayList<Integer> matNoList);
+
+	ArrayList<MatPtInfo> selectMatchingPTInfoList(ArrayList<Integer> matNoList);
 
 
 

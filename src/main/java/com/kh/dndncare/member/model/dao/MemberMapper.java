@@ -2,16 +2,15 @@ package com.kh.dndncare.member.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.session.RowBounds;
 
-
+import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
-
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.MatPtInfo;
 import com.kh.dndncare.member.model.vo.Matching;
-
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
@@ -72,6 +71,14 @@ public interface MemberMapper {
 	ArrayList<CalendarEvent> patientCalendarEvent(ArrayList<Integer> matNoList);
 
 	ArrayList<Member> selectMemberList(ArrayList<Integer> memberNoList);
+
+	ArrayList<Matching> selectMatchingList(RowBounds rowBounds, HashMap<String, Object> searchOption);
+
+	int getMatchingListCount(HashMap<String, Object> searchOption);
+
+	ArrayList<Member> selectMatchingMemberList(ArrayList<Integer> matNoList);
+
+	ArrayList<MatPtInfo> selectMatchingPTInfoList(ArrayList<Integer> matNoList);
 
 
 

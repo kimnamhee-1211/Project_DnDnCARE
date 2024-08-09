@@ -29,11 +29,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
+import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.MatPtInfo;
+import com.kh.dndncare.member.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
@@ -850,29 +855,40 @@ public class MemberController {
 		// MEMBER_NO(간병인 번호), MEMBER_NAME(간병인 이름), MEMBER_GENDER(간병인 성별), MEMBER_AGE(간병인 나이), MAT_MODE(기간제1, 시간제2), 
 		// MAT_ADDRESS_INFO(간병 장소), HOSPITAL_NAME(병원명)
 		// MAT_NO(매칭번호), PT_COUNT(공동인지 개인인지 구분), BEGIN_DT(시작일), END_DT(종료일) 
-		
+		int listCount = mService.getMatchingListCount(null);
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 8);
+		ArrayList<Matching> matList = new ArrayList<Matching>();
+		ArrayList<Integer> matNoList = new ArrayList<Integer>();
+		ArrayList<MatPtInfo> mpiList = new ArrayList<MatPtInfo>();
+		ArrayList<Member> memList = new ArrayList<Member>();
 		if(memberNo != null) {
-			
-			
-			
-			
-			
+			matList = mService.selectMatchingList(pi, null);
+			if(!matList.isEmpty()) {
+				for(Matching mat : matList) {
+					matNoList.add(Integer.parseInt(String.valueOf(mat.getMatNo()))); // [1, 50, 55, 62, 30, 31, 63]
+				}
+				mpiList = mService.selectMatchingPTInfoList(matNoList);
+				memList = mService.selectMatchingMemberList(matNoList); // [Member(memberNo=48, memberId=null, memberPwd=null, memberName=comp1, memberGender=M, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=74, career=null, license=null, matNo=1, groupLeader=N), Member(memberNo=55, memberId=null, memberPwd=null, memberName=나리환자1, memberGender=M, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=44, career=null, license=null, matNo=31, groupLeader=Y), Member(memberNo=15, memberId=null, memberPwd=null, memberName=나환자, memberGender=F, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=52, career=null, license=null, matNo=50, groupLeader=N), Member(memberNo=15, memberId=null, memberPwd=null, memberName=나환자, memberGender=F, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=52, career=null, license=null, matNo=55, groupLeader=Y), Member(memberNo=10, memberId=null, memberPwd=null, memberName=test3, memberGender=F, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=0, career=null, license=null, matNo=1, groupLeader=Y), Member(memberNo=10, memberId=null, memberPwd=null, memberName=test3, memberGender=F, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=0, career=null, license=null, matNo=30, groupLeader=N), Member(memberNo=10, memberId=null, memberPwd=null, memberName=test3, memberGender=F, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=0, career=null, license=null, matNo=50, groupLeader=Y), Member(memberNo=28, memberId=null, memberPwd=null, memberName=기기기, memberGender=M, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=40, career=null, license=null, matNo=30, groupLeader=Y), Member(memberNo=28, memberId=null, memberPwd=null, memberName=기기기, memberGender=M, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=40, career=null, license=null, matNo=62, groupLeader=Y), Member(memberNo=28, memberId=null, memberPwd=null, memberName=기기기, memberGender=M, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=40, career=null, license=null, matNo=63, groupLeader=Y)]
+			}
 		}
 		
+		GsonBuilder gb = new GsonBuilder().setDateFormat("YYYY-MM-dd");
+		Gson gson = gb.create();
 		
-		Gson gson = new Gson();
-		ArrayList<String> list = new ArrayList<String>();
-		list.add("기본1");
-		list.add("기본2");
-		list.add("기본3");
-		list.add("기본4");
-		list.add("기본5");
-		list.add("기본6");
-		list.add("기본7");
-		list.add("기본8");
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		result.put("matList", matList);
+		result.put("mpiList", mpiList);
+		result.put("memList", memList);
+		
 		response.setContentType("application/json; charset=UTF-8");
 		try {
-			gson.toJson(list, response.getWriter());
+			if(!matList.isEmpty()) {
+				System.out.println("목록있음");
+				gson.toJson(result, response.getWriter());
+			} else {
+				System.out.println("목록없음");
+				gson.toJson("noExist", response.getWriter());
+			}
 		} catch (JsonIOException | IOException e) {
 			e.printStackTrace();
 		}
