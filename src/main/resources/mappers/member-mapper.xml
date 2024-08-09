@@ -294,7 +294,8 @@
 	<select id="selectMatList" resultType="MatMatptInfo">	<!-- 환자번호로 mat_pt테이블의 매칭번호를 뽑아온다. -->
 		select *
 		from mat_pt_info
-    		join matching using(mat_no)
+    		left join matching ON mat_pt_info.mat_no = matching.mat_no
+            left join member on matching.member_no =member.member_no
 		where pt_no = (select pt_no
 						from patient
 						where member_no = #{memberNo})
