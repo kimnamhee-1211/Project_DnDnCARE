@@ -231,6 +231,7 @@ public class MemberController {
 				infoMap.put("돌보고 싶은 질환", wantDisease);
 			}
 		}
+		// HashMap<String, String> infoMap
 		if(Integer.parseInt(String.valueOf(infoMap.get("나이"))) < 0) {
 			infoMap.put("나이", (Integer.parseInt(infoMap.get("나이"))+100)+"");
 		}
