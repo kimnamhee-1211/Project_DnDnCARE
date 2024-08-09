@@ -33,12 +33,15 @@ import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.Pagination;
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.Info;
+import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
@@ -722,7 +725,14 @@ public class MemberController {
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		int ptNo = loginUser.getMemberNo();
 		
-		ArrayList<MatMatptInfo> list = mService.reviewList(ptNo);
+		ArrayList<MatPtInfo> list = mService.reviewList(ptNo);
+		HashMap<Integer, Object> reviewList = new HashMap<Integer, Object>();
+		
+		
+		for(MatPtInfo reviewsInfo:list) {
+                //ArrayList<CareReview> SelectReviewList = mService.selectReviewList(reviewsInfo.getReviewNo());
+            }
+		
 		model.addAttribute("list", list);
 		if (loginUser != null) {
 			char check = loginUser.getMemberCategory().charAt(0);

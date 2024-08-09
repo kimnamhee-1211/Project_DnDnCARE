@@ -32,4 +32,5 @@ public class CareGiver {
 	private Date memberAge;
 	private int age;
 	private int score;
+	
 }

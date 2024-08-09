@@ -18,11 +18,13 @@
 				<div class="row">
 					<div align="center"class="col m-3 testBorder" >
 			      		<img id="profile-image" src="image/icon_profile.png"/>
+			      		<hr>
 			      		<div class="h3">[[${caregiverIntro.memberName}]]님</div>
-			      		<div class="h6">경력:[[${caregiverInfoList.career}]]년</div>
-			      		<div class="h6">국적:[[${caregiverIntro.memberNational}]]</div>
+			      		
 		      		</div>
 		      		<div class="col m-3 testBorder">
+		      		
+			      		
 			      		<div class="row m-2">
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
 								<button th:if="${1 <= avgReviewScore}" class="btn-star btn-icon-star-left" value="1"></button>
@@ -47,15 +49,24 @@
 			      				
 			      		</div>
 			      		<div class="d-flex justify-content-between" style="margin-top:-10px">
-							<span>총 후기 ([[${reviewCount}]])</span>			      		
-							<span th:if="${avgReviewScore != 0}">[[${avgReviewScore}]]점</span>	
+							<span>총 후기 ([[${reviewCount}]]개)</span>			      		
+							<span th:if="${avgReviewScore != 0}">평점 : [[${avgReviewScore}]]점</span>	
 							<span th:if="${avgReviewScore == 0}">정보가 없습니다.</span>		      		
 			      		</div>
-			      		<div class="col m-3 testBorder">
-			      			[[${caregiverIntro.careIntro}]]
-			      		</div>
-			      		<div class="col m-3 testBorder">
-			      			자격증 : [[${caregiverInfoList.license}]]
+			      		<div class="col m-2 testBorder">
+			      			<h6>나이 : </h6>
+			      			<th:block th:if="${caregiverIntro.memberGender} == 'M'">
+			      				<h6>성별 : 남성</h6>
+			      			</th:block>
+			      			<th:block th:if="${caregiverIntro.memberGender} == 'F'">
+			      				<h6>성별 : 여성</h6>
+			      			</th:block>
+			      			<h6>경력:[[${caregiverInfoList.career}]]년, 국적:[[${caregiverIntro.memberNational}]]</h6>
+			      			<h6>자격증 : [[${caregiverInfoList.license}]]</h6>
+			      			<div class="h6">희망금액 : [[${caregiverIntro.minMoney}]]원 ~ [[${caregiverIntro.maxMoney}]]원</div>
+			      			<hr>
+			      			<h6	 align="center">자기소개</h6> 
+			      			<h6>[[${caregiverIntro.careIntro}]]</h6>
 			      		</div>
 			      		
 		      		</div>

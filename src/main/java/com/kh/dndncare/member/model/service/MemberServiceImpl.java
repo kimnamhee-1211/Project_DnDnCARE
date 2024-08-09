@@ -12,6 +12,7 @@ import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.dao.MemberMapper;
 
@@ -271,7 +272,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<MatMatptInfo> reviewList(int ptNo) {
+	public ArrayList<MatPtInfo> reviewList(int ptNo) {
 		return mMapper.reviewList(ptNo);
 	}
 

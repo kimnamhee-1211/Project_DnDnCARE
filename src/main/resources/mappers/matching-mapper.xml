@@ -140,14 +140,14 @@
 	<select id="reviewCount" resultType="_int">
 		select count(*)
 		from care_review
-		where member_no=#{memberNo} 
+		where member_no=#{memberNo} and review_status='Y'
 	</select>
 	
 	<!-- 간병인 평점 -->
 	<select id="avgReviewScore" resultType="Double">
 		select avg(review_score)
 		from care_review
-		where member_no=#{memberNo}
+		where member_no=#{memberNo} and review_status='Y'
 	</select>
 	
 	<!-- 받아온 patient정보로 수정 -->
@@ -224,13 +224,14 @@
 		values(#{matNo}, #{ptNo}, #{antePay}, #{service}, #{matAddressInfo}, #{matRequest}, default, #{groupLeader})
 	</insert>
 
-
+	<!-- 간병인 정보 조회 -->
 	<select id="selectIntro" resultType="Caregiver">
-		select care_intro, member_national, member_name
+		select *
 		from caregiver
 			join member using(member_no)
 		where member_no = #{memberNo}
 	</select>
+	
 	<!-- 결제정보가져오려는 셀렉트 매칭 정보 -->
 	<select id="selectMatching" resultType="MatMatptInfo">
 		select *
@@ -239,7 +240,7 @@
 	</select>
 
 
-
+	<!--  리뷰작성 미완성 -->
 	<insert id="insertReview">
 		<selectKey resultType="_int" keyProperty="reviewNo" order="BEFORE">
 			select seq_crcid.nextval from dual

@@ -26,6 +26,7 @@ public class MatPtInfo {
 	private String memberName;
 	private String reviewContent;
 	private int reviewScore;
+	private int reviewNo;
 	
 	
 
