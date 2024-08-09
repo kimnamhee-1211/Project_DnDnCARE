@@ -243,7 +243,7 @@ public class MemberController {
 		// 3. 환자 목록 조회
 		ArrayList<HashMap<String, Object>> promptPatientList = new ArrayList<HashMap<String, Object>>(); // 프롬프트에 전달할 최종 후보군 리스트
 		String joinStatus = infoMap.remove("CARE_JOIN_STATUS"); // 공동 간병 참여여부
-		String careGiverAddress = infoMap.get("주소").contains("서울") ? "서울" : (infoMap.get("주소").contains("제주") ? "제주" : infoMap.get("주소"));
+		String careGiverAddress = infoMap.get("주소").contains("서울") ? "서울" : (infoMap.get("주소").contains("제주") ? "제주" : (infoMap.get("주소").contains("세종") ? "세종" : infoMap.get("주소")));
 		// 환자 기본정보 조회 : 회원번호, 이름, 성별, 나이, 간병장소, 국적, 키, 몸무게, 요청서비스, 요청사항, 요청장소, 매칭 시작일, 매칭 종료일, 금액
 //		PATIENT : 멤버번호(PT_NO), 이름(PT_NAME), 성별(PT_GENDER), 나이(PT_GENDER), 국적, 키(PT_HEIGHT), 몸무게(PT_WEIGHT)
 //		MATCHING: 매칭번호(MAT_NO), 시작날짜(BEGIN_DT), 종료날짜(END_DT), 지불가능한 금액(MONEY)  
@@ -1069,7 +1069,7 @@ public class MemberController {
 		
 		// 3. 간병인 목록 조회
 //		ArrayList<HashMap<String, Object>> promptCaregiverList = new ArrayList<HashMap<String, Object>>(); // 프롬프트에 전달할 최종 후보군 리스트
-		String myAddress = infoMap.get("주소").contains("서울") ? "서울" : (infoMap.get("주소").contains("제주") ? "제주" : infoMap.get("주소"));
+		String myAddress = infoMap.get("주소").contains("서울") ? "서울" : (infoMap.get("주소").contains("제주") ? "제주" : (infoMap.get("주소").contains("세종") ? "세종" : infoMap.get("주소")));
 //		간병인 기본정보 조회 : 회원번호, 성별, 나이, 주소, 국적, 제공하려는 서비스, 경력, 서비스한 경험, 돌봄경험, 자격증, 최소비용
 //		MEMBER : MEMBER_NO, MEMBER_GENDER, MEMBER_AGE, MEMBER_ADDRESS, MEMBER_NATIONAL => 필수
 //		CAREGIVER: MIN_MONEY (필수)
