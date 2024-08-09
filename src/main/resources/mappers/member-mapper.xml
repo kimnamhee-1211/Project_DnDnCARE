@@ -245,4 +245,22 @@
 		WHERE MAT_CONFIRM = 'Y' AND MEMBER.MEMBER_NO = ${memberNo}
 	</select>
 	
+	<select id="patientCalendarEvent" resultType="CalendarEvent">
+		SELECT MAT_NO, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MONEY, MEMBER_NO AS CAREGIVER_NO, MAT_DATE
+		FROM MATCHING 
+		        JOIN MATCHING_DATE USING(MAT_NO)
+		WHERE MAT_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+	
+	<!-- MEMBER_NO, MEMBER_NAME, MEMBER_GENDER, MEMBER_AGE -->
+	<select id="selectMemberList" resultType="Member">
+		SELECT MEMBER_NO, MEMBER_NAME, MEMBER_GENDER, 
+				EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS "memberRealAge"
+		FROM MEMBER
+		WHERE MEMBER_NO IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+	
+	
 </mapper>

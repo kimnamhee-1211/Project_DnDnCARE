@@ -38,7 +38,7 @@ public class CalendarEvent {
 	private String matDate; // 시간제 간병일 때의 근무날짜
 	private Date beginDt;
 	private Date endDt;
-	
+	private int careGiverNo;
 	
 	
 }

@@ -69,6 +69,10 @@ public interface MemberMapper {
 
 	ArrayList<HashMap<String, Integer>> getPatientEvent(int memberNo);
 
+	ArrayList<CalendarEvent> patientCalendarEvent(ArrayList<Integer> matNoList);
+
+	ArrayList<Member> selectMemberList(ArrayList<Integer> memberNoList);
+
 
 
 	
