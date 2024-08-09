@@ -12,4 +12,8 @@ public class HomeController {
 		return "home";
 	}
 	
+	@GetMapping("naver.do")
+	public String naver() {
+		return "naverTest";
+	}
 }

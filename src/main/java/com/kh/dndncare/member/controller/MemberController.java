@@ -1383,7 +1383,6 @@ public class MemberController {
 
 	
 	
-	
 }//클래스 끝
 
 	
