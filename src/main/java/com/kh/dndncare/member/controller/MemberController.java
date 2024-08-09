@@ -87,22 +87,27 @@ public class MemberController {
 
 		if (loginUser != null) {
 			Patient p = mService.selectPatient(loginUser.getMemberNo());
+			
 			// List<Integer> memberInfo =
 			// mService.selectMemberInfo(loginUser.getMemberNo());
 
 			char check = loginUser.getMemberCategory().charAt(0);
+			Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 내정보
+			Info wantInfo = categoryFunction(loginUser.getMemberNo(), false); // 원하는간병인정보
+			model.addAttribute("memberInfo", memberInfo);
+			System.out.println("여기가 멤버인포 : " + memberInfo);
+			model.addAttribute("wantInfo", wantInfo);
+			System.out.println("여기가 왠트인포 : " + wantInfo);
 
 
 			switch (check) {
 			case 'C':
+				CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+				model.addAttribute("cg", cg);
 				return "myInfo";
 
 			case 'P':
-				Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 내정보
-				Info wantInfo = categoryFunction(loginUser.getMemberNo(), false); // 원하는간병인정보
 				model.addAttribute("p", p);
-				model.addAttribute("memberInfo", memberInfo);
-				model.addAttribute("wantInfo", wantInfo);
 				System.out.println(wantInfo.getInfoDisease());
 
 				// Patient pWant = categoryFunction()
@@ -135,9 +140,10 @@ public class MemberController {
 
 			
 			for(HashMap<String,String> m : category) {
+				System.out.println(m.get("S_CATEGORY"));
 				 switch(m.get("L_CATEGORY")) {
 					 case "service" : memberInfo.getInfoService().add(0,m.get("S_CATEGORY")); break;
-					 case "serviceCareer" : memberInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
+					 //case "serviceCareer" : memberInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "career" : memberInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "disease" : memberInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
 					 case "license" : memberInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;

@@ -23,39 +23,41 @@
 	
 	<div id="upperContents">
 		<div><!-- 왼쪽 공백 --></div>
+		
 		<div id="upperLeftContents">
-			<div style="height:100px;"><!-- 결제 요청 카드 -->
-				<br/>
-				<th:block th:each="m : ${mc}" th:if="${m.matConfirm == 'W'}">
-					<table class="table" >
-						<thead>
-							<tr class="align-middle">
-								<th>[[${m.memberName}]]님과의 매칭이 성사되었습니다.</th>
-								<td>
-								<button class="btn btn-success payButton">결제하기</button>
-								<input type="hidden" value="68"/> <!-- 이걸 쓸진 모르겠지만 만들어둠 -->
-								</td>
-									
-							</tr>
-						</thead>
-					</table>
-				</th:block>
-			</div>
-			<div id="upperContentsBtn" class="align-middle text-center" style="height:200px;"><!-- 메뉴판 -->
-				<div><button class="custom-btn btn-14" th:onclick="'location.href=\'' + @{/publicMatching.mc} + '\''" style="width:600px; height:100px;">간병인 공개 매칭 신청</button></div>
-				<div>
-					<div><!-- 테이블 왼쪽 공백 --></div>
-					<table>
-	                    <tr>
-	                        <td><button class="custom-btn btn-14">내 정보</button></td>
-	                        <td><button class="custom-btn btn-14">간병 정보</button></td>
-	                        <td><button class="custom-btn btn-14">커뮤니티</button></td>
-	                    </tr>
-	                </table>
-	                <div><!-- 테이블 오른쪽 공백 --></div>
+			<div style="height:270px;"><!-- 결제 요청 카드 -->
+				<div class="p-2" id="viewPayList">[[${session.loginUser.memberName}]]님! 결제 요청 건이 있어요</div>
+				<div class="pay-content">
+					<th:block th:each="m : ${mc}" th:if="${m.matConfirm == 'W'}">
+						<table class="ml-4 mr-4 table" >
+							<thead>
+								<tr class="align-middle">
+									<th width="510">[[${m.memberName}]]님과의 매칭이 성사되었습니다.</th>
+									<td align="center">
+									<button class="btn btn-success payButton">결제하기</button>
+									<input type="hidden" th:value="${m.matNo}"/> <!-- 이걸 쓸진 모르겠지만 만들어둠 -->
+									</td>
+								</tr>
+							</thead>
+						</table>
+					</th:block>
+				</div>
+			
+				<div id="upperContentsBtn" class="m-1 align-middle text-center" style="height:200px;"><!-- 메뉴판 -->
+					<div><button class="custom-btn btn-14" th:onclick="'location.href=\'' + @{/publicMatching.mc} + '\''" style="width:600px; height:100px;">간병인 공개 매칭 신청</button></div>
+					<div>
+						<div><!-- 테이블 왼쪽 공백 --></div>
+						<table>
+		                    <tr>
+		                        <td><button class="custom-btn btn-14">내 정보</button></td>
+		                        <td><button class="custom-btn btn-14">간병 정보</button></td>
+		                        <td><button class="custom-btn btn-14">커뮤니티</button></td>
+		                    </tr>
+		                </table>
+		                <div><!-- 테이블 오른쪽 공백 --></div>
+					</div>
 				</div>
 			</div>
-			
 			<div><!-- AI 매칭 : 가로 700, 세로 200 -->
 				<table class="table mainTable" style="height:200px;">
                 	<thead>
@@ -452,6 +454,11 @@
     
     <script>//종규삽입
     
+    //결제목록 보이기
+    document.getElementById('viewPayList').addEventListener('click',function(){
+    	this.nextElementSibling.classList.toggle('showPay');
+    })
+    
     
     //폼 태그없이 memberNo만 넘기자. 간병인 리뷰디테일 페이지로 memberNo
     const infoBts = document.getElementsByClassName('btn-select-info');
@@ -476,26 +483,27 @@
     for(payBt of payBts){
     	payBt.addEventListener('click',function(){
 			$('#modalChoice').modal('show');
-			
+			console.log(this.nextElementSibling);
 			$.ajax({
 				url:'payInfo.mc',
-				data: {matNo:payBt.nextElementSibling.value },
+				data: {matNo:this.nextElementSibling.value },
 				success:data=>{
-					console.log(data);
+					
 					document.getElementById('payService').innerText = data.service;
 					document.getElementById('payPtCount').innerText = data.ptCount == 1 ? '개인' : '공동';
 					document.getElementById('payMatDate').innerText = data.beginDt +' '+ data.beginTime + ' ~ ' + data.endDt + ' '+ data.endTime + ' 총' + data.days +'일 ' + data.times +'시간';
 					document.getElementById('payMoney').innerText = data.money.toLocaleString() + '원';
 					document.getElementById('payAddress').innerText = data.matAddressInfo.split('//')[1] + ' '+data.matAddressInfo.split('//')[2];
 					document.getElementById('careName').innerText = data.memberName;
-					//결재최종금액도 너핮
+					//결재최종금액도 더하기
 					if(data.matMode != 1){
-						document.getElementsByClassName('resultPay')[0].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원';
-						document.getElementsByClassName('resultPay')[1].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원 결제하기';
-						document.getElementsByName('payMoney')[0].value = data.money / data.ptCount;
+						document.getElementsByClassName('resultPay')[0].innerText = (data.money * data.hourly / data.ptCount).toLocaleString() + '원';
+						document.getElementsByClassName('resultPay')[1].innerText = (data.money * data.hourly / data.ptCount).toLocaleString() + '원 결제하기';
+						document.getElementsByName('payMoney')[0].value = (data.money * data.hourly / data.ptCount) / data.ptCount;
+						document.getElementById('payMatDate').innerText = data.beginDt +' '+ data.beginTime + ' ~ ' + data.endDt + ' '+ data.endTime + ' 기간 중 총' + data.hourly +'회 ' + data.times +'시간';
 					}else{
-						document.getElementsByClassName('resultPay')[0].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원';
-						document.getElementsByClassName('resultPay')[1].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원 결제하기';
+						document.getElementsByClassName('resultPay')[0].innerText = (data.money / data.ptCount).toLocaleString() + '원';
+						document.getElementsByClassName('resultPay')[1].innerText = (data.money / data.ptCount).toLocaleString() + '원 결제하기';
 						document.getElementsByName('payMoney')[0].value = data.money * data.days / data.ptCount;
 					}
 				},

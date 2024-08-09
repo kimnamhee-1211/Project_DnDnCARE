@@ -194,6 +194,11 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.insertPay(loginUser,p);
 	}
 
+	@Override
+	public String selectMatDate(int matNo) {
+		return mMapper.selectMatDate(matNo);
+	}
+
 
 
 

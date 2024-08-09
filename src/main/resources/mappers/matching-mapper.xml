@@ -258,7 +258,11 @@
 		)
 	</insert>
 
-
+	<select id="selectMatDate" resultType="String">
+		select mat_date
+		from matching_date
+		where mat_no = #{matNo} 
+	</select>
 
 
 </mapper>

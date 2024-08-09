@@ -246,3 +246,37 @@ a {
 	padding:0px;
 	width:16px; height:16px;
 }
+
+/*잘 수정해보자. 결제 할구간이야*/
+.pay-content{
+	height:00px;
+	overflow:hidden;
+	z-index: 2;
+}
+
+.showPay{
+	position: absolute;
+	background:white;
+	height:200px;
+	width:700px;
+	border: 1px solid #8dd986;
+	z-index : 2;
+	overflow: auto;
+}
+
+.selectUpdateDiv{
+	position: absolute;
+	overflow: auto;
+	height:200px;
+	min-width:80px;
+	background:white;
+	border:1px solid #8dd986;
+	border-radius:5px;
+	z-index:1;
+}
+
+#viewPayList{
+	margin:16px;
+	margin-bottom:0px;
+	border-bottom:2px solid #8dd986;
+}

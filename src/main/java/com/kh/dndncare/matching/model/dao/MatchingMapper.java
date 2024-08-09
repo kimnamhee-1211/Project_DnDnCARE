@@ -79,5 +79,7 @@ public interface MatchingMapper {
 
 	int insertPay(@Param("loginUser")Member loginUser,@Param("p") Pay p);
 
+	String selectMatDate(int matNo);
+
 
 }

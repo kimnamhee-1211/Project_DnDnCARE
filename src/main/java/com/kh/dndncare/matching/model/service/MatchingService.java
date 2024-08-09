@@ -84,6 +84,7 @@ public interface MatchingService {
 	MatMatptInfo selecMatching(int matNo);
 	MatMatptInfo selecMatPtInfo(int matNo, int i);
 	int insertPay(Member loginUser, Pay p);
+	String selectMatDate(int matNo);
 	
 
 }

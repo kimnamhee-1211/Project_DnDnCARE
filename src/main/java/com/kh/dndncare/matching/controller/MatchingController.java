@@ -515,6 +515,9 @@ public class MatchingController {
 		matInfo.setDeposit(matPtInfo.getDeposit());
 		matInfo.setGroupLeader(matPtInfo.getGroupLeader());
 		
+		String hourly = mcService.selectMatDate(matNo);
+		int hourly2 = hourly.split(",").length;
+		matInfo.setHourly(hourly2);
 		
 		//며칠 몇시간 하는건지 계산해보자
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -559,11 +562,17 @@ public class MatchingController {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		//pay DB에 접근,기록
 		int result1 = mcService.insertPay(loginUser,p);
-		//입금확인해보기. 매칭방번호로 조회해서, 한명이라도 N이있으면 넘어가기로하자. N이없으면 매칭방에서 matConfirmY로
-		int result2;
+		//
+		if( result1 > 0) {
 		
+			
+			
+			return "redirect:patientMain.me";
+			
+		}else {
 		
-		return "redirect:patientMain.me";
+			throw new MatchingException("결제실패");
+		}
 	}
 	
 	
