@@ -319,5 +319,10 @@
 			where pt_no = #{ptNo} and review_status ='Y'
 	</select>
 	
+	<select id="selectReviewList">
+		select *
+		from care_review
+		where review_no = #{reviewNo}
+	</select>
 	
 </mapper>

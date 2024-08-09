@@ -10,6 +10,7 @@ import java.util.List;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
@@ -107,6 +108,8 @@ public interface MemberService {
 	ArrayList<CareGiver> selectCareGiverList();
 
 	ArrayList<MatPtInfo> reviewList(int ptNo);
+
+	ArrayList<CareReview> selectReviewList(int reviewNo);
 
 
 }

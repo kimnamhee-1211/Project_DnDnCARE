@@ -730,10 +730,13 @@ public class MemberController {
 		
 		
 		for(MatPtInfo reviewsInfo:list) {
-                //ArrayList<CareReview> SelectReviewList = mService.selectReviewList(reviewsInfo.getReviewNo());
+                ArrayList<CareReview> selectReviewList = mService.selectReviewList(reviewsInfo.getReviewNo());
+                reviewList.put(reviewsInfo.getReviewNo(), selectReviewList);
             }
+		System.out.println(reviewList);
 		
 		model.addAttribute("list", list);
+		
 		if (loginUser != null) {
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch (check) {
