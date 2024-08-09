@@ -375,6 +375,7 @@ public class MatchingController {
 			String diseaseLevel = null;
 			if(jmPtInfos != null) {
 				for(InfoCategory jmPtInfo : jmPtInfos) {
+					
 					if(jmPtInfo.getLCategory().equals("disease")) {
 						disease.add(jmPtInfo.getSCategory());					
 					}else if(jmPtInfo.getLCategory().equals("diseaseLevel")) {
@@ -520,6 +521,8 @@ public class MatchingController {
 
 
 	}
+	
+
 	
 	
 	
