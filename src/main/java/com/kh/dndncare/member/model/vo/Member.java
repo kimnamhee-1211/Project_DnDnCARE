@@ -33,4 +33,6 @@ public class Member {
 	private String memberPay;
 	private Date memberUpdateDate;
 	private int memberRealAge; // 나이 계산용 필드 추가
+	private String career;
+	private String license;
 }

@@ -40,5 +40,4 @@ public class CalendarEvent {
 	private Date endDt;
 	private int careGiverNo;
 	
-	
 }

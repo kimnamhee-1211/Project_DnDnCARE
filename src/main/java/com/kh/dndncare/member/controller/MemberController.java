@@ -1228,9 +1228,9 @@ public class MemberController {
 											@RequestParam("memberNo") int memberNo) {
 		Member loginUser = (Member)model.getAttribute("loginUser");
 		
-		
 		// 일정 조회 
 		ArrayList<CalendarEvent> eList = new ArrayList<CalendarEvent>();
+		ArrayList<Member> mList = new ArrayList<Member>();
 		if(loginUser != null) {
 			// 환자에 대한 성사된 매칭번호와 해당 간병인의 회원번호 조회
 			ArrayList<HashMap<String, Integer>> list = mService.getPatientEvent(memberNo); // [{MAT_NO=69, MEMBER_NO=85}]
@@ -1244,7 +1244,7 @@ public class MemberController {
 			// 해당 간병인에 대한 정보 조회 : 멤버번호, 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개) 
 			//MEMBER : MEMBER_NO, MEMBER_NAME, MEMBER_GENDER, MEMBER_AGE
 			//INFO_CATEGORY : L_CATEGORY==career, L_CATEGORY==license
-			ArrayList<Member> mList = mService.selectMemberList(memberNoList); // [Member(memberNo=85, memberId=null, memberPwd=null, memberName=나리간병5, memberGender=M, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=69)]
+			mList = mService.selectMemberList(memberNoList); // [Member(memberNo=85, memberId=null, memberPwd=null, memberName=나리간병5, memberGender=M, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=69)]
 			ArrayList<HashMap<String, Object>> infoList = mService.selectCaregiverInfo(memberNoList);
 			//[{S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=85}, {S_CATEGORY=가정돌봄, L_CATEGORY=service, MEMBER_NO=85}, {S_CATEGORY=동행서비스, L_CATEGORY=service, MEMBER_NO=85}, {S_CATEGORY=3, L_CATEGORY=career, MEMBER_NO=85}, {S_CATEGORY=섬망, L_CATEGORY=disease, MEMBER_NO=85}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=85}, {S_CATEGORY=간병사, L_CATEGORY=license, MEMBER_NO=85}, {S_CATEGORY=요양보호사, L_CATEGORY=license, MEMBER_NO=85}]
 
@@ -1255,110 +1255,129 @@ public class MemberController {
 			eList = mService.patientCalendarEvent(matNoList);
 			//[CalendarEvent(matNo=69, title=null, start=null, end=null, money=150000, hospitalNo=0, hospitalAddress=null, hospitalName=null, beginTime=12:00, endTime=15:00, matMode=0, matchingType=null, ptCount=0, matAddressInfo=null, ptNo=0, matDate=2024-08-09,2024-08-16,2024-08-15,2024-08-22,2024-08-23, beginDt=2024-08-09, endDt=2024-08-23, careGiverNo=85)]
 			
-			for(CalendarEvent c : eList) {
+			for(Member m : mList) {
 				String career = ""; 
 				String license = "";
-				for(HashMap<String, Object> m : infoList) {
-					if(String.valueOf(m.get("MEMBER_NO")).equals(c.getMatNo()+"")) {
-						if(m.get("L_CATEGORY").equals("career")) {
-							career += m.get("S_CATEGORY");
+				for(HashMap<String, Object> h : infoList) {
+					if(String.valueOf(h.get("MEMBER_NO")).equals(m.getMemberNo()+"")) {
+						if(h.get("L_CATEGORY").equals("career")) {
+							career += h.get("S_CATEGORY") + "/";
 						}
-						if(m.get("L_CATEGORY").equals("license")) {
-							license += m.get("S_CATEGORY") + "/";
+						if(h.get("L_CATEGORY").equals("license")) {
+							license += h.get("S_CATEGORY") + "/";
 						}
 					}
 				}
 				
-//				if(service.length() > 0) { // 간병인의 서비스 경력이 존재하는 경우를 가르킴
-//					service = service.substring(0, service.lastIndexOf("/"));
-//					infoMap.put("서비스경험", service);
-//				}
-				
-				
-				
+				if(career.length() > 0) { // 간병인의 경력이 존재하는 경우를 가르킴
+					career = career.substring(0, career.lastIndexOf("/"));
+					m.setCareer(career);
+				}
+				if(license.length() > 0) { // 간병인의 자격증이 존재하는 경우를 가르킴
+					license = license.substring(0, license.lastIndexOf("/"));
+					m.setLicense(license);
+				}
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 		}
 		
 		JSONArray array = new JSONArray();
 		
 		for(CalendarEvent c : eList) {
-			int matNo = c.getMatNo();
-			int money = c.getMoney();
-			String beginTime = c.getBeginTime();
-			String endTime = c.getEndTime();
-			String matAddressInfo = c.getMatAddressInfo();
-			Date beginDate = c.getBeginDt();
-			Date endDate = c.getEndDt();
-			
-			if(c.getPtCount() == 1) {
-				if(c.getMatMode() == 1) {
-					JSONObject obj = new JSONObject();
-					obj.put("title", "개인 기간제 간병");
-					obj.put("start", c.getBeginDt());
-					obj.put("end", c.getEndDt());
-					obj.put("matNo", matNo);
-					obj.put("money", money);
-					obj.put("matAddressInfo", matAddressInfo);
-					obj.put("beginDate", beginDate);
-					obj.put("endDate", endDate);
-					array.put(obj);
-				} else {
-					String[] strArr = c.getMatDate().split(",");
-					System.out.println(Arrays.toString(strArr));
-					for(int i = 0; i < strArr.length; i++) {
+			for(Member m : mList) {
+				int matNo = c.getMatNo();
+				int caregiverNo = c.getCareGiverNo();
+				int money = c.getMoney();
+				String beginTime = c.getBeginTime();
+				String endTime = c.getEndTime();
+				String matAddressInfo = c.getMatAddressInfo();
+				Date beginDate = c.getBeginDt();
+				Date endDate = c.getEndDt();
+				
+				if(c.getPtCount() == 1) {
+					if(c.getMatMode() == 1) {
 						JSONObject obj = new JSONObject();
-						obj.put("title", "개인 시간제 간병");
-						obj.put("start", strArr[i]);
-						obj.put("end", strArr[i]);
+						obj.put("title", "개인 기간제 간병");
+						obj.put("start", c.getBeginDt());
+						obj.put("end", c.getEndDt());
 						obj.put("matNo", matNo);
 						obj.put("money", money);
 						obj.put("matAddressInfo", matAddressInfo);
 						obj.put("beginDate", beginDate);
 						obj.put("endDate", endDate);
+						if(caregiverNo == m.getMemberNo()) { //간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
+							obj.put("caregiverName", m.getMemberName());
+							obj.put("caregiverGender", m.getMemberGender());
+							obj.put("caregiverRealAge", m.getMemberRealAge());
+							obj.put("caregiverCareer", m.getCareer());
+							obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+						}
 						array.put(obj);
+					} else {
+						String[] strArr = c.getMatDate().split(",");
+						System.out.println(Arrays.toString(strArr));
+						for(int i = 0; i < strArr.length; i++) {
+							JSONObject obj = new JSONObject();
+							obj.put("title", "개인 시간제 간병");
+							obj.put("start", strArr[i]);
+							obj.put("end", strArr[i]);
+							obj.put("matNo", matNo);
+							obj.put("money", money);
+							obj.put("matAddressInfo", matAddressInfo);
+							obj.put("beginDate", beginDate);
+							obj.put("endDate", endDate);
+							if(caregiverNo == m.getMemberNo()) { //간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
+								obj.put("caregiverName", m.getMemberName());
+								obj.put("caregiverGender", m.getMemberGender());
+								obj.put("caregiverRealAge", m.getMemberRealAge());
+								obj.put("caregiverCareer", m.getCareer());
+								obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+							}
+							array.put(obj);
+						}
 					}
-				}
-			} else {
-				if(c.getMatMode() == 1) {
-					JSONObject obj = new JSONObject();
-					obj.put("title", "공동 기간제 간병");
-					obj.put("start", c.getBeginDt());
-					obj.put("end", c.getEndDt());
-					obj.put("matNo", matNo);
-					obj.put("money", money);
-					obj.put("matAddressInfo", matAddressInfo);
-					obj.put("beginDate", beginDate);
-					obj.put("endDate", endDate);
-					array.put(obj);
 				} else {
-					String[] strArr = c.getMatDate().split(",");
-					for(int i = 0; i < strArr.length; i++) {
+					if(c.getMatMode() == 1) {
 						JSONObject obj = new JSONObject();
-						obj.put("title", "공동 시간제 간병");
-						obj.put("start", strArr[i]);
-						obj.put("end", strArr[i]);
+						obj.put("title", "공동 기간제 간병");
+						obj.put("start", c.getBeginDt());
+						obj.put("end", c.getEndDt());
 						obj.put("matNo", matNo);
 						obj.put("money", money);
 						obj.put("matAddressInfo", matAddressInfo);
 						obj.put("beginDate", beginDate);
 						obj.put("endDate", endDate);
+						if(caregiverNo == m.getMemberNo()) { //간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
+							obj.put("caregiverName", m.getMemberName());
+							obj.put("caregiverGender", m.getMemberGender());
+							obj.put("caregiverRealAge", m.getMemberRealAge());
+							obj.put("caregiverCareer", m.getCareer());
+							obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+						}
 						array.put(obj);
+					} else {
+						String[] strArr = c.getMatDate().split(",");
+						for(int i = 0; i < strArr.length; i++) {
+							JSONObject obj = new JSONObject();
+							obj.put("title", "공동 시간제 간병");
+							obj.put("start", strArr[i]);
+							obj.put("end", strArr[i]);
+							obj.put("matNo", matNo);
+							obj.put("money", money);
+							obj.put("matAddressInfo", matAddressInfo);
+							obj.put("beginDate", beginDate);
+							obj.put("endDate", endDate);
+							if(caregiverNo == m.getMemberNo()) { //간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
+								obj.put("caregiverName", m.getMemberName());
+								obj.put("caregiverGender", m.getMemberGender());
+								obj.put("caregiverRealAge", m.getMemberRealAge());
+								obj.put("caregiverCareer", m.getCareer());
+								obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+							}
+							array.put(obj);
+						}
 					}
 				}
 			}
-			
 		}
 		return array.toString();
 	}

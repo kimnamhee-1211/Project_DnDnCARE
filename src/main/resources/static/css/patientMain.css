@@ -166,3 +166,8 @@ a {
   background-color: #8dd986; 
   border-color: green;
 }
+
+/* 캘린더 이벤트의 정보를 보는 모달박스 */
+.eventInfo {
+	display:grid; grid-template-columns: 1fr 1fr;
+}
