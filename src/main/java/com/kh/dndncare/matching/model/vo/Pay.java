@@ -8,24 +8,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
-public class MatPtInfo {
-	
+public class Pay {
+	private int payNo;
 	private int matNo;
-	private int ptNo;
-	private int antePay;
-	private String service;
-	private String matAddressInfo;
-	private String matRequest;
-	private String deposit;
-	private String groupLeader;
-	private int reviewNo;
-	
-	
-	
-
+	private int mamberNo;
+	private Date payDate;
+	private int payMoney;
+	private String accountName;
+	private String accountPhone;
+	private String accountEmail;
+	private String merchantUid;
+	private String payService;
 }

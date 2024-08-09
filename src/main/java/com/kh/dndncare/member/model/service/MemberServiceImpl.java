@@ -273,13 +273,18 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<MatPtInfo> reviewList(int ptNo) {
+	public ArrayList<CareReview> reviewList(int ptNo) {
 		return mMapper.reviewList(ptNo);
 	}
 
 	@Override
 	public ArrayList<CareReview> selectReviewList(int reviewNo) {
 		return mMapper.selectReviewList(reviewNo);
+	}
+
+	@Override
+	public int getPtNo(int memberNo) {
+		return mMapper.getPtNo(memberNo);
 	}
 
 }

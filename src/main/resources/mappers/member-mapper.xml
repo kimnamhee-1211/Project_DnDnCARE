@@ -294,8 +294,10 @@
 	<select id="selectMatList" resultType="MatMatptInfo">	<!-- 환자번호로 mat_pt테이블의 매칭번호를 뽑아온다. -->
 		select *
 		from mat_pt_info
-    		join matching using(mat_no)
-		where pt_no = (select pt_no
+    		left join matching ON mat_pt_info.mat_no = matching.mat_no
+            left join member on matching.member_no =member.member_no
+            left join caregiver on matching.member_no = caregiver.member_no
+		where mat_confirm != 'N' and pt_no = (select pt_no
 						from patient
 						where member_no = #{memberNo})
 	</select>
@@ -310,19 +312,27 @@
 	</select>
 	
 	<!-- 내가 작성한 리뷰조회 -->
-	<select id="reviewList" resultType="MatPtInfo">
+	<select id="reviewList" resultType="CareReview">
 		select *
-			from mat_pt_info
-			    join matching using(mat_no)
-			    join member using(member_no)
-			    join care_review using(pt_no)
-			where pt_no = #{ptNo} and review_status ='Y'
+		from care_review c
+		    left join member m on(c.member_no = m.member_no)
+		    left join mat_pt_info mpi on(mpi.pt_no = c.pt_no)
+		    left join matching mc on(mc.mat_no = mpi.mat_no)
+		where review_status = 'Y' and c.pt_no=#{ptNo}
 	</select>
 	
-	<select id="selectReviewList">
+	<select id="selectReviewList" resultType="CareReview">
 		select *
 		from care_review
 		where review_no = #{reviewNo}
 	</select>
+	
+	<select id="getPtNo" resultType="_int">
+		select pt_no
+		from patient
+		where member_no=#{memberNo}
+	</select>
+	
+	
 	
 </mapper>

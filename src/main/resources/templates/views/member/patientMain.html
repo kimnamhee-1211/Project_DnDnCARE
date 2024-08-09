@@ -7,10 +7,11 @@
     <link href="css/patientMain.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>	<!-- 결제 -->
+    
     <style>
     	.fc{width:500px !important; height:500px !important; } 
     </style>
@@ -25,18 +26,20 @@
 		<div id="upperLeftContents">
 			<div style="height:100px;"><!-- 결제 요청 카드 -->
 				<br/>
-				<table class="table">
-					<thead>
-						<tr class="align-middle">
-							<th>개나리님과의 매칭이 성사되었습니다.</th>
-							<td>
-							<button class="btn btn-success payButton">결제하기</button>
-							<input type="hidden" value="68"/> <!-- 이걸 쓸진 모르겠지만 만들어둠 -->
-							</td>
-								
-						</tr>
-					</thead>
-				</table>
+				<th:block th:each="m : ${mc}" th:if="${m.matConfirm == 'W'}">
+					<table class="table" >
+						<thead>
+							<tr class="align-middle">
+								<th>[[${m.memberName}]]님과의 매칭이 성사되었습니다.</th>
+								<td>
+								<button class="btn btn-success payButton">결제하기</button>
+								<input type="hidden" value="68"/> <!-- 이걸 쓸진 모르겠지만 만들어둠 -->
+								</td>
+									
+							</tr>
+						</thead>
+					</table>
+				</th:block>
 			</div>
 			<div id="upperContentsBtn" class="align-middle text-center" style="height:200px;"><!-- 메뉴판 -->
 				<div><button class="custom-btn btn-14" th:onclick="'location.href=\'' + @{/publicMatching.mc} + '\''" style="width:600px; height:100px;">간병인 공개 매칭 신청</button></div>
@@ -369,7 +372,7 @@
 <!--             </div> -->
         </div>
         <div><!--오른쪽 공백--></div>
-    </div>
+    
     
     <div id="myPresentMatching">
         <a class="navbar-brand align-middle" href="#">
@@ -380,32 +383,38 @@
     
 	<!-- Modal -->
 	<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-    		<div class="modal-content rounded-3 shadow">
-    			<div class="m-4 text-center h2">결제 정보</div>
-    			<div class="m-4 h3" style="border-bottom:1px solid #8dd986;">OOO님과 매칭되었습니다!</div>
+		<div class="modal-dialog modal-dialog-centered" role="document" style="max-width:700px;">
+    		<div class="modal-content rounded-3 shadow" style="min-width:700px;">
+    			<div class="m-5 text-center h2">결제 정보</div>
+    			<div class="m-4 h5" style="border-bottom:1px solid #8dd986;"><span class="h2" id="careName"></span>님과 매칭되었습니다!</div>
 				<div class="d-flex justify-content-start">    			
 	    			<div >
 	    				<div class="m-4 text-center">매칭 서비스</div>
 	    				<div class="m-4 text-center">공동간병 여부</div>
 	    				<div class="m-4 text-center">간병 날짜</div>
-	    				<div class="m-4 text-center">주소 </div>
 	    				<div class="m-4 text-center">일당 금액</div>
+	    				<div class="m-4 text-center">주소 </div>
 	    			</div>
 	    			<div>
-	    				<div class="m-4">가정돌봄? </div>
-	    				<div class="m-4">가정돌봄? </div>
-	    				<div class="m-4">가정돌봄? </div>
-	    				<div class="m-4">가정돌봄? </div>
+	    				<div class="m-4" id="payService"></div>
+	    				<div class="m-4" id="payPtCount"></div>
+	    				<div class="m-4" id="payMatDate"></div>
+	    				<div class="m-4" id="payMoney"></div>
+	    				<div class="m-4" id="payAddress"></div>
 	    			</div>
     			</div>
     			
-    			<div align="right" class="m-4 h">총 금액 100,000원</div>
+    			<div align="right" class="m-4 h3 resultPay"></div>
       			<div align="center"class="modal-footer d-flex justify-content-center p-0">
       				<div align="center"class="d-flex justify-content-center">
-	      				<button type="button" class="btn btn-lg btn-success payApply h1 m-4" onclick="requestPay()">100,000원 결제하기</button>
+	      				<button type="button" class="btn btn-lg btn-success payApply h1 m-4 resultPay" onclick="requestPay()">100,000원 결제하기</button>
       				</div>
-      				
+      				<form id="payForm" method="post">
+      					<input type="hidden" name="matNo"/>
+      					<input type="hidden" name="payMoney"/>
+      					<input type="hidden" name="payService">
+      					<input type="hidden" name="merchantUid">
+      				</form>
       			</div>
     		</div>
   		</div>	
@@ -461,6 +470,8 @@
 // 		$('#modalChoice').modal('show');	
 // 	})
 	
+	
+	
 	const payBts = document.getElementsByClassName('payButton');
     for(payBt of payBts){
     	payBt.addEventListener('click',function(){
@@ -470,14 +481,28 @@
 				url:'payInfo.mc',
 				data: {matNo:payBt.nextElementSibling.value },
 				success:data=>{
-					console.log('굳');
 					console.log(data);
+					document.getElementById('payService').innerText = data.service;
+					document.getElementById('payPtCount').innerText = data.ptCount == 1 ? '개인' : '공동';
+					document.getElementById('payMatDate').innerText = data.beginDt +' '+ data.beginTime + ' ~ ' + data.endDt + ' '+ data.endTime + ' 총' + data.days +'일 ' + data.times +'시간';
+					document.getElementById('payMoney').innerText = data.money.toLocaleString() + '원';
+					document.getElementById('payAddress').innerText = data.matAddressInfo.split('//')[1] + ' '+data.matAddressInfo.split('//')[2];
+					document.getElementById('careName').innerText = data.memberName;
+					//결재최종금액도 너핮
+					if(data.matMode != 1){
+						document.getElementsByClassName('resultPay')[0].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원';
+						document.getElementsByClassName('resultPay')[1].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원 결제하기';
+						document.getElementsByName('payMoney')[0].value = data.money / data.ptCount;
+					}else{
+						document.getElementsByClassName('resultPay')[0].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원';
+						document.getElementsByClassName('resultPay')[1].innerText = (data.money * data.days / data.ptCount).toLocaleString() + '원 결제하기';
+						document.getElementsByName('payMoney')[0].value = data.money * data.days / data.ptCount;
+					}
 				},
 				error:data=>console.log(data)
 			})
     	})		
     };
-	
 	
 	
 	
@@ -497,7 +522,8 @@
     	const seconds = now.getSeconds().toString().padStart(2, '0');
 
     	const formattedTime = year+month+day+hours+minutes+seconds;
-    	const form = document.getElementById('form');
+    	const form = document.getElementById('payForm');
+    	console.log(document.getElementsByName('merchantUid')[0]);
     	
 	    function requestPay() {
 	    	//const money = document.getElementById('customAmountInput').value;
@@ -507,7 +533,7 @@
 			        pg: "html5_inicis.INIpayTest",
 			        pay_method: "card",
 			        merchant_uid: formattedTime,
-			        name: "HomeWork후원결제",
+			        name: "든든케어간병신청",
 			        amount: 100,
 			        buyer_tel: "000",
 		    	},function(response){
@@ -515,10 +541,13 @@
 		    	  console.log(response.success);
 		    	  if(response.success){
 		    		  alert('결제 성공');
-		    		  /* document.getElementById('payCheck').value = response.success;
+		    		  console.log(response.merchant_uid);
 		    		  document.getElementsByName('merchantUid')[0].value = response.merchant_uid;
-		    		  form.action = '${contextPath}/successPay.su';
-		  	    	  form.submit(); */
+		    		  document.getElementsByName('matNo')[0].value = payBt.nextElementSibling.value;
+		    		  //document.getElementsByName('payMoney')[0].value = response.merchant_uid; 위에서미리넘기자
+		    		  document.getElementsByName('payService')[0].value = response.merchant_uid;
+		    		  form.action = 'successPay.mc';
+		  	    	  form.submit();
 		    		  
 		    		  
 		    	  }else{
@@ -533,6 +562,7 @@
 	    		alert('후원 최소 금액은 1,000원입니다');
 	    	} */
 	    }
+	    
 	    
 	    
     </script> 

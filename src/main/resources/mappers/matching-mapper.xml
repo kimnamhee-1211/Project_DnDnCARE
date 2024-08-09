@@ -236,9 +236,15 @@
 	<select id="selectMatching" resultType="MatMatptInfo">
 		select *
 		from matching
+			join member using(member_no)
 		where mat_no = #{matNo}
 	</select>
 
+	<select id="selecMatPtInfo" resultType="MatMatptInfo">
+		select *
+		from mat_pt_info
+		where mat_no = #{matNo} and pt_no = (select pt_no from patient where member_no = #{memberNo})
+	</select>
 
 	<!--  리뷰작성 미완성 -->
 	<insert id="insertReview">
@@ -247,6 +253,20 @@
 		</selectKey>	
 		insert into care_review
 		value(#{reviewNo}, #{pt_no}, #{mat_no}, #{reviewContent}, #{reivewScore}, sysdate, sysdate, 'Y', #{memberNo})
+	</insert>
+	<insert id="insertPay">
+		insert into pay values(
+			seq_pay.nextval,
+			#{p.matNo},
+			#{loginUser.memberNo},
+			sysdate,
+			#{p.payMoney},
+			#{loginUser.memberName},
+			#{loginUser.memberPhone},
+			#{loginUser.memberEmail},
+			#{p.merchantUid},
+			#{p.payService}
+		)
 	</insert>
 
 

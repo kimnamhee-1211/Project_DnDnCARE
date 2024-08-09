@@ -80,7 +80,7 @@
 		      							<td>[[${i.beginDt}]]</td>
 		      							 <td>~</td>
 		      							 <td>[[${i.endDt}]]</td>
-		      							<td> 간병인 정보 따로 맵퍼에서 불러오기 1.성함2.별점 </td>
+		      							<td> 이름 : [[${i.memberName}]] </td>
 		      							<td><span th:if="${!i.isAfterDate}">진행 중</span><span th:if="${i.isAfterDate}">완료</span></td>
 		      							<td><button class="myInfo-btn btn-sm" onclick='location.href="reviewDetail.mc"'>후기 가능</button></td>
 		      						</tr>

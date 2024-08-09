@@ -13,7 +13,9 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
+import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
 public interface MatchingService {
@@ -90,6 +92,8 @@ public interface MatchingService {
 	CareGiver selectIntro(int memberNo);
 	
 	MatMatptInfo selecMatching(int matNo);
+	MatMatptInfo selecMatPtInfo(int matNo, int i);
+	int insertPay(Member loginUser, Pay p);
 	
 	int insertReview(HashMap<String, Object> map);
 	

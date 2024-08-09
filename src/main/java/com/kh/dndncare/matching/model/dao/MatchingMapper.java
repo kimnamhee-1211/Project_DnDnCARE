@@ -14,8 +14,9 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
-
+import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
 @Mapper
@@ -79,6 +80,10 @@ public interface MatchingMapper {
 	MatMatptInfo selectMatching(int matNo);
 
 	int insertReview(HashMap<String, Object> map);
+	
+	MatMatptInfo selecMatPtInfo(@Param("matNo")int matNo,@Param("memberNo") int memberNo);
+
+	int insertPay(@Param("loginUser")Member loginUser,@Param("p") Pay p);
 
 
 }
