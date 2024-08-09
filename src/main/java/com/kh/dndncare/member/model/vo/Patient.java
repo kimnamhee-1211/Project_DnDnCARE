@@ -26,7 +26,6 @@ public class Patient {
 	private Date ptAge; // PT_AGE
 	private int ptWeight; // PT_WEIGHT
 	private int ptHeight; // PT_HEIGHT
-	private String ptService; // PT_SERVICE
 	private String ptAddress; // PT_ADDRESS
 	private String ptRequest; // PT_REQUEST
 	private Date ptUpdateDate;

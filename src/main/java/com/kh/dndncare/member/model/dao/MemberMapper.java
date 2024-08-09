@@ -103,4 +103,8 @@ public interface MemberMapper {
 	
 	ArrayList<MatMatptInfo> selectMatList(int memberNo);
 
+	ArrayList<CareGiver> selectCareGiverList();
+
+	ArrayList<MatMatptInfo> reviewList(int ptNo);
+
 }

@@ -18,37 +18,38 @@
 				<div class="row">
 					<div align="center"class="col m-3 testBorder" >
 			      		<img id="profile-image" src="image/icon_profile.png"/>
-			      		<div class="h3">[[${session.loginUser.memberName}]]님</div>
+			      		<div class="h3">[[${caregiverIntro.memberName}]]님</div>
 			      		<div class="h6">경력:[[${caregiverInfoList.career}]]년</div>
 			      		<div class="h6">국적:[[${caregiverIntro.memberNational}]]</div>
 		      		</div>
 		      		<div class="col m-3 testBorder">
 			      		<div class="row m-2">
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
-								<button th:if="${1 <= avgReviewScore}" class="btn-star btn-icon-star-left"></button>
-								<button th:if="${2 <= avgReviewScore}" class="btn-star-right btn-icon-star-right"></button>
+								<button th:if="${1 <= avgReviewScore}" class="btn-star btn-icon-star-left" value="1"></button>
+								<button th:if="${2 <= avgReviewScore}" class="btn-star-right btn-icon-star-right" value="2"></button>
 			      			</div>
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
-								<button th:if="${3 <= avgReviewScore}" class="btn-star btn-icon-star-left"></button>
-								<button th:if="${4 <= avgReviewScore}" class="btn-star-right btn-icon-star-right"></button>
+								<button th:if="${3 <= avgReviewScore}" class="btn-star btn-icon-star-left" value="3"></button>
+								<button th:if="${4 <= avgReviewScore}" class="btn-star-right btn-icon-star-right" value="4"></button>
 			      			</div>
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
-								<button th:if="${5 <= avgReviewScore}" class="btn-star btn-icon-star-left"></button>
-								<button th:if="${6 <= avgReviewScore}" class="btn-star-right btn-icon-star-right"></button>
+								<button th:if="${5 <= avgReviewScore}" class="btn-star btn-icon-star-left" value="5"></button>
+								<button th:if="${6 <= avgReviewScore}" class="btn-star-right btn-icon-star-right" value="6"></button>
 			      			</div>
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
-								<button th:if="${7 <= avgReviewScore}" class="btn-star btn-icon-star-left"></button>
-								<button th:if="${8 <= avgReviewScore}" class="btn-star-right btn-icon-star-right"></button>
+								<button th:if="${7 <= avgReviewScore}" class="btn-star btn-icon-star-left" value="7"></button>
+								<button th:if="${8 <= avgReviewScore}" class="btn-star-right btn-icon-star-right" value="8"></button>
 			      			</div>
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
-								<button th:if="${9 <= avgReviewScore}" class="btn-star btn-icon-star-left"></button>
-								<button th:if="${10 <= avgReviewScore}" class="btn-star-right "></button>
+								<button th:if="${9 <= avgReviewScore}" class="btn-star btn-icon-star-left" value="9"></button>
+								<button th:if="${10 <= avgReviewScore}" class="btn-star-right" value="10"></button>
 			      			</div>
 			      				
 			      		</div>
 			      		<div class="d-flex justify-content-between" style="margin-top:-10px">
 							<span>총 후기 ([[${reviewCount}]])</span>			      		
-							<span>[[${avgReviewScore}]]점</span>			      		
+							<span th:if="${avgReviewScore != 0}">[[${avgReviewScore}]]점</span>	
+							<span th:if="${avgReviewScore == 0}">정보가 없습니다.</span>		      		
 			      		</div>
 			      		<div class="col m-3 testBorder">
 			      			[[${caregiverIntro.careIntro}]]
@@ -101,7 +102,7 @@
 									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="8"></button>
 				      			</div>
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-									<button type="button" class="btn-star btn-icon-star-left-modal"value="9"></button>
+									<button type="button" class="btn-star btn-icon-star-left-modal" value="9"></button>
 									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="10"></button>
 				      			</div>
 			    			</div>
@@ -109,6 +110,7 @@
 						<div class="m-4 review-content"contenteditable=true></div>		    				
 		      			<div class="modal-footer  p-0">
 		      				<div class="d-flex justify-content-evenly">
+               				 <input type="hidden" name="memberNo" id="hiddenCaregiverNo" th:value=${memberNo}>		
 		      				 <input type="hidden" name="reviewScore" id="hiddenScore" value="10">
                				 <input type="hidden" name="reviewContent" id="hiddenReview">		
 			      				<button type="button" class="btn btn-success" id="modalReviewWrite">후기남기기</button>
@@ -164,18 +166,19 @@
 				}
 				    
 				
-				document.getElementById('modalReviewWrite').addEventListener('click', () => {
-					const reviewScore = document.getElementById('reviewScore');
-					const btns = reviewScore.querySelectorAll('button');
-			        
+				document.getElementById('modalReviewWrite').addEventListener('click', function() {
+					const reviewScoreDiv = document.getElementById('reviewScore');
+					const reviewScore = document.getElementById('modalScore').innerText
+					console.log(reviewScore)
 					
+					document.getElementById('hiddenScore').value = reviewScore;
+						
 					const reviewContent = document.querySelector('.review-content').innerText;
-				    document.getElementById('hiddenReview').value = reviewContent;
-				        
-				    	const form = document.getElementById('writeReviewForm');
-				    	console.log(form)
-				        form.action = 'writeReview.mc';
-				        form.submit();
+			   		document.getElementById('hiddenReview').value = reviewContent;
+			        
+			    	const form = document.getElementById('writeReviewForm');
+			        form.action = 'writeReview.mc';
+			       	form.submit();
 			    });
 			</script>
 			

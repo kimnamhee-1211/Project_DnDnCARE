@@ -23,6 +23,9 @@ public class MatPtInfo {
 	private String matRequest;
 	private String deposit;
 	private String groupLeader;
+	private String memberName;
+	private String reviewContent;
+	private int reviewScore;
 	
 	
 

@@ -26,4 +26,10 @@ public class CareGiver {
 	
 	private List<Integer> memberInfo;
 	private List<Integer> wantInfo;
+	
+	private String memberGender;
+	private String memberName;
+	private Date memberAge;
+	private int age;
+	private int score;
 }

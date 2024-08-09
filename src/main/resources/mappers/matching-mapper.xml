@@ -144,7 +144,7 @@
 	</select>
 	
 	<!-- 간병인 평점 -->
-	<select id="avgReviewScore" resultType="_double">
+	<select id="avgReviewScore" resultType="Double">
 		select avg(review_score)
 		from care_review
 		where member_no=#{memberNo}
@@ -226,15 +226,27 @@
 
 
 	<select id="selectIntro" resultType="Caregiver">
-		select care_intro, member_national
+		select care_intro, member_national, member_name
 		from caregiver
 			join member using(member_no)
 		where member_no = #{memberNo}
 	</select>
+	<!-- 결제정보가져오려는 셀렉트 매칭 정보 -->
+	<select id="selectMatching" resultType="MatMatptInfo">
+		select *
+		from matching
+		where mat_no = #{matNo}
+	</select>
 
 
 
-
+	<insert id="insertReview">
+		<selectKey resultType="_int" keyProperty="reviewNo" order="BEFORE">
+			select seq_crcid.nextval from dual
+		</selectKey>	
+		insert into care_review
+		value(#{reviewNo}, #{pt_no}, #{mat_no}, #{reviewContent}, #{reivewScore}, sysdate, sysdate, 'Y', #{memberNo})
+	</insert>
 
 
 

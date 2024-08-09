@@ -299,4 +299,24 @@
 						from patient
 						where member_no = #{memberNo})
 	</select>
+	
+	
+	
+	<select id="selectCareGiverList" resultType="CareGiver">	<!-- 간병인정보를 모두 불러온다.(재가공할거지만) -->
+		select *
+		from careGiver
+			join member using(member_no)
+		where member_status = 'N'
+	</select>
+	
+	<select id="reviewList" resultType="MatPtInfo">
+		select member_name, review_content, review_score
+			from mat_pt_info
+			    join matching using(mat_no)
+			    join member using(member_no)
+			    join care_review using(pt_no)
+			where pt_no = #{ptNo}
+	</select>
+	
+	
 </mapper>

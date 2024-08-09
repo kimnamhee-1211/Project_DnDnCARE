@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
@@ -45,7 +46,7 @@ public interface MatchingService {
 	Hospital getHospital(Hospital hospital);
 	
 	//loginUser-MatNo get
-	int[] getloginMatNo(int memberNo);
+	Set<Integer> getloginMatNo(int memberNo);
 	
 	//loginUser-PtNo get
 	int getPtNo(int memberNo);
@@ -69,17 +70,29 @@ public interface MatchingService {
 	
 	int reviewCount(int memberNo);
 	
-	double avgReviewScore(int memberNo);
+	Double avgReviewScore(int memberNo);
 	
 
 	int updatePatient(Patient patient);
+	
 	int insertMatchingDate(HashMap<String, Object> map);
+	
 	int getMatNo(int ptNo);
+	
 	int insertMatching(Matching matching);
+	
 	int insertWantInfo(Map<String, Object> params);
+	
 	int insertMatPtInfo(MatPtInfo matPtInfo);
+	
 	int deleteWantInfo(int memberNo);
+	
 	CareGiver selectIntro(int memberNo);
+	
+	MatMatptInfo selecMatching(int matNo);
+	
+	int insertReview(HashMap<String, Object> map);
+	
 	
 
 }

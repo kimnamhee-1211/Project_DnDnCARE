@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class MatMatptInfo {
+public class MatMatptInfoPt {
 	
 	//hospital
 	private String hospitalName;
@@ -42,12 +42,20 @@ public class MatMatptInfo {
 	private String endTime;
 	private int matMode;
 	
-	//endDT를 지난 날짜 체크
-	private boolean isAfterDate;
+	//patient
+	private String ptName;
+	private String ptGender; // PT_GENDER
+	private Date ptAge; // PT_AGE
+	private int ptWeight; // PT_WEIGHT
+	private int ptHeight; // PT_HEIGHT
+	private String ptAddress; // PT_ADDRESS
+	private String ptRequest; // PT_REQUEST
+	private Date ptUpdateDate;
 	
-	//loginUser의 그룹 간병 참여 여부 확인용
-	private String join;
+	//나이계산
+	private int ptRealAge;
 	
-	//간병인이름도 같이담기
-	private String memberName;
+	//노출 위한 주소 (시까지만 노출)
+	private String ptAddressMin;
+	
 }

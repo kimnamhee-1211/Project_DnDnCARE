@@ -265,4 +265,14 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectMatList(memberNo);
 	}
 
+	@Override
+	public ArrayList<CareGiver> selectCareGiverList() {
+		return mMapper.selectCareGiverList();
+	}
+
+	@Override
+	public ArrayList<MatMatptInfo> reviewList(int ptNo) {
+		return mMapper.reviewList(ptNo);
+	}
+
 }

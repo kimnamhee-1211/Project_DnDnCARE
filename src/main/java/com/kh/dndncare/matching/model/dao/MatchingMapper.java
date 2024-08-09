@@ -3,6 +3,7 @@ package com.kh.dndncare.matching.model.dao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -42,7 +43,7 @@ public interface MatchingMapper {
 
 	Hospital getHospital(Hospital hospital);
 
-	int[] getloginMatNo(int memberNo);
+	Set<Integer> getloginMatNo(int memberNo);
 
 	int getPtNo(int memberNo);
 
@@ -57,7 +58,7 @@ public interface MatchingMapper {
 	int delMatchingDate(int matNo);
 	int reviewCount(int memberNo);
 
-	double avgReviewScore(int memberNo);
+	Double avgReviewScore(int memberNo);
 	
 	int updatePatient(Patient patient);
 
@@ -74,6 +75,10 @@ public interface MatchingMapper {
 	int deleteWantInfo(int memberNo);
 
 	CareGiver selectIntro(int memberNo);
+	
+	MatMatptInfo selectMatching(int matNo);
+
+	int insertReview(HashMap<String, Object> map);
 
 
 }

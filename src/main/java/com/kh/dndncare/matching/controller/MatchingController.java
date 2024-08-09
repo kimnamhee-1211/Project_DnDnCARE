@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
@@ -200,14 +200,20 @@ public class MatchingController {
 		
 		//병원으로 list 뽑기 
 		ArrayList<MatMatptInfo> list = mcService.getJmList(hospitalName);
-		System.out.println(list);
-				
 		
+		//loginUser가 그룹에 참여중인지 아닌지 확인 => view 표시용
 		//loginUser-MatNo get
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		int[] loginMatNos = mcService.getloginMatNo(loginUser.getMemberNo());
+		Set<Integer> loginMatNos = mcService.getloginMatNo(loginUser.getMemberNo());
+		for (MatMatptInfo l : list) {
+		    if (loginMatNos.contains(l.getMatNo())) {
+		        l.setJoin("Y");
+		    } else {
+		        l.setJoin("N");
+		    }
+		}
 		
-		model.addAttribute("loginMatNos", loginMatNos);
+		
 		model.addAttribute("list", list);
 		return "joinMatching";
 	}
@@ -450,11 +456,12 @@ public class MatchingController {
 		}
 	}
 	
-	// 간병인 페이지
-	@GetMapping("reviewDetail.mc")
-	public String getMethodName(HttpSession session, Model model) {
-		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
-		// 일단 로그인 유저로 진행 정보보기페이지에서 넘어올때 memberNo받아옴
+
+	
+	@GetMapping("reviewDetail.mc")												
+	public String getMethodName(HttpSession session, Model model,@RequestParam("memberNo")int memberNo) {
+		
+		//int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		
 		// 후기내역
 		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
@@ -463,7 +470,8 @@ public class MatchingController {
 		int reviewCount = mcService.reviewCount(memberNo);
 		
 		// 평점
-		double avgReviewScore = mcService.avgReviewScore(memberNo);
+		Double avgReviewScore = mcService.avgReviewScore(memberNo);
+		avgReviewScore= (avgReviewScore != null) ? avgReviewScore : 0.0;
 		
 		// 간병인 소개
 		CareGiver caregiverIntro = mcService.selectIntro(memberNo);
@@ -483,6 +491,8 @@ public class MatchingController {
 		}
 		
 		
+		
+		model.addAttribute("memberNo", memberNo);
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("reviewCount", reviewCount);
 		model.addAttribute("avgReviewScore",avgReviewScore);
@@ -510,16 +520,44 @@ public class MatchingController {
 	}
 	
 	@PostMapping("writeReview.mc")
-	public String insertReview(@RequestParam("reviewScore") int reviewScore,@RequestParam("reviewContent") String reviewContent, HttpSession session) {
+	public String insertReview(@RequestParam("memberNo") int memberNo, @RequestParam("reviewScore") int reviewScore, @RequestParam("reviewContent") String reviewContent, HttpSession session) {
 		int ptNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		System.out.println(reviewScore);
+		// 환자번호
 		map.put("ptNo", ptNo);
+		// 후기점수
 		map.put("reviewScore", reviewScore);
+		// 후기내용
 		map.put("reviewContent", reviewContent);
-		//int result = mcService.insertReview();
+		// 간병인 고유번호
+		map.put("memberNo", memberNo);
+		System.out.println(map);
+		int result = mcService.insertReview(map);
 		return null;
+	}
 				
+	//비동기로 환자측에서 결제할때 간병인 정보 가져오기
+	@GetMapping("payInfo.mc")
+	@ResponseBody
+	public void payInfo(@RequestParam("matNo") int matNo,HttpServletResponse response) {
+		// 보낼때, 매칭번호가 필수다
+		MatMatptInfo matInfo = mcService.selecMatching(matNo);
+		
+		
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");	
+		//내 date형식 포멧을 변경해준다.
+		Gson gson = gb.create();
+		response.setContentType("application/json; charset=UTF-8");
+		try {
+			gson.toJson(matInfo, response.getWriter());
+		} catch (JsonIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	
