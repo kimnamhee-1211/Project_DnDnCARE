@@ -73,7 +73,7 @@
 						    </tr>
 						     <tr>
 						      <th>상세주소</th>
-						      <td colspan="3">[[${gm.matAddressInfo.split(' // ')[1]}]]</td>
+						      <td colspan="3">[[${gm.matAddressInfo.split('//')[2]}]]</td>
 						    </tr>					
 						    <tr>
 						      <th>요청사항</th>
@@ -202,6 +202,26 @@
 		    </div>
 		  </div>
 		</div>
+		
+		
+		<!-- 동작 성공 후 redirect 시 -->	
+		<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered modal-lg">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h3 class="modal-title fw-bold fs-5">공개 매칭</h3>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body" style="margin:30px;">
+		        <h4 class="h4 mb-3" id="successModalMsg"></h4>    
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
 			
 	</div>	
 	
@@ -209,14 +229,19 @@
 	
 	
 	<script th:inline="javascript">
-	
-		const msg = /*[[${msg}]]*/'msg';
-		if(msg != null){
-			alert(msg);
-		}
 		
 	
 		window.onload = function(){
+			
+			
+			/*<![CDATA[*/
+			const msg = /*[[${msg}]]*/'msg';
+			/*]]>*/
+			
+			if(msg){
+				$('#successModalMsg').html(msg)			
+				$('#successModal').modal('show');
+			}
 			
 			//공동간병그룹 등록
 		    document.getElementById("insertGruop").addEventListener('click', function() {

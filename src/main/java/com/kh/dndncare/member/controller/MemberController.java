@@ -528,9 +528,10 @@ public class MemberController {
 			matMatptInfoPtListBefore.get(i).setPtRealAge(ptRealAge);
 			
 			//노출 주소
-			String[] addr = matMatptInfoPtListBefore.get(i).getMatAddressInfo().split(" ");
-			String addressMin = addr[0] + " " +  addr[1];  //00도 00시//
-			matMatptInfoPtListBefore.get(i).setMatAddressMin(addressMin);
+			String[] addr = matMatptInfoPtListBefore.get(i).getMatAddressInfo().split("//");			
+			String[] addressMin = addr[1].split(" ");
+			String addressMinStr = addressMin[0] + " " + addressMin[1]; //00도 00시//
+			matMatptInfoPtListBefore.get(i).setMatAddressMin(addressMinStr);
 			
 			if(i < 6 ){			
 			matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
@@ -539,19 +540,33 @@ public class MemberController {
 			}else if(i<18) {
 				matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
 			}			
-			
 		}		
 		
-		if(matPtCount < 1  && matPtName != null) {
+		if(matPtCount > 0  && matPtName != null) {
 			model.addAttribute("matPtCount", matPtCount);
 			model.addAttribute("matPtName", matPtName);
 		}
 		
 		System.out.println(matMatptInfoPtList1);
-		
 		model.addAttribute("matMatptInfoPtList1", matMatptInfoPtList1);
 		model.addAttribute("matMatptInfoPtList2", matMatptInfoPtList2);
 		model.addAttribute("matMatptInfoPtList3", matMatptInfoPtList3);
+		
+		//loginUser(간병인)에게 매칭을 신청한 대상 정보 불러오기
+		ArrayList<HashMap<String, Object>> requestMatPt	= mService.getRequestMatPt(loginUser.getMemberNo());
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 
 		//infoMap.put("자격증", license); // 가공 종료!

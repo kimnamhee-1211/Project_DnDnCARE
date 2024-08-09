@@ -35,7 +35,7 @@ public interface MatchingMapper {
 
 	ArrayList<Patient> getPatientToMatNo(int matNo);
 
-	ArrayList<InfoCategory> getInfo(int memberNo);
+	ArrayList<InfoCategory> getInfo(int ptNo);
 
 	int insertMatDate(@Param("matNo") int matNo, @Param("matDate") String matDate);
 	
@@ -76,6 +76,8 @@ public interface MatchingMapper {
 	int requestMatching(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
 
 	String getMatPtName(@Param("matNo") int matNo, @Param("ptCount") int ptCount);
+
+	int requestMatCheck(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
 
 
 }

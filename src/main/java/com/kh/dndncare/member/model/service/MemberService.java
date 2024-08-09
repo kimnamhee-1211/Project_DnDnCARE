@@ -32,6 +32,7 @@ public interface MemberService {
 	ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser);
 
 	ArrayList<Member> selectAllMember();
+	
 	int enroll(Member m);
 
 	int enrollCareGiver(CareGiver cg);
@@ -105,6 +106,8 @@ public interface MemberService {
 	ArrayList<MatMatptInfo> selectMatList(int i);
 
 	ArrayList<MatMatptInfoPt> getMatMatptInfoPt();
+
+	ArrayList<HashMap<String, Object>> getRequestMatPt(int memberNo);
 
 
 }

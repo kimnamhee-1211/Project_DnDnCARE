@@ -17,7 +17,7 @@
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	
-	<div id="wrap" style="padding-top:100px; padding-bottom:1000px;">
+	<div id="wrap">
 	
 		<div id="upperContents">
 			<div><!-- 왼쪽 공백 --></div>
@@ -88,43 +88,8 @@
 	                        <td></td>
 	                    </tr>
 	                    <tr class="align-middle text-center">
+	                    	<td style="display:none" th:text="${mat.matNo}"></td>
 	                        <td colspan="4" class="align-middle">나팔꽃님이 매칭을 원하고 있어요</td>
-	                        <td><button class="btn btn-success workInfo">정보보기</button></td>
-	                    </tr>
-	                    <tr class="align-middle text-center">
-	                        <td colspan="4" class="align-middle">다람쥐님이 매칭을 원하고 있어요</td>
-	                        <td><button class="btn btn-success workInfo">정보보기</button></td>
-	                    </tr>
-	                    <tr class="align-middle text-center">
-	                        <td colspan="4" class="align-middle">라일락님이 매칭을 원하고 있어요</td>
-	                        <td><button class="btn btn-success workInfo">정보보기</button></td>
-	                    </tr>
-	                    <tr class="align-middle text-center">    
-	                        <td colspan="4" class="align-middle">마동석님이 매칭을 원하고 있어요</td>
-	                        <td><button class="btn btn-success workInfo">정보보기</button></td>
-	                    </tr>   
-	                    <tr class="align-middle text-center">    
-	                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-	                        <td><button class="btn btn-success workInfo">정보보기</button></td>
-	                    </tr>
-	                    <tr class="align-middle text-center">    
-	                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-	                        <td><button class="btn btn-success workInfo">정보보기</button></td>
-	                    </tr>
-	                    <tr class="align-middle text-center">    
-	                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-	                        <td><button class="btn btn-success workInfo">정보보기</button></td>
-	                    </tr>
-	                    <tr class="align-middle text-center">    
-	                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-	                        <td><button class="btn btn-success workInfo">정보보기</button></td>
-	                    </tr>
-	                    <tr class="align-middle text-center">    
-	                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-	                        <td><button class="btn btn-success workInfo">정보보기</button></td>
-	                    </tr>
-	                    <tr class="align-middle text-center">    
-	                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
 	                        <td><button class="btn btn-success workInfo">정보보기</button></td>
 	                    </tr>
 	                </tbody>
@@ -154,10 +119,11 @@
 	                   					<div class="card-body">
 	                     					<h6 class="card-title" style="font-weight:700">
 	                       						<span th:if="${mat.ptCount == 1}">[[${mat.ptName}]]</span>
-	                       						<span th:if="${mat.ptCount > 1}">[[${mat.ptName}]] 외</span>&nbsp;&nbsp;
+	                       						<span th:if="${mat.ptCount > 1}">[[${mat.ptName}]] 외</span>&nbsp;&nbsp;&nbsp;
 	                       						<img th:if="${mat.ptCount > 1}" src="image/icon/users.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='병원돌봄'}" src="image/icon/hospital.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='가정돌봄'}"  src="image/icon/home.png"/>
+	                       						<span>[[${mat.service}]]</span>
 	                      					</h6>
 	                      					<p class="card-text">
 	                       						<span>[[${mat.beginDt}]]</span>
@@ -165,7 +131,7 @@
 	                       						<span>[[${mat.endDt}]]</span>
 	                      					</p>
 	                      					<p class="card-text" th:if="${mat.ptCount == 1}">
-	                       						<span th:text="${mat.ptGender == 'M' ? '남성' : '여성'}"></span>
+	                       						<span th:text="${mat.ptGender == 'M' ? '남성' : '여성'}"></span>&nbsp;&nbsp;
 	                       						<span>[[${mat.ptRealAge}]]세</span>	                        	
 	                      					</p>
 	                      					<p class="card-text">
@@ -174,7 +140,7 @@
 	                      					<p class="card-text" th:if="${mat.ptCount > 1 }">
 	                     						<span>[[${mat.hospitalName}]]</span> 
 	                      					</p>		                       	
-	                       					<button class="btn btn-success workInfo2">정보 보기</button>
+	                       					<button class="btn btn-success workInfo">정보 보기</button>
 										</div>
 									</div>
 								</div>
@@ -209,7 +175,7 @@
 	                      					<p class="card-text" th:if="${mat.ptCount > 1}">
 	                     						<span>[[${mat.hospitalName}]]</span> 
 	                      					</p>		                       	
-	                       					<button class="btn btn-success workInfo2">정보 보기</button>
+	                       					<button class="btn btn-success workInfo">정보 보기</button>
 										</div>
 									</div>
 								</div>
@@ -244,7 +210,7 @@
 	                      					<p class="card-text" th:if="${mat.ptCount > 1}">
 	                     						<span>[[${mat.hospitalName}]]</span> 
 	                      					</p>		                       	
-	                       					<button class="btn btn-success workInfo2">정보 보기</button>
+	                       					<button class="btn btn-success workInfo">정보 보기</button>
 										</div>
 									</div>
 								</div>
@@ -277,22 +243,21 @@
 	    
 	    
 	    <!-- 매칭 신청 성공 시 모달 -->
-	    <th:block th:if="${matPtName != null}">	    
 			<div class="modal fade" id="matSuccesseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			  <div class="modal-dialog modal-dialog-centered">
+			  <div class="modal-dialog modal-dialog-centered modal-lg">
 			    <div class="modal-content">
 			      <div class="modal-header">
-			        <h1 class="modal-title fs-5" id="exampleModalLabel">매칭 신청 완료</h1>
+			        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 완료</h3>
 			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			      </div>
-			      <div class="modal-body">
-			        <h3 class="h3 mb-4 fw-bold text-center" th:if="{matPtCount > 1 }">
-			        	[[${${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹과의 매칭 신청이 완료되었습니다. 
-			        </h3>
-			        <h3 class="h3 mb-4 fw-bold text-center" th:if="{matPtCount == 1}">
+			      <div class="modal-body" style="margin:30px;">
+			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
+			        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 매칭 신청이 완료되었습니다. 
+			        </h4>
+			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
 			        	[[${matPtName}]]님과의 매칭 신청이 완료되었습니다.
-			        </h3>	
-			         <h5 class="h5 mb-1 fw-bold text-center">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다. </h5>
+			        </h4>	
+			         <h5 class="h5 mb-1 fw-bold">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다. </h5>
 			      </div>
 			      <div class="modal-footer">
 			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -300,7 +265,6 @@
 			    </div>
 			  </div>
 			</div>
-		</th:block>    
    
    
    
@@ -418,7 +382,7 @@
     	 	
     
 	   		 //정보보기 버튼 클릭	
-	  		const workInfos = document.querySelectorAll('.workInfo2');    	
+	  		const workInfos = document.querySelectorAll('.workInfo');    	
 	    	for(const workInfo of workInfos){
 	        	workInfo.addEventListener('click', function(){
 	        		const matNo = this.parentElement.parentElement.previousElementSibling.innerHTML
@@ -431,6 +395,10 @@
 	    	
 	    	const matPtName = /*[[${matPtName}]]*/
 	    	const matPtCount = /*[[${matPtCount}]]*/
+	    	
+	    	console.log(matPtName);
+	    	console.log(matPtCount);
+	    	
 	    	
 	    	if(matPtName != null && matPtCount != null){
 	    		$('#matSuccesseModal').modal('show');

@@ -37,7 +37,7 @@ public interface MatchingService {
 	ArrayList<Patient> getPatientToMatNo(int matNo);
 	
 	//get member info (대분류 : 소분류)
-	ArrayList<InfoCategory> getInfo(int memberNo);
+	ArrayList<InfoCategory> getInfo(int ptNo);
 	
 	//insert MatchingDate
 	int insertMatDate(int matNo, String matDate);
@@ -89,6 +89,7 @@ public interface MatchingService {
 	
 	//pt 이름 뽑기(공동간병일 경우 방 개설자)
 	String getMatPtName(int matNo, int ptCount );
+	int requestMatCheck(int memberNo, int matNo);
 
 
 }

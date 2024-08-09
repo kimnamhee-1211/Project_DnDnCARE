@@ -106,4 +106,6 @@ public interface MemberMapper {
 
 	ArrayList<MatMatptInfoPt> getMatMatptInfoPt();
 
+	ArrayList<HashMap<String, Object>> getRequestMatPt(int memberNo);
+
 }

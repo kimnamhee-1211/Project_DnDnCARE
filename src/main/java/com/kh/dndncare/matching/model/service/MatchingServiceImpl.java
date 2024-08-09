@@ -70,8 +70,8 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	//get member info (대분류 : 소분류)
-	public ArrayList<InfoCategory> getInfo(int memberNo) {
-		return mMapper.getInfo(memberNo);
+	public ArrayList<InfoCategory> getInfo(int ptNo) {
+		return mMapper.getInfo(ptNo);
 	}
 
 	
@@ -191,6 +191,14 @@ public class MatchingServiceImpl implements MatchingService {
 	@Override
 	public String getMatPtName(int matNo, int ptCount) {
 		return mMapper.getMatPtName(matNo, ptCount);
+	}
+	
+	
+	//매칭방에 이미 매칭 신청을 한 간병인인지 아닌지 확인
+	@Override
+	public int requestMatCheck(int memberNo, int matNo) {
+		// TODO Auto-generated method stub
+		return mMapper.requestMatCheck(memberNo, matNo);
 	}
 	
 

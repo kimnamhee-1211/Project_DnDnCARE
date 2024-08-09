@@ -321,7 +321,18 @@
 	
 	
 	
+	<select id="getRequestMatPt" resultType="map">
+		select mat_no, ptName
+		from matching
+			join mat_pt_info using(mat_no)
+			join patient on(mat_pt_info.pt_no = patient.pt_no)
+		where matching.memberNo = #{memberNo}	
+				and matching.mat_confirm = 'N'
+		<if test = ""></if>
 	
+	
+	
+	</select>
 	
 	
 	

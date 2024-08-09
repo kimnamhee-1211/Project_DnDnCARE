@@ -191,7 +191,7 @@ public class MatchingController {
 	//공동간병 병원 선택
 	@GetMapping("joinMatching.jm")
 	public String joinMatchinjmain(@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress, 
-								Model model, HttpSession session) {
+								Model model, HttpSession session, @RequestParam(value="msg", required=false) String msg) {
 		
 		//병원 정보 전달
 		Hospital hospital = new Hospital();
@@ -201,6 +201,7 @@ public class MatchingController {
 		
 		//병원으로 list 뽑기 
 		ArrayList<MatMatptInfo> list = mcService.getJmList(hospitalName);
+		
 		
 		//loginUser가 그룹에 참여중인지 아닌지 확인 => view 표시용
 		//loginUser-MatNo get
@@ -214,7 +215,7 @@ public class MatchingController {
 		    }
 		}
 		
-		
+		model.addAttribute("msg", msg);
 		model.addAttribute("list", list);
 		return "joinMatching";
 	}
@@ -317,6 +318,7 @@ public class MatchingController {
 		if(result2>0 && result3>0) {
 			re.addAttribute("hospitalName", hospital.getHospitalName());
 			re.addAttribute("hospitalAddress", hospital.getHospitalAddress());
+			re.addAttribute("msg", "공동간병 등록이 완료되었습니다.");
 			return "redirect:joinMatching.jm";
 		}
 		throw new MemberException("공동간병 그룹 등록 실패");
@@ -343,7 +345,7 @@ public class MatchingController {
 		for(Patient jmPt : jmPts) {
 			
 			//get member info (대분류 : 소분류)
-			ArrayList<InfoCategory> jmPtInfos =  mcService.getInfo(jmPt.getMemberNo());
+			ArrayList<InfoCategory> jmPtInfos =  mcService.getInfo(jmPt.getPtNo());
 			
 			ArrayList<String> disease =  new ArrayList<>();
 			String diseaseLevel = null;
@@ -498,7 +500,7 @@ public class MatchingController {
 	
 	//간병인 메인에서 환자 정보 페이지로 
 	@GetMapping("goCaregiverPtInfo.mc")
-	public String goCaregiverPtInfo(@RequestParam("matNo") int matNo, Model model) {
+	public String goCaregiverPtInfo(@RequestParam("matNo") int matNo, Model model, HttpSession session) {
 				
 		ArrayList<MatMatptInfoPt> mPI = mcService.matPtInfoToCaregiver("N", matNo);
 		ArrayList<String> diseaseArr = new ArrayList<String>();
@@ -510,20 +512,21 @@ public class MatchingController {
 			int ptRealAge = AgeCalculator.calculateAge(mPI.get(i).getPtAge());
 			mPI.get(i).setPtRealAge(ptRealAge);
 			
-			//노출 주소
-			String[] addr = mPI.get(i).getMatAddressInfo().split(" ");
-			String addressMin = addr[0] + " " +  addr[1];  //00도 00시//
-			mPI.get(i).setMatAddressMin(addressMin);
+			//노출 주소 00도 00시
+			String[] addr = mPI.get(i).getMatAddressInfo().split("//");
+			String[] addressMin = addr[1].split(" ");
+			String addressMinStr = addressMin[0] + " " + addressMin[1];
+			mPI.get(i).setMatAddressMin(addressMinStr);
 			
 			//주소 full (//제외)
 			String address = mPI.get(i).getMatAddressInfo().replace("//", " "); 
 			mPI.get(i).setMatAddressInfo(address);
 			
-			int memberNo = mPI.get(i).getMemberNo();
+			int ptNo = mPI.get(i).getPtNo();
 									
 			//memberInfo 뽑기
-			ArrayList <InfoCategory> info = mcService.getInfo(memberNo);
-			System.out.println(info);
+			ArrayList <InfoCategory> info = mcService.getInfo(ptNo);
+			System.out.println("info: " + info);
 			
 			for(int l = 0; l < info.size(); l++) {
 				
@@ -534,24 +537,33 @@ public class MatchingController {
 				}else if(info.get(l).getLCategory().equals("mobilityStatus")) {
 					mobilityStatus = info.get(l).getSCategory();
 				}
-			}
-			
-			System.out.println(diseaseArr);
-			System.out.println(diseaseLevel);
-			System.out.println(mobilityStatus);
-			
+			}			
 			mPI.get(i).setDisease(diseaseArr.toString().replace("[", "").replace("]", ""));
 			mPI.get(i).setDiseaseLevel(diseaseLevel.toString().replace("[", "").replace("]", ""));
 			mPI.get(i).setMobilityStatus(mobilityStatus);
 		}
 		
+		
+		Member loginUser = (Member) session.getAttribute("loginUser");		
+		int count = mcService.requestMatCheck(loginUser.getMemberNo(), matNo);
+		
+		String matCheck = "";
+		if(count == 0) {
+			matCheck = "N";
+		}else {
+			matCheck = "Y";
+		}		
+		
 		System.out.println(mPI);
+		System.out.println(matCheck);
 		model.addAttribute("mPI", mPI);
+		model.addAttribute("matCheck", matCheck);
 		
 		return "caregiverPtInfo";
 	}
 	
 	
+	//간병인 회원의 매칭 신청
 	@GetMapping("requestMatching.mc")
 	public String requestMatching(@RequestParam("matNo") int matNo, @RequestParam("ptCount") int ptCount, 
 								RedirectAttributes re, HttpSession session) {
@@ -563,8 +575,6 @@ public class MatchingController {
 		if(result > 0) {
 			//pt 이름 뽑기(공동간병일 경우 방 개설자)
 			String matPtName = mcService.getMatPtName(matNo, ptCount);
-			System.out.println(matPtName);
-			System.out.println(ptCount);
 			
 			if(matPtName != null) {
 				re.addAttribute("matPtName", matPtName);

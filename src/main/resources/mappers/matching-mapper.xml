@@ -68,7 +68,8 @@
 		select l_category, s_category
 		from member_info 
 			join info_category using(category_no)
-		where member_no = #{memberNo}	
+			join patient on(member_info.member_no = patient.member_no)
+		where patient.pt_no = #{ptNo}	
 	</select>
 	
 	<select id="selectReviewList" resultType="CareReview">
@@ -231,16 +232,14 @@
 		order by matching.begin_dt desc
 	</select>
 
-	<!-- 매칭테이블에 간병인 memberNo 넣기 -->
-	<update id="requestMatching">
-		update matching
-		set member_no = #{memberNo},
-			mat_confirm = 'W'
-		where mat_no = #{matNo}	
-	</update>
+	<!-- 간병인 매칭 신청 : mat_care_pending에 간병인 memberNo 넣기 -->
+	<insert id="requestMatching">
+		insert into mat_care_pending
+		values(#{matNo}, #{memberNo})
+	</insert>
 	
 	<!-- pt 이름 뽑기(공동간병일 경우 방 개설자) -->
-	<select id="getMatPtName">
+	<select id="getMatPtName" resultType="string">
 		select patient.pt_name
 		from patient
 			join mat_pt_info on(patient.pt_no = mat_pt_info.pt_no)
@@ -251,8 +250,12 @@
 		</if>
 	</select>
 
-
-
+	<!-- //매칭방에 이미 매칭 신청을 한 간병인인지 아닌지 확인 -->
+	<select id="requestMatCheck" resultType="_int">
+		select count(*)
+		from mat_care_pending
+		where member_no = #{memberNo} and mat_no = ${matNo}
+	</select>
 
 
 

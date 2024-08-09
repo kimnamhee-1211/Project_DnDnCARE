@@ -43,18 +43,21 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.login(m);
 	}
 	
+	
+	//// 멤버 테이블만 있고 환자/ 간병인 테이블에 insert됮 않은 경우 멤버 테이블 삭제
 	@Override
 	public int noInfomemberdle() {
 		return mMapper.noInfomemberdle();
 	}
 
-
+	//아이디 중복체크
 	@Override
 	public int idCheck(String id) {
 
 		return mMapper.idCheck(id);
 	}
 	
+	//닉네임 중복 체크
 	@Override
 	public int nickNameCheck(String nickName) {
 		return mMapper.nickNameCheck(nickName);
@@ -73,20 +76,25 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectAllMember();
 	}
 
+	//member테이블 insert(회원가입)
 	public int enroll(Member m) {
 		return mMapper.enroll(m);
 	}
 
+	//간병인 테이블 insert(회원가입 -간병인)
 	@Override
 	public int enrollCareGiver(CareGiver cg) {
 		return  mMapper.enrollCareGiver(cg);
 	}
 
+	//member_info insert (회원가입)
 	@Override
 	public int enrollInfoCategory(Object ob) {
 		return mMapper.enrollInfoCategory(ob);
 	}
 
+	
+	///환자 테이블 insert (환자 회원가입)
 	@Override
 	public int enrollPatient(Patient pt) {
 		return  mMapper.enrollPatient(pt);
@@ -271,6 +279,14 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public ArrayList<MatMatptInfoPt> getMatMatptInfoPt() {
 		return mMapper.getMatMatptInfoPt();
+	}
+	
+	
+	//
+	@Override
+	public ArrayList<HashMap<String, Object>> getRequestMatPt(int memberNo) {
+		// TODO Auto-generated method stub
+		return mMapper.getRequestMatPt(memberNo);
 	}
 
 }
