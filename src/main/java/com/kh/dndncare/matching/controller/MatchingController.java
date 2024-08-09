@@ -552,7 +552,33 @@ public class MatchingController {
 	}
 	
 	
-	
+	@GetMapping("requestMatching.mc")
+	public String requestMatching(@RequestParam("matNo") int matNo, @RequestParam("ptCount") int ptCount, 
+								RedirectAttributes re, HttpSession session) {
+		
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		
+		int result = mcService.requestMatching(loginUser.getMemberNo(), matNo);
+		
+		if(result > 0) {
+			//pt 이름 뽑기(공동간병일 경우 방 개설자)
+			String matPtName = mcService.getMatPtName(matNo, ptCount);
+			System.out.println(matPtName);
+			System.out.println(ptCount);
+			
+			if(matPtName != null) {
+				re.addAttribute("matPtName", matPtName);
+				re.addAttribute("matPtCount", ptCount);
+				return "redirect:caregiverMain.me";
+			}else {
+				throw new MemberException("간병인 매칭 신청 실패1");
+			}			
+			
+		}else {
+			throw new MemberException("간병인 매칭 신청 실패2");
+		}
+
+	}
 	
 	
 	

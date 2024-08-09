@@ -231,9 +231,25 @@
 		order by matching.begin_dt desc
 	</select>
 
-
-
-
+	<!-- 매칭테이블에 간병인 memberNo 넣기 -->
+	<update id="requestMatching">
+		update matching
+		set member_no = #{memberNo},
+			mat_confirm = 'W'
+		where mat_no = #{matNo}	
+	</update>
+	
+	<!-- pt 이름 뽑기(공동간병일 경우 방 개설자) -->
+	<select id="getMatPtName">
+		select patient.pt_name
+		from patient
+			join mat_pt_info on(patient.pt_no = mat_pt_info.pt_no)
+			join matching on(mat_pt_info.mat_no = matching.mat_no)
+		where mat_pt_info.mat_no = #{matNo}
+		<if test="ptCount > 1">
+			and mat_pt_info.group_leader = 'Y'
+		</if>
+	</select>
 
 
 

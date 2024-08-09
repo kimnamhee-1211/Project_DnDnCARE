@@ -148,7 +148,7 @@
 					<div class="carousel-inner">					
 						<div class="carousel-item active" th:if="${matMatptInfoPtList1 != null}">
 							<div class="row row-cols-md-2 g-2 ptDiv">
-	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList1}">
+	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList1}" th:if="${ mat.ptCount == 1 || (mat.ptCount > 1 && mat.groupLeader == 'Y')}">
 	               					<div style="display:none" th:text="${mat.matNo}"></div>
 	                   				<div class="card h-95 w-80">
 	                   					<div class="card-body">
@@ -171,7 +171,7 @@
 	                      					<p class="card-text">
 	                       						<span>[[${mat.matAddressMin}]]</span>                        	
 	                      					</p>
-	                      					<p class="card-text" th:if="${mat.ptCount > 1}">
+	                      					<p class="card-text" th:if="${mat.ptCount > 1 }">
 	                     						<span>[[${mat.hospitalName}]]</span> 
 	                      					</p>		                       	
 	                       					<button class="btn btn-success workInfo2">정보 보기</button>
@@ -181,10 +181,9 @@
 	                		</div>
 						</div>
 						
-						
 						<div class="carousel-item" th:if="${matMatptInfoPtList2 != null}">
 							<div class="row row-cols-md-2 g-2 ptDiv">
-	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList2}">
+	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList2}" th:if="${ mat.ptCount == 1 || (mat.ptCount > 1 && mat.groupLeader == 'Y')}">
 	               					<div style="display:none" th:text="${mat.matNo}"></div>
 	                   				<div class="card h-95 w-80">
 	                   					<div class="card-body">
@@ -219,7 +218,7 @@
 						
 						<div class="carousel-item" th:if="${matMatptInfoPtList3 != null}">
 							<div class="row row-cols-md-2 g-2 ptDiv">
-	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList3}">
+	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList3}" th:if="${ mat.ptCount == 1 || (mat.ptCount > 1 && mat.groupLeader == 'Y')}">
 	               					<div style="display:none" th:text="${mat.matNo}"></div>
 	                   				<div class="card h-95 w-80">
 	                   					<div class="card-body">
@@ -252,7 +251,6 @@
 	                		</div>
 						</div>
 										
-						
 			 		</div>		 	
 			    	<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
 			  	  		<span class="carousel-control-prev-icon" ></span>
@@ -276,8 +274,36 @@
 	            나의 매칭 현황
 	        </a>
 	    </div>
+	    
+	    
+	    <!-- 매칭 신청 성공 시 모달 -->
+	    <th:block th:if="${matPtName != null}">	    
+			<div class="modal fade" id="matSuccesseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h1 class="modal-title fs-5" id="exampleModalLabel">매칭 신청 완료</h1>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        <h3 class="h3 mb-4 fw-bold text-center" th:if="{matPtCount > 1 }">
+			        	[[${${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹과의 매칭 신청이 완료되었습니다. 
+			        </h3>
+			        <h3 class="h3 mb-4 fw-bold text-center" th:if="{matPtCount == 1}">
+			        	[[${matPtName}]]님과의 매칭 신청이 완료되었습니다.
+			        </h3>	
+			         <h5 class="h5 mb-1 fw-bold text-center">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다. </h5>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		</th:block>    
    
-    
+   
+   
     </div>
     
     
@@ -403,8 +429,12 @@
 	    	} 
 	    	
 	    	
-    	
+	    	const matPtName = /*[[${matPtName}]]*/
+	    	const matPtCount = /*[[${matPtCount}]]*/
 	    	
+	    	if(matPtName != null && matPtCount != null){
+	    		$('#matSuccesseModal').modal('show');
+	    	}
 	    	
 	    	
 	    	

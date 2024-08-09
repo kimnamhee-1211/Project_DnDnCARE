@@ -73,5 +73,9 @@ public interface MatchingMapper {
 
 	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(@Param("matConfirm") String matConfirm, @Param("matNo") int matNo);
 
+	int requestMatching(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
+
+	String getMatPtName(@Param("matNo") int matNo, @Param("ptCount") int ptCount);
+
 
 }

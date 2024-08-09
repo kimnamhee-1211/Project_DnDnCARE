@@ -502,7 +502,8 @@ public class MemberController {
 	
 	// 간병인 메인페이지로 가기 
 	@GetMapping("caregiverMain.me")
-	public String caregiverMain(HttpSession session, Model model) {
+	public String caregiverMain(HttpSession session, Model model,
+								@RequestParam(value="matPtCount", defaultValue = "0") int matPtCount, @RequestParam(value="matPtName", required = false) String matPtName) {
 		// 1. 자동 추천 목록 받아오기
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		int memberNo = 0;
@@ -539,7 +540,14 @@ public class MemberController {
 				matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
 			}			
 			
+		}		
+		
+		if(matPtCount < 1  && matPtName != null) {
+			model.addAttribute("matPtCount", matPtCount);
+			model.addAttribute("matPtName", matPtName);
 		}
+		
+		System.out.println(matMatptInfoPtList1);
 		
 		model.addAttribute("matMatptInfoPtList1", matMatptInfoPtList1);
 		model.addAttribute("matMatptInfoPtList2", matMatptInfoPtList2);

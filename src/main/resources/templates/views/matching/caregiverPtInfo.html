@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link th:href="@{css/caregiverPtInfo.css}" rel="stylesheet" type="text/css"/>
 </head>
@@ -15,7 +16,9 @@
 			<h1 class="h1 mb-4 fw-bold text-center">매칭 정보</h1><br>
 		</div>
 		<div class="title2-content d-flex justify-content-center mx-auto">	
-			<div class="form-floating mb-3 mx-auto">	
+			<div class="form-floating mb-3 mx-auto">
+				<div style="display:none" th:text="${mPI[0].matNo}" id="matNo"></div>
+				<div style="display:none" th:text="${mPI[0].ptCount}" id="ptCount"></div>
 				<table class="table" style="font-size:20px;line-height:40px;width:1000px;">
 				    <tr style="font-size:22px;">
 				      <th scope="col" th:if="${mPI[0].ptCount == 1}" colspan="3">&nbsp;&nbsp;&nbsp;[[${mPI[0].matAddressMin}]]</th>
@@ -101,7 +104,7 @@
 			</div>	
 
 			<div class="sign-btn d-flex justify-content-center mx-auto" style="weight:300px;">
-				<button type="button" class="signIn-btn mt-4" id="nextButton" data-bs-toggle="modal" data-bs-target="#exampleModal"><span>매칭 신청</span></button>
+				<button type="button" class="signIn-btn mt-4" data-bs-toggle="modal" data-bs-target="#exampleModal"><span>매칭 신청</span></button>
 				<button type="button" class="signUp-btn mt-4" id="backButton"><span>이전으로</span></button>
 			</div>
 		</main>
@@ -110,22 +113,23 @@
 	
 	<!-- 매칭 신청 모달 -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered">
+	  <div class="modal-dialog modal-dialog-centered modal-xl">
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <h1 class="modal-title fs-5" id="exampleModalLabel">매칭 신청</h1>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
-	      <div class="modal-body">
-	        <h3 class="h3 mb-4 fw-bold text-center" th:each="onePt : ${mPI}" th:if="${onePt.ptCount > 1 && onePt.groupLeader == 'Y'}">
-	        	[[${onePt.ptName}]] 등 [[${onePt.ptCount}]]명의 공동간병 그룹과의 매칭을 신청하시겠습니까?
+	      <div class="modal-body" style="margin:30px;">
+	        <h3 class="h3 mb-4 fw-bold" th:each="onePt : ${mPI}" th:if="${onePt.ptCount > 1 && onePt.groupLeader == 'Y'}">
+	        	[[${onePt.ptName}]]님 등 [[${onePt.ptCount}]]명의 공동간병 그룹과의 매칭을 신청하시겠습니까?
 	        </h3>
-	        <h3 class="h3 mb-4 fw-bold text-center" th:if="${mPI[0].ptCount == 1}">
-	        	[[${mPI[0].ptName}]]와의 매칭을 신청하시겠습니까?
-	        </h3>	        
+	        <h3 class="h3 mb-4 fw-bold" th:if="${mPI[0].ptCount == 1}">
+	        	[[${mPI[0].ptName}]]님과의 매칭을 신청하시겠습니까?
+	        </h3>
+	        <h4 class="h4 mb-1 fw-bold">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다.</h4>	        
 	      </div>
 	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-primary">매칭 신청</button>
+	      	<button type="button" class="btn btn-primary" id="requestMatching">매칭 신청</button>
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 	      </div>
 	    </div>
@@ -141,9 +145,27 @@
 	<script th:inline="javascript">
 	
 	window.onload = function() {
-		//document.querySelector('#nextButton').addEventListener('click', ()=>{
-		//	modal.show();
-		//})
+		
+		
+		document.querySelector('#requestMatching').addEventListener('click', ()=>{
+			const matNo = document.querySelector('#matNo').innerHTML;
+			const ptCount = document.querySelector('#ptCount').innerHTML;
+			
+			location.href='requestMatching.mc?matNo='+ matNo + '&ptCount=' + ptCount;
+		})
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	};
 	
 	

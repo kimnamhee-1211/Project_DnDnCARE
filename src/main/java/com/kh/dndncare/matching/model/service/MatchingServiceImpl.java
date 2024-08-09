@@ -181,6 +181,18 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.matPtInfoToCaregiver(matConfirm, matNo);
 	}
 	
+	//매칭테이블에 간병인 memberNo 넣기
+	@Override
+	public int requestMatching(int memberNo, int matNo) {
+		return mMapper.requestMatching(memberNo, matNo);
+	}
+	
+	//pt 이름 뽑기(공동간병일 경우 방 개설자)
+	@Override
+	public String getMatPtName(int matNo, int ptCount) {
+		return mMapper.getMatPtName(matNo, ptCount);
+	}
+	
 
 
 
