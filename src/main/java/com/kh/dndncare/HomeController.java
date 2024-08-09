@@ -33,5 +33,10 @@ public class HomeController {
 		return "callback";
 	}
 	
+	@GetMapping("kakao.lo")
+	public String kakao() {
+		return "kakao";
+	}
+	
 
 }
