@@ -1298,7 +1298,7 @@
 			// *** 비동기 방식으로 임의결과 요청하는 ajax함수 정의 (시작) ***
 			let noSearchAjax = (page) => {
 				$.ajax({
-					url: 'workInfoTest.me?page='+page,
+					url: 'workAllInfo.me?page='+page,
 					type: 'post',
 					data : {},
 					success: data => {
@@ -1365,7 +1365,6 @@
 					}
 				}
 			})
-			
 			//fetchData(); // 처음 페이지 로드시에 1페이지에 해당하는 검색결과를 가져온다.
 			// 일감목록 검색 결과를 출력하는 무한스크롤 (끝)
 			

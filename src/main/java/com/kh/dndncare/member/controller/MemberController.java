@@ -842,10 +842,21 @@ public class MemberController {
 	
 	
 	//무한스크롤 테스트 중 : 성공
-	@PostMapping("workInfoTest.me")
+	@PostMapping("workAllInfo.me")
 	@ResponseBody
 	public void workInfoTest(HttpServletResponse response, @RequestParam(value="page", defaultValue="1") int currentPage) {
 		// 페이지 첫 로드시 또는 검색조건이 하나도 없이 검색버튼을 눌렀을 때 이곳으로 요청이 들어옴
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		Gson gson = new Gson();
 		ArrayList<String> list = new ArrayList<String>();
@@ -1237,7 +1248,7 @@ public class MemberController {
 			ArrayList<Integer> memberNoList = new ArrayList<Integer>();
 			ArrayList<Integer> matNoList = new ArrayList<Integer>();
 			for(HashMap<String, Integer> m : list) {
-				memberNoList.add(Integer.parseInt(String.valueOf(m.get("MEMBER_NO"))));
+				memberNoList.add(Integer.parseInt(String.valueOf(m.get("MEMBER_NO")))); 
 				matNoList.add(Integer.parseInt(String.valueOf(m.get("MAT_NO"))));
 			}
 			
