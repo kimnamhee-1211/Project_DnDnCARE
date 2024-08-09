@@ -842,20 +842,22 @@ public class MemberController {
 	
 	
 	//무한스크롤 테스트 중 : 성공
-	@PostMapping("workAllInfo.me")
+	@PostMapping("workAllInfo.me") // 간병인의 입장에서 매칭정보를 가져오는 것
 	@ResponseBody
-	public void workInfoTest(HttpServletResponse response, @RequestParam(value="page", defaultValue="1") int currentPage) {
+	public void workAllInfo(HttpServletResponse response, @RequestParam(value="page", defaultValue="1") int currentPage,
+								@RequestParam("memberNo") Integer memberNo) {
 		// 페이지 첫 로드시 또는 검색조건이 하나도 없이 검색버튼을 눌렀을 때 이곳으로 요청이 들어옴
+		// MEMBER_NO(간병인 번호), MEMBER_NAME(간병인 이름), MEMBER_GENDER(간병인 성별), MEMBER_AGE(간병인 나이), MAT_MODE(기간제1, 시간제2), 
+		// MAT_ADDRESS_INFO(간병 장소), HOSPITAL_NAME(병원명)
+		// MAT_NO(매칭번호), PT_COUNT(공동인지 개인인지 구분), BEGIN_DT(시작일), END_DT(종료일) 
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		if(memberNo != null) {
+			
+			
+			
+			
+			
+		}
 		
 		
 		Gson gson = new Gson();

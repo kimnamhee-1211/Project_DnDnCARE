@@ -1154,7 +1154,9 @@
 				$.ajax({
 					url: 'moreCaregiverInfo.me?page='+page,
 					type: 'post',
-					data : {},
+					/*<![CDATA[*/
+					data : {memberNo: /*[[${session.loginUser.memberNo}]]*/0},
+					/*]]>*/
 					success: data => {
 						console.log(data);
 						
