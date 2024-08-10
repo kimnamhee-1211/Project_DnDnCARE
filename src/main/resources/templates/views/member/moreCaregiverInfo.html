@@ -1152,33 +1152,147 @@
 			// *** 비동기 방식으로 임의결과 요청하는 ajax함수 정의 (시작) ***
 			let noSearchAjax = (page) => {
 				$.ajax({
-					url: 'moreCaregiverInfo.me?page='+page,
+					url: 'moreCaregiverList.me?page='+page,
 					type: 'post',
 					/*<![CDATA[*/
 					data : {memberNo: /*[[${session.loginUser.memberNo}]]*/0},
 					/*]]>*/
 					success: data => {
 						console.log(data);
-						
-						for(let count of data) {
-							root.innerHTML += '<div class="col-sm-6">\
-	            				<div class="card h-95 w-80">\
-	    							<div class="card-body">\
-	        						<h6 class="card-title">\
-	            						<span style="background:skyblue; color:blue;">ㅇㅇㅇ 님</span>&nbsp;&nbsp;\
-	            						<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;\
-	            						<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;\
-	       							</h6>\
-				                    <p class="card-text">\
-				                    	<span>서울시 도봉구 (모든결과)</span>\
-				                   	</p>\
-				                    <button class="btn btn-success workInfo">정보 보기</button>\
-			                		</div>\
-	   							</div>\
-								</div>';
-						}
+						if(data != 'noExist') {
+							for(let d of data) {
+								// 별점 이미지 그리기 작업
+								const nameSpan = document.querySelector('#tartget');
+								const imgArr = [];
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								const modScore = d.avgReviewScore / 2
+								if(modScore == 0){ // 별점이 짝수
+									for(let i = 0; i < modScore; i++){
+										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+									for(let i = 4; i >= modScore; i--){
+										imgArr[i].setAttribute("src", "image/icon/emptyStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+								} else { // 별점이 홀수
+									for(let i = 0; i < Math.floor(modScore); i++){
+										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+									
+									let half = Math.floor(modScore);
+									imgArr[half].setAttribute("src", "image/icon/halfStar.png");
+									
+									for(let i = 4; i >= Math.ceil(modScore); i--){
+										imgArr[i].setAttribute("src", "image/icon/emptyStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+								}
+								
+								if(d.careImg == null) { // 이미지 파일이 없는 경우
+									const div0 = document.createElement('div');
+									div0.className = 'col-sm-6';
+									
+									const div1 = document.createElement('div');
+									div1.className = 'card h-95 w-80';
+									
+									const div2 = document.createElement('div');
+									div2.className = 'card-body text-center';
+									
+									const h6 = document.createElement('h6');
+									h6.className = 'card-title';
+									const img = document.createElement('img');
+									img.setAttribute('src', 'image/icon/maleProfile.png');
+									const h6Span = document.createElement('span');
+									h6Span.innerText = d.memberName + '님';
+									h6.append(img);
+									h6.append(h6Span);
+									for(let i = 0; i < 5; i++) {
+										h6.append(imgArr[i]);
+									}
+									
+									const p = document.createElement('p');
+									p.className = 'card-text';
+									const pSpan = document.createElement('span');
+									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									p.append(pSpan);
+									
+									const inp = document.createElement('input');
+									inp.setAttribute('type', 'hidden');
+									inp.setAttribute('name', 'memberNo');
+									inp.setAttribute('value', d.memberNo);
+									const button = document.createElement('button');
+									button.className = 'btn btn-success';
+									button.setAttribute('onclick', 'caregiverDetail()');
+									button.innerText = '정보보기';
+									
+									div2.append(h6);
+									div2.append(p);
+									div2.append(inp);
+									div2.append(button);
+									div1.append(div2);
+									div0.append(div1);
+									
+									root.append(div0);
+									
+								} else { // 이미지 파일이 있는 경우
+									const div0 = document.createElement('div');
+									div0.className = 'col-sm-6';
+									
+									const div1 = document.createElement('div');
+									div1.className = 'card h-95 w-80';
+									
+									const div2 = document.createElement('div');
+									div2.className = 'card-body text-center';
+									
+									const h6 = document.createElement('h6');
+									h6.className = 'card-title';
+									const img = document.createElement('img');
+									img.setAttribute('src', 'image/icon/maleProfile.png'); // **이미지 경로 수정해야함**
+									const h6Span = document.createElement('span');
+									h6Span.innerText = d.memberName + '님';
+									h6.append(img);
+									h6.append(h6Span);
+									for(let i = 0; i < 5; i++) {
+										h6.append(imgArr[i]);
+									}
+									
+									const p = document.createElement('p');
+									p.className = 'card-text';
+									const pSpan = document.createElement('span');
+									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									p.append(pSpan);
+									
+									const inp = document.createElement('input');
+									inp.setAttribute('type', 'hidden');
+									inp.setAttribute('name', 'memberNo');
+									inp.setAttribute('value', d.memberNo);
+									const button = document.createElement('button');
+									button.className = 'btn btn-success';
+									button.setAttribute('onclick', 'caregiverDetail()');
+									button.innerText = '정보보기';
+									
+									div2.append(h6);
+									div2.append(p);
+									div2.append(inp);
+									div2.append(button);
+									div1.append(div2);
+									div0.append(div1);
+									
+									root.append(div0);
+								}
+							}
 						ajaxNoSearchPage++;
+						console.log('page : ' + ajaxNoSearchPage);
 						searchFlag = false;
+						} else {
+							console.log('검색결과 없음');
+						}
 					},
 					error: data => {
 						console.log('error');
@@ -1189,7 +1303,7 @@
 			// 화면 처음로드시에 띄울 임의 검색결과 목록
 			noSearchAjax(ajaxNoSearchPage);
 			
-			// 검색조건 초기화하기
+			// 검색조건 초기화하기(시작)
 			document.querySelector('#goClear').addEventListener('click', () => {
 				for(let sub of allSubBtnList) {
 					if(sub.className.includes('btn-success')) {
@@ -1203,93 +1317,33 @@
 						sub.classList.add('btn-light');
 					}
 				}
-			
-			
 			})
-			
-			
-			
-			
-			
-			
-			
+			// 검색조건 초기화하기(끝)
 			
 			// 일감목록 검색 결과를 출력하는 무한스크롤 (시작)
-			// (1) 초기 데이터 출력 == page가 1인 상태
-			/* let currentPage = 1; // 현재 로드된 페이지의 번호를 나타내는 변수. 초기값은 1로 설정.
-			let isFetching = false; // 데이터를 가져오는 중인지 여부를 나타내는 변수. 초기값은 false로 설정.
-			let hasMore = true; // 가져올 더 많은 데이터가 있는지 여부를 나타내는 변수. 초기값은 true로 설정.
-			
-			let root = document.querySelector('#root'); // 검색결과를 출력할 div요소에 접근한다.
-			
-			async function fetchData() {
-				isFetching = true; // 데이터를 가져오는 중이라는 표현
-				//let response = await fetch(`https://jsonplaceholder.typicode.com/posts?_page=${currentPage}`);
-				let response = await fetch(`http://localhost:8096/workInfoTest.me?page=${currentPage}`);
-				let data = await response.json();
-			    console.log(data);
-			    
-			    isFetching = false; // 데이터를 가져오고 있지 않는 중이라는 표현
-			    
-			    if (data.length === 0) {
-			        hasMore = false;
-			        return
-			    } */
-			 	// DB에 삽입된 데이터가 없기 때문에 임의로 6개를 뿌리자
-			 	/*	반복적으로 넣어야할 요소
-				 	<div class="col-sm-6">
-	                    <div class="card h-95 w-80">
-	                    	<div class="card-body">
-	                        	<h6 class="card-title">
-		                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
-		                        	<img src="image/icon/hospital.png"/>
-	                       		</h6>
-	                        <p class="card-text">
-	                        	<span>병원명</span>
-	                       	</p>
-	                        <button class="btn btn-success workInfo">정보 보기</button>
-	                    	</div>
-	                    </div>
-	                </div>
-			 	*/
-			    /* for(let post of data) { // 가져온 데이터를 화면에 뿌리는 코드
-			        root.innerHTML += '<div class="col-sm-6">\
-	                    				<div class="card h-95 w-80">\
-                							<div class="card-body">\
-                    						<h6 class="card-title">\
-                        						<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;\
-                        						<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;\
-                        						<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;\
-                        						<img src="image/icon/hospital.png"/>\
-                   							</h6>\
-						                    <p class="card-text">\
-						                    	<span>병원명</span>\
-						                   	</p>\
-						                    <button class="btn btn-success workInfo">정보 보기</button>\
-					                		</div>\
-               							</div>\
-           							</div>';
-			    }
-			    currentPage++;
-			} */
-			
-			window.addEventListener('scroll', () => {
-				/* if(isFetching || !hasMore) {
-					return;
-				} */
-				
-				if((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 300) {
+			// 쓰로틀링 코드
+			let timer;
+			if (!timer) {
+				timer = setTimeout(() => {
+				  timer = null;
+				  /* 실행될 이벤트 */
 					if(searchFlag == false) {
 						noSearchAjax(ajaxNoSearchPage);
 					} else {
 						searchAjax(ajaxSearchPage);
 					}
-				}
-			})
-			
-			//fetchData(); // 처음 페이지 로드시에 1페이지에 해당하는 검색결과를 가져온다.
+				}, 1000);
+			};
+
+			// 쓰로틀링을 적용한 스크롤 이벤트 핸들러
+			if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
+			  if (!timer) {
+				timer = setTimeout(() => {
+				  timer = null;
+				  console.log("End Of Document");
+				}, 500);
+				};
+			}
 			// 일감목록 검색 결과를 출력하는 무한스크롤 (끝)
 			
 			// 태그 전체 모달창 출력
@@ -1380,20 +1434,6 @@
     		})
     		// 자동추천 새로고침 비동기 요청 (끝)
 	    	/*]]>*/
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 		}
 	</script>
 </body>

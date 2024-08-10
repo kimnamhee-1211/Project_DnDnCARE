@@ -1215,10 +1215,13 @@ public class MemberController {
 		}
 	
 	
-		@PostMapping("moreCaregiverInfo.me")
+		@PostMapping("moreCaregiverList.me")
 		@ResponseBody
-		public void moreCaregiverInfo(HttpServletResponse response, 
+		public void moreCaregiverList(HttpServletResponse response, 
 										@RequestParam(value="page", defaultValue="1") int currentPage) {
+			System.out.println("컨트롤러의 페이지 : " + currentPage);
+			
+			
 			// 페이지 첫 로드시 또는 검색조건이 하나도 없이 검색버튼을 눌렀을 때 이곳으로 요청이 들어옴
 			Gson gson = new Gson();
 			response.setContentType("application/json; charset=UTF-8");
@@ -1226,26 +1229,30 @@ public class MemberController {
 				
 				int listCount = mService.getCaregiverListCount();
 				PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 8);
-				
-				ArrayList<CareGiver> cList = mService.selectAllCaregiver(pi);
-				ArrayList<Integer> cNoList = new ArrayList<Integer>();
-				ArrayList<HashMap<String, Integer>> scoreList = new ArrayList<HashMap<String, Integer>>();
-				if(!cList.isEmpty()) { // 간병인 목록이 존재하는 경우
-					for(CareGiver c : cList) {
-						cNoList.add(c.getMemberNo());
-					}
-					scoreList = mService.getCaregiverScoreList(cNoList);
-					
-					for(HashMap<String, Integer> m : scoreList) {
+				//currentPage > pi.getEndPage()
+				if(false) {
+					gson.toJson("noExist", response.getWriter());
+				} else {
+					ArrayList<CareGiver> cList = mService.selectAllCaregiver(pi);
+					ArrayList<Integer> cNoList = new ArrayList<Integer>();
+					ArrayList<HashMap<String, Integer>> scoreList = new ArrayList<HashMap<String, Integer>>();
+					if(!cList.isEmpty()) { // 간병인 목록이 존재하는 경우
 						for(CareGiver c : cList) {
-							if(Integer.parseInt(String.valueOf(m.get("MEMBER_NO"))) == c.getMemberNo()) {
-								c.setAvgReviewScore(Integer.parseInt(String.valueOf(m.get("AVGREVIEWSCORE"))));
+							cNoList.add(c.getMemberNo());
+						}
+						scoreList = mService.getCaregiverScoreList(cNoList);
+						
+						for(HashMap<String, Integer> m : scoreList) {
+							for(CareGiver c : cList) {
+								if(Integer.parseInt(String.valueOf(m.get("MEMBER_NO"))) == c.getMemberNo()) {
+									c.setAvgReviewScore(Integer.parseInt(String.valueOf(m.get("AVGREVIEWSCORE"))));
+								}
 							}
 						}
+						gson.toJson(cList, response.getWriter());
+					} else { // 간병인 목록이 존재하지 않는 경우
+						gson.toJson("noExist", response.getWriter());
 					}
-					gson.toJson(cList, response.getWriter());
-				} else { // 간병인 목록이 존재하지 않는 경우
-					gson.toJson("noExist", response.getWriter());
 				}
 			} catch (JsonIOException | IOException e) {	
 				e.printStackTrace();
