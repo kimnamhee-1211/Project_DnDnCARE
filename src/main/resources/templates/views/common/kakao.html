@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
   integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
 <script>
-  Kakao.init('c089c8172def97eb00c07217cae17495'); // 사용하려는 앱의 JavaScript 키 입력
+  Kakao.init('aa531f371cb3a46353f94fc53e8a26b2'); // 사용하려는 앱의 JavaScript 키 입력
 </script>
 </head>
 <body>
@@ -19,12 +19,12 @@
     alt="카카오 로그인 버튼" />
 </a>
 <p id="token-result"></p>
+<span></span>
 
 <script>
   function loginWithKakao() {
 	  Kakao.Auth.authorize({
-      redirectUri: 'https://developers.kakao.com/tool/demo/oauth',
-      
+      redirectUri: 'http://localhost:8096/kakao.lo',
     });
   }
 
@@ -52,7 +52,8 @@
     var parts = document.cookie.split(name + '=');
     if (parts.length === 2) { return parts[1].split(';')[0]; }
   }
-  
+  displayToken();
+
   
 </script>
 

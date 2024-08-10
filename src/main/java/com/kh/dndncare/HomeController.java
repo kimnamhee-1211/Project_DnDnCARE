@@ -4,7 +4,9 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -34,9 +36,16 @@ public class HomeController {
 	}
 	
 	@GetMapping("kakao.lo")
-	public String kakao() {
+	public String kakao(@RequestParam(value="code", required = false)String code,Model model) {
+		if(code != null) {
+			model.addAttribute("code",code);
+		}
 		return "kakao";
 	}
 	
+	@GetMapping("google.lo")
+	public String google() {
+		return "google";
+	}
 
 }
