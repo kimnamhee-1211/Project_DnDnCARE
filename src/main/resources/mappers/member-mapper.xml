@@ -275,8 +275,24 @@
 		SELECT MATCHING.MAT_NO,PT_COUNT, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MAT_MODE
 		FROM MATCHING
 		WHERE MAT_CONFIRM = 'N'
+		<if test="resultMatNoList != null">
+			AND MAT_NO IN
+			<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+		</if>
 		ORDER BY BEGIN_DT
 	</select>
+	
+	<select id="searchMatchingList" resultType="Matching">
+		SELECT MATCHING.MAT_NO,PT_COUNT, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MAT_MODE
+		FROM MATCHING
+		WHERE MAT_CONFIRM = 'N'
+				AND MAT_NO IN
+				<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+		ORDER BY BEGIN_DT
+	</select>
+	
+	
+	
 	
 	<select id="selectMatchingPTInfoList" resultType="MatPtInfo">
 		SELECT  MATCHING.MAT_NO, SERVICE,
@@ -302,6 +318,131 @@
 		WHERE MATCHING.MAT_NO IN 
 		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
 	</select>
+	
+	<!-- 간병인 일감찾기 : 검색조건 결과찾기 : 1번 -->
+	<select id="searchDefaultMatNoList" resultType="map">
+		SELECT DISTINCT MATCHING.MAT_NO, MAT_MODE
+		FROM MATCHING
+		        JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
+		        JOIN PATIENT ON(MAT_PT_INFO.PT_NO = PATIENT.PT_NO)
+		WHERE MAT_CONFIRM = 'N' 
+		<if test="service != null">
+			AND MAT_PT_INFO.SERVICE IN 
+			<foreach collection="service" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="share != null">
+			AND MATCHING.PT_COUNT IN 
+			<foreach collection="share" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="area != null">
+			AND MAT_PT_INFO.MAT_ADDRESS_INFO LIKE '%${area}%'
+		</if>
+		<if test="gender != null">
+			AND PATIENT.PT_GENDER IN
+			<foreach collection="gender" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="age != null">
+			<choose>
+				<when test="age == 1"> <!-- 청년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) BETWEEN 0 AND 34
+				</when>
+				<when test="age == 2"> <!-- 중년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) BETWEEN 35 AND 59
+				</when>
+				<when test="age == 3"> <!-- 장년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) <![CDATA[>=]]> 60
+				</when>
+				<when test="age == 4"> <!-- 청년 and 중년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) <![CDATA[<=]]> 59
+				</when>
+				<when test="age == 5"> <!-- 청년 and 장년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) NOT BETWEEN 35 AND 59
+				</when>
+				<when test="age == 6"> <!-- 중년 and 장년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) <![CDATA[>=]]> 35
+				</when>
+			</choose>
+		</if>
+		<if test="cost != null">
+			AND MATCHING.MONEY <![CDATA[<=]]> ${cost}
+		</if>
+		ORDER BY MATCHING.MAT_NO DESC
+	</select>
+	
+	
+	<select id="searchTermMatNoList" resultType="_int">
+		SELECT MATCHING.MAT_NO
+		FROM MATCHING
+		WHERE MATCHING.MAT_NO IN
+		<foreach collection="termMatNoList" item="item" open="(" close=")" separator=",">${item}</foreach>
+		<if test="term != '16'">
+        	AND END_DT - BEGIN_DT <![CDATA[<=]]> ${term}
+        </if>		
+        <if test="term == '16'">
+        	AND END_DT - BEGIN_DT <![CDATA[>=]]> ${term}
+        </if>	 	
+	 	ORDER BY MATCHING.MAT_NO DESC
+	</select>
+	
+	<select id="searchTimeMatNoList" resultType="_int">
+		SELECT MATCHING.MAT_NO
+		FROM MATCHING
+		        JOIN MATCHING_DATE ON(MATCHING.MAT_NO = MATCHING_DATE.MAT_NO)
+		WHERE MATCHING.MAT_NO IN 
+		<foreach collection="timeMatNoList" item="item" open="(" close=")" separator=",">${item}</foreach>
+        <if test="term != '16'">
+        	AND length(MATCHING_DATE.MAT_DATE) <![CDATA[<=]]> 11 * ${term} - 1
+        </if>		
+        <if test="term == '16'">
+        	AND length(MATCHING_DATE.MAT_DATE) <![CDATA[>=]]> 11 * ${term} - 1
+        </if>		
+	 	ORDER BY MATCHING.MAT_NO DESC
+	</select>
+	
+	<select id="searchCategoryMatNoList" resultType="map">
+		SELECT MATCHING.MAT_NO, CATEGORY_NO
+		FROM MATCHING
+		        JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
+		        JOIN PATIENT ON(MAT_PT_INFO.PT_NO = PATIENT.PT_NO)
+		        JOIN MEMBER_INFO ON(PATIENT.MEMBER_NO = MEMBER_INFO.MEMBER_NO)
+		WHERE MATCHING.MAT_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+		ORDER BY MATCHING.MAT_NO
+	</select>
+	
+	<!-- 간병인 숫자 조회 -->
+	<select id="getCaregiverListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE MEMBER_STATUS = 'N' AND MEMBER_CATEGORY = 'C'
+	</select>
+	
+	<!-- 환자의 간병인찾기 : 모든 간병인에 대한 정보조회 -->
+	<select id="selectAllCaregiver" resultType="CareGiver">
+		SELECT MEMBER.MEMBER_NO, MEMBER_NAME, MEMBER_GENDER, 
+		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS caregiverRealAge,
+		        MEMBER_NATIONAL AS caregiverNational, CARE_IMG
+		FROM MEMBER
+		        JOIN CAREGIVER ON(MEMBER.MEMBER_NO = CAREGIVER.MEMBER_NO)
+		WHERE MEMBER_STATUS = 'N' AND MEMBER_CATEGORY = 'C'
+	</select>
+	
+	<!-- 위의 간병인에 대한 평점 조회 -->
+	<select id="getCaregiverScoreList" resultType="map">
+		SELECT CAREGIVER.MEMBER_NO, NVL(TRUNC(AVG(REVIEW_SCORE)), 0) as avgReviewScore
+		FROM CAREGIVER 
+		       LEFT JOIN CARE_REVIEW ON(CAREGIVER.MEMBER_NO = CARE_REVIEW.MEMBER_NO)
+		WHERE CAREGIVER.MEMBER_NO IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+		GROUP BY CAREGIVER.MEMBER_NO
+	</select>
+	
 	
 	
 	

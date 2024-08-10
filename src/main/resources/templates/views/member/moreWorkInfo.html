@@ -1265,51 +1265,11 @@
 					data : {condition : JSON.stringify(searchConditionObj)},
 					success: data => {
 						console.log(data);
-						
-						for(let count of data) {
-							root.innerHTML += '<div class="col-sm-6">\
-	            				<div class="card h-95 w-80">\
-	    							<div class="card-body">\
-	        						<h6 class="card-title">\
-	            						<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;\
-	            						<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;\
-	            						<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;\
-	            						<img src="image/icon/hospital.png"/>\
-	       							</h6>\
-				                    <p class="card-text">\
-				                    	<span>병원명 (검색결과)</span>\
-				                   	</p>\
-				                    <button class="btn btn-success workInfo">정보 보기</button>\
-			                		</div>\
-	   							</div>\
-								</div>';
-						}
-						ajaxSearchPage++;
-						searchFlag = true;
-					},
-					error: data => {
-						console.log('error');
-					}
-				})
-			}
-			// *** 비동기 방식으로 검색결과 요청하는 ajax함수 정의 (끝) ***
-			
-			
-			// *** 비동기 방식으로 임의결과 요청하는 ajax함수 정의 (시작) ***
-			let noSearchAjax = (page) => {
-				$.ajax({
-					url: 'workAllInfo.me?page='+page,
-					type: 'post',
-					/*<![CDATA[*/
-					data : {memberNo: /*[[${session.loginUser.memberNo}]]*/0},
-					/*]]>*/
-					success: data => {
 						if(data != 'noExist'){
 							let matList = data.matList;
 							let memList = data.memList;
 							let mpiList = data.mpiList;
 							let matNo = '';
-							
 							for(let mat of matList){
 								for(let mpi of mpiList) {
 									if(mat.matNo == mpi.matNo){
@@ -1317,7 +1277,7 @@
 											if(mat.matNo == mem.matNo) {
 												let gender = mem.memberGender == 'M' ? '남성' : '여성';
 												let address = mpi.matAddressInfo.split(' ')[0] + ' ' + mpi.matAddressInfo.split(' ')[1];
-												if(mpi.service == '개인간병'){
+												if(mpi.service == '가정돌봄' && mat.ptCount == 1){ // 가정, 개인
 													console.log(mat.matNo);
 													root.innerHTML += `<div class="col-sm-6">\
 												            				<div class="card h-95 w-80">\
@@ -1339,7 +1299,7 @@
 												   							</div>\
 																		</div>`;
 																		break;
-												} else if(mpi.service == '병원돌봄'){
+												} else if(mpi.service == '병원돌봄' && mat.ptCount == 1){ // 병원돌봄, 개인
 													console.log(mat.matNo);
 													root.innerHTML += `<div class="col-sm-6">\
 							            				<div class="card h-95 w-80">\
@@ -1361,7 +1321,7 @@
 							   							</div>\
 													</div>`;
 													break;
-												} else if(mem.groupLeader =='Y'){//공동간병
+												} else if(mat.ptCount == 2 && mem.groupLeader =='Y'){//공동간병
 													console.log(mat.matNo);
 													let leaderName = mem.memberName;
 													root.innerHTML += `<div class="col-sm-6">\
@@ -1392,7 +1352,118 @@
 									}
 									
 								}
-								
+							}
+							ajaxNoSearchPage++;
+							searchFlag = false;
+						} else {
+							console.log('목록 끝');
+						}
+					},
+					error: data => {
+						console.log('error');
+					}
+				})
+			}
+			// *** 비동기 방식으로 검색결과 요청하는 ajax함수 정의 (끝) ***
+			
+			
+			// *** 비동기 방식으로 임의결과 요청하는 ajax함수 정의 (시작) ***
+			let noSearchAjax = (page) => {
+				$.ajax({
+					url: 'workAllInfo.me?page='+page,
+					type: 'post',
+					/*<![CDATA[*/
+					data : {memberNo: /*[[${session.loginUser.memberNo}]]*/0},
+					/*]]>*/
+					success: data => {
+						console.log(data);
+						if(data != 'noExist'){
+							let matList = data.matList;
+							let memList = data.memList;
+							let mpiList = data.mpiList;
+							let matNo = '';
+							for(let mat of matList){
+								for(let mpi of mpiList) {
+									if(mat.matNo == mpi.matNo){
+										for(let mem of memList){
+											if(mat.matNo == mem.matNo) {
+												let gender = mem.memberGender == 'M' ? '남성' : '여성';
+												let address = mpi.matAddressInfo.split(' ')[0] + ' ' + mpi.matAddressInfo.split(' ')[1];
+												if(mpi.service == '가정돌봄' && mat.ptCount == 1){ // 가정, 개인
+													console.log(mat.matNo);
+													root.innerHTML += `<div class="col-sm-6">\
+												            				<div class="card h-95 w-80">\
+												    							<div class="card-body">\
+												        						<h6 class="card-title">\
+												            						<span>${mem.memberName}</span>&nbsp;&nbsp;\
+												            						<img src="image/icon/home.png"/>\
+												            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
+												       							</h6>\
+															                    <p class="card-text">\
+															                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
+															                    	<span>${gender}</span>&nbsp;&nbsp;\
+															                    	<span>${mem.memberRealAge}세</span><br/>\
+															                    	<span>${address}</span>\
+															                   	</p>\
+															                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
+															                    <button class="btn btn-success workInfo">정보 보기</button>\
+														                		</div>\
+												   							</div>\
+																		</div>`;
+																		break;
+												} else if(mpi.service == '병원돌봄' && mat.ptCount == 1){ // 병원돌봄, 개인
+													console.log(mat.matNo);
+													root.innerHTML += `<div class="col-sm-6">\
+							            				<div class="card h-95 w-80">\
+							    							<div class="card-body">\
+							        						<h6 class="card-title">\
+							            						<span>${mem.memberName}</span>&nbsp;&nbsp;\
+							            						<img src="image/icon/hospital.png"/>\
+							            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
+							       							</h6>\
+										                    <p class="card-text">\
+										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
+										                    	<span>${gender}</span>&nbsp;&nbsp;\
+										                    	<span>${mem.memberRealAge}세</span><br/>\
+										                    	<span>${mpi.hospitalName}</span>\
+										                   	</p>\
+										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
+										                    <button class="btn btn-success workInfo">정보 보기</button>\
+									                		</div>\
+							   							</div>\
+													</div>`;
+													break;
+												} else if(mat.ptCount == 2 && mem.groupLeader =='Y'){//공동간병
+													console.log(mat.matNo);
+													let leaderName = mem.memberName;
+													root.innerHTML += `<div class="col-sm-6">\
+							            				<div class="card h-95 w-80">\
+							    							<div class="card-body">\
+							        						<h6 class="card-title">\
+							            						<span>${leaderName} 외</span>&nbsp;&nbsp;\
+							            						<img src="image/icon/users.png"/>\
+							            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
+							       							</h6>\
+										                    <p class="card-text">\
+										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
+										                    	<span>${gender}</span>&nbsp;&nbsp;\
+										                    	<span>${mem.memberRealAge}세</span><br/>\
+										                    	<span>${mpi.hospitalName}</span>\
+										                   	</p>\
+										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
+										                    <button class="btn btn-success workInfo">정보 보기</button>\
+									                		</div>\
+							   							</div>\
+													</div>`;
+													break;
+												}
+											}
+											
+										}
+									break;
+									}
+									
+								}
 							}
 							ajaxNoSearchPage++;
 							searchFlag = false;
@@ -1432,7 +1503,7 @@
 					return;
 				} */
 				
-				if((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 300) {
+				if((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 100) {
 					if(searchFlag == false) {
 						noSearchAjax(ajaxNoSearchPage);
 					} else {
@@ -1534,13 +1605,6 @@
     		})
 			/*]]>*/
     		// 자동추천 새로고침 비동기 요청 (끝)
-			
-			
-			
-			
-			
-			
-			
 		}
 	</script>
 </body>

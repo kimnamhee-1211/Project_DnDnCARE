@@ -182,9 +182,9 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<Matching> selectMatchingList(PageInfo pi, HashMap<String, Object> searchOption) {
+	public ArrayList<Matching> selectMatchingList(PageInfo pi, ArrayList<Integer> resultMatNoList) {
 		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
-		return mMapper.selectMatchingList(rowBounds, searchOption);
+		return mMapper.selectMatchingList(rowBounds, resultMatNoList);
 	}
 
 	@Override
@@ -200,6 +200,48 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public ArrayList<MatPtInfo> selectMatchingPTInfoList(ArrayList<Integer> matNoList) {
 		return mMapper.selectMatchingPTInfoList(matNoList);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Integer>> searchDefaultMatNoList(HashMap<String, Object> searchDefaultMap) {
+		return mMapper.searchDefaultMatNoList(searchDefaultMap);
+	}
+
+	@Override
+	public ArrayList<Integer> searchTermMatNoList(HashMap<String, Object> termMap) {
+		return mMapper.searchTermMatNoList(termMap);
+	}
+
+	@Override
+	public ArrayList<Integer> searchTimeMatNoList(HashMap<String, Object> termMap) {
+		return mMapper.searchTimeMatNoList(termMap);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Integer>> searchCategoryMatNoList(ArrayList<Integer> tempMatNoList) {
+		return mMapper.searchCategoryMatNoList(tempMatNoList);
+	}
+
+	@Override
+	public ArrayList<Matching> searchMatchingList(PageInfo pi, ArrayList<Integer> resultMatNoList) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return mMapper.searchMatchingList(rowBounds, resultMatNoList);
+	}
+
+	@Override
+	public ArrayList<CareGiver> selectAllCaregiver(PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return mMapper.selectAllCaregiver(rowBounds, null);
+	}
+
+	@Override
+	public int getCaregiverListCount() {
+		return mMapper.getCaregiverListCount();
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Integer>> getCaregiverScoreList(ArrayList<Integer> cNoList) {
+		return mMapper.getCaregiverScoreList(cNoList);
 	}
 
 

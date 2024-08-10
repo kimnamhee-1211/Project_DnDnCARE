@@ -38,6 +38,7 @@ public class CareGiver {
 	private String haveService;
 	private String career;
 	private String memberName;
+	private int avgReviewScore;
 	// ai추천용 필드 (끝)
 	
 	

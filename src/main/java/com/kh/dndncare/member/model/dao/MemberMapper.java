@@ -72,13 +72,29 @@ public interface MemberMapper {
 
 	ArrayList<Member> selectMemberList(ArrayList<Integer> memberNoList);
 
-	ArrayList<Matching> selectMatchingList(RowBounds rowBounds, HashMap<String, Object> searchOption);
+	ArrayList<Matching> selectMatchingList(RowBounds rowBounds, ArrayList<Integer> resultMatNoList);
 
 	int getMatchingListCount(HashMap<String, Object> searchOption);
 
 	ArrayList<Member> selectMatchingMemberList(ArrayList<Integer> matNoList);
 
 	ArrayList<MatPtInfo> selectMatchingPTInfoList(ArrayList<Integer> matNoList);
+
+	ArrayList<HashMap<String, Integer>> searchDefaultMatNoList(HashMap<String, Object> searchDefaultMap);
+
+	ArrayList<Integer> searchTermMatNoList(HashMap<String, Object> termMap);
+
+	ArrayList<Integer> searchTimeMatNoList(HashMap<String, Object> termMap);
+
+	ArrayList<HashMap<String, Integer>> searchCategoryMatNoList(ArrayList<Integer> tempMatNoList);
+
+	ArrayList<Matching> searchMatchingList(RowBounds rowBounds, ArrayList<Integer> resultMatNoList);
+
+	ArrayList<CareGiver> selectAllCaregiver(RowBounds rowBounds, Object obj);
+
+	int getCaregiverListCount();
+
+	ArrayList<HashMap<String, Integer>> getCaregiverScoreList(ArrayList<Integer> cNoList);
 
 
 

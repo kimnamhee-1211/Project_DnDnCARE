@@ -897,32 +897,240 @@ public class MemberController {
 	// 간병인 일감찾기 페이지에서의 검색 요청을 처리
 	@PostMapping("searchPatientList.me")
 	@ResponseBody
-	public void searchPatientList(@RequestParam("condition") String obj, @RequestParam(value="page", defaultValue="1") int page,
+	public void searchPatientList(@RequestParam("condition") String obj, 
+									@RequestParam(value="page", defaultValue="1") int currentPage,
 									HttpServletResponse response) {
 		// 검색 조건이 하나라도 있는 경우만 이곳으로 들어온다
-		
-		System.out.println(obj);
-		
+		System.out.println("검색조건 확인 : " + obj); 
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			Map<String, String> map =
 			               mapper.readValue(obj, new TypeReference<Map<String, String>>(){});
 			
-			// 검색조건과 페이지에 맞게 조회해와야함
-			
-			Gson gson = new Gson();
-			ArrayList<String> list = new ArrayList<String>();
-			list.add("search1");
-			list.add("search2");
-			list.add("search3");
-			list.add("search4");
-			list.add("search5");
-			list.add("search6");
-			list.add("search7");
-			list.add("search8");
 			response.setContentType("application/json; charset=UTF-8");
-			gson.toJson(list, response.getWriter());
+			GsonBuilder gb = new GsonBuilder().setDateFormat("YYYY-MM-dd");
+			Gson gson = gb.create();
+			HashMap<String, Object> result = new HashMap<String, Object>();
 			
+			
+			// 검색조건과 페이지에 맞게 조회해와야함
+			// 서비스 검색조건 가공
+			ArrayList<String> serviceList = new ArrayList<String>();
+			if(map.get("service").length() > 0) { // 서비스 검색조건이 있는 경우
+				String[] serviceArr = map.get("service").split("/");
+				for(String s : serviceArr) {
+					serviceList.add(s);
+				}
+			}
+			// 공동간병 검색조건을 가공
+			ArrayList<String> shareList = new ArrayList<String>();
+			if(map.get("share").length() > 0) { // 공동간병에 대한 검색조건이 있는 경우
+				if(map.get("share").contains("개인")) shareList.add("1");
+				if(map.get("share").contains("공동")) shareList.add("2");
+			}
+			// 지역 검색조건을 가공
+			String area = "";
+			if(map.get("area").length()>0) {
+				switch(map.get("area")) {
+				case "전국" : area = "%"; break;
+				case "서울", "부산", "대구", "인천", "광주", "대전", "울산", "제주","세종" : area = map.get("area"); break;
+				case "경기도" : area = "경기"; break;
+				case "강원도" : area = "강원"; break;
+				case "충청북도" : area = "충%북";  break;
+				case "충청남도" : area = "충%남"; break;
+				case "전라북도" : area = "전%북";  break;
+				case "전라남도" : area = "전%남";  break;
+				case "경상북도" : area = "경%북"; break;
+				case "경상남도" : area = "경%남"; break;
+				}
+			}
+			// 성별 검색조건을 가공
+			ArrayList<String> genderList = new ArrayList<String>();
+			if(map.get("gender").length()>0) {
+				if(map.get("gender").contains("남")) {
+					genderList.add("M");
+				}
+				if(map.get("gender").contains("여")) {
+					genderList.add("F");
+				}
+			}
+			// 연령 검색조건을 가공 : 경우의 수가 8가지(선택을 하지 않은 경우 포함)이므로 식별값을 부여
+			String age = "";
+			if(map.get("age").length() > 0) {
+				switch(map.get("age")) {
+				case "청년": age = "1"; break;
+				case "중년": age = "2"; break;
+				case "장년": age = "3"; break;
+				case "청년/중년": age = "4"; break;
+				case "청년/장년": age = "5"; break;
+				case "중년/장년": age = "6"; break;
+				case "청년/중년/장년": age = "7"; break;
+				}
+			}
+			// 금액 검색조건을 가공
+			String cost = "";
+			if(map.get("cost").length() > 0) {
+				switch(map.get("cost")) {
+				case "~30,000원" : cost = "30000"; break;
+				case "~50,000원" : cost = "50000"; break;
+				case "~80,000원" : cost = "80000"; break;
+				case "~100,000원" : cost = "100000"; break;
+				}
+			}
+			
+			// 서비스, 공동간병, 지역, 성별, 연령, 비용에 대하여 검색한 매칭번호를 조회한다.
+			// 검색 조건이 없는 경우 mapper에게 List를 전달하지 않을 것
+			HashMap<String, Object> searchDefaultMap = new HashMap<String, Object>();
+			if(!serviceList.isEmpty()) searchDefaultMap.put("service", serviceList);
+			if(!shareList.isEmpty()) searchDefaultMap.put("share", shareList);
+			if(area.length() > 0) searchDefaultMap.put("area", area);
+			if(!genderList.isEmpty()) searchDefaultMap.put("gender", genderList);
+			if(age.length() > 0) searchDefaultMap.put("age", age);
+			if(cost.length() > 0) searchDefaultMap.put("cost", cost);
+			
+			ArrayList<HashMap<String, Integer>> searchDefaultMatNoList = mService.searchDefaultMatNoList(searchDefaultMap);
+			// 만약, 검색조건 중 위에서의 검색조건이 없었다면 MAT_CONFIRM = 'N'인 매칭번호들이 조회된다!
+			
+			// searchDefaultMatNoList 에서 시간제와 기간제를 구분한다.
+			ArrayList<Integer> termMatNoList = new ArrayList<Integer>();
+			ArrayList<Integer> timeMatNoList = new ArrayList<Integer>();
+			for(HashMap<String, Integer> m : searchDefaultMatNoList) {
+				if(String.valueOf(m.get("MAT_MODE")).equals("1")) {
+					termMatNoList.add(Integer.parseInt(String.valueOf(m.get("MAT_NO"))));
+				}
+				if(String.valueOf(m.get("MAT_MODE")).equals("2")) {
+					timeMatNoList.add(Integer.parseInt(String.valueOf(m.get("MAT_NO"))));
+				}
+			}
+			
+			// 기간 검색조건을 가공한다.
+			HashMap<String, Object> termMap = new HashMap<String, Object>();
+			ArrayList<Integer> searchTermMatNoList = new ArrayList<Integer>();
+			ArrayList<Integer> searchTimeMatNoList = new ArrayList<Integer>();
+			ArrayList<Integer> tempMatNoList = new ArrayList<Integer>();// 기간제 검색과 시간제 검색한 결과값들을 모을 리스트
+			String term = "";
+			if(map.get("term").length() > 0) {
+				switch(map.get("term")) {
+				case "1일 미만" : term = "1"; break;
+				case "7일 미만" : term = "7"; break;
+				case "15일 미만" : term = "5"; break;
+				case "15일 이상" : term = "16"; break;
+				}
+			}
+			
+			if(term.length() > 0) {
+				if(!termMatNoList.isEmpty()) { // 기간제 검색
+					termMap.put("termMatNoList", termMatNoList);
+					termMap.put("term", term);
+					searchTermMatNoList = mService.searchTermMatNoList(termMap);
+					for(Integer i : searchTermMatNoList) {
+						tempMatNoList.add(Integer.parseInt(String.valueOf(i)));
+					}
+				} 
+				if(!termMatNoList.isEmpty()) { // 시간제 검색
+					termMap.put("timeMatNoList", timeMatNoList);
+					termMap.put("term", term);
+					searchTimeMatNoList = mService.searchTimeMatNoList(termMap);
+					for(Integer i : searchTimeMatNoList) {
+						tempMatNoList.add(Integer.parseInt(String.valueOf(i)));
+					}
+				} 
+			} else { // 기간 검색자체를 하지 않은 경우는 MAT_MODE에 따라 분리한 리스트를 다시 하나로 합쳐준다
+				for(Integer i : termMatNoList) {
+					tempMatNoList.add(i);
+				}
+				for(Integer i : timeMatNoList) {
+					tempMatNoList.add(i);
+				}
+			}
+			
+			// 후보 매칭번호에 대한 카테고리 넘버들을 가져온다.
+			ArrayList<HashMap<String, Integer>> searchCategoryMatNoList = new ArrayList<HashMap<String, Integer>>();
+			if(!tempMatNoList.isEmpty()) {
+				searchCategoryMatNoList = mService.searchCategoryMatNoList(tempMatNoList);
+			} else {
+				gson.toJson("noExist", response.getWriter());
+			}
+			//[{MAT_NO=1, CATEGORY_NO=1}, {MAT_NO=1, CATEGORY_NO=2}, 
+			// {MAT_NO=1, CATEGORY_NO=63}, {MAT_NO=1, CATEGORY_NO=29}, 
+			// {MAT_NO=1, CATEGORY_NO=28}, {MAT_NO=1, CATEGORY_NO=24}, {MAT_NO=1, CATEGORY_NO=23}, {MAT_NO=1, CATEGORY_NO=63}, {MAT_NO=1, CATEGORY_NO=62}, {MAT_NO=1, CATEGORY_NO=3}, {MAT_NO=1, CATEGORY_NO=21}, {MAT_NO=1, CATEGORY_NO=22}, {MAT_NO=1, CATEGORY_NO=23}, {MAT_NO=1, CATEGORY_NO=24}, {MAT_NO=1, CATEGORY_NO=25}, {MAT_NO=1, CATEGORY_NO=26}, {MAT_NO=1, CATEGORY_NO=27}, {MAT_NO=1, CATEGORY_NO=28}, {MAT_NO=1, CATEGORY_NO=29}, {MAT_NO=1, CATEGORY_NO=30}, {MAT_NO=1, CATEGORY_NO=61}, {MAT_NO=30, CATEGORY_NO=24}, {MAT_NO=30, CATEGORY_NO=28}, {MAT_NO=30, CATEGORY_NO=23}, {MAT_NO=30, CATEGORY_NO=29}, {MAT_NO=30, CATEGORY_NO=22}, {MAT_NO=30, CATEGORY_NO=61}, {MAT_NO=30, CATEGORY_NO=23}, {MAT_NO=30, CATEGORY_NO=63}, {MAT_NO=46, CATEGORY_NO=41}, {MAT_NO=46, CATEGORY_NO=21}, {MAT_NO=46, CATEGORY_NO=22}, {MAT_NO=46, CATEGORY_NO=23}, {MAT_NO=46, CATEGORY_NO=24}, {MAT_NO=46, CATEGORY_NO=27}, {MAT_NO=46, CATEGORY_NO=28}, {MAT_NO=46, CATEGORY_NO=31}, {MAT_NO=46, CATEGORY_NO=32}, {MAT_NO=46, CATEGORY_NO=63}, {MAT_NO=46, CATEGORY_NO=62}, {MAT_NO=46, CATEGORY_NO=61}, {MAT_NO=46, CATEGORY_NO=40}, {MAT_NO=46, CATEGORY_NO=1}, {MAT_NO=47, CATEGORY_NO=41}, {MAT_NO=47, CATEGORY_NO=21}, {MAT_NO=47, CATEGORY_NO=22}, {MAT_NO=47, CATEGORY_NO=23}, {MAT_NO=47, CATEGORY_NO=24}, {MAT_NO=47, CATEGORY_NO=27}, {MAT_NO=47, CATEGORY_NO=28}, {MAT_NO=47, CATEGORY_NO=31}, {MAT_NO=47, CATEGORY_NO=32}, {MAT_NO=47, CATEGORY_NO=63}, {MAT_NO=47, CATEGORY_NO=62}, {MAT_NO=47, CATEGORY_NO=61}, {MAT_NO=47, CATEGORY_NO=40}, {MAT_NO=47, CATEGORY_NO=1}, {MAT_NO=49, CATEGORY_NO=41}, {MAT_NO=49, CATEGORY_NO=21}, {MAT_NO=49, CATEGORY_NO=22}, {MAT_NO=49, CATEGORY_NO=23}, {MAT_NO=49, CATEGORY_NO=24}, {MAT_NO=49, CATEGORY_NO=27}, {MAT_NO=49, CATEGORY_NO=28}, {MAT_NO=49, CATEGORY_NO=31}, {MAT_NO=49, CATEGORY_NO=32}, {MAT_NO=49, CATEGORY_NO=63}, {MAT_NO=49, CATEGORY_NO=62}, {MAT_NO=49, CATEGORY_NO=61}, {MAT_NO=49, CATEGORY_NO=40}, {MAT_NO=49, CATEGORY_NO=1}, {MAT_NO=52, CATEGORY_NO=41}, {MAT_NO=52, CATEGORY_NO=21}, {MAT_NO=52, CATEGORY_NO=22}, {MAT_NO=52, CATEGORY_NO=23}, {MAT_NO=52, CATEGORY_NO=24}, {MAT_NO=52, CATEGORY_NO=27}, {MAT_NO=52, CATEGORY_NO=28}, {MAT_NO=52, CATEGORY_NO=31}, {MAT_NO=52, CATEGORY_NO=32}, {MAT_NO=52, CATEGORY_NO=63}, {MAT_NO=52, CATEGORY_NO=62}, {MAT_NO=52, CATEGORY_NO=61}, {MAT_NO=52, CATEGORY_NO=40}, {MAT_NO=52, CATEGORY_NO=1}, {MAT_NO=54, CATEGORY_NO=27}, {MAT_NO=54, CATEGORY_NO=26}, {MAT_NO=54, CATEGORY_NO=24}, {MAT_NO=54, CATEGORY_NO=21}, {MAT_NO=54, CATEGORY_NO=63}, {MAT_NO=54, CATEGORY_NO=2}, {MAT_NO=54, CATEGORY_NO=1}, {MAT_NO=55, CATEGORY_NO=27}, {MAT_NO=55, CATEGORY_NO=26}, {MAT_NO=55, CATEGORY_NO=24}, {MAT_NO=55, CATEGORY_NO=21}, {MAT_NO=55, CATEGORY_NO=63}, {MAT_NO=55, CATEGORY_NO=2}, {MAT_NO=55, CATEGORY_NO=1}, {MAT_NO=61, CATEGORY_NO=41}, {MAT_NO=61, CATEGORY_NO=21}, {MAT_NO=61, CATEGORY_NO=22}, {MAT_NO=61, CATEGORY_NO=23}, {MAT_NO=61, CATEGORY_NO=24}, {MAT_NO=61, CATEGORY_NO=27}, {MAT_NO=61, CATEGORY_NO=28}, {MAT_NO=61, CATEGORY_NO=31}, {MAT_NO=61, CATEGORY_NO=32}, {MAT_NO=61, CATEGORY_NO=63}, {MAT_NO=61, CATEGORY_NO=62}, {MAT_NO=61, CATEGORY_NO=61}, {MAT_NO=61, CATEGORY_NO=40}, {MAT_NO=61, CATEGORY_NO=1}, {MAT_NO=64, CATEGORY_NO=41}, {MAT_NO=64, CATEGORY_NO=21}, {MAT_NO=64, CATEGORY_NO=22}, {MAT_NO=64, CATEGORY_NO=23}, {MAT_NO=64, CATEGORY_NO=24}, {MAT_NO=64, CATEGORY_NO=27}, {MAT_NO=64, CATEGORY_NO=28}, {MAT_NO=64, CATEGORY_NO=31}, {MAT_NO=64, CATEGORY_NO=32}, {MAT_NO=64, CATEGORY_NO=63}, {MAT_NO=64, CATEGORY_NO=62}, {MAT_NO=64, CATEGORY_NO=61}, {MAT_NO=64, CATEGORY_NO=40}, {MAT_NO=64, CATEGORY_NO=1}, {MAT_NO=70, CATEGORY_NO=41}, {MAT_NO=70, CATEGORY_NO=21}, {MAT_NO=70, CATEGORY_NO=22}, {MAT_NO=70, CATEGORY_NO=23}, {MAT_NO=70, CATEGORY_NO=24}, {MAT_NO=70, CATEGORY_NO=27}, {MAT_NO=70, CATEGORY_NO=28}, {MAT_NO=70, CATEGORY_NO=31}, {MAT_NO=70, CATEGORY_NO=32}, {MAT_NO=70, CATEGORY_NO=63}, {MAT_NO=70, CATEGORY_NO=62}, {MAT_NO=70, CATEGORY_NO=61}, {MAT_NO=70, CATEGORY_NO=40}, {MAT_NO=70, CATEGORY_NO=1}, {MAT_NO=71, CATEGORY_NO=41}, {MAT_NO=71, CATEGORY_NO=21}, {MAT_NO=71, CATEGORY_NO=22}, {MAT_NO=71, CATEGORY_NO=23}, {MAT_NO=71, CATEGORY_NO=24}, {MAT_NO=71, CATEGORY_NO=27}, {MAT_NO=71, CATEGORY_NO=28}, {MAT_NO=71, CATEGORY_NO=31}, {MAT_NO=71, CATEGORY_NO=32}, {MAT_NO=71, CATEGORY_NO=63}, {MAT_NO=71, CATEGORY_NO=62}, {MAT_NO=71, CATEGORY_NO=61}, {MAT_NO=71, CATEGORY_NO=40}, {MAT_NO=71, CATEGORY_NO=1}, {MAT_NO=72, CATEGORY_NO=23}, {MAT_NO=72, CATEGORY_NO=24}, {MAT_NO=72, CATEGORY_NO=28}, {MAT_NO=72, CATEGORY_NO=63}, {MAT_NO=72, CATEGORY_NO=62}, {MAT_NO=72, CATEGORY_NO=40}, {MAT_NO=72, CATEGORY_NO=1}, {MAT_NO=72, CATEGORY_NO=2}, {MAT_NO=72, CATEGORY_NO=3}, {MAT_NO=73, CATEGORY_NO=23}, {MAT_NO=73, CATEGORY_NO=24}, {MAT_NO=73, CATEGORY_NO=28}, {MAT_NO=73, CATEGORY_NO=63}, {MAT_NO=73, CATEGORY_NO=62}, {MAT_NO=73, CATEGORY_NO=40}, {MAT_NO=73, CATEGORY_NO=1}, {MAT_NO=73, CATEGORY_NO=2}, {MAT_NO=73, CATEGORY_NO=3}]
+			
+			// 질병과 중증도, 거동 검색 조건을 가져온다
+			String disease = map.get("disease"); // 질병에 대한 검색조건
+			ArrayList<Integer> categoryNoList = new ArrayList<Integer>(); // 질병에 대한 조건을 필요한 카테고리 넘버로 변환하여 저장
+			if(disease.length() > 0) {
+				if(disease.contains("치매")) categoryNoList.add(21);
+				if(disease.contains("섬망")) categoryNoList.add(22);
+				if(disease.contains("욕창")) categoryNoList.add(23);
+				if(disease.contains("하반신 마비")) categoryNoList.add(24);
+				if(disease.contains("전신 마비")) categoryNoList.add(25);
+				if(disease.contains("와상환자")) categoryNoList.add(26);
+				if(disease.contains("기저귀 케어")) categoryNoList.add(27);
+				if(disease.contains("의식 없음")) categoryNoList.add(28);
+				if(disease.contains("석션")) categoryNoList.add(29);
+				if(disease.contains("피딩")) categoryNoList.add(30);
+				if(disease.contains("소변줄")) categoryNoList.add(31);
+				if(disease.contains("장루")) categoryNoList.add(32);
+				if(disease.contains("투석")) categoryNoList.add(33);
+				if(disease.contains("전염성 질환")) categoryNoList.add(34);
+				if(disease.contains("파킨슨")) categoryNoList.add(35);
+				if(disease.contains("정신질환")) categoryNoList.add(36);
+			}
+			String level = map.get("level");
+			if(level.length() > 0) {
+				if(level.contains("경증")) categoryNoList.add(61);
+				if(level.contains("중등중")) categoryNoList.add(62);
+				if(level.contains("중증")) categoryNoList.add(63);
+			}
+			
+			String walk = map.get("walk");
+			if(walk.length() > 0) {
+				if(walk.contains("가능")) categoryNoList.add(40);
+				if(walk.contains("불가능")) categoryNoList.add(41);
+			}
+
+			if(!categoryNoList.isEmpty()) { // 카테고리 번호가 포함된 맵들로만 걸러내자
+				for(int i = 0; i < searchCategoryMatNoList.size(); i++) {
+					if(!categoryNoList.contains(Integer.parseInt(String.valueOf(searchCategoryMatNoList.get(i).get("CATEGORY_NO"))))) {
+						searchCategoryMatNoList.remove(i);
+					}
+				}
+			}
+			
+			ArrayList<Integer> resultMatNoList = new ArrayList<Integer>();
+			if(categoryNoList.isEmpty()) {
+				// 카테고리 필터링을 하지 않았을 때 tempMatNoList에 원래의 매칭번호들이 담겨있음
+				resultMatNoList = tempMatNoList;
+			} else { // 카테고리 필터링을 했을 때 searchCategoryMatNoList에서 매칭번호들을 추출해야함
+				for(HashMap<String, Integer> m : searchCategoryMatNoList) {
+					Integer matNo = Integer.parseInt(String.valueOf(m.get("MAT_NO")));
+					if(!resultMatNoList.contains(matNo)) {
+						resultMatNoList.add(matNo);
+					}
+				}
+			}
+			// 조건에 따른 매칭번호 추출 완료! resultMatNoList
+			
+			int listCount = resultMatNoList.size();
+			PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 8);
+			ArrayList<Matching> matList = new ArrayList<Matching>();
+			ArrayList<MatPtInfo> mpiList = new ArrayList<MatPtInfo>();
+			ArrayList<Member> memList = new ArrayList<Member>();
+			
+			if(!resultMatNoList.isEmpty()) {
+				matList = mService.searchMatchingList(pi, resultMatNoList);
+				mpiList = mService.selectMatchingPTInfoList(resultMatNoList);
+				memList = mService.selectMatchingMemberList(resultMatNoList);
+			}
+			
+			if(!matList.isEmpty() && !mpiList.isEmpty() && !memList.isEmpty()) {
+				result.put("matList", matList);
+				result.put("mpiList", mpiList);
+				result.put("memList", memList);
+				gson.toJson(result, response.getWriter());
+			} else {
+				gson.toJson("noExist", response.getWriter());
+			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		} catch (JsonIOException e) {
@@ -956,7 +1164,7 @@ public class MemberController {
 		public void searchCaregiverList(@RequestParam("condition") String obj, @RequestParam(value="page", defaultValue="1") int page,
 										HttpServletResponse response) {
 			// 검색 조건이 하나라도 있는 경우만 이곳으로 들어온다
-			System.out.println(obj);
+			System.out.println("검색조건 확인 : " + obj);
 			
 			ObjectMapper mapper = new ObjectMapper();
 			try {
@@ -964,6 +1172,25 @@ public class MemberController {
 				               mapper.readValue(obj, new TypeReference<Map<String, String>>(){});
 				
 				// 검색조건과 페이지에 맞게 조회해와야함
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 				
 				Gson gson = new Gson();
 				ArrayList<String> list = new ArrayList<String>();
@@ -990,23 +1217,37 @@ public class MemberController {
 	
 		@PostMapping("moreCaregiverInfo.me")
 		@ResponseBody
-		public void moreCaregiverInfo(HttpServletResponse response, @RequestParam(value="page", defaultValue="1") int currentPage) {
+		public void moreCaregiverInfo(HttpServletResponse response, 
+										@RequestParam(value="page", defaultValue="1") int currentPage) {
 			// 페이지 첫 로드시 또는 검색조건이 하나도 없이 검색버튼을 눌렀을 때 이곳으로 요청이 들어옴
-			
 			Gson gson = new Gson();
-			ArrayList<String> list = new ArrayList<String>();
-			list.add("기본1");
-			list.add("기본2");
-			list.add("기본3");
-			list.add("기본4");
-			list.add("기본5");
-			list.add("기본6");
-			list.add("기본7");
-			list.add("기본8");
 			response.setContentType("application/json; charset=UTF-8");
 			try {
-				gson.toJson(list, response.getWriter());
-			} catch (JsonIOException | IOException e) {
+				
+				int listCount = mService.getCaregiverListCount();
+				PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 8);
+				
+				ArrayList<CareGiver> cList = mService.selectAllCaregiver(pi);
+				ArrayList<Integer> cNoList = new ArrayList<Integer>();
+				ArrayList<HashMap<String, Integer>> scoreList = new ArrayList<HashMap<String, Integer>>();
+				if(!cList.isEmpty()) { // 간병인 목록이 존재하는 경우
+					for(CareGiver c : cList) {
+						cNoList.add(c.getMemberNo());
+					}
+					scoreList = mService.getCaregiverScoreList(cNoList);
+					
+					for(HashMap<String, Integer> m : scoreList) {
+						for(CareGiver c : cList) {
+							if(Integer.parseInt(String.valueOf(m.get("MEMBER_NO"))) == c.getMemberNo()) {
+								c.setAvgReviewScore(Integer.parseInt(String.valueOf(m.get("AVGREVIEWSCORE"))));
+							}
+						}
+					}
+					gson.toJson(cList, response.getWriter());
+				} else { // 간병인 목록이 존재하지 않는 경우
+					gson.toJson("noExist", response.getWriter());
+				}
+			} catch (JsonIOException | IOException e) {	
 				e.printStackTrace();
 			}
 		}
