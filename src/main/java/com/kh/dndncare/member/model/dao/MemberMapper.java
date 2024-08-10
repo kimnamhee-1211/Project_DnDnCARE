@@ -12,7 +12,7 @@ import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.Matching;
-
+import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 
 import com.kh.dndncare.member.model.vo.CareGiver;
@@ -106,6 +106,6 @@ public interface MemberMapper {
 
 	ArrayList<MatMatptInfoPt> getMatMatptInfoPt();
 
-	ArrayList<HashMap<String, Object>> getRequestMatPt(int memberNo);
+	ArrayList<RequestMatPt> getRequestMatPt(int memberNo);
 
 }

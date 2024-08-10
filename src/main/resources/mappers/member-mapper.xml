@@ -315,23 +315,21 @@
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
 			join hospital on(hospital.hospital_no = matching.hospital_no)	
 		where matching.mat_confirm = 'N' and matching.begin_dt > sysdate
-		order by matching.begin_dt desc
+		order by matching.begin_dt
 	</select>
 	
-	
-	
-	
-	<select id="getRequestMatPt" resultType="map">
-		select mat_no, ptName
+	<!-- loginUser(간병인)에게 매칭을 신청한 대상 이름 불러오기 -->
+	<select id="getRequestMatPt" resultType="RequestMatPt">
+		select matching.mat_no, patient.pt_name, 
+				patient.pt_gender, patient.pt_age,
+				matching.pt_count, 
+				mat_pt_info.group_leader
 		from matching
-			join mat_pt_info using(mat_no)
+			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no)
 			join patient on(mat_pt_info.pt_no = patient.pt_no)
-		where matching.memberNo = #{memberNo}	
+		where matching.member_no = #{memberNo}	
 				and matching.mat_confirm = 'N'
-		<if test = ""></if>
-	
-	
-	
+				and matching.begin_dt > sysdate
 	</select>
 	
 	

@@ -66,32 +66,22 @@
 	    <!-- 아래쪽 컨텐츠-->
 	    <div id="underContents">
 	        <div><!--왼쪽 공백--></div>
+	                
+	        <!-- 남희 좌측 하단 -->
 	        <div><!--매칭정보 : 가로 500, 세로 700-->
 	            <table class="table mainTable">
 	                <thead>
-	                    <tr>
-	                        <th colspan="5" class="align-middle">현재 개나리님과 매칭 중 입니다.</th>
+	                    <tr style="padding:10px;">
+	                        <th colspan="5" class="align-middle">[[${loginUserName}]]님과의 매칭을 원하는 분들이 있습니다.</th>
 	                    </tr>
 	                </thead>
 	                <tbody>
-	                    <tr class="align-middle text-center">
-	                        <td class="align-middle">남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>다리골절</td>
-	                        <td rowspan="2"><button class="btn btn-success">대화신청</button></td>
+	                    <tr class="align-middle text-center" th:each="matPt : ${requestMatPt}">
+	                    	<td style="display:none" th:text="${matPt.matNo}"></td>
+	                        <td colspan="4" class="align-middle">[[${matPt.ptName}]]님([[${matPt.ptRealAge}]]세 [[${matPt.ptGender =='M' ? '남':'여' }]])이 매칭을 원하고 있어요</td>
+	                        <td><button class="btn btn-success workInfo two">정보보기</button></td>
 	                    </tr>
-	                    <tr class="align-middle text-center">
-	                        <td>24-07-24</td>
-	                        <td>~</td>
-	                        <td>24-08-15</td>
-	                        <td></td>
-	                    </tr>
-	                    <tr class="align-middle text-center">
-	                    	<td style="display:none" th:text="${mat.matNo}"></td>
-	                        <td colspan="4" class="align-middle">나팔꽃님이 매칭을 원하고 있어요</td>
-	                        <td><button class="btn btn-success workInfo">정보보기</button></td>
-	                    </tr>
+	                    <tr class="align-middle text-center">더보기</tr>
 	                </tbody>
 	            </table>
 	        </div>
@@ -100,7 +90,7 @@
 	        
 	        
 	        
-	        <!-- 남희 -->
+	        <!-- 남희 우측 하단 -->
 	        <div id="findWorkList" class="text-center"><!--대상검색 : 가로 700, 세로 700-->
 				<h5>조건 검색을 활용해 원하는 환자 정보를 확인하시려면 더보기를 눌러주세요.</h5>
 	            <button type="button" class="btn btn-link" onclick="location.href='moreWorkInfo.me'">더 보기</button>			
@@ -385,20 +375,22 @@
 	  		const workInfos = document.querySelectorAll('.workInfo');    	
 	    	for(const workInfo of workInfos){
 	        	workInfo.addEventListener('click', function(){
-	        		const matNo = this.parentElement.parentElement.previousElementSibling.innerHTML
-	        		if(matNo)
-	        		location.href = 'goCaregiverPtInfo.mc?matNo='+ matNo
-	        	})
-	
+	        		let matNo = '';
+	        		if(this.className.includes('two')){
+	        			matNo = this.parentElement.parentElement.firstElementChild.innerHTML;
+	        		}else{
+	        			matNo = this.parentElement.parentElement.previousElementSibling.innerHTML;
+	        		}
+	        		
+	        		if(matNo){
+	        			location.href = 'goCaregiverPtInfo.mc?matNo='+ matNo;
+	        		}
+	        	});
 	    	} 
 	    	
 	    	
 	    	const matPtName = /*[[${matPtName}]]*/
 	    	const matPtCount = /*[[${matPtCount}]]*/
-	    	
-	    	console.log(matPtName);
-	    	console.log(matPtCount);
-	    	
 	    	
 	    	if(matPtName != null && matPtCount != null){
 	    		$('#matSuccesseModal').modal('show');

@@ -14,6 +14,7 @@ import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.dao.MemberMapper;
 
 import com.kh.dndncare.member.model.vo.CalendarEvent;
@@ -282,10 +283,9 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	
-	//
+	//loginUser(간병인)에게 매칭을 신청한 대상 이름 불러오기
 	@Override
-	public ArrayList<HashMap<String, Object>> getRequestMatPt(int memberNo) {
-		// TODO Auto-generated method stub
+	public ArrayList<RequestMatPt> getRequestMatPt(int memberNo) {
 		return mMapper.getRequestMatPt(memberNo);
 	}
 

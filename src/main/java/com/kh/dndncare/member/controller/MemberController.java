@@ -36,6 +36,7 @@ import com.kh.dndncare.common.AgeCalculator;
 import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
+import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
@@ -504,8 +505,11 @@ public class MemberController {
 	@GetMapping("caregiverMain.me")
 	public String caregiverMain(HttpSession session, Model model,
 								@RequestParam(value="matPtCount", defaultValue = "0") int matPtCount, @RequestParam(value="matPtName", required = false) String matPtName) {
-		// 1. 자동 추천 목록 받아오기
+		
 		Member loginUser = (Member)session.getAttribute("loginUser");
+		model.addAttribute("loginUserName", loginUser.getMemberName());
+		
+		// 1. 자동 추천 목록 받아오기
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo(); 
@@ -553,12 +557,26 @@ public class MemberController {
 		model.addAttribute("matMatptInfoPtList3", matMatptInfoPtList3);
 		
 		//loginUser(간병인)에게 매칭을 신청한 대상 정보 불러오기
-		ArrayList<HashMap<String, Object>> requestMatPt	= mService.getRequestMatPt(loginUser.getMemberNo());
+		ArrayList<RequestMatPt> requestMatPt = mService.getRequestMatPt(loginUser.getMemberNo());
+		System.out.println(requestMatPt);
 		
+		for(int i = 0 ; i < requestMatPt.size(); i ++) {
+			int realAge = AgeCalculator.calculateAge(requestMatPt.get(i).getPtAge());
+			requestMatPt.get(i).setPtRealAge(realAge);
+			
+			if((Integer)requestMatPt.get(i).getPtCount()> 1) {
+				if(requestMatPt.get(i).getGroupLeader().equals("N")) {
+					requestMatPt.remove(i);
+				}
+			}
+			if(i > 10) {
+				requestMatPt.remove(i);
+			}
+		}
+		model.addAttribute("requestMatPt", requestMatPt);
 		
-		
-		
-		
+		//현재 매칭중인 pt정보
+		//ArrayList<MatMatptInfoPt> matConfirmPt = mService.getMatConfirmPt();
 		
 		
 		
