@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
 </head>
-<body>
+<body id="">
 	<div th:replace="~{common/navbar :: navbar}">></div>
 	
 	<div id="contents">
@@ -186,11 +186,11 @@
 	                <!-- 간병 일감목록을 무한스크롤로 출력할 공간 -->
 	            </div>
 			</div>
-		<div><!-- 오른쪽 공백 --></div>
+			<div id=""><!-- 오른쪽 공백 --></div>
 		</div>
 	</div>
 	
-	<div th:replace="~{common/footer :: footer}"></div>
+	<div th:replace="~{common/footer :: footer}" id=""></div>
 	
 	<!-- 태그 전체를 취사선택할 수 있는 모달창 -->
 	<div class="modal" tabindex="-1" id="allTagModal">
@@ -304,6 +304,10 @@
 	
 	<script th:inline="javascript">
 		window.onload = () => {
+			let innerHeight = window.innerHeight;
+			let scrollY = window.scrollY;
+			let scrollHeight = document.body.scrollHeight;
+			
 			// 일감목록의 태그 버튼 클릭시 하위 버튼을 보여주는 기능 (시작)
 			const allSubBtnList = document.querySelectorAll('.subBtn');	// 임의의 세부 태그 버튼
 			const allSearchBtnList = document.querySelectorAll('.searchBtn');
@@ -1207,7 +1211,11 @@
 									const h6 = document.createElement('h6');
 									h6.className = 'card-title';
 									const img = document.createElement('img');
-									img.setAttribute('src', 'image/icon/maleProfile.png');
+									if(d.memberGender == 'M') {
+										img.setAttribute('src', 'image/icon/maleProfile.png');
+									} else {
+										img.setAttribute('src', 'image/icon/femaleProfile.png');
+									}
 									const h6Span = document.createElement('span');
 									h6Span.innerText = d.memberName + '님';
 									h6.append(img);
@@ -1253,7 +1261,11 @@
 									const h6 = document.createElement('h6');
 									h6.className = 'card-title';
 									const img = document.createElement('img');
-									img.setAttribute('src', 'image/icon/maleProfile.png'); // **이미지 경로 수정해야함**
+									if(d.memberGender == 'M') {
+										img.setAttribute('src', 'image/icon/maleProfile.png');
+									} else {
+										img.setAttribute('src', 'image/icon/femaleProfile.png');
+									} // **이미지 경로 수정해야함**
 									const h6Span = document.createElement('span');
 									h6Span.innerText = d.memberName + '님';
 									h6.append(img);
@@ -1290,6 +1302,11 @@
 						ajaxNoSearchPage++;
 						console.log('page : ' + ajaxNoSearchPage);
 						searchFlag = false;
+						
+						innerHeight = window.innerHeight;
+						scrollY = window.scrollY;
+						scrollHeight = document.body.scrollHeight;
+						
 						} else {
 							console.log('검색결과 없음');
 						}
@@ -1299,6 +1316,7 @@
 					}
 				})
 			}
+			// *** 비동기 방식으로 임의결과 요청하는 ajax함수 정의 (끝) ***
 			
 			// 화면 처음로드시에 띄울 임의 검색결과 목록
 			noSearchAjax(ajaxNoSearchPage);
@@ -1325,25 +1343,25 @@
 			let timer;
 			if (!timer) {
 				timer = setTimeout(() => {
-				  timer = null;
-				  /* 실행될 이벤트 */
+					timer = null;
+				  	//실행될 이벤트 
 					if(searchFlag == false) {
 						noSearchAjax(ajaxNoSearchPage);
 					} else {
 						searchAjax(ajaxSearchPage);
 					}
-				}, 1000);
+				}, 1500);
 			};
 
 			// 쓰로틀링을 적용한 스크롤 이벤트 핸들러
 			if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
-			  if (!timer) {
-				timer = setTimeout(() => {
-				  timer = null;
-				  console.log("End Of Document");
-				}, 500);
+			  	if (!timer) {
+					timer = setTimeout(() => {
+						timer = null;
+					  	console.log("End Of Document");
+					}, 1000);
 				};
-			}
+			} 
 			// 일감목록 검색 결과를 출력하는 무한스크롤 (끝)
 			
 			// 태그 전체 모달창 출력

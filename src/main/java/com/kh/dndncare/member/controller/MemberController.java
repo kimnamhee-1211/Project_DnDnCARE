@@ -1172,26 +1172,6 @@ public class MemberController {
 				               mapper.readValue(obj, new TypeReference<Map<String, String>>(){});
 				
 				// 검색조건과 페이지에 맞게 조회해와야함
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 				Gson gson = new Gson();
 				ArrayList<String> list = new ArrayList<String>();
 				list.add("search1");
@@ -1221,7 +1201,6 @@ public class MemberController {
 										@RequestParam(value="page", defaultValue="1") int currentPage) {
 			System.out.println("컨트롤러의 페이지 : " + currentPage);
 			
-			
 			// 페이지 첫 로드시 또는 검색조건이 하나도 없이 검색버튼을 눌렀을 때 이곳으로 요청이 들어옴
 			Gson gson = new Gson();
 			response.setContentType("application/json; charset=UTF-8");
@@ -1230,7 +1209,7 @@ public class MemberController {
 				int listCount = mService.getCaregiverListCount();
 				PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 8);
 				//currentPage > pi.getEndPage()
-				if(false) {
+				if(currentPage > pi.getEndPage()) {
 					gson.toJson("noExist", response.getWriter());
 				} else {
 					ArrayList<CareGiver> cList = mService.selectAllCaregiver(pi);
@@ -1421,7 +1400,7 @@ public class MemberController {
 		
 		// 6. 프롬프트를 전달하고 결과값 받아오기
 		String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
-		System.out.println("GPT가 추천한 매칭번호 : " + result);
+		System.out.println("GPT가 추천한 매칭번호 : " + result); //83, 82, 57, 85, 14, 46, 23, 22, 79, 84.
 		String[] choice = result.split(", ");
 		ArrayList<Integer> choiceNoList = new ArrayList<Integer>();
 		for(int i = 0; i < choice.length; i++) {
