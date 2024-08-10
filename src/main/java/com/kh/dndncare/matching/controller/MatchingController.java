@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
@@ -36,6 +37,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
@@ -460,9 +462,10 @@ public class MatchingController {
 	}
 	
 	
-	@GetMapping("reviewDetail.mc")
-	public String getMethodName(HttpSession session, Model model) {
-		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+	@GetMapping("reviewDetail.mc")												
+	public String getMethodName(HttpSession session, Model model,@RequestParam("memberNo")int memberNo) {
+		
+		//int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		
 		// 정보
 		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
@@ -472,6 +475,8 @@ public class MatchingController {
 		
 		// 평점
 		int avgReviewScore = mcService.avgReviewScore(memberNo);
+		
+		
 		
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("reviewCount", reviewCount);
@@ -497,6 +502,61 @@ public class MatchingController {
 
 	}
 	
+	//비동기로 환자측에서 결제할때 간병인 정보 가져오기
+	@GetMapping("payInfo.mc")
+	@ResponseBody
+	public void payInfo(@RequestParam("matNo") int matNo,HttpServletResponse response,HttpSession session) {
+		// 보낼때, 매칭번호가 필수다
+		
+		Member m = (Member)session.getAttribute("loginUser");
+		MatMatptInfo matInfo = mcService.selecMatching(matNo);
+		MatMatptInfo matPtInfo = mcService.selecMatPtInfo(matNo,m.getMemberNo());
+		matInfo.setPtNo(matPtInfo.getPtNo());
+		matInfo.setAntePay(matPtInfo.getAntePay());
+		matInfo.setService(matPtInfo.getService());
+		matInfo.setMatAddressInfo(matPtInfo.getMatAddressInfo());
+		matInfo.setMatRequest(matPtInfo.getMatRequest());
+		matInfo.setDeposit(matPtInfo.getDeposit());
+		matInfo.setGroupLeader(matPtInfo.getGroupLeader());
+		
+		String hourly = mcService.selectMatDate(matNo);
+		int hourly2 = hourly.split(",").length;
+		matInfo.setHourly(hourly2);
+		
+		//며칠 몇시간 하는건지 계산해보자
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        
+        // LocalDateTime 객체로 변환
+        LocalDateTime beforeDateTime = LocalDateTime.parse(matInfo.getBeginDt() + " " + matInfo.getBeginTime(), dateTimeFormatter);
+        LocalDateTime afterDateTime = LocalDateTime.parse(matInfo.getEndDt() + " " + matInfo.getEndTime(), dateTimeFormatter);
+        
+        // 시간 차이 계산
+        Duration duration = Duration.between(beforeDateTime, afterDateTime);
+        
+        // 일과 시간으로 변환
+        long days = duration.toDays();
+        matInfo.setDays(duration.toDays());
+        matInfo.setTimes(duration.minusDays(days).toHours());
+		
+		
+		
+		
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");	
+		//내 date형식 포멧을 변경해준다.
+		Gson gson = gb.create();
+		response.setContentType("application/json; charset=UTF-8");
+		try {
+			gson.toJson(matInfo, response.getWriter());
+		} catch (JsonIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
 	
 	//간병인 메인에서 환자 정보 페이지로 
 	@GetMapping("goCaregiverPtInfo.mc")
@@ -614,6 +674,26 @@ public class MatchingController {
 	
 	
 	
+	
+	@PostMapping("successPay.mc")
+	public String insertPay(@ModelAttribute Pay p,
+							HttpSession session) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		//pay DB에 접근,기록
+		int result1 = mcService.insertPay(loginUser,p);
+		//
+		if( result1 > 0) {
+		
+			
+			
+			return "redirect:patientMain.me";
+			
+		}else {
+		
+			throw new MatchingException("결제실패");
+		}
+	}
 	
 	
 	

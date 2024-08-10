@@ -1,10 +1,18 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" >
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link th:href="@{css/login.css}" rel="stylesheet" type="text/css"/>
-
+<!-- 네이버 -->
+<script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<!-- 카카오 -->
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
+  integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
+<script>
+  Kakao.init('aa531f371cb3a46353f94fc53e8a26b2'); // 사용하려는 앱의 JavaScript 키 입력
+</script>
 </head>
 <body>
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
@@ -37,14 +45,14 @@
 				<p class="text-center">SNS계정으로 <br> DnDnCare를 편하게 이용하세요</p>
 				<ul class="icon-section d-flex justify-content-evenly">
 					<li>    
-						<svg class="kakao" width="60" height="60" id="kakao">
-        					<use xlink:href="../image/icon_kakao.svg#icon"></use>
-        				</svg>카카오
+						<a id="kakao-login-btn"  href="javascript:loginWithKakao()">
+						  <img src="https://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width="180"
+						    alt="카카오 로그인 버튼" />
+						</a>
        				</li>
        				<li>    
-						<svg class="naver" width="60" height="60" id="naver">
+						<div id="naver_id_login"></div>
         					<use xlink:href="../image/icon_naver.svg#icon"></use>
-        				</svg>네이버
        				</li>
        				<li>    
 						<svg class="google" width="60" height="60" id="google">
@@ -58,9 +66,25 @@
 	</main>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	<script>
+		//네이버
+		var naver_id_login = new naver_id_login("m2tmMPCHBBaFCdz1OOkT", "http://localhost:8096/callback.lo");
+	  	var state = naver_id_login.getUniqState();
+	  	naver_id_login.setButton("green", 55);
+	  	naver_id_login.setDomain("http://localhost:8096/patient.me");
+	  	naver_id_login.setState(state);
+	  	naver_id_login.setPopup();
+	  	naver_id_login.init_naver_id_login();
+	  	console.log(naver_id_login);
+	
+	  	
+	  	//카카오 시작
+	  	function loginWithKakao() {
+			  Kakao.Auth.authorize({
+		      redirectUri: 'http://localhost:8096/kakao.lo',
+		    });
+		  }
+	  	
 		document.addEventListener('DOMContentLoaded', function() { // DOMContentLoaded => 페이지 로딩될때 다른거 기다리지 않고 바로 되게하는 것 굳이 필요하진않음
-		    document.getElementById('kakao').addEventListener('click', handleKakaoLogin);
-		    document.getElementById('naver').addEventListener('click', handleNaverLogin);
 		    document.getElementById('google').addEventListener('click', handleGoogleLogin);
 		});
 		
@@ -69,10 +93,6 @@
 		    // 카카오 로그인 로직 구현
 		}
 		
-		function handleNaverLogin() {
-		    console.log('네이버 로그인 시도');
-		    // 네이버 로그인 로직 구현
-		}
 		
 		function handleGoogleLogin() {
 		    console.log('구글 로그인 시도');

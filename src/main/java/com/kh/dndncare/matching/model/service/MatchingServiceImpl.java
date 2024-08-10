@@ -15,7 +15,9 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
+import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
 @Service
@@ -174,6 +176,7 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.deleteWantInfo(memberNo);
 	}
 
+<<<<<<< HEAD
 	
 	//매칭/매칭인포/환자/병원 한번에 가져오기
 	@Override
@@ -201,6 +204,29 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.requestMatCheck(memberNo, matNo);
 	}
 	
+=======
+	@Override
+	public MatMatptInfo selecMatching(int matNo) {
+		return mMapper.selectMatching(matNo);
+	}
+
+	@Override
+	public MatMatptInfo selecMatPtInfo(int matNo, int memberNo) {
+		return mMapper.selecMatPtInfo(matNo,memberNo);
+	}
+
+	@Override
+	public int insertPay(Member loginUser, Pay p) {
+		return mMapper.insertPay(loginUser,p);
+	}
+
+	@Override
+	public String selectMatDate(int matNo) {
+		return mMapper.selectMatDate(matNo);
+	}
+
+
+>>>>>>> refs/heads/master
 
 
 

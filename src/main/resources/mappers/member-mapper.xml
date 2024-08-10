@@ -300,13 +300,15 @@
 	<select id="selectMatList" resultType="MatMatptInfo">	<!-- 환자번호로 mat_pt테이블의 매칭번호를 뽑아온다. -->
 		select *
 		from mat_pt_info
-    		join matching using(mat_no)
+    		left join matching ON mat_pt_info.mat_no = matching.mat_no
+            left join member on matching.member_no =member.member_no
 		where pt_no = (select pt_no
 						from patient
 						where member_no = #{memberNo})
 	</select>
 	
 	
+<<<<<<< HEAD
 	<!-- 매칭 + 환자 정보 다 가져오기  -->
 	<select id="getMatMatptInfoPt" resultType="MatMatptInfoPt">
 		select *
@@ -346,6 +348,15 @@
 	
 	
 	
+=======
+	
+	<select id="selectCareGiverList" resultType="CareGiver">	<!-- 간병인정보를 모두 불러온다.(재가공할거지만) -->
+		select *
+		from careGiver
+			join member using(member_no)
+		where member_status = 'N'
+	</select>
+>>>>>>> refs/heads/master
 	
 	
 	

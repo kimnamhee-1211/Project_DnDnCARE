@@ -1,8 +1,8 @@
 package com.kh.dndncare.member.controller;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,14 +29,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
+<<<<<<< HEAD
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.AgeCalculator;
 import com.kh.dndncare.common.Pagination;
+=======
+>>>>>>> refs/heads/master
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+<<<<<<< HEAD
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
+=======
+import com.kh.dndncare.matching.model.vo.Matching;
+>>>>>>> refs/heads/master
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
@@ -93,22 +100,27 @@ public class MemberController {
 
 		if (loginUser != null) {
 			Patient p = mService.selectPatient(loginUser.getMemberNo());
+			
 			// List<Integer> memberInfo =
 			// mService.selectMemberInfo(loginUser.getMemberNo());
 
 			char check = loginUser.getMemberCategory().charAt(0);
+			Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 내정보
+			Info wantInfo = categoryFunction(loginUser.getMemberNo(), false); // 원하는간병인정보
+			model.addAttribute("memberInfo", memberInfo);
+			System.out.println("여기가 멤버인포 : " + memberInfo);
+			model.addAttribute("wantInfo", wantInfo);
+			System.out.println("여기가 왠트인포 : " + wantInfo);
 
 
 			switch (check) {
 			case 'C':
+				CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+				model.addAttribute("cg", cg);
 				return "myInfo";
 
 			case 'P':
-				Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 내정보
-				Info wantInfo = categoryFunction(loginUser.getMemberNo(), false); // 원하는간병인정보
 				model.addAttribute("p", p);
-				model.addAttribute("memberInfo", memberInfo);
-				model.addAttribute("wantInfo", wantInfo);
 				System.out.println(wantInfo.getInfoDisease());
 
 				// Patient pWant = categoryFunction()
@@ -141,9 +153,10 @@ public class MemberController {
 
 			
 			for(HashMap<String,String> m : category) {
+				System.out.println(m.get("S_CATEGORY"));
 				 switch(m.get("L_CATEGORY")) {
 					 case "service" : memberInfo.getInfoService().add(0,m.get("S_CATEGORY")); break;
-					 case "serviceCareer" : memberInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
+					 //case "serviceCareer" : memberInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "career" : memberInfo.getInfoCareer().add(0,m.get("S_CATEGORY")); break;
 					 case "disease" : memberInfo.getInfoDisease().add(0,m.get("S_CATEGORY")); break;
 					 case "license" : memberInfo.getInfoLicense().add(0,m.get("S_CATEGORY")); break;
@@ -266,6 +279,8 @@ public class MemberController {
 
 				return "redirect:caregiverMain.me";
 			} else if(loginUser.getMemberCategory().equalsIgnoreCase("P")) {
+				
+				
 				return "redirect:patientMain.me";
 			}
 
@@ -641,7 +656,24 @@ public class MemberController {
 
 	// 임시버튼 : 환자 메인페이지로 가기
 	@GetMapping("patientMain.me")
-	public String patientMain() {
+	public String patientMain(Model model, HttpSession session) {
+		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		//Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 간병인 멤퍼인포정보
+		ArrayList<CareGiver> cg = mService.selectCareGiverList(); // 간병인 정보
+		model.addAttribute("cg",cg);
+		ArrayList<MatMatptInfo> mc = mService.selectMatList(loginUser.getMemberNo());
+		model.addAttribute("mc",mc);
+		System.out.println(mc);
+		for(CareGiver c : cg) {
+			LocalDate birthDateParsed = c.getMemberAge().toLocalDate();
+			LocalDate today = LocalDate.now();
+			
+			c.setAge(Period.between(birthDateParsed, today).getYears());
+			//System.out.println(c);
+		}
+		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --up--
+		
 		return "patientMain";
 	}
 
@@ -1429,6 +1461,7 @@ public class MemberController {
 
 	
 	
+<<<<<<< HEAD
 	
 	
 	
@@ -1467,6 +1500,8 @@ public class MemberController {
 	
 	
 	
+=======
+>>>>>>> refs/heads/master
 }//클래스 끝
 
 	

@@ -14,8 +14,9 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
-
+import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
 @Mapper
@@ -78,6 +79,15 @@ public interface MatchingMapper {
 	String getMatPtName(@Param("matNo") int matNo, @Param("ptCount") int ptCount);
 
 	int requestMatCheck(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
+
+	MatMatptInfo selectMatching(int matNo);
+
+	MatMatptInfo selecMatPtInfo(@Param("matNo")int matNo,@Param("memberNo") int memberNo);
+
+	int insertPay(@Param("loginUser")Member loginUser,@Param("p") Pay p);
+
+	String selectMatDate(int matNo);
+
 
 
 }
