@@ -48,4 +48,8 @@ public class HomeController {
 		return "google";
 	}
 
+	@GetMapping("map.lo")
+	public String map() {
+		return "map";
+	}
 }
