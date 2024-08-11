@@ -244,6 +244,22 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.getCaregiverScoreList(cNoList);
 	}
 
+	@Override
+	public ArrayList<CareGiver> searchDefaultCaregiverNoList(HashMap<String, Object> searchDefaultMap) {
+		return mMapper.searchDefaultCaregiverNoList(searchDefaultMap);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Integer>> searchCaregiverCategoryMNoList(ArrayList<Integer> cNoList) {
+		return mMapper.searchCaregiverCategoryMNoList(cNoList);
+	}
+
+	@Override
+	public ArrayList<CareGiver> searchCaregiverList(PageInfo pi, ArrayList<Integer> resultCaregiverNoList) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return mMapper.searchCaregiverList(rowBounds, resultCaregiverNoList);
+	}
+
 
 
 	

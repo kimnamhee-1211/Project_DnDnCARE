@@ -1124,26 +1124,153 @@
 					data : {condition : JSON.stringify(searchConditionObj)},
 					success: data => {
 						console.log(data);
+						if(data != 'noExist') {
+							for(let d of data) {
+								// 별점 이미지 그리기 작업
+								const nameSpan = document.querySelector('#tartget');
+								const imgArr = [];
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								const modScore = d.avgReviewScore / 2
+								if(modScore == 0){ // 별점이 짝수
+									for(let i = 0; i < modScore; i++){
+										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+									for(let i = 4; i >= modScore; i--){
+										imgArr[i].setAttribute("src", "image/icon/emptyStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+								} else { // 별점이 홀수
+									for(let i = 0; i < Math.floor(modScore); i++){
+										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+									
+									let half = Math.floor(modScore);
+									imgArr[half].setAttribute("src", "image/icon/halfStar.png");
+									
+									for(let i = 4; i >= Math.ceil(modScore); i--){
+										imgArr[i].setAttribute("src", "image/icon/emptyStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+								}
+								
+								if(d.careImg == null) { // 이미지 파일이 없는 경우
+									const div0 = document.createElement('div');
+									div0.className = 'col-sm-6';
+									
+									const div1 = document.createElement('div');
+									div1.className = 'card h-95 w-80';
+									
+									const div2 = document.createElement('div');
+									div2.className = 'card-body text-center';
+									
+									const h6 = document.createElement('h6');
+									h6.className = 'card-title';
+									const img = document.createElement('img');
+									if(d.memberGender == 'M') {
+										img.setAttribute('src', 'image/icon/maleProfile.png');
+									} else {
+										img.setAttribute('src', 'image/icon/femaleProfile.png');
+									}
+									const h6Span = document.createElement('span');
+									h6Span.innerText = d.memberName + '님';
+									h6.append(img);
+									h6.append(h6Span);
+									for(let i = 0; i < 5; i++) {
+										h6.append(imgArr[i]);
+									}
+									
+									const p = document.createElement('p');
+									p.className = 'card-text';
+									const pSpan = document.createElement('span');
+									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									p.append(pSpan);
+									
+									const inp = document.createElement('input');
+									inp.setAttribute('type', 'hidden');
+									inp.setAttribute('name', 'memberNo');
+									inp.setAttribute('value', d.memberNo);
+									const button = document.createElement('button');
+									button.className = 'btn btn-success';
+									button.setAttribute('onclick', 'caregiverDetail()');
+									button.innerText = '정보보기';
+									
+									div2.append(h6);
+									div2.append(p);
+									div2.append(inp);
+									div2.append(button);
+									div1.append(div2);
+									div0.append(div1);
+									
+									root.append(div0);
+									
+								} else { // 이미지 파일이 있는 경우
+									const div0 = document.createElement('div');
+									div0.className = 'col-sm-6';
+									
+									const div1 = document.createElement('div');
+									div1.className = 'card h-95 w-80';
+									
+									const div2 = document.createElement('div');
+									div2.className = 'card-body text-center';
+									
+									const h6 = document.createElement('h6');
+									h6.className = 'card-title';
+									const img = document.createElement('img');
+									if(d.memberGender == 'M') {
+										img.setAttribute('src', 'image/icon/maleProfile.png');
+									} else {
+										img.setAttribute('src', 'image/icon/femaleProfile.png');
+									} // **이미지 경로 수정해야함**
+									const h6Span = document.createElement('span');
+									h6Span.innerText = d.memberName + '님';
+									h6.append(img);
+									h6.append(h6Span);
+									for(let i = 0; i < 5; i++) {
+										h6.append(imgArr[i]);
+									}
+									
+									const p = document.createElement('p');
+									p.className = 'card-text';
+									const pSpan = document.createElement('span');
+									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									p.append(pSpan);
+									
+									const inp = document.createElement('input');
+									inp.setAttribute('type', 'hidden');
+									inp.setAttribute('name', 'memberNo');
+									inp.setAttribute('value', d.memberNo);
+									const button = document.createElement('button');
+									button.className = 'btn btn-success';
+									button.setAttribute('onclick', 'caregiverDetail()');
+									button.innerText = '정보보기';
+									
+									div2.append(h6);
+									div2.append(p);
+									div2.append(inp);
+									div2.append(button);
+									div1.append(div2);
+									div0.append(div1);
+									
+									root.append(div0);
+								}
+							}
+						ajaxNoSearchPage++;
+						console.log('page : ' + ajaxNoSearchPage);
+						searchFlag = false;
 						
-						for(let count of data) {
-							root.innerHTML += '<div class="col-sm-6">\
-	            				<div class="card h-95 w-80">\
-	    							<div class="card-body">\
-	        						<h6 class="card-title">\
-	            						<span style="background:skyblue; color:blue;">ㅇㅇㅇ 님</span>&nbsp;&nbsp;\
-	            						<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;\
-	            						<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;\
-	       							</h6>\
-				                    <p class="card-text">\
-				                    	<span>서울시 도봉구 (검색결과)</span>\
-				                   	</p>\
-				                    <button class="btn btn-success workInfo">정보 보기</button>\
-			                		</div>\
-	   							</div>\
-								</div>';
+						innerHeight = window.innerHeight;
+						scrollY = window.scrollY;
+						scrollHeight = document.body.scrollHeight;
+						
+						} else {
+							console.log('검색결과 없음');
 						}
-						ajaxSearchPage++;
-						searchFlag = true;
 					},
 					error: data => {
 						console.log('error');

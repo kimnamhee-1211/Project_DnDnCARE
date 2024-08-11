@@ -1141,7 +1141,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("moreCaregiverInfo.me")
-	public String moreCaregiverInfo(@RequestParam(value = "page", defaultValue="1") int page, HttpSession session, Model model) {
+	public String moreCaregiverInfo(@RequestParam(value = "page", defaultValue="1") int currentPage, HttpSession session, Model model) {
 		// 자동추천 목록 받아오기
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		int memberNo = 0;
@@ -1161,7 +1161,7 @@ public class MemberController {
 	// 간병인 일감찾기 페이지에서의 검색 요청을 처리
 		@PostMapping("searchCaregiverList.me")
 		@ResponseBody
-		public void searchCaregiverList(@RequestParam("condition") String obj, @RequestParam(value="page", defaultValue="1") int page,
+		public void searchCaregiverList(@RequestParam("condition") String obj, @RequestParam(value="page", defaultValue="1") int currentPage,
 										HttpServletResponse response) {
 			// 검색 조건이 하나라도 있는 경우만 이곳으로 들어온다
 			System.out.println("검색조건 확인 : " + obj);
@@ -1172,19 +1172,189 @@ public class MemberController {
 				               mapper.readValue(obj, new TypeReference<Map<String, String>>(){});
 				
 				// 검색조건과 페이지에 맞게 조회해와야함
-				Gson gson = new Gson();
-				ArrayList<String> list = new ArrayList<String>();
-				list.add("search1");
-				list.add("search2");
-				list.add("search3");
-				list.add("search4");
-				list.add("search5");
-				list.add("search6");
-				list.add("search7");
-				list.add("search8");
 				response.setContentType("application/json; charset=UTF-8");
-				gson.toJson(list, response.getWriter());
+				GsonBuilder gb = new GsonBuilder().setDateFormat("YYYY-MM-dd");
+				Gson gson = gb.create();
 				
+				// 공동간병 검색조건을 가공
+				ArrayList<String> shareList = new ArrayList<String>();
+				if(map.get("share").length() > 0) { // 공동간병에 대한 검색조건이 있는 경우
+					if(map.get("share").contains("개인")) shareList.add("N");
+					if(map.get("share").contains("공동")) shareList.add("Y");
+				}
+				
+				// 지역 검색조건을 가공
+				String area = "";
+				if(map.get("area").length()>0) {
+					switch(map.get("area")) {
+					case "전국" : area = "%"; break;
+					case "서울", "부산", "대구", "인천", "광주", "대전", "울산", "제주","세종" : area = map.get("area"); break;
+					case "경기도" : area = "경기"; break;
+					case "강원도" : area = "강원"; break;
+					case "충청북도" : area = "충%북";  break;
+					case "충청남도" : area = "충%남"; break;
+					case "전라북도" : area = "전%북";  break;
+					case "전라남도" : area = "전%남";  break;
+					case "경상북도" : area = "경%북"; break;
+					case "경상남도" : area = "경%남"; break;
+					}
+				}
+				
+				// 성별 검색조건을 가공
+				ArrayList<String> genderList = new ArrayList<String>();
+				if(map.get("gender").length()>0) {
+					if(map.get("gender").contains("남")) {
+						genderList.add("M");
+					}
+					if(map.get("gender").contains("여")) {
+						genderList.add("F");
+					}
+				}
+				// 연령 검색조건을 가공 : 경우의 수가 8가지(선택을 하지 않은 경우 포함)이므로 식별값을 부여
+				String age = "";
+				if(map.get("age").length() > 0) {
+					switch(map.get("age")) {
+					case "청년": age = "1"; break;
+					case "중년": age = "2"; break;
+					case "장년": age = "3"; break;
+					case "청년/중년": age = "4"; break;
+					case "청년/장년": age = "5"; break;
+					case "중년/장년": age = "6"; break;
+					case "청년/중년/장년": age = "7"; break;
+					}
+				}
+				// 금액 검색조건을 가공
+				String maxMoney = "";
+				if(map.get("cost").length() > 0) {
+					switch(map.get("cost")) {
+					case "~30,000원" : maxMoney = "30000"; break;
+					case "~50,000원" : maxMoney = "50000"; break;
+					case "~80,000원" : maxMoney = "80000"; break;
+					case "~100,000원" : maxMoney = "100000"; break;
+					}
+				}
+				
+				// 서비스, 공동간병, 지역, 성별, 연령, 비용에 대하여 검색한 매칭번호를 조회한다.
+				// 검색 조건이 없는 경우 mapper에게 List를 전달하지 않을 것
+				HashMap<String, Object> searchDefaultMap = new HashMap<String, Object>();
+				if(!shareList.isEmpty()) searchDefaultMap.put("share", shareList);
+				if(area.length() > 0) searchDefaultMap.put("area", area);
+				if(!genderList.isEmpty()) searchDefaultMap.put("gender", genderList);
+				if(age.length() > 0) searchDefaultMap.put("age", age);
+				if(maxMoney.length() > 0) searchDefaultMap.put("maxMoney", maxMoney);
+				
+				ArrayList<CareGiver> searchDefaultCaregiverNoList = mService.searchDefaultCaregiverNoList(searchDefaultMap);
+				// 만약, 검색조건 중 위에서의 검색조건이 없었다면 MEMBER_STATUS = 'N' AND MEMBER_CATEGORY = 'C'인 간병인들이 조회된다!
+				//[CareGiver(memberNo=83, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=44, caregiverNational=내국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=컴2, avgReviewScore=0), CareGiver(memberNo=79, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=34, caregiverNational=내국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=나리간병3, avgReviewScore=0), CareGiver(memberNo=85, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=69, caregiverNational=내국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=나리간병5, avgReviewScore=0), CareGiver(memberNo=22, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=0, caregiverNational=내국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=test, avgReviewScore=0), CareGiver(memberNo=14, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=30, caregiverNational=외국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=김종기2, avgReviewScore=0), CareGiver(memberNo=82, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=-20, caregiverNational=외국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=나리간병4, avgReviewScore=0)]
+				
+				// 위의 조건에 해당하는 간병인 번호를 추출한다.
+				ArrayList<Integer> cNoList = new ArrayList<Integer>();
+				if(!searchDefaultCaregiverNoList.isEmpty()) { // 간병인 목록이 존재하는 경우
+					for(CareGiver c : searchDefaultCaregiverNoList) {
+						cNoList.add(c.getMemberNo());
+					}
+				}// [83, 79, 85, 22, 14, 82]
+				
+				// 후보 간병인에 대한 카테고리 넘버들을 가져온다.
+				ArrayList<HashMap<String, Integer>> searchCaregiverCategoryNoList = new ArrayList<HashMap<String, Integer>>();
+				if(!cNoList.isEmpty()) {
+					searchCaregiverCategoryNoList = mService.searchCaregiverCategoryMNoList(cNoList);
+				} else {
+					gson.toJson("noExist", response.getWriter());
+				}
+				// [{CATEGORY_NO=15, MEMBER_NO=83}, {CATEGORY_NO=1, MEMBER_NO=83}, {CATEGORY_NO=2, MEMBER_NO=83}, {CATEGORY_NO=21, MEMBER_NO=83}, {CATEGORY_NO=22, MEMBER_NO=83}, {CATEGORY_NO=23, MEMBER_NO=83}, {CATEGORY_NO=24, MEMBER_NO=83}, {CATEGORY_NO=25, MEMBER_NO=83}, {CATEGORY_NO=26, MEMBER_NO=83}, {CATEGORY_NO=27, MEMBER_NO=83}, {CATEGORY_NO=28, MEMBER_NO=83}, {CATEGORY_NO=29, MEMBER_NO=83}, {CATEGORY_NO=30, MEMBER_NO=83}, {CATEGORY_NO=51, MEMBER_NO=83}, {CATEGORY_NO=72, MEMBER_NO=83}, {CATEGORY_NO=73, MEMBER_NO=83}, {CATEGORY_NO=11, MEMBER_NO=22}, {CATEGORY_NO=11, MEMBER_NO=14}, {CATEGORY_NO=2, MEMBER_NO=14}, {CATEGORY_NO=52, MEMBER_NO=14}, {CATEGORY_NO=51, MEMBER_NO=14}, {CATEGORY_NO=52, MEMBER_NO=14}, {CATEGORY_NO=51, MEMBER_NO=14}]
+
+				
+				// 질병과 서비스, 경력, 자격증 검색 조건을 가져온다
+				ArrayList<Integer> categoryNoList = new ArrayList<Integer>(); // 조건을 카테고리 넘버로 변환하여 저장
+				String disease = map.get("disease"); // 질병에 대한 검색조건
+				if(disease.length() > 0) {
+					if(disease.contains("치매")) categoryNoList.add(21);
+					if(disease.contains("섬망")) categoryNoList.add(22);
+					if(disease.contains("욕창")) categoryNoList.add(23);
+					if(disease.contains("하반신 마비")) categoryNoList.add(24);
+					if(disease.contains("전신 마비")) categoryNoList.add(25);
+					if(disease.contains("와상환자")) categoryNoList.add(26);
+					if(disease.contains("기저귀 케어")) categoryNoList.add(27);
+					if(disease.contains("의식 없음")) categoryNoList.add(28);
+					if(disease.contains("석션")) categoryNoList.add(29);
+					if(disease.contains("피딩")) categoryNoList.add(30);
+					if(disease.contains("소변줄")) categoryNoList.add(31);
+					if(disease.contains("장루")) categoryNoList.add(32);
+					if(disease.contains("투석")) categoryNoList.add(33);
+					if(disease.contains("전염성 질환")) categoryNoList.add(34);
+					if(disease.contains("파킨슨")) categoryNoList.add(35);
+					if(disease.contains("정신질환")) categoryNoList.add(36);
+				}
+				
+				String service = map.get("service"); // 서비스에 대한 검색조건
+				if(service.length() > 0) {
+					if(service.contains("병원")) categoryNoList.add(6);
+					if(service.contains("가정")) categoryNoList.add(7);
+				}
+				
+				String career = map.get("career"); // 경력에 대한 검색조건 : 없음/1년미만/1~3년/3~5년/5년이상
+				if(career.length() > 0) {
+					if(career.contains("없음")) categoryNoList.add(11);
+					if(career.contains("1년미만")) categoryNoList.add(12);
+					if(career.contains("1~3년")) categoryNoList.add(13);
+					if(career.contains("3~5년")) categoryNoList.add(14);
+					if(career.contains("5년이상")) categoryNoList.add(15);
+				}
+				
+				String license = map.get("license"); // 자격증에 대한 검색조건 : 간병사/요양보호사/간호조무사
+				if(license.length() > 0) {
+					if(license.contains("간병사")) categoryNoList.add(51);
+					if(license.contains("요양보호사")) categoryNoList.add(52);
+					if(license.contains("간호조무사")) categoryNoList.add(53);
+				}
+				
+				
+				if(!categoryNoList.isEmpty()) { // 카테고리 번호가 포함된 맵들로만 걸러내자
+					for(int i = 0; i < searchCaregiverCategoryNoList.size(); i++) {
+						if(!categoryNoList.contains(Integer.parseInt(String.valueOf(searchCaregiverCategoryNoList.get(i).get("CATEGORY_NO"))))) {
+							searchCaregiverCategoryNoList.remove(i);
+						}
+					}
+				}
+				
+				
+				ArrayList<Integer> resultCaregiverNoList = new ArrayList<Integer>();
+				if(categoryNoList.isEmpty()) {
+					// 카테고리 필터링을 하지 않았을 때 tempMatNoList에 원래의 매칭번호들이 담겨있음
+					resultCaregiverNoList = cNoList;
+				} else { // 카테고리 필터링을 했을 때 searchCategoryMatNoList에서 매칭번호들을 추출해야함
+					for(HashMap<String, Integer> m : searchCaregiverCategoryNoList) {
+						Integer memberNo = Integer.parseInt(String.valueOf(m.get("MEMBER_NO")));
+						if(!resultCaregiverNoList.contains(memberNo)) {
+							resultCaregiverNoList.add(memberNo);
+						}
+					}
+				} // 조건에 따른 간병인의 회원번호 추출 완료! resultCaregiverNoList
+				
+				int listCount = resultCaregiverNoList.size();
+				PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 8);
+				ArrayList<CareGiver> cList = mService.searchCaregiverList(pi, resultCaregiverNoList);
+				
+				
+				ArrayList<HashMap<String, Integer>> scoreList = new ArrayList<HashMap<String, Integer>>();
+				if(!cList.isEmpty()) { // 간병인 목록이 존재하는 경우
+					for(CareGiver c : cList) {
+						cNoList.add(c.getMemberNo());
+					}
+					scoreList = mService.getCaregiverScoreList(resultCaregiverNoList);
+					
+					for(HashMap<String, Integer> m : scoreList) {
+						for(CareGiver c : cList) {
+							if(Integer.parseInt(String.valueOf(m.get("MEMBER_NO"))) == c.getMemberNo()) {
+								c.setAvgReviewScore(Integer.parseInt(String.valueOf(m.get("AVGREVIEWSCORE"))));
+							}
+						}
+					}
+					gson.toJson(cList, response.getWriter());
+				} else { // 간병인 목록이 존재하지 않는 경우
+					gson.toJson("noExist", response.getWriter());
+				}
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			} catch (JsonIOException e) {

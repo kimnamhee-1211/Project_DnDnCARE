@@ -96,6 +96,12 @@ public interface MemberMapper {
 
 	ArrayList<HashMap<String, Integer>> getCaregiverScoreList(ArrayList<Integer> cNoList);
 
+	ArrayList<CareGiver> searchDefaultCaregiverNoList(HashMap<String, Object> searchDefaultMap);
+
+	ArrayList<HashMap<String, Integer>> searchCaregiverCategoryMNoList(ArrayList<Integer> cNoList);
+
+	ArrayList<CareGiver> searchCaregiverList(RowBounds rowBounds, ArrayList<Integer> resultCaregiverNoList);
+
 
 
 	

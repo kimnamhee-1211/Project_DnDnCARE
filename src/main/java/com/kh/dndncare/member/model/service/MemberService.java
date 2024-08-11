@@ -98,6 +98,12 @@ public interface MemberService {
 
 	ArrayList<HashMap<String, Integer>> getCaregiverScoreList(ArrayList<Integer> cNoList);
 
+	ArrayList<CareGiver> searchDefaultCaregiverNoList(HashMap<String, Object> searchDefaultMap);
+
+	ArrayList<HashMap<String, Integer>> searchCaregiverCategoryMNoList(ArrayList<Integer> cNoList);
+
+	ArrayList<CareGiver> searchCaregiverList(PageInfo pi, ArrayList<Integer> resultCaregiverNoList);
+
 
 
 
