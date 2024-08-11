@@ -364,8 +364,6 @@ public class MatchingController {
 			}		
 		}		
 				
-		System.out.println("jmMatMatptInfo" + jmMatMatptInfo);
-		System.out.println("jmPts1" + jmPts);
 		HashMap<String, Object> jmMacPt = new HashMap<String, Object>();
 		jmMacPt.put("jmMatMatptInfo", jmMatMatptInfo);
 		jmMacPt.put("jmPts", jmPts);
@@ -501,61 +499,63 @@ public class MatchingController {
 	//간병인 메인에서 환자 정보 페이지로 
 	@GetMapping("goCaregiverPtInfo.mc")
 	public String goCaregiverPtInfo(@RequestParam("matNo") int matNo, Model model, HttpSession session) {
-				
-		ArrayList<MatMatptInfoPt> mPI = mcService.matPtInfoToCaregiver("N", matNo);
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		ArrayList<MatMatptInfoPt> mPI = mcService.matPtInfoToCaregiver(matNo);
 		ArrayList<String> diseaseArr = new ArrayList<String>();
 		ArrayList<String> diseaseLevel = new ArrayList<String>();
 		String mobilityStatus = null;
 		
-		for(int i = 0; i < mPI.size(); i++) {
+		//matching테이블에 간병인 memberNo들어왔는지 확인 => 매칭 신청/승낙 구분용
+		Integer MatMemberNo = mcService.getMatMemberNo(matNo);
+		if(MatMemberNo != null && MatMemberNo == loginUser.getMemberNo()) {
+			model.addAttribute("MatMemberNo", MatMemberNo);
+		}
+		System.out.println("MatMemberNo = " + MatMemberNo);
+		
+		
+		for(MatMatptInfoPt m: mPI) {
 			//나이 계산
-			int ptRealAge = AgeCalculator.calculateAge(mPI.get(i).getPtAge());
-			mPI.get(i).setPtRealAge(ptRealAge);
+			int ptRealAge = AgeCalculator.calculateAge(m.getPtAge());
+			m.setPtRealAge(ptRealAge);
 			
 			//노출 주소 00도 00시
-			String[] addr = mPI.get(i).getMatAddressInfo().split("//");
+			String[] addr = m.getMatAddressInfo().split("//");
 			String[] addressMin = addr[1].split(" ");
 			String addressMinStr = addressMin[0] + " " + addressMin[1];
-			mPI.get(i).setMatAddressMin(addressMinStr);
+			m.setMatAddressMin(addressMinStr);
 			
 			//주소 full (//제외)
-			String address = mPI.get(i).getMatAddressInfo().replace("//", " "); 
-			mPI.get(i).setMatAddressInfo(address);
+			String address = m.getMatAddressInfo().replace("//", " "); 
+			m.setMatAddressInfo(address);
 			
-			int ptNo = mPI.get(i).getPtNo();
-									
 			//memberInfo 뽑기
-			ArrayList <InfoCategory> info = mcService.getInfo(ptNo);
+			ArrayList <InfoCategory> info = mcService.getInfo(m.getPtNo());
 			System.out.println("info: " + info);
 			
-			for(int l = 0; l < info.size(); l++) {
-				
-				if(info.get(l).getLCategory().equals("disease")) {
-					 diseaseArr.add(info.get(l).getSCategory());
-				}else if(info.get(l).getLCategory().equals("diseaseLevel")) {
-					diseaseLevel.add(info.get(l).getSCategory());
-				}else if(info.get(l).getLCategory().equals("mobilityStatus")) {
-					mobilityStatus = info.get(l).getSCategory();
+			for(InfoCategory i : info) {
+				if(i.getLCategory().equals("disease")) {
+					 diseaseArr.add(i.getSCategory());
+				}else if(i.getLCategory().equals("diseaseLevel")) {
+					diseaseLevel.add(i.getSCategory());
+				}else if(i.getLCategory().equals("mobilityStatus")) {
+					mobilityStatus = i.getSCategory();
 				}
 			}			
-			mPI.get(i).setDisease(diseaseArr.toString().replace("[", "").replace("]", ""));
-			mPI.get(i).setDiseaseLevel(diseaseLevel.toString().replace("[", "").replace("]", ""));
-			mPI.get(i).setMobilityStatus(mobilityStatus);
+			m.setDisease(diseaseArr.toString().replace("[", "").replace("]", ""));
+			m.setDiseaseLevel(diseaseLevel.toString().replace("[", "").replace("]", ""));
+			m.setMobilityStatus(mobilityStatus);
 		}
 		
-		
-		Member loginUser = (Member) session.getAttribute("loginUser");		
+	
 		int count = mcService.requestMatCheck(loginUser.getMemberNo(), matNo);
-		
 		String matCheck = "";
 		if(count == 0) {
 			matCheck = "N";
 		}else {
 			matCheck = "Y";
 		}		
-		
-		System.out.println(mPI);
-		System.out.println(matCheck);
 		model.addAttribute("mPI", mPI);
 		model.addAttribute("matCheck", matCheck);
 		
@@ -579,6 +579,7 @@ public class MatchingController {
 			if(matPtName != null) {
 				re.addAttribute("matPtName", matPtName);
 				re.addAttribute("matPtCount", ptCount);
+				re.addAttribute("result", "request");
 				return "redirect:caregiverMain.me";
 			}else {
 				throw new MemberException("간병인 매칭 신청 실패1");
@@ -592,26 +593,162 @@ public class MatchingController {
 	
 	//나의 매칭현황
 	@GetMapping("goMyMatching.mc")
-	public String goMyMatching(HttpSession session) {
+	public String goMyMatching(HttpSession session, Model model) {
 		
 		Member loginuser = (Member)session.getAttribute("loginUser");
-		
-		ArrayList<MatMatptInfoPt> myMatching = mcService. getMyMatching(loginuser.getMemberNo());
-		
-		
+		ArrayList<MatMatptInfoPt> myMatchingAll = mcService. getMyMatching(loginuser.getMemberNo());
+		System.out.println("myMatchingAll : " + myMatchingAll);
 		
 		
+		ArrayList<MatMatptInfoPt> myMatching = new ArrayList<MatMatptInfoPt>();
+		ArrayList<MatMatptInfoPt> myMatchingW = new ArrayList<MatMatptInfoPt>();
+		ArrayList<MatMatptInfoPt> myRequestMatPt = new ArrayList<MatMatptInfoPt>();
 		
+		LocalDate today = LocalDate.now();		
 		
+		for(MatMatptInfoPt i : myMatchingAll) {
+			
+			//노출 나이 set
+			int realAge = AgeCalculator.calculateAge(i.getPtAge());
+			i.setPtRealAge(realAge);
+						
+			//매칭 진행 중
+			if(i.getMatConfirm().equals("Y")) {
+		        Date endDt = i.getEndDt(); 
+		        LocalDate endLocalDate = endDt.toLocalDate();		        
+		        if (endLocalDate.isAfter(today)) {
+		            myMatching.add(i);
+		        }
+			}
+			
+			//매칭 결제 대기중
+			if(i.getMatConfirm().equals("W")) {
+		        Date beginDt = i.getBeginDt(); 
+		        LocalDate beginLocalDate = beginDt.toLocalDate();		        
+		        if (beginLocalDate.isAfter(today)) {
+		        	myMatchingW.add(i);
+		        }
+			}
+			
+			//매칭신청 받은 내역
+			if(i.getMatConfirm().equals("N")) {
+		        Date beginDt = i.getBeginDt(); 
+		        LocalDate beginLocalDate = beginDt.toLocalDate();		        
+		        if (beginLocalDate.isAfter(today)) {
+		        	myRequestMatPt.add(i);
+		        }
+			}	
+		}		
 		
-		return "goMyMatching";
+		//매칭 신청 내역
+		ArrayList<MatMatptInfoPt> myRequestMat= mcService. getMyRequestMat(loginuser.getMemberNo());
+		for(MatMatptInfoPt i : myRequestMat) {
+			
+			//노출 나이 set
+			int realAge = AgeCalculator.calculateAge(i.getPtAge());
+			i.setPtRealAge(realAge);
+		}
+		
+		System.out.println("myMatching : " +  myMatching);
+		System.out.println("myMatchingW : " +  myMatchingW);
+		System.out.println("myRequestMatPt : " +  myRequestMatPt);
+		System.out.println("myRequestMat : " +  myRequestMat);
+			
+		model.addAttribute("myMatching", myMatching);
+		model.addAttribute("myMatchingW", myMatchingW);
+		model.addAttribute("myRequestMat", myRequestMat);
+		model.addAttribute("myRequestMatPt", myRequestMatPt);
+		model.addAttribute("loginUserName", loginuser.getMemberName());
+		
+		return "myMatching";
 	}
 	
 	
+	@PostMapping(value="getMatPtToMatNo.mc", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public void getMatPtToMatNo(@RequestParam("matNo") int matNo, HttpServletResponse response) {
+		
+		ArrayList<MatMatptInfoPt> matInfo = mcService.matPtInfoToCaregiver(matNo);
+		
+		ArrayList<String> diseaseArr = new ArrayList<String>();
+		ArrayList<String> diseaseLevel = new ArrayList<String>();
+		String mobilityStatus = null;
+		
+		for(MatMatptInfoPt i : matInfo) {
+			
+			//노출 주소 set
+			String[] addArr = i.getMatAddressInfo().split("//");
+			String[] addArrMin = addArr[1].split(" ");
+			String addMin = addArrMin[0] + " " +  addArrMin[1];
+			i.setMatAddressMin(addMin);
+			
+			//노출 나이 set
+			int realAge = AgeCalculator.calculateAge(i.getPtAge());
+			i.setPtRealAge(realAge);
+			
+			//상세 주소 set
+			String add = i.getMatAddressInfo().replace("//", " ");
+			i.setMatAddressInfo(add);
+			//날짜 노출 예쁘게
+			if(i.getMatDate() != null) {
+				String date = i.getMatDate().replace(",", ", ");
+				i.setMatDate(date);
+			}
+			
+			//환자 정보 set
+			ArrayList <InfoCategory> info = mcService.getInfo(i.getPtNo());
+			System.out.println("info: " + info);
+			
+			for(InfoCategory m : info) {
+				if(m.getLCategory().equals("disease")) {
+					 diseaseArr.add(m.getSCategory());
+				}else if(m.getLCategory().equals("diseaseLevel")) {
+					diseaseLevel.add(m.getSCategory());
+				}else if(m.getLCategory().equals("mobilityStatus")) {
+					mobilityStatus = m.getSCategory();
+				}
+			}			
+			i.setDisease(diseaseArr.toString().replace("[", "").replace("]", ""));
+			i.setDiseaseLevel(diseaseLevel.toString().replace("[", "").replace("]", ""));
+			i.setMobilityStatus(mobilityStatus);
+		}
+		
+		System.out.println(matInfo);
+		
+		response.setContentType("application/json; charset=UTF-8");
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
+		Gson gson = gb.create();
+		
+		try {
+			gson.toJson(matInfo, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 	
 	
-	
-	
+	//간병인의 매칭 승낙
+	@GetMapping("MatchingapproveC.mc")
+	public String MatchingapproveC(@RequestParam("matNo") int matNo, @RequestParam("ptCount") int ptCount, 
+			RedirectAttributes re, HttpSession session) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		int result = mcService.matchingApproveC(matNo, loginUser.getMemberNo());
+		if(result > 0) {		
+			String matPtName = mcService.getMatPtName(matNo, ptCount);			
+			re.addAttribute("matPtName", matPtName);
+			re.addAttribute("matPtCount", ptCount);
+			re.addAttribute("result", "approve");
+			return "redirect:caregiverMain.me";
+		}else {
+			throw new MemberException("간병인 매칭 승낙 실패");
+		}
+
+
+	}
 	
 	
 	

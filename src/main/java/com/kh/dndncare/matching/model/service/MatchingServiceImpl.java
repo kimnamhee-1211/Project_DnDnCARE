@@ -177,8 +177,8 @@ public class MatchingServiceImpl implements MatchingService {
 	
 	//매칭/매칭인포/환자/병원 한번에 가져오기
 	@Override
-	public ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(String matConfirm, int matNo) {
-		return mMapper.matPtInfoToCaregiver(matConfirm, matNo);
+	public ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo) {
+		return mMapper.matPtInfoToCaregiver(matNo);
 	}
 	
 	//매칭테이블에 간병인 memberNo 넣기
@@ -193,7 +193,6 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.getMatPtName(matNo, ptCount);
 	}
 	
-	
 	//매칭방에 이미 매칭 신청을 한 간병인인지 아닌지 확인
 	@Override
 	public int requestMatCheck(int memberNo, int matNo) {
@@ -201,12 +200,29 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.requestMatCheck(memberNo, matNo);
 	}
 
-	//나의 현재 매칭 정보
+	//나의 현재 매칭 정보)
 	@Override
 	public ArrayList<MatMatptInfoPt> getMyMatching(int memberNo) {
-		return mMapper.getMyMatching(memberNo);
+		return mMapper.getMyMatching( memberNo);
 	}
 	
+	//매칭 신청 내역
+	@Override
+	public ArrayList<MatMatptInfoPt> getMyRequestMat(int memberNo) {
+		return mMapper.getMyRequestMat(memberNo);
+	}
+
+	//matching테이블에 간병인 memberNo들어왔는지 확인
+	@Override
+	public Integer getMatMemberNo(int matNo) {
+		return mMapper.getMatMemberNo(matNo);
+	}
+	
+	//간병인의 매칭 승낙
+	@Override
+	public int matchingApproveC(int matNo,  int memberNo) {
+		return mMapper.matchingApproveC(matNo, memberNo);
+	}
 
 
 

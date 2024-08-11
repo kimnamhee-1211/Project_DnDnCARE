@@ -104,7 +104,8 @@
 			</div>	
 
 			<div class="sign-btn d-flex justify-content-center mx-auto" style="weight:300px;">
-				<button type="button" class="signIn-btn mt-4" id="modalOfen"><span>매칭 신청</span></button>
+				<button type="button" th:if="${MatMemberNo >= 0}" class="signIn-btn mt-4" id="modalOfenOk"><span>매칭 승낙</span></button>
+				<button type="button" th:if="${MatMemberNo < 0}" class="signIn-btn mt-4" id="modalOfen"><span>매칭 신청</span></button>
 				<button type="button" class="signUp-btn mt-4" id="backButton"><span>이전으로</span></button>
 			</div>
 		</main>
@@ -160,7 +161,30 @@
 	  </div>
 	</div>
 	
-		
+	<!-- 매칭 승낙 모달 -->	
+	<div class="modal fade" id="matOk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 승낙</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h4 class="h4 mb-4 fw-bold" th:each="onePt : ${mPI}" th:if="${onePt.ptCount > 1 && onePt.groupLeader == 'Y'}">
+	        	[[${onePt.ptName}]]님 등 [[${onePt.ptCount}]]명의 공동간병 그룹의 매칭 신청을 승낙하시겠습니까?
+	        </h4>
+	        <h4 class="h4 mb-4 fw-bold" th:if="${mPI[0].ptCount == 1}">
+	        	[[${mPI[0].ptName}]]님의 매칭 신청을 승낙하시겠습니까?
+	        </h4>
+	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청 승낙이 완료됩니다.<br>상대가 입금을 완료하면 매칭이 성사됩니다.</h5>	        
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" id="requestMatchingOk">매칭 승낙</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>	
 	
 	
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
@@ -173,19 +197,17 @@
 	/*]]>*/
 	
 	window.onload = function() {
-				
-		console.log(matCheck);
 		
-		if(matCheck){
-			document.querySelector('#modalOfen').addEventListener('click', ()=>{				
-				if(matCheck == 'Y'){
+		const modalOfen = document.querySelector('#modalOfen')
+		if(modalOfen){
+			modalOfen.addEventListener('click', ()=>{				
+				if(matCheck && matCheck == 'Y'){
 					$('#matCheckY').modal('show');
-				}else if(matCheck == 'N'){
+				}else if(matCheck && matCheck == 'N'){
 					$('#matCheckN').modal('show');
 				}				
-			})			
-		}
-		
+			});			
+		}	
 		
 		document.querySelector('#requestMatching').addEventListener('click', ()=>{
 			const matNo = document.querySelector('#matNo').innerHTML;
@@ -196,7 +218,21 @@
 
 		
 		
+		const modalOfenOk = document.querySelector('#modalOfenOk')
+		if(modalOfenOk){
+			modalOfenOk.addEventListener('click', ()=>{
+				$('#matOk').modal('show');			
+			});		
+		}
 		
+		
+		document.querySelector('#requestMatchingOk').addEventListener('click', ()=>{
+			const matNo = document.querySelector('#matNo').innerHTML;
+			const ptCount = document.querySelector('#ptCount').innerHTML;
+			location.href='MatchingapproveC.mc?matNo='+ matNo + '&ptCount=' + ptCount;
+		})
+		
+
 		
 		
 		

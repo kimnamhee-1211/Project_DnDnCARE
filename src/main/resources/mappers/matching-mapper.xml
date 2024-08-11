@@ -145,7 +145,6 @@
 	</delete>
 	
 	
-	
 	<select id="reviewCount" resultType="_int">
 		select count(*)
 		from care_review
@@ -229,7 +228,7 @@
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
 			join hospital on(hospital.hospital_no = matching.hospital_no)
 			left join matching_date on(matching.mat_no = matching_date.mat_no) 		
-		where matching.mat_confirm = #{matConfirm} and matching.mat_no = #{matNo}
+		where matching.mat_no = #{matNo}
 		order by mat_pt_info.pt_no 
 	</select>
 
@@ -255,23 +254,52 @@
 	<select id="requestMatCheck" resultType="_int">
 		select count(*)
 		from mat_care_pending
-		where member_no = #{memberNo} and mat_no = ${matNo}
+		where member_no = #{memberNo} and mat_no = #{matNo}
 	</select>
 
+	<!-- 나의 현재 매칭 정보 list용 -->
+	<select id="getMyMatching" resultType="MatMatptInfoPt">
+		select matching.mat_no, matching.pt_count, mat_pt_info.group_leader, 
+			patient.pt_name, patient.pt_gender, patient.pt_age, matching.mat_confirm,
+			matching.begin_dt, matching.end_dt
+		from matching
+			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
+			join patient on(mat_pt_info.pt_no = patient.pt_no)	
+			join hospital on(hospital.hospital_no = matching.hospital_no)
+			left join matching_date on(matching.mat_no = matching_date.mat_no) 		
+		where matching.member_no = #{memberNo}	
+		order by matching.begin_dt	
+	</select>
+	
+	
 
+	<!--간병인의 매칭 신청 내역 list용-->
+	<select id="getMyRequestMat" resultType="MatMatptInfoPt">
+		select matching.mat_no, matching.pt_count, mat_pt_info.group_leader, patient.pt_name, patient.pt_gender, patient.pt_age
+		from matching
+			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
+			join patient on(mat_pt_info.pt_no = patient.pt_no)	
+			join hospital on(hospital.hospital_no = matching.hospital_no)
+			join matching_date on(matching.mat_no = matching_date.mat_no) 	
+			join mat_care_pending on(matching.mat_no = mat_care_pending.mat_no)
+		where matching.mat_confirm = 'N' and matching.begin_dt > sysdate
+				and mat_care_pending.member_no = #{memberNo}
+		order by matching.begin_dt		
+	</select>
 
+	<!--matching테이블에 간병인 memberNo들어왔는지 확인 -->
+	<select id="getMatMemberNo" resultType="integer">
+		select member_no
+		from matching
+		where matching.mat_no = #{matNo}
+	</select>
 
-
-
-
-
-
-
-
-
-
-
-
+	<!-- 간병인의 매칭 승낙 -->
+	<update id="matchingApproveC">
+		update matching
+		set mat_confirm = 'W'
+		where mat_no = #{matNo} and member_no = #{memberNo}
+	</update>
 
 
 

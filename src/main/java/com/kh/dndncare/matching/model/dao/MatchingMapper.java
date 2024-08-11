@@ -71,7 +71,7 @@ public interface MatchingMapper {
 
 	int deleteWantInfo(int memberNo);
 
-	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(@Param("matConfirm") String matConfirm, @Param("matNo") int matNo);
+	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo);
 
 	int requestMatching(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
 
@@ -79,7 +79,15 @@ public interface MatchingMapper {
 
 	int requestMatCheck(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
 
-	ArrayList<MatMatptInfoPt> requestMgetMyMatchingatCheck(int memberNo);
+	ArrayList<MatMatptInfoPt> getMyMatching(int memberNo);
+
+	ArrayList<MatMatptInfoPt> getMyRequestMat(int memberNo);
+
+	Integer getMatMemberNo(int matNo);
+
+	int matchingApproveC(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
+
+
 
 
 }

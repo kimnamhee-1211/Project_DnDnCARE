@@ -82,7 +82,7 @@ public interface MatchingService {
 	
 	
 	//매칭/매칭인포/환자/병원 한번에 가져오기
-	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(String matConfirm, int matNo);
+	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo);
 	
 	//매칭테이블에 간병인 memberNo 넣기
 	int requestMatching(int memberNo, int matNo);
@@ -95,6 +95,16 @@ public interface MatchingService {
 	
 	//나의 현재 매칭 정보
 	ArrayList<MatMatptInfoPt> getMyMatching(int memberNo);
+	
+	//매칭 신청 내역
+	ArrayList<MatMatptInfoPt> getMyRequestMat(int memberNo);
+	
+	//matching테이블에 간병인 memberNo들어왔는지 확인
+	Integer getMatMemberNo(int matNo);
+	
+	//간병인의 매칭 승낙
+	int matchingApproveC(int matNo, int memberNo);
+
 
 
 }

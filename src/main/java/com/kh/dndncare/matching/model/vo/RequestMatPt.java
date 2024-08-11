@@ -21,6 +21,7 @@ public class RequestMatPt {
 	//matinfo
 	private int matNo;
 	private String groupLeader;	
+	private String service;	
 	private int ptCount;
 	private String ptName;
 	private String ptGender; // PT_GENDER

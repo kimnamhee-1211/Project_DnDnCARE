@@ -504,7 +504,9 @@ public class MemberController {
 	// 간병인 메인페이지로 가기 
 	@GetMapping("caregiverMain.me")
 	public String caregiverMain(HttpSession session, Model model,
-								@RequestParam(value="matPtCount", defaultValue = "0") int matPtCount, @RequestParam(value="matPtName", required = false) String matPtName) {
+								@RequestParam(value="matPtCount", defaultValue = "0") int matPtCount, 
+								@RequestParam(value="matPtName", required = false) String matPtName,
+								 @RequestParam(value="result", required = false) String result) {
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		model.addAttribute("loginUserName", loginUser.getMemberName());
@@ -513,8 +515,7 @@ public class MemberController {
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo(); 
-			ArrayList<Patient> completeList = openAiPatientChoice(memberNo); // 추천목록이 없으면 null로 넘어옴
-			
+			ArrayList<Patient> completeList = openAiPatientChoice(memberNo); // 추천목록이 없으면 null로 넘어옴		
 			model.addAttribute("completeList", completeList);
 		}
 				
@@ -542,20 +543,22 @@ public class MemberController {
 					matMatptInfoPtListBefore.remove(i);
 				}
 			}
+			
+			if(i < 6) {
+				matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
+			}else if(i < 12) {
+				matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
+			}else if(i < 18) {
+				matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
+			}			
 					
 		}
-		
-		System.arraycopy(matMatptInfoPtListBefore, 0, matMatptInfoPtList1, 0, 6);
-		System.arraycopy(matMatptInfoPtListBefore, 6, matMatptInfoPtList2, 0, 6);
-		System.arraycopy(matMatptInfoPtListBefore, 12, matMatptInfoPtList3, 0, 6);
-		
-		
-		
-		
 		
 		if(matPtCount > 0  && matPtName != null) {
 			model.addAttribute("matPtCount", matPtCount);
 			model.addAttribute("matPtName", matPtName);
+			model.addAttribute("result", result);
+			
 		}
 		
 		System.out.println(matMatptInfoPtList1);

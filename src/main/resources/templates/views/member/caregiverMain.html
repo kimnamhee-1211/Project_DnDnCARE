@@ -83,7 +83,15 @@
 	                <tbody>
 	                    <tr class="align-middle text-center" th:each="matPt : ${requestMatPt}">
 	                    	<td style="display:none" th:text="${matPt.matNo}"></td>
-	                        <td colspan="4" class="align-middle">[[${matPt.ptName}]]님([[${matPt.ptRealAge}]]세 [[${matPt.ptGender =='M' ? '남':'여' }]])이 매칭을 원하고 있어요</td>
+	                        <td colspan="4" th:if="${matPt.ptCount == 1}" class="align-middle">
+	                        	<img th:if="${matPt.ptCount == 1 && matPt.service =='병원돌봄'}" src="image/icon/hospital.png"/>
+	                       		<img th:if="${matPt.ptCount == 1 && matPt.service =='가정돌봄'}" src="image/icon/home.pn/">
+	                       		[[${matPt.ptName}]]님([[${matPt.ptRealAge}]]세 [[${matPt.ptGender =='M' ? '남':'여' }]])이 매칭을 원하고 있어요
+	                       		 </td>
+	                        <td colspan="4" th:if="${matPt.ptCount > 1}" class="align-middle">
+	                        	<img src="image/icon/users.png"/>
+	                        	[[${matPt.ptName}]]님 등 [[${matPt.ptCount}]]명이 매칭을 원하고 있어요
+	                        </td>
 	                        <td><button class="btn btn-success workInfo two">정보보기</button></td>
 	                    </tr>
 	                </tbody>
@@ -119,7 +127,7 @@
 	                       						<span th:if="${mat.ptCount > 1}">[[${mat.ptName}]] 외</span>&nbsp;&nbsp;&nbsp;
 	                       						<img th:if="${mat.ptCount > 1}" src="image/icon/users.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='병원돌봄'}" src="image/icon/hospital.png"/>
-	                       						<img th:if="${mat.ptCount == 1 && mat.service =='가정돌봄'}"  src="image/icon/home.png"/>
+	                       						<img th:if="${mat.ptCount == 1 && mat.service =='가정돌봄'}" src="image/icon/home.png"/>
 	                       						<span>[[${mat.service}]]</span>
 	                      					</h6>
 	                      					<p class="card-text">
@@ -231,31 +239,43 @@
 	    
 	    
 	    <!-- 매칭 신청 성공 시 모달 -->
-			<div class="modal fade" id="matSuccesseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			  <div class="modal-dialog modal-dialog-centered modal-lg">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 완료</h3>
-			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="modal-body" style="margin:30px;">
-			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
-			        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 매칭 신청이 완료되었습니다. 
-			        </h4>
-			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
-			        	[[${matPtName}]]님과의 매칭 신청이 완료되었습니다.
-			        </h4>	
-			         <h5 class="h5 mb-1 fw-bold">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다. </h5>
-			      </div>
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-   
-   
-   
+		<div class="modal fade" id="matSuccesseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered modal-lg">
+		    <div class="modal-content" th:if ="${result == 'request'}">
+		      <div class="modal-header">
+		        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 완료</h3>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body" style="margin:30px;" th:if ="${result == 'request'}">
+		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
+		        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 매칭 신청이 완료되었습니다. 
+		        </h4>
+		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
+		        	[[${matPtName}]]님과의 매칭 신청이 완료되었습니다.
+		        </h4>	
+		         <h5 class="h5 mb-1 fw-bold">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다. </h5>
+		      </div>
+		     </div>
+		     <div class="modal-content" th:if ="${result == 'approve'}">
+		      <div class="modal-header">
+		        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 승낙 완료</h3>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body" style="margin:30px;" th:if ="${result == 'approve'}">
+		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
+		        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹의 매칭 신청을 승낙하셨습니다. 
+		        </h4>
+		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
+		        	[[${matPtName}]]님의 매칭 신청을 승낙하셨습니다.
+		        </h4>	
+		         <h5 class="h5 mb-1 fw-bold">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다. </h5>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div> 
     </div>
     
     

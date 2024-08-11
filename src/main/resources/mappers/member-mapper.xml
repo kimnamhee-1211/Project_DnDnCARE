@@ -314,7 +314,8 @@
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
 			join hospital on(hospital.hospital_no = matching.hospital_no)	
-		where matching.mat_confirm = 'N' and matching.begin_dt > sysdate
+		where matching.mat_confirm = 'N' and matching.begin_dt > sysdate 
+			and matching.member_no  is null
 		order by matching.begin_dt
 	</select>
 	
@@ -322,7 +323,7 @@
 	<select id="getRequestMatPt" resultType="RequestMatPt">
 		select matching.mat_no, patient.pt_name, 
 				patient.pt_gender, patient.pt_age,
-				matching.pt_count, 
+				matching.pt_count, mat_pt_info.service,
 				mat_pt_info.group_leader
 		from matching
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no)
