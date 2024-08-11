@@ -37,7 +37,7 @@
                     	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index < 5}">
                         	<td>[[${c.memberName}]]</td>
 	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
-	                        <td>[[${c.caregiverRealAge}]]</td>
+	                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
 	                        <td>[[${c.caregiverAddress}]]</td>
 	                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
 	                        <td>[[${c.minMoney}]]원</td>
@@ -60,7 +60,7 @@
                     	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index >= 5}">
                         	<td>[[${c.memberName}]]</td>
 	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
-	                        <td>[[${c.caregiverRealAge}]]</td>
+	                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
 	                        <td>[[${c.caregiverAddress}]]</td>
 	                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
 	                        <td>[[${c.minMoney}]]원</td>
@@ -1098,6 +1098,7 @@
 					
 					// *** 비동기 방식으로 검색결과 요청하기 (시작)***
 					if(searchExist) { // 검색 조건이 하나라도 있을 때를 의미함
+						ajaxSearchPage = 1;
 						root.innerHTML = ''; // 기존의 목록출력을 모두 지운다.
 						searchAjax(ajaxSearchPage); // 새로운 목록을 불러온다.
 					} else { // 검색 조건이 하나도 없을 때를 의미함
@@ -1261,7 +1262,7 @@
 								}
 							}
 						ajaxNoSearchPage++;
-						console.log('page : ' + ajaxNoSearchPage);
+						console.log('page : ' + ajaxSearchPage);
 						searchFlag = false;
 						
 						innerHeight = window.innerHeight;
@@ -1448,18 +1449,25 @@
 			// 화면 처음로드시에 띄울 임의 검색결과 목록
 			noSearchAjax(ajaxNoSearchPage);
 			
-			// 검색조건 초기화하기(시작)
+			// 검색조건 초기화하기(시작) : 초기화버튼 클릭
 			document.querySelector('#goClear').addEventListener('click', () => {
 				for(let sub of allSubBtnList) {
 					if(sub.className.includes('btn-success')) {
 						sub.classList.remove('btn-success');
 						sub.classList.add('btn-light');
 					}
+					sub.style.display = 'none';
 				}
 				for(let sub of allSearchBtnList) {
 					if(sub.className.includes('btn-success')) {
 						sub.classList.remove('btn-success');
 						sub.classList.add('btn-light');
+					}
+				}
+				for(let main of allMainBtnList) { // 여기에요
+					if(main.className.includes('btn-success')) {
+						main.classList.remove('btn-success');
+						main.classList.add('btn-light');
 					}
 				}
 			})
