@@ -89,7 +89,12 @@ public interface MatchingService {
 	
 	//pt 이름 뽑기(공동간병일 경우 방 개설자)
 	String getMatPtName(int matNo, int ptCount );
+	
+	//이미 매칭을 신청한 사람인지 확인
 	int requestMatCheck(int memberNo, int matNo);
+	
+	//나의 현재 매칭 정보
+	ArrayList<MatMatptInfoPt> getMyMatching(int memberNo);
 
 
 }

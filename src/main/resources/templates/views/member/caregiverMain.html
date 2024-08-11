@@ -69,10 +69,15 @@
 	                
 	        <!-- 남희 좌측 하단 -->
 	        <div><!--매칭정보 : 가로 500, 세로 700-->
+	        	<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
+					<span style="margin-top:10px;">[[${loginUserName}]]님에게 들어온 매칭 신청</span>
+           			<button type="button" class="btn-select">전체 보기</button>
+            	</div>
+            	<br/>
 	            <table class="table mainTable">
 	                <thead>
-	                    <tr style="padding:10px;">
-	                        <th colspan="5" class="align-middle">[[${loginUserName}]]님과의 매칭을 원하는 분들이 있습니다.</th>
+	                    <tr>
+	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님과의 매칭을 원하는 분들이 있습니다.</th>
 	                    </tr>
 	                </thead>
 	                <tbody>
@@ -81,7 +86,6 @@
 	                        <td colspan="4" class="align-middle">[[${matPt.ptName}]]님([[${matPt.ptRealAge}]]세 [[${matPt.ptGender =='M' ? '남':'여' }]])이 매칭을 원하고 있어요</td>
 	                        <td><button class="btn btn-success workInfo two">정보보기</button></td>
 	                    </tr>
-	                    <tr class="align-middle text-center">더보기</tr>
 	                </tbody>
 	            </table>
 	        </div>
@@ -92,18 +96,21 @@
 	        
 	        <!-- 남희 우측 하단 -->
 	        <div id="findWorkList" class="text-center"><!--대상검색 : 가로 700, 세로 700-->
-				<h5>조건 검색을 활용해 원하는 환자 정보를 확인하시려면 더보기를 눌러주세요.</h5>
-	            <button type="button" class="btn btn-link" onclick="location.href='moreWorkInfo.me'">더 보기</button>			
-				<div id="carouselExampleIndicators" class="carousel slide">
-					<div class="carousel-indicators">
-					  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-					  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-					  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-					</div>
+				<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
+					<span style="margin-top:10px;">간병인을 찾고 계신가요?</span>
+           			<button type="button" class="btn-select">원하는 간병인 찾기</button>
+            	</div>
+            	<br/><br/>
+			    <div id="carouselExampleIndicators" class="carousel slide">
+			  		<div class="carousel-indicators" style="margin-bottom:-40px; ">
+			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;" data-bs-slide-to="0" class="active btn-test" aria-current="true" aria-label="Slide 1"></button>
+			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="1" aria-label="Slide 2"></button>
+			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="2" aria-label="Slide 3"></button>
+			  		</div>
 					<div class="carousel-inner">					
 						<div class="carousel-item active" th:if="${matMatptInfoPtList1 != null}">
 							<div class="row row-cols-md-2 g-2 ptDiv">
-	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList1}" th:if="${ mat.ptCount == 1 || (mat.ptCount > 1 && mat.groupLeader == 'Y')}">
+	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList1}">
 	               					<div style="display:none" th:text="${mat.matNo}"></div>
 	                   				<div class="card h-95 w-80">
 	                   					<div class="card-body">
@@ -139,7 +146,7 @@
 						
 						<div class="carousel-item" th:if="${matMatptInfoPtList2 != null}">
 							<div class="row row-cols-md-2 g-2 ptDiv">
-	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList2}" th:if="${ mat.ptCount == 1 || (mat.ptCount > 1 && mat.groupLeader == 'Y')}">
+	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList2}">
 	               					<div style="display:none" th:text="${mat.matNo}"></div>
 	                   				<div class="card h-95 w-80">
 	                   					<div class="card-body">
@@ -174,7 +181,7 @@
 						
 						<div class="carousel-item" th:if="${matMatptInfoPtList3 != null}">
 							<div class="row row-cols-md-2 g-2 ptDiv">
-	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList3}" th:if="${ mat.ptCount == 1 || (mat.ptCount > 1 && mat.groupLeader == 'Y')}">
+	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList3}">
 	               					<div style="display:none" th:text="${mat.matNo}"></div>
 	                   				<div class="card h-95 w-80">
 	                   					<div class="card-body">
@@ -206,16 +213,7 @@
 								</div>
 	                		</div>
 						</div>
-										
 			 		</div>		 	
-			    	<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-			  	  		<span class="carousel-control-prev-icon" ></span>
-			    		<span style="background:skyblue; color:black;">Previous</span>
-			 		</button>
-			    	<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-			    		<span class="carousel-control-next-icon" aria-hidden="true"></span>
-			    		<span style="background:skyblue; color:black;">Next</span>
-			  		</button>
 				</div>
 	        </div>
 	       	<div><!--오른쪽 공백--></div>
@@ -225,7 +223,7 @@
 	    
 	    <!-- 사이드 버튼 -->
 	    <div id="myPresentMatching">
-	        <a class="navbar-brand align-middle" href="#">
+	        <a class="navbar-brand align-middle" href="goMyMatching.mc">
 	            <img src="image/icon/deal.png">
 	            나의 매칭 현황
 	        </a>
@@ -395,8 +393,6 @@
 	    	if(matPtName != null && matPtCount != null){
 	    		$('#matSuccesseModal').modal('show');
 	    	}
-	    	
-	    	
 	    	
 	    	
 	    	

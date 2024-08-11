@@ -79,5 +79,7 @@ public interface MatchingMapper {
 
 	int requestMatCheck(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
 
+	ArrayList<MatMatptInfoPt> requestMgetMyMatchingatCheck(int memberNo);
+
 
 }

@@ -537,14 +537,21 @@ public class MemberController {
 			String addressMinStr = addressMin[0] + " " + addressMin[1]; //00도 00시//
 			matMatptInfoPtListBefore.get(i).setMatAddressMin(addressMinStr);
 			
-			if(i < 6 ){			
-			matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
-			}else if(i<12) {
-				matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
-			}else if(i<18) {
-				matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
-			}			
-		}		
+			if(matMatptInfoPtListBefore.get(i).getPtCount() > 1) {
+				if(matMatptInfoPtListBefore.get(i).getGroupLeader().equals("N")) {
+					matMatptInfoPtListBefore.remove(i);
+				}
+			}
+					
+		}
+		
+		System.arraycopy(matMatptInfoPtListBefore, 0, matMatptInfoPtList1, 0, 6);
+		System.arraycopy(matMatptInfoPtListBefore, 6, matMatptInfoPtList2, 0, 6);
+		System.arraycopy(matMatptInfoPtListBefore, 12, matMatptInfoPtList3, 0, 6);
+		
+		
+		
+		
 		
 		if(matPtCount > 0  && matPtName != null) {
 			model.addAttribute("matPtCount", matPtCount);

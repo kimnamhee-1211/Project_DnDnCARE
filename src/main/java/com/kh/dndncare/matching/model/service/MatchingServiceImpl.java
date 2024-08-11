@@ -200,6 +200,12 @@ public class MatchingServiceImpl implements MatchingService {
 		// TODO Auto-generated method stub
 		return mMapper.requestMatCheck(memberNo, matNo);
 	}
+
+	//나의 현재 매칭 정보
+	@Override
+	public ArrayList<MatMatptInfoPt> getMyMatching(int memberNo) {
+		return mMapper.getMyMatching(memberNo);
+	}
 	
 
 

@@ -195,4 +195,12 @@ a {
 	display:grid; grid-template-columns: 1fr 1fr;
 }
 
+/*하단 더보기 버튼*/
+.btn-select{
+	background-color:#8dd986;
+	border: 0;
+	color:white;
+	width:40%;
+	height:40px;
+}
 

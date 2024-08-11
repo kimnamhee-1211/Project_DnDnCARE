@@ -166,3 +166,11 @@ a {
   background-color: #8dd986; 
   border-color: green;
 }
+
+.btn-select{
+	background-color:#8dd986;
+	border: 0;
+	color:white;
+	width:40%;
+	height:40px;
+}

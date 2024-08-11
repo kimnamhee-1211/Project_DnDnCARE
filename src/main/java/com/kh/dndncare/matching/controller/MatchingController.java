@@ -590,7 +590,22 @@ public class MatchingController {
 
 	}
 	
-	
+	//나의 매칭현황
+	@GetMapping("goMyMatching.mc")
+	public String goMyMatching(HttpSession session) {
+		
+		Member loginuser = (Member)session.getAttribute("loginUser");
+		
+		ArrayList<MatMatptInfoPt> myMatching = mcService. getMyMatching(loginuser.getMemberNo());
+		
+		
+		
+		
+		
+		
+		
+		return "goMyMatching";
+	}
 	
 	
 	
