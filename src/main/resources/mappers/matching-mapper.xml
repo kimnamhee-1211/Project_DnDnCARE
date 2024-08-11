@@ -145,7 +145,7 @@
 	
 	<!-- 간병인 평점 -->
 	<select id="avgReviewScore" resultType="Double">
-		select avg(review_score)
+		select round(avg(review_score),2)
 		from care_review
 		where member_no=#{memberNo} and review_status='Y'
 	</select>
@@ -249,11 +249,12 @@
 	<!--  리뷰작성 미완성 -->
 	<insert id="insertReview">
 		<selectKey resultType="_int" keyProperty="reviewNo" order="BEFORE">
-			select seq_crcid.nextval from dual
+			select seq_crid.nextval from dual
 		</selectKey>	
 		insert into care_review
-		value(#{reviewNo}, #{pt_no}, #{mat_no}, #{reviewContent}, #{reivewScore}, sysdate, sysdate, 'Y', #{memberNo})
+		values(#{reviewNo}, #{ptNo}, #{matNo}, #{reviewContent}, #{reviewScore}, sysdate, sysdate, 'Y', #{memberNo})
 	</insert>
+	
 	<insert id="insertPay">
 		insert into pay values(
 			seq_pay.nextval,
@@ -269,6 +270,11 @@
 		)
 	</insert>
 
+	<update id="deleteReview">
+		update care_review
+		set review_status = 'N'
+		where review_no = #{reviewNo}
+	</update>
 
 
 

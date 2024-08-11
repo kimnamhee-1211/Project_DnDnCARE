@@ -194,6 +194,7 @@ public class MatchingServiceImpl implements MatchingService {
 	public int insertReview(HashMap<String, Object> map) {
 		return mMapper.insertReview(map);
 	}
+	
 	public MatMatptInfo selecMatPtInfo(int matNo, int memberNo) {
 		return mMapper.selecMatPtInfo(matNo,memberNo);
 	}
@@ -201,6 +202,11 @@ public class MatchingServiceImpl implements MatchingService {
 	@Override
 	public int insertPay(Member loginUser, Pay p) {
 		return mMapper.insertPay(loginUser,p);
+	}
+
+	@Override
+	public int deleteReivew(int reviewNo) {
+		return mMapper.deleteReview(reviewNo);
 	}
 
 

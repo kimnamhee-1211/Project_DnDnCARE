@@ -462,9 +462,8 @@ public class MatchingController {
 
 	
 	@GetMapping("reviewDetail.mc")												
-	public String getMethodName(HttpSession session, Model model,@RequestParam("memberNo")int memberNo) {
+	public String getMethodName(HttpSession session, Model model,@RequestParam("memberNo")int memberNo,@RequestParam(value="matNo", required = false) Integer matNo, @RequestParam(value="from", required = false) String beforePage) {
 		
-		//int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		
 		// 후기내역
 		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
@@ -493,9 +492,12 @@ public class MatchingController {
 			}
 		}
 		
-		
+		System.out.println("이전페이지"+beforePage);
+		System.out.println("매칭"+caregiverInfoList);
 		
 		model.addAttribute("memberNo", memberNo);
+		model.addAttribute("matNo", matNo);
+		model.addAttribute("beforePage", beforePage);
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("reviewCount", reviewCount);
 		model.addAttribute("avgReviewScore",avgReviewScore);
@@ -523,8 +525,9 @@ public class MatchingController {
 	}
 	
 	@PostMapping("writeReview.mc")
-	public String insertReview(@RequestParam("memberNo") int memberNo, @RequestParam("reviewScore") int reviewScore, @RequestParam("reviewContent") String reviewContent, HttpSession session) {
-		int ptNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+	public String insertReview(@RequestParam("memberNo") int memberNo, @RequestParam(value="reviewScore", defaultValue = "10") int reviewScore, @RequestParam(value="matNo",required = false) int matNo , @RequestParam("reviewContent") String reviewContent, HttpSession session) {
+		int loginUserNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		int ptNo = mcService.getPtNo(loginUserNo);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		// 환자번호
 		map.put("ptNo", ptNo);
@@ -532,11 +535,20 @@ public class MatchingController {
 		map.put("reviewScore", reviewScore);
 		// 후기내용
 		map.put("reviewContent", reviewContent);
+		
+		// 매칭번호
+		map.put("matNo", matNo);
+		
 		// 간병인 고유번호
 		map.put("memberNo", memberNo);
-		System.out.println(map);
+		
+		System.out.println("후기작성데이터"+map);
 		int result = mcService.insertReview(map);
-		return null;
+		if(result>0) {
+			return "myInfoMatchingReview.me";
+		}else {
+			throw new MatchingException("후기 작성 실패");
+		}
 	}
 				
 	//비동기로 환자측에서 결제할때 간병인 정보 가져오기
@@ -606,6 +618,19 @@ public class MatchingController {
 		
 		return "redirect:patientMain.me";
 	}
+	
+	@PostMapping("deleteReview.mc")
+	public String deleteReview(@RequestParam("reviewNo") int reviewNo) {
+		System.out.println("리뷰번호확인"+reviewNo);
+		int result = mcService.deleteReivew(reviewNo);
+		if(result > 0) {
+			return "redirect:myInfoMatchingReview.me";
+		}else {
+				throw new MatchingException("후기 삭제 실패");
+			}
+	}
+	
+	
 	
 	
 	

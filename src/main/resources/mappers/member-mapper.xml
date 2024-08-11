@@ -313,7 +313,7 @@
 	
 	<!-- 내가 작성한 리뷰조회 -->
 	<select id="reviewList" resultType="CareReview">
-		select *
+		select distinct review_no, c.pt_no, c.mat_no, review_content, review_score, review_create_date, review_update_date, m.member_name
 		from care_review c
 		    left join member m on(c.member_no = m.member_no)
 		    left join mat_pt_info mpi on(mpi.pt_no = c.pt_no)

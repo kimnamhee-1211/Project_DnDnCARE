@@ -729,7 +729,6 @@ public class MemberController {
 		
 		int ptNo = mService.getPtNo(memberNo);
 		ArrayList<CareReview> list = mService.reviewList(ptNo);
-		System.out.println(ptNo);
 		System.out.println("123"+list);
 		HashMap<Integer, Object> reviewList = new HashMap<Integer, Object>();
 		

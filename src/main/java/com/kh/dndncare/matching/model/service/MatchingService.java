@@ -97,6 +97,8 @@ public interface MatchingService {
 	
 	int insertReview(HashMap<String, Object> map);
 	
+	int deleteReivew(int reviewNo);
+	
 	
 
 }

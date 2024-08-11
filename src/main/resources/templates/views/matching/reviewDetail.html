@@ -79,8 +79,8 @@
 						<img style="width:250px;"src="image/icon_PieChart.png"/>
 					</div>
 					<div align="center" class="col m-3">
-						<button type="button" class="m-4 btn-maincolor">간병 신청하기</button>
-						<button type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton">후기 작성하기</button>
+						<button type="button" class="m-4 btn-maincolor" th:if="${beforePage==null}">간병 신청하기</button>
+						<button type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton" th:unless="${beforePage==null}">후기 작성하기</button>
 					</div>
 				</div>
 			</div>
@@ -121,6 +121,7 @@
 						<div class="m-4 review-content"contenteditable=true></div>		    				
 		      			<div class="modal-footer  p-0">
 		      				<div class="d-flex justify-content-evenly">
+               				 <input type="hidden" name="matNo" id="hiddenMatNo" th:value=${matNo}>		
                				 <input type="hidden" name="memberNo" id="hiddenCaregiverNo" th:value=${memberNo}>		
 		      				 <input type="hidden" name="reviewScore" id="hiddenScore" value="10">
                				 <input type="hidden" name="reviewContent" id="hiddenReview">		

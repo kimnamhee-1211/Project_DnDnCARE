@@ -85,5 +85,7 @@ public interface MatchingMapper {
 
 	int insertPay(@Param("loginUser")Member loginUser,@Param("p") Pay p);
 
+	int deleteReview(int reviewNo);
+
 
 }
