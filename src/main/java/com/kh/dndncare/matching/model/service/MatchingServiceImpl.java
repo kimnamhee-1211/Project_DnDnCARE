@@ -176,7 +176,7 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.deleteWantInfo(memberNo);
 	}
 
-<<<<<<< HEAD
+
 	
 	//매칭/매칭인포/환자/병원 한번에 가져오기
 	@Override
@@ -229,23 +229,25 @@ public class MatchingServiceImpl implements MatchingService {
 
 	@Override
 	public MatMatptInfo selecMatching(int matNo) {
-		return mMapper.selectMatching(matNo);
+		return mMapper.selecMatching(matNo);
 	}
 
 	@Override
-	public MatMatptInfo selecMatPtInfo(int matNo, int memberNo) {
-		return mMapper.selecMatPtInfo(matNo,memberNo);
+	public MatMatptInfo selecMatPtInfo(int matNo, int i) {
+		return mMapper.selecMatPtInfo(matNo, i);
 	}
 
 	@Override
 	public int insertPay(Member loginUser, Pay p) {
-		return mMapper.insertPay(loginUser,p);
+		return mMapper.insertPay(loginUser, p);
 	}
 
 	@Override
 	public String selectMatDate(int matNo) {
 		return mMapper.selectMatDate(matNo);
 	}
+
+
 
 
 

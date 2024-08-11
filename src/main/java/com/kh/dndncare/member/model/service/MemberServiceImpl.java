@@ -285,7 +285,8 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public ArrayList<RequestMatPt> getRequestMatPt(int memberNo) {
 		return mMapper.getRequestMatPt(memberNo);
-
+	}
+		
 	@Override
 	public ArrayList<CareGiver> selectCareGiverList() {
 		return mMapper.selectCareGiverList();

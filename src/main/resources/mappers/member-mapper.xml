@@ -308,7 +308,6 @@
 	</select>
 	
 	
-<<<<<<< HEAD
 	<!-- 매칭 + 환자 정보 다 가져오기  -->
 	<select id="getMatMatptInfoPt" resultType="MatMatptInfoPt">
 		select *
@@ -335,29 +334,15 @@
 				and matching.begin_dt > sysdate
 	</select>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-=======
-	
+
+
 	<select id="selectCareGiverList" resultType="CareGiver">	<!-- 간병인정보를 모두 불러온다.(재가공할거지만) -->
 		select *
 		from careGiver
 			join member using(member_no)
 		where member_status = 'N'
 	</select>
->>>>>>> refs/heads/master
+
 	
 	
 	

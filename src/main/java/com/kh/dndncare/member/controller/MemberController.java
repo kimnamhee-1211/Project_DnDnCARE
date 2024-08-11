@@ -29,21 +29,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
-<<<<<<< HEAD
+
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.AgeCalculator;
 import com.kh.dndncare.common.Pagination;
-=======
->>>>>>> refs/heads/master
+
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
-<<<<<<< HEAD
+
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
-=======
 import com.kh.dndncare.matching.model.vo.Matching;
->>>>>>> refs/heads/master
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
@@ -1469,49 +1466,6 @@ public class MemberController {
 		throw new MemberException("정보변경을 실패했습니다");
 	}
 
-	
-	
-<<<<<<< HEAD
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-=======
->>>>>>> refs/heads/master
 }//클래스 끝
 
 	
