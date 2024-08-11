@@ -76,7 +76,7 @@
 	  	insert into member
 	  	values(#{memberNo}, #{memberId}, #{memberPwd}, #{memberName}, #{memberGender}, 
 	  			#{memberNickName}, #{memberAge}, #{memberPhone}, #{memberEmail}, sysdate,
-	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, null, sysdate)  	
+	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, #{memberPay}, sysdate)  	
 	  </insert>
 	  
 	  
@@ -310,6 +310,11 @@
 		where member_status = 'N'
 	</select>
 	
+	<select id="selectSocialLogin" resultType="Member">
+		select *
+		from member
+		where member_Pay = #{code}
+	</select>
 	
 	
 	

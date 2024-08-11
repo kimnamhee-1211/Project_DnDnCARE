@@ -105,4 +105,6 @@ public interface MemberMapper {
 
 	ArrayList<CareGiver> selectCareGiverList();
 
+	Member selectSocialLogin(String code);
+
 }

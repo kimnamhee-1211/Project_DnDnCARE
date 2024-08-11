@@ -669,7 +669,10 @@ public class MemberController {
 		m.setMemberEmail(memberEmail);
 
 		System.out.println("회원가입 검증=" + m);
-
+		//소셜회원가입하나추가
+		String code = (String) session.getAttribute("code");
+		m.setMemberPay(code);
+		session.removeAttribute("code");
 		int result = mService.enroll(m);
 
 		// 회원가입용 session데이터
@@ -1381,7 +1384,31 @@ public class MemberController {
 		throw new MemberException("정보변경을 실패했습니다");
 	}
 
-	
+	@GetMapping("socialLogin.me")
+	public String socialLogin(@RequestParam("code") String code,HttpSession session,Model model,RedirectAttributes ra) {
+		//소셜로그인 없으면 회원가입으로, 있으면 로그인 바로하게 하기
+		System.out.println(code);
+		Member m = mService.selectSocialLogin(code);
+		if(m == null) {		//검사해서 없으면 회원가입창으로
+			session.setAttribute("code", code);
+			return "redirect:enroll1View.me";
+		}else {				//검사해서 있으면 바로 로그인하기
+			model.addAttribute("loginUser", m);
+
+			if (m.getMemberCategory().equalsIgnoreCase("C")) {
+				ra.addAttribute("memberNo", m.getMemberNo());
+
+				return "redirect:caregiverMain.me";
+			} else if(m.getMemberCategory().equalsIgnoreCase("P")) {
+				
+				
+				return "redirect:patientMain.me";
+			}
+
+			return "redirect:patientMain.me";
+		}
+		
+	}
 	
 }//클래스 끝
 

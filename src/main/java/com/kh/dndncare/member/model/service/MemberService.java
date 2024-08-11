@@ -105,5 +105,7 @@ public interface MemberService {
 
 	ArrayList<CareGiver> selectCareGiverList();
 
+	Member selectSocialLogin(String code);
+
 
 }

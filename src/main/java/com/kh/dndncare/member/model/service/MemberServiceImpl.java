@@ -270,4 +270,9 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectCareGiverList();
 	}
 
+	@Override
+	public Member selectSocialLogin(String code) {
+		return mMapper.selectSocialLogin(code);
+	}
+
 }
