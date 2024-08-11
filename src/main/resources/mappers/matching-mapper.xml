@@ -301,14 +301,40 @@
 		where mat_no = #{matNo} and member_no = #{memberNo}
 	</update>
 
+	<!-- 결제정보가져오려는 셀렉트 매칭 정보 -->
+	<select id="selectMatching" resultType="MatMatptInfo">
+		select *
+		from matching
+			join member using(member_no)
+		where mat_no = #{matNo}
+	</select>
 
+	<select id="selecMatPtInfo" resultType="MatMatptInfo">
+		select *
+		from mat_pt_info
+		where mat_no = #{matNo} and pt_no = (select pt_no from patient where member_no = #{memberNo})
+	</select>
 
+	<insert id="insertPay">
+		insert into pay values(
+			seq_pay.nextval,
+			#{p.matNo},
+			#{loginUser.memberNo},
+			sysdate,
+			#{p.payMoney},
+			#{loginUser.memberName},
+			#{loginUser.memberPhone},
+			#{loginUser.memberEmail},
+			#{p.merchantUid},
+			#{p.payService}
+		)
+	</insert>
 
-
-
-
-
-
+	<select id="selectMatDate" resultType="String">
+		select mat_date
+		from matching_date
+		where mat_no = #{matNo} 
+	</select>
 
 
 </mapper>

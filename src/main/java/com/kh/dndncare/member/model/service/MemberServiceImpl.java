@@ -274,7 +274,6 @@ public class MemberServiceImpl implements MemberService {
 	public ArrayList<MatMatptInfo> selectMatList(int memberNo) {
 		return mMapper.selectMatList(memberNo);
 	}
-
 	
 	//MatMatptInfoPt get - 환자매칭 모든 정보
 	@Override
@@ -282,11 +281,15 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.getMatMatptInfoPt();
 	}
 	
-	
 	//loginUser(간병인)에게 매칭을 신청한 대상 이름 불러오기
 	@Override
 	public ArrayList<RequestMatPt> getRequestMatPt(int memberNo) {
 		return mMapper.getRequestMatPt(memberNo);
+
+	@Override
+	public ArrayList<CareGiver> selectCareGiverList() {
+		return mMapper.selectCareGiverList();
+
 	}
 
 }

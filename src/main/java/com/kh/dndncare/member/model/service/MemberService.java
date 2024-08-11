@@ -110,5 +110,8 @@ public interface MemberService {
 
 	ArrayList<RequestMatPt> getRequestMatPt(int memberNo);
 
+	ArrayList<CareGiver> selectCareGiverList();
+
+
 
 }
