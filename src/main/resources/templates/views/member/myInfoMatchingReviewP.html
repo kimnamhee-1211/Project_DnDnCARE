@@ -185,13 +185,12 @@
 				<div class="modal-dialog modal-dialog-centered" role="document">
 		    		<div class="modal-content rounded-3 shadow">
 		    		 <form id="updateReviewForm" method="post" action="updateReview.mc">
-		    			<div align="center" class="m-2 mt-2 h2" id="modalScore" style="margin-top:30px;">점수 : [[${reviewScore}]]</div>
-			    			<div align="center" id="reviewScore" class="d-flex justify-content-center m-3" >
+		    			<div align="center" class="m-2 mt-2 h2" id="modalScore" style="margin-top:30px;"> 기존 점수 : [[${reviewScore}]]</div>
 		    					<input type="hidden" name="reviewBeforeScore" id="hiddenBeforeScore" value=""/>
+			    			<div align="center" id="reviewScore" class="d-flex justify-content-center m-3" >
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-			    					<input id="testReviewScore" th:value=${reviewScore}/>
-									<button th:if="${reviewScore == 1}" type="button" class="btn-star btn-icon-star-left-modal" value="1"></button>
-									<button th:if="${reviewScore > 1}" type="button" class="btn-star-right btn-icon-star-right-modal "value="2"></button>
+									<button type="button" class="btn-star btn-icon-star-left-modal" value="1"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal "value="2"></button>
 				      			</div>
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
 									<button type="button" class="btn-star btn-icon-star-left-modal" value="3"></button>
@@ -360,8 +359,6 @@
 		   
 		   $('#reviewUpdateModal').modal('show');
 	    }
-	   const testScore = document.getElementById('testReviewScore')
-	   console.log(testScore.value)
 	   
 	</script>
 	

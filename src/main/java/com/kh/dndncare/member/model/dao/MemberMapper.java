@@ -172,4 +172,8 @@ public interface MemberMapper {
 
 	int getPtNo(int memberNo);
 
+	ArrayList<CareReview> caregiverReviewList(int memberNo);
+
+	ArrayList<CareReview> monthScoreList(int memberNo);
+
 }

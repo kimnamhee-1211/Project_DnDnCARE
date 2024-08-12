@@ -449,4 +449,16 @@ public class MemberServiceImpl implements MemberService {
 		return null;	//죽은메소드라고함
 	}
 
+
+	@Override
+	public ArrayList<CareReview> caregiverReviewList(int memberNo) {
+		return mMapper.caregiverReviewList(memberNo);
+	}
+
+
+	@Override
+	public ArrayList<CareReview> monthScoreList(int memberNo) {
+		return mMapper.monthScoreList(memberNo);
+	}
+
 }

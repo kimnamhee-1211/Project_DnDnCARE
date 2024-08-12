@@ -479,7 +479,10 @@ public class MatchingController {
 		
 		// 간병인 소개
 		CareGiver caregiverIntro = mcService.selectIntro(memberNo);
+		AgeCalculator ageCalculator = new AgeCalculator();
+		int age = ageCalculator.calculateAge(caregiverIntro.getMemberAge());
 		
+		System.out.println(age);
 		// 간병인 정보(국적, 경력, 자격증)
 		ArrayList<InfoCategory> caregiverInfo = mcService.getCaregiverInfo(memberNo);
 		HashMap<String, Object> caregiverInfoList = new HashMap<String, Object>();
@@ -505,6 +508,7 @@ public class MatchingController {
 		model.addAttribute("avgReviewScore",avgReviewScore);
 		model.addAttribute("caregiverIntro",caregiverIntro);
 		model.addAttribute("caregiverInfoList", caregiverInfoList);
+		model.addAttribute("age",age);
 		return "reviewDetail";
 	}
 	

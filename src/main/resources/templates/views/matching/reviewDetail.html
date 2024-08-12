@@ -13,7 +13,7 @@
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	<main class="container whdrb testBorder">
 		<div class="row m-4">
-			<div class="m-4 h1">간병사 <span style="color:#8dd986">정보</span></div>
+			<div class="m-4 h1">간병인 <span style="color:#8dd986">정보</span></div>
 			<div class="col m-4 testBorder">
 				<div class="row">
 					<div align="center"class="col m-3 testBorder" >
@@ -54,7 +54,7 @@
 							<span th:if="${avgReviewScore == 0}">정보가 없습니다.</span>		      		
 			      		</div>
 			      		<div class="col m-2 testBorder">
-			      			<h6>나이 : </h6>
+			      			<h6>나이 : [[${age}]]세 </h6>
 			      			<th:block th:if="${caregiverIntro.memberGender} == 'M'">
 			      				<h6>성별 : 남성</h6>
 			      			</th:block>

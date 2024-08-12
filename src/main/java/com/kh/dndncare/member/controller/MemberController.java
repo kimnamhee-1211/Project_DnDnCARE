@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -871,31 +872,58 @@ public class MemberController {
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		int memberNo = loginUser.getMemberNo();
 		
-		// 회원번호로 환자번호 get
-		int ptNo = mService.getPtNo(memberNo);
-		
-		// 환자가 작성한 후기글
-		ArrayList<CareReview> list = mService.reviewList(ptNo);
+		LocalDate currentDate = LocalDate.now();
+		String currentMonth = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
-		HashMap<Integer, Object> reviewList = new HashMap<Integer, Object>();
 		
-		
-		for(CareReview reviewsInfo:list) {
-			// 리뷰번호로 간병인별로 작성한 리뷰 조회
-                ArrayList<CareReview> selectReviewList = mService.selectReviewList(reviewsInfo.getReviewNo());
-                reviewList.put(reviewsInfo.getReviewNo(), selectReviewList);
-                
-            }
-		System.out.println("lll"+reviewList);
-		
-		model.addAttribute("list", list);
 		
 		if (loginUser != null) {
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch (check) {
 			case 'C':
+				ArrayList<CareReview> caregiverList = mService.caregiverReviewList(memberNo);
+				ArrayList<CareReview> monthScoreList = mService.monthScoreList(memberNo);
+				System.out.println("월간"+monthScoreList);
+
+				CareReview monthScore = null;
+				for (CareReview score : monthScoreList) {
+					if(score.getMonth().equals(currentMonth)) {
+						monthScore = score;
+						break;
+					}
+				}
+				System.out.println(monthScore);
+				if (monthScore != null) {
+					model.addAttribute("month",monthScore.getMonth());
+		            model.addAttribute("sumScore", monthScore.getSumScore());
+		            model.addAttribute("avgScore", monthScore.getAvgScore());
+		        } else {
+		            model.addAttribute("message", "이달의 데이터가 없습니다.");
+		        }
+				model.addAttribute("cList", caregiverList);
+				System.out.println("간병인입장후기"+caregiverList);
 				return "myInfoMatchingReview";
 			case 'P':
+				// 회원번호로 환자번호 get
+				int ptNo = mService.getPtNo(memberNo);
+				
+				// 환자가 작성한 후기글
+				ArrayList<CareReview> list = mService.reviewList(ptNo);
+
+				HashMap<Integer, Object> reviewList = new HashMap<Integer, Object>();
+				
+				
+				for(CareReview reviewsInfo:list) {
+					// 리뷰번호로 간병인별로 작성한 리뷰 조회
+		                ArrayList<CareReview> selectReviewList = mService.selectReviewList(reviewsInfo.getReviewNo());
+		                reviewList.put(reviewsInfo.getReviewNo(), selectReviewList);
+		                
+		            }
+				System.out.println("lll"+reviewList);
+				
+				model.addAttribute("list", list);
+				
+				
 				return "myInfoMatchingReviewP";
 			case 'A':
 				return null;

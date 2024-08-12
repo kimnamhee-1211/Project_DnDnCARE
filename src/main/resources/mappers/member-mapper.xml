@@ -742,6 +742,21 @@
 		ORDER BY MEMBER_NO DESC
 	</select>
 	
+	<select id="caregiverReviewList" resultType="CareReview">
+		select *
+		from care_review cr
+		    join patient p on(p.pt_no = cr.pt_no)
+		where cr.member_No = #{memberNo}
+	</select>
 	
+	<select id="monthScoreList" resultType="CareReview">
+		select to_char(end_dt, 'YYYY-MM') as month, sum(review_score) "sumScore", avg(review_score) "avgScore", sum(money) sumMoney
+		from (select cr.review_No, cr.review_score, m.end_dt, cr.member_no, m.money
+		     from care_review cr
+		     join patient p on p.pt_no = cr.pt_no
+		     join matching m on cr.mat_no = m.mat_no
+		     where cr.member_no = #{memberNo})
+		group by to_char(end_dt, 'YYYY-MM')
+	</select>
 	
 </mapper>

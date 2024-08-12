@@ -27,4 +27,10 @@ public class CareReview {
 	private String memberName;
 	private String careIntro;
 	
+	// 통계용
+	private String month;
+	private int sumScore;
+	private double avgScore;
+	private int sumMoney; 
+	
 }
