@@ -41,7 +41,7 @@ public class HomeController {
 			model.addAttribute("code2",code);
 		}
 		System.out.println(code);
-		return "kakao";
+		return "callbackKakao";
 	}
 	
 	@GetMapping("google.lo")
