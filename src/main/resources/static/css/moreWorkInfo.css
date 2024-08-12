@@ -1,5 +1,4 @@
 @charset "UTF-8";
-
 #contents {
 	display:grid; grid-template-columns: 1fr 1280px 1fr;
 }
@@ -21,3 +20,4 @@
 #lowerContentsTitle{
 	display:grid; grid-template-columns: 1fr 1fr;
 }
+

@@ -21,9 +21,15 @@ public class CareGiver {
 	private int minMoney;
 	private int maxMoney;
 	private String careJoinStatus;
-	private String careService;
 	private Date careUpdateDate;
+	private String memberNational;
 	
+	private List<Integer> memberInfo;
+	private List<Integer> wantInfo;
+	
+	private Date memberAge;
+	private int age;
+	private int score;
 	private List<Integer> infoCategory;
 	
 	

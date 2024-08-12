@@ -7,9 +7,11 @@
     <link href="css/patientMain.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>	<!-- 결제 -->
+    
     <style>
     	.fc{width:500px !important; height:500px !important; } 
     </style>
@@ -21,34 +23,41 @@
 	
 	<div id="upperContents">
 		<div><!-- 왼쪽 공백 --></div>
+		
 		<div id="upperLeftContents">
-			<div style="height:100px;"><!-- 결제 요청 카드 -->
-				<br/>
-				<table class="table">
-					<thead>
-						<tr class="align-middle">
-							<th>개나리님과의 매칭이 성사되었습니다.</th>
-							<td><button class="btn btn-success">결제하기</button></td>
-						</tr>
-					</thead>
-				</table>
-			</div>
-			<div id="upperContentsBtn" class="align-middle text-center" style="height:200px;"><!-- 메뉴판 -->
-				<div><button class="custom-btn btn-14" style="width:600px; height:100px;">간병인 공개 매칭 신청</button></div>
-				
-				<div>
-					<div><!-- 테이블 왼쪽 공백 --></div>
-					<table>
-	                    <tr>
-	                        <td><button class="custom-btn btn-14">내 정보</button></td>
-	                        <td><button class="custom-btn btn-14">간병 정보</button></td>
-	                        <td><button class="custom-btn btn-14">커뮤니티</button></td>
-	                    </tr>
-	                </table>
-	                <div><!-- 테이블 오른쪽 공백 --></div>
+			<div style="height:270px;"><!-- 결제 요청 카드 -->
+				<div class="p-2" id="viewPayList">[[${session.loginUser.memberName}]]님! 결제 요청 건이 있어요</div>
+				<div class="pay-content">
+					<th:block th:each="m : ${mc}" th:if="${m.matConfirm == 'W'}">
+						<table class="ml-4 mr-4 table" >
+							<thead>
+								<tr class="align-middle">
+									<th width="510">[[${m.memberName}]]님과의 매칭이 성사되었습니다.</th>
+									<td align="center">
+									<button class="btn btn-success payButton">결제하기</button>
+									<input type="hidden" th:value="${m.matNo}"/> <!-- 이걸 쓸진 모르겠지만 만들어둠 -->
+									</td>
+								</tr>
+							</thead>
+						</table>
+					</th:block>
+				</div>
+			
+				<div id="upperContentsBtn" class="m-1 align-middle text-center" style="height:200px;"><!-- 메뉴판 -->
+					<div><button class="custom-btn btn-14" th:onclick="'location.href=\'' + @{/publicMatching.mc} + '\''" style="width:600px; height:100px;">간병인 공개 매칭 신청</button></div>
+					<div>
+						<div><!-- 테이블 왼쪽 공백 --></div>
+						<table>
+		                    <tr>
+		                        <td><button class="custom-btn btn-14">내 정보</button></td>
+		                        <td><button class="custom-btn btn-14">간병 정보</button></td>
+		                        <td><button class="custom-btn btn-14">커뮤니티</button></td>
+		                    </tr>
+		                </table>
+		                <div><!-- 테이블 오른쪽 공백 --></div>
+					</div>
 				</div>
 			</div>
-			
 			<div><!-- AI 매칭 : 가로 700, 세로 200 -->
 				<table class="table mainTable" style="height:200px;">
                 	<thead>
@@ -63,7 +72,7 @@
 	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
 	                        <td>[[${c.caregiverRealAge}]]</td>
 	                        <td>[[${c.caregiverAddress}]]</td>
-	                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
+	                        <td>[[${c.haveLicense == undefined ? '-' : c.haveLicense}]]</td>
 	                        <td>[[${c.minMoney}]]원</td>
                      	</tr>
                      	
@@ -148,114 +157,168 @@
             </table>
         </div>
         <div><!--공백 --></div>
+        
+        <!-- 케러셀 효과준 공개정보(남희님쓰세유) -->
         <div id="findWorkList" class="text-center"><!--대상검색 : 가로 700, 세로 700-->
-            <br/>
-            <button type="button" class="btn btn-light">지역</button>
-            &nbsp;&nbsp;
-            <button type="button" class="btn btn-light">성별</button>
-            &nbsp;&nbsp;
-            <button type="button" class="btn btn-light">연령</button>
-            &nbsp;&nbsp;
-            <button type="button" class="btn btn-light">질환</button>
-            &nbsp;&nbsp;
-            <button type="button" class="btn btn-light">중증도</button>
-            &nbsp;&nbsp;
-            <br/>
-            <button type="button" class="btn btn-link" onclick="location.href='moreCaregiverInfo.me'">더 보기</button>
+        	<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
+			<span style="margin-top:10px;">간병인을 찾고 계신가요?</span>
+            <button type="button" class="btn-select" onclick="location.href='moreCaregiverInfo.me'">원하는 간병인 찾기</button>
+            </div>
             <br/><br/>
 
-            <div class="row row-cols-md-2 g-2">
-                <div class="col-sm-6">
-                    <div class="card h-95 w-80">
-                      <div class="card-body">
-                        <h5 class="card-title">다람쥐님</h5>
-                        <p class="card-text">남성 8 서울시 노원구</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
-                      </div>
-                    </div>
-                  </div>
-                <div class="col-sm-6">
-                    <div class="card h-95 w-80">
-                      <div class="card-body">
-                        <h5 class="card-title">라일락님</h5>
-                        <p class="card-text">여성 20 광주 북구</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
-                      </div>
-                    </div>
-                </div>
-                
-                <div class="col-sm-6">
-                    <div class="card h-95 w-80">
-                      <div class="card-body">
-                        <h5 class="card-title">다람쥐님</h5>
-                        <p class="card-text">남성 8 서울시 노원구</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
-                      </div>
-                    </div>
-                  </div>
-                <div class="col-sm-6">
-                    <div class="card h-95 w-80">
-                      <div class="card-body">
-                        <h5 class="card-title">라일락님</h5>
-                        <p class="card-text">여성 20 광주 북구</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
-                      </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-6">
-                    <div class="card h-95 w-80">
-                      <div class="card-body">
-                        <h5 class="card-title">마동석님</h5>
-                        <p class="card-text">남성 60 제주도 서귀포시</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
-                      </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card h-95 w-80">
-                      <div class="card-body">
-                        <h5 class="card-title">바밤바님</h5>
-                        <p class="card-text">남성 30 강원도 철원군</p>
-                        <a href="#" class="btn btn-success">정보 보기</a>
-                      </div>
-                    </div>
-                </div>
-            </div>
             
-            <!-- 페이징 버튼 -->
-            <div class="pt-0">
-                <ul class="pagination justify-content-center mb-0">
-                   	<!-- 이전버튼 -->
-                   	<li class="page-item disabled">
-                       	<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                    </li>
-                   	                        
-                    <li class="page-item active">
-                    	<a class="page-link" href="#">1</a>
-                   	</li>
-                   <li class="page-item">
-                    	<a class="page-link" href="#">2</a>
-                   	</li>
-                   	<li class="page-item">
-                    	<a class="page-link" href="#">3</a>
-                   	</li>
-                   	<li class="page-item">
-                    	<a class="page-link" href="#">4</a>
-                   	</li>
-                   	<li class="page-item">
-                    	<a class="page-link" href="#">5</a>
-                   	</li>
-                   
-                   	<!-- 다음 버튼 -->
-                 	<li class="page-item disabled">
-                 		<a class="page-link" href="#" aria-disabled="true">Next</a>
-                	</li>
-                </ul>
-            </div>
-        </div>
-        <div><!--오른쪽 공백--></div>
+            
+            
+            
+            
+			            <div id="carouselExampleIndicators" class="carousel slide">
+			  <div class="carousel-indicators" style="margin-bottom:-40px; ">
+			    <button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;" data-bs-slide-to="0" class="active btn-test" aria-current="true" aria-label="Slide 1"></button>
+			    <button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="1" aria-label="Slide 2"></button>
+			    <button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="2" aria-label="Slide 3"></button>
+			  </div>
+			  <div class="carousel-inner">
+			    <div class="carousel-item active">
+			      <div class="row row-cols-md-2 g-2	">
+			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(0, 5)}">
+			            <div class="card h-95 w-80">
+			              <div class="card-body">
+			              	<div class="row m-2">
+			              		<div align="left" class="col-3 test-left" >
+			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
+			              		</div>
+			              		<div align="left"class="col text-left" >
+			              			<div class="d-flex justify-content-between">
+				                		<h5 class="card-title">[[${cg[num].memberName}]]님</h5>
+				                		<div align="center"  class="d-flex justify-content-left" >
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<span style="margin-top:-4px">10</span>
+						    			</div>
+			                		</div>
+			                		<p class="card-text">[[${cg[num].memberGender == "M" ? "남" : "여"}]] [[${cg[num].age}]]세 [[${cg[num].memberNational}]]</p>
+			                		
+			                	</div>
+			                </div>
+			                <button class="btn-select-info">정보 보기</button>
+			                <input type="hidden" th:value="${cg[num].memberNo}">	<!-- 네임안썻음 -->
+			              </div>
+			            </div>
+			          </div>
+			     </div>
+			    </div>
+			    <div class="carousel-item">
+			      <div class="row row-cols-md-2 g-2	">
+			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(6, 11)}">
+			            <div class="card h-95 w-80">
+			              <div class="card-body">
+			              	<div class="row m-2">
+			              		<div align="left" class="col-3 test-left" >
+			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
+			              		</div>
+			              		<div align="left"class="col text-left" >
+			              			<div class="d-flex justify-content-between">
+				                		<h5 class="card-title">[[${cg[num].memberName}]]님</h5>
+				                		<div align="center"  class="d-flex justify-content-left" >
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<span style="margin-top:-4px">10</span>
+						    			</div>
+			                		</div>
+			                		<p class="card-text">[[${cg[num].memberGender == "M" ? "남" : "여"}]] [[${cg[num].age}]]세 [[${cg[num].memberNational}]]</p>
+			                		
+			                	</div>
+			                </div>
+			                <button class="btn-select-info">정보 보기</button>
+			                <input type="hidden" th:value="${cg[num].memberNo}">	<!-- 네임안썻음 -->
+			              </div>
+			            </div>
+			          </div>
+			     </div>
+			    </div>
+			    <div class="carousel-item">
+			      <div class="row row-cols-md-2 g-2	">
+			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(12, 17)}">
+			            <div class="card h-95 w-80">
+			              <div class="card-body">
+			              	<div class="row m-2">
+			              		<div align="left" class="col-3 test-left" >
+			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
+			              		</div>
+			              		<div align="left"class="col text-left" >
+			              			<div class="d-flex justify-content-between">
+				                		<h5 class="card-title">[[${cg[num].memberName}]]님</h5>
+				                		<div align="center"  class="d-flex justify-content-left" >
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<div align="left"class="icon-star-review">
+												<button class="btn-star btn-icon-star-review"></button>
+							      			</div>
+							      			<span style="margin-top:-4px">10</span>
+						    			</div>
+			                		</div>
+			                		<p class="card-text">[[${cg[num].memberGender == "M" ? "남" : "여"}]] [[${cg[num].age}]]세 [[${cg[num].memberNational}]]</p>
+			                		
+			                	</div>
+			                </div>
+			                <button class="btn-select-info">정보 보기</button>
+			                <input type="hidden" th:value="${cg[num].memberNo}">	<!-- 네임안썻음 -->
+			              </div>
+			            </div>
+			          </div>
+			     </div>
+			    </div>
+			  </div>
+			  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			    <span class="visually-hidden">Previous</span>
+			  </button>
+			  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+			    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			    <span class="visually-hidden">Next</span>
+			  </button>
+			</div>
+		</div>
+		<!-- 케러셀 효과준 공개정보(남희님쓰세유) -->            
     </div>
+        <div><!--오른쪽 공백--></div>
+    
     
     <div id="myPresentMatching">
         <a class="navbar-brand align-middle" href="#">
@@ -264,8 +327,50 @@
         </a>
     </div>
     
+	<!-- Modal -->
+	<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice2">
+		<div class="modal-dialog modal-dialog-centered" role="document" style="max-width:700px;">
+    		<div class="modal-content rounded-3 shadow" style="min-width:700px;">
+    			<div class="m-5 text-center h2">결제 정보</div>
+    			<div class="m-4 h5" style="border-bottom:1px solid #8dd986;"><span class="h2" id="careName"></span>님과 매칭되었습니다!</div>
+				<div class="d-flex justify-content-start">    			
+	    			<div >
+	    				<div class="m-4 text-center">매칭 서비스</div>
+	    				<div class="m-4 text-center">공동간병 여부</div>
+	    				<div class="m-4 text-center">간병 날짜</div>
+	    				<div class="m-4 text-center">일당 금액</div>
+	    				<div class="m-4 text-center">주소 </div>
+	    			</div>
+	    			<div>
+	    				<div class="m-4" id="payService"></div>
+	    				<div class="m-4" id="payPtCount"></div>
+	    				<div class="m-4" id="payMatDate"></div>
+	    				<div class="m-4" id="payMoney"></div>
+	    				<div class="m-4" id="payAddress"></div>
+	    			</div>
+    			</div>
+    			
+    			<div align="right" class="m-4 h3 resultPay"></div>
+      			<div align="center"class="modal-footer d-flex justify-content-center p-0">
+      				<div align="center"class="d-flex justify-content-center">
+	      				<button type="button" class="btn btn-lg btn-success payApply h1 m-4 resultPay" onclick="requestPay()">100,000원 결제하기</button>
+      				</div>
+      				<form id="payForm" method="post">
+      					<input type="hidden" name="matNo"/>
+      					<input type="hidden" name="payMoney"/>
+      					<input type="hidden" name="payService">
+      					<input type="hidden" name="merchantUid">
+      				</form>
+      			</div>
+    		</div>
+  		</div>	
+	</div>
+    
+    <th:block th:replace="~{common/footer :: footer}"></th:block>
+    
+    
     <!-- 캘린더 이벤트의 모달박스 (시작)-->
-    <div class="modal" tabindex="-1">
+    <div class="modal" id="calendarModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content">
 		   		<div class="modal-header">
@@ -304,13 +409,6 @@
 	</div>
     <!-- 캘린더 이벤트의 모달박스 (끝) -->
     
-    
-    
-    
-    
-    
-    
-    <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     <script th:inline="javascript">
     // 캘린더 객체 생성
@@ -356,7 +454,7 @@
 		          		infoDetail[2].innerHTML = info.event.extendedProps.endDate;
 		          		infoDetail[4].innerHTML = info.event.extendedProps.money + '원';
 		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
-		        	  	$('.modal').modal('show');
+		        	  	$('#calendarModal').modal('show');
   		        	  }
   		        });
   		        calendar.render();
@@ -402,7 +500,7 @@
 	    						const td3 = document.createElement('td');
 	    						td3.innerText = d.caregiverAddress;
 	    						const td4 = document.createElement('td');
-	    						td4.innerText = d.haveLicense;
+	    						td4.innerText = d.haveLicense == undefined ? '-' : d.haveLicense;
 	    						const td5 = document.createElement('td');
 	    						td5.innerText = d.minMoney + '원';
 	    						
@@ -429,22 +527,130 @@
     	}
     	/*]]>*/
     
+    </script>  
+    
+    <script>//종규삽입
+    
+    //결제목록 보이기
+    document.getElementById('viewPayList').addEventListener('click',function(){
+    	this.nextElementSibling.classList.toggle('showPay');
+    })
+    
+    
+    //폼 태그없이 memberNo만 넘기자. 간병인 리뷰디테일 페이지로 memberNo
+    const infoBts = document.getElementsByClassName('btn-select-info');
+    
+    for(infoBt of infoBts){
+    	infoBt.addEventListener('click',function(){
+    		location.href = 'reviewDetail.mc?memberNo=' + this.nextElementSibling.value;
+    	})
+    }
+    	
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    </script>    
+    //모달.지금은하난데 for문돌려야겟지?
+//     document.getElementsByClassName('payButton')[0].addEventListener('click',()=>{
+// 		$('#modalChoice').modal('show');	
+// 	})
+	
+	
+	
+	const payBts = document.getElementsByClassName('payButton');
+    for(payBt of payBts){
+    	payBt.addEventListener('click',function(){
+			$('#modalChoice2').modal('show');
+			console.log(this.nextElementSibling);
+			$.ajax({
+				url:'payInfo.mc',
+				data: {matNo:this.nextElementSibling.value },
+				success:data=>{
+					
+					document.getElementById('payService').innerText = data.service;
+					document.getElementById('payPtCount').innerText = data.ptCount == 1 ? '개인' : '공동';
+					document.getElementById('payMatDate').innerText = data.beginDt +' '+ data.beginTime + ' ~ ' + data.endDt + ' '+ data.endTime + ' 총' + data.days +'일 ' + data.times +'시간';
+					document.getElementById('payMoney').innerText = data.money.toLocaleString() + '원';
+					document.getElementById('payAddress').innerText = data.matAddressInfo.split('//')[1] + ' '+data.matAddressInfo.split('//')[2];
+					document.getElementById('careName').innerText = data.memberName;
+					//결재최종금액도 더하기
+					if(data.matMode != 1){
+						document.getElementsByClassName('resultPay')[0].innerText = (data.money * data.hourly / data.ptCount).toLocaleString() + '원';
+						document.getElementsByClassName('resultPay')[1].innerText = (data.money * data.hourly / data.ptCount).toLocaleString() + '원 결제하기';
+						document.getElementsByName('payMoney')[0].value = (data.money * data.hourly / data.ptCount) / data.ptCount;
+						document.getElementById('payMatDate').innerText = data.beginDt +' '+ data.beginTime + ' ~ ' + data.endDt + ' '+ data.endTime + ' 기간 중 총' + data.hourly +'회 ' + data.times +'시간';
+					}else{
+						document.getElementsByClassName('resultPay')[0].innerText = (data.money / data.ptCount).toLocaleString() + '원';
+						document.getElementsByClassName('resultPay')[1].innerText = (data.money / data.ptCount).toLocaleString() + '원 결제하기';
+						document.getElementsByName('payMoney')[0].value = data.money * data.days / data.ptCount;
+					}
+				},
+				error:data=>console.log(data)
+			})
+    	})		
+    };
+	
+	
+	
+	//포트원 api
+    	
+    		
+	    IMP.init("imp25707021");		//내가생성한 가짜 스토어번호임
+    	
+    	const now = new Date();
+		
+    	const year = now.getFullYear();
+    	
+    	const month = (now.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더함
+    	const day = now.getDate().toString().padStart(2, '0');
+    	const hours = now.getHours().toString().padStart(2, '0');
+    	const minutes = now.getMinutes().toString().padStart(2, '0');
+    	const seconds = now.getSeconds().toString().padStart(2, '0');
+
+    	const formattedTime = year+month+day+hours+minutes+seconds;
+    	const form = document.getElementById('payForm');
+    	console.log(document.getElementsByName('merchantUid')[0]);
+    	
+	    function requestPay() {
+	    	//const money = document.getElementById('customAmountInput').value;
+			
+	    	/* if(money >=1000){ */  //테스트 중에만 주석, 실제입력은 다르게!
+		    	IMP.request_pay({
+			        pg: "html5_inicis.INIpayTest",
+			        pay_method: "card",
+			        merchant_uid: formattedTime,
+			        name: "든든케어간병신청",
+			        amount: 100,
+			        buyer_tel: "000",
+		    	},function(response){
+		    	  console.log(response);
+		    	  console.log(response.success);
+		    	  if(response.success){
+		    		  alert('결제 성공');
+		    		  console.log(response.merchant_uid);
+		    		  document.getElementsByName('merchantUid')[0].value = response.merchant_uid;
+		    		  document.getElementsByName('matNo')[0].value = payBt.nextElementSibling.value;
+		    		  //document.getElementsByName('payMoney')[0].value = response.merchant_uid; 위에서미리넘기자
+		    		  document.getElementsByName('payService')[0].value = response.merchant_uid;
+		    		  form.action = 'successPay.mc';
+		  	    	  form.submit();
+		    		  
+		    		  
+		    	  }else{
+		    		  alert('결제 실패하였습니다');
+		    		  alert(response.error_msg);
+		    		  
+		    		  /* form.action = '${contextPath}/successPay.su';
+		  	    	  form.submit(); */
+		    	  }
+		     	});
+	    	/* }else{
+	    		alert('후원 최소 금액은 1,000원입니다');
+	    	} */
+	    }
+	    
+	    
+	    
+    </script> 
 </body>
+
 </html>

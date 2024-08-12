@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link th:href="@{css/joinMatching.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+	<div class="wrap">
+		<div class="title-content d-flex justify-content-center mx-auto">
+			<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="130"></a>	
+			<h1 class="h1 mb-1 fw-bold mb-1 text-center">공동간병</h1><br>
+		</div>
+		<div class="title2-content d-flex justify-content-center mx-auto">	
+			<div class="form-floating mb-3 fw-bold mb-2 mx-auto">	
+				<table class="table" style="font-size:22px;line-height:40px;" id="hoInfo">
+				    <tr>
+				      <th scope="col" style="width:100px;">병원명</th>
+				      <td id="hospitalName" scope="col" style="width:600px;">[[${hospital.hospitalName}]]</td>
+				      <th scope="col" rowspan="2" style="width:400px; border:none;'">
+						<div class="sign-btn  flex-column">
+							<button type="button" id="insertGruop" class="signIn-btn mt-1">
+								공동간병 모집
+							</button>
+				      	</div>
+				      </th>
+				    </tr>	
+				    <tr>
+				      <th scope="col" style="width:100px;">주소</th>
+				      <td scope="col"id="hospitalAddress" style="width:600px;font-size:16px;">[[${hospital.hospitalAddress}]]</td>
+				    </tr>		
+				</table>	
+			</div>
+		</div>
+		
+		<!-- 공동간병 그룹 리스트 -->
+		<main class="container-xl  justify-content-center mx-auto" style="width:1600px; padding:0 auto">
+			<th:block th:if="${list != null}">
+				<div class="tableDiv" th:each="gm : ${list}">
+					<table class="table room">
+						<thead>
+						    <tr>
+						      <th scope="col">NO</th>
+						      <th scope="col">[[${gm.matNo}]]</th>
+						      <th scope="col" th:if="${gm.join == 'Y'}" colspan="2">참여중</th>
+              				  <th scope="col" th:if="${gm.join == 'N'}" colspan="2"> </th>			      
+						    </tr>
+						  </thead>
+						  <tbody>
+						  	<tr>
+							  <th>인원</th>
+						      <td colspan="3">[[${gm.ptCount}]]명</td>
+						    </tr>
+						    <tr>
+						      <th colspan="2">1인당 1일 돌봄비용</th>
+						      <td colspan="2">[[${gm.antePay}]]</td>
+						     </tr>
+						    <tr>
+						      <th>간병 시작일</th>
+						      <td>[[${gm.beginDt}]]</td>
+						      <th>간병 종료일</th>
+						      <td>[[${gm.endDt}]]</td>
+						    </tr>
+						    <tr>
+						      <th>시작시간</th>
+						      <td>[[${gm.beginTime}]]</td>
+						      <th>종료시간</th>
+						      <td>[[${gm.endTime}]]</td>
+						    </tr>
+						     <tr>
+						      <th>상세주소</th>
+						      <td colspan="3">[[${gm.matAddressInfo.split('//')[2]}]]</td>
+						    </tr>					
+						    <tr>
+						      <th>요청사항</th>
+						      <td colspan="3">[[${gm.matRequest == 	undefined ? "-" : gm.matRequest}]]</td>
+						    </tr>
+						</tbody>
+					</table>
+				</div>
+			</th:block>	
+			<th:block th:if="${list == null}">
+				<h2 class="h2 mb-3 fw-bold mb-5">아직 개설된 공동간병 그룹이 없습니다.</h2>
+				<h2 class="h2 mb-3 fw-bold mb-5">새롭게 공동간병 그룹을 만들어보세요.</h2>
+			</th:block>
+		</main>
+
+		<!-- 공동간병 그룹 상세 정보 -->
+		<div class="modal fade modal-xl" id="gmContentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-xl" >
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">공동간병 그룹</h1>
+		       			 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		     		</div>
+		     		<div class="modal-body">
+		      			<h3 class="h3 fw-bold mb-4"  style="margin:30px;">공동간병 그룹 상세 정보</h3>
+						<table class="table" id="gmInfo" style="margin-bottom:40px;"></table>										
+						<h4 class="fw-bold mb-2" style="margin:10px 30px;">공동간병 그룹 참여자</h4>
+						<div id="ptDiv" class="align-items-center"></div>
+			      		<div class="modal-footer" style="margin-top:50px;">
+			      			<button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" id="join" style="display:none">참여하기</button>
+			      			<button class="btn btn-secondary" data-bs-target="#exampleModalToggle3" data-bs-toggle="modal" id="out" style="display:none">참여 취소하기</button>
+			      			<button class="btn btn-secondary" data-bs-target="#exampleModalToggle4" data-bs-toggle="modal" id="walkout" style="display:none">참여자 퇴장</button>
+			       			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			      		</div>
+			    	</div>
+			 	 </div>
+			</div>
+		</div>
+		
+		<!-- 참여 시 -->
+		<div class="modal fade modal-lg" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+		  <div class="modal-dialog modal-dialog-centered modal-lg" >
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel2">공동간병 그룹 참여</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body mx-auto">
+		      	<form action="joinJoinMatching.jm" method="post" id="joinJoinMatching">
+			      	<h3 class="h3 fw-bold mb-1" style="margin-top:30px;">해당 공동간병 그룹에 참여하시겠습니까?</h3>
+			        <h4 class="h4 fw-bold mb-5" style="margin-top:30px;">아래 버튼을 누르면 공동간병 그룹 참여가 완료됩니다.</h4>
+			        <h5 class="h5 mb-4" style="margin-top:30px;">만약 관련 요청사항이 있다면 100자 이내로 입력해주세요.</h5>
+			        <input type="text" class="form-control mb-5" maxlength="100" placeholder="요청사항" name="matRequest">
+		      		<input type="hidden" name="matNo" id="joinMatNo">
+		      		<input type="hidden" name="hospitalName" id="joinHospitalName" th:value="${hospital.hospitalName}">
+		      		<input type="hidden" name="hospitalAddress" id="joinHospitalAddress" th:value="${hospital.hospitalAddress}">
+		      	</form>
+		      </div>
+		      <div class="modal-footer">
+		      	<button class="btn btn-primary" type="button" id="joinJmButton">참여하기</button>
+		        <button class="btn btn-secondary" data-bs-target="#gmContentModal" data-bs-toggle="modal">뒤로가기</button>
+		      	<button class="btn btn-secondary" data-bs-target="#exampleModalToggle2" data-bs-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		
+		<!-- 참여 취소 시 -->
+		<div class="modal fade modal-lg" id="exampleModalToggle3" aria-hidden="true" aria-labelledby="exampleModalToggleLabel3" tabindex="-1">
+		  <div class="modal-dialog modal-dialog-centered modal-lg" >
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel3">공동간병 그룹 참여 취소</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body mx-auto">
+		      	<form action="outJoinMatching.jm" method="post" id="outJoinMatching">
+			      	<h3 class="h3 fw-bold mb-4" style="margin:20px 30px;">공동간병 그룹 참여를 취소하시겠습니까?</h3>
+			        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">아래 버튼을 누르면 공동간병 그룹 참여가 취소됩니다.</h5>
+			        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">공동간병 그룹 참여 취소가 완료되면 회복이 불가능합니다.</h5>
+			        <h5 class="h5 fw-bold mb-4" style="margin:0 30px;">취소 후 재참여를 원하실 경우 새롭게 다시 참여 신청을 해주시기 바랍니다.</h5>
+			        <h5 id="joinLeaderMsg" class="h5 fw-bold mb-4" style="margin:0 40px;display:none;color:red;">그룹 개설 회원은 현재 그룹에 참여 중인 회원이 있는 경우 그룹 참여를 취소할 수 없습니다.</h5>
+		      		<input type="hidden" name="matNo" id="outMatNo">
+		      		<input type="hidden" name="matMode" id="outMatMode">
+		      		<input type="hidden" name="hospitalName" id="outHospitalName" th:value="${hospital.hospitalName}">
+		      		<input type="hidden" name="hospitalAddress" id="outHospitalAddress" th:value="${hospital.hospitalAddress}">
+		      	</form>
+		      </div>
+		      <div class="modal-footer">
+		      	<button class="btn btn-secondary" type="button" id="outJmButton">참여 취소하기</button>
+		        <button class="btn btn-secondary" data-bs-target="#gmContentModal" data-bs-toggle="modal">뒤로가기</button>
+		      	<button class="btn btn-secondary" data-bs-target="#exampleModalToggle3" data-bs-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- 참여자 퇴장 시 -->
+		<div class="modal fade modal-lg" id="exampleModalToggle4" aria-hidden="true" aria-labelledby="exampleModalToggleLabel4" tabindex="-1">
+		  <div class="modal-dialog modal-dialog-centered modal-lg" >
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel4">공동간병 그룹 참여자 퇴장</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body mx-auto">
+		      	<form action="walkoutJoinMatching.jm" method="post" id="walkoutJoinMatching">
+			      	<h3 class="h3 fw-bold mb-4" style="margin:20px 30px;">공동간병 그룹 참여자를 퇴장시키시겠습니까?</h3>
+			        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">퇴장시킬 회원을 선택하고,<br>아래 버튼을 누르면 공동간병 그룹 참여자를 퇴장시킬 수 있습니다.</h5>					
+			        <h5 class="h5 fw-bold mb-4" style="margin:0 30px;">공동간병 그룹 참여자 퇴장이 완료되면 회복이 불가능합니다.</h5>
+			        <h4 class="h4 fw-bold mb-4" style="margin:0 30px;">퇴장 참여자 선택</h4>
+			        <div id="walkoutPtDiv" class="row mb-4" style="margin-left:40px;"></div>	
+			        <h5 id="walkoutrMsg" class="h5 fw-bold mb-4" style="margin:0 40px;display:none;color:red;"></h5>
+		      		<input type="hidden" name="matNo" id="walkoutMatNo">
+		      		<input type="hidden" name="matMode" id="walkoutMatMode">
+		      		<input type="hidden" name="hospitalName" id="walkoutHospitalName" th:value="${hospital.hospitalName}">
+		      		<input type="hidden" name="hospitalAddress" id="walkoutHospitalAddress" th:value="${hospital.hospitalAddress}">
+		      	</form>
+		      </div>
+		      <div class="modal-footer">
+		      	<button class="btn btn-secondary" type="button" id="walkoutJmButton">참여자 퇴장</button>
+		        <button class="btn btn-secondary" data-bs-target="#gmContentModal" data-bs-toggle="modal">뒤로가기</button>
+		      	<button class="btn btn-secondary" data-bs-target="#exampleModalToggle4" data-bs-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		
+		<!-- 동작 성공 후 redirect 시 -->	
+		<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered modal-lg">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h3 class="modal-title fw-bold fs-5">공개 매칭</h3>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body" style="margin:30px;">
+		        <h4 class="h4 mb-3" id="successModalMsg"></h4>    
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+			
+	</div>	
+	
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	
+	
+	<script th:inline="javascript">
+		
+	
+		window.onload = function(){
+			
+			
+			/*<![CDATA[*/
+			const msg = /*[[${msg}]]*/'msg';
+			/*]]>*/
+			
+			if(msg){
+				$('#successModalMsg').html(msg)			
+				$('#successModal').modal('show');
+			}
+			
+			//공동간병그룹 등록
+		    document.getElementById("insertGruop").addEventListener('click', function() {
+		    	const hospitalName = document.getElementById("hospitalName").innerText;
+		    	const hospitalAddress = document.getElementById("hospitalAddress").innerText;
+		    	
+		        location.href = 'joinMatchingEnrollView.jm?hospitalName='+hospitalName+'&hospitalAddress='+hospitalAddress;
+		    });
+		
+			
+		    //상세정보 노출
+			const tableDivs = document.querySelectorAll('.tableDiv');
+
+			for(const tableDiv of tableDivs){
+				tableDiv.addEventListener('click', function(){
+					
+					$('#gmContentModal').modal('show');
+					
+					const matNoTd = this.querySelector('th').nextElementSibling;
+					if(matNoTd){
+						let matNo = '';  /*반복 위해 비우기*/
+						matNo = matNoTd.innerText;
+						
+						$.ajax({
+							url : 'getJmContent.jm',
+							type : 'post',
+							data : {'matNo' : matNo},
+							dataType : 'json',
+							success : data => {
+								const jmMatMatptInfo = data.jmMatMatptInfo;
+								const jmPts = data.jmPts;
+								const jmMatDate = data.jmMatDate;
+								const loginPt = data.loginPt;
+								
+								const matAddressInfo = jmMatMatptInfo.matAddressInfo.split(' // ')[1]
+							
+								//참여신청 & 참여취소 클릭하는 경우를 위해 데이터 전달
+								document.getElementById('joinMatNo').value = jmMatMatptInfo.matNo;
+								document.getElementById('outMatNo').value = jmMatMatptInfo.matNo;
+								document.getElementById('outMatMode').value = jmMatMatptInfo.matMode;
+								document.getElementById('walkoutMatNo').value = jmMatMatptInfo.matNo;
+								
+								//jmMatMatptInfo
+								let jmMatDateInnerHTML = '';
+								if(jmMatMatptInfo.matMode == 2){
+									jmMatDateInnerHTML = `
+						                <tr>
+					                    <th>선택일자</th>
+					                    <td colspan="3">${jmMatDate}</td>
+					                </tr>`;
+								}								
+								
+								const tableGmInfoInnerHTML = `
+								    <thead>
+								        <tr>
+								            <th scope="col" style="width:20%;">NO</th>
+								            <th scope="col" style="width:30%;" >${jmMatMatptInfo.matNo}</th>
+								            <th scope="col" style="width:20%;">1인당 1일 돌봄비</th>
+								            <td scope="col" style="width:30%;">${jmMatMatptInfo.antePay}원</td>
+								        </tr>
+								    </thead>
+								    <tbody>
+								        <tr>
+								            <th>총 인원</th>
+								            <td>${jmMatMatptInfo.ptCount}명</td>
+								            <th>현재 참여 인원</th>
+								            <td>${jmPts.length}명</td>
+								        </tr>
+								        <tr>
+								            <th>간병 시작일</th>
+								            <td>${jmMatMatptInfo.beginDt}</td>
+								            <th>간병 종료일</th>
+								            <td>${jmMatMatptInfo.endDt}</td>
+								        </tr>
+								        ${jmMatDateInnerHTML}
+								        <tr>
+								            <th>시작시간</th>
+								            <td>${jmMatMatptInfo.beginTime}</td>
+								            <th>종료시간</th>
+								            <td>${jmMatMatptInfo.endTime}</td>
+								        </tr>
+								        <tr>
+								            <th>상세주소</th>
+								            <td colspan="3">${matAddressInfo}</td>
+								        </tr>					
+								        <tr>
+								            <th>요청사항</th>
+								            <td colspan="3">${jmMatMatptInfo.matRequest == undefined ? "-" : jmMatMatptInfo.matRequest}</td>
+								        </tr>
+								    </tbody>
+								`;
+								
+								const tableGmInfo = document.querySelector('#gmInfo');
+								tableGmInfo.innerHTML = '';	/*반복 위해 비우기*/
+								if(tableGmInfo){
+									tableGmInfo.innerHTML = tableGmInfoInnerHTML;								
+								}
+														
+								
+								//버튼 보이기 조건용 변수
+								let showJoinButton = true;
+								let showOutButton = false;
+								let showWalkoutButton = false;
+								//jmPts 
+								const ptDiv = document.getElementById("ptDiv");
+								ptDiv.innerHTML=''; /*반복 위해 비우기*/
+								for(const jmPt of jmPts){
+									const ptAge = jmPt.ptAge
+									
+									//나이계산
+									const today = new Date();
+								    const birthDate = new Date(ptAge);
+								    let age = today.getFullYear() - birthDate.getFullYear();
+								    const monthDifference = today.getMonth() - birthDate.getMonth();
+							
+								    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+								        age--;
+								    }
+									
+									const tableDiv = document.createElement('div');
+									tableDiv.className = "tableDiv";
+									tableDiv.style.margin = "10px 25px"; 
+									tableDiv.style.width = "500px"; 
+									
+									const tableDivInnerHTML=`
+										<table class="table pt">
+											<thead>
+											    <tr>
+											      <th scope="col" >이름</th>
+											      <th colspan="3" scope="col">${jmPt.ptName}</th>
+											    </tr>
+											  </thead>
+											  <tbody>
+											    <tr>
+											      <th>성별</th>
+											      <td>${jmPt.ptGender == 'F' ? '여성':'남성'}</td>
+											      <th>나이</th>
+											      <td>${age}</td>
+											    </tr>
+											    <tr>
+											      <th>키</th>
+											      <td>${jmPt.ptHeight}cm</td>
+											      <th>몸무게</th>
+											      <td>${jmPt.ptWeight}kg</td>
+											    </tr>
+											     <tr>
+											      <th>질환</th>
+											      <td colspan="3">${jmPt.disease == undefined ? '-' : jmPt.disease}</td>
+											    </tr>					
+											  	<tr>
+											     <th>중증도</th>
+											      <td colspan="3">${jmPt.diseaseLevel == undefined ? '-' : jmPt.diseaseLevel}</td>
+											    </tr>
+											    <tr>
+											      <th>요청사항</th>
+											      <td colspan="3">${jmPt.ptRequest == 	undefined ? '-' : jmPt.ptRequest}</td>
+											    </tr>										    
+											    <tr>
+											      <th colspan="2">그룹 개설 회원</th>
+											      <td colspan="2">${jmMatMatptInfo.ptNo == jmPt.ptNo ? 'Y' : 'N'}</td>
+											    </tr>
+											</tbody>
+										</table>`;	
+								
+									tableDiv.innerHTML = tableDivInnerHTML;
+									ptDiv.append(tableDiv);
+									
+									//참여자 퇴장 사용하는 시 선택 참여자 버튼 만들기 
+									const walkoutPtDiv = document.getElementById('walkoutPtDiv');
+									walkoutPtDiv.innerHTML = '';
+									if(jmMatMatptInfo.ptNo != jmPt.ptNo){
+										const inputDiv = document.createElement('div');
+										inputDiv.className ="col";
+		
+										walkoutPtDivInner = `
+											<input type="checkbox" class="btn-check" name="ptNo" id="${jmPt.ptNo}" value="${jmPt.ptNo}" autocomplete="off">
+											<label class="btn btn-outline-secondary" for="${jmPt.ptNo}">${jmPt.ptName}</label>`;
+											
+										inputDiv.innerHTML = walkoutPtDivInner;
+										walkoutPtDiv.append(inputDiv);
+									}
+										
+										
+									//참여인원 다 차거나 이미 참여중인 경우가 아니면 참여버튼 보이기								
+									if(jmPts.length >= jmMatMatptInfo.ptCount || jmPt.memberNo == loginPt.memberNo){
+										showJoinButton = false;
+									}
+									console.log('showJoinButton' + showJoinButton);
+									//이미 참여중인 경우 참여 취소 버튼 보이기
+									if(jmPt.memberNo == loginPt.memberNo){
+										showOutButton = true; 											
+									}
+									//참여자 퇴장 버튼 보이기 && 참여자 이름 보이기
+									if(jmMatMatptInfo.ptNo == loginPt.ptNo && jmPts.length > 1){													
+										showWalkoutButton = true										
+									}
+									
+								}
+								
+								//참여 신청
+								showJoin(showJoinButton)
+								document.getElementById('joinJmButton').addEventListener('click', ()=>{
+									const joinJoinMatching = document.getElementById('joinJoinMatching');
+									joinJoinMatching.submit();						
+								});
+								
+								
+								//참여 멤버가 참여 취소하기 -> 개설자는 인원에 따라 참여 멤이 있으면 취소 불가능
+								showOut(showOutButton)
+								document.getElementById('outJmButton').addEventListener('click', ()=>{
+									const outJoinMatching = document.getElementById('outJoinMatching');
+									if(jmMatMatptInfo.ptNo == loginPt.ptNo && jmPts.length > 0){
+										document.getElementById('joinLeaderMsg').style.display = "block";
+									}else{
+										document.getElementById('joinLeaderMsg').style.display = "none";
+										outJoinMatching.submit();
+									}										
+								});	
+								
+								
+								//방장이 참여자 퇴장시키기
+								showWalkout(showWalkoutButton)
+								document.getElementById('walkoutJmButton').addEventListener('click', ()=>{
+									const walkoutJoinMatching = document.getElementById('walkoutJoinMatching');
+									const walkoutrMsg = document.getElementById('walkoutrMsg')
+									const checkedCheckbox = document.querySelectorAll('input[name="ptNo"]:checked');
+									
+									
+									walkoutrMsg.innerText = "";
+									
+									if(checkedCheckbox.length === 1){
+										document.getElementById('walkoutrMsg').style.display = "none";
+										walkoutJoinMatching.submit();
+									}else if(checkedCheckbox.length > 1){
+										walkoutrMsg.style.display = "block";
+										walkoutrMsg.innerText = "퇴장시킬 참여자는 한 명만 선택할 수 있습니다."
+									}else{
+										walkoutrMsg.style.display = "block";
+										walkoutrMsg.innerText = "퇴장시킬 참여자를 선택해주세요."
+									}								
+								});
+
+
+								
+							},
+							error : data => {
+								console.log(data)
+							}										
+						});
+					}
+					
+				});
+			}			
+		}
+		
+	
+		//참여버튼 보이기
+		function showJoin(showJoinButton){
+			if(showJoinButton){
+				document.getElementById('join').style.display = "block";
+			}else{
+				document.getElementById('join').style.display = "none";
+			}
+		}	
+		//참여 취소버튼 보이기
+		function showOut(showOutButton){
+			if(showOutButton){
+				document.getElementById('out').style.display = "block";
+			}else{
+				document.getElementById('out').style.display = "none";
+			}
+		}	
+			
+		//참여자 퇴장버튼 보이기
+		function showWalkout(showWalkoutButton){
+			if(showWalkoutButton){
+				document.getElementById('walkout').style.display = "block";
+			}else{
+				document.getElementById('walkout').style.display = "none";
+			}
+		}	
+		
+		
+		
+		function calculateAge(birthdate) {
+		    const today = new Date();
+		    const birthDate = new Date(birthdate);
+		    let age = today.getFullYear() - birthDate.getFullYear();
+		    const monthDifference = today.getMonth() - birthDate.getMonth();
+	
+		    // 생일이 지나지 않았거나 같은 달이지만 생일이 지나지 않은 경우
+		    if(monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())){
+		        age--;
+		    }
+		    return age;
+		}
+	
+	
+
+	
+	
+
+	
+	
+	</script>
+		
+		
+</body>
+</html>

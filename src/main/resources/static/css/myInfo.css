@@ -115,6 +115,7 @@ body {
 	color:white;
 	border-radius: 5px;
 	padding:5px;
+	cursor: pointer;
 	
 }
 
@@ -210,4 +211,5 @@ body {
 .show{
 	height:200px;
 	border-top: 1px solid #8dd986;
+	z-index : 10;
 }

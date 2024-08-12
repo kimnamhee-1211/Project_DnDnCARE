@@ -2,15 +2,21 @@ package com.kh.dndncare.member.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
-import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.matching.model.vo.CareReview;
+import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
+import com.kh.dndncare.matching.model.vo.MatPtInfo;
+import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.CareGiver;
-import com.kh.dndncare.member.model.vo.MatPtInfo;
-import com.kh.dndncare.member.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
@@ -106,6 +112,64 @@ public interface MemberMapper {
 
 	
 
+	Patient selectPatient(int memberNo);
 
+	List<Integer> selectInfoCategory(int memberNo);
+
+
+	int updatePassword(HashMap<String, String> changeInfo);
+
+	int deleteWantInfo(int memberNo);
+
+	int deleteMemberInfo(int memberNo);
+
+	int insertWantInfo(HashMap<String, Integer> info);
+
+	ArrayList<HashMap<String, String>> selectWantInfo(int memberNo);
+
+	int updatePatient(Patient p);
+
+	int insertMemberInfo(HashMap<String, Integer> info);
+
+	int updateMember(Member m);
+
+	CareGiver selectCareGiver(int memberNo);
+
+	int updateCareGiver(CareGiver cg);
+
+	int updateMemberVer2(Member m);
+	ArrayList<Board> mySelectBoardList(int mNo, RowBounds rowBounds);
+
+	int getBoardListCount(int mNo);
+
+	int boardLikeCount(int boardNo);
+
+	int getReplyListCount(int mNo);
+
+	ArrayList<Reply> mySelectReplyList(int mNo, RowBounds rowBounds);
+
+	int replyLikeCount(int replyNo);
+
+	int getLikeListCount(int mNo);
+
+	ArrayList<Board> mySelectLikeList(int mNo, RowBounds rowBounds);
+
+	int likeLikeCount(int boardNo);
+	
+	ArrayList<MatMatptInfo> selectMatList(int memberNo);
+
+
+	ArrayList<MatMatptInfoPt> getMatMatptInfoPt();
+
+	ArrayList<RequestMatPt> getRequestMatPt(int memberNo);
+
+	ArrayList<CareGiver> selectCareGiverList();
+
+	Member selectSocialLogin(String code);
+	ArrayList<CareReview> reviewList(int ptNo);
+
+	ArrayList<CareReview> selectReviewList(int reviewNo);
+
+	int getPtNo(int memberNo);
 
 }

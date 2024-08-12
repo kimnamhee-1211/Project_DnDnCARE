@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -33,9 +33,8 @@
 	      		</div>
 	      		
 	      		<div class="row m-4">
-	      			<div class="m-4 col">
-					  <button type="button" class="btn-outline-maincolor-2">피간병인(나환자)</button>
-					  <button type="button" class="btn-outline-maincolor-2">피간병인(찐환자)</button>
+	      			<div align="center" class="m-4 col">
+					  	<div class="h2">내 매칭 현황 및 후기를 작성할 수 있어요!</div>
 	      			</div>
 	      		</div>
 	      		
@@ -47,7 +46,7 @@
 						<div class="myInfo-Border-maincolor mt-2 mb-3">
 						
 							<div class="m-2 d-flex justify-content-between">
-								<div class="h3 myInfo-title">OOO님 이용일수/지출</div>
+								<div class="h3 myInfo-title">[[${session.loginUser.MemberName}]]님 이용일수/지출</div>
 								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">검색란?</button>
 							</div>
 							
@@ -60,36 +59,34 @@
 						<div class="myInfo-Border-maincolor mt-2 mb-3">
 						
 							<div class="m-2 d-flex justify-content-between">
-								<div class="h3 myInfo-title">OOO님 매칭 이력</div>
-								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">검색란?</button>
+								<div class="h3 myInfo-title">[[${session.loginUser.MemberName}]]님 매칭 이력</div>
+								<div>
+									<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">최근</button>
+									<button class="btn-outline-maincolor btn-sm" style="width:85px; height:40px;">종료</button>
+								</div>
 							</div>
 							
 							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
 								<table class="m-2">
 		      						<tr>
-										<th width="300px">간호 일자</th>
-										<th width="820px">정보</th>
+										<th width="170px">간호 시작일</th>
+										<th width="10"> </th>
+										<th width="170px">간호 끝</th>
+										<th width="820px">간병인 정보</th>
 										<th width="150px">매칭 상태</th>
 										<th width="120px">후기 작성</th>
 		      						</tr>
-		      						<tr>
-		      							<td>2020.11.12 ~ 2020.11.13</td>
-		      							<td>나간병님 여자 60세 서울 </td>
-		      							<td>진행중</td>
-		      							<td><button class="myInfo-btn btn-sm">후기 남기기</button></td>
-		      						</tr>	
-		      						<tr>
-		      							<td>2020.11.12 ~ 2020.11.13</td>
-		      							<td>나간병님 여자 60세 서울 </td>
-		      							<td>완료</td>
-		      							<td><button class="myInfo-btn btn-sm">후기 남기기</button></td>
-		      						</tr>	
-		      						<tr>
-		      							<td>2020.11.12 ~ 2020.11.13</td>
-		      							<td>나간병님 여자 60세 서울 </td>
-		      							<td>완료</td>
-		      							<td><button class="myInfo-btn btn-sm">후기 남기기</button></td>
-		      						</tr>	
+		      						<tr th:each="i : ${mciList}">
+		      							<td>[[${i.beginDt}]]</td>
+		      							 <td>~</td>
+		      							 <td>[[${i.endDt}]]</td>
+		      							<td> 이름 : [[${i.memberName}]] </td>
+		      							<input type="hidden" id="hiddenMemberNo" name="memberNo" th:value="${i.memberNo}"/>
+		      							<input type="hidden" id="hiddenMatchingNo" name="matNo" th:value="${i.matNo}"/>
+		      							<td><span th:if="${!i.isAfterDate}">진행 중</span><span th:if="${i.isAfterDate}">완료</span></td>
+		      							<td><button class="myInfo-btn btn-sm" onclick="reviewDetail('myInfoMatchingHistoryP')">후기 가능</button></td>
+		      						</tr>
+		      						
 		      					
 		      						
 	      						</table>
@@ -118,6 +115,10 @@
 				}
 			};
 			
+		}
+		
+		function reviewDetail(beforePage){
+			location.href = 'reviewDetail.mc?memberNo=' + hiddenMemberNo.value + '&matNo='+ hiddenMatchingNo.value+ '&from=' + beforePage;
 		}
 	
 	</script>

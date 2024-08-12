@@ -1,6 +1,8 @@
 package com.kh.dndncare.member.model.vo;
 
+
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -24,10 +26,16 @@ public class Patient {
 	private Date ptAge; // PT_AGE
 	private int ptWeight; // PT_WEIGHT
 	private int ptHeight; // PT_HEIGHT
-	private String ptService; // PT_SERVICE
 	private String ptAddress; // PT_ADDRESS
 	private String ptRequest; // PT_REQUEST
 	private Date ptUpdateDate;
+	
+	private List<Integer> memberInfo;
+	private List<Integer> wantInfo;
+	
+	private ArrayList<String> disease;
+	private String diseaseLevel;
+	
 	
 	private List<Integer> infoCategory;
 	
