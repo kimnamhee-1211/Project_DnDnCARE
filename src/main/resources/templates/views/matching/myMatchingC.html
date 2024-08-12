@@ -24,14 +24,14 @@
 			<div class="form-floating mb-5 mx-auto">
 				<div class="accordion" id="accordionExample">
 				  <div class="accordion-item"  th:each="myMat : ${myMatching}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
-				  	<div style="display:none" th:text="${myMat.matNo}" id="matNo"></div>
+				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 				    <h2 class="accordion-header">
 				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseOne' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
 				      	<th:block th:if="${myMat.ptCount > 1}">[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹과의 매칭이 진행 중입니다.</th:block>
 				        <th:block th:if="${myMat.ptCount == 1}">[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])과의 매칭이 진행 중입니다.</th:block>
 				      </button>
 				    </h2>
-				    <div th:id="'collapseOne' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+				    <div th:id="'collapseOne' + ${myMat.matNo}" class="accordion-collapse collapse " data-bs-parent="#accordionExample">
 						<div class="accordion-body">
 							<table class="table mx-auto">
 								<thead></thead>
@@ -48,9 +48,9 @@
 			<div class="form-floating mb-5 mx-auto">
 				<div class="accordion" id="accordionExample">
 				  <div class="accordion-item"  th:each="myMat : ${myMatchingW}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
-				  	<div style="display:none" th:text="${myMat.matNo}" id="matNo"></div>
+				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 				    <h2 class="accordion-header">
-				      <button class="accordion-button" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsetwo' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
+				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsetwo' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
 				      	<th:block th:if="${myMat.ptCount > 1}">[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹과의 매칭이 결제 대기 중입니다.</th:block>
 				        <th:block th:if="${myMat.ptCount == 1}">[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])과의 매칭이 결제 대기 중입니다.</th:block>
 				      </button>
@@ -73,9 +73,9 @@
 			<div class="form-floating mb-5 mx-auto">
 				<div class="accordion" id="accordionExample">
 					<div class="accordion-item"  th:each="myMat : ${myRequestMat}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
-						<div style="display:none" th:text="${myMat.matNo}" id="matNo"></div>
+						<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 				    	<h2 class="accordion-header">
-				      		<button class="accordion-button" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsethree' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
+				      		<button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsethree' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
 				      			<th:block th:if="${myMat.ptCount > 1}">[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹과의 매칭을 신청하셨습니다.</th:block>
 				        		<th:block th:if="${myMat.ptCount == 1}">[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])과의 매칭을 신청하셨습니다.</th:block>
 				      		</button>
@@ -98,9 +98,9 @@
 			<div class="form-floating mb-5 mx-auto">
 				<div class="accordion" id="accordionExample">
 				  <div class="accordion-item"  th:each="myMat : ${myRequestMatPt}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
-				  	<div style="display:none" th:text="${myMat.matNo}" id="matNo"></div>
+				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 				    <h2 class="accordion-header">
-				      <button class="accordion-button" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsefour' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
+				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsefour' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
 				      	<th:block th:if="${myMat.ptCount > 1}">
 				      		[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹이 매칭을 신청하셨습니다.
 				      	</th:block>
@@ -110,8 +110,8 @@
 				      </button>
 				    </h2>
 				    <div th:id="'collapsefour' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-						<div class="accordion-body">
-							<div style="display:none" th:text="${myMat.ptCount}" id="ptCount"></div>
+						<div class="accordion-body" style="text-align: center;">
+							<div style="display:none" th:text="${myMat.ptCount}" class="ptCount"></div>
 							<table class="table mx-auto">
 								<thead></thead>
 								<tbody></tbody>
@@ -286,8 +286,8 @@
 			if(matOks){
 				for(const matOk of matOks){
 					matOk.addEventListener('click', function(){
-						modalMatNo = this.parentElement.parentElement.parentElement.querySelector('#matNo').innerHTML;
-						modalPtCount = this.parentElement.querySelector('#ptCount').innerHTML;
+						modalMatNo = this.parentElement.parentElement.parentElement.querySelector('.matNo').innerHTML;
+						modalPtCount = this.parentElement.querySelector('.ptCount').innerHTML;
 						let modalBodyInner = '';						
 						for(const matPt of myRequestMatPt){
 							if(matPt.ptCount == 1 && matPt.matNo == modalMatNo){

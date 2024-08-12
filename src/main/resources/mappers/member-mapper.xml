@@ -39,8 +39,6 @@
 	  </select>
 	  
 	  
-	  
-
 	<!-- ResultMap : 캘린더에 적합도록 매핑 -->
 	<resultMap type="CalendarEvent" id="calendarResultMap">
 		<id column="MAT_NO" property="matNo"/>
@@ -371,6 +369,33 @@
 		from patient
 		where member_no=#{memberNo}
 	</select>
+	
+	<!-- 나(환자)에게 매칭 신청한 사람 목록 -->
+	<select id="getRequestCaregiver" resultType="CareGiverMin">
+		select careGiver.member_no, careGiver.care_img, member.member_national, member.member_gender, member.member_name, member.member_age
+		from careGiver
+			join member on (careGiver.member_no = member.member_no)
+			join mat_care_pending on (member.member_no = mat_care_pending.member_no)
+			join matching on (mat_care_pending.mat_no = matching.mat_no)
+			join mat_pt_info on (matching.mat_no = mat_pt_info.mat_no)
+		where  mat_pt_info.pt_no = #{ptNo}
+			and matching.begin_dt > sysdate
+			and mat_confirm = 'N'			 
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

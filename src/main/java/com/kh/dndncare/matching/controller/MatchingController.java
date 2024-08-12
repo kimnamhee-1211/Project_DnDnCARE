@@ -40,6 +40,7 @@ import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.member.model.vo.Info;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
@@ -704,12 +705,12 @@ public class MatchingController {
 
 	}
 	
-	//나의 매칭현황
-	@GetMapping("goMyMatching.mc")
-	public String goMyMatching(HttpSession session, Model model) {
+	//나의 매칭현황(간병인)
+	@GetMapping("goMyMatchingC.mc")
+	public String goMyMatchingC(HttpSession session, Model model) {
 		
-		Member loginuser = (Member)session.getAttribute("loginUser");
-		ArrayList<MatMatptInfoPt> myMatchingAll = mcService. getMyMatching(loginuser.getMemberNo());
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		ArrayList<MatMatptInfoPt> myMatchingAll = mcService. getMyMatching(loginUser.getMemberNo());
 		System.out.println("myMatchingAll : " + myMatchingAll);
 		
 		
@@ -754,7 +755,7 @@ public class MatchingController {
 		}		
 		
 		//매칭 신청 내역
-		ArrayList<MatMatptInfoPt> myRequestMat= mcService. getMyRequestMat(loginuser.getMemberNo());
+		ArrayList<MatMatptInfoPt> myRequestMat= mcService. getMyRequestMat(loginUser.getMemberNo());
 		for(MatMatptInfoPt i : myRequestMat) {
 			
 			//노출 나이 set
@@ -771,9 +772,9 @@ public class MatchingController {
 		model.addAttribute("myMatchingW", myMatchingW);
 		model.addAttribute("myRequestMat", myRequestMat);
 		model.addAttribute("myRequestMatPt", myRequestMatPt);
-		model.addAttribute("loginUserName", loginuser.getMemberName());
+		model.addAttribute("loginUserName", loginUser.getMemberName());
 		
-		return "myMatching";
+		return "myMatchingC";
 	}
 	
 	
@@ -865,17 +866,7 @@ public class MatchingController {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -917,10 +908,82 @@ public class MatchingController {
 		return "redirect:myInfoMatchingReview.me";
 	}
 	
+	//나의 매칭현황(환자)
+	@GetMapping("goMyMatchingP.mc")
+	public String goMyMatchingP(HttpSession session, Model model) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		int loginPt = mcService.getPtNo(loginUser.getMemberNo());
+		
+		//매칭 내역 (진행 + 결제대기 + 환자자 신청)
+		ArrayList<CareGiverMin> myMatchingAll = mcService. getMyMatchingP(loginPt);
+				
+		ArrayList<CareGiverMin> myMatching = new ArrayList<CareGiverMin>();
+		ArrayList<CareGiverMin> myMatchingW = new ArrayList<CareGiverMin>();
+		ArrayList<CareGiverMin> myRequestMatC = new ArrayList<CareGiverMin>();
+		
+		LocalDate today = LocalDate.now();		
+		
+		for(CareGiverMin i : myMatchingAll) {
+			
+			//노출 나이 set
+			int realAge = AgeCalculator.calculateAge(i.getMemberAge());
+			i.setAge(realAge);
+						
+			//매칭 진행 중
+			if(i.getMatConfirm().equals("Y")) {
+		        Date endDt = i.getEndDt(); 
+		        LocalDate endLocalDate = endDt.toLocalDate();		        
+		        if (endLocalDate.isAfter(today)) {
+		            myMatching.add(i);
+		        }
+			}
+			
+			//매칭 결제 대기중
+			if(i.getMatConfirm().equals("W")) {
+		        Date beginDt = i.getBeginDt(); 
+		        LocalDate beginLocalDate = beginDt.toLocalDate();		        
+		        if (beginLocalDate.isAfter(today)) {
+		        	myMatchingW.add(i);
+		        }
+			}
+			
+			//매칭신청 받은 내역
+			if(i.getMatConfirm().equals("N")) {
+		        Date beginDt = i.getBeginDt(); 
+		        LocalDate beginLocalDate = beginDt.toLocalDate();		        
+		        if (beginLocalDate.isAfter(today)) {
+		        	myRequestMatC.add(i);
+		        }
+			}	
+		}
+		
+		//매칭 내역 (간병인이 나(환자)를 신청)
+		ArrayList<CareGiverMin> myMatchingMat = mcService. getMyMatchingPN(loginPt);
+		for(CareGiverMin i : myMatchingMat) {
+			
+			//노출 나이 set
+			int realAge = AgeCalculator.calculateAge(i.getMemberAge());
+			i.setAge(realAge);
+		}
+		
+
+		System.out.println("myMatching : " +  myMatching);
+		System.out.println("myMatchingW : " +  myMatchingW);
+		System.out.println("myRequestMatC : " +  myRequestMatC);
+		System.out.println("myMatchingMat : " +  myMatchingMat);
+			
+		model.addAttribute("myMatching", myMatching);
+		model.addAttribute("myMatchingW", myMatchingW);
+		model.addAttribute("myRequestMatC", myRequestMatC);
+		model.addAttribute("myMatchingMat", myMatchingMat);
+		
+		model.addAttribute("loginUserName", loginUser.getMemberName());
+		
+		return "myMatchingP";	
 	
-	
-	
-	
+	}
 	
 	
 }

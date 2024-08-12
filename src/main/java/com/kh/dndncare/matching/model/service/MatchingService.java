@@ -14,6 +14,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
@@ -117,7 +118,7 @@ public interface MatchingService {
 	//이미 매칭을 신청한 사람인지 확인
 	int requestMatCheck(int memberNo, int matNo);
 	
-	//나의 현재 매칭 정보
+	//나(간병인)의 현재 매칭 정보
 	ArrayList<MatMatptInfoPt> getMyMatching(int memberNo);
 	
 	//매칭 신청 내역
@@ -128,6 +129,13 @@ public interface MatchingService {
 	
 	//간병인의 매칭 승낙
 	int matchingApproveC(int matNo, int memberNo);
+	
+	//나(환자)의 현재 매칭 정보-- 진행 + 결제대기 + 환자자 신청
+	ArrayList<CareGiverMin> getMyMatchingP(int ptNo);
+	
+	//나(환자)의 현재 매칭 정보-- 간병인이 환자(나) 신청
+	ArrayList<CareGiverMin> getMyMatchingPN(int ptNo);
+
 
 
 

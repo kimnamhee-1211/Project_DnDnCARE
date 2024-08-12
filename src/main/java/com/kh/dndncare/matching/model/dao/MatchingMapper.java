@@ -15,6 +15,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
@@ -104,7 +105,13 @@ public interface MatchingMapper {
 	String selectMatDate(int matNo);
 	int deleteReview(int reviewNo);
 
-	ArrayList<InfoCategory> getCaregiverInfo(int memberNo);
+	ArrayList<InfoCategory> getCaregiverInfo(int ptNo);
+
+	
+	ArrayList<CareGiverMin> getMyMatchingP(int ptNo);
+
+	
+	ArrayList<CareGiverMin> getMyMatchingPN(int ptNo);
 
 
 

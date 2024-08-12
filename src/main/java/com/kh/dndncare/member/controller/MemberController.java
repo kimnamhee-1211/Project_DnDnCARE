@@ -51,6 +51,7 @@ import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.member.model.vo.Info;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
@@ -687,8 +688,35 @@ public class MemberController {
 		}
 		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --up--
 		
+		
+		//남희 
+		//ptno 뽑기
+		int loginPt = mService.getPtNo(loginUser.getMemberNo());
+		// 환자 입장에서 나를 선택한 간병인 정보 불러오기
+
+		ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
+		for(int i = 0; i < requestCaregiver.size(); i++){
+			int age = AgeCalculator.calculateAge(requestCaregiver.get(i).getMemberAge());
+			requestCaregiver.get(i).setAge(age);
+			
+			if(i > 10) {
+				requestCaregiver.remove(i);
+			}
+
+		}
+		System.out.println("requestCaregiver : " + requestCaregiver);
+		model.addAttribute("requestCaregiver", requestCaregiver);	
+		
+		//loginUser Name
+		model.addAttribute("loginUserName", loginUser.getMemberName());	
+		
 		return "patientMain";
 	}
+	
+	
+	
+	
+	
 
 	// 회원가입 페이지 이동
 	@GetMapping("enroll1View.me")

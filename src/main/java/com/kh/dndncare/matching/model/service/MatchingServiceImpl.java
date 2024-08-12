@@ -16,6 +16,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
@@ -209,7 +210,7 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.requestMatCheck(memberNo, matNo);
 	}
 
-	//나의 현재 매칭 정보)
+	//나(간병인)의 현재 매칭 정보)
 	@Override
 	public ArrayList<MatMatptInfoPt> getMyMatching(int memberNo) {
 		return mMapper.getMyMatching( memberNo);
@@ -269,6 +270,19 @@ public class MatchingServiceImpl implements MatchingService {
 		// TODO Auto-generated method stub
 		return 0;//없는메소드	
 		}
+	
+	
+	//나(환자)의 현재 매칭 정보- 진행 + 결제대기 + 환자자 신청
+	@Override
+	public ArrayList<CareGiverMin> getMyMatchingP(int ptNo) {
+		return mMapper.getMyMatchingP(ptNo);
+	}
+
+	//나(환자)의 현재 매칭 정보-- 간병인이 환자(나) 신청
+	@Override
+	public ArrayList<CareGiverMin> getMyMatchingPN(int ptNo) {
+		return mMapper.getMyMatchingPN(ptNo);
+	}
 
 
 

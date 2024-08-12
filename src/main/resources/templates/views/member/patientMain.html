@@ -114,72 +114,33 @@
     <!-- 아래쪽 컨텐츠-->
     <div id="underContents">
         <div><!--왼쪽 공백--></div>
-        <div><!--매칭정보 : 가로 500, 세로 700-->
-            <table class="table mainTable">
-                <thead>
-                    <tr>
-                        <th colspan="5" class="align-middle">현재 개나리님과 매칭 중 입니다.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="align-middle ">
-                        <td>남성</td>
-                        <td>50</td>
-                        <td>서울시 종로구</td>
-                        <td>다리골절</td>
-                        <td rowspan="2"><button class="btn btn-success">대화신청</button></td>
-                    </tr>
-                    <tr>
-                        <td>24-07-24</td>
-                        <td>~</td>
-                        <td>24-08-15</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="align-middle">나팔꽃님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="align-middle">다람쥐님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="align-middle">라일락님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
-                    </tr>
-                    <tr>    
-                        <td colspan="4" class="align-middle">마동석님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
-                    </tr>   
-                    <tr>    
-                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
-                    </tr>
-                    <tr>    
-                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
-                    </tr>
-                    <tr>    
-                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
-                    </tr>
-                    <tr>    
-                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
-                    </tr>
-                    <tr>    
-                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
-                    </tr>
-                    <tr>    
-                        <td colspan="4" class="align-middle">바밤바님이 매칭을 원하고 있어요</td>
-                        <td><button class="btn btn-success">대화신청</button></td>
-                    </tr>
-                      
-                </tbody>
-            </table>
-        </div>
-        <div><!--공백 --></div>
+        
+			<!-- 남희 좌측 하단 -->
+	        <div><!--매칭정보 : 가로 500, 세로 700-->
+	        	<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
+					<span style="margin-top:10px;">[[${loginUserName}]]님에게 들어온 매칭 신청</span>
+           			<button type="button" class="btn-select">전체 보기</button>
+            	</div>
+            	<br/>
+	            <table class="table mainTable">
+	                <thead>
+	                    <tr>
+	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님과의 매칭을 원하는 분들이 있습니다.</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr class="align-middle text-center" th:each="rc : ${requestCaregiver}">
+	                    	<td style="display:none" th:text="${rc.memberNo}"></td>
+	                        <td colspan="4" class="align-middle">
+	                       		[[${rc.memberName}]]님([[${rc.age}]]세 [[${rc.memberGender =='M' ? '남':'여' }]] [[${rc.memberNational}]])이 매칭을 원하고 있어요.
+	                       	</td>
+	                        <td><button class="btn btn-success workInfo two">정보보기</button></td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	        </div>
+	        <div><!--공백 --></div>
+        
         
         <!-- 케러셀 효과준 공개정보(남희님쓰세유) -->
         <div id="findWorkList" class="text-center"><!--대상검색 : 가로 700, 세로 700-->
@@ -187,14 +148,8 @@
 			<span style="margin-top:10px;">간병인을 찾고 계신가요?</span>
             <button type="button" class="btn-select">원하는 간병인 찾기</button>
             </div>
-            <br/><br/>
-
-            
-            
-            
-            
-            
-			            <div id="carouselExampleIndicators" class="carousel slide">
+            <br/><br/>          
+			<div id="carouselExampleIndicators" class="carousel slide">
 			  <div class="carousel-indicators" style="margin-bottom:-40px; ">
 			    <button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;" data-bs-slide-to="0" class="active btn-test" aria-current="true" aria-label="Slide 1"></button>
 			    <button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -377,7 +332,7 @@
     
     
     <div id="myPresentMatching">
-        <a class="navbar-brand align-middle" href="#">
+        <a class="navbar-brand align-middle" href="goMyMatchingP.mc">
             <img src="image/icon/deal.png">
             나의 매칭 현황
         </a>
