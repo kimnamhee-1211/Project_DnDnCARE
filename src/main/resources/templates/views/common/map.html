@@ -7,23 +7,51 @@
     <title>간단한 지도 표시하기</title>
     
     <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=34igzywqrm"></script>
+    
+    
+     <style>
+        /* div와 iframe 스타일 설정 */
+        #container {
+            width: 500px;
+            height: 500px;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        iframe {
+            width: 200%;
+            height: 200%;
+            position: absolute;
+            top: -40%;
+            left: -100%;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-<div id="map" style="width:100%;height:400px;"></div>
-
-
- <div style="width: 100%; height: 500px; border: 1px solid #ccc;">
-        <iframe src="https://www.naver.com" style="width: 100%; height: 100%; border: none;"></iframe>
+	<div align="center">
+    <div id="container">
+        <iframe id="myIframe" src="https://map.naver.com/p/search/연세 세브란스 병원?c=15.00,0,0,0,dh"></iframe>
+    </div>
+    <div style="border:2px solid black; width:500px;  height: 60px;">
+    	<span>연세 세브란스 병원</span>
+    	<div align="left" class="m-2">
+    	<span style="color:#DDDDDD; ">https://map.naver.com</span>
+    	</div>
+    </div>
     </div>
 
+    <script>
+        const iframe = document.getElementById('myIframe');
 
-<script>
-var mapOptions = {
-    center: new naver.maps.LatLng(37.3595704, 127.105399),
-    zoom: 15
-};
+        iframe.onload = function() {
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            const scrollWidth = doc.documentElement.scrollWidth;
+            const scrollHeight = doc.documentElement.scrollHeight;
 
-var map = new naver.maps.Map('map', mapOptions);
-</script>
+            // 중앙으로 스크롤
+        };
+    </script>
 </body>
 </html>

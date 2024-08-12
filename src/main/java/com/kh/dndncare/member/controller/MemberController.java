@@ -108,6 +108,8 @@ public class MemberController {
 
 			char check = loginUser.getMemberCategory().charAt(0);
 			Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 내정보
+			System.out.println("이게 메소드" + categoryFunction(loginUser.getMemberNo(), true));
+			System.out.println("넣은거"+memberInfo);
 			Info wantInfo = categoryFunction(loginUser.getMemberNo(), false); // 원하는간병인정보
 			model.addAttribute("memberInfo", memberInfo);
 			System.out.println("여기가 멤버인포 : " + memberInfo);
@@ -155,7 +157,7 @@ public class MemberController {
 
 			
 			for(HashMap<String,String> m : category) {
-				System.out.println(m.get("S_CATEGORY"));
+				System.out.println("여기정보 확인하기" + m.get("S_CATEGORY"));
 				 switch(m.get("L_CATEGORY")) {
 					 case "service" : memberInfo.getInfoService().add(0,m.get("S_CATEGORY")); break;
 					 //case "serviceCareer" : memberInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
@@ -170,7 +172,7 @@ public class MemberController {
 			};
 		
 
-
+			/*
 			for (HashMap<String, String> m : category) {
 				switch (m.get("L_CATEGORY")) {
 				case "service":
@@ -199,7 +201,7 @@ public class MemberController {
 					break;
 				}
 			}
-			;
+			;*/
 
 
 			return memberInfo;
@@ -233,7 +235,7 @@ public class MemberController {
 			};
 			
 
-
+			/*
 			for (HashMap<String, String> m : category) {
 				switch (m.get("L_CATEGORY")) {
 				case "service":
@@ -261,8 +263,7 @@ public class MemberController {
 					wantInfo.getInfoAgeGroup().add(0, m.get("S_CATEGORY"));
 					break;
 				}
-			}
-			;
+			};*/
 
 
 			return wantInfo;
@@ -1784,11 +1785,11 @@ public class MemberController {
 
 		p.setMemberNo(loginUser.getMemberNo());
 
-		System.out.println(p);
 		System.out.println(memInfo);
 		int result = mService.updatePatient(p); // 환자정보바꾸기
 
 		int result2 = mService.deleteMemberInfo(loginUser.getMemberNo()); // 환자인포정보 한번 다 지우기
+		System.out.println(result2);
 		if (!memInfo.equals("fail")) {
 
 			String[] mis = memInfo.split(",");
@@ -1798,6 +1799,7 @@ public class MemberController {
 				info.put("memberNo", loginUser.getMemberNo());
 				info.put("categoryNo", Integer.parseInt(mi));
 				int result3 = mService.insertMemberInfo(info);
+				System.out.println(result3);
 			}
 
 		}
