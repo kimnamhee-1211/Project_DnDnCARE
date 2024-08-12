@@ -178,23 +178,9 @@
 		where pt_no = #{ptNo}
 	</select>
 	
-	<!-- 매칭 정보 삽입 -->
-	<insert id="insertMatching">		
-		insert into matching
-		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime})
-	</insert>
-	
 	<!-- want_info insert -->
 	<insert id="insertWantInfo">
-	    INSERT ALL
-	    <if test="symptoms != null and symptoms.size() > 0">
-	        <foreach collection="symptoms" item="symptom">
-	            INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{symptom})
-	        </foreach>
-	    </if>
-	    <if test="mobility != null">
-	        INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{mobility})
-	    </if>
+    	INSERT ALL
 	    <if test="gender != null">
 	        INTO want_info (member_no, category_no) VALUES (#{memberNo}, #{gender})
 	    </if>
@@ -210,20 +196,55 @@
 	    SELECT * FROM DUAL
 	</insert>
 	
+	<!-- member_info delete -->
+	<delete id="deleteMemberInfo">
+    DELETE FROM member_info
+    WHERE member_no = #{memberNo}
+    AND (
+        category_no IN
+        <foreach item="symptom" collection="symptoms" open="(" separator="," close=")">
+            #{symptom}
+        </foreach>
+        <if test="selectedDiseaseLevels != null and selectedDiseaseLevels.size() > 0">
+            OR category_no IN
+            <foreach item="selectedDiseaseLevel" collection="selectedDiseaseLevels" open="(" separator="," close=")">
+                #{selectedDiseaseLevel}
+            </foreach>
+        </if>
+        <if test="mobility != null">
+            OR category_no = #{mobility}
+        </if>
+        <if test="service != null">
+            OR category_no = #{service}
+        </if>
+    )
+</delete>
+	<!-- member_info insert -->
+ 	<insert id="insertMemberInfo">
+ 		INSERT ALL
+	    <if test="symptoms != null and symptoms.size() > 0">
+	        <foreach collection="symptoms" item="symptom">
+	            INTO member_info (member_no, category_no) VALUES (#{memberNo}, #{symptom})
+	        </foreach>
+	    </if>
+	    <if test="selectedDiseaseLevels != null and selectedDiseaseLevels.size() > 0">
+	        <foreach collection="selectedDiseaseLevels" item="selectedDiseaseLevel">
+	            INTO member_info (member_no, category_no) VALUES (#{memberNo}, #{selectedDiseaseLevel})
+	        </foreach>
+	    </if>
+	    <if test="mobility != null">
+	        INTO member_info (member_no, category_no) VALUES (#{memberNo}, #{mobility})
+	    </if>
+	    INTO member_info (member_no, category_no) VALUES (#{memberNo}, #{service})
+	     SELECT * FROM DUAL
+ 	</insert>
+    
 	<!-- want-info 삭제 -->
 	<delete id="deleteWantInfo">
 		delete from want_info
 		where member_no = #{memberNo}
 	</delete>
 	
-	<!-- mat_pt_info등록 -->
-	<insert id="insertMatPtInfo" useGeneratedKeys="true">	
-		<selectKey resultType="_int" keyProperty="matNo" order="BEFORE">
-			select seq_macid.nextval from dual
-		</selectKey>	
-		insert into mat_pt_info
-		values(#{matNo}, #{ptNo}, #{antePay}, #{service}, #{matAddressInfo}, #{matRequest}, default, #{groupLeader})
-	</insert>
 
 	<!-- 간병인 정보 조회 -->
 	<select id="selectIntro" resultType="Caregiver">
@@ -245,6 +266,13 @@
 		select *
 		from mat_pt_info
 		where mat_no = #{matNo} and pt_no = (select pt_no from patient where member_no = #{memberNo})
+	</select>
+	<select id="getCategoryNo" resultType="int">
+	    SELECT DISTINCT ic.category_no
+		FROM info_category ic
+			LEFT JOIN member_info mi ON ic.category_no = mi.category_no AND mi.member_no = #{memberNo}
+			LEFT JOIN want_info wi ON ic.category_no = wi.category_no AND wi.member_no = #{memberNo}
+		WHERE mi.member_no IS NOT NULL OR wi.member_no IS NOT NULL
 	</select>
 
 	<!--  리뷰작성  -->

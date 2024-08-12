@@ -129,7 +129,11 @@ lable{
   }
   .multiple-selection-note {
     display: inline-block;
-    margin-right:60px;
+    margin-left:20px;
+}
+  .multiple-selection-note2 {
+    display: inline-block;
+    margin-right:30px;
 }
   .symptom-buttons {
   	  margin-top:30px;
