@@ -14,6 +14,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
@@ -59,7 +60,8 @@ public interface MatchingMapper {
 	int delMatchingDate(int matNo);
 	int reviewCount(int memberNo);
 
-	int avgReviewScore(int memberNo);
+	Double avgReviewScore(int memberNo);
+	
 	int updatePatient(Patient patient);
 
 	int insertMatching(Matching matching);
@@ -72,8 +74,14 @@ public interface MatchingMapper {
 
 	int deleteWantInfo(int memberNo);
 
+	CareGiver selectIntro(int memberNo);
+	
+	MatMatptInfo selectMatching(int matNo);
 	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo);
 
+	int insertReview(HashMap<String, Object> map);
+	
+	MatMatptInfo selecMatPtInfo(@Param("matNo")int matNo,@Param("memberNo") int memberNo);
 	int requestMatching(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
 
 	String getMatPtName(@Param("matNo") int matNo, @Param("ptCount") int ptCount);
@@ -90,11 +98,13 @@ public interface MatchingMapper {
 
 	MatMatptInfo selecMatching(int matNo);
 
-	MatMatptInfo selecMatPtInfo(@Param("matNo") int matNo, @Param("i") int i);
 
 	int insertPay(@Param("loginUser") Member loginUser, @Param("p") Pay p);
 
 	String selectMatDate(int matNo);
+	int deleteReview(int reviewNo);
+
+	ArrayList<InfoCategory> getCaregiverInfo(int memberNo);
 
 
 

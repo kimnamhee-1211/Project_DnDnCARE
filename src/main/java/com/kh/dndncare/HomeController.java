@@ -38,8 +38,9 @@ public class HomeController {
 	@GetMapping("kakao.lo")
 	public String kakao(@RequestParam(value="code", required = false)String code,Model model) {
 		if(code != null) {
-			model.addAttribute("code",code);
+			model.addAttribute("code2",code);
 		}
+		System.out.println(code);
 		return "kakao";
 	}
 	
@@ -48,4 +49,8 @@ public class HomeController {
 		return "google";
 	}
 
+	@GetMapping("map.lo")
+	public String map() {
+		return "map";
+	}
 }

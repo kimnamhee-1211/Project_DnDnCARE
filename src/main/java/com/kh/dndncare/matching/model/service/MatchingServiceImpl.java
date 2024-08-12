@@ -15,6 +15,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
@@ -141,7 +142,7 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	@Override
-	public int avgReviewScore(int memberNo) {
+	public Double avgReviewScore(int memberNo) {
 		return mMapper.avgReviewScore(memberNo);
 	}
  
@@ -176,6 +177,11 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.deleteWantInfo(memberNo);
 	}
 
+	// 간병인 소개
+	@Override
+	public CareGiver selectIntro(int memberNo) {
+		return mMapper.selectIntro(memberNo);
+	}
 
 	
 	//매칭/매칭인포/환자/병원 한번에 가져오기
@@ -228,14 +234,17 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	@Override
+	public int insertReview(HashMap<String, Object> map) {
+		return mMapper.insertReview(map);
+	}
+	
+	public MatMatptInfo selecMatPtInfo(int matNo, int memberNo) {
+		return mMapper.selecMatPtInfo(matNo,memberNo);
+	}
 	public MatMatptInfo selecMatching(int matNo) {
 		return mMapper.selecMatching(matNo);
 	}
 
-	@Override
-	public MatMatptInfo selecMatPtInfo(int matNo, int i) {
-		return mMapper.selecMatPtInfo(matNo, i);
-	}
 
 	@Override
 	public int insertPay(Member loginUser, Pay p) {
@@ -246,6 +255,20 @@ public class MatchingServiceImpl implements MatchingService {
 	public String selectMatDate(int matNo) {
 		return mMapper.selectMatDate(matNo);
 	}
+	public int deleteReivew(int reviewNo) {
+		return mMapper.deleteReview(reviewNo);
+	}
+
+	@Override
+	public ArrayList<InfoCategory> getCaregiverInfo(int memberNo) {
+		return mMapper.getCaregiverInfo(memberNo);
+	}
+
+	@Override
+	public int insertMatPtInfo(MatPtInfo matPtInfo) {
+		// TODO Auto-generated method stub
+		return 0;//없는메소드	
+		}
 
 
 

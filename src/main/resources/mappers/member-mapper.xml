@@ -54,14 +54,14 @@
 	</resultMap>
 	  
 	  
-	  
+	  <!-- 
 	<select id="caregiverCalendarEvent" resultMap="calendarResultMap">
 		SELECT MAT_NO, '간병하기' AS TITLE, BEGIN_DT, END_DT, MONEY, HOSPTAL_NO, HOSPTAL_ADDRESS, HOSPTAL_NAME 
 		FROM MATCHING
 		        JOIN HOSPTAL USING(HOSPTAL_NO)
 		WHERE MEMBER_NO = #{memberNo}
 	</select>
-
+-->
 	  <select id="selectAllMember" resultType="Member">		<!-- 멤버좀 확인할라구요 -->
 		select *
 		from member	  
@@ -76,7 +76,7 @@
 	  	insert into member
 	  	values(#{memberNo}, #{memberId}, #{memberPwd}, #{memberName}, #{memberGender}, 
 	  			#{memberNickName}, #{memberAge}, #{memberPhone}, #{memberEmail}, sysdate,
-	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, null, sysdate)  	
+	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, #{memberPay}, sysdate)  	
 	  </insert>
 	  
 	  
@@ -302,7 +302,8 @@
 		from mat_pt_info
     		left join matching ON mat_pt_info.mat_no = matching.mat_no
             left join member on matching.member_no =member.member_no
-		where pt_no = (select pt_no
+            left join caregiver on matching.member_no = caregiver.member_no
+		where mat_confirm != 'N' and pt_no = (select pt_no
 						from patient
 						where member_no = #{memberNo})
 	</select>
@@ -344,6 +345,32 @@
 	</select>
 
 	
+	<select id="selectSocialLogin" resultType="Member">
+		select *
+		from member
+		where member_Pay = #{code}
+	</select>
+	<!-- 내가 작성한 리뷰조회 -->
+	<select id="reviewList" resultType="CareReview">
+		select distinct review_no, c.pt_no, c.mat_no, review_content, review_score, review_create_date, review_update_date, m.member_name
+		from care_review c
+		    left join member m on(c.member_no = m.member_no)
+		    left join mat_pt_info mpi on(mpi.pt_no = c.pt_no)
+		    left join matching mc on(mc.mat_no = mpi.mat_no)
+		where review_status = 'Y' and c.pt_no=#{ptNo}
+	</select>
+	
+	<select id="selectReviewList" resultType="CareReview">
+		select *
+		from care_review
+		where review_no = #{reviewNo}
+	</select>
+	
+	<select id="getPtNo" resultType="_int">
+		select pt_no
+		from patient
+		where member_no=#{memberNo}
+	</select>
 	
 	
 	

@@ -13,6 +13,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
@@ -72,19 +73,36 @@ public interface MatchingService {
 	
 	int reviewCount(int memberNo);
 	
-	int avgReviewScore(int memberNo);
+	Double avgReviewScore(int memberNo);
 	
 
 	int updatePatient(Patient patient);
+	
 	int insertMatchingDate(HashMap<String, Object> map);
+	
 	int getMatNo(int ptNo);
+	
 	int insertMatching(Matching matching);
+	
 	int insertWantInfo(Map<String, Object> params);
+	
+	int insertMatPtInfo(MatPtInfo matPtInfo);
+	
 	int deleteWantInfo(int memberNo);
+	
+	CareGiver selectIntro(int memberNo);
+	
 	MatMatptInfo selecMatching(int matNo);
 	MatMatptInfo selecMatPtInfo(int matNo, int i);
 	int insertPay(Member loginUser, Pay p);
 	String selectMatDate(int matNo);
+	
+	int insertReview(HashMap<String, Object> map);
+	
+	int deleteReivew(int reviewNo);
+	
+	ArrayList<InfoCategory> getCaregiverInfo(int memberNo);
+	
 	
 	
 	//매칭/매칭인포/환자/병원 한번에 가져오기

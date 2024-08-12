@@ -54,11 +54,6 @@
 						<div id="naver_id_login"></div>
         					<use xlink:href="../image/icon_naver.svg#icon"></use>
        				</li>
-       				<li>    
-						<svg class="google" width="60" height="60" id="google">
-        					<use xlink:href="../image/icon_google.svg#icon"></use>
-        				</svg>구글
-       				</li>
 					
 				</ul>
 			</div>
@@ -72,7 +67,7 @@
 	  	naver_id_login.setButton("green", 55);
 	  	naver_id_login.setDomain("http://localhost:8096/patient.me");
 	  	naver_id_login.setState(state);
-	  	naver_id_login.setPopup();
+	  	//naver_id_login.setPopup();
 	  	naver_id_login.init_naver_id_login();
 	  	console.log(naver_id_login);
 	
@@ -80,9 +75,9 @@
 	  	//카카오 시작
 	  	function loginWithKakao() {
 			  Kakao.Auth.authorize({
-		      redirectUri: 'http://localhost:8096/kakao.lo',
+		      redirectUri: 'http://localhost:8096/kakao.lo'
 		    });
-		  }
+		  } 
 	  	
 		document.addEventListener('DOMContentLoaded', function() { // DOMContentLoaded => 페이지 로딩될때 다른거 기다리지 않고 바로 되게하는 것 굳이 필요하진않음
 		    document.getElementById('google').addEventListener('click', handleGoogleLogin);

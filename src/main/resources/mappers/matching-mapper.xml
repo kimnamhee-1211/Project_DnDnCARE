@@ -68,18 +68,13 @@
 		where patient.pt_no = #{ptNo}	
 	</select>
 	
+	<!--  리뷰리스트 -->
 	<select id="selectReviewList" resultType="CareReview">
 		select *
 		from care_review r
-		        left join patient p on(p.pt_no = r.pt_no)
-		        left join mat_pt_info mpi on(mpi.pt_no = p.pt_no)
-		        left join matching mc on(mc.mat_no = mpi.mat_no)
-		        left join caregiver cg on(mc.member_no = cg.member_no)
-		        left join member m on(m.member_no = mc.member_no)
-		        left join matching mc on(mc.member_no = cg.member_no)
-		        left join member m on(m.member_no = cg.member_no)
-		where review_status ='Y' 
-       	<!-- and m.member_no = #{memberNo} -->
+			join patient p on(p.pt_no = r.pt_no)
+			join member m on(m.member_no = r.member_no)
+		where review_status ='Y' and r.member_no = #{memberNo}
 	</select>
 	
 	<!-- 병원 get : 병원 존재 유무 확인-->
@@ -140,17 +135,18 @@
 	</delete>
 	
 	
+	<!-- 간병인 후기수 -->
 	<select id="reviewCount" resultType="_int">
 		select count(*)
 		from care_review
-			join matching using(mat_no)
-		<!-- where member_no=#{memberNo}   -->
+		where member_no=#{memberNo} and review_status='Y'
 	</select>
 	
-	<select id="avgReviewScore" resultType="_int">
-		select avg(review_score)
+	<!-- 간병인 평점 -->
+	<select id="avgReviewScore" resultType="Double">
+		select round(avg(review_score),2)
 		from care_review
-		<!-- where member_no=#{memberNo} -->
+		where member_no=#{memberNo} and review_status='Y'
 	</select>
 	
 	<!-- 받아온 patient정보로 수정 -->
@@ -296,6 +292,14 @@
 		where mat_no = #{matNo} and member_no = #{memberNo}
 	</update>
 
+	<!-- 간병인 정보 조회 -->
+	<select id="selectIntro" resultType="Caregiver">
+		select *
+		from caregiver
+			join member using(member_no)
+		where member_no = #{memberNo}
+	</select>
+	
 	<!-- 결제정보가져오려는 셀렉트 매칭 정보 -->
 	<select id="selectMatching" resultType="MatMatptInfo">
 		select *
@@ -310,6 +314,15 @@
 		where mat_no = #{matNo} and pt_no = (select pt_no from patient where member_no = #{memberNo})
 	</select>
 
+	<!--  리뷰작성  -->
+	<insert id="insertReview">
+		<selectKey resultType="_int" keyProperty="reviewNo" order="BEFORE">
+			select seq_crid.nextval from dual
+		</selectKey>	
+		insert into care_review
+		values(#{reviewNo}, #{ptNo}, #{matNo}, #{reviewContent}, #{reviewScore}, sysdate, sysdate, 'Y', #{memberNo})
+	</insert>
+	
 	<insert id="insertPay">
 		insert into pay values(
 			seq_pay.nextval,
@@ -330,6 +343,21 @@
 		from matching_date
 		where mat_no = #{matNo} 
 	</select>
+	<!-- 리뷰삭제 -->
+	<update id="deleteReview">
+		update care_review
+		set review_status = 'N'
+		where review_no = #{reviewNo}
+	</update>
+	
+	<!-- member의 category  -->
+	<select id="getCaregiverInfo" resultType="InfoCategory">
+		select l_category, s_category
+		from member_info 
+			join info_category using(category_no)
+		where member_no = #{memberNo}
+	</select>
+
 
 
 </mapper>

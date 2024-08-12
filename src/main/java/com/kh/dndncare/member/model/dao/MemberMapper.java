@@ -9,7 +9,9 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
@@ -111,5 +113,11 @@ public interface MemberMapper {
 
 	ArrayList<CareGiver> selectCareGiverList();
 
+	Member selectSocialLogin(String code);
+	ArrayList<CareReview> reviewList(int ptNo);
+
+	ArrayList<CareReview> selectReviewList(int reviewNo);
+
+	int getPtNo(int memberNo);
 
 }

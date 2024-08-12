@@ -36,16 +36,23 @@ import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.AgeCalculator;
 import com.kh.dndncare.common.Pagination;
 
+import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.common.Pagination;
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
+import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.Info;
+import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
@@ -353,7 +360,6 @@ public class MemberController {
 																							// L_CATEGORY=license}]
 
 >>>>>>> refs/remotes/origin/Kiryong
-=======
 		
 		
 		
@@ -754,12 +760,16 @@ public class MemberController {
 		m.setMemberEmail(memberEmail);
 
 		System.out.println("회원가입 검증=" + m);
-
+		//소셜회원가입하나추가
+		String code = (String) session.getAttribute("code");
+		m.setMemberPay(code);
+		session.removeAttribute("code");
 		int result = mService.enroll(m);
 
 		// 회원가입용 session데이터
 		model.addAttribute("enrollmember", m);
 		System.out.println("회원가입 데이터 전송 검증 =" + m);
+		System.out.println("성공여부" + result);
 
 		if (result > 0) {
 			if (m.getMemberCategory().equals("C")) {
@@ -769,6 +779,7 @@ public class MemberController {
 			}
 		} else {
 			throw new MemberException("회원가입에 실패했습니다.");
+			
 		}
 
 	}
@@ -783,7 +794,6 @@ public class MemberController {
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
-		
 		if(loginUser != null) {
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch(check) {
@@ -791,6 +801,7 @@ public class MemberController {
 				
 				case 'P':
 					ArrayList<MatMatptInfo> mciList = mService.selectMatList(loginUser.getMemberNo());	//환자측 매칭방번호 리스트.ptNo가들어가서무조건
+					System.out.println(mciList);
 					for(MatMatptInfo i : mciList) {
 						System.out.println(i);
 						i.setAfterDate(LocalDate.now().isAfter(i.getBeginDt().toLocalDate()));
@@ -807,10 +818,25 @@ public class MemberController {
 	}
 
 	@GetMapping("myInfoMatchingReview.me")
-	public String myInfoMatchingReview(HttpSession session) { // 마이페이지 매칭 이력 확인용
+	public String myInfoMatchingReview(HttpSession session, Model model) { // 마이페이지 매칭 이력 확인용
 
 		Member loginUser = (Member) session.getAttribute("loginUser");
-
+		int memberNo = loginUser.getMemberNo();
+		
+		int ptNo = mService.getPtNo(memberNo);
+		ArrayList<CareReview> list = mService.reviewList(ptNo);
+		System.out.println("123"+list);
+		HashMap<Integer, Object> reviewList = new HashMap<Integer, Object>();
+		
+		
+		for(CareReview reviewsInfo:list) {
+                ArrayList<CareReview> selectReviewList = mService.selectReviewList(reviewsInfo.getReviewNo());
+                reviewList.put(reviewsInfo.getReviewNo(), selectReviewList);
+            }
+		System.out.println(reviewList);
+		
+		model.addAttribute("list", list);
+		
 		if (loginUser != null) {
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch (check) {
@@ -826,95 +852,67 @@ public class MemberController {
 	}
 	
 	// 내 작성글 보기
-	@GetMapping("myInfoBoardList.me")
-	public String myInfoBoardList(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model, HttpSession session) {		//마이페이지 보드작성 확인용
-		
-	    
-		Member loginUser = (Member)session.getAttribute("loginUser");
-		int mNo = loginUser.getMemberNo();
+	   @GetMapping("myInfoBoardList.me")
+	   public String myInfoBoardList(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model, HttpSession session) {      //마이페이지 보드작성 확인용
+	      
+	       
+	      Member loginUser = (Member)session.getAttribute("loginUser");
+	      int mNo = loginUser.getMemberNo();
 
-	// 내 작성글 보기
-//	   @GetMapping("myInfoBoardList.me")
-//	   public String myInfoBoardList(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model, HttpSession session) {      //마이페이지 보드작성 확인용
-//	      
-//	       
-//	      Member loginUser = (Member)session.getAttribute("loginUser");
-//	      int mNo = loginUser.getMemberNo();
-//
 //	      // 게시글페이지네이션
-//	      int boardListCount = mService.getBoardListCount(mNo); 
-//	       PageInfo boardPi = Pagination.getPageInfo(currentPage, boardListCount, 5);
-//	       
+	      int boardListCount = mService.getBoardListCount(mNo); 
+	       PageInfo boardPi = Pagination.getPageInfo(currentPage, boardListCount, 5);
+	       
 //	      // 내 작성글 정보
-//	      ArrayList<Board> boardList = mService.mySelectBoardList(boardPi, mNo);
-//	      
+	      ArrayList<Board> boardList = mService.mySelectBoardList(boardPi, mNo);
+	      
 //	      // 내 작성글 좋아요
-//	      HashMap<Integer, Integer> boardLikeCounts = new HashMap<>();
-//	      for (Board board : boardList) {
-//	         int boardLikeCount = mService.boardLikeCount(board.getBoardNo());
-//	         boardLikeCounts.put(board.getBoardNo(), boardLikeCount);
-//	      }
-//	      
+	      HashMap<Integer, Integer> boardLikeCounts = new HashMap<>();
+	      for (Board board : boardList) {
+	         int boardLikeCount = mService.boardLikeCount(board.getBoardNo());
+	         boardLikeCounts.put(board.getBoardNo(), boardLikeCount);
+	      }
+	      
 //	      // 댓글 페이지네이션
-//	      int replyListCount = mService.getReplyListCount(mNo);
-//	      PageInfo replyPi = Pagination.getPageInfo(currentPage, replyListCount, 5);
-//	      
+	      int replyListCount = mService.getReplyListCount(mNo);
+	      PageInfo replyPi = Pagination.getPageInfo(currentPage, replyListCount, 5);
+	      
 //	      // 내 댓글 정보
-//	      ArrayList<Reply> replyList = mService.mySelectReplyList(replyPi, mNo);
-//	      
+	      ArrayList<Reply> replyList = mService.mySelectReplyList(replyPi, mNo);
+	      
 //	      // 내 댓글 좋아요
-//	      HashMap<Integer, Integer> replyLikeCounts = new HashMap<>();
-//	      for(Reply reply : replyList) {
-//	         int replyLikeCount = mService.replyLikeCount(reply.getReplyNo());
-//	         replyLikeCounts.put(reply.getReplyNo(), replyLikeCount);
-//	      }
+	      HashMap<Integer, Integer> replyLikeCounts = new HashMap<>();
+	      for(Reply reply : replyList) {
+	         int replyLikeCount = mService.replyLikeCount(reply.getReplyNo());
+	         replyLikeCounts.put(reply.getReplyNo(), replyLikeCount);
+	      }
 //	      // 좋아요 페이지네이션
-//	      int likeListCount = mService.getLikeListCount(mNo);
-//	      PageInfo likePi = Pagination.getPageInfo(currentPage, likeListCount, 5);
+	      int likeListCount = mService.getLikeListCount(mNo);
+	      PageInfo likePi = Pagination.getPageInfo(currentPage, likeListCount, 5);
 //
 //	      // 좋아요한 글 목록
-//	      ArrayList<Board> likeList = mService.mySelectLikeList(likePi, mNo);
-//	      
-//	      // 좋아요한 글 좋아요
-//	      HashMap<Integer, Integer> likeLikeCounts = new HashMap<>();
-//	      for (Board board : likeList) {
-//	         int likeLikeCount = mService.likeLikeCount(board.getBoardNo());
-//	         likeLikeCounts.put(board.getBoardNo(), likeLikeCount);
-//	      }
-//	      
-//	      
-//	      model.addAttribute("boardPi", boardPi);
-//	      model.addAttribute("boardList", boardList);
-//	      model.addAttribute("boardLikeCounts", boardLikeCounts);
-//	      model.addAttribute("replyPi", replyPi);
-//	      model.addAttribute("replyList", replyList);
-//	      model.addAttribute("replyLikeCounts", replyLikeCounts);
-//	      model.addAttribute("likePi", likePi);
-//	      model.addAttribute("likeList", likeList);
-//	      model.addAttribute("likeLikeCounts", likeLikeCounts);
-//	      return "myInfoBoardList";
-//	   }
-	/*
-	 * // 좋아요한 글 목록 ArrayList<Board> likeList = mService.mySelectLikeList(likePi,
-	 * mNo);
-	 * 
-	 * // 좋아요한 글 좋아요 HashMap<Integer, Integer> likeLikeCounts = new HashMap<>(); for
-	 * (Board board : likeList) { int likeLikeCount =
-	 * mService.likeLikeCount(board.getBoardNo());
-	 * likeLikeCounts.put(board.getBoardNo(), likeLikeCount); }
-	 * 
-	 * 
-	 * model.addAttribute("boardPi", boardPi); model.addAttribute("boardList",
-	 * boardList); model.addAttribute("boardLikeCounts", boardLikeCounts);
-	 * model.addAttribute("replyPi", replyPi); model.addAttribute("replyList",
-	 * replyList); model.addAttribute("replyLikeCounts", replyLikeCounts);
-	 * model.addAttribute("likePi", likePi); model.addAttribute("likeList",
-	 * likeList); model.addAttribute("likeLikeCounts", likeLikeCounts);
-	 */
-		
-		
-		return "myInfoBoardList";
-	}
+	      ArrayList<Board> likeList = mService.mySelectLikeList(likePi, mNo);
+	      
+	      // 좋아요한 글 좋아요
+	      HashMap<Integer, Integer> likeLikeCounts = new HashMap<>();
+	      for (Board board : likeList) {
+	         int likeLikeCount = mService.likeLikeCount(board.getBoardNo());
+	         likeLikeCounts.put(board.getBoardNo(), likeLikeCount);
+	      }
+	      
+	      
+	      model.addAttribute("boardPi", boardPi);
+	      model.addAttribute("boardList", boardList);
+	      model.addAttribute("boardLikeCounts", boardLikeCounts);
+	      model.addAttribute("replyPi", replyPi);
+	      model.addAttribute("replyList", replyList);
+	      model.addAttribute("replyLikeCounts", replyLikeCounts);
+	      model.addAttribute("likePi", likePi);
+	      model.addAttribute("likeList", likeList);
+	      model.addAttribute("likeLikeCounts", likeLikeCounts);
+	      return "myInfoBoardList";
+	   }
+	
 	
 	
 	//간병인 회원가입(간병인 정보 입력)
@@ -1023,14 +1021,8 @@ public class MemberController {
 		Member loginUser = (Member)model.getAttribute("loginUser");
 		
 		// 일정 조회 
-=======
 
-	// 임시 : 메인페이지 이동시 캘린더 이벤트 조회
-	public void calendarEvent(Model model, HttpServletResponse response) {
-		Member loginUser = (Member) model.getAttribute("loginUser");
-
-		// 일정 조회
->>>>>>> refs/remotes/origin/Kiryong
+	
 		ArrayList<CalendarEvent> eList = mService.caregiverCalendarEvent(loginUser);
 
 		// GSON
@@ -1466,6 +1458,32 @@ public class MemberController {
 		throw new MemberException("정보변경을 실패했습니다");
 	}
 
+	@GetMapping("socialLogin.me")
+	public String socialLogin(@RequestParam("code") String code,HttpSession session,Model model,RedirectAttributes ra) {
+		//소셜로그인 없으면 회원가입으로, 있으면 로그인 바로하게 하기
+		System.out.println(code);
+		Member m = mService.selectSocialLogin(code);
+		if(m == null) {		//검사해서 없으면 회원가입창으로
+			session.setAttribute("code", code);
+			return "redirect:enroll1View.me";
+		}else {				//검사해서 있으면 바로 로그인하기
+			model.addAttribute("loginUser", m);
+
+			if (m.getMemberCategory().equalsIgnoreCase("C")) {
+				ra.addAttribute("memberNo", m.getMemberNo());
+
+				return "redirect:caregiverMain.me";
+			} else if(m.getMemberCategory().equalsIgnoreCase("P")) {
+				
+				
+				return "redirect:patientMain.me";
+			}
+
+			return "redirect:patientMain.me";
+		}
+		
+	}
+	
 }//클래스 끝
 
 	
