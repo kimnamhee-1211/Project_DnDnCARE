@@ -16,6 +16,7 @@ import lombok.ToString;
 @ToString
 public class CareGiverMin {
 	private int memberNo;
+	private int metNo;
 	private String careImg;
 	private String memberNational;
 	private String memberGender;

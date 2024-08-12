@@ -362,7 +362,7 @@
 	<select id="getMyMatchingP" resultType="CareGiverMin">
 		select matching.member_no, careGiver.care_img, member.member_national, 
 				member.member_gender, member.member_name, member.member_age,
-				matching.end_dt, matching.begin_dt, matching.mat_confirm
+				matching.end_dt, matching.begin_dt, matching.mat_confirm, member.matNo
 		from careGiver
 			join member on (careGiver.member_no = member.member_no)
 			join matching on (member.member_no = matching.member_no)
@@ -373,7 +373,7 @@
 	<!--//나(환자)의 현재 매칭 정보- 간병인이 신청 -->
 	<select id="getMyMatchingPN">
         select mat_care_pending.member_no, careGiver.care_img, member.member_national, 
-				member.member_gender, member.member_name, member.member_age
+				member.member_gender, member.member_name, member.member_age, member.matNo
 		from careGiver
 			join member on (careGiver.member_no = member.member_no)
 			join mat_care_pending on (member.member_no = mat_care_pending.member_no)

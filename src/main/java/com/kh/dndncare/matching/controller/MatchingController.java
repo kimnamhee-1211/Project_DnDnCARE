@@ -465,8 +465,7 @@ public class MatchingController {
 
 	
 	@GetMapping("reviewDetail.mc")												
-	public String getMethodName(HttpSession session, Model model,@RequestParam("memberNo")int memberNo,@RequestParam(value="matNo", required = false) Integer matNo, @RequestParam(value="from", required = false) String beforePage) {
-		
+	public String getMethodName(HttpSession session, Model model,@RequestParam("memberNo")int memberNo,@RequestParam(value="matNo", required = false) Integer matNo, @RequestParam(value="from", required = false) String beforePage) {		
 		
 		// 후기내역
 		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
@@ -508,6 +507,8 @@ public class MatchingController {
 		model.addAttribute("caregiverInfoList", caregiverInfoList);
 		return "reviewDetail";
 	}
+	
+	
 	
 	//공동간병 참여자 퇴장
 	@PostMapping("walkoutJoinMatching.jm")

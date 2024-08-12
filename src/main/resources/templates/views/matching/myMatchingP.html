@@ -25,6 +25,7 @@
 				<div class="accordion" id="accordionExample">
 				  <div class="accordion-item"  th:each="myMat : ${myMatching}">
 				  	<div style="display:none" th:text="${myMat.memberNo}" class="memberNo"></div>
+				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 				    <h2 class="accordion-header">
 				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseOne' + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
 				      		[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭이 진행 중입니다.
@@ -72,6 +73,7 @@
 				<div class="accordion" id="accordionExample">
 					<div class="accordion-item"  th:each="myMat : ${myRequestMatC}">
 						<div style="display:none" th:text="${myMat.memberNo}" class="memberNo"></div>
+						<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 				    	<h2 class="accordion-header">
 				      		<button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsethree' + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
 				        		[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭을 신청하셨습니다.
@@ -96,6 +98,7 @@
 				<div class="accordion" id="accordionExample">
 				  <div class="accordion-item"  th:each="myMat : ${myMatchingMat}">
 				  	<div style="display:none" th:text="${myMat.memberNo}" class="memberNo"></div>
+				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 				    <h2 class="accordion-header">
 				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsefour' + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
 				      	[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])이 매칭을 신청하셨습니다.
@@ -126,7 +129,7 @@
 	      </div>
 	      <div class="modal-body" style="margin:30px;">
 	        <h4 class="h4 mb-4 fw-bold" id="modalBody"></h4>
-	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청 승낙이 완료됩니다.<br>상대가 입금을 완료하면 매칭이 성사됩니다.</h5>	        
+	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청 승낙이 완료됩니다.<br>입금을 완료하면 매칭이 성사됩니다.</h5>	        
 	      </div>
 	      <div class="modal-footer">
 	      	<button type="button" class="btn btn-primary" id="requestMatchingOk">매칭 승낙</button>
@@ -148,15 +151,16 @@
 			
 			for(const accordionButton of accordionButtons){
 				accordionButton.addEventListener('click', function(){
-					const matNo = this.parentElement.previousElementSibling.innerHTML;
+					const matNo = this.parentElement.parentElement.querySelector('matNO').innerHTML;
+					const memberNO = this.parentElement.parentElement.querySelector('memberNO').innerHTML;
 					
 					const thead = this.parentElement.parentElement.querySelector('thead')
 					const tbody = this.parentElement.parentElement.querySelector('tbody')
 					
 					$.ajax({
-						url : 'getMatPtToMatNo.mc',
+						url : 'getMatCToMatNoMemNo.mc',
 						type :'post',
-						data : {matNo : matNo},
+						data : {matNo : matNo, memberNO : memberNO },
 						dataType : 'json',
 						success : data=>{
 							const matInfo = data;
