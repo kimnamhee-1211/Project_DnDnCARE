@@ -8,6 +8,7 @@
 	 	where member_status = 'N' and member_id=#{memberId}
 	</select> -->
 	
+	
 	  <select id="login" resultType="Member">
 	  	select *
 	  	from member

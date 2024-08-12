@@ -162,6 +162,10 @@ public class MatchingController {
 	         
 	         int matNo = matching.getMatNo();
 	         
+	         
+	         
+	         
+	         
 	         //시간제일 때 Matching_date 테이블 insert
 	         if(matching.getMatMode() == 2 && selectDays != null) {
 	            formattedDates = convertDates(selectDays);
@@ -188,11 +192,14 @@ public class MatchingController {
 	         matPtInfo.setGroupLeader("N");
 
 	         int ptInfoResult = mcService.enrollMatPtInfo(matPtInfo);
+	         
+	         //채팅방 생성 (간병인 후기 보기에서 매칭방 신청하고 바로 채팅방 생성할때)
+	         
 	         int finalResult = wantInfoResult + patientResult + ptInfoResult + dateResult + matchingResult + deleteWantInfo + deleteMemberInfoResult + memberInfoResult;
 	         
 	         if(finalResult!=0) {
 	        	session.removeAttribute("tempPatient"); // 세션에 담아놨던 patient 객체 삭제 
-	        	session.removeAttribute("service");
+	        	session.removeAttribute("service");        	
 	            return "redirect:myInfo.me";
 	         } else {
 	            throw new MatchingException("공개구인 신청에 실패하였습니다");
@@ -708,6 +715,8 @@ public class MatchingController {
 		}		
 		model.addAttribute("mPI", mPI);
 		model.addAttribute("matCheck", matCheck);
+		//채팅테스트용 matNo
+		model.addAttribute("matNo",matNo);
 		
 		return "caregiverPtInfo";
 	}
