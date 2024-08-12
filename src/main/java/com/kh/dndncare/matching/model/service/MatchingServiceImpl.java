@@ -214,6 +214,11 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.getCaregiverInfo(memberNo);
 	}
 
+	@Override
+	public int updateReview(CareReview cr) {
+		return mMapper.updateReview(cr);
+	}
+
 
 
 

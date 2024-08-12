@@ -619,6 +619,7 @@ public class MatchingController {
 		return "redirect:patientMain.me";
 	}
 	
+	// 후기삭제
 	@PostMapping("deleteReview.mc")
 	public String deleteReview(@RequestParam("reviewNo") int reviewNo) {
 		int result = mcService.deleteReivew(reviewNo);
@@ -629,11 +630,17 @@ public class MatchingController {
 			}
 	}
 	
+	// 후기 수정
 	@PostMapping("updateReview.mc")
 	public String updateReview(@ModelAttribute CareReview cr) {
-		
 		System.out.println("updateReview"+cr);
-		return "redirect:myInfoMatchingReview.me";
+		
+		int result = mcService.updateReview(cr);
+		if(result > 0) {
+			return "redirect:myInfoMatchingReview.me";
+		}else {
+			throw new MatchingException("후기 수정 실패");
+		}
 	}
 	
 	

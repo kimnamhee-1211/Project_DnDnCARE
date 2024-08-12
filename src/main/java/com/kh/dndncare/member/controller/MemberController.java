@@ -692,7 +692,8 @@ public class MemberController {
 	public String myInfoMatching() { // 마이페이지 현재매칭정보 확인용
 		return "myInfoMatching";
 	}
-
+	
+	// 매칭이력
 	@GetMapping("myInfoMatchingHistory.me")
 	public String myInfoMatchingHistory(HttpSession session,Model model) {		//마이페이지 매칭 이력 확인용
 		
@@ -705,7 +706,7 @@ public class MemberController {
 				
 				case 'P':
 					ArrayList<MatMatptInfo> mciList = mService.selectMatList(loginUser.getMemberNo());	//환자측 매칭방번호 리스트.ptNo가들어가서무조건
-					System.out.println(mciList);
+					System.out.println("매칭이력"+mciList);
 					for(MatMatptInfo i : mciList) {
 						System.out.println(i);
 						i.setAfterDate(LocalDate.now().isAfter(i.getBeginDt().toLocalDate()));
@@ -721,23 +722,29 @@ public class MemberController {
 		throw new MemberException("로그인없음. 인터셉터설정");
 	}
 
+	// 내가 쓴 후기
 	@GetMapping("myInfoMatchingReview.me")
 	public String myInfoMatchingReview(HttpSession session, Model model) { // 마이페이지 매칭 이력 확인용
 
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		int memberNo = loginUser.getMemberNo();
 		
+		// 회원번호로 환자번호 get
 		int ptNo = mService.getPtNo(memberNo);
+		
+		// 환자가 작성한 후기글
 		ArrayList<CareReview> list = mService.reviewList(ptNo);
-		System.out.println("123"+list);
+
 		HashMap<Integer, Object> reviewList = new HashMap<Integer, Object>();
 		
 		
 		for(CareReview reviewsInfo:list) {
+			// 리뷰번호로 간병인별로 작성한 리뷰 조회
                 ArrayList<CareReview> selectReviewList = mService.selectReviewList(reviewsInfo.getReviewNo());
                 reviewList.put(reviewsInfo.getReviewNo(), selectReviewList);
+                
             }
-		System.out.println(reviewList);
+		System.out.println("lll"+reviewList);
 		
 		model.addAttribute("list", list);
 		

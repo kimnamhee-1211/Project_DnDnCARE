@@ -142,13 +142,13 @@
 									<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
 								</div>
 								<div>
-									 <button class="btn-outline-maincolor btn-sm m-2" th:onclick="updateReview([[${r.reviewNo}]],[[${r.reviewScore}]], '[[${r.reviewContent}]]')">수정하기</button>
+									 <button class="btn-outline-maincolor btn-sm m-2" th:onclick="updateReview([[${r.reviewNo}]],[[${r.reviewScore}]], [[${r.reviewContent}]])">수정하기</button>
     								 <button class="btn-outline-maincolor btn-sm m-2" th:onclick="deleteReview([[${r.reviewNo}]])">삭제하기</button>
 								</div>
 							</div>
 							 <div class="hidden-content m-2">
 							 	 <div class="col testBorder">
-									<div   class="d-flex justify-content-left" style="min-width:600px; border:none;">평점 : 
+									<div class="d-flex justify-content-left" style="min-width:600px; border:none;">평점 : 
 						      			<div align="left"class="icon-star-review">
 											<button th:if="${1 == r.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
 											<button th:if="${1 < r.reviewScore}" class="btn-star btn-icon-star-review"></button>
@@ -185,40 +185,41 @@
 				<div class="modal-dialog modal-dialog-centered" role="document">
 		    		<div class="modal-content rounded-3 shadow">
 		    		 <form id="updateReviewForm" method="post" action="updateReview.mc">
-		    			<div align="center" class="m-2 mt-2 h2" id="modalScore" style="margin-top:30px;">10</div>
-		    			<input type="hidden" name="reviewBeforeScore" id="hiddenBeforeScore" th:value=0/>
+		    			<div align="center" class="m-2 mt-2 h2" id="modalScore" style="margin-top:30px;">점수 : [[${reviewScore}]]</div>
 			    			<div align="center" id="reviewScore" class="d-flex justify-content-center m-3" >
+		    					<input type="hidden" name="reviewBeforeScore" id="hiddenBeforeScore" value=""/>
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-									<button type="button" class="btn-star btn-icon-star-left-modal" value="1"></button>
-									<button type="button" class="btn-star-right btn-icon-star-right-modal "value="2"></button>
+			    					<input id="testReviewScore" th:value=${reviewScore}/>
+									<button th:if="${reviewScore == 1}" type="button" class="btn-star btn-icon-star-left-modal" value="1"></button>
+									<button th:if="${reviewScore > 1}" type="button" class="btn-star-right btn-icon-star-right-modal "value="2"></button>
 				      			</div>
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-									<button type="button" class="btn-star btn-icon-star-left-modal"value="3"></button>
-									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="4"></button>
+									<button type="button" class="btn-star btn-icon-star-left-modal" value="3"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal" value="4"></button>
 				      			</div>
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-									<button type="button" class="btn-star btn-icon-star-left-modal"value="5"></button>
-									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="6"></button>
+									<button type="button" class="btn-star btn-icon-star-left-modal" value="5"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal" value="6"></button>
 				      			</div>
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
-									<button type="button" class="btn-star btn-icon-star-left-modal"value="7"></button>
-									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="8"></button>
+									<button type="button" class="btn-star btn-icon-star-left-modal" value="7"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal" value="8"></button>
 				      			</div>
 			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
 									<button type="button" class="btn-star btn-icon-star-left-modal" value="9"></button>
-									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="10"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal" value="10"></button>
 				      			</div>
 			    			</div>
 		    			<div align="center">별을 클릭하세요</div>
-						<div class="m-4" id="modalUpdateContent" contenteditable=true th:utext="${reviewContent}"></div>		    				
+						<div class="m-4" id="modalUpdateContent" contenteditable=true>[[${reviewContent}]]</div>		    				
 		      			<div class="modal-footer  p-0">
 		      				<div class="d-flex justify-content-evenly">
 		      				<input type="hidden" name="reviewNo" id="updateReviewNo" value=""/>
                				 <input type="hidden" name="memberNo" id="hiddenCaregiverNo" th:value=${memberNo}/>		
-		      				 <input type="hidden" name="reviewScore" id="hiddenUpdateScore" value="10"/>
-               				 <input type="hidden" name="reviewContent" id="hiddenReviewContent" vlue=""/>		
+		      				 <input type="hidden" name="reviewScore" id="hiddenUpdateScore" value=""/>
+               				 <input type="hidden" name="reviewContent" id="hiddenReviewContent" value=""/>		
 			      				<button type="button" class="btn btn-success" id="reviewUpdate">후기수정</button>
-			      				<button type="button" class="btn btn-light"data-bs-dismiss="modal">취소</button>
+			      				<button type="button" class="btn btn-light" data-bs-dismiss="modal">취소</button>
 		      				</div>
 		      			</div>
 			    		</form>
@@ -293,8 +294,6 @@
 								
 							}else{
 								if(!bts[i].classList.contains('btn-icon-star-right-modal')){
-									console.log('체크')
-									console.log(i)
 									bts[i].classList.add('btn-icon-star-right-modal');
 								}
 							}
@@ -326,8 +325,9 @@
 	   
 	   document.getElementById('reviewUpdate').addEventListener('click', function(){
 		   // 점수, 내용
-		   document.getElementById('hiddenReviewScore').value = document.getElementById('reviewScore').innerHTML
-		   document.getElementById('hiddenReviewContent').value = document.getElementById('modalUpdateContent').innerHTML
+		   const reviewScore = document.getElementById('modalScore').innerHTML
+		   document.getElementById('hiddenUpdateScore').value = reviewScore
+		   document.getElementById('hiddenReviewContent').value = document.getElementById('modalUpdateContent').innerText
 		   document.getElementById('updateReviewForm').submit();
 	   });
 	   
@@ -342,7 +342,6 @@
 		
 	   function deleteReview(reviewNo) {
 		   document.getElementById('deleteReviewNo').value = reviewNo;
-		   
 		   $('#reviewDeletemodal').modal('show');
 	    }
 	   
@@ -350,13 +349,19 @@
 		   console.log("번호" + reviewNo + "점수" + reviewScore + "내용" + reviewContent)
 		   // 번호, 점수, 내용 띄우기
    		   document.getElementById('updateReviewNo').value = reviewNo;
-		   document.getElementById('hiddenBeforeScore').value = reviewScore;
+		   document.getElementById('modalScore').innerHTML = reviewScore;
 		   document.getElementById('modalUpdateContent').innerHTML= reviewContent;
 		   
+		   document.getElementById('hiddenBeforeScore').value = reviewScore;
+		   const reviewScores = document.getElementById('reviewScore');
+		   const starBtn = reviewScores.querySelectorAll('button');
+		   starBtn.innerHTML = reviewScore
 		   
 		   
 		   $('#reviewUpdateModal').modal('show');
 	    }
+	   const testScore = document.getElementById('testReviewScore')
+	   console.log(testScore.value)
 	   
 	</script>
 	

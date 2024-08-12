@@ -89,5 +89,7 @@ public interface MatchingMapper {
 
 	ArrayList<InfoCategory> getCaregiverInfo(int memberNo);
 
+	int updateReview(CareReview cr);
+
 
 }

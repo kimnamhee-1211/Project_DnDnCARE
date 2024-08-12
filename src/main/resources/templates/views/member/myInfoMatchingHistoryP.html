@@ -70,17 +70,17 @@
 								<table class="m-2">
 		      						<tr>
 										<th width="170px">간호 시작일</th>
-										<th width="10"> </th>
-										<th width="170px">간호 끝</th>
+										<th width="10">   </th>
+										<th width="170px">간호 종료일</th>
 										<th width="820px">간병인 정보</th>
 										<th width="150px">매칭 상태</th>
 										<th width="120px">후기 작성</th>
 		      						</tr>
 		      						<tr th:each="i : ${mciList}">
 		      							<td>[[${i.beginDt}]]</td>
-		      							 <td>~</td>
+		      							 <td> ~ </td>
 		      							 <td>[[${i.endDt}]]</td>
-		      							<td> 이름 : [[${i.memberName}]] </td>
+		      							<td> 이름 : [[${i.memberName}]] 비용 : [[${i.money}]]</td>
 		      							<input type="hidden" id="hiddenMemberNo" name="memberNo" th:value="${i.memberNo}"/>
 		      							<input type="hidden" id="hiddenMatchingNo" name="matNo" th:value="${i.matNo}"/>
 		      							<td><span th:if="${!i.isAfterDate}">진행 중</span><span th:if="${i.isAfterDate}">완료</span></td>

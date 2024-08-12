@@ -101,6 +101,8 @@ public interface MatchingService {
 	
 	ArrayList<InfoCategory> getCaregiverInfo(int memberNo);
 	
+	int updateReview(CareReview cr);
+	
 	
 
 }
