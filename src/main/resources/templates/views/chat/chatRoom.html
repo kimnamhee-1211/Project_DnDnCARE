@@ -13,55 +13,61 @@
     </div>
 
     <script th:inline="javascript">
-        /*<![CDATA[*/
-        const chatRoomId = /*[[${chatRoomId}]]*/ 'default-room-id';
-        const userId = /*[[${userId}]]*/ 'default-user-id';
-        let stompClient = null;
+    /*<![CDATA[*/
+    const chatRoomId = /*[[${chatRoomId}]]*/ 'default-room-id';
+    const userId = /*[[${userId}]]*/ 'default-user-id';
+    let stompClient = null;
 
-        function connect() {
-            const socket = new SockJS('/ws-stomp');
-            stompClient = Stomp.over(socket);
-            stompClient.connect({}, function(frame) {
-                console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/chat/' + chatRoomId, function(message) {
-                    showMessage(JSON.parse(message.body));
-                });
-                loadChatHistory();
+    function connect() {
+        const socket = new SockJS('/ws-stomp');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/room/chat/' + chatRoomId, function(message) {
+                showMessage(JSON.parse(message.body));
             });
-        }
+            loadChatHistory();
+        });
+    }
 
-        function sendMessage() {
-            const messageInput = document.getElementById('message');
-            const messageContent = messageInput.value.trim();
-            if(messageContent && stompClient) {
-                const chatMessage = {
-                    chatRoomId: chatRoomId,
-                    senderId: userId,
-                    content: messageContent
-                };
-                stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-                messageInput.value = '';
-            }
+    function sendMessage() {
+        const messageInput = document.getElementById('message');
+        const messageContent = messageInput.value.trim();
+        if (messageContent && stompClient) {
+            const chatMessage = {
+                chatRoomNo: chatRoomId,
+                memberNo: userId,
+                chatContent: messageContent,
+                readCount: 0,
+                writeDate: new Date()
+            };
+            stompClient.send("/send/chat/" + chatRoomId, {}, JSON.stringify(chatMessage));
+            messageInput.value = '';
         }
+    }
 
-        function showMessage(message) {
-            const messageElement = document.createElement('div');
-            messageElement.textContent = `${message.senderId}: ${message.content}`;
-            document.getElementById('chat-messages').appendChild(messageElement);
-        }
+    function showMessage(message) {
+        const messageElement = document.createElement('div');
+        messageElement.textContent = `${message.memberNo}: ${message.chatContent}`;
+        document.getElementById('chat-messages').appendChild(messageElement);
+    }
 
-        function loadChatHistory() {
-            fetch(`/api/chat/messages/${chatRoomId}`)
-                .then(response => response.json())
-                .then(data => {
+    function loadChatHistory() {
+        fetch(`/api/chat/messages/${chatRoomId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data)) {
                     data.forEach(showMessage);
-                })
-                .catch(error => console.error('Error loading chat history:', error));
-        }
+                } else {
+                    console.error('Unexpected data format:', data);
+                }
+            })
+            .catch(error => console.error('Error loading chat history:', error));
+    }
 
-        // Connect to WebSocket when the page loads
-        connect();
-        /*]]>*/
+    // Connect to WebSocket when the page loads
+    connect();
+    /*]]>*/
     </script>
 </body>
 </html>

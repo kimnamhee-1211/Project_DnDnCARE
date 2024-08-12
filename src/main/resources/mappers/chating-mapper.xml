@@ -1,10 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.kh.dndncare.matching.model.dao.ChatingMapper">
-	<select id="getChatingRoom" resultType="ChatingRoom">
+<mapper namespace="com.kh.dndncare.chating.model.dao.ChatingMapper">
+	<select id="getChatRoom" resultType="ChatingRoom">
 		select *
 		from chat_room
 			join chat_room_member using(chat_room_no)
 		where member_no = #{memberNo} and mat_no = #{matNo}
 	</select>
+	
+	<select id="getMatMemberNo" resultType="_int">
+		select member_no
+		from patient 
+		where pt_no = #{matPtNo}
+	</select>
+	
+	<select id="getChatRoomNo" resultType="_int">
+		select chat_room_no
+		from chat_room
+		where mat_no in (select mat_no
+					    from mat_pt_info
+					    where pt_no = #{matPtNo}) 
+	</select>
+	
+	<insert id="insertChatRoom" useGeneratedKeys="true" keyProperty="chatRoomNo">
+		<selectKey resultType="_int" keyProperty="chatRoomNo" order="BEFORE">
+			select seq_chat.nextval from dual
+		</selectKey>	
+		insert into chat_room
+		values(#{chatRoomNo},#{matNo},default,'test')
+	</insert>
+	
+	<insert id="insertChatRoomMember">
+	   INSERT ALL
+		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{memberNo}, #{chatRoomNo})
+		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{matMemberNo}, #{chatRoomNo})
+	   SELECT * FROM dual
+	</insert>
+	
+	<insert id="insertMessage"  useGeneratedKeys="true" parameterType="ChatingRoomMessage">
+		<selectKey resultType="_int" keyProperty="chatMassageNo" order="BEFORE">
+			select seq_chat_message.nextval from dual
+		</selectKey>
+        INSERT INTO chat_room_message (chat_massage_no, chat_room_no, member_no, chat_content, read_count, write_date)
+        VALUES (#{chatMassageNo}, #{chatRoomNo}, #{memberNo}, #{chatContent}, #{readCount}, #{writeDate})
+    </insert>
+
+    <select id="getMessagesByChatRoomNo" parameterType="int" resultType="ChatingRoomMessage">
+        SELECT * FROM chat_room_message
+        WHERE chat_room_no = #{chatRoomNo}
+        ORDER BY write_date ASC
+    </select>
+	
 </mapper>
