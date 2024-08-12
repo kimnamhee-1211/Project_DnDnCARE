@@ -61,7 +61,7 @@
 					<table>
 	                    <tr>
 	                        <td><button class="custom-btn btn-14">내 정보</button></td>
-	                        <td><button class="custom-btn btn-14">간병 정보</button></td>
+	                        <td><button class="custom-btn btn-14" id="careInformation">간병 정보</button></td>
 	                        <td><button class="custom-btn btn-14">커뮤니티</button></td>
 	                    </tr>
 	                </table>
@@ -444,9 +444,6 @@
 	    						}
 	    						td4.innerText = disease;
 	    						
-	    						
-	    						
-	    						
 	    						const td5 = document.createElement('td');
 	    						td5.innerText = d.money + '원';
 	    						
@@ -488,13 +485,28 @@
 	        	});
 	    	} 
 	    	
-	    	
 	    	const matPtName = /*[[${matPtName}]]*/
 	    	const matPtCount = /*[[${matPtCount}]]*/
 	    	
 	    	if(matPtName != null && matPtCount != null){
 	    		$('#matSuccesseModal').modal('show');
 	    	}
+	    	
+	    	// 간병정보(간병백과) 페이지로 이동 (시작)
+	    	document.querySelector('#careInformation').onclick = () => {
+	    		/*<![CDATA[*/
+	    		const isAdmin = /*[[${session.loginUser.memberCategory}]]*/'관리자여부';
+	    		if(isAdmin == 'A'){ // 관리자의 입장에서 간병정보 페이지 출력
+	    			location.href='careInformation.adm';
+	    		} else{ // 일반 사용자의 입장에서 간병정보 페이지 출력
+	    			//location.href='';
+	    		}	
+	    		/*]]>*/	
+	    	}
+	    	// 간병정보(간병백과) 페이지로 이동 (끝)
+	    	
+	    	
+	    	
     	}
     	
     </script>    

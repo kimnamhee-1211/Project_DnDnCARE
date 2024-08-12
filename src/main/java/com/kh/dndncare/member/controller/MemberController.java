@@ -284,9 +284,10 @@ public class MemberController {
 				
 				
 				return "redirect:patientMain.me";
+			} else {
+				return "redirect:adminMain.adm";
 			}
 
-			return "redirect:patientMain.me";
 
 		} else {
 			throw new MemberException("로그인을 실패하였습니다.");
