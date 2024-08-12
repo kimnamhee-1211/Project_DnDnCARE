@@ -479,7 +479,7 @@ public class MatchingController {
 		CareGiver caregiverIntro = mcService.selectIntro(memberNo);
 		
 		// 간병인 정보(국적, 경력, 자격증)
-		ArrayList<InfoCategory> caregiverInfo = mcService.getInfo(memberNo);
+		ArrayList<InfoCategory> caregiverInfo = mcService.getCaregiverInfo(memberNo);
 		HashMap<String, Object> caregiverInfoList = new HashMap<String, Object>();
 		for(InfoCategory info:caregiverInfo) {
 			switch(info.getLCategory()) {
@@ -621,7 +621,6 @@ public class MatchingController {
 	
 	@PostMapping("deleteReview.mc")
 	public String deleteReview(@RequestParam("reviewNo") int reviewNo) {
-		System.out.println("리뷰번호확인"+reviewNo);
 		int result = mcService.deleteReivew(reviewNo);
 		if(result > 0) {
 			return "redirect:myInfoMatchingReview.me";
@@ -630,7 +629,12 @@ public class MatchingController {
 			}
 	}
 	
-	
+	@PostMapping("updateReview.mc")
+	public String updateReview(@ModelAttribute CareReview cr) {
+		
+		System.out.println("updateReview"+cr);
+		return "redirect:myInfoMatchingReview.me";
+	}
 	
 	
 	

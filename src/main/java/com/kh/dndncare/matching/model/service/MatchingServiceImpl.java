@@ -209,6 +209,11 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.deleteReview(reviewNo);
 	}
 
+	@Override
+	public ArrayList<InfoCategory> getCaregiverInfo(int memberNo) {
+		return mMapper.getCaregiverInfo(memberNo);
+	}
+
 
 
 

@@ -87,5 +87,7 @@ public interface MatchingMapper {
 
 	int deleteReview(int reviewNo);
 
+	ArrayList<InfoCategory> getCaregiverInfo(int memberNo);
+
 
 }

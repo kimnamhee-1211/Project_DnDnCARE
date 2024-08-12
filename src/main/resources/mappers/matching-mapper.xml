@@ -70,6 +70,7 @@
 		where member_no = #{memberNo}	
 	</select>
 	
+	<!--  리뷰리스트 -->
 	<select id="selectReviewList" resultType="CareReview">
 		select *
 		from care_review r
@@ -246,7 +247,7 @@
 		where mat_no = #{matNo} and pt_no = (select pt_no from patient where member_no = #{memberNo})
 	</select>
 
-	<!--  리뷰작성 미완성 -->
+	<!--  리뷰작성  -->
 	<insert id="insertReview">
 		<selectKey resultType="_int" keyProperty="reviewNo" order="BEFORE">
 			select seq_crid.nextval from dual
@@ -270,11 +271,20 @@
 		)
 	</insert>
 
+	<!-- 리뷰삭제 -->
 	<update id="deleteReview">
 		update care_review
 		set review_status = 'N'
 		where review_no = #{reviewNo}
 	</update>
+	
+	<!-- member의 category  -->
+	<select id="getCaregiverInfo" resultType="InfoCategory">
+		select l_category, s_category
+		from member_info 
+			join info_category using(category_no)
+		where member_no = #{memberNo}
+	</select>
 
 
 

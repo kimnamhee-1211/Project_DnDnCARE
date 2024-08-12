@@ -99,6 +99,8 @@ public interface MatchingService {
 	
 	int deleteReivew(int reviewNo);
 	
+	ArrayList<InfoCategory> getCaregiverInfo(int memberNo);
+	
 	
 
 }
