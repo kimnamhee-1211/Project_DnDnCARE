@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chat Room</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+    <div id="chat-page">
+        <div id="chat-messages"></div>
+        <input type="text" id="message" placeholder="Type a message..."/>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const chatRoomId = /*[[${chatRoomId}]]*/ 'default-room-id';
+        const userId = /*[[${userId}]]*/ 'default-user-id';
+        let stompClient = null;
+
+        function connect() {
+            const socket = new SockJS('/ws-stomp');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/chat/' + chatRoomId, function(message) {
+                    showMessage(JSON.parse(message.body));
+                });
+                loadChatHistory();
+            });
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('message');
+            const messageContent = messageInput.value.trim();
+            if(messageContent && stompClient) {
+                const chatMessage = {
+                    chatRoomId: chatRoomId,
+                    senderId: userId,
+                    content: messageContent
+                };
+                stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+                messageInput.value = '';
+            }
+        }
+
+        function showMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = `${message.senderId}: ${message.content}`;
+            document.getElementById('chat-messages').appendChild(messageElement);
+        }
+
+        function loadChatHistory() {
+            fetch(`/api/chat/messages/${chatRoomId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(showMessage);
+                })
+                .catch(error => console.error('Error loading chat history:', error));
+        }
+
+        // Connect to WebSocket when the page loads
+        connect();
+        /*]]>*/
+    </script>
+</body>
+</html>
