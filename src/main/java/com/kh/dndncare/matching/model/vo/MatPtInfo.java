@@ -25,7 +25,7 @@ public class MatPtInfo {
 	private String groupLeader;
 	private int reviewNo;
 	
-	
+	private String hospitalName;
 	
 
 }

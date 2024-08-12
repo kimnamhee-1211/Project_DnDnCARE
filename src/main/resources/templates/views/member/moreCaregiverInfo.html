@@ -7,6 +7,9 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    
+    <link th:href="@{css/footer.css}" rel="stylesheet" type="text/css"/>
+    
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}">></div>
@@ -16,7 +19,7 @@
 		<div><!-- 컨텐츠 --> 
 			<div class="">
 				<span class="badge rounded-pill bg-primary" style="font-size: 25px;">나와 딱 맞는 간병인을 찾아드려요.</span>
-				<img src="image/icon/refresh.gif" width="40px;" height="40px"/>	
+				<img src="image/icon/refresh.gif" id="refreshChoice" width="40px;" height="40px"/>	
 			</div>
 			
 			<br/>
@@ -29,51 +32,19 @@
                         	<th>성별</th>
                         	<th>나이</th>
                         	<th>지역</th>
-                        	<th>경력</th>
+                        	<th>자격증</th>
                         	<th>돌봄비</th>
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center">
-                        	<td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>1년이하</td>
-	                        <td>80,000원</td>
+                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index < 5}">
+                        	<td>[[${c.memberName}]]</td>
+	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
+	                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
+	                        <td>[[${c.caregiverAddress}]]</td>
+	                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
+	                        <td>[[${c.minMoney}]]원</td>
                      	</tr>
-                     	<tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>3년이하</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>5년이하</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>5년이상</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>없음</td>
-	                        <td>80,000원</td>
-	                    </tr>
                  	</tbody>
              	</table>
 				
@@ -89,46 +60,14 @@
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center">
-                        	<td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>없음</td>
-	                        <td>80,000원</td>
+                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index >= 5}">
+                        	<td>[[${c.memberName}]]</td>
+	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
+	                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
+	                        <td>[[${c.caregiverAddress}]]</td>
+	                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
+	                        <td>[[${c.minMoney}]]원</td>
                      	</tr>
-                     	<tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>1년이하</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>3년이하</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>5년이하</td>
-	                        <td>80,000원</td>
-	                    </tr>
-	                    <tr class="text-center">
-	                        <td>개나리님</td>
-	                        <td>남성</td>
-	                        <td>50</td>
-	                        <td>서울시 종로구</td>
-	                        <td>5년이상</td>
-	                        <td>80,000원</td>
-	                    </tr>
                  	</tbody>
              	</table>
 			</div>
@@ -250,11 +189,9 @@
 	                <!-- 간병 일감목록을 무한스크롤로 출력할 공간 -->
 	            </div>
 			</div>
-		<div><!-- 오른쪽 공백 --></div>
+			<div id=""><!-- 오른쪽 공백 --></div>
 		</div>
 	</div>
-	
-	<div th:replace="~{common/footer :: footer}"></div>
 	
 	<!-- 태그 전체를 취사선택할 수 있는 모달창 -->
 	<div class="modal" tabindex="-1" id="allTagModal">
@@ -366,8 +303,55 @@
 		</div>
 	</div>
 	
-	<script>
+	<!-- 테스트중 -->
+	<!-- <div th:replace="~{common/footer :: footer}" id=""></div> -->
+	<div id="footer-section">
+	    <div class="inner">
+	        <div class="footer-logo">
+	            <a href="home.do"><img th:src="@{/image/logo-removebg.png}" alt="로고" id="footer-logo"></a>
+	        </div>
+	        <div class="column-wrap d-flex">
+		        <div class="footer-column">
+		            <h3>Project</h3>
+		            <p>Title</p>
+		            <h6>DnDnCare</h6> 
+		            <p>Tell</p>              
+		            <h6>02-6959-2159</h6>
+		            <p>Address</p>
+		            <h6>서울특별시 중구 남대문로 120</h6>
+		        </div>
+		        <div class="footer-column">
+		            <h3>Team Member</h3>
+		            <h4>김명훈</h4>               
+		            <h4>김종규</h4>
+		            <h4>김기룡</h4>  
+		            <h4>김남희</h4>
+		            <h4>이재영</h4>
+		        </div>
+		        <div class="footer-column">
+		           <h3>Project Info</h3>
+				   <h6>KH정보교육원 JAVA개발자 양성 과정</h6>
+				   <h6>Final Project</h6>
+				   <h6>2024.07.29 - 2024.09.03</h6>
+				   <h6>Java, SpringBoot, Oracle, JavaScript</h6>
+		        </div>
+	        </div>
+	        
+	    </div>
+	    <div class="footer-bottom">
+	        <p class="text-center">&copy; 2024 HomeWork. All rights reserved.</p>
+	    </div>
+	</div>
+    <div id="obsTarget"></div>             
+	
+	
+	<!-- <script src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script> -->
+	<script th:inline="javascript">
 		window.onload = () => {
+			let innerHeight = window.innerHeight;
+			let scrollY = window.scrollY;
+			let scrollHeight = document.body.scrollHeight;
+			
 			// 일감목록의 태그 버튼 클릭시 하위 버튼을 보여주는 기능 (시작)
 			const allSubBtnList = document.querySelectorAll('.subBtn');	// 임의의 세부 태그 버튼
 			const allSearchBtnList = document.querySelectorAll('.searchBtn');
@@ -1158,6 +1142,7 @@
 					
 					// *** 비동기 방식으로 검색결과 요청하기 (시작)***
 					if(searchExist) { // 검색 조건이 하나라도 있을 때를 의미함
+						ajaxSearchPage = 1;
 						root.innerHTML = ''; // 기존의 목록출력을 모두 지운다.
 						searchAjax(ajaxSearchPage); // 새로운 목록을 불러온다.
 					} else { // 검색 조건이 하나도 없을 때를 의미함
@@ -1184,26 +1169,153 @@
 					data : {condition : JSON.stringify(searchConditionObj)},
 					success: data => {
 						console.log(data);
+						if(data != 'noExist') {
+							for(let d of data) {
+								// 별점 이미지 그리기 작업
+								const nameSpan = document.querySelector('#tartget');
+								const imgArr = [];
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								const modScore = d.avgReviewScore / 2
+								if(modScore == 0){ // 별점이 짝수
+									for(let i = 0; i < modScore; i++){
+										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+									for(let i = 4; i >= modScore; i--){
+										imgArr[i].setAttribute("src", "image/icon/emptyStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+								} else { // 별점이 홀수
+									for(let i = 0; i < Math.floor(modScore); i++){
+										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+									
+									let half = Math.floor(modScore);
+									imgArr[half].setAttribute("src", "image/icon/halfStar.png");
+									
+									for(let i = 4; i >= Math.ceil(modScore); i--){
+										imgArr[i].setAttribute("src", "image/icon/emptyStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+								}
+								
+								if(d.careImg == null) { // 이미지 파일이 없는 경우
+									const div0 = document.createElement('div');
+									div0.className = 'col-sm-6';
+									
+									const div1 = document.createElement('div');
+									div1.className = 'card h-95 w-80';
+									
+									const div2 = document.createElement('div');
+									div2.className = 'card-body text-center';
+									
+									const h6 = document.createElement('h6');
+									h6.className = 'card-title';
+									const img = document.createElement('img');
+									if(d.memberGender == 'M') {
+										img.setAttribute('src', 'image/icon/maleProfile.png');
+									} else {
+										img.setAttribute('src', 'image/icon/femaleProfile.png');
+									}
+									const h6Span = document.createElement('span');
+									h6Span.innerText = d.memberName + '님';
+									h6.append(img);
+									h6.append(h6Span);
+									for(let i = 0; i < 5; i++) {
+										h6.append(imgArr[i]);
+									}
+									
+									const p = document.createElement('p');
+									p.className = 'card-text';
+									const pSpan = document.createElement('span');
+									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									p.append(pSpan);
+									
+									const inp = document.createElement('input');
+									inp.setAttribute('type', 'hidden');
+									inp.setAttribute('name', 'memberNo');
+									inp.setAttribute('value', d.memberNo);
+									const button = document.createElement('button');
+									button.className = 'btn btn-success';
+									button.setAttribute('onclick', 'caregiverDetail()');
+									button.innerText = '정보보기';
+									
+									div2.append(h6);
+									div2.append(p);
+									div2.append(inp);
+									div2.append(button);
+									div1.append(div2);
+									div0.append(div1);
+									
+									root.append(div0);
+									
+								} else { // 이미지 파일이 있는 경우
+									const div0 = document.createElement('div');
+									div0.className = 'col-sm-6';
+									
+									const div1 = document.createElement('div');
+									div1.className = 'card h-95 w-80';
+									
+									const div2 = document.createElement('div');
+									div2.className = 'card-body text-center';
+									
+									const h6 = document.createElement('h6');
+									h6.className = 'card-title';
+									const img = document.createElement('img');
+									if(d.memberGender == 'M') {
+										img.setAttribute('src', 'image/icon/maleProfile.png');
+									} else {
+										img.setAttribute('src', 'image/icon/femaleProfile.png');
+									} // **이미지 경로 수정해야함**
+									const h6Span = document.createElement('span');
+									h6Span.innerText = d.memberName + '님';
+									h6.append(img);
+									h6.append(h6Span);
+									for(let i = 0; i < 5; i++) {
+										h6.append(imgArr[i]);
+									}
+									
+									const p = document.createElement('p');
+									p.className = 'card-text';
+									const pSpan = document.createElement('span');
+									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									p.append(pSpan);
+									
+									const inp = document.createElement('input');
+									inp.setAttribute('type', 'hidden');
+									inp.setAttribute('name', 'memberNo');
+									inp.setAttribute('value', d.memberNo);
+									const button = document.createElement('button');
+									button.className = 'btn btn-success';
+									button.setAttribute('onclick', 'caregiverDetail()');
+									button.innerText = '정보보기';
+									
+									div2.append(h6);
+									div2.append(p);
+									div2.append(inp);
+									div2.append(button);
+									div1.append(div2);
+									div0.append(div1);
+									
+									root.append(div0);
+								}
+							}
+						ajaxNoSearchPage++;
+						console.log('page : ' + ajaxSearchPage);
+						searchFlag = false;
 						
-						for(let count of data) {
-							root.innerHTML += '<div class="col-sm-6">\
-	            				<div class="card h-95 w-80">\
-	    							<div class="card-body">\
-	        						<h6 class="card-title">\
-	            						<span style="background:skyblue; color:blue;">ㅇㅇㅇ 님</span>&nbsp;&nbsp;\
-	            						<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;\
-	            						<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;\
-	       							</h6>\
-				                    <p class="card-text">\
-				                    	<span>서울시 도봉구 (검색결과)</span>\
-				                   	</p>\
-				                    <button class="btn btn-success workInfo">정보 보기</button>\
-			                		</div>\
-	   							</div>\
-								</div>';
+						innerHeight = window.innerHeight;
+						scrollY = window.scrollY;
+						scrollHeight = document.body.scrollHeight;
+						
+						} else {
+							console.log('검색결과 없음');
 						}
-						ajaxSearchPage++;
-						searchFlag = true;
 					},
 					error: data => {
 						console.log('error');
@@ -1216,48 +1328,179 @@
 			// *** 비동기 방식으로 임의결과 요청하는 ajax함수 정의 (시작) ***
 			let noSearchAjax = (page) => {
 				$.ajax({
-					url: 'moreCaregiverInfo.me?page='+page,
+					url: 'moreCaregiverList.me?page='+page,
 					type: 'post',
-					data : {},
+					/*<![CDATA[*/
+					data : {memberNo: /*[[${session.loginUser.memberNo}]]*/0},
+					/*]]>*/
 					success: data => {
 						console.log(data);
-						
-						for(let count of data) {
-							root.innerHTML += '<div class="col-sm-6">\
-	            				<div class="card h-95 w-80">\
-	    							<div class="card-body">\
-	        						<h6 class="card-title">\
-	            						<span style="background:skyblue; color:blue;">ㅇㅇㅇ 님</span>&nbsp;&nbsp;\
-	            						<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;\
-	            						<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;\
-	       							</h6>\
-				                    <p class="card-text">\
-				                    	<span>서울시 도봉구 (모든결과)</span>\
-				                   	</p>\
-				                    <button class="btn btn-success workInfo">정보 보기</button>\
-			                		</div>\
-	   							</div>\
-								</div>';
-						}
+						if(data != 'noExist') {
+							for(let d of data) {
+								// 별점 이미지 그리기 작업
+								const nameSpan = document.querySelector('#tartget');
+								const imgArr = [];
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								imgArr.push(document.createElement('img'));
+								const modScore = d.avgReviewScore / 2
+								if(modScore == 0){ // 별점이 짝수
+									for(let i = 0; i < modScore; i++){
+										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+									for(let i = 4; i >= modScore; i--){
+										imgArr[i].setAttribute("src", "image/icon/emptyStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+								} else { // 별점이 홀수
+									for(let i = 0; i < Math.floor(modScore); i++){
+										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+									
+									let half = Math.floor(modScore);
+									imgArr[half].setAttribute("src", "image/icon/halfStar.png");
+									
+									for(let i = 4; i >= Math.ceil(modScore); i--){
+										imgArr[i].setAttribute("src", "image/icon/emptyStar.png");
+										imgArr[i].setAttribute("width", "25px");
+									}
+								}
+								
+								if(d.careImg == null) { // 이미지 파일이 없는 경우
+									const div0 = document.createElement('div');
+									div0.className = 'col-sm-6';
+									
+									const div1 = document.createElement('div');
+									div1.className = 'card h-95 w-80';
+									
+									const div2 = document.createElement('div');
+									div2.className = 'card-body text-center';
+									
+									const h6 = document.createElement('h6');
+									h6.className = 'card-title';
+									const img = document.createElement('img');
+									if(d.memberGender == 'M') {
+										img.setAttribute('src', 'image/icon/maleProfile.png');
+									} else {
+										img.setAttribute('src', 'image/icon/femaleProfile.png');
+									}
+									const h6Span = document.createElement('span');
+									h6Span.innerText = d.memberName + '님';
+									h6.append(img);
+									h6.append(h6Span);
+									for(let i = 0; i < 5; i++) {
+										h6.append(imgArr[i]);
+									}
+									
+									const p = document.createElement('p');
+									p.className = 'card-text';
+									const pSpan = document.createElement('span');
+									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									p.append(pSpan);
+									
+									const inp = document.createElement('input');
+									inp.setAttribute('type', 'hidden');
+									inp.setAttribute('name', 'memberNo');
+									inp.setAttribute('value', d.memberNo);
+									const button = document.createElement('button');
+									button.className = 'btn btn-success';
+									button.setAttribute('onclick', 'caregiverDetail()');
+									button.innerText = '정보보기';
+									
+									div2.append(h6);
+									div2.append(p);
+									div2.append(inp);
+									div2.append(button);
+									div1.append(div2);
+									div0.append(div1);
+									
+									root.append(div0);
+									
+								} else { // 이미지 파일이 있는 경우
+									const div0 = document.createElement('div');
+									div0.className = 'col-sm-6';
+									
+									const div1 = document.createElement('div');
+									div1.className = 'card h-95 w-80';
+									
+									const div2 = document.createElement('div');
+									div2.className = 'card-body text-center';
+									
+									const h6 = document.createElement('h6');
+									h6.className = 'card-title';
+									const img = document.createElement('img');
+									if(d.memberGender == 'M') {
+										img.setAttribute('src', 'image/icon/maleProfile.png');
+									} else {
+										img.setAttribute('src', 'image/icon/femaleProfile.png');
+									} // **이미지 경로 수정해야함**
+									const h6Span = document.createElement('span');
+									h6Span.innerText = d.memberName + '님';
+									h6.append(img);
+									h6.append(h6Span);
+									for(let i = 0; i < 5; i++) {
+										h6.append(imgArr[i]);
+									}
+									
+									const p = document.createElement('p');
+									p.className = 'card-text';
+									const pSpan = document.createElement('span');
+									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									p.append(pSpan);
+									
+									const inp = document.createElement('input');
+									inp.setAttribute('type', 'hidden');
+									inp.setAttribute('name', 'memberNo');
+									inp.setAttribute('value', d.memberNo);
+									const button = document.createElement('button');
+									button.className = 'btn btn-success';
+									button.setAttribute('onclick', 'caregiverDetail()');
+									button.innerText = '정보보기';
+									
+									div2.append(h6);
+									div2.append(p);
+									div2.append(inp);
+									div2.append(button);
+									div1.append(div2);
+									div0.append(div1);
+									
+									root.append(div0);
+								}
+							}
 						ajaxNoSearchPage++;
+						console.log('page : ' + ajaxNoSearchPage);
 						searchFlag = false;
+						
+						innerHeight = window.innerHeight;
+						scrollY = window.scrollY;
+						scrollHeight = document.body.scrollHeight;
+						
+						} else {
+							console.log('검색결과 없음');
+						}
 					},
 					error: data => {
 						console.log('error');
 					}
 				})
 			}
+			// *** 비동기 방식으로 임의결과 요청하는 ajax함수 정의 (끝) ***
 			
 			// 화면 처음로드시에 띄울 임의 검색결과 목록
 			noSearchAjax(ajaxNoSearchPage);
 			
-			// 검색조건 초기화하기
+			// 검색조건 초기화하기(시작) : 초기화버튼 클릭
 			document.querySelector('#goClear').addEventListener('click', () => {
 				for(let sub of allSubBtnList) {
 					if(sub.className.includes('btn-success')) {
 						sub.classList.remove('btn-success');
 						sub.classList.add('btn-light');
 					}
+					sub.style.display = 'none';
 				}
 				for(let sub of allSearchBtnList) {
 					if(sub.className.includes('btn-success')) {
@@ -1265,93 +1508,32 @@
 						sub.classList.add('btn-light');
 					}
 				}
-			
-			
-			})
-			
-			
-			
-			
-			
-			
-			
-			
-			// 일감목록 검색 결과를 출력하는 무한스크롤 (시작)
-			// (1) 초기 데이터 출력 == page가 1인 상태
-			/* let currentPage = 1; // 현재 로드된 페이지의 번호를 나타내는 변수. 초기값은 1로 설정.
-			let isFetching = false; // 데이터를 가져오는 중인지 여부를 나타내는 변수. 초기값은 false로 설정.
-			let hasMore = true; // 가져올 더 많은 데이터가 있는지 여부를 나타내는 변수. 초기값은 true로 설정.
-			
-			let root = document.querySelector('#root'); // 검색결과를 출력할 div요소에 접근한다.
-			
-			async function fetchData() {
-				isFetching = true; // 데이터를 가져오는 중이라는 표현
-				//let response = await fetch(`https://jsonplaceholder.typicode.com/posts?_page=${currentPage}`);
-				let response = await fetch(`http://localhost:8096/workInfoTest.me?page=${currentPage}`);
-				let data = await response.json();
-			    console.log(data);
-			    
-			    isFetching = false; // 데이터를 가져오고 있지 않는 중이라는 표현
-			    
-			    if (data.length === 0) {
-			        hasMore = false;
-			        return
-			    } */
-			 	// DB에 삽입된 데이터가 없기 때문에 임의로 6개를 뿌리자
-			 	/*	반복적으로 넣어야할 요소
-				 	<div class="col-sm-6">
-	                    <div class="card h-95 w-80">
-	                    	<div class="card-body">
-	                        	<h6 class="card-title">
-		                        	<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;
-		                        	<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;
-		                        	<img src="image/icon/hospital.png"/>
-	                       		</h6>
-	                        <p class="card-text">
-	                        	<span>병원명</span>
-	                       	</p>
-	                        <button class="btn btn-success workInfo">정보 보기</button>
-	                    	</div>
-	                    </div>
-	                </div>
-			 	*/
-			    /* for(let post of data) { // 가져온 데이터를 화면에 뿌리는 코드
-			        root.innerHTML += '<div class="col-sm-6">\
-	                    				<div class="card h-95 w-80">\
-                							<div class="card-body">\
-                    						<h6 class="card-title">\
-                        						<span style="background:skyblue; color:blue;">MM월 dd일 HH시</span>&nbsp;&nbsp;\
-                        						<span style="background:lightgrey;">성별</span>&nbsp;&nbsp;\
-                        						<span style="background:lightgrey;">나이</span>&nbsp;&nbsp;\
-                        						<img src="image/icon/hospital.png"/>\
-                   							</h6>\
-						                    <p class="card-text">\
-						                    	<span>병원명</span>\
-						                   	</p>\
-						                    <button class="btn btn-success workInfo">정보 보기</button>\
-					                		</div>\
-               							</div>\
-           							</div>';
-			    }
-			    currentPage++;
-			} */
-			
-			window.addEventListener('scroll', () => {
-				/* if(isFetching || !hasMore) {
-					return;
-				} */
-				
-				if((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 300) {
-					if(searchFlag == false) {
-						noSearchAjax(ajaxNoSearchPage);
-					} else {
-						searchAjax(ajaxSearchPage);
+				for(let main of allMainBtnList) { // 여기에요
+					if(main.className.includes('btn-success')) {
+						main.classList.remove('btn-success');
+						main.classList.add('btn-light');
 					}
 				}
 			})
+			// 검색조건 초기화하기(끝)
 			
-			//fetchData(); // 처음 페이지 로드시에 1페이지에 해당하는 검색결과를 가져온다.
+			// 일감목록 검색 결과를 출력하는 무한스크롤 (시작)
+			const callback = (entries, observer) => {
+				  entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						if(searchFlag == false) {
+							noSearchAjax(ajaxNoSearchPage);
+						} else {
+							searchAjax(ajaxSearchPage);
+						}
+					}
+				  });
+				}
+
+			const observer = new IntersectionObserver(callback);
+			const targetDiv = document.querySelector('#obsTarget');
+			observer.observe(targetDiv);
+			
 			// 일감목록 검색 결과를 출력하는 무한스크롤 (끝)
 			
 			// 태그 전체 모달창 출력
@@ -1360,7 +1542,88 @@
 			})
 			
 			
-			
+    		// 자동추천 새로고침 비동기 요청 (시작)
+    		const refreshChoice = document.querySelector('#refreshChoice');
+    		refreshChoice.addEventListener('mouseenter', function() {
+    			this.style.cursor= 'pointer';
+    		})
+    		/*<![CDATA[*/
+    		const tbodyList = document.querySelectorAll('.autoMatching tbody');	
+    		refreshChoice.addEventListener('click', function() {
+    			if(/*[[${completeList}]]*/'arrList' != null) {
+    				const tbody = this.parentElement.parentElement.parentElement.nextElementSibling;
+    				
+    				$.ajax({
+	    				url: 'refreshCaregiverChoice.me',
+	    				data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0, selectNum: 10},
+	    				success: data => { // 배열로 넘어옴
+	    					// 새로 추천받은 목록으로 교체(시작)
+	    					console.log(data);
+	    					tbodyList[0].innerText = '';
+	    					tbodyList[1].innerText = '';
+	    					for(let i = 0; i < data.length; i++) {
+	    						let d = data[i];
+	    						if(i < 5) {
+		    						const tr = document.createElement('tr');
+		    						tr.classList.add('text-center');
+		    						const td0 = document.createElement('td');
+		    						td0.innerText = d.memberName;
+		    						const td1 = document.createElement('td');
+		    						td1.innerText = d.memberGender == 'M' ? '남' : '여';
+		    						const td2 = document.createElement('td');
+		    						td2.innerText = d.caregiverRealAge;
+		    						const td3 = document.createElement('td');
+		    						td3.innerText = d.caregiverAddress;
+		    						const td4 = document.createElement('td');
+		    						td4.innerText = d.haveLicense;
+		    						const td5 = document.createElement('td');
+		    						td5.innerText = d.minMoney + '원';
+		    						
+		    						tbodyList[0].appendChild(tr);
+		    						tr.appendChild(td0);
+		    						tr.appendChild(td1);
+		    						tr.appendChild(td2);
+		    						tr.appendChild(td3);
+		    						tr.appendChild(td4);
+		    						tr.appendChild(td5);
+	    						} else {
+	    							const tr = document.createElement('tr');
+		    						tr.classList.add('text-center');
+		    						const td0 = document.createElement('td');
+		    						td0.innerText = d.memberName;
+		    						const td1 = document.createElement('td');
+		    						td1.innerText = d.memberGender == 'M' ? '남' : '여';
+		    						const td2 = document.createElement('td');
+		    						td2.innerText = d.caregiverRealAge;
+		    						const td3 = document.createElement('td');
+		    						td3.innerText = d.caregiverAddress;
+		    						const td4 = document.createElement('td');
+		    						td4.innerText = d.haveLicense;
+		    						const td5 = document.createElement('td');
+		    						td5.innerText = d.minMoney + '원';
+		    						
+		    						tbodyList[1].appendChild(tr);
+		    						tr.appendChild(td0);
+		    						tr.appendChild(td1);
+		    						tr.appendChild(td2);
+		    						tr.appendChild(td3);
+		    						tr.appendChild(td4);
+		    						tr.appendChild(td5);
+	    						}
+	    						// 새로 추천받은 목록으로 교체(끝)
+	    					}
+	    					alert('새로운 추천목록으로 갱신되었습니다.');
+	    				},
+	    				error: data => {
+	    					console.log('에러')
+	    				}
+	    			})
+    			} else {
+    				alert('추천 후보가 존재하지 않습니다.');
+    			}
+    		})
+    		// 자동추천 새로고침 비동기 요청 (끝)
+	    	/*]]>*/
 		}
 	</script>
 </body>

@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Param;
 import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
@@ -36,9 +37,9 @@ public interface MatchingMapper {
 
 	ArrayList<Patient> getPatientToMatNo(int matNo);
 
-	ArrayList<InfoCategory> getInfo(int memberNo);
+	ArrayList<InfoCategory> getInfo(int ptNo);
 
-	int insertMatchingDate(@Param("matNo") int matNo, @Param("matchingDate") String matchingDate);
+	int insertMatDate(@Param("matNo") int matNo, @Param("matDate") String matDate);
 	
 	ArrayList<CareReview> selectReviewList(int memberNo);
 
@@ -71,25 +72,43 @@ public interface MatchingMapper {
 
 	int insertWantInfo(Map<String, Object> params);
 
-	int insertMatPtInfo(MatPtInfo matPtInfo);
-
 	int deleteWantInfo(int memberNo);
 
 	CareGiver selectIntro(int memberNo);
 	
 	MatMatptInfo selectMatching(int matNo);
+	ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo);
 
 	int insertReview(HashMap<String, Object> map);
 	
 	MatMatptInfo selecMatPtInfo(@Param("matNo")int matNo,@Param("memberNo") int memberNo);
+	int requestMatching(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
 
-	int insertPay(@Param("loginUser")Member loginUser,@Param("p") Pay p);
+	String getMatPtName(@Param("matNo") int matNo, @Param("ptCount") int ptCount);
 
+	int requestMatCheck(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
+
+	ArrayList<MatMatptInfoPt> getMyMatching(int memberNo);
+
+	ArrayList<MatMatptInfoPt> getMyRequestMat(int memberNo);
+
+	Integer getMatMemberNo(int matNo);
+
+	int matchingApproveC(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
+
+	MatMatptInfo selecMatching(int matNo);
+
+
+	int insertPay(@Param("loginUser") Member loginUser, @Param("p") Pay p);
+
+	String selectMatDate(int matNo);
 	int deleteReview(int reviewNo);
 
 	ArrayList<InfoCategory> getCaregiverInfo(int memberNo);
 
 	int updateReview(CareReview cr);
+
+
 
 
 }

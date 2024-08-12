@@ -1,7 +1,7 @@
 /* #mainContainer {display:grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows:500px;} */
 /* #upperLeftContents {display:grid; grid-template-columns:100%; grid-template-rows: 100px 200px 200px;} */
 #patientBtn {display: grid; grid-template-cloumns:1fr 1fr 1fr;}
-#upperContents {display: grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows: 500px;}
+#upperContents {display: grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows: 600px;}
 #container div:nth-child(2) {display:grid; grid-template-columns: 100%; grid-template-rows: 200px;}        
 #underContents {display:grid; grid-template-columns:1fr 500px 80px 700px 1fr; grid-template-rows: 700px;}
 /* #cardDiv {display:grid; grid-template-columns: 350px 350px; grid-template-rows: 200px;} */
@@ -245,4 +245,42 @@ a {
 	background-size: 70px 70px;
 	padding:0px;
 	width:16px; height:16px;
+}
+
+/*잘 수정해보자. 결제 할구간이야*/
+.pay-content{
+	height:00px;
+	overflow:hidden;
+	z-index: 2;
+}
+
+.showPay{
+	position: absolute;
+	background:white;
+	height:200px;
+	width:700px;
+	border: 1px solid #8dd986;
+	z-index : 2;
+	overflow: auto;
+}
+
+.selectUpdateDiv{
+	position: absolute;
+	overflow: auto;
+	height:200px;
+	min-width:80px;
+	background:white;
+	border:1px solid #8dd986;
+	border-radius:5px;
+	z-index:1;
+}
+
+#viewPayList{
+	margin:16px;
+	margin-bottom:0px;
+	border-bottom:2px solid #8dd986;
+}
+/* 캘린더 이벤트의 정보를 보는 모달박스 */
+.eventInfo {
+	display:grid; grid-template-columns: 1fr 1fr;
 }

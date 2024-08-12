@@ -27,4 +27,17 @@ public class CalendarEvent {
 	private int hospitalNo; 
 	private String hospitalAddress;
 	private String hospitalName;
+	
+	private String beginTime;
+	private String endTime;
+	private int matMode; // 1:기간제, 2:시간제
+	private String matchingType; // ptCount==1이면 개인간병, ptCount==2이면 공동간병
+	private int ptCount; 
+	private String matAddressInfo;
+	private int ptNo;
+	private String matDate; // 시간제 간병일 때의 근무날짜
+	private Date beginDt;
+	private Date endDt;
+	private int careGiverNo;
+	
 }

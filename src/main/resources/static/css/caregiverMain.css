@@ -9,8 +9,11 @@
 body { font-family: 'Pretendard-Regular'; background-color:white; color: #333; }
 
 
+#wrap{padding-top:100px; padding-bottom:300px;}
+
+
 /* #mainContainer {display:grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows:500px;} */
-#upperLeftContents {display:grid; grid-template-rows: 250px 250px;}
+#upperLeftContents {display:grid; grid-template-rows: 350px 150px;}
 #upperContents {display: grid; grid-template-columns:1fr 700px 80px 500px 1fr; grid-template-rows: 500px;}
 #container div:nth-child(2) {display:grid; grid-template-columns: 100%; grid-template-rows: 200px;}        
 #underContents {display:grid; grid-template-columns:1fr 500px 80px 700px 1fr; grid-template-rows: 700px;}
@@ -88,6 +91,7 @@ button {
     /* box-shadow: 0 2px 3px #e4e8f0; */
     box-shadow: 0 2px 3px #8dd986;
 }
+
 .card {
     position: relative;
     display: flex;
@@ -99,6 +103,14 @@ button {
     border: 1px solid #eff0f2;
     border-radius: 1rem;
 }
+
+
+.card-text{ margin-bottom: 3px;  font-size: 15px;}
+
+.workInfo{margin-top: 5px;}
+
+
+
 .avatar-md {
     height: 4rem;
     width: 4rem;
@@ -178,9 +190,17 @@ a {
   border-color: green;
 }
 
-/* 일감찾기의 정보를 보는 모달박스 */
+/* 캘린더 이벤트의 정보를 보는 모달박스 */
 .workInfo {
 	display:grid; grid-template-columns: 1fr 1fr;
 }
 
+/*하단 더보기 버튼*/
+.btn-select{
+	background-color:#8dd986;
+	border: 0;
+	color:white;
+	width:40%;
+	height:40px;
+}
 
