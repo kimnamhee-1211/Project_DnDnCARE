@@ -2,6 +2,7 @@ package com.kh.dndncare.matching.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -107,6 +108,13 @@ public interface MatchingMapper {
 	ArrayList<InfoCategory> getCaregiverInfo(int memberNo);
 
 
+	int insertMemberInfo(Map<String, Object> memberInfoParams);
+
+	int deleteMemberInfo(Map<String, Object> memberInfoParams);
+
+	List<Integer> getCategoryNo(int memberNo);
+
+	
 
 
 }

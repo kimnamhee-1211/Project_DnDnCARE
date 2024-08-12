@@ -4,6 +4,7 @@ package com.kh.dndncare.matching.model.service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -89,6 +90,10 @@ public interface MatchingService {
 	int insertMatPtInfo(MatPtInfo matPtInfo);
 	
 	int deleteWantInfo(int memberNo);
+	int insertMemberInfo(Map<String, Object> memberInfoParams);
+	int deleteMemberInfo(Map<String, Object> memberInfoParams);
+	List<Integer> getCategoryNo(int memberNo);
+	
 	
 	CareGiver selectIntro(int memberNo);
 	

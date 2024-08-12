@@ -2,6 +2,7 @@ package com.kh.dndncare.matching.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -269,6 +270,22 @@ public class MatchingServiceImpl implements MatchingService {
 		// TODO Auto-generated method stub
 		return 0;//없는메소드	
 		}
+	@Override
+	public int insertMemberInfo(Map<String, Object> memberInfoParams) {
+		return mMapper.insertMemberInfo(memberInfoParams);
+	}
+
+	@Override
+	public int deleteMemberInfo(Map<String, Object> memberInfoParams) {
+		return mMapper.deleteMemberInfo(memberInfoParams);
+	}
+
+	@Override
+	public List<Integer> getCategoryNo(int memberNo) {
+		return mMapper.getCategoryNo(memberNo);
+	}
+
+
 
 
 
