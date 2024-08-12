@@ -22,7 +22,7 @@ public class AdminController {
 	@GetMapping("careInformation.adm")
 	public String careInformation() {
 		
-		return "careInformation.adm";
+		return "careInformation";
 	}
 	
 	//
