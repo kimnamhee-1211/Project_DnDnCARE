@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.dao.MemberMapper;
 
@@ -273,6 +275,19 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member selectSocialLogin(String code) {
 		return mMapper.selectSocialLogin(code);
+	}
+	public ArrayList<CareReview> reviewList(int ptNo) {
+		return mMapper.reviewList(ptNo);
+	}
+
+	@Override
+	public ArrayList<CareReview> selectReviewList(int reviewNo) {
+		return mMapper.selectReviewList(reviewNo);
+	}
+
+	@Override
+	public int getPtNo(int memberNo) {
+		return mMapper.getPtNo(memberNo);
 	}
 
 }

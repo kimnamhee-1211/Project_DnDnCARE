@@ -37,6 +37,8 @@ import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.Exception.MemberException;
+import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.Info;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
@@ -354,7 +356,7 @@ public class MatchingController {
 					}else if(jmPtInfo.getLCategory().equals("diseaseLevel")) {
 						
 						diseaseLevel = jmPtInfo.getSCategory();				
-					}	
+					}	 
 				}	
 				//공동 간병 참여자들 Patient에 member info set
 				jmPt.setDisease(disease);
@@ -457,26 +459,50 @@ public class MatchingController {
 		}
 	}
 	
+
 	
 	@GetMapping("reviewDetail.mc")												
-	public String getMethodName(HttpSession session, Model model,@RequestParam("memberNo")int memberNo) {
+	public String getMethodName(HttpSession session, Model model,@RequestParam("memberNo")int memberNo,@RequestParam(value="matNo", required = false) Integer matNo, @RequestParam(value="from", required = false) String beforePage) {
 		
-		//int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		
-		// 정보
+		// 후기내역
 		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
 		
 		// 후기개수
 		int reviewCount = mcService.reviewCount(memberNo);
 		
 		// 평점
-		int avgReviewScore = mcService.avgReviewScore(memberNo);
+		Double avgReviewScore = mcService.avgReviewScore(memberNo);
+		avgReviewScore= (avgReviewScore != null) ? avgReviewScore : 0.0;
 		
+		// 간병인 소개
+		CareGiver caregiverIntro = mcService.selectIntro(memberNo);
 		
+		// 간병인 정보(국적, 경력, 자격증)
+		ArrayList<InfoCategory> caregiverInfo = mcService.getCaregiverInfo(memberNo);
+		HashMap<String, Object> caregiverInfoList = new HashMap<String, Object>();
+		for(InfoCategory info:caregiverInfo) {
+			switch(info.getLCategory()) {
+			case "career" : caregiverInfoList.put("career", info.getSCategory()); break;
+			case "license" : 
+				if (!caregiverInfoList.containsKey("license")) {
+                caregiverInfoList.put("license", new ArrayList<String>());
+            }
+            ((ArrayList<String>)caregiverInfoList.get("license")).add(info.getSCategory());
+			}
+		}
 		
+		System.out.println("이전페이지"+beforePage);
+		System.out.println("매칭"+caregiverInfoList);
+		
+		model.addAttribute("memberNo", memberNo);
+		model.addAttribute("matNo", matNo);
+		model.addAttribute("beforePage", beforePage);
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("reviewCount", reviewCount);
 		model.addAttribute("avgReviewScore",avgReviewScore);
+		model.addAttribute("caregiverIntro",caregiverIntro);
+		model.addAttribute("caregiverInfoList", caregiverInfoList);
 		return "reviewDetail";
 	}
 	
@@ -498,6 +524,33 @@ public class MatchingController {
 
 	}
 	
+	@PostMapping("writeReview.mc")
+	public String insertReview(@RequestParam("memberNo") int memberNo, @RequestParam(value="reviewScore", defaultValue = "10") int reviewScore, @RequestParam(value="matNo",required = false) int matNo , @RequestParam("reviewContent") String reviewContent, HttpSession session) {
+		int loginUserNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		int ptNo = mcService.getPtNo(loginUserNo);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		// 환자번호
+		map.put("ptNo", ptNo);
+		// 후기점수
+		map.put("reviewScore", reviewScore);
+		// 후기내용
+		map.put("reviewContent", reviewContent);
+		
+		// 매칭번호
+		map.put("matNo", matNo);
+		
+		// 간병인 고유번호
+		map.put("memberNo", memberNo);
+		
+		System.out.println("후기작성데이터"+map);
+		int result = mcService.insertReview(map);
+		if(result>0) {
+			return "myInfoMatchingReview.me";
+		}else {
+			throw new MatchingException("후기 작성 실패");
+		}
+	}
+				
 	//비동기로 환자측에서 결제할때 간병인 정보 가져오기
 	@GetMapping("payInfo.mc")
 	@ResponseBody
@@ -573,6 +626,23 @@ public class MatchingController {
 		
 			throw new MatchingException("결제실패");
 		}
+	}
+	
+	@PostMapping("deleteReview.mc")
+	public String deleteReview(@RequestParam("reviewNo") int reviewNo) {
+		int result = mcService.deleteReivew(reviewNo);
+		if(result > 0) {
+			return "redirect:myInfoMatchingReview.me";
+		}else {
+				throw new MatchingException("후기 삭제 실패");
+			}
+	}
+	
+	@PostMapping("updateReview.mc")
+	public String updateReview(@ModelAttribute CareReview cr) {
+		
+		System.out.println("updateReview"+cr);
+		return "redirect:myInfoMatchingReview.me";
 	}
 	
 	
