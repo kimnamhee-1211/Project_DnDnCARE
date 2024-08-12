@@ -3,6 +3,7 @@ package com.kh.dndncare.member.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public interface MemberService {
 	int nickNameCheck(String nickName);
 
 
-	ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser);
+	ArrayList<CalendarEvent> caregiverCalendarEvent(Integer memberNo);
 
 	ArrayList<Member> selectAllMember();
 	
@@ -49,7 +50,6 @@ public interface MemberService {
 
 	boolean sendSms(String phoneNumber, String string);
 
-	ArrayList<Matching> calendarEvent(Member loginUser);
 
 	Patient selectPatient(int memberNo);
 	HashMap<String, String> getCaregiverInfo(int memberNo);
@@ -76,10 +76,65 @@ public interface MemberService {
 
 	int updateMember(Member m);
 	ArrayList<Patient> selectPatientList(String caregiverCity);
+	ArrayList<Patient> selectPatientList(HashMap<String, Object> condition);
 
 	ArrayList<HashMap<String, String>> getPatientExp(ArrayList<Integer> pNoList);
 
 	ArrayList<Patient> choicePatientList(ArrayList<Integer> choiceNoList);
+
+	ArrayList<HashMap<String, String>> getCaregiverWant(int memberNo);
+
+	ArrayList<HashMap<String, Object>> getPatientInfo(ArrayList<Integer> mNoList);
+
+	HashMap<String, String> getPatientMyInfo(int memberNo);
+
+	ArrayList<HashMap<String, String>> getPatientMyExp(int memberNo);
+
+	ArrayList<HashMap<String, String>> getCaregiverMyWant(int memberNo);
+
+	ArrayList<HashMap<String, Object>> selectCaregiverList(HashMap<String, Object> condition);
+
+	ArrayList<HashMap<String, Object>> selectCaregiverInfo(ArrayList<Integer> mNoList);
+
+	ArrayList<CareGiver> choiceCaregiverList(ArrayList<Integer> choiceNoList);
+
+	ArrayList<HashMap<String, Integer>> getPatientEvent(int memberNo);
+
+	ArrayList<CalendarEvent> patientCalendarEvent(ArrayList<Integer> matNoList);
+
+	ArrayList<Member> selectMemberList(ArrayList<Integer> memberNoList);
+
+	ArrayList<Matching> selectMatchingList(PageInfo pi, ArrayList<Integer> resultMatNoList);
+
+	int getMatchingListCount(HashMap<String, Object> searchOption);
+
+	ArrayList<Member> selectMatchingMemberList(ArrayList<Integer> matNoList);
+
+	ArrayList<MatPtInfo> selectMatchingPTInfoList(ArrayList<Integer> matNoList);
+
+	ArrayList<HashMap<String, Integer>> searchDefaultMatNoList(HashMap<String, Object> searchDefaultMap);
+
+	ArrayList<Integer> searchTermMatNoList(HashMap<String, Object> termMap);
+
+	ArrayList<Integer> searchTimeMatNoList(HashMap<String, Object> termMap);
+
+	ArrayList<HashMap<String, Integer>> searchCategoryMatNoList(ArrayList<Integer> tempMatNoList);
+
+	ArrayList<Matching> searchMatchingList(PageInfo pi, ArrayList<Integer> resultMatNoList);
+
+	ArrayList<CareGiver> selectAllCaregiver(PageInfo pi);
+
+	int getCaregiverListCount();
+
+	ArrayList<HashMap<String, Integer>> getCaregiverScoreList(ArrayList<Integer> cNoList);
+
+	ArrayList<CareGiver> searchDefaultCaregiverNoList(HashMap<String, Object> searchDefaultMap);
+
+	ArrayList<HashMap<String, Integer>> searchCaregiverCategoryMNoList(ArrayList<Integer> cNoList);
+
+	ArrayList<CareGiver> searchCaregiverList(PageInfo pi, ArrayList<Integer> resultCaregiverNoList);
+
+
 
 
 	CareGiver selectCareGiver(int memberNo);

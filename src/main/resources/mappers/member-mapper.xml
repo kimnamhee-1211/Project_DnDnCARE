@@ -54,14 +54,16 @@
 	</resultMap>
 	  
 	  
-	  <!-- 
-	<select id="caregiverCalendarEvent" resultMap="calendarResultMap">
-		SELECT MAT_NO, '간병하기' AS TITLE, BEGIN_DT, END_DT, MONEY, HOSPTAL_NO, HOSPTAL_ADDRESS, HOSPTAL_NAME 
-		FROM MATCHING
-		        JOIN HOSPTAL USING(HOSPTAL_NO)
-		WHERE MEMBER_NO = #{memberNo}
+	<select id="caregiverCalendarEvent" resultType="CalendarEvent">
+		SELECT 	M.MAT_NO, MONEY, BEGIN_TIME, END_TIME, MAT_MODE, BEGIN_DT, END_DT,
+		        PT_NO, 
+		        SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) AS MAT_ADDRESS_INFO, 
+		        PT_COUNT, MAT_DATE
+		FROM MATCHING M
+		        JOIN MAT_PT_INFO I ON(M.MAT_NO = I.MAT_NO)
+		        JOIN MATCHING_DATE D ON(I.MAT_NO = D.MAT_NO)
+		WHERE MEMBER_NO = ${memberNo}
 	</select>
--->
 	  <select id="selectAllMember" resultType="Member">		<!-- 멤버좀 확인할라구요 -->
 		select *
 		from member	  
@@ -134,11 +136,14 @@
 	
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 간병인 본인 정보 조회 -->
 	<select id="getCaregiverInfo" resultType="map">
-		SELECT DECODE(MEMBER_GENDER, 'M', '남성', 'F', '여성') AS "성별", TRUNC(SYSDATE - MEMBER_AGE) AS "나이", 
-        SUBSTR(REPLACE(MEMBER_ADDRESS, '//', ' ') , INSTR(MEMBER_ADDRESS, ' ') ) AS "주소",
-		        MEMBER_NATIONAL AS "국적"
-		FROM MEMBER
-		WHERE MEMBER_NO = ${memberNo}
+		SELECT 	DECODE(MEMBER_GENDER, 'M', '남성', 'F', '여성') AS "성별", 
+		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS "나이",
+		        SUBSTR(REPLACE(MEMBER_ADDRESS, '//', ' ') , INSTR(REPLACE(MEMBER_ADDRESS, '//', ' '), ' ')+1) AS "주소",
+		        MEMBER_NATIONAL AS "국적",
+		        CARE_JOIN_STATUS, MIN_MONEY AS "최소금액"
+		FROM MEMBER M
+		        JOIN CAREGIVER C ON(M.MEMBER_NO = C.MEMBER_NO) 
+		WHERE M.MEMBER_NO = ${memberNo}
 	</select>
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 간병인 본인 정보 조회 : 2번 -->
 	<select id="getCaregiverExp" resultType="map">
@@ -151,20 +156,23 @@
 	
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 환자 후보군의 정보 조회 : 1번 -->
 	<select id="selectPatientList" resultType="Patient">
-		<![CDATA[
 		SELECT *
-		FROM   (SELECT  MEMBER.MEMBER_NO, PT_NAME, PT_GENDER, TRUNC(SYSDATE - PT_AGE) AS PT_REAL_AGE, 
-						SUBSTR(REPLACE(PT_ADDRESS, '//', ' ') , INSTR(REPLACE(PT_ADDRESS, '//', ' '), ' ')+1) as PT_ADDRESS,
-						MEMBER_NATIONAL, PT_WEIGHT, PT_HEIGHT, MAT_REQUEST, 
-						BEGIN_DT, END_DT, MONEY, MAT_CONFIRM
-		       FROM MATCHING 
-		            JOIN MAT_PT_INFO USING(MAT_NO)
-		            JOIN PATIENT USING(PT_NO)
-		            JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
-		       WHERE MEMBER_STATUS = 'Y' AND MAT_CONFIRM='N' AND PT_ADDRESS LIKE '%${caregiverCity}%'
-		       ORDER BY DBMS_RANDOM.RANDOM)
-		WHERE ROWNUM < 10
-		]]>
+		FROM   (SELECT  MEMBER.MEMBER_NO, PT_NAME, PT_GENDER,  
+		                EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS PT_REAL_AGE, 
+		                MEMBER_NATIONAL, PT_WEIGHT, PT_HEIGHT,
+		                MAT_NO, BEGIN_DT, END_DT, MONEY,
+		                SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) as PT_ADDRESS, 
+		                SERVICE, MAT_REQUEST, PT_COUNT
+			   FROM MATCHING 
+			        JOIN MAT_PT_INFO USING(MAT_NO)
+			        JOIN PATIENT USING(PT_NO)
+			        JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
+		   WHERE MEMBER_STATUS = 'N' AND MAT_CONFIRM='N' AND MAT_ADDRESS_INFO LIKE '%${address}%'
+		   <if test='joinStatus.equals("N")'>
+		   			AND PT_COUNT = 1
+		   </if>
+		   ORDER BY DBMS_RANDOM.RANDOM)
+		WHERE ROWNUM <![CDATA[<]]> ${selectNum}+1
 	</select>
 	
 	<delete id="deleteWantInfo">		<!-- 내가원하는 상대매칭정보 -->
@@ -200,6 +208,16 @@
 		        JOIN want_INFO USING(MEMBER_NO)
 		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
 		WHERE MEMBER_NO = ${memberNo}
+	</select>
+	
+	<!-- 간병인 메인페이지에서의 자동 추천을 위한 환자 후보군의 정보 조회 : 2번 -->
+	<select id="getPatientInfo" resultType="map">
+		SELECT MEMBER_NO, L_CATEGORY, S_CATEGORY
+		FROM MEMBER
+		        JOIN MEMBER_INFO USING(MEMBER_NO)
+		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
+		WHERE MEMBER_NO IN  
+		<foreach collection="list" item="item" open="(" close=")" separator=", ">${item}</foreach>
 	</select>
 	
 	<update id="updatePatient">
@@ -307,7 +325,30 @@
 						from patient
 						where member_no = #{memberNo})
 	</select>
+	<!-- 추천된 환자 정보조회 : 이름, 성별, 나이, 지역, 금액 -->
+	<select id="choicePatientList" resultType="Patient">
+		SELECT  PATIENT.MEMBER_NO, PT_NAME, PT_GENDER, PT_NO,  
+		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) AS PT_REAL_AGE, 
+		        MAT_NO, BEGIN_DT, END_DT, MONEY,
+		        SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) as PT_ADDRESS, 
+		        SERVICE, MAT_REQUEST, PT_COUNT
+		FROM MATCHING 
+		    JOIN MAT_PT_INFO USING(MAT_NO)
+		    JOIN PATIENT USING(PT_NO)
+	    WHERE MAT_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=", ">
+			${item}
+		</foreach>
+	</select>
 	
+	<!-- 간병인이 원하는 정보조회 -->
+	<select id="getCaregiverWant" resultType="map">
+		SELECT L_CATEGORY, S_CATEGORY
+		FROM MEMBER M
+		        JOIN WANT_INFO W ON(M.MEMBER_NO = W.MEMBER_NO)
+		        JOIN INFO_CATEGORY I ON(W.CATEGORY_NO = I.CATEGORY_NO)
+		WHERE M.MEMBER_NO = ${memberNo}
+	</select>	
 	
 	<!-- 매칭 + 환자 정보 다 가져오기  -->
 	<select id="getMatMatptInfoPt" resultType="MatMatptInfoPt">
@@ -370,6 +411,335 @@
 		select pt_no
 		from patient
 		where member_no=#{memberNo}
+	</select>
+	<!-- 환자 메인 : 환자 본인 정보 조회 1번 -->
+	<select id="getPatientMyInfo" resultType="map">
+		select DECODE(pt_gender, 'M', '남성', '여성') AS "성별", 
+				EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS "연령",
+		        SUBSTR(REPLACE(PT_ADDRESS, '//', ' ') , INSTR(REPLACE(PT_ADDRESS, '//', ' '), ' ')+1) as "주소",
+		        pt_height AS "키", pt_weight AS "몸무게",
+		        member_national AS "국적"
+		from member 
+		        join patient using(member_no)
+		where member_no = ${memberNo}
+	</select>
+	
+	<select id="getPatientMyExp" resultType="map">
+		SELECT L_CATEGORY, S_CATEGORY
+		FROM MEMBER
+		        JOIN MEMBER_INFO USING(MEMBER_NO)
+		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
+	
+	<select id="getCaregiverMyWant" resultType="map">
+		SELECT L_CATEGORY, S_CATEGORY
+		FROM MEMBER
+		        JOIN WANT_INFO USING(MEMBER_NO)
+		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
+	
+	<select id="selectCaregiverList" resultType="map">
+		SELECT *
+		FROM (  SELECT MEMBER_NO AS "회원번호", DECODE(MEMBER_GENDER, 'M', '남성', '여성') AS "성별", 
+		                EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS "연령", 
+		                SUBSTR(REPLACE(MEMBER_ADDRESS, '//', ' ') , INSTR(REPLACE(MEMBER_ADDRESS, '//', ' '), ' ')+1) as "주소",
+		                MEMBER_NATIONAL AS 국적, MIN_MONEY AS "최소요구금액"
+		        FROM MEMBER
+		                JOIN CAREGIVER USING(MEMBER_NO)
+		        WHERE MEMBER_STATUS = 'N' AND MEMBER_ADDRESS LIKE '%${address}%'
+		        ORDER BY DBMS_RANDOM.RANDOM)
+		WHERE ROWNUM <![CDATA[<]]> ${selectNum}+1
+	</select>
+	
+	<select id="selectCaregiverInfo" resultType="map">
+		SELECT MEMBER_NO, L_CATEGORY, S_CATEGORY
+		FROM MEMBER
+		        JOIN MEMBER_INFO USING(MEMBER_NO)
+		        JOIN INFO_CATEGORY USING(CATEGORY_NO)
+		WHERE MEMBER_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+	
+	<select id="choiceCaregiverList" resultType="Caregiver">
+		SELECT MEMBER_NO, MEMBER_GENDER, MEMBER_NAME,
+		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS "caregiverRealAge",
+		        SUBSTR(REPLACE(MEMBER_ADDRESS, '//', ' ') , INSTR(REPLACE(MEMBER_ADDRESS, '//', ' '), ' ')+1) as "caregiverAddress",
+		        MEMBER_NATIONAL AS "caregiverNational", MIN_MONEY
+		FROM MEMBER
+		        JOIN CAREGIVER USING(MEMBER_NO)
+		WHERE MEMBER_NO IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+	
+	<select id="getPatientEvent" resultType="map">
+		SELECT MATCHING.MAT_NO, MATCHING.MEMBER_NO
+		FROM MATCHING 
+		        JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
+		        JOIN PATIENT ON(MAT_PT_INFO.PT_NO = PATIENT.PT_NO)
+		        JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
+		WHERE MAT_CONFIRM = 'Y' AND MEMBER.MEMBER_NO = ${memberNo}
+	</select>
+	
+	<select id="patientCalendarEvent" resultType="CalendarEvent">
+		SELECT MATCHING.MAT_NO, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MONEY, MATCHING.MEMBER_NO AS CAREGIVER_NO, MAT_DATE,
+				SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) AS MAT_ADDRESS_INFO
+		FROM MATCHING 
+		        JOIN MATCHING_DATE ON(MATCHING.MAT_NO = MATCHING_DATE.MAT_NO)
+                JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
+		WHERE MATCHING.MAT_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+	
+	<!-- MEMBER_NO, MEMBER_NAME, MEMBER_GENDER, MEMBER_AGE -->
+	<select id="selectMemberList" resultType="Member">
+		SELECT MEMBER_NO, MEMBER_NAME, MEMBER_GENDER, 
+				EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS "memberRealAge"
+		FROM MEMBER
+		WHERE MEMBER_NO IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+	
+	<select id="getMatchingListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM MATCHING
+		WHERE MAT_CONFIRM = 'N'
+	</select>
+	
+	<!-- 간병인의 일감찾기(검색조건X) : 매칭정보 조회 -->
+	<select id="selectMatchingList" resultType="Matching">
+		SELECT MATCHING.MAT_NO,PT_COUNT, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MAT_MODE
+		FROM MATCHING
+		WHERE MAT_CONFIRM = 'N'
+		<if test="resultMatNoList != null">
+			AND MAT_NO IN
+			<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+		</if>
+		ORDER BY BEGIN_DT
+	</select>
+	
+	<select id="searchMatchingList" resultType="Matching">
+		SELECT MATCHING.MAT_NO,PT_COUNT, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MAT_MODE
+		FROM MATCHING
+		WHERE MAT_CONFIRM = 'N'
+				AND MAT_NO IN
+				<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+		ORDER BY BEGIN_DT
+	</select>
+	
+	
+	
+	
+	<select id="selectMatchingPTInfoList" resultType="MatPtInfo">
+		SELECT  MATCHING.MAT_NO, SERVICE,
+		        SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) AS MAT_ADDRESS_INFO,
+		        HOSPITAL_NAME
+		FROM MATCHING
+		        JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
+		        JOIN HOSPITAL USING(HOSPITAL_NO)
+		WHERE MATCHING.MAT_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+	
+	
+	<!-- 간병인의 일감찾기(검색조건X) : 환자정보 조회 -->
+	<select id="selectMatchingMemberList" resultType="Member">
+		SELECT MATCHING.MAT_NO, MEMBER.MEMBER_NO, MEMBER.MEMBER_NAME, MEMBER.MEMBER_GENDER,
+		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS MEMBER_REAL_AGE,
+		        GROUP_LEADER
+		FROM MATCHING
+		        JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
+		        JOIN PATIENT ON(MAT_PT_INFO.PT_NO = PATIENT.PT_NO)
+		        JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
+		WHERE MATCHING.MAT_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+	
+	<!-- 간병인 일감찾기 : 검색조건 결과찾기 : 1번 -->
+	<select id="searchDefaultMatNoList" resultType="map">
+		SELECT DISTINCT MATCHING.MAT_NO, MAT_MODE
+		FROM MATCHING
+		        JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
+		        JOIN PATIENT ON(MAT_PT_INFO.PT_NO = PATIENT.PT_NO)
+		WHERE MAT_CONFIRM = 'N' 
+		<if test="service != null">
+			AND MAT_PT_INFO.SERVICE IN 
+			<foreach collection="service" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="share != null">
+			AND MATCHING.PT_COUNT IN 
+			<foreach collection="share" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="area != null">
+			AND MAT_PT_INFO.MAT_ADDRESS_INFO LIKE '%${area}%'
+		</if>
+		<if test="gender != null">
+			AND PATIENT.PT_GENDER IN
+			<foreach collection="gender" item="item" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+		<if test="age != null">
+			<choose>
+				<when test="age == 1"> <!-- 청년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) BETWEEN 0 AND 34
+				</when>
+				<when test="age == 2"> <!-- 중년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) BETWEEN 35 AND 59
+				</when>
+				<when test="age == 3"> <!-- 장년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) <![CDATA[>=]]> 60
+				</when>
+				<when test="age == 4"> <!-- 청년 and 중년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) <![CDATA[<=]]> 59
+				</when>
+				<when test="age == 5"> <!-- 청년 and 장년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) NOT BETWEEN 35 AND 59
+				</when>
+				<when test="age == 6"> <!-- 중년 and 장년 -->
+					AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PT_AGE, 'RRRR-MM-DD')) <![CDATA[>=]]> 35
+				</when>
+			</choose>
+		</if>
+		<if test="cost != null">
+			AND MATCHING.MONEY <![CDATA[<=]]> ${cost}
+		</if>
+		ORDER BY MATCHING.MAT_NO DESC
+	</select>
+	
+	
+	<select id="searchTermMatNoList" resultType="_int">
+		SELECT MATCHING.MAT_NO
+		FROM MATCHING
+		WHERE MATCHING.MAT_NO IN
+		<foreach collection="termMatNoList" item="item" open="(" close=")" separator=",">${item}</foreach>
+		<if test="term != '16'">
+        	AND END_DT - BEGIN_DT <![CDATA[<=]]> ${term}
+        </if>		
+        <if test="term == '16'">
+        	AND END_DT - BEGIN_DT <![CDATA[>=]]> ${term}
+        </if>	 	
+	 	ORDER BY MATCHING.MAT_NO DESC
+	</select>
+	
+	<select id="searchTimeMatNoList" resultType="_int">
+		SELECT MATCHING.MAT_NO
+		FROM MATCHING
+		        JOIN MATCHING_DATE ON(MATCHING.MAT_NO = MATCHING_DATE.MAT_NO)
+		WHERE MATCHING.MAT_NO IN 
+		<foreach collection="timeMatNoList" item="item" open="(" close=")" separator=",">${item}</foreach>
+        <if test="term != '16'">
+        	AND length(MATCHING_DATE.MAT_DATE) <![CDATA[<=]]> 11 * ${term} - 1
+        </if>		
+        <if test="term == '16'">
+        	AND length(MATCHING_DATE.MAT_DATE) <![CDATA[>=]]> 11 * ${term} - 1
+        </if>		
+	 	ORDER BY MATCHING.MAT_NO DESC
+	</select>
+	
+	<select id="searchCategoryMatNoList" resultType="map">
+		SELECT MATCHING.MAT_NO, CATEGORY_NO
+		FROM MATCHING
+		        JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
+		        JOIN PATIENT ON(MAT_PT_INFO.PT_NO = PATIENT.PT_NO)
+		        JOIN MEMBER_INFO ON(PATIENT.MEMBER_NO = MEMBER_INFO.MEMBER_NO)
+		WHERE MATCHING.MAT_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+		ORDER BY MATCHING.MAT_NO
+	</select>
+	
+	<!-- 간병인 숫자 조회 -->
+	<select id="getCaregiverListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE MEMBER_STATUS = 'N' AND MEMBER_CATEGORY = 'C'
+	</select>
+	
+	<!-- 환자의 간병인찾기 : 모든 간병인에 대한 정보조회 -->
+	<select id="selectAllCaregiver" resultType="CareGiver">
+		SELECT MEMBER.MEMBER_NO, MEMBER_NAME, MEMBER_GENDER, 
+		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS caregiverRealAge,
+		        MEMBER_NATIONAL AS caregiverNational, CARE_IMG
+		FROM MEMBER
+		        JOIN CAREGIVER ON(MEMBER.MEMBER_NO = CAREGIVER.MEMBER_NO)
+		WHERE MEMBER_STATUS = 'N' AND MEMBER_CATEGORY = 'C'
+		ORDER BY MEMBER.MEMBER_NO DESC
+	</select>
+	
+	<!-- 위의 간병인에 대한 평점 조회 -->
+	<select id="getCaregiverScoreList" resultType="map">
+		SELECT CAREGIVER.MEMBER_NO, NVL(TRUNC(AVG(REVIEW_SCORE)), 0) as avgReviewScore
+		FROM CAREGIVER 
+		       LEFT JOIN CARE_REVIEW ON(CAREGIVER.MEMBER_NO = CARE_REVIEW.MEMBER_NO)
+		WHERE CAREGIVER.MEMBER_NO IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+		GROUP BY CAREGIVER.MEMBER_NO
+	</select>
+	
+	<!-- 환자의 간병인찾기 : 기본적인 검색조건으로 1차 검색 -->
+	<select id="searchDefaultCaregiverNoList" resultType="CareGiver">
+	SELECT MEMBER.MEMBER_NO, MEMBER_NAME, MEMBER_GENDER, 
+	        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS caregiverRealAge,
+	        MEMBER_NATIONAL AS caregiverNational, CARE_IMG
+	FROM MEMBER
+	        JOIN CAREGIVER ON(MEMBER.MEMBER_NO = CAREGIVER.MEMBER_NO)
+	WHERE MEMBER_STATUS = 'N' 
+	        AND MEMBER_CATEGORY = 'C'
+	    <if test="share != null"> AND CARE_JOIN_STATUS IN 
+	    	<foreach collection="share" item="item" open="(" close=")" separator=",">#{item}</foreach>
+	    </if>
+		<if test="area != null">AND MEMBER_ADDRESS LIKE '%${area}%'</if>	       
+		<if test="gender != null"> AND MEMBER_GENDER IN
+			<foreach collection="gender" item="item" open="(" close=")" separator=",">#{item}</foreach>
+		</if>	    
+		<if test="age != null">
+			<choose>
+					<when test="age == 1"> <!-- 청년 -->
+						AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) BETWEEN 0 AND 34
+					</when>
+					<when test="age == 2"> <!-- 중년 -->
+						AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) BETWEEN 35 AND 59
+					</when>
+					<when test="age == 3"> <!-- 장년 -->
+						AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) <![CDATA[>=]]> 60
+					</when>
+					<when test="age == 4"> <!-- 청년 and 중년 -->
+						AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) <![CDATA[<=]]> 59
+					</when>
+					<when test="age == 5"> <!-- 청년 and 장년 -->
+						AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) NOT BETWEEN 35 AND 59
+					</when>
+					<when test="age == 6"> <!-- 중년 and 장년 -->
+						AND EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) <![CDATA[>=]]> 35
+					</when>
+				</choose>
+		</if>
+		<if test="maxMoney != null">AND MAX_MONEY <![CDATA[<=]]> ${maxMoney}</if>	        
+	</select>
+	
+	<!-- 환자의 간병인찾기 : 카테고리 검색조건으로 2차 검색 -->
+	<select id="searchCaregiverCategoryMNoList" resultType="map">
+		SELECT MEMBER_NO, CATEGORY_NO
+		FROM MEMBER_INFO 
+		WHERE MEMBER_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+	
+	<!-- 페이징 처리를 한 간병인 목록 조회 -->
+	<select id="searchCaregiverList" resultType="CareGiver">
+		SELECT MEMBER.MEMBER_NO, MEMBER_NAME, MEMBER_GENDER, 
+		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS caregiverRealAge,
+		        MEMBER_NATIONAL AS caregiverNational, CARE_IMG
+		FROM MEMBER
+		        JOIN CAREGIVER ON(MEMBER.MEMBER_NO = CAREGIVER.MEMBER_NO)
+		WHERE MEMBER.MEMBER_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+		ORDER BY MEMBER_NO DESC
 	</select>
 	
 	
