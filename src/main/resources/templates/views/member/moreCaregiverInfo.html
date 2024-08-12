@@ -7,8 +7,11 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    
+    <link th:href="@{css/footer.css}" rel="stylesheet" type="text/css"/>
+    
 </head>
-<body id="">
+<body>
 	<div th:replace="~{common/navbar :: navbar}">></div>
 	
 	<div id="contents">
@@ -190,8 +193,6 @@
 		</div>
 	</div>
 	
-	<div th:replace="~{common/footer :: footer}" id=""></div>
-	
 	<!-- 태그 전체를 취사선택할 수 있는 모달창 -->
 	<div class="modal" tabindex="-1" id="allTagModal">
 		<div class="modal-dialog">
@@ -302,6 +303,49 @@
 		</div>
 	</div>
 	
+	<!-- 테스트중 -->
+	<!-- <div th:replace="~{common/footer :: footer}" id=""></div> -->
+	<div id="footer-section">
+	    <div class="inner">
+	        <div class="footer-logo">
+	            <a href="home.do"><img th:src="@{/image/logo-removebg.png}" alt="로고" id="footer-logo"></a>
+	        </div>
+	        <div class="column-wrap d-flex">
+		        <div class="footer-column">
+		            <h3>Project</h3>
+		            <p>Title</p>
+		            <h6>DnDnCare</h6> 
+		            <p>Tell</p>              
+		            <h6>02-6959-2159</h6>
+		            <p>Address</p>
+		            <h6>서울특별시 중구 남대문로 120</h6>
+		        </div>
+		        <div class="footer-column">
+		            <h3>Team Member</h3>
+		            <h4>김명훈</h4>               
+		            <h4>김종규</h4>
+		            <h4>김기룡</h4>  
+		            <h4>김남희</h4>
+		            <h4>이재영</h4>
+		        </div>
+		        <div class="footer-column">
+		           <h3>Project Info</h3>
+				   <h6>KH정보교육원 JAVA개발자 양성 과정</h6>
+				   <h6>Final Project</h6>
+				   <h6>2024.07.29 - 2024.09.03</h6>
+				   <h6>Java, SpringBoot, Oracle, JavaScript</h6>
+		        </div>
+	        </div>
+	        
+	    </div>
+	    <div class="footer-bottom">
+	        <p class="text-center">&copy; 2024 HomeWork. All rights reserved.</p>
+	    </div>
+	</div>
+    <div id="obsTarget"></div>             
+	
+	
+	<!-- <script src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script> -->
 	<script th:inline="javascript">
 		window.onload = () => {
 			let innerHeight = window.innerHeight;
@@ -1474,29 +1518,22 @@
 			// 검색조건 초기화하기(끝)
 			
 			// 일감목록 검색 결과를 출력하는 무한스크롤 (시작)
-			// 쓰로틀링 코드
-			let timer;
-			if (!timer) {
-				timer = setTimeout(() => {
-					timer = null;
-				  	//실행될 이벤트 
-					if(searchFlag == false) {
-						noSearchAjax(ajaxNoSearchPage);
-					} else {
-						searchAjax(ajaxSearchPage);
+			const callback = (entries, observer) => {
+				  entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						if(searchFlag == false) {
+							noSearchAjax(ajaxNoSearchPage);
+						} else {
+							searchAjax(ajaxSearchPage);
+						}
 					}
-				}, 1500);
-			};
+				  });
+				}
 
-			// 쓰로틀링을 적용한 스크롤 이벤트 핸들러
-			if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
-			  	if (!timer) {
-					timer = setTimeout(() => {
-						timer = null;
-					  	console.log("End Of Document");
-					}, 1000);
-				};
-			} 
+			const observer = new IntersectionObserver(callback);
+			const targetDiv = document.querySelector('#obsTarget');
+			observer.observe(targetDiv);
+			
 			// 일감목록 검색 결과를 출력하는 무한스크롤 (끝)
 			
 			// 태그 전체 모달창 출력

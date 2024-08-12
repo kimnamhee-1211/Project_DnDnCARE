@@ -323,9 +323,11 @@ public class MemberController {
 		String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
 		System.out.println("GPT가 추천한 매칭번호 : " + result);
 		String[] choice = result.split(", ");
+		System.out.println("GPT 추천번호의 split" + Arrays.toString(choice));
 		ArrayList<Integer> choiceNoList = new ArrayList<Integer>();
 		for(int i = 0; i < choice.length; i++) {
 			if(choice[i].contains(".")) {
+				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
 				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
 			} else {
 				choiceNoList.add(Integer.parseInt(choice[i]));
@@ -1379,6 +1381,7 @@ public class MemberController {
 				int listCount = mService.getCaregiverListCount();
 				PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 8);
 				//currentPage > pi.getEndPage()
+				System.out.println("최대 페이지는 :" + pi.getMaxPage());
 				if(currentPage > pi.getEndPage()) {
 					gson.toJson("noExist", response.getWriter());
 				} else {
@@ -1571,10 +1574,12 @@ public class MemberController {
 		// 6. 프롬프트를 전달하고 결과값 받아오기
 		String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
 		System.out.println("GPT가 추천한 매칭번호 : " + result); //83, 82, 57, 85, 14, 46, 23, 22, 79, 84.
-		String[] choice = result.split(", ");
+		String[] choice = result.split(", "); 
+		System.out.println("GPT가 추천한 매칭번호의 스플릿 : " + Arrays.toString(choice)); // [90, 42, 83, 50, 23, 82, 85, 57, 14, 79.]
 		ArrayList<Integer> choiceNoList = new ArrayList<Integer>();
 		for(int i = 0; i < choice.length; i++) {
 			if(choice[i].contains(".")) {
+				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
 				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
 			} else {
 				choiceNoList.add(Integer.parseInt(choice[i]));
