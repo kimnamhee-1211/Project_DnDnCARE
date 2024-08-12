@@ -28,11 +28,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
+import com.kh.dndncare.common.AgeCalculator;
 import com.kh.dndncare.matching.model.exception.MatchingException;
 import com.kh.dndncare.matching.model.service.MatchingService;
 import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
@@ -193,7 +195,7 @@ public class MatchingController {
 	//공동간병 병원 선택
 	@GetMapping("joinMatching.jm")
 	public String joinMatchinjmain(@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress, 
-								Model model, HttpSession session) {
+								Model model, HttpSession session, @RequestParam(value="msg", required=false) String msg) {
 		
 		//병원 정보 전달
 		Hospital hospital = new Hospital();
@@ -203,6 +205,7 @@ public class MatchingController {
 		
 		//병원으로 list 뽑기 
 		ArrayList<MatMatptInfo> list = mcService.getJmList(hospitalName);
+		
 		
 		//loginUser가 그룹에 참여중인지 아닌지 확인 => view 표시용
 		//loginUser-MatNo get
@@ -216,7 +219,7 @@ public class MatchingController {
 		    }
 		}
 		
-		
+		model.addAttribute("msg", msg);
 		model.addAttribute("list", list);
 		return "joinMatching";
 	}
@@ -299,9 +302,9 @@ public class MatchingController {
 		
 		//macthing date set(불필요한 괄호 빼기)
 		if(jm.getMatMode() == 2) {
-			String matchingDate = Arrays.toString(day).replace("[", "").replace("]", "");
+			String matDate = Arrays.toString(day).replace("[", "").replace("]", "");
 			@SuppressWarnings("unused")
-			int result4 = mcService.insertMatchingDate(jm.getMatNo(), matchingDate);
+			int result4 = mcService.insertMatDate(jm.getMatNo(), matDate);
 		}
 		
 		//매칭 환자 등록
@@ -310,7 +313,7 @@ public class MatchingController {
 		Patient pt = mcService.getPatient(memberNo);		
 		jmPt.setPtNo(pt.getPtNo());
 		jmPt.setService("공동간병");
-		jmPt.setMatAddressInfo(hospital.getHospitalAddress() +" // "+ jmPt.getMatAddressInfo());
+		jmPt.setMatAddressInfo(hospital.getHospitalAddress() +"//"+ jmPt.getMatAddressInfo());
 		jmPt.setGroupLeader("Y");
 		System.out.println("등록" + jmPt);
 		int result3 = mcService.enrollMatPtInfo(jmPt);
@@ -319,6 +322,7 @@ public class MatchingController {
 		if(result2>0 && result3>0) {
 			re.addAttribute("hospitalName", hospital.getHospitalName());
 			re.addAttribute("hospitalAddress", hospital.getHospitalAddress());
+			re.addAttribute("msg", "공동간병 등록이 완료되었습니다.");
 			return "redirect:joinMatching.jm";
 		}
 		throw new MemberException("공동간병 그룹 등록 실패");
@@ -345,7 +349,7 @@ public class MatchingController {
 		for(Patient jmPt : jmPts) {
 			
 			//get member info (대분류 : 소분류)
-			ArrayList<InfoCategory> jmPtInfos =  mcService.getInfo(jmPt.getMemberNo());
+			ArrayList<InfoCategory> jmPtInfos =  mcService.getInfo(jmPt.getPtNo());
 			
 			ArrayList<String> disease =  new ArrayList<>();
 			String diseaseLevel = null;
@@ -364,8 +368,6 @@ public class MatchingController {
 			}		
 		}		
 				
-		System.out.println("jmMatMatptInfo" + jmMatMatptInfo);
-		System.out.println("jmPts1" + jmPts);
 		HashMap<String, Object> jmMacPt = new HashMap<String, Object>();
 		jmMacPt.put("jmMatMatptInfo", jmMatMatptInfo);
 		jmMacPt.put("jmPts", jmPts);
@@ -506,7 +508,7 @@ public class MatchingController {
 		return "reviewDetail";
 	}
 	
-	
+	//공동간병 참여자 퇴장
 	@PostMapping("walkoutJoinMatching.jm")
 	public String walkoutJoinMatching(@RequestParam("matNo") int matNo, @RequestParam("ptNo") int ptNo,
 									@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,
@@ -606,6 +608,276 @@ public class MatchingController {
 		
 	}
 
+	
+	//간병인 메인에서 환자 정보 페이지로 
+	@GetMapping("goCaregiverPtInfo.mc")
+	public String goCaregiverPtInfo(@RequestParam("matNo") int matNo, Model model, HttpSession session) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		ArrayList<MatMatptInfoPt> mPI = mcService.matPtInfoToCaregiver(matNo);
+		ArrayList<String> diseaseArr = new ArrayList<String>();
+		ArrayList<String> diseaseLevel = new ArrayList<String>();
+		String mobilityStatus = null;
+		
+		//matching테이블에 간병인 memberNo들어왔는지 확인 => 매칭 신청/승낙 구분용
+		Integer MatMemberNo = mcService.getMatMemberNo(matNo);
+		if(MatMemberNo != null && MatMemberNo == loginUser.getMemberNo()) {
+			model.addAttribute("MatMemberNo", MatMemberNo);
+		}
+		System.out.println("MatMemberNo = " + MatMemberNo);
+		
+		
+		for(MatMatptInfoPt m: mPI) {
+			//나이 계산
+			int ptRealAge = AgeCalculator.calculateAge(m.getPtAge());
+			m.setPtRealAge(ptRealAge);
+			
+			//노출 주소 00도 00시
+			String[] addr = m.getMatAddressInfo().split("//");
+			String[] addressMin = addr[1].split(" ");
+			String addressMinStr = addressMin[0] + " " + addressMin[1];
+			m.setMatAddressMin(addressMinStr);
+			
+			//주소 full (//제외)
+			String address = m.getMatAddressInfo().replace("//", " "); 
+			m.setMatAddressInfo(address);
+			
+			//memberInfo 뽑기
+			ArrayList <InfoCategory> info = mcService.getInfo(m.getPtNo());
+			System.out.println("info: " + info);
+			
+			for(InfoCategory i : info) {
+				if(i.getLCategory().equals("disease")) {
+					 diseaseArr.add(i.getSCategory());
+				}else if(i.getLCategory().equals("diseaseLevel")) {
+					diseaseLevel.add(i.getSCategory());
+				}else if(i.getLCategory().equals("mobilityStatus")) {
+					mobilityStatus = i.getSCategory();
+				}
+			}			
+			m.setDisease(diseaseArr.toString().replace("[", "").replace("]", ""));
+			m.setDiseaseLevel(diseaseLevel.toString().replace("[", "").replace("]", ""));
+			m.setMobilityStatus(mobilityStatus);
+		}
+		
+	
+		int count = mcService.requestMatCheck(loginUser.getMemberNo(), matNo);
+		String matCheck = "";
+		if(count == 0) {
+			matCheck = "N";
+		}else {
+			matCheck = "Y";
+		}		
+		model.addAttribute("mPI", mPI);
+		model.addAttribute("matCheck", matCheck);
+		
+		return "caregiverPtInfo";
+	}
+	
+	
+	//간병인 회원의 매칭 신청
+	@GetMapping("requestMatching.mc")
+	public String requestMatching(@RequestParam("matNo") int matNo, @RequestParam("ptCount") int ptCount, 
+								RedirectAttributes re, HttpSession session) {
+		
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		
+		int result = mcService.requestMatching(loginUser.getMemberNo(), matNo);
+		
+		if(result > 0) {
+			//pt 이름 뽑기(공동간병일 경우 방 개설자)
+			String matPtName = mcService.getMatPtName(matNo, ptCount);
+			
+			if(matPtName != null) {
+				re.addAttribute("matPtName", matPtName);
+				re.addAttribute("matPtCount", ptCount);
+				re.addAttribute("result", "request");
+				return "redirect:caregiverMain.me";
+			}else {
+				throw new MemberException("간병인 매칭 신청 실패1");
+			}			
+			
+		}else {
+			throw new MemberException("간병인 매칭 신청 실패2");
+		}
+
+	}
+	
+	//나의 매칭현황
+	@GetMapping("goMyMatching.mc")
+	public String goMyMatching(HttpSession session, Model model) {
+		
+		Member loginuser = (Member)session.getAttribute("loginUser");
+		ArrayList<MatMatptInfoPt> myMatchingAll = mcService. getMyMatching(loginuser.getMemberNo());
+		System.out.println("myMatchingAll : " + myMatchingAll);
+		
+		
+		ArrayList<MatMatptInfoPt> myMatching = new ArrayList<MatMatptInfoPt>();
+		ArrayList<MatMatptInfoPt> myMatchingW = new ArrayList<MatMatptInfoPt>();
+		ArrayList<MatMatptInfoPt> myRequestMatPt = new ArrayList<MatMatptInfoPt>();
+		
+		LocalDate today = LocalDate.now();		
+		
+		for(MatMatptInfoPt i : myMatchingAll) {
+			
+			//노출 나이 set
+			int realAge = AgeCalculator.calculateAge(i.getPtAge());
+			i.setPtRealAge(realAge);
+						
+			//매칭 진행 중
+			if(i.getMatConfirm().equals("Y")) {
+		        Date endDt = i.getEndDt(); 
+		        LocalDate endLocalDate = endDt.toLocalDate();		        
+		        if (endLocalDate.isAfter(today)) {
+		            myMatching.add(i);
+		        }
+			}
+			
+			//매칭 결제 대기중
+			if(i.getMatConfirm().equals("W")) {
+		        Date beginDt = i.getBeginDt(); 
+		        LocalDate beginLocalDate = beginDt.toLocalDate();		        
+		        if (beginLocalDate.isAfter(today)) {
+		        	myMatchingW.add(i);
+		        }
+			}
+			
+			//매칭신청 받은 내역
+			if(i.getMatConfirm().equals("N")) {
+		        Date beginDt = i.getBeginDt(); 
+		        LocalDate beginLocalDate = beginDt.toLocalDate();		        
+		        if (beginLocalDate.isAfter(today)) {
+		        	myRequestMatPt.add(i);
+		        }
+			}	
+		}		
+		
+		//매칭 신청 내역
+		ArrayList<MatMatptInfoPt> myRequestMat= mcService. getMyRequestMat(loginuser.getMemberNo());
+		for(MatMatptInfoPt i : myRequestMat) {
+			
+			//노출 나이 set
+			int realAge = AgeCalculator.calculateAge(i.getPtAge());
+			i.setPtRealAge(realAge);
+		}
+		
+		System.out.println("myMatching : " +  myMatching);
+		System.out.println("myMatchingW : " +  myMatchingW);
+		System.out.println("myRequestMatPt : " +  myRequestMatPt);
+		System.out.println("myRequestMat : " +  myRequestMat);
+			
+		model.addAttribute("myMatching", myMatching);
+		model.addAttribute("myMatchingW", myMatchingW);
+		model.addAttribute("myRequestMat", myRequestMat);
+		model.addAttribute("myRequestMatPt", myRequestMatPt);
+		model.addAttribute("loginUserName", loginuser.getMemberName());
+		
+		return "myMatching";
+	}
+	
+	
+	@PostMapping(value="getMatPtToMatNo.mc", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public void getMatPtToMatNo(@RequestParam("matNo") int matNo, HttpServletResponse response) {
+		
+		ArrayList<MatMatptInfoPt> matInfo = mcService.matPtInfoToCaregiver(matNo);
+		
+		ArrayList<String> diseaseArr = new ArrayList<String>();
+		ArrayList<String> diseaseLevel = new ArrayList<String>();
+		String mobilityStatus = null;
+		
+		for(MatMatptInfoPt i : matInfo) {
+			
+			//노출 주소 set
+			String[] addArr = i.getMatAddressInfo().split("//");
+			String[] addArrMin = addArr[1].split(" ");
+			String addMin = addArrMin[0] + " " +  addArrMin[1];
+			i.setMatAddressMin(addMin);
+			
+			//노출 나이 set
+			int realAge = AgeCalculator.calculateAge(i.getPtAge());
+			i.setPtRealAge(realAge);
+			
+			//상세 주소 set
+			String add = i.getMatAddressInfo().replace("//", " ");
+			i.setMatAddressInfo(add);
+			//날짜 노출 예쁘게
+			if(i.getMatDate() != null) {
+				String date = i.getMatDate().replace(",", ", ");
+				i.setMatDate(date);
+			}
+			
+			//환자 정보 set
+			ArrayList <InfoCategory> info = mcService.getInfo(i.getPtNo());
+			System.out.println("info: " + info);
+			
+			for(InfoCategory m : info) {
+				if(m.getLCategory().equals("disease")) {
+					 diseaseArr.add(m.getSCategory());
+				}else if(m.getLCategory().equals("diseaseLevel")) {
+					diseaseLevel.add(m.getSCategory());
+				}else if(m.getLCategory().equals("mobilityStatus")) {
+					mobilityStatus = m.getSCategory();
+				}
+			}			
+			i.setDisease(diseaseArr.toString().replace("[", "").replace("]", ""));
+			i.setDiseaseLevel(diseaseLevel.toString().replace("[", "").replace("]", ""));
+			i.setMobilityStatus(mobilityStatus);
+		}
+		
+		System.out.println(matInfo);
+		
+		response.setContentType("application/json; charset=UTF-8");
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
+		Gson gson = gb.create();
+		
+		try {
+			gson.toJson(matInfo, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	
+	//간병인의 매칭 승낙
+	@GetMapping("MatchingapproveC.mc")
+	public String MatchingapproveC(@RequestParam("matNo") int matNo, @RequestParam("ptCount") int ptCount, 
+			RedirectAttributes re, HttpSession session) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		int result = mcService.matchingApproveC(matNo, loginUser.getMemberNo());
+		if(result > 0) {		
+			String matPtName = mcService.getMatPtName(matNo, ptCount);			
+			re.addAttribute("matPtName", matPtName);
+			re.addAttribute("matPtCount", ptCount);
+			re.addAttribute("result", "approve");
+			return "redirect:caregiverMain.me";
+		}else {
+			throw new MemberException("간병인 매칭 승낙 실패");
+		}
+
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	@PostMapping("successPay.mc")

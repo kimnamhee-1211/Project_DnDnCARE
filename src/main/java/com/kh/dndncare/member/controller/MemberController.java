@@ -34,8 +34,18 @@ import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.matching.model.vo.CareReview;
+
+import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.common.AgeCalculator;
+import com.kh.dndncare.common.Pagination;
+
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
+
+import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
+import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
@@ -511,16 +521,91 @@ public class MemberController {
 	
 	// 간병인 메인페이지로 가기 
 	@GetMapping("caregiverMain.me")
-	public String caregiverMain(HttpSession session, Model model) {
-		// 1. 자동 추천 목록 받아오기
+	public String caregiverMain(HttpSession session, Model model,
+								@RequestParam(value="matPtCount", defaultValue = "0") int matPtCount, 
+								@RequestParam(value="matPtName", required = false) String matPtName,
+								 @RequestParam(value="result", required = false) String result) {
+		
 		Member loginUser = (Member)session.getAttribute("loginUser");
+		model.addAttribute("loginUserName", loginUser.getMemberName());
+		
+		// 1. 자동 추천 목록 받아오기
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo(); 
-			ArrayList<Patient> completeList = openAiPatientChoice(memberNo); // 추천목록이 없으면 null로 넘어옴
-			
+			ArrayList<Patient> completeList = openAiPatientChoice(memberNo); // 추천목록이 없으면 null로 넘어옴		
 			model.addAttribute("completeList", completeList);
 		}
+				
+		
+		//남희 - 환자정보 불러오기
+		//MatMatptInfoPt 18개 뽑기 
+		ArrayList<MatMatptInfoPt> matMatptInfoPtListBefore = mService.getMatMatptInfoPt();		
+		ArrayList<MatMatptInfoPt> matMatptInfoPtList1 = new ArrayList<MatMatptInfoPt>();
+		ArrayList<MatMatptInfoPt> matMatptInfoPtList2 = new ArrayList<MatMatptInfoPt>();
+		ArrayList<MatMatptInfoPt> matMatptInfoPtList3 = new ArrayList<MatMatptInfoPt>();
+		
+		for(int i = 0; i < matMatptInfoPtListBefore.size(); i++) {
+			//나이 계산
+			int ptRealAge = AgeCalculator.calculateAge(matMatptInfoPtListBefore.get(i).getPtAge());
+			matMatptInfoPtListBefore.get(i).setPtRealAge(ptRealAge);
+			
+			//노출 주소
+			String[] addr = matMatptInfoPtListBefore.get(i).getMatAddressInfo().split("//");			
+			String[] addressMin = addr[1].split(" ");
+			String addressMinStr = addressMin[0] + " " + addressMin[1]; //00도 00시//
+			matMatptInfoPtListBefore.get(i).setMatAddressMin(addressMinStr);
+			
+			if(matMatptInfoPtListBefore.get(i).getPtCount() > 1) {
+				if(matMatptInfoPtListBefore.get(i).getGroupLeader().equals("N")) {
+					matMatptInfoPtListBefore.remove(i);
+				}
+			}
+			
+			if(i < 6) {
+				matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
+			}else if(i < 12) {
+				matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
+			}else if(i < 18) {
+				matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
+			}			
+					
+		}
+		
+		if(matPtCount > 0  && matPtName != null) {
+			model.addAttribute("matPtCount", matPtCount);
+			model.addAttribute("matPtName", matPtName);
+			model.addAttribute("result", result);
+			
+		}
+		
+		System.out.println(matMatptInfoPtList1);
+		model.addAttribute("matMatptInfoPtList1", matMatptInfoPtList1);
+		model.addAttribute("matMatptInfoPtList2", matMatptInfoPtList2);
+		model.addAttribute("matMatptInfoPtList3", matMatptInfoPtList3);
+		
+		//loginUser(간병인)에게 매칭을 신청한 대상 정보 불러오기
+		ArrayList<RequestMatPt> requestMatPt = mService.getRequestMatPt(loginUser.getMemberNo());
+		System.out.println(requestMatPt);
+		
+		for(int i = 0 ; i < requestMatPt.size(); i ++) {
+			int realAge = AgeCalculator.calculateAge(requestMatPt.get(i).getPtAge());
+			requestMatPt.get(i).setPtRealAge(realAge);
+			
+			if((Integer)requestMatPt.get(i).getPtCount()> 1) {
+				if(requestMatPt.get(i).getGroupLeader().equals("N")) {
+					requestMatPt.remove(i);
+				}
+			}
+			if(i > 10) {
+				requestMatPt.remove(i);
+			}
+		}
+		model.addAttribute("requestMatPt", requestMatPt);
+		
+		//현재 매칭중인 pt정보
+		//ArrayList<MatMatptInfoPt> matConfirmPt = mService.getMatConfirmPt();
+		
 		
 		
 		

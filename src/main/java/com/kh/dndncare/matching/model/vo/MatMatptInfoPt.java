@@ -1,6 +1,8 @@
 package com.kh.dndncare.matching.model.vo;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,11 +53,20 @@ public class MatMatptInfoPt {
 	private String ptAddress; // PT_ADDRESS
 	private String ptRequest; // PT_REQUEST
 	private Date ptUpdateDate;
-	
+		
+	private String matDate;
+		
 	//나이계산
 	private int ptRealAge;
 	
 	//노출 위한 주소 (시까지만 노출)
-	private String ptAddressMin;
+	private String matAddressMin;	
+	
+	//memberInfo 정보 뽑기
+	private String disease;	
+	private String mobilityStatus;
+	private String diseaseLevel;
+	
+
 	
 }

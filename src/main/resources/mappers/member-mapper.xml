@@ -114,12 +114,14 @@
 	  	from patient
 	  	where member_no = #{memberNo}
 	  </select>
+	  
 	  <!-- 환자 인포카테고리 -->
 	  <update id="updatePassword">
 	  	update member
 	  	set member_pwd = #{newPwd}
 	  	where member_id = #{memberId}
 	  </update>
+	  
 	  <!-- 간병인정보 가져오기 -->
 	  <select id="selectCareGiver" resultType="CareGiver">
 	  	select *
@@ -170,6 +172,7 @@
 		where member_no = #{memberNo}
 		
 	</delete>
+	
 	<insert id="insertWantInfo">		<!-- 내가 원하는 상대매칭 정보 -->
 	insert into want_info values(
 		${memberNo},
@@ -177,11 +180,13 @@
 	)
 	
 	</insert>
+	
 	<delete id="deleteMemberInfo">		<!-- 내 인포정보 -->
 		delete member_info
 		where member_no = #{memberNo}
 		
 	</delete>
+	
 	<insert id="insertMemberInfo">		<!-- 내 인포정보 -->
 	insert into member_info values(
 		${memberNo},
@@ -291,6 +296,7 @@
 			join board b on(l.board_no = b.board_No)
 		where l.board_no = #{boardNo} and b.board_status = 'Y'
 	</select>
+	
 	<select id="selectMatList" resultType="MatMatptInfo">	<!-- 환자번호로 mat_pt테이블의 매칭번호를 뽑아온다. -->
 		select *
 		from mat_pt_info
@@ -303,13 +309,41 @@
 	</select>
 	
 	
+	<!-- 매칭 + 환자 정보 다 가져오기  -->
+	<select id="getMatMatptInfoPt" resultType="MatMatptInfoPt">
+		select *
+		from matching
+			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
+			join patient on(mat_pt_info.pt_no = patient.pt_no)	
+			join hospital on(hospital.hospital_no = matching.hospital_no)	
+		where matching.mat_confirm = 'N' and matching.begin_dt > sysdate 
+			and matching.member_no  is null
+		order by matching.begin_dt
+	</select>
 	
+	<!-- loginUser(간병인)에게 매칭을 신청한 대상 이름 불러오기 -->
+	<select id="getRequestMatPt" resultType="RequestMatPt">
+		select matching.mat_no, patient.pt_name, 
+				patient.pt_gender, patient.pt_age,
+				matching.pt_count, mat_pt_info.service,
+				mat_pt_info.group_leader
+		from matching
+			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no)
+			join patient on(mat_pt_info.pt_no = patient.pt_no)
+		where matching.member_no = #{memberNo}	
+				and matching.mat_confirm = 'N'
+				and matching.begin_dt > sysdate
+	</select>
+	
+
+
 	<select id="selectCareGiverList" resultType="CareGiver">	<!-- 간병인정보를 모두 불러온다.(재가공할거지만) -->
 		select *
 		from careGiver
 			join member using(member_no)
 		where member_status = 'N'
 	</select>
+
 	
 	<select id="selectSocialLogin" resultType="Member">
 		select *

@@ -13,7 +13,9 @@ import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
+import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
@@ -33,6 +35,7 @@ public interface MemberService {
 	ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser);
 
 	ArrayList<Member> selectAllMember();
+	
 	int enroll(Member m);
 
 	int enrollCareGiver(CareGiver cg);
@@ -105,6 +108,10 @@ public interface MemberService {
 
 	ArrayList<MatMatptInfo> selectMatList(int i);
 
+	ArrayList<MatMatptInfoPt> getMatMatptInfoPt();
+
+	ArrayList<RequestMatPt> getRequestMatPt(int memberNo);
+
 	ArrayList<CareGiver> selectCareGiverList();
 
 	Member selectSocialLogin(String code);
@@ -113,6 +120,7 @@ public interface MemberService {
 	ArrayList<CareReview> selectReviewList(int reviewNo);
 
 	int getPtNo(int memberNo);
+
 
 
 }
