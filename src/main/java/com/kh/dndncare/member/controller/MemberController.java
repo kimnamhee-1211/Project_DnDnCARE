@@ -29,11 +29,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
-import com.kh.dndncare.board.model.vo.Board;
-import com.kh.dndncare.board.model.vo.PageInfo;
-import com.kh.dndncare.board.model.vo.Reply;
-import com.kh.dndncare.common.Pagination;
-import com.kh.dndncare.matching.model.vo.CareReview;
 
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
@@ -41,11 +36,16 @@ import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.AgeCalculator;
 import com.kh.dndncare.common.Pagination;
 
+import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.common.Pagination;
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
-import com.kh.dndncare.matching.model.vo.MatPtInfo;
 
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
+import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
@@ -769,6 +769,7 @@ public class MemberController {
 		// 회원가입용 session데이터
 		model.addAttribute("enrollmember", m);
 		System.out.println("회원가입 데이터 전송 검증 =" + m);
+		System.out.println("성공여부" + result);
 
 		if (result > 0) {
 			if (m.getMemberCategory().equals("C")) {
@@ -778,6 +779,7 @@ public class MemberController {
 			}
 		} else {
 			throw new MemberException("회원가입에 실패했습니다.");
+			
 		}
 
 	}
