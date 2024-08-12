@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<link th:href="@{css/caregiverPtInfo.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
+	<div class="wrap">
+		<div class="title-content d-flex justify-content-center mx-auto">
+			<a href="home.do"><img class="logo-image mb-5 w-75" src="image/logo-removebg.png" width="130"></a>	
+			<h1 class="h1 mb-4 fw-bold text-center">매칭 정보</h1><br>
+		</div>
+		<div class="title2-content d-flex justify-content-center mx-auto">	
+			<div class="form-floating mb-3 mx-auto">
+				<div style="display:none" th:text="${mPI[0].matNo}" id="matNo"></div>
+				<div style="display:none" th:text="${mPI[0].ptCount}" id="ptCount"></div>
+				<table class="table" style="line-height:40px;width:750px;">
+				    <tr style="font-size:21px;">
+				      <th scope="col" th:if="${mPI[0].ptCount == 1}" colspan="3">&nbsp;&nbsp;&nbsp;[[${mPI[0].matAddressMin}]]</th>
+				      <th scope="col" th:if="${mPI[0].ptCount > 1}" colspan="3">&nbsp;[[${mPI[0].matAddressMin}]]&nbsp;&nbsp;&nbsp;&nbsp;[[${mPI[0].hospitalName}]]</th>
+				      <th scope="col" colspan="1">[[${mPI[0].service}]]</th>
+				    </tr>	
+				    <tr>
+				      <th scope="col">&nbsp;1일 돌봄비용</th>
+				      <td scope="col" colspan="3">[[${mPI[0].money}]]원</td>
+				    </tr>				    
+				    <tr th:if="${mPI[0].ptCount > 1}">
+				      <th style="width:50px;"scope="col">&nbsp;총 인원</th>
+				      <td style="width:90px;"scope="col">[[${mPI[0].ptCount}]]인</td>
+				      <th style="width:50px;"scope="col">현재 인원</th>
+				      <td style="width:90px;"scope="col">[[${mPI.size()}]]인</td>	
+				    <tr>
+				      <th scope="col">&nbsp;간병 시작일</th>
+				      <td scope="col">[[${mPI[0].beginDt}]]</td>
+				  	  <th scope="col">간병 종료일</th>
+				      <td scope="col">[[${mPI[0].endDt}]]</td>
+				    </tr>
+				    <tr th:if="${mPI[0].matMode == 2}">
+				      <th scope="col">&nbsp;선택 일자</th>
+				      <td scope="col" colspan="3">[[${mPI[0].matDate}]]&nbsp;</td>
+				    </tr>
+		    		<tr>
+				      <th scope="col">&nbsp;시작시간</th>
+				      <td scope="col">[[${mPI[0].beginTime}]]</td>
+				  	  <th scope="col">종료시간</th>
+				      <td scope="col">[[${mPI[0].endTime}]]</td>
+				    <tr>
+				      <th scope="col">&nbsp;상세 주소</th>
+				      <td scope="col" colspan="3">[[${mPI[0].matAddressInfo}]]&nbsp;&nbsp;</td>
+				    </tr>
+				    <tr>
+				      <th scope="col">&nbsp;요청사항</th>
+				      <td scope="col" colspan="3">[[${mPI[0].matRequest}]]&nbsp;&nbsp;</td>
+				    </tr>			
+				</table>	
+			</div>
+		</div>
+	
+		<main class="container-xxl align-items-center mx-auto">
+			<div class="mx-auto align-items-center" id="tableDivDiv">
+				<div class="tableDiv d-flex mx-auto align-items-center" th:each="onePt : ${mPI}">
+					<table class="table mx-auto">
+						<thead>
+						    <tr>
+						      <th scope="col">이름</th>
+						      <th scope="col" colspan="3">[[${onePt.ptName}]]</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr>
+						      <th style="width:50px;">성별</th>
+						      <td style="width:90px;">[[${onePt.ptGender == 'M' ? '남성' : '여성'}]]</td>
+						      <th style="width:50px;">나이</th>
+						      <td style="width:90px;">[[${onePt.ptRealAge}]]</td>
+						    </tr>
+						    <tr>
+						      <th>신장</th>
+						      <td>[[${onePt.ptHeight}]]</td>
+						      <th>체중</th>
+						      <td>[[${onePt.ptWeight}]]</td>
+						    </tr>
+						     <tr>
+						      <th>질병</th>
+						      <td colspan="3">[[${onePt.disease}]]</td>
+						    </tr>											  
+						  	<tr>
+						      <th>중증도</th>
+						      <td>[[${onePt.diseaseLevel}]]</td>
+						      <th>거동 상태</th>
+						      <td>[[${onePt.mobilityStatus}]]</td>
+						    </tr>
+						    <tr>
+						      <th>요청사항</th>
+						      <td colspan="3">[[${onePt.ptRequest}]]</td>
+						    </tr>
+						</tbody>		
+					</table>
+				</div>
+			</div>	
+
+			<div class="sign-btn d-flex justify-content-center mx-auto" style="weight:300px;">
+				<button type="button" th:if="${MatMemberNo >= 0}" class="signIn-btn mt-4" id="modalOfenOk"><span>매칭 승낙</span></button>
+				<button type="button" th:if="${MatMemberNo < 0}" class="signIn-btn mt-4" id="modalOfen"><span>매칭 신청</span></button>
+				<button type="button" class="signUp-btn mt-4" id="backButton"><span>이전으로</span></button>
+			</div>
+		</main>
+	</div>
+	
+	
+	<!-- 매칭 신청 모달 -->	
+	<div class="modal fade" id="matCheckN" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h4 class="h4 mb-4 fw-bold" th:each="onePt : ${mPI}" th:if="${onePt.ptCount > 1 && onePt.groupLeader == 'Y'}">
+	        	[[${onePt.ptName}]]님 등 [[${onePt.ptCount}]]명의 공동간병 그룹과의 매칭을 신청하시겠습니까?
+	        </h4>
+	        <h4 class="h4 mb-4 fw-bold" th:if="${mPI[0].ptCount == 1}">
+	        	[[${mPI[0].ptName}]]님과의 매칭을 신청하시겠습니까?
+	        </h4>
+	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다.</h5>	        
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" id="requestMatching">매칭 신청</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	
+	<!-- 이미 해당 매칭방에 매칭 신청을 한 경우 -->	
+	<div class="modal fade" id="matCheckY" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h5 class="h5 mb-3">
+	        	해당 건은 이미 매칭 신청이 완료되었습니다. 
+	        </h5> 
+	         <h5 class="h5 mb-3">
+	        	동일한 상대에게 2번 이상 매칭 신청을 할 수 없습니다. 
+	        </h5>    
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- 매칭 승낙 모달 -->	
+	<div class="modal fade" id="matOk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 승낙</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h4 class="h4 mb-4 fw-bold" th:each="onePt : ${mPI}" th:if="${onePt.ptCount > 1 && onePt.groupLeader == 'Y'}">
+	        	[[${onePt.ptName}]]님 등 [[${onePt.ptCount}]]명의 공동간병 그룹의 매칭 신청을 승낙하시겠습니까?
+	        </h4>
+	        <h4 class="h4 mb-4 fw-bold" th:if="${mPI[0].ptCount == 1}">
+	        	[[${mPI[0].ptName}]]님의 매칭 신청을 승낙하시겠습니까?
+	        </h4>
+	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청 승낙이 완료됩니다.<br>상대가 입금을 완료하면 매칭이 성사됩니다.</h5>	        
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" id="requestMatchingOk">매칭 승낙</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>	
+	
+	
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	
+	
+	<script th:inline="javascript">
+	
+	/*<![CDATA[*/
+	const matCheck = /*[[${matCheck}]]*/'matCheck';
+	/*]]>*/
+	
+	window.onload = function() {
+		
+		const modalOfen = document.querySelector('#modalOfen')
+		if(modalOfen){
+			modalOfen.addEventListener('click', ()=>{				
+				if(matCheck && matCheck == 'Y'){
+					$('#matCheckY').modal('show');
+				}else if(matCheck && matCheck == 'N'){
+					$('#matCheckN').modal('show');
+				}				
+			});			
+		}	
+		
+		document.querySelector('#requestMatching').addEventListener('click', ()=>{
+			const matNo = document.querySelector('#matNo').innerHTML;
+			const ptCount = document.querySelector('#ptCount').innerHTML;
+			
+			location.href='requestMatching.mc?matNo='+ matNo + '&ptCount=' + ptCount;
+		})
+
+		
+		
+		const modalOfenOk = document.querySelector('#modalOfenOk')
+		if(modalOfenOk){
+			modalOfenOk.addEventListener('click', ()=>{
+				$('#matOk').modal('show');			
+			});		
+		}
+		
+		
+		document.querySelector('#requestMatchingOk').addEventListener('click', ()=>{
+			const matNo = document.querySelector('#matNo').innerHTML;
+			const ptCount = document.querySelector('#ptCount').innerHTML;
+			location.href='MatchingapproveC.mc?matNo='+ matNo + '&ptCount=' + ptCount;
+		})
+		
+
+		
+		
+		
+		
+		
+		
+		
+	};
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	</script>
+		
+		
+</body>
+</html>

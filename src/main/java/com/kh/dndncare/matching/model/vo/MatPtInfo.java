@@ -23,7 +23,9 @@ public class MatPtInfo {
 	private String matRequest;
 	private String deposit;
 	private String groupLeader;
+	private int reviewNo;
 	
+	private String hospitalName;
 	
 
 }

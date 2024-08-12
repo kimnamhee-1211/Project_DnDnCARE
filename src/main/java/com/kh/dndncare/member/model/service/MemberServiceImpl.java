@@ -11,12 +11,15 @@ import org.springframework.stereotype.Service;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatPtInfo;
+import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.RequestMatPt;
+import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.member.model.dao.MemberMapper;
-
 import com.kh.dndncare.member.model.vo.CalendarEvent;
-
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
@@ -42,18 +45,21 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.login(m);
 	}
 	
+	
+	//// 멤버 테이블만 있고 환자/ 간병인 테이블에 insert됮 않은 경우 멤버 테이블 삭제
 	@Override
 	public int noInfomemberdle() {
 		return mMapper.noInfomemberdle();
 	}
 
-
+	//아이디 중복체크
 	@Override
 	public int idCheck(String id) {
 
 		return mMapper.idCheck(id);
 	}
 	
+	//닉네임 중복 체크
 	@Override
 	public int nickNameCheck(String nickName) {
 		return mMapper.nickNameCheck(nickName);
@@ -64,28 +70,33 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
-	public ArrayList<CalendarEvent> caregiverCalendarEvent(Member loginUser) {
-		return mMapper.caregiverCalendarEvent(loginUser);
+	public ArrayList<CalendarEvent> caregiverCalendarEvent(Integer memberNo) {
+		return mMapper.caregiverCalendarEvent(memberNo);
 	}
 	
 	public ArrayList<Member> selectAllMember() {
 		return mMapper.selectAllMember();
 	}
 
+	//member테이블 insert(회원가입)
 	public int enroll(Member m) {
 		return mMapper.enroll(m);
 	}
 
+	//간병인 테이블 insert(회원가입 -간병인)
 	@Override
 	public int enrollCareGiver(CareGiver cg) {
 		return  mMapper.enrollCareGiver(cg);
 	}
 
+	//member_info insert (회원가입)
 	@Override
 	public int enrollInfoCategory(Object ob) {
 		return mMapper.enrollInfoCategory(ob);
 	}
 
+	
+	///환자 테이블 insert (환자 회원가입)
 	@Override
 	public int enrollPatient(Patient pt) {
 		return  mMapper.enrollPatient(pt);
@@ -108,11 +119,6 @@ public class MemberServiceImpl implements MemberService {
 	    }
 	}
 
-	@Override
-	public ArrayList<Matching> calendarEvent(Member loginUser) {
-		// TODO Auto-generated method stub 이거 뭐여
-		return null;
-	}
 
 	@Override
 	public Patient selectPatient(int memberNo) {
@@ -128,8 +134,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<Patient> selectPatientList(String caregiverCity) {
-		return mMapper.selectPatientList(caregiverCity);
+	public ArrayList<Patient> selectPatientList(HashMap<String, Object> condition) {
+		return mMapper.selectPatientList(condition);
 	}
 
 	@Override
@@ -141,6 +147,142 @@ public class MemberServiceImpl implements MemberService {
 	public ArrayList<Patient> choicePatientList(ArrayList<Integer> choiceNoList) {
 		return mMapper.choicePatientList(choiceNoList);
 	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> getCaregiverWant(int memberNo) {
+		return mMapper.getCaregiverWant(memberNo);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Object>> getPatientInfo(ArrayList<Integer> mNoList) {
+		return mMapper.getPatientInfo(mNoList);
+	}
+
+	@Override
+	public HashMap<String, String> getPatientMyInfo(int memberNo) {
+		return mMapper.getPatientMyInfo(memberNo);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> getPatientMyExp(int memberNo) {
+		return mMapper.getPatientMyExp(memberNo);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, String>> getCaregiverMyWant(int memberNo) {
+		return mMapper.getCaregiverMyWant(memberNo);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Object>> selectCaregiverList(HashMap<String, Object> condition) {
+		return mMapper.selectCaregiverList(condition);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Object>> selectCaregiverInfo(ArrayList<Integer> mNoList) {
+		return mMapper.selectCaregiverInfo(mNoList);
+	}
+
+	@Override
+	public ArrayList<CareGiver> choiceCaregiverList(ArrayList<Integer> choiceNoList) {
+		return mMapper.choiceCaregiverList(choiceNoList);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Integer>> getPatientEvent(int memberNo) {
+		return mMapper.getPatientEvent(memberNo);
+	}
+
+	@Override
+	public ArrayList<CalendarEvent> patientCalendarEvent(ArrayList<Integer> matNoList) {
+		return mMapper.patientCalendarEvent(matNoList);
+	}
+
+	@Override
+	public ArrayList<Member> selectMemberList(ArrayList<Integer> memberNoList) {
+		return mMapper.selectMemberList(memberNoList);
+	}
+
+	@Override
+	public ArrayList<Matching> selectMatchingList(PageInfo pi, ArrayList<Integer> resultMatNoList) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return mMapper.selectMatchingList(rowBounds, resultMatNoList);
+	}
+
+	@Override
+	public int getMatchingListCount(HashMap<String, Object> searchOption) {
+		return mMapper.getMatchingListCount(searchOption);
+	}
+
+	@Override
+	public ArrayList<Member> selectMatchingMemberList(ArrayList<Integer> matNoList) {
+		return mMapper.selectMatchingMemberList(matNoList);
+	}
+
+	@Override
+	public ArrayList<MatPtInfo> selectMatchingPTInfoList(ArrayList<Integer> matNoList) {
+		return mMapper.selectMatchingPTInfoList(matNoList);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Integer>> searchDefaultMatNoList(HashMap<String, Object> searchDefaultMap) {
+		return mMapper.searchDefaultMatNoList(searchDefaultMap);
+	}
+
+	@Override
+	public ArrayList<Integer> searchTermMatNoList(HashMap<String, Object> termMap) {
+		return mMapper.searchTermMatNoList(termMap);
+	}
+
+	@Override
+	public ArrayList<Integer> searchTimeMatNoList(HashMap<String, Object> termMap) {
+		return mMapper.searchTimeMatNoList(termMap);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Integer>> searchCategoryMatNoList(ArrayList<Integer> tempMatNoList) {
+		return mMapper.searchCategoryMatNoList(tempMatNoList);
+	}
+
+	@Override
+	public ArrayList<Matching> searchMatchingList(PageInfo pi, ArrayList<Integer> resultMatNoList) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return mMapper.searchMatchingList(rowBounds, resultMatNoList);
+	}
+
+	@Override
+	public ArrayList<CareGiver> selectAllCaregiver(PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return mMapper.selectAllCaregiver(rowBounds, null);
+	}
+
+	@Override
+	public int getCaregiverListCount() {
+		return mMapper.getCaregiverListCount();
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Integer>> getCaregiverScoreList(ArrayList<Integer> cNoList) {
+		return mMapper.getCaregiverScoreList(cNoList);
+	}
+
+	@Override
+	public ArrayList<CareGiver> searchDefaultCaregiverNoList(HashMap<String, Object> searchDefaultMap) {
+		return mMapper.searchDefaultCaregiverNoList(searchDefaultMap);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Integer>> searchCaregiverCategoryMNoList(ArrayList<Integer> cNoList) {
+		return mMapper.searchCaregiverCategoryMNoList(cNoList);
+	}
+
+	@Override
+	public ArrayList<CareGiver> searchCaregiverList(PageInfo pi, ArrayList<Integer> resultCaregiverNoList) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return mMapper.searchCaregiverList(rowBounds, resultCaregiverNoList);
+	}
+
+
 
 	
 
@@ -263,6 +405,48 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public ArrayList<MatMatptInfo> selectMatList(int memberNo) {
 		return mMapper.selectMatList(memberNo);
+	}
+	
+	//MatMatptInfoPt get - 환자매칭 모든 정보
+	@Override
+	public ArrayList<MatMatptInfoPt> getMatMatptInfoPt() {
+		return mMapper.getMatMatptInfoPt();
+	}
+	
+	//loginUser(간병인)에게 매칭을 신청한 대상 이름 불러오기
+	@Override
+	public ArrayList<RequestMatPt> getRequestMatPt(int memberNo) {
+		return mMapper.getRequestMatPt(memberNo);
+	}
+		
+	@Override
+	public ArrayList<CareGiver> selectCareGiverList() {
+		return mMapper.selectCareGiverList();
+
+	}
+
+	@Override
+	public Member selectSocialLogin(String code) {
+		return mMapper.selectSocialLogin(code);
+	}
+	public ArrayList<CareReview> reviewList(int ptNo) {
+		return mMapper.reviewList(ptNo);
+	}
+
+	@Override
+	public ArrayList<CareReview> selectReviewList(int reviewNo) {
+		return mMapper.selectReviewList(reviewNo);
+	}
+
+	@Override
+	public int getPtNo(int memberNo) {
+		return mMapper.getPtNo(memberNo);
+	}
+
+
+	@Override
+	public ArrayList<Patient> selectPatientList(String caregiverCity) {
+		return null;	//죽은메소드라고함
 	}
 
 }

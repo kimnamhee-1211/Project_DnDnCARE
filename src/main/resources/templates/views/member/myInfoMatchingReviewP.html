@@ -3,8 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+		html, body {
+		    height: 100%;
+		    margin: 0;
+		    padding: 0;
+		}
+		
+		body {
+		    display: flex;
+		    flex-direction: column;
+		    min-height: 100vh;
+		}
+		.icon-star{
+			background-image:url(../image/icon_star.svg);
+			background-size: 167px 167px;
+			padding:0px;
+		}
+		
+		.btn-star{
+			background: transparent;
+			border:0px solid black;
+			width:20px;
+			height:43px;
+			padding:0;
+			margin-left:0px;
+			margin-right:-1.5px;
+			background-repeat: no-repeat;
+		}		
+		
+		.btn-icon-star-review{
+			background-image:url(../image/icon_star2.svg);
+			background-size: 90px 90px;
+			padding:0px;
+			margin-left:0px;
+			background-repeat: no-repeat;	
+		}
+		
+		.btn-icon-star-review-half{
+			background-image:url(../image/icon_star2.svg);
+			background-size: 90px 90px;
+			padding:0px;
+			margin-left:0px;
+			background-repeat: no-repeat;
+			width:11px;
+		}
+		
+		.icon-star-review{
+			background-image:url(../image/icon_star.svg);
+			background-size: 90px 90px;
+			padding:0px;
+			width:26px; height:27px;
+		}
+		.btn-star-right{
+			background: transparent;
+			border:0px solid black;
+			width:20px;
+			height:43px;
+			padding:0;
+			margin-left:-3px;
+			margin-right:-1.5px;
+			background-repeat: no-repeat;
+		}
+		
+		.btn-icon-star-left{
+			background-image:url(../image/icon_star2.svg);
+			background-size: 167px 167px;
+			padding:0px;
+			margin-left:0px;
+			background-repeat: no-repeat;	
+		}
+		
+		.btn-icon-star-right{
+			background-image:url(../image/icon_star2.svg);
+			background-size: 167px 167px;
+			padding:0px;
+			background-position: -19.5px 0px;
+			background-repeat: no-repeat;	
+		}
+		.btn-icon-star-left-modal{
+			background-image:url(../image/icon_star2.svg);
+			background-size: 167px 167px;
+			padding:0px;
+			margin-left:-8px;
+			background-repeat: no-repeat;	
+		}
+		
+		.btn-icon-star-right-modal{
+			background-image:url(../image/icon_star2.svg);
+			background-size: 167px 167px;
+			padding:0px;
+			background-position: -19.5px 0px;
+			background-repeat: no-repeat;	
+		}
+		 .hidden-content {
+            display: none;
+        }
+</style>
 <link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
@@ -12,12 +112,8 @@
 	
 	
 	<div class="container" >
-	
 		 <div class="row">
 			<div class="col" >
-				
-			
-			
 	     		<div align="center"class="myInfo-Border m-4">
 	     			<div class="m-4" style="border-bottom:2px solid #8dd986;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
@@ -29,56 +125,133 @@
 	    	</div>
 	    	
 	    	<div class="col" >
-	      		
 	      		<div class="row m-4" style="width:950px"> <!-- 여기로규격정햇다 -->
 		      		<div class="m-3 h1 menu-name" >내가 쓴 후기</div>
 	      		</div>
-	      		
-	      		
-	      		
-	      		
-	      		
-	      		<div class="row m-4">
-	      			<div class="col m-3"><!-- 실제 데이터 넣고 for문 돌리기  -->
-						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
-							<div class="m-1 d-flex justify-content-between">
-								<div class="h5 m-2">OOO님에 대한  후기<img class="tri-btn"width="35" src="image/icon_turnTri.png"/></div>
+
+	      		<div class="col m-2" >
+		      		<div class="col m-2" th:if="${list} == null">
+		      				<h2 align="center">작성한 후기가 없습니다.</h2>
+	      			</div>
+	      			<div class="col m-2" th:each="r:${list}" th:unless="${list} == null" ><!-- 실제 데이터 넣고 for문 돌리기  -->
+						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3" >
+							<div class="m-2 d-flex justify-content-between" >
+								<input type="hidden" name="reviewNo" th:value="${r.reviewNo}">
+								<div class="h5 m-2" onclick="toggleReviewContent(this)">
+									[[${r.memberName}]]님에 대한  후기
+									<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
+								</div>
 								<div>
-									<button class="btn-outline-maincolor btn-sm m-2">수정하기</button>
-									<button class="btn-outline-maincolor btn-sm m-2">삭제하기</button>
+									 <button class="btn-outline-maincolor btn-sm m-2" th:onclick="updateReview([[${r.reviewNo}]],[[${r.reviewScore}]], '[[${r.reviewContent}]]')">수정하기</button>
+    								 <button class="btn-outline-maincolor btn-sm m-2" th:onclick="deleteReview([[${r.reviewNo}]])">삭제하기</button>
 								</div>
 							</div>
-							
-						</div>
-						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
-							<div class="m-1 d-flex justify-content-between">
-								<div class="h5 m-2">OOO님에 대한  후기<img class="tri-btn"width="35" src="image/icon_turnTri.png"/></div>
-								<div>
-									<button class="btn-outline-maincolor btn-sm m-2">수정하기</button>
-									<button class="btn-outline-maincolor btn-sm m-2">삭제하기</button>
-								</div>
-							</div>
-							
-						</div>
-						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
-							<div class="m-1 d-flex justify-content-between">
-								<div class="h5 m-2">OOO님에 대한  후기<img class="tri-btn"width="35" src="image/icon_turnTri.png"/></div>
-								<div>
-									<button class="btn-outline-maincolor btn-sm m-2">수정하기</button>
-									<button class="btn-outline-maincolor btn-sm m-2">삭제하기</button>
-								</div>
-							</div>
+							 <div class="hidden-content m-2">
+							 	 <div class="col testBorder">
+									<div   class="d-flex justify-content-left" style="min-width:600px; border:none;">평점 : 
+						      			<div align="left"class="icon-star-review">
+											<button th:if="${1 == r.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+											<button th:if="${1 < r.reviewScore}" class="btn-star btn-icon-star-review"></button>
+						      			</div>
+						      			<div align="left"class="icon-star-review">
+											<button th:if="${3 == r.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+											<button th:if="${3< r.reviewScore}" class="btn-star btn-icon-star-review"></button>
+						      			</div>
+						      			<div align="left"class="icon-star-review">
+											<button th:if="${5 == r.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+											<button th:if="${5 < r.reviewScore}" class="btn-star btn-icon-star-review"></button>
+						      			</div>
+						      			<div align="left"class="icon-star-review">
+											<button th:if="${7 == r.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+											<button th:if="${7 < r.reviewScore}" class="btn-star btn-icon-star-review"></button>
+						      			</div>
+						      			<div align="left"class="icon-star-review">
+											<button th:if="${9 == r.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+											<button th:if="${9 < r.reviewScore}" class="btn-star btn-icon-star-review"></button>
+						      			</div>
+						      			<span>([[${r.reviewScore}]])</span>
+					    			</div>
+						      			<br>[[${r.reviewContent}]]
+							    </div>
+				            </div>
 							
 						</div>
 	      			</div>
+	      			
 	      		</div>
 	      		
+	<!-- updateModal -->
+			<div class="modal fade" tabindex="-1" role="dialog" id="reviewUpdateModal">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+		    		<div class="modal-content rounded-3 shadow">
+		    		 <form id="updateReviewForm" method="post" action="updateReview.mc">
+		    			<div align="center" class="m-2 mt-2 h2" id="modalScore" style="margin-top:30px;">10</div>
+		    			<input type="hidden" name="reviewBeforeScore" id="hiddenBeforeScore" th:value=0/>
+			    			<div align="center" id="reviewScore" class="d-flex justify-content-center m-3" >
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button type="button" class="btn-star btn-icon-star-left-modal" value="1"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal "value="2"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button type="button" class="btn-star btn-icon-star-left-modal"value="3"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="4"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button type="button" class="btn-star btn-icon-star-left-modal"value="5"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="6"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button type="button" class="btn-star btn-icon-star-left-modal"value="7"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="8"></button>
+				      			</div>
+			    				<div class="icon-star" style="width:46px; height:46px;padding:0px;">
+									<button type="button" class="btn-star btn-icon-star-left-modal" value="9"></button>
+									<button type="button" class="btn-star-right btn-icon-star-right-modal"value="10"></button>
+				      			</div>
+			    			</div>
+		    			<div align="center">별을 클릭하세요</div>
+						<div class="m-4" id="modalUpdateContent" contenteditable=true th:utext="${reviewContent}"></div>		    				
+		      			<div class="modal-footer  p-0">
+		      				<div class="d-flex justify-content-evenly">
+		      				<input type="hidden" name="reviewNo" id="updateReviewNo" value=""/>
+               				 <input type="hidden" name="memberNo" id="hiddenCaregiverNo" th:value=${memberNo}/>		
+		      				 <input type="hidden" name="reviewScore" id="hiddenUpdateScore" value="10"/>
+               				 <input type="hidden" name="reviewContent" id="hiddenReviewContent" vlue=""/>		
+			      				<button type="button" class="btn btn-success" id="reviewUpdate">후기수정</button>
+			      				<button type="button" class="btn btn-light"data-bs-dismiss="modal">취소</button>
+		      				</div>
+		      			</div>
+			    		</form>
+		      				
+		    		</div>
+		  		</div>	
+			</div>
+			<!-- delete Modal -->
+			<div class="modal fade" tabindex="-1" role="dialog" id="reviewDeletemodal">
+		    <div class="modal-dialog" role="document">
+		        <div class="modal-content rounded-3 shadow">
+		            <form id="deleteReviewForm" method="post" action="deleteReview.mc">
+			            <div class="modal-body p-4 text-center">
+			                <h3 class="mb-0">후기글을 정말로 삭제하시겠습니까?</h3>
+			                <p class="mb-0">삭제하시면 다시 작성 하실수없습니다</p>
+			            </div>
+			            <div class="modal-footer flex-nowrap p-0">
+			             	<input type="hidden" name="reviewNo" id="deleteReviewNo" value=""/>
+			                <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end" id="reviewDelete">
+			                    <strong>네</strong>
+			                </button>
+			                <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0" data-bs-dismiss="modal">아니오</button>
+			            </div>
+			         </form>
+		        </div>
+		    </div>
+		</div>
 	    	</div>
     	</div>
 	
-	
 	</div>
 	
+			
 	<script th:inline="javascript">
 		
 		window.onload =() =>{
@@ -103,9 +276,88 @@
 					}
 				});
 			}
+						
+			
+			
+			const reviewScore = document.getElementById('reviewScore');
+			const bts = reviewScore.querySelectorAll('button');
+			for(bt of bts){
+					bt.addEventListener('click',function(){
+						document.getElementById('modalScore').innerText = this.value;
+						
+						for(let i = 0 ; i < this.value ; i++){	//색칠하기
+							if(i % 2 == 0){
+								if(!bts[i].classList.contains('btn-icon-star-left-modal')){
+									bts[i].classList.add('btn-icon-star-left-modal');
+								}
+								
+							}else{
+								if(!bts[i].classList.contains('btn-icon-star-right-modal')){
+									console.log('체크')
+									console.log(i)
+									bts[i].classList.add('btn-icon-star-right-modal');
+								}
+							}
+						}
+						for(let i = 9 ; i >= this.value ; i--){ //색지우기
+							if(i % 2 == 0){
+								if(bts[i].classList.contains('btn-icon-star-left-modal')){
+									bts[i].classList.remove('btn-icon-star-left-modal');
+									
+								}
+								
+							}else{
+								if(bts[i].classList.contains('btn-icon-star-right-modal')){
+									bts[i].classList.remove('btn-icon-star-right-modal');
+									
+								}
+							}
+						}
+					})
+			}
+			    
+				
 		
+	   document.getElementById('reviewDelete').addEventListener('click', function() {
+	   		const deleteReviewNo = document.getElementById('deleteReviewNo').value
+			console.log(deleteReviewNo);
+	   	 	document.getElementById('deleteReviewForm').submit();
+	   });
+	   
+	   document.getElementById('reviewUpdate').addEventListener('click', function(){
+		   // 점수, 내용
+		   document.getElementById('hiddenReviewScore').value = document.getElementById('reviewScore').innerHTML
+		   document.getElementById('hiddenReviewContent').value = document.getElementById('modalUpdateContent').innerHTML
+		   document.getElementById('updateReviewForm').submit();
+	   });
+	   
 		}
-	
+		function toggleReviewContent(headerElement) {
+	        const reviewDetail = headerElement.closest('.reviewDetail');
+	        const reviewContent = reviewDetail.querySelector('.hidden-content');
+	        const triBtn = reviewDetail.querySelector('.tri-btn');
+	        
+	        reviewContent.style.display = reviewContent.style.display === 'none' ? 'block' : 'none';
+	    }
+		
+	   function deleteReview(reviewNo) {
+		   document.getElementById('deleteReviewNo').value = reviewNo;
+		   
+		   $('#reviewDeletemodal').modal('show');
+	    }
+	   
+	   function updateReview(reviewNo, reviewScore, reviewContent) {
+		   console.log("번호" + reviewNo + "점수" + reviewScore + "내용" + reviewContent)
+		   // 번호, 점수, 내용 띄우기
+   		   document.getElementById('updateReviewNo').value = reviewNo;
+		   document.getElementById('hiddenBeforeScore').value = reviewScore;
+		   document.getElementById('modalUpdateContent').innerHTML= reviewContent;
+		   
+		   
+		   
+		   $('#reviewUpdateModal').modal('show');
+	    }
+	   
 	</script>
 	
 </body>

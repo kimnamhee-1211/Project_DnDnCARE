@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,13 @@ import com.kh.dndncare.matching.model.dao.MatchingMapper;
 import com.kh.dndncare.matching.model.vo.CareReview;
 import com.kh.dndncare.matching.model.vo.Hospital;
 import com.kh.dndncare.matching.model.vo.MatMatptInfo;
+import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
+import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
 
 @Service
@@ -69,15 +74,15 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	//get member info (대분류 : 소분류)
-	public ArrayList<InfoCategory> getInfo(int memberNo) {
-		return mMapper.getInfo(memberNo);
+	public ArrayList<InfoCategory> getInfo(int ptNo) {
+		return mMapper.getInfo(ptNo);
 	}
 
 	
 	//insert MatchingDate
 	@Override
-	public int insertMatchingDate(int matNo, String matchingDate) {
-		return mMapper.insertMatchingDate(matNo, matchingDate);
+	public int insertMatDate(int matNo, String matDate) {
+		return mMapper.insertMatDate(matNo, matDate);
 	}
 	
 	//병원  데이터 get
@@ -88,7 +93,7 @@ public class MatchingServiceImpl implements MatchingService {
 
 	//loginUser-MatNo get
 	@Override
-	public int[] getloginMatNo(int memberNo) {
+	public Set<Integer> getloginMatNo(int memberNo) {
 		return mMapper.getloginMatNo(memberNo);
 	}
 	
@@ -138,7 +143,7 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	@Override
-	public int avgReviewScore(int memberNo) {
+	public Double avgReviewScore(int memberNo) {
 		return mMapper.avgReviewScore(memberNo);
 	}
  
@@ -167,16 +172,104 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.insertWantInfo(params);
 	}
 
-	@Override
-	public int insertMatPtInfo(MatPtInfo matPtInfo) {
-		return mMapper.insertMatPtInfo(matPtInfo);
-	}
 
 	@Override
 	public int deleteWantInfo(int memberNo) {
 		return mMapper.deleteWantInfo(memberNo);
 	}
 
+	// 간병인 소개
+	@Override
+	public CareGiver selectIntro(int memberNo) {
+		return mMapper.selectIntro(memberNo);
+	}
+
+	
+	//매칭/매칭인포/환자/병원 한번에 가져오기
+	@Override
+	public ArrayList<MatMatptInfoPt> matPtInfoToCaregiver(int matNo) {
+		return mMapper.matPtInfoToCaregiver(matNo);
+	}
+	
+	//매칭테이블에 간병인 memberNo 넣기
+	@Override
+	public int requestMatching(int memberNo, int matNo) {
+		return mMapper.requestMatching(memberNo, matNo);
+	}
+	
+	//pt 이름 뽑기(공동간병일 경우 방 개설자)
+	@Override
+	public String getMatPtName(int matNo, int ptCount) {
+		return mMapper.getMatPtName(matNo, ptCount);
+	}
+	
+	//매칭방에 이미 매칭 신청을 한 간병인인지 아닌지 확인
+	@Override
+	public int requestMatCheck(int memberNo, int matNo) {
+		// TODO Auto-generated method stub
+		return mMapper.requestMatCheck(memberNo, matNo);
+	}
+
+	//나의 현재 매칭 정보)
+	@Override
+	public ArrayList<MatMatptInfoPt> getMyMatching(int memberNo) {
+		return mMapper.getMyMatching( memberNo);
+	}
+	
+	//매칭 신청 내역
+	@Override
+	public ArrayList<MatMatptInfoPt> getMyRequestMat(int memberNo) {
+		return mMapper.getMyRequestMat(memberNo);
+	}
+
+	//matching테이블에 간병인 memberNo들어왔는지 확인
+	@Override
+	public Integer getMatMemberNo(int matNo) {
+		return mMapper.getMatMemberNo(matNo);
+	}
+	
+	//간병인의 매칭 승낙
+	@Override
+	public int matchingApproveC(int matNo,  int memberNo) {
+		return mMapper.matchingApproveC(matNo, memberNo);
+	}
+
+	@Override
+	public int insertReview(HashMap<String, Object> map) {
+		return mMapper.insertReview(map);
+	}
+	
+	public MatMatptInfo selecMatPtInfo(int matNo, int memberNo) {
+		return mMapper.selecMatPtInfo(matNo,memberNo);
+	}
+	public MatMatptInfo selecMatching(int matNo) {
+		return mMapper.selecMatching(matNo);
+	}
+
+
+	@Override
+	public int insertPay(Member loginUser, Pay p) {
+		return mMapper.insertPay(loginUser, p);
+	}
+
+	@Override
+	public String selectMatDate(int matNo) {
+		return mMapper.selectMatDate(matNo);
+	}
+	public int deleteReivew(int reviewNo) {
+		return mMapper.deleteReview(reviewNo);
+	}
+
+	@Override
+	public ArrayList<InfoCategory> getCaregiverInfo(int memberNo) {
+		return mMapper.getCaregiverInfo(memberNo);
+	}
+
+	@Override
+	public int insertMatPtInfo(MatPtInfo matPtInfo) {
+		// TODO Auto-generated method stub
+		return 0;//없는메소드	
+		}
 	@Override
 	public int insertMemberInfo(Map<String, Object> memberInfoParams) {
 		return mMapper.insertMemberInfo(memberInfoParams);

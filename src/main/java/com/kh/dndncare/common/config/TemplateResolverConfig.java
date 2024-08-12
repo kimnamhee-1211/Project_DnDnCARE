@@ -83,6 +83,19 @@ public class TemplateResolverConfig {
 		
 		return dotJm;
 	}
+	@Bean
+	public ClassLoaderTemplateResolver dotLoResolver() {
+		ClassLoaderTemplateResolver dotLo = new ClassLoaderTemplateResolver();
+		dotLo.setPrefix("templates/views/common/");
+		dotLo.setSuffix(".html");
+		dotLo.setTemplateMode(TemplateMode.HTML);
+		dotLo.setCharacterEncoding("UTF-8");
+		dotLo.setCacheable(false);
+		dotLo.setOrder(6);
+		dotLo.setCheckExistence(true);
+		
+		return dotLo;
+	}
 	
 	@Bean
 	public ClassLoaderTemplateResolver dotChResolver() {
