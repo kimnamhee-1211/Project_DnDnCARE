@@ -48,6 +48,7 @@ import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.member.model.vo.Info;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
@@ -709,7 +710,10 @@ public class MemberController {
 		
 	//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --up--
 	@GetMapping("patientMain.me")
-	public String patientMain(HttpSession session, Model model) {
+	public String patientMain(Model model, HttpSession session,
+			@RequestParam(value="matCName", required = false) String matCName, @RequestParam(value="result", required = false) String result) {
+		
+		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--
 		// 1. 자동 추천 목록 받아오기
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		int memberNo = 0;
@@ -734,8 +738,42 @@ public class MemberController {
 			//System.out.println(c);
 		}
 		
+		
+		//남희 
+		//ptno 뽑기
+		int loginPt = mService.getPtNo(loginUser.getMemberNo());
+		// 환자 입장에서 나를 선택한 간병인 정보 불러오기
+
+		ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
+		for(int i = 0; i < requestCaregiver.size(); i++){
+			int age = AgeCalculator.calculateAge(requestCaregiver.get(i).getMemberAge());
+			requestCaregiver.get(i).setAge(age);
+			
+			if(i > 10) {
+				requestCaregiver.remove(i);
+			}
+
+		}
+		System.out.println("requestCaregiver : " + requestCaregiver);
+		model.addAttribute("requestCaregiver", requestCaregiver);	
+		
+		//loginUser Name
+		model.addAttribute("loginUserName", loginUser.getMemberName());	
+		
+		//매칭 승낙/신청 시 모달
+		if(matCName != null && result != null) {
+			model.addAttribute("matCName", matCName);	
+			model.addAttribute("result", result);
+		}
+		
+		
 		return "patientMain";
 	}
+	
+	
+	
+	
+	
 
 	// 회원가입 페이지 이동
 	@GetMapping("enroll1View.me")
@@ -2151,7 +2189,8 @@ public class MemberController {
 			// 해당 간병인에 대한 정보 조회 : 멤버번호, 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개) 
 			//MEMBER : MEMBER_NO, MEMBER_NAME, MEMBER_GENDER, MEMBER_AGE
 			//INFO_CATEGORY : L_CATEGORY==career, L_CATEGORY==license
-			mList = mService.selectMemberList(memberNoList); // [Member(memberNo=85, memberId=null, memberPwd=null, memberName=나리간병5, memberGender=M, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=69)]
+			/* 종규 명훈메소드 임의 수정*/
+			//mList = mService.selectMemberList(memberNoList); // [Member(memberNo=85, memberId=null, memberPwd=null, memberName=나리간병5, memberGender=M, memberNickName=null, memberAge=null, memberPhone=null, memberEmail=null, memberCreateDate=null, memberAddress=null, memberCategory=null, memberStatus=null, memberNational=null, memberPay=null, memberUpdateDate=null, memberRealAge=69)]
 			ArrayList<HashMap<String, Object>> infoList = mService.selectCaregiverInfo(memberNoList);
 			//[{S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=85}, {S_CATEGORY=가정돌봄, L_CATEGORY=service, MEMBER_NO=85}, {S_CATEGORY=동행서비스, L_CATEGORY=service, MEMBER_NO=85}, {S_CATEGORY=3, L_CATEGORY=career, MEMBER_NO=85}, {S_CATEGORY=섬망, L_CATEGORY=disease, MEMBER_NO=85}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=85}, {S_CATEGORY=간병사, L_CATEGORY=license, MEMBER_NO=85}, {S_CATEGORY=요양보호사, L_CATEGORY=license, MEMBER_NO=85}]
 

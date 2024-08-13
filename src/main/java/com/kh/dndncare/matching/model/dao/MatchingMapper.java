@@ -16,6 +16,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
@@ -82,7 +83,8 @@ public interface MatchingMapper {
 
 	int insertReview(HashMap<String, Object> map);
 	
-	MatMatptInfo selecMatPtInfo(@Param("matNo")int matNo,@Param("memberNo") int memberNo);
+	MatMatptInfo selecMatPtInfo(@Param("matNo")int matNo, @Param("memberNo") int memberNo);
+	
 	int requestMatching(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
 
 	String getMatPtName(@Param("matNo") int matNo, @Param("ptCount") int ptCount);
@@ -105,7 +107,15 @@ public interface MatchingMapper {
 	String selectMatDate(int matNo);
 	int deleteReview(int reviewNo);
 
-	ArrayList<InfoCategory> getCaregiverInfo(int memberNo);
+	ArrayList<InfoCategory> getCaregiverInfo(int ptNo);
+
+	
+	ArrayList<CareGiverMin> getMyMatchingP(int ptNo);
+
+	
+	ArrayList<CareGiverMin> getMyMatchingPN(int ptNo);
+
+	String getNameC(int memberNo);
 
 
 	int insertMemberInfo(Map<String, Object> memberInfoParams);
@@ -113,6 +123,12 @@ public interface MatchingMapper {
 	int deleteMemberInfo(Map<String, Object> memberInfoParams);
 
 	List<Integer> getCategoryNo(int memberNo);
+
+	int updateMatC(@Param("matNo") int matNo, @Param("memberNoC") int memberNoC);
+
+	int matchingApproveP(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
+
+	int CheckMatMemNo(int matNo);
 
 	
 

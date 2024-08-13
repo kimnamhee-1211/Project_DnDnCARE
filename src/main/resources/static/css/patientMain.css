@@ -279,8 +279,29 @@ a {
 	margin:16px;
 	margin-bottom:0px;
 	border-bottom:2px solid #8dd986;
+<<<<<<< HEAD
+}
+
+
+.signUp-btn{
+	padding: 0 40px;
+	weight: 600px;
+	margin: 0 50px;
+}
+
+.sign-btn button {
+	height:70px;
+	font-size:24px;
+	font-weight: 600;
+	border-radius:25px;
+	border:none;
+	margin-top:70px;
+}
+
+
 }
 /* 캘린더 이벤트의 정보를 보는 모달박스 */
 .eventInfo {
 	display:grid; grid-template-columns: 1fr 1fr;
 }
+

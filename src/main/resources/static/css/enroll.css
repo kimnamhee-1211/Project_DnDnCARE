@@ -79,3 +79,61 @@ body {
     align-items: center;
     text-align: center;
 }
+
+.btn-check {
+    position: absolute;
+    clip: rect(0,0,0,0);
+    pointer-events: none;
+}
+
+.btn-radio {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #495057;
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        width: 100%;
+        text-align: center;
+    }
+    .btn-radio.selected {
+        background-color: #8dd986;
+        color: white;
+    }
+
+.btn-check:checked + .btn-radio {
+    color: #fff;
+    background-color: #8dd986;
+    border-color: #8dd986;
+}
+
+.btn-radio:hover {
+    background-color: #8dd986;
+}
+
+.btn-check:checked + .btn-radio:hover {
+    background-color: #8dd986;
+}
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

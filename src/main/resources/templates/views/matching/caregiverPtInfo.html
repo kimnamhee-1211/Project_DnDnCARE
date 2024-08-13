@@ -56,8 +56,15 @@
 				    <tr>
 				      <th scope="col">&nbsp;요청사항</th>
 				      <td scope="col" colspan="3">[[${mPI[0].matRequest}]]&nbsp;&nbsp;</td>
-				    </tr>			
-				</table>	
+				    </tr>
+				</table>
+				<!--  종규 삽입부분 아래 -->
+				<div align="center" id="map-size">
+					<div align="cente" class="m2" style="height:350px; width:500px; border:1px solid black;" >
+						<iframe id="myIframe" src="https://map.naver.com/p/search/서울 강북구 솔매로22길 3?c=12.00,0,0,0,dh"></iframe>
+					</div>
+				</div>
+				<!-- 종규 삽입부분 위 -->			
 			</div>
 		</div>
 	
@@ -106,7 +113,9 @@
 			<div class="sign-btn d-flex justify-content-center mx-auto" style="weight:300px;">
 				<button type="button" th:if="${MatMemberNo >= 0}" class="signIn-btn mt-4" id="modalOfenOk"><span>매칭 승낙</span></button>
 				<button type="button" th:if="${MatMemberNo < 0}" class="signIn-btn mt-4" id="modalOfen"><span>매칭 신청</span></button>
+				<button type="button" id="startChat">채팅하기</button>
 				<button type="button" class="signUp-btn mt-4" id="backButton"><span>이전으로</span></button>
+				[[${mPI[0].ptNo}]]
 			</div>
 		</main>
 	</div>
@@ -125,7 +134,8 @@
 	        	[[${onePt.ptName}]]님 등 [[${onePt.ptCount}]]명의 공동간병 그룹과의 매칭을 신청하시겠습니까?
 	        </h4>
 	        <h4 class="h4 mb-4 fw-bold" th:if="${mPI[0].ptCount == 1}">
-	        	[[${mPI[0].ptName}]]님과의 매칭을 신청하시겠습니까?
+	        	[[${mPI[0].ptName}]]님과의 매칭을 신청하시겠습니까? 
+	        	
 	        </h4>
 	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다.</h5>	        
 	      </div>
@@ -136,6 +146,7 @@
 	    </div>
 	  </div>
 	</div>
+	
 	
 	
 	<!-- 이미 해당 매칭방에 매칭 신청을 한 경우 -->	
@@ -178,6 +189,7 @@
 	        </h4>
 	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청 승낙이 완료됩니다.<br>상대가 입금을 완료하면 매칭이 성사됩니다.</h5>	        
 	      </div>
+	      
 	      <div class="modal-footer">
 	      	<button type="button" class="btn btn-primary" id="requestMatchingOk">매칭 승낙</button>
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -195,6 +207,18 @@
 	/*<![CDATA[*/
 	const matCheck = /*[[${matCheck}]]*/'matCheck';
 	/*]]>*/
+	
+		/*<![CDATA[*/
+	const matNo = /*[[${matNo}]]*/'matNo';
+	/*]]>*/
+	
+		/*<![CDATA[*/
+	const matPtNo = /*[[${mPI[0].ptNo}]]*/'matPtNo';
+	/*]]>*/
+	
+	
+	
+	let url = "/createAndGetChat.ch?matNo=" + matNo +'&matPtNo=' + matPtNo ;
 	
 	window.onload = function() {
 		
@@ -229,9 +253,13 @@
 		document.querySelector('#requestMatchingOk').addEventListener('click', ()=>{
 			const matNo = document.querySelector('#matNo').innerHTML;
 			const ptCount = document.querySelector('#ptCount').innerHTML;
-			location.href='MatchingapproveC.mc?matNo='+ matNo + '&ptCount=' + ptCount;
+			location.href='matchingApproveC.mc?matNo='+ matNo + '&ptCount=' + ptCount;
 		})
 		
+		//채팅방 생성
+		document.getElementById("startChat").addEventListener("click", function() {
+	        window.location.href = url; // 해당 URL로 리디렉션
+	    });
 
 		
 		

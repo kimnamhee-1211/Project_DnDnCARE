@@ -21,6 +21,7 @@ import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.member.model.dao.MemberMapper;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
@@ -443,10 +444,17 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.getPtNo(memberNo);
 	}
 
+	
+	//매칭 신청한 간병인 목록 가져오기
+	@Override
+	public ArrayList<CareGiverMin> getRequestCaregiver(int ptNo) {
+		return mMapper.getRequestCaregiver(ptNo);
+	}
 
 	@Override
 	public ArrayList<Patient> selectPatientList(String caregiverCity) {
 		return null;	//죽은메소드라고함
+
 	}
 
 

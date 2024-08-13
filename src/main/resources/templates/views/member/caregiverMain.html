@@ -26,7 +26,7 @@
 				<table class="table mainTable table-hover">
                  <thead>
                      <tr>
-                         <th colspan="5">나와 딱 맞는 일감을 찾아드려요.</th>
+                         <th colspan="5">[[${loginUserName}]]님과 딱 맞는 일감을 찾아드려요.</th>
                          <th class="text-center">
                         	<img src="image/icon/refresh.png" id="refreshChoice" style="width:30px; height:30px;">
                         </th>
@@ -98,11 +98,11 @@
 	                        <td colspan="4" th:if="${matPt.ptCount == 1}" class="align-middle">
 	                        	<img th:if="${matPt.ptCount == 1 && matPt.service =='병원돌봄'}" src="image/icon/hospital.png"/>
 	                       		<img th:if="${matPt.ptCount == 1 && matPt.service =='가정돌봄'}" src="image/icon/home.pn/">
-	                       		[[${matPt.ptName}]]님([[${matPt.ptRealAge}]]세 [[${matPt.ptGender =='M' ? '남':'여' }]])이 매칭을 원하고 있어요
+	                       		[[${matPt.ptName}]]님([[${matPt.ptRealAge}]]세 [[${matPt.ptGender =='M' ? '남':'여' }]])이 매칭을 원하고 있어요.
 	                       		 </td>
 	                        <td colspan="4" th:if="${matPt.ptCount > 1}" class="align-middle">
 	                        	<img src="image/icon/users.png"/>
-	                        	[[${matPt.ptName}]]님 등 [[${matPt.ptCount}]]명이 매칭을 원하고 있어요
+	                        	[[${matPt.ptName}]]님 등 [[${matPt.ptCount}]]명이 매칭을 원하고 있어요.
 	                        </td>
 	                        <td><button class="btn btn-success workInfo two">정보보기</button></td>
 	                    </tr>
@@ -117,8 +117,9 @@
 	        <!-- 남희 우측 하단 -->
 	        <div id="findWorkList" class="text-center"><!--대상검색 : 가로 700, 세로 700-->
 				<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
-					<span style="margin-top:10px;">간병인을 찾고 계신가요?</span>
-           			<button type="button" class="btn-select" onclick="location.href='moreWorkInfo.me'">원하는 간병인 찾기</button>
+					<span style="margin-top:10px;">간병일감을 찾고 계신가요?</span>
+           			<button type="button" class="btn-select">원하는 간병일감 찾기</button>
+
             	</div>
             	<br/><br/>
 			    <div id="carouselExampleIndicators" class="carousel slide">
@@ -243,14 +244,14 @@
 	    
 	    <!-- 사이드 버튼 -->
 	    <div id="myPresentMatching">
-	        <a class="navbar-brand align-middle" href="goMyMatching.mc">
+	        <a class="navbar-brand align-middle" href="goMyMatchingC.mc">
 	            <img src="image/icon/deal.png">
 	            나의 매칭 현황
 	        </a>
 	    </div>
 	    
 	    
-	    <!-- 매칭 신청 성공 시 모달 -->
+	    <!-- 매칭 신청 성공/승낙 시 모달 -->
 		<div class="modal fade" id="matSuccesseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		  <div class="modal-dialog modal-dialog-centered modal-lg">
 		    <div class="modal-content" th:if ="${result == 'request'}">
@@ -260,12 +261,11 @@
 		      </div>
 		      <div class="modal-body" style="margin:30px;" th:if ="${result == 'request'}">
 		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
-		        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 매칭 신청이 완료되었습니다. 
+		        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹에 매칭을 신청하셨습니다.
 		        </h4>
 		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
-		        	[[${matPtName}]]님과의 매칭 신청이 완료되었습니다.
+		        	[[${matPtName}]]님에게 매칭을 신청하셨습니다.
 		        </h4>	
-		         <h5 class="h5 mb-1 fw-bold">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다. </h5>
 		      </div>
 		     </div>
 		     <div class="modal-content" th:if ="${result == 'approve'}">
@@ -280,7 +280,6 @@
 		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
 		        	[[${matPtName}]]님의 매칭 신청을 승낙하셨습니다.
 		        </h4>	
-		         <h5 class="h5 mb-1 fw-bold">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다. </h5>
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -288,6 +287,10 @@
 		    </div>
 		  </div>
 		</div> 
+    
+    
+    
+    
     </div>
     
     
@@ -327,7 +330,7 @@
 		    	<div class="modal-footer">
 		    		<input type="hidden" name="matNo"/>
 	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">Close</button>
-	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">자세히 보기</button>
+	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">자세히 보기</button>	    			
 		    	</div>
 		  	</div>
 		</div>

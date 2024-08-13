@@ -14,18 +14,23 @@
 	<main class="container whdrb testBorder">
 		<div class="row m-4">
 			<div class="m-4 h1">간병사 <span style="color:#8dd986">정보</span></div>
-			<div class="col m-4 testBorder">
-				<div class="row">
-					<div align="center"class="col m-3 testBorder" >
+			<div class="col-8 m-3 testBorder">
+				<div class="row justify-content-md-center">
+					<div align="center" class="col-4 m-3 p-3 testBorder" >
 			      		<img id="profile-image" src="image/icon_profile.png"/>
 			      		<hr>
 			      		<div class="h3">[[${caregiverIntro.memberName}]]님</div>
-			      		
+			      			<div style="display:none" th:text="${memberNo}" class="memberNo"></div>	
+			      		<div align="center">
+							<button th:if="${matNo == null && beforePage == null}" type="button" class="m-4 btn-maincolor" id="requestMatModal">매칭 신청하기</button>
+							<button th:if="${matNo != null && beforePage == null}" type="button" class="m-4 btn-maincolor" id="matOkModal">매칭 승낙하기</button>	
+							<button th:if="${matNo != null && beforePage != null}" type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton">후기 작성하기</button>		
+						</div>		      		
 		      		</div>
-		      		<div class="col m-3 testBorder">
-		      		
-			      		
-			      		<div class="row m-2">
+		      		<div class="col-7 m-3 p-3 testBorder justify-content-md-center">
+		      				      		
+			      		<div class="row m-2 p-4">
+			      			&nbsp;&nbsp;&nbsp;&nbsp;
 			      			<div class="col icon-star" style="width:46px; height:46px;padding:0px;">
 								<button th:if="${1 <= avgReviewScore}" class="btn-star btn-icon-star-left" value="1"></button>
 								<button th:if="${2 <= avgReviewScore}" class="btn-star-right btn-icon-star-right" value="2"></button>
@@ -48,22 +53,27 @@
 			      			</div>
 			      				
 			      		</div>
-			      		<div class="d-flex justify-content-between" style="margin-top:-10px">
-							<span>총 후기 ([[${reviewCount}]]개)</span>			      		
-							<span th:if="${avgReviewScore != 0}">평점 : [[${avgReviewScore}]]점</span>	
-							<span th:if="${avgReviewScore == 0}">정보가 없습니다.</span>		      		
+			      		
+			      		<div class="d-flex justify-content-between p-1" style="margin-top:-10px">
+							<span>&nbsp;&nbsp;&nbsp;&nbsp;총 후기 ([[${reviewCount}]]개)</span>			      		
+							<span th:if="${avgReviewScore != 0}">평점 : [[${avgReviewScore}]]점&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>	
+							<span th:if="${avgReviewScore == 0}">정보가 없습니다.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>		      		
 			      		</div>
-			      		<div class="col m-2 testBorder">
-			      			<h6>나이 : </h6>
-			      			<th:block th:if="${caregiverIntro.memberGender} == 'M'">
-			      				<h6>성별 : 남성</h6>
-			      			</th:block>
-			      			<th:block th:if="${caregiverIntro.memberGender} == 'F'">
-			      				<h6>성별 : 여성</h6>
-			      			</th:block>
-			      			<h6>경력:[[${caregiverInfoList.career}]]년, 국적:[[${caregiverIntro.memberNational}]]</h6>
-			      			<h6>자격증 : [[${caregiverInfoList.license}]]</h6>
-			      			<div class="h6">희망금액 : [[${caregiverIntro.minMoney}]]원 ~ [[${caregiverIntro.maxMoney}]]원</div>
+			      		
+			      		<div class="col-11 m-3 p-3 testBorder">
+			      			<h6>
+			      				나이 : [[${caregiverIntro.age}]]세&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				      			<th:block th:if="${caregiverIntro.memberGender} == 'M'">
+				      				성별 : 남성&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				      			</th:block>
+				      			<th:block th:if="${caregiverIntro.memberGender} == 'F'">
+				      				성별 : 여성&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				      			</th:block>			      			
+			      				국적 : [[${caregiverIntro.memberNational}]]</h6>
+			      			<h6>경력 : [[${caregiverInfoList.career}]]년</h6>
+			      			<h6 th:if="${caregiverInfoList.license != null}">자격증 : [[${caregiverInfoList.license}]]</h6>
+			      			<div class="h6">적정 1일 돌봄 비용 : [[${caregiverIntro.minMoney}]]원 ~ [[${caregiverIntro.maxMoney}]]원</div>
+			      			<h6>공동간병 참여 여부 : [[${caregiverIntro.careJoinStatus =='Y' ? '참여':'미참여'}]]</h6>
 			      			<hr>
 			      			<h6	 align="center">자기소개</h6> 
 			      			<h6>[[${caregiverIntro.careIntro}]]</h6>
@@ -72,22 +82,11 @@
 		      		</div>
 	      		</div>
 			</div>
-			<div class="col m-4 testBorder">
-				<div class="row">
-					<div class="col m-3">
-						<span class="row">매칭 기록</span>
-						<img style="width:250px;"src="image/icon_PieChart.png"/>
-					</div>
-					<div align="center" class="col m-3">
-						<button type="button" class="m-4 btn-maincolor" th:if="${beforePage==null}">간병 신청하기</button>
-						<button type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton" th:unless="${beforePage==null}">후기 작성하기</button>
-					</div>
-				</div>
+			<div class="col-3 m-3 p-2 text-center testBorder" >
+				<div class="row m-3 text-center" align="center"><h5>매칭 기록</h5></div>
+				<img style="width:200px;"src="image/icon_PieChart.png"/>
 			</div>
 			
-			
-			
-				
 			
 			<!-- Modal -->
 			<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice">
@@ -135,76 +134,6 @@
 		  		</div>	
 			</div>
 			
-			<script>
-				document.getElementById('reviewWriteButton').addEventListener('click',()=>{
-					$('#modalChoice').modal('show');	
-				})
-				
-				const reviewScore = document.getElementById('reviewScore');
-				const bts = reviewScore.querySelectorAll('button');
-				for(bt of bts){
-						bt.addEventListener('click',function(){
-							document.getElementById('modalScore').innerText = this.value;
-							
-							for(let i = 0 ; i < this.value ; i++){	//색칠하기
-								if(i % 2 == 0){
-									if(!bts[i].classList.contains('btn-icon-star-left-modal')){
-										bts[i].classList.add('btn-icon-star-left-modal');
-									}
-									
-								}else{
-									if(!bts[i].classList.contains('btn-icon-star-right-modal')){
-										console.log('체크')
-										console.log(i)
-										bts[i].classList.add('btn-icon-star-right-modal');
-									}
-								}
-							}
-							for(let i = 9 ; i >= this.value ; i--){ //색지우기
-								if(i % 2 == 0){
-									if(bts[i].classList.contains('btn-icon-star-left-modal')){
-										bts[i].classList.remove('btn-icon-star-left-modal');
-										
-									}
-									
-								}else{
-									if(bts[i].classList.contains('btn-icon-star-right-modal')){
-										bts[i].classList.remove('btn-icon-star-right-modal');
-										
-									}
-								}
-							}
-						})
-				}
-				    
-				
-				document.getElementById('modalReviewWrite').addEventListener('click', function() {
-					const reviewScoreDiv = document.getElementById('reviewScore');
-					const reviewScore = document.getElementById('modalScore').innerText
-					console.log(reviewScore)
-					
-					document.getElementById('hiddenScore').value = reviewScore;
-						
-					const reviewContent = document.querySelector('.review-content').innerText;
-			   		document.getElementById('hiddenReview').value = reviewContent;
-			        
-			    	const form = document.getElementById('writeReviewForm');
-			        form.action = 'writeReview.mc';
-			       	form.submit();
-			    });
-			</script>
-			
-			<!-- 
-			 랠릿 도메인 알고리즘 김영학 스프링부트강의 시큐어코딩 코딩테스트
-			 -->
-			
-			<!-- 종규 -->
-			<!-- 재영 -->
-			<!--  review pt_no >> patient pt_no
-				  review matching >> mat_no 
-			 -->
-
-			
 		</div>
 		<div class="row m-5 testBorder" th:each="rList:${reviewList}"><!-- each -->
 			<div class="col m-4 testBorder">
@@ -242,10 +171,217 @@
 				<hr>
 				<div class="col m-4 testBorder">
 					<div>[[${rList.reviewContent}]]</div>
-				</div>
 			</div>
-				
+		</div>
+		<div class="sign-btn d-flex justify-content-center mx-auto" style="weight:300px;" th:if="${beforePage == null}">
+			<button type="button" class="signUp-btn mt-4 justify-content-md-center" id="backButton"><span>이전으로</span></button>		
+		</div>
+	</main> 
 	
-	</main>
+	
+	<!-- 매칭 신청 모달 -->	
+	<div class="modal fade" id="matCheckN" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h4 class="h4 mb-4 fw-bold">
+	        	[[${caregiverIntro.memberName}]]님과의 매칭을 신청하시겠습니까?
+	        </h4>
+	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청 페이지로 이동합니다.<br>매칭 신청 후 상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다.</h5>	        
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" id="requestMatching">매칭 신청</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	
+	
+	<!-- 매칭 승낙 모달 -->	
+	<div class="modal fade" id="matOk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 승낙</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h4 class="h4 mb-4 fw-bold">
+	        	[[${caregiverIntro.memberName}]]님의 매칭 신청을 승낙하시겠습니까?
+	        </h4>
+	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청 승낙이 완료됩니다.<br>입금을 완료하면 매칭이 성사됩니다.</h5>	        
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" id="requestMatchingOk">매칭 승낙</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>	
+	
+		<!-- 이미 해당 매칭방에 매칭 신청을 한 경우 -->	
+	<div class="modal fade" id="matCheckY" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h5 class="h5 mb-3">
+	        	해당 건은 이미 매칭 신청이 완료되었습니다. 
+	        </h5> 
+	         <h5 class="h5 mb-3">
+	        	동일한 상대에게 2번 이상 매칭 신청을 할 수 없습니다. 
+	        </h5>    
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	
+	<script th:inline="javascript">
+		
+	
+		const reviewWriteButton = document.getElementById('reviewWriteButton')
+		if(reviewWriteButton){
+			reviewWriteButton.addEventListener('click',()=>{
+				$('#modalChoice').modal('show');	
+			})
+		}
+		
+		const reviewScore = document.getElementById('reviewScore');
+		const bts = reviewScore.querySelectorAll('button');
+		for(bt of bts){
+				bt.addEventListener('click',function(){
+					document.getElementById('modalScore').innerText = this.value;
+					
+					for(let i = 0 ; i < this.value ; i++){	//색칠하기
+						if(i % 2 == 0){
+							if(!bts[i].classList.contains('btn-icon-star-left-modal')){
+								bts[i].classList.add('btn-icon-star-left-modal');
+							}
+							
+						}else{
+							if(!bts[i].classList.contains('btn-icon-star-right-modal')){
+								console.log('체크')
+								console.log(i)
+								bts[i].classList.add('btn-icon-star-right-modal');
+							}
+						}
+					}
+					for(let i = 9 ; i >= this.value ; i--){ //색지우기
+						if(i % 2 == 0){
+							if(bts[i].classList.contains('btn-icon-star-left-modal')){
+								bts[i].classList.remove('btn-icon-star-left-modal');
+								
+							}
+							
+						}else{
+							if(bts[i].classList.contains('btn-icon-star-right-modal')){
+								bts[i].classList.remove('btn-icon-star-right-modal');
+								
+							}
+						}
+					}
+				})
+		}
+		    
+		
+		document.getElementById('modalReviewWrite').addEventListener('click', function() {
+			const reviewScoreDiv = document.getElementById('reviewScore');
+			const reviewScore = document.getElementById('modalScore').innerText
+			console.log(reviewScore)
+			
+			document.getElementById('hiddenScore').value = reviewScore;
+				
+			const reviewContent = document.querySelector('.review-content').innerText;
+	   		document.getElementById('hiddenReview').value = reviewContent;
+	        
+	    	const form = document.getElementById('writeReviewForm');
+	        form.action = 'writeReview.mc';
+	       	form.submit();
+	    });
+	
+		
+		
+		window.onload =() =>{
+			
+			/*<![CADATA[*/
+			const matNo = /*[[${matNo}]]*/'matNo'
+			/*]]>*/
+			
+
+			/*<![CADATA[*/
+			const memberNo = /*[[${memberNo}]]*/'memberNo'
+				/*]]>*/
+							
+			//남희 : 매칭 신청
+			const requestMatModal = document.querySelector('#requestMatModal');
+			if(requestMatModal){
+				requestMatModal.addEventListener('click', ()=>{
+					$('#matCheckN').modal('show');	
+
+				});
+			}
+				document.querySelector('#requestMatching').addEventListener('click', ()=>{
+					location.href = 'publicMatching.mc?memberNoC=' + memberNo;
+				});
+			
+			
+			//남희 : 매칭 승낙
+			const matOkModal = document.querySelector('#matOkModal');
+			if(matOkModal){
+				matOkModal.addEventListener('click', ()=>{
+					$('#matOk').modal('show');	
+				});
+			}
+			document.querySelector('#requestMatchingOk').addEventListener('click', ()=>{
+				location.href = 'matchingApproveP.mc?matNo=' + matNo + '&memberNo=' + memberNo;
+			});
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</script>
+	
+	<!-- 
+	 랠릿 도메인 알고리즘 김영학 스프링부트강의 시큐어코딩 코딩테스트
+	 -->
+	
+	<!-- 종규 -->
+	<!-- 재영 -->
+	<!--  review pt_no >> patient pt_no
+		  review matching >> mat_no 
+	 -->
+
+
 </body>
 </html>

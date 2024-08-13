@@ -18,6 +18,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.vo.CareGiver;
+import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
@@ -177,6 +178,7 @@ public interface MemberService {
 	int getPtNo(int memberNo);
 
 	void nn(int mId);
+	ArrayList<CareGiverMin> getRequestCaregiver(int ptNo);
 
 
 
