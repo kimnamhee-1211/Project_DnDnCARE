@@ -176,6 +176,8 @@ public interface MemberService {
 
 	int getPtNo(int memberNo);
 
+	void nn(int mId);
+
 
 
 }

@@ -172,4 +172,6 @@ public interface MemberMapper {
 
 	int getPtNo(int memberNo);
 
+	void nn(int mId);
+
 }

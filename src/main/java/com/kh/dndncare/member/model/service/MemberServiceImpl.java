@@ -449,4 +449,10 @@ public class MemberServiceImpl implements MemberService {
 		return null;	//죽은메소드라고함
 	}
 
+
+	@Override
+	public void nn(int mId) {
+		mMapper.nn(mId);
+	}
+
 }

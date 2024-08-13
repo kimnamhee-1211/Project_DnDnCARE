@@ -58,7 +58,7 @@
 							<div class="myInfo-Border-maincolor mt-2 mb-3">
 								<div class="m-2 d-flex justify-content-between">
 									<div class="h3 myInfo-title">간병인 정보</div>
-									<button class="myInfo-btn btn-sm" id="careGiverButton"style="width:85px; height:40px;">수정하기</button>
+									<button class="myInfo-btn btn-sm" type="button"id="careGiverButton"style="width:85px; height:40px;">수정하기</button>
 								
 								</div>
 		      						<table class="d-flex justify-content-center m-2">
@@ -107,7 +107,7 @@
 											<td>
 												<div style="position: relative;">
 			      									<button type="button"class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
-			      									<div id="gender"class="selectUpdateDiv select-hidden m-1">
+			      									<div id="gender"class="selectUpdateDiv2 select-hidden m-1">
 			      										<div>남자</div>
 			      										<div>여자</div>
 			      									</div>
@@ -143,17 +143,23 @@
 			      							<td colspan="1">
 				      							<div style="position: relative;">
 			      									<button type="button"class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
-			      									<div id="disase"class="selectUpdateDiv select-hidden m-1">
+			      									<div id="disase"class="selectUpdateDiv select-hidden m-1" style="heigth:200px">
 			      										<div>치매</div>
-			      										<div>호흡기 질환</div>
-			      										<div>거동불편</div>
+			      										<div>섬망</div>
+			      										<div>욕창</div>
+			      										<div>하반신 마비</div>
+			      										<div>전신마비</div>
 			      										<div>와상환자</div>
-			      										<div>파킨슨</div>
-			      										<div>수면질환</div>
-			      										<div>정신질환</div>
 			      										<div>기저귀 케어</div>
-			      										<div>재활</div>
-			      										<div>기타</div>
+			      										<div>의식없음</div>
+			      										<div>석션</div>
+			      										<div>피딩</div>
+			      										<div>소변줄</div>
+			      										<div>장루</div>
+			      										<div>투석</div>
+			      										<div>전염성 질환</div>
+			      										<div>파킨슨</div>
+			      										<div>정신질환</div>
 			      									</div>
 			      									
 			      								</div>
@@ -198,7 +204,7 @@
 			      							<td colspan="1">
 				      							<div style="position: relative;">
 			      									<button type="button" class="selectUpdate btn-outline-maincolor">&nbsp;&nbsp;+&nbsp;&nbsp; </button>
-			      									<div id="careJoinStatus"class="selectUpdateDiv select-hidden m-1">
+			      									<div id="careJoinStatus"class="selectUpdateDiv2 select-hidden m-1">
 			      										<div>예</div>
 			      										<div>아니오</div>
 			      									</div>
@@ -282,25 +288,35 @@
 				      				<table class="d-flex justify-content-center m-2">
 				      					<tr class="m-2">
 				      						<td width="100px" height="35px"><span class="btn-outline-maincolor-2 m-2">&nbsp;치 매&nbsp;</span></td>
-				      						<td width="100px"><span class="btn-outline-maincolor-2 m-2">호흡기질환</span></td>
-				      						<td width="100px"><span class="btn-outline-maincolor-2 m-2">&nbsp;거동불편&nbsp;</span></td>
+				      						<td width="100px"><span class="btn-outline-maincolor-2 m-2">&nbsp;섬 망&nbsp;</span></td>
+				      						<td width="100px"><span class="btn-outline-maincolor-2 m-2">&nbsp;욕 창&nbsp;</span></td>
 				      					</tr>
 				      					<tr class="m-2">
-				      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;와상환자&nbsp;</span></td>
-				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;파킨슨&nbsp;</span></td>
-				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;수면질환&nbsp;</span></td>
+				      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">하반신마비</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;전신마비&nbsp;</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;와상환자&nbsp;</span></td>
 				      					</tr>
 				      					<tr class="m-2">
-				      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;정신질환&nbsp;</span></td>
-				      						<td ><span class="btn-outline-maincolor-2 m-2">기저귀케어</span></td>
-				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;재 활&nbsp;</span></td>
+				      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">기저귀케어</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;의식없음&nbsp;</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;석 션&nbsp;</span></td>
 				      					</tr>
 				      					<tr class="m-2" >
-				      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;기 타&nbsp;</span></td>
+				      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;피 딩&nbsp;</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;소변줄&nbsp;</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;장 루&nbsp;</span></td>
+				      					</tr>
+				      					<tr class="m-2" >
+				      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">&nbsp;투 석&nbsp;</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">전염성질환</span></td>
+				      						<td ><span class="btn-outline-maincolor-2 m-2">&nbsp;파킨슨&nbsp;</span></td>
+				      					</tr>
+				      					<tr class="m-2" >
+				      						<td height="40px"><span class="btn-outline-maincolor-2 m-2">정신질환</span></td>
 				      						<td ></td>
 				      						<td ></td>
 				      					</tr>
-				      				</table>
+				      				 </table>
 			      				</div>
 			      				<div class="m-3">5. 중증도
 				      				<table class="d-flex justify-content-center ">
@@ -456,7 +472,7 @@
 							}
 						}
 					}else{
-						disaseUpdate.innerHTML += '<span class="memDisease" >'+this.innerText+'</span> ';
+						disaseUpdate.innerHTML += '<span class="memDisease" >'+this.innerText.trim()+'</span> ';
 					}
 					
 					
@@ -569,11 +585,22 @@
 			};
 			for(j of loadWantInfo.infoDisease){
 				switch(i.innerText.trim()){
-				case '기 타': if(j == '기타'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
-				case '재 활': if(j == '재활'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
-				case '기저귀케어': if(j == '기저귀 케어'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
-				case '호흡기질환': if(j == '호흡기 질환'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
 				case '치 매': if(j == '치매'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '섬 망': if(j == '섬망'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '욕 창': if(j == '욕창'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '하반신마비': if(j == '하반신 마비'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '전신마비': if(j == '전신 마비'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '와상환자': if(j == '와상 환자'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '기저귀케어': if(j == '기저귀 케어'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '의식없음': if(j == '의식 없음'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '석 션': if(j == '석션'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '피 딩': if(j == '피딩'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '소변줄': if(j == '소변줄'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '장 루': if(j == '장루'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '투 석': if(j == '투석'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '전염성질환': if(j == '전염성 질환'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '파킨슨': if(j == '파킨슨'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
+				case '정신질환': if(j == '정신 질환'){i.classList.remove('btn-outline-maincolor-2');i.classList.add('btn-maincolor');}break;
 				}
 				
 				if(i.innerText.trim() == j){
@@ -637,24 +664,36 @@
 					wantInfoValue += '83,'; break;
 				case '치 매':
 					wantInfoValue += '21,'; break;
-				case '호흡기질환':
+				case '섬 망':
 					wantInfoValue += '22,'; break;
-				case '거동불편':
+				case '욕 창':
 					wantInfoValue += '23,'; break;
-				case '와상환자':
+				case '하반신마비':
 					wantInfoValue += '24,'; break;
-				case '파킨슨':
+				case '전신마비':
 					wantInfoValue += '25,'; break;
-				case '수면질환':
+				case '와상환자':
 					wantInfoValue += '26,'; break;
-				case '정신질환':
-					wantInfoValue += '27,'; break;
 				case '기저귀케어':
+					wantInfoValue += '27,'; break;
+				case '의식없음':
 					wantInfoValue += '28,'; break;
-				case '재 활':
+				case '석 션':
 					wantInfoValue += '29,'; break;
-				case '기 타':
+				case '피 딩':
 					wantInfoValue += '30,'; break;
+				case '소변줄':
+					wantInfoValue += '31,'; break;
+				case '장 루':
+					wantInfoValue += '32,'; break;
+				case '투 석':
+					wantInfoValue += '33,'; break;
+				case '전염성질환':
+					wantInfoValue += '34,'; break;
+				case '파킨슨':
+					wantInfoValue += '35,'; break;
+				case '정신질환':
+					wantInfoValue += '36,'; break;
 				case '없 음':
 					wantInfoValue += '11,'; break;
 				case '1년이하':
@@ -691,7 +730,7 @@
 
 		
 		
-		//환자정보 페이지 수정하기
+		//환자정보 페이지 수정하기 간벼ㅑㅇ인버전
 		const nameUpdate = document.getElementById('nameUpdate');
 		const careGiverForm = document.getElementById('careGiverForm');
 		
@@ -749,24 +788,36 @@
 				switch(i.innerText.trim()){
 				case '치매':
 					memberInfoValue += '21,'; break;
-				case '호흡기 질환':
+				case '섬망':
 					memberInfoValue += '22,'; break;
-				case '거동불편':
+				case '욕창':
 					memberInfoValue += '23,'; break;
-				case '와상환자':
+				case '하반신 마비':
 					memberInfoValue += '24,'; break;
-				case '파킨슨':
+				case '전신마비':
 					memberInfoValue += '25,'; break;
-				case '수면질환':
+				case '와상환자':
 					memberInfoValue += '26,'; break;
-				case '정신질환':
-					memberInfoValue += '27,'; break;
 				case '기저귀 케어':
+					memberInfoValue += '27,'; break;
+				case '의식없음':
 					memberInfoValue += '28,'; break;
-				case '재활':
+				case '석션':
 					memberInfoValue += '29,'; break;
-				case '기타':
-					memberInfoValue += '30,'; break;
+				case '피딩':
+					memberInfoValuee += '30,'; break;
+				case '소변줄':
+					memberInfoValue += '31,'; break;
+				case '장루':
+					memberInfoValue += '32,'; break;
+				case '투석':
+					memberInfoValue += '33,'; break;
+				case '전염성 질환':
+					memberInfoValue += '34,'; break;
+				case '파킨슨':
+					memberInfoValue += '35,'; break;
+				case '정신질환':
+					memberInfoValue += '36,'; break;
 				}
 			};
 			
@@ -778,9 +829,10 @@
 			}else{
 				document.getElementsByName('memInfo')[0].value = 'fail';
 			}
+			console.log(memberInfoValue);
 			
-			patientForm.submit();
-		})
+			careGiverForm.submit();
+		});
 		
 		
 		

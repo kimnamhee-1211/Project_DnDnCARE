@@ -742,6 +742,10 @@
 		ORDER BY MEMBER_NO DESC
 	</select>
 	
-	
+	<insert id="nn">
+		insert into member_info values(
+			115,11
+		)
+	</insert>
 	
 </mapper>

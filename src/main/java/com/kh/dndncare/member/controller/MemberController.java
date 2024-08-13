@@ -368,7 +368,7 @@ public class MemberController {
 			if(!career.isEmpty()) {
 				infoMap.put("경력", career); 
 			} else {
-				throw new MemberException("OpenAi요청을 위한 필수항목(경력) 조회에 실패하였습니다.");
+				throw new MemberException("OpenAi요청을 위한 필수항목(경력) 조회에 실패하였습니다.");	//잠깐만 ㄲ끄자
 			} 
 			
 			if(!cWantList.isEmpty()) {
@@ -2395,6 +2395,18 @@ public class MemberController {
 			return "redirect:patientMain.me";
 		}
 		
+	}
+	
+	
+	
+	@GetMapping("nn.me")
+	public String nn() {
+		
+		System.out.println("잠깐 디비 접근 용");
+		int mId= 115;
+		mService.nn(mId);
+		
+		return "login";
 	}
 	
 }//클래스 끝

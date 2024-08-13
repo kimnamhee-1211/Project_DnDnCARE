@@ -171,8 +171,19 @@ body {
 .selectUpdateDiv{
 	position: absolute;
 	overflow: auto;
-	height:100px;
-	min-width:80px;
+	height:150px;
+	min-width:100px;
+	background:white;
+	border:1px solid #8dd986;
+	border-radius:5px;
+	z-index:1;
+}
+
+.selectUpdateDiv2{
+	position: absolute;
+	overflow: auto;
+	height:80px;
+	min-width:100px;
 	background:white;
 	border:1px solid #8dd986;
 	border-radius:5px;
