@@ -670,7 +670,9 @@ public class MemberController {
 
 	// 임시버튼 : 환자 메인페이지로 가기
 	@GetMapping("patientMain.me")
-	public String patientMain(Model model, HttpSession session) {
+	public String patientMain(Model model, HttpSession session,
+			@RequestParam(value="matCName", required = false) String matCName, @RequestParam(value="result", required = false) String result) {
+		
 		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		//Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 간병인 멤퍼인포정보
@@ -709,6 +711,13 @@ public class MemberController {
 		
 		//loginUser Name
 		model.addAttribute("loginUserName", loginUser.getMemberName());	
+		
+		//매칭 승낙/신청 시 모달
+		if(matCName != null && result != null) {
+			model.addAttribute("matCName", matCName);	
+			model.addAttribute("result", result);
+		}
+		
 		
 		return "patientMain";
 	}

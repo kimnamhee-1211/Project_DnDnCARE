@@ -56,12 +56,17 @@ public class MatchingController {
 	private MatchingService mcService;
 	
 	@GetMapping("publicMatching.mc")
-	public String publicMatchingView(HttpSession session,Model model) {
+	public String publicMatchingView(HttpSession session,Model model,
+			@RequestParam(value="memberNoC", required=false) int memberNoC) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		if(loginUser !=null) {
 			int memberNo = loginUser.getMemberNo();
 			Patient patient = mcService.getPatient(memberNo);
 			model.addAttribute("patient",patient);
+			
+			if(memberNoC > 0) {
+				model.addAttribute("memberNoC",memberNoC);
+			}							
 			return "publicMatching";
 			
 		}
@@ -70,7 +75,8 @@ public class MatchingController {
 	
 	//2번째 페이지로 정보 전달 및 이동
 	@PostMapping("publicMatching2.mc")
-	public String publicMatching2(@ModelAttribute Patient patient,Model model,HttpSession session) {
+	public String publicMatching2(@ModelAttribute Patient patient,Model model,HttpSession session,
+			@RequestParam(value="memberNoC", required=false) int memberNoC) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		if(loginUser !=null && patient !=null) {
 			patient.setMemberNo(loginUser.getMemberNo());
@@ -85,7 +91,8 @@ public class MatchingController {
 	   public String publicMatchingApply(HttpSession session,@ModelAttribute Matching matching,@RequestParam("selectedSymptoms") String selectedSymptoms,
 	                              @RequestParam("selectedMobility") String selectedMobility,@RequestParam("selectedGender") String selectedGender,
 	                              @RequestParam(value="selectedDays",required =false) String selectDays,@RequestParam("selectedCareer") String selectedCareer
-	                              ,@RequestParam("selectedLocal") String selectedLocal,@RequestParam("selectedAge") String selectedAge) {
+	                              ,@RequestParam("selectedLocal") String selectedLocal,@RequestParam("selectedAge") String selectedAge,
+	                              @RequestParam(value="memberNoC", required=false) int memberNoC) {
 	      Patient patient = (Patient)session.getAttribute("tempPatient");
 	      int memberNo = patient.getMemberNo();
 	      String formattedDates = null;
@@ -108,9 +115,7 @@ public class MatchingController {
 	        int deleteWantInfo = mcService.deleteWantInfo(memberNo);
 	        int wantInfoResult = mcService.insertWantInfo(params);
 
-	        
-	      
-	      
+	        	      
 	      if(patient != null && matching != null && selectedSymptoms !=null
 	            && selectedMobility !=null && selectedGender !=null
 	            && selectedCareer !=null && selectedLocal !=null && selectedAge !=null) {
@@ -157,8 +162,17 @@ public class MatchingController {
 	         int ptInfoResult = mcService.enrollMatPtInfo(matPtInfo);
 	         int finalResult = wantInfoResult + patientResult + ptInfoResult + dateResult + matchingResult + deleteWantInfo;
 	         
+	         
+	         
+	         
+	         
+	         
+	         
+	         
+	         
 	         if(finalResult!=0) {
-	            return "redirect:myInfo.me";
+	            return "redirect:myInfo.me";	            
+	            
 	         } else {
 	            throw new MatchingException("공개구인 신청에 실패하였습니다");
 	         }
@@ -465,7 +479,9 @@ public class MatchingController {
 
 	
 	@GetMapping("reviewDetail.mc")												
-	public String getMethodName(HttpSession session, Model model,@RequestParam("memberNo")int memberNo,@RequestParam(value="matNo", required = false) Integer matNo, @RequestParam(value="from", required = false) String beforePage) {		
+	public String getMethodName(HttpSession session, Model model,@RequestParam("memberNo")int memberNo,
+								@RequestParam(value="matNo", required = false) Integer matNo, 
+								@RequestParam(value="from", required = false) String beforePage) {		
 		
 		// 후기내역
 		ArrayList<CareReview> reviewList = mcService.selectReviewList(memberNo);
@@ -478,7 +494,15 @@ public class MatchingController {
 		avgReviewScore= (avgReviewScore != null) ? avgReviewScore : 0.0;
 		
 		// 간병인 소개
-		CareGiver caregiverIntro = mcService.selectIntro(memberNo);
+		CareGiver caregiverIntro = mcService.selectIntro(memberNo);	
+		System.out.println(caregiverIntro);
+		
+		
+		
+		//남희 : 나이세팅
+		int age = AgeCalculator.calculateAge(caregiverIntro.getMemberAge());
+		caregiverIntro.setAge(age);
+		
 		
 		// 간병인 정보(국적, 경력, 자격증)
 		ArrayList<InfoCategory> caregiverInfo = mcService.getCaregiverInfo(memberNo);
@@ -489,8 +513,8 @@ public class MatchingController {
 			case "license" : 
 				if (!caregiverInfoList.containsKey("license")) {
                 caregiverInfoList.put("license", new ArrayList<String>());
-            }
-            ((ArrayList<String>)caregiverInfoList.get("license")).add(info.getSCategory());
+				}
+				((ArrayList<String>)caregiverInfoList.get("license")).add(info.getSCategory().replace("[", "").replace("]", ""));
 			}
 		}
 		
@@ -845,8 +869,8 @@ public class MatchingController {
 	
 	
 	//간병인의 매칭 승낙
-	@GetMapping("MatchingapproveC.mc")
-	public String MatchingapproveC(@RequestParam("matNo") int matNo, @RequestParam("ptCount") int ptCount, 
+	@GetMapping("matchingApproveC.mc")
+	public String matchingapproveC(@RequestParam("matNo") int matNo, @RequestParam("ptCount") int ptCount, 
 			RedirectAttributes re, HttpSession session) {
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
@@ -864,10 +888,6 @@ public class MatchingController {
 
 
 	}
-	
-	
-	
-
 	
 	
 	
@@ -985,6 +1005,46 @@ public class MatchingController {
 		return "myMatchingP";	
 	
 	}
+	
+	//환자 매칭 승낙
+	@GetMapping("matchingApproveP")
+	public String matchingApproveP(@RequestParam("matNo") int matNo, @RequestParam("memberNo") int memberNo,
+									RedirectAttributes re) {
+		
+		int result = mcService.matchingApproveC(matNo, memberNo);
+		
+		//매칭 간병인 이름 얻어오기
+		String matCName = mcService.getNameC(memberNo);
+		
+		
+		if(result > 0) {
+			re.addAttribute("matCName", matCName);
+			re.addAttribute("result", "approve");
+			return "redirct:patientMain.me";
+		}else {
+			throw new MatchingException(" 환자 매칭 승낙 실패");
+		}
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }

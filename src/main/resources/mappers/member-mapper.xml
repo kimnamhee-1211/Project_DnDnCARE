@@ -372,7 +372,7 @@
 	
 	<!-- 나(환자)에게 매칭 신청한 사람 목록 -->
 	<select id="getRequestCaregiver" resultType="CareGiverMin">
-		select careGiver.member_no, careGiver.care_img, member.member_national, member.member_gender, member.member_name, member.member_age
+		select careGiver.member_no, careGiver.care_img, member.member_national, member.member_gender, member.member_name, member.member_age,  matching.mat_no
 		from careGiver
 			join member on (careGiver.member_no = member.member_no)
 			join mat_care_pending on (member.member_no = mat_care_pending.member_no)

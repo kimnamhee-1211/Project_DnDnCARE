@@ -238,7 +238,7 @@
 	    </div>
 	    
 	    
-	    <!-- 매칭 신청 성공 시 모달 -->
+	    <!-- 매칭 신청 성공/승낙 시 모달 -->
 		<div class="modal fade" id="matSuccesseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		  <div class="modal-dialog modal-dialog-centered modal-lg">
 		    <div class="modal-content" th:if ="${result == 'request'}">
@@ -248,12 +248,11 @@
 		      </div>
 		      <div class="modal-body" style="margin:30px;" th:if ="${result == 'request'}">
 		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
-		        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 매칭 신청이 완료되었습니다. 
+		        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹에 매칭을 신청하셨습니다.
 		        </h4>
 		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
-		        	[[${matPtName}]]님과의 매칭 신청이 완료되었습니다.
+		        	[[${matPtName}]]님에게 매칭을 신청하셨습니다.
 		        </h4>	
-		         <h5 class="h5 mb-1 fw-bold">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다. </h5>
 		      </div>
 		     </div>
 		     <div class="modal-content" th:if ="${result == 'approve'}">
@@ -268,7 +267,6 @@
 		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
 		        	[[${matPtName}]]님의 매칭 신청을 승낙하셨습니다.
 		        </h4>	
-		         <h5 class="h5 mb-1 fw-bold">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다. </h5>
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -276,6 +274,10 @@
 		    </div>
 		  </div>
 		</div> 
+    
+    
+    
+    
     </div>
     
     

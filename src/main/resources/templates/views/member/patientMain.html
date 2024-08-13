@@ -130,7 +130,8 @@
 	                </thead>
 	                <tbody>
 	                    <tr class="align-middle text-center" th:each="rc : ${requestCaregiver}">
-	                    	<td style="display:none" th:text="${rc.memberNo}"></td>
+	                    	<td style="display:none" th:text="${rc.memberNo}" class="memberNo"></td>
+	                    	<td style="display:none" th:text="${rc.matNo}" class="matNo"></td>
 	                        <td colspan="4" class="align-middle">
 	                       		[[${rc.memberName}]]님([[${rc.age}]]세 [[${rc.memberGender =='M' ? '남':'여' }]] [[${rc.memberNational}]])이 매칭을 원하고 있어요.
 	                       	</td>
@@ -191,7 +192,7 @@
 			                		
 			                	</div>
 			                </div>
-			                <button class="btn-select-info">정보 보기</button>
+			                <button class="btn btn-success workInfo">정보 보기</button>
 			                <input type="hidden" th:value="${cg[num].memberNo}">	<!-- 네임안썻음 -->
 			              </div>
 			            </div>
@@ -233,7 +234,7 @@
 			                		
 			                	</div>
 			                </div>
-			                <button class="btn-select-info">정보 보기</button>
+			                <button class="btn btn-success workInfo">정보 보기</button>
 			                <input type="hidden" th:value="${cg[num].memberNo}">	<!-- 네임안썻음 -->
 			              </div>
 			            </div>
@@ -275,7 +276,7 @@
 			                		
 			                	</div>
 			                </div>
-			                <button class="btn-select-info">정보 보기</button>
+			                <button class="btn btn-success workInfo">정보 보기</button>
 			                <input type="hidden" th:value="${cg[num].memberNo}">	<!-- 네임안썻음 -->
 			              </div>
 			            </div>
@@ -377,6 +378,43 @@
   		</div>	
 	</div>
     
+   	  <!-- 매칭 신청/승낙 성공 시 모달 -->
+	<div class="modal fade" id="matSuccesseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg">
+	    <div class="modal-content" th:if ="${result == 'request'}">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 완료</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h4 class="h4 mb-4 fw-bold">[[${matCName}]]님에게 매칭을 신청하셨습니다.</h4>	
+	      </div>
+	    </div>
+	     <div class="modal-content" th:if ="${result == 'approve'}">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 승낙 완료</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h4 class="h4 mb-4 fw-bold">[[${matCName}]]님의 매칭 신청을 승낙하셨습니다.</h4>	
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	   </div>
+	 </div>
+	</div> 
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     <script>
@@ -415,16 +453,38 @@
     })
     
     
-    //폼 태그없이 memberNo만 넘기자. 간병인 리뷰디테일 페이지로 memberNo
-    const infoBts = document.getElementsByClassName('btn-select-info');
+    //남희 가공
+    window.onload=()=>{
     
-    for(infoBt of infoBts){
-    	infoBt.addEventListener('click',function(){
-    		location.href = 'reviewDetail.mc?memberNo=' + this.nextElementSibling.value;
-    	})
-    }
+	    //폼 태그없이 memberNo만 넘기자. 간병인 리뷰디테일 페이지로 memberNo
+	    const infoBts = document.getElementsByClassName('workInfo');
+	    
+	    for(infoBt of infoBts){
+	    	infoBt.addEventListener('click',function(){	    		
+	    		let memberNo='';
+	    		let matNo='';
+	    		if(this.className.includes('two')){
+	    			memberNo = this.parentElement.parentElement.querySelector('.memberNo').innerHTML;
+	    			matNo = this.parentElement.parentElement.querySelector('.matNo').innerHTML;
+	    			
+	    			location.href = 'reviewDetail.mc?memberNo='+ memberNo +'&matNo=' + matNo;
+	    		}else{
+	    			memberNo = this.nextElementSibling.value;
+	    			location.href = 'reviewDetail.mc?memberNo='+ memberNo;
+	    		}
+	
+	    	})
+	    }
+	    
+	    
+	    const matCName = /*[[${matCName}]]*/
+    	if(matCName != null){
+    		$('#matSuccesseModal').modal('show');
+    	}
     	
-    
+	    
+    	
+    }
     
     
     //모달.지금은하난데 for문돌려야겟지?
@@ -525,6 +585,13 @@
 	    		alert('후원 최소 금액은 1,000원입니다');
 	    	} */
 	    }
+	    
+	    
+	    
+	    
+	    
+	    
+	    
 	    
 	    
 	    

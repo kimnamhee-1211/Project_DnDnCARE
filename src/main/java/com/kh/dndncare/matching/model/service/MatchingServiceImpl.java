@@ -283,6 +283,14 @@ public class MatchingServiceImpl implements MatchingService {
 	public ArrayList<CareGiverMin> getMyMatchingPN(int ptNo) {
 		return mMapper.getMyMatchingPN(ptNo);
 	}
+	
+	
+	//매칭 간병인 이름 얻어오기
+	@Override
+	public String getNameC(int memberNo) {
+		// TODO Auto-generated method stub
+		return mMapper.getNameC(memberNo);
+	}
 
 
 

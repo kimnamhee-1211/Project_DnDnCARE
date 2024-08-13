@@ -162,12 +162,18 @@
 		where pt_no = #{ptNo}
 	</update>
 	
-	<!-- matching_date insert -->
-	
+	<!-- matching_date insert 남희-->	
 	<insert id="insertMatDate">
 		insert into matching_date
 		values(#{matNo},#{matDate})
 	</insert>
+	
+	<!-- matching_date insert 기룡-->	
+	<insert id="insertMatchingDate">
+      insert into matching_date
+      values(#{matNo},#{formattedDates})
+   </insert>
+	
 	
 	<!-- mat_no 얻어오기 -->
 	<select id="getMatNo" resultType="_int">
@@ -175,7 +181,6 @@
 		from mat_pt_info
 		where pt_no = #{ptNo}
 	</select>
-	
 
 	
 	<!-- want_info insert -->
@@ -294,8 +299,8 @@
 
 	<!-- 간병인 정보 조회 -->
 	<select id="selectIntro" resultType="Caregiver">
-		select *
-		from caregiver
+		select * 
+		from careGiver
 			join member using(member_no)
 		where member_no = #{memberNo}
 	</select>
@@ -360,9 +365,9 @@
 	
 	<!--//나(환자)의 현재 매칭 정보- 진행 + 결제대기 + 환자가 신청 -->
 	<select id="getMyMatchingP" resultType="CareGiverMin">
-		select matching.member_no, careGiver.care_img, member.member_national, 
+		select matching.mat_no, matching.member_no, careGiver.care_img, member.member_national, 
 				member.member_gender, member.member_name, member.member_age,
-				matching.end_dt, matching.begin_dt, matching.mat_confirm, member.matNo
+				matching.end_dt, matching.begin_dt, matching.mat_confirm
 		from careGiver
 			join member on (careGiver.member_no = member.member_no)
 			join matching on (member.member_no = matching.member_no)
@@ -372,20 +377,24 @@
 	
 	<!--//나(환자)의 현재 매칭 정보- 간병인이 신청 -->
 	<select id="getMyMatchingPN">
-        select mat_care_pending.member_no, careGiver.care_img, member.member_national, 
-				member.member_gender, member.member_name, member.member_age, member.matNo
+        select mat_care_pending.mat_no, mat_care_pending.member_no, careGiver.care_img, member.member_national, 
+				member.member_gender, member.member_name, member.member_age
 		from careGiver
 			join member on (careGiver.member_no = member.member_no)
 			join mat_care_pending on (member.member_no = mat_care_pending.member_no)
 			join matching on (mat_care_pending.mat_no = matching.mat_no)
 			join mat_pt_info on (matching.mat_no = mat_pt_info.mat_no)
-		where  mat_pt_info.pt_no = #{ptNo} 	and matching.mat_confirm = 'N' and matching.begin_dt > sysdate;
+		where  mat_pt_info.pt_no = #{ptNo}	and matching.mat_confirm = 'N' and matching.begin_dt > sysdate
 	</select>
 	
 	
 	
-	
-	
+	<!--//매칭 간병인 이름 얻어오기  -->
+	<select id ="getNameC" resultType="string">
+		select member_name
+		from member
+		where member_no = #{memberNo}	
+	</select>
 	
 	
 	

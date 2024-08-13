@@ -113,6 +113,8 @@ public interface MatchingMapper {
 	
 	ArrayList<CareGiverMin> getMyMatchingPN(int ptNo);
 
+	String getNameC(int memberNo);
+
 
 
 

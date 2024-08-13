@@ -135,6 +135,7 @@ public interface MatchingService {
 	
 	//나(환자)의 현재 매칭 정보-- 간병인이 환자(나) 신청
 	ArrayList<CareGiverMin> getMyMatchingPN(int ptNo);
+	String getNameC(int memberNo);
 
 
 
