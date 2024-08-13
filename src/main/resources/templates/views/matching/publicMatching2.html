@@ -12,7 +12,7 @@
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
 	<main class="inner-content d-flex justify-content-center">
 		<form class="w-50 text-center" action="publicMatchingApply.mc" method="post">	
-			<input type="hidden" th:if="${memberNoC != null}" name="memberNoC" th:value="memberNoC">	
+			<input type="hidden" th:if="${memberNoC != null}" name="memberNoC" th:value="${memberNoC}">	
 			<div class="publicMatching-wrap text-center">
 				<div class="w-100">
 					<a href="home.do"><img class="logo-image mb-4" src="image/logo-removebg.png" width="300"></a>

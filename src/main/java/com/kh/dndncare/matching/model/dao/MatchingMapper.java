@@ -126,6 +126,10 @@ public interface MatchingMapper {
 
 	int updateMatC(@Param("matNo") int matNo, @Param("memberNoC") int memberNoC);
 
+	int matchingApproveP(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
+
+	int CheckMatMemNo(int matNo);
+
 	
 
 

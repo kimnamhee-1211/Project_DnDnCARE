@@ -146,6 +146,12 @@ public interface MatchingService {
 	
 	//환자 -> 간병인 매칭 신청했을 경우 macthing 테이블에 간병인 memberNo 넣기
 	int updateMatC(int matNo, int memberNoC);
+	
+	//환자측 매칭 승낙
+	int matchingApproveP(int matNo, int memberNo);
+	
+	//환자가 이미 신청한 내역인지 확인
+	int CheckMatMemNo(int matNo);
 
 
 

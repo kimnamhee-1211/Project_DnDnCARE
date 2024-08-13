@@ -289,14 +289,6 @@ input {
 
 
 
-
-
-
-
-
-
-
-
 .signUp-btn{
 	padding: 0 40px;
 	weight: 600px;
@@ -305,8 +297,7 @@ input {
 
 .sign-btn button {
 	height:70px;
-	font-size:24px;
-	font-weight: 600;
+	font-size:20px;
 	border-radius:25px;
 	border:none;
 	margin-top:70px;

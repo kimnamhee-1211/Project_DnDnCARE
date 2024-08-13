@@ -71,7 +71,7 @@
 				      			</th:block>			      			
 			      				국적 : [[${caregiverIntro.memberNational}]]</h6>
 			      			<h6>경력 : [[${caregiverInfoList.career}]]년</h6>
-			      			<h6>자격증 : [[${caregiverInfoList.license}]]</h6>
+			      			<h6 th:if="${caregiverInfoList.license != null}">자격증 : [[${caregiverInfoList.license}]]</h6>
 			      			<div class="h6">적정 1일 돌봄 비용 : [[${caregiverIntro.minMoney}]]원 ~ [[${caregiverIntro.maxMoney}]]원</div>
 			      			<h6>공동간병 참여 여부 : [[${caregiverIntro.careJoinStatus =='Y' ? '참여':'미참여'}]]</h6>
 			      			<hr>
@@ -191,7 +191,7 @@
 	        <h4 class="h4 mb-4 fw-bold">
 	        	[[${caregiverIntro.memberName}]]님과의 매칭을 신청하시겠습니까?
 	        </h4>
-	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다.</h5>	        
+	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청 페이지로 이동합니다.<br>매칭 신청 후 상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다.</h5>	        
 	      </div>
 	      <div class="modal-footer">
 	      	<button type="button" class="btn btn-primary" id="requestMatching">매칭 신청</button>
@@ -225,6 +225,28 @@
 	  </div>
 	</div>	
 	
+		<!-- 이미 해당 매칭방에 매칭 신청을 한 경우 -->	
+	<div class="modal fade" id="matCheckY" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h5 class="h5 mb-3">
+	        	해당 건은 이미 매칭 신청이 완료되었습니다. 
+	        </h5> 
+	         <h5 class="h5 mb-3">
+	        	동일한 상대에게 2번 이상 매칭 신청을 할 수 없습니다. 
+	        </h5>    
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	
@@ -292,38 +314,42 @@
 	    });
 	
 		
-		/*<![CADATA[*/
-		const matNo = /*[[${matNo}]]*/'matNo'
-		/*]]>*/
 		
-		/*<![CADATA[*/
-		const memberNo = /*[[${matNo}]]*/'memberNo'
-		/*]]>*/
-						
-		//남희 : 매칭 신청
-		const requestMatModal = document.querySelector('#requestMatModal');
-		if(matNo && requestMatModal){
-			requestMatModal.addEventListener('cilck', ()=>{
-				$('#matCheckN').modal('show');	
-			})
-		}
-		document.querySelector('#requestMatching').addEventListener('cilck', ()=>{
-			location.href = 'publicMatching.mc?memberNoC' + memberNo;
-		})
-		
-		
-		
-		//남희 : 매칭 승낙
-		const matOkModal = document.querySelector('#matOkModal');
-		if(matNo && matOkModal){
-			matOk.addEventListener('cilck', ()=>{
-				$('#matOk').modal('show');	
-			})
-		}
-		document.querySelector('#requestMatchingOk').addEventListener('cilck', ()=>{
-			location.href = 'matchingApproveP.mc?matNo=' + matNo + '&memberNo' + memberNo;
-		})
+		window.onload =() =>{
+			
+			/*<![CADATA[*/
+			const matNo = /*[[${matNo}]]*/'matNo'
+			/*]]>*/
+			
 
+			/*<![CADATA[*/
+			const memberNo = /*[[${memberNo}]]*/'memberNo'
+				/*]]>*/
+							
+			//남희 : 매칭 신청
+			const requestMatModal = document.querySelector('#requestMatModal');
+			if(requestMatModal){
+				requestMatModal.addEventListener('click', ()=>{
+					$('#matCheckN').modal('show');	
+
+				});
+			}
+				document.querySelector('#requestMatching').addEventListener('click', ()=>{
+					location.href = 'publicMatching.mc?memberNoC=' + memberNo;
+				});
+			
+			
+			//남희 : 매칭 승낙
+			const matOkModal = document.querySelector('#matOkModal');
+			if(matOkModal){
+				matOkModal.addEventListener('click', ()=>{
+					$('#matOk').modal('show');	
+				});
+			}
+			document.querySelector('#requestMatchingOk').addEventListener('click', ()=>{
+				location.href = 'matchingApproveP.mc?matNo=' + matNo + '&memberNo=' + memberNo;
+			});
+		}
 		
 		
 		

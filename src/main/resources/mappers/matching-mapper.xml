@@ -21,6 +21,12 @@
 		values(#{matNo}, #{beginDt}, #{endDt}, #{money}, default, #{hospitalNo}, null, #{ptCount}, #{beginTime}, #{endTime},#{matMode})
 	</insert>
 	
+	<!-- 매칭 pt info 테이블 등록 -->   
+   <insert id="enrollMatPtInfo">   
+      insert into mat_pt_info
+      values(#{matNo}, #{ptNo}, #{antePay}, #{service}, #{matAddressInfo}, #{matRequest}, default, #{groupLeader})
+   </insert>
+	
 	<!-- pt get -->
 	<select id="getPatient" resultType="Patient">
 		select *
@@ -441,6 +447,53 @@
 			LEFT JOIN want_info wi ON ic.category_no = wi.category_no AND wi.member_no = #{memberNo}
 		WHERE mi.member_no IS NOT NULL OR wi.member_no IS NOT NULL
 	</select>
+
+	<!-- //환자 -> 간병인 정보보기 ->  매칭 신청했을 경우 macthing 테이블에 간병인 memberNo 넣기ㄱ -->
+	<update id="updateMatC">
+		update matching
+		set member_no = #{memberNoC}
+		where mat_no = #{matNo}
+	</update>
+
+
+	<!-- 간병인의 매칭 승낙 -->
+	<update id="matchingApproveP">
+		update matching
+		set mat_confirm = 'W',
+			member_no = #{memberNo}
+		where mat_no = #{matNo}
+	</update>
+
+	
+	<!--//환자가 이미 신청한 내역인지 확인  -->
+	<select id ="requestCheck" resultType="_int">
+		select member_no
+		from matching
+		where mat_no = #{matNo}	
+	</select>
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

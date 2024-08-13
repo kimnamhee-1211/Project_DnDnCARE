@@ -289,7 +289,6 @@ public class MatchingServiceImpl implements MatchingService {
 	//매칭 간병인 이름 얻어오기
 	@Override
 	public String getNameC(int memberNo) {
-		// TODO Auto-generated method stub
 		return mMapper.getNameC(memberNo);
 	}
 	
@@ -311,8 +310,18 @@ public class MatchingServiceImpl implements MatchingService {
 	//환자 -> 간병인 매칭 신청했을 경우 macthing 테이블에 간병인 memberNo 넣기
 	@Override
 	public int updateMatC(int matNo, int memberNoC) {
-		// TODO Auto-generated method stub
 		return mMapper.updateMatC(matNo, memberNoC);
+	}
+
+	@Override
+	public int matchingApproveP(int matNo, int memberNo) {
+		return mMapper.matchingApproveP(matNo, memberNo);
+	}
+
+	//환자가 이미 신청한 내역인지 확인
+	@Override
+	public int CheckMatMemNo(int matNo) {
+		return mMapper.CheckMatMemNo(matNo);
 	}
 
 

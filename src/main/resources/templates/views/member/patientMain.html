@@ -379,7 +379,7 @@
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 	      </div>
 	   </div>
-	   <div class="modal-content" th:if ="${matCName == null && result == 'insert'}">
+	   <div class="modal-content" th:if ="${ matCName == null && result == 'insert'}">
 	      <div class="modal-header">
 	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 승낙 완료</h3>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -583,7 +583,7 @@
     
     </script>  
     
-    <script>//종규삽입
+    <script th:inline="javascript">//종규삽입
     
     //결제목록 보이기
     document.getElementById('viewPayList').addEventListener('click',function(){
@@ -614,8 +614,11 @@
 	    	})
 	    }
 	    
+	    	    
+	    /*<![CDATA[*/
+	    const result = /*[[${result}]]*/''
+	    /*]]>*/
 	    
-	    const result = /*[[${result}]]*/
     	if(result != null){
     		$('#matSuccesseModal').modal('show');
     	}
