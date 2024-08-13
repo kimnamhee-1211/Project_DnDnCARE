@@ -182,6 +182,8 @@ public interface MemberService {
 
 	ArrayList<CareReview> sumAvgScore(int memberNo);
 
+	ArrayList<MatMatptInfoPt> useMonth(int ptNo);
+
 
 
 }

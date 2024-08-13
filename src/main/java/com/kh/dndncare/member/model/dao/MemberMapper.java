@@ -178,4 +178,6 @@ public interface MemberMapper {
 
 	ArrayList<CareReview> sumAvgScore(int memberNo);
 
+	ArrayList<MatMatptInfoPt> useMonth(int ptNo);
+
 }

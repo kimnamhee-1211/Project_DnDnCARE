@@ -47,10 +47,17 @@
 						
 							<div class="m-2 d-flex justify-content-between">
 								<div class="h3 myInfo-title">[[${session.loginUser.MemberName}]]님 이용일수/지출</div>
+								<div>
+									<button class="myInfo-btn btn-sm" style="width:85px;">이용일</button>
+									<button class="btn-outline-maincolor btn-sm" style="width:85px;">지출</button>
+								</div>
 							</div>
 							
 							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
-								<div>-------------------------------------------------꺽은선그래프-------------------------------------------------</div>
+								<div> -------------------------------------------------꺽은선그래프-------------------------------------------------
+								<canvas class="my-4 w-100" id="userMonthCount" width="900" height="250"></canvas>
+									
+								</div>
 							</div>
 						</div>
 						
@@ -108,10 +115,13 @@
 	
 	</div>
 	
-	
+	 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
 	<script th:inline="javascript">
-		
+		 /*<![CDATA[*/
+			
 		window.onload =() =>{
+	        const monthPatient = /*[[${monthPatient}]]*/;
+	        
 			const menuAtag = document.getElementsByClassName('my-menu');
 			const menuName = document.getElementsByClassName('menu-name')[0];
 			for(i of menuAtag){
@@ -120,16 +130,38 @@
 				}
 			};
 			
-			
+			// 이용일수 차트
+			const ctx = document.getElementById('userMonthCount');
+			const myChart = new Chart(ctx, {
+			    type: 'line',
+			    data: {
+			        labels: ["1","2","3"], // x좌표
+			        datasets: [{
+			            data: ["1000","2000","3000"], // y좌표 (데이터 값)
+			            backgroundColor: 'white', // 배경 색상
+			            borderColor: 'black', // 선 색상
+			            borderWidth: 1 // 선의 두께
+			        }]
+			    },
+			    options: {
+			        scales: {
+			            x: {
+			                beginAtZero: true
+			            },
+			            y: {
+			                beginAtZero: true
+			            }
+			        }
+			    }
+		});
 		}
-
 			
 		function reviewDetail(beforePage){
 			var memberNo = document.querySelector('input[name="memberNo"]').value;
 		    var matNo = document.querySelector('input[name="matNo"]').value;
 			location.href = 'reviewDetail.mc?memberNo=' + memberNo + '&matNo='+ matNo+ '&from=' + beforePage;
 		}
-	
+		/*]]>*/
 	</script>
 	
 </body>

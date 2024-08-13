@@ -880,7 +880,11 @@ public class MemberController {
 						System.out.println(i);
 						i.setAfterDate(currentDate.isAfter(i.getEndDt().toLocalDate()));
 					}
-					//ArrayList<MatMatptInfoPt> monthPatient = mService.useMonth(ptNo);
+					ArrayList<MatMatptInfoPt> monthPatient = mService.useMonth(ptNo);
+					
+					if(monthPatient != null) {
+						model.addAttribute("monthPatient",monthPatient);
+					}
 					
 					model.addAttribute("mciList",mciList);
 					model.addAttribute("today", LocalDate.now());

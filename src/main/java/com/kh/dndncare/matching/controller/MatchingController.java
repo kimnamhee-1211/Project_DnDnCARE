@@ -486,18 +486,23 @@ public class MatchingController {
 		// 간병인 정보(국적, 경력, 자격증)
 		ArrayList<InfoCategory> caregiverInfo = mcService.getCaregiverInfo(memberNo);
 		HashMap<String, Object> caregiverInfoList = new HashMap<String, Object>();
+		boolean hasLicense = false;
 		for(InfoCategory info:caregiverInfo) {
 			switch(info.getLCategory()) {
 			case "career" : caregiverInfoList.put("career", info.getSCategory()); break;
 			case "license" : 
 				if (!caregiverInfoList.containsKey("license")) {
                 caregiverInfoList.put("license", new ArrayList<String>());
-                System.out.println(caregiverInfoList);
-            }
+				}
             ((ArrayList<String>)caregiverInfoList.get("license")).add(info.getSCategory());
+            hasLicense = true;
+            break;
 			}
+				
 		}
-		
+		if (!hasLicense) {
+		    caregiverInfoList.put("license", null);
+		}
 		System.out.println("이전페이지"+beforePage);
 		System.out.println("매칭"+caregiverInfoList);
 		

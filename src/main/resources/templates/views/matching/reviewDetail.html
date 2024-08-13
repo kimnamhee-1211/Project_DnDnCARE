@@ -63,13 +63,13 @@
 			      			</th:block>
 			      			<h6>경력:[[${caregiverInfoList.career}]]년, 국적:[[${caregiverIntro.memberNational}]]</h6>
 			      			<th:block th:if="${caregiverInfoList.license != null and caregiverInfoList.license.size() > 0}">
-				      			<th:block th:each="license : ${caregiverInfoList.license}">
 				      				<span class=h6>자격증 : </span>
+				      			<th:block th:each="license : ${caregiverInfoList.license}">
 				      				<span th:text="${license}"></span>
 				      			</th:block>
 			      			</th:block>
 			      			<th:block th:if="${caregiverInfoList.license == null or caregiverInfoList.license.size() == 0}">
-						        <li>자격증이 없습니다.</li>
+						        <span>- 자격증이 없습니다.</span>
 						    </th:block>
 			      			<div class="h6">희망금액 : [[${caregiverIntro.minMoney}]]원 ~ [[${caregiverIntro.maxMoney}]]원</div>
 			      			<hr>

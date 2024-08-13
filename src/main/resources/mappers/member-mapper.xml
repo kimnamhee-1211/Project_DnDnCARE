@@ -758,9 +758,18 @@
 	</select>
 	
 	<select id="sumAvgScore" resultType="CareReview">
-	select sum(review_score) sumScore, avg(review_score) avgScore, count(review_score) countReview
-	from care_review
-	where member_no = #{memberNo}
+		select sum(review_score) sumScore, avg(review_score) avgScore, count(review_score) countReview
+		from care_review
+		where member_no = #{memberNo}
+	</select>
+	
+	<!-- 월별 정보 -->
+	<select id="useMonth" resultType="MatMatptInfoPt">
+		select to_char(end_dt, 'YYYY-MM') as month, sum(end_dt - begin_dt) useCount, sum(ante_pay) ante_pay
+		from matching
+		    join mat_pt_info using(mat_no)
+		where pt_no = #{ptNo}
+		group by to_char(end_dt, 'YYYY-MM')
 	</select>
 	
 </mapper>

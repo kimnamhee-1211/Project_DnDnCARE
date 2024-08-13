@@ -467,4 +467,10 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.sumAvgScore(memberNo);
 	}
 
+
+	@Override
+	public ArrayList<MatMatptInfoPt> useMonth(int ptNo) {
+		return mMapper.useMonth(ptNo);
+	}
+
 }
