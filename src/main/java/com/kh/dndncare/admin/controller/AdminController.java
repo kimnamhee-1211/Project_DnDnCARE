@@ -2,15 +2,12 @@ package com.kh.dndncare.admin.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 import javax.imageio.ImageIO;
 
-import org.apache.tika.mime.MimeTypeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -103,12 +100,12 @@ public class AdminController {
 					}
 				}
 				
-				String copyName = copyNameCreate(); // 제목의형식?
-				renameName = copyName + "." + type;
-				ImageUtil.base64ToFile(copyName, b64); 
+				String copyName = copyNameCreate(); // 첨부파일명(확장자가 없음)을 생성한다.
+				renameName = copyName + "." + type; // 첨부파일명 + ".확장자"를 DB에 저장할 리네임으로 지정한다.
+				ImageUtil.base64ToFile(copyName, b64);  // 첨부파일명과 암호화된 이미지src를 전달한다.
 					
 				if(content.contains(b64)) {
-					content = content.replace(b64, renameName);
+					content = content.replace(b64, renameName); // HTML의 암호화부분을 "첨부파일명.확장자"로 바꾸어 둔다. (View에서 출력하기 편리하게 하기 위함)
 				}
 				Attachment a = new Attachment();
 				a.setRenameName(renameName); // 첨부파일에 대한 리네임을 명시한다.
@@ -118,35 +115,30 @@ public class AdminController {
 			b.setCategoryNo(7);
 			b.setAreaNo(1); // 지역번호는 '서울'로 지정한다.
 			
-			// 썸네일 생성하기
-			BufferedImage image = ImageIO.read(new File("\\\\192.168.40.37\\sharedFolder/dndnCare/thumbnail.png"));
+			// 2. 썸네일 생성하기
+			BufferedImage image = ImageIO.read(new File("\\\\192.168.40.37\\sharedFolder/dndnCare/thumbnail.png")); // 바탕이 될 썸네일 기본 이미지를 불러온다.
 			image = thumbnailUtil.createThumbnail(image, b.getBoardTitle(), 25, 150); // 썸네일 기본 이미지 위에 텍스트 입력하기
 			String thumbnailName = copyNameCreate() + ".png"; // 텍스트 입력한 썸네일 파일을 저장할 때 사용할 파일명
 			thumbnailUtil.saveImage(image, "\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
 			
-			// 2. DB에 전달할 데이터로서 가공한다. : "data:image/~~~~~"인 부분을 잘라내면됨
-			//System.out.println(content); // <p>내용을 입력해 주세요.<img src="2024081313175048983.png" contenteditable="false"><img src="2024081313175413366.png" contenteditable="false"><br></p>
+			// 3. DB에 전달할 데이터로서 가공한다. : "data:image/~~~~~"인 부분을 잘라내면됨
 			int bResult = aService.insertCareInfomation(b); // 게시글 삽입 후 생성된 글 번호를 받아온다.
 			int aResult = 0;
 			if(bResult > 0) { // 게시글 삽입에 성공한 경우
-				for(Attachment attm : aList) {
+				for(Attachment attm : aList) { // 첨부파일에 대한 정보를 주입
 					attm.setRefBoardNo(b.getBoardNo()); // 첨부파일에 대한 참조글번호를 지정한다.
 					attm.setOriginalName(b.getBoardTitle());
 					attm.setAttmPath("\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + renameName);
 					attm.setAttmLevel(1);
 				}
 				
-				Attachment thumbnail = new Attachment();
+				Attachment thumbnail = new Attachment(); // 자동생성한 썸네일에 대한 정보를 주입
 				thumbnail.setRefBoardNo(b.getBoardNo());
 				thumbnail.setOriginalName("auto_Thumbnail");
 				thumbnail.setRenameName(thumbnailName);
 				thumbnail.setAttmPath("\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
 				thumbnail.setAttmLevel(0);
-				aList.add(thumbnail);
-				
-				
-				System.out.println("aList : " + aList);
-				
+				aList.add(thumbnail); // aList의 마지막 index에 썸네일을 add한다.
 				
 				if(!aList.isEmpty()) { // 첨부파일이 있을 때만 저장해야한다.
 					aResult = aService.insertAttachment(aList);
@@ -165,10 +157,9 @@ public class AdminController {
 		}
 		
 		return null;
-		
 	}
 	
-	// 이미지 파일명 제작하기
+	// 이미지 파일명 제작해주는 메소드
 	public String copyNameCreate() {// type : 이미지의 형식
 		// 현재 시간을 yyyyMMddHHssSSS로 만들기
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHssSSS");

@@ -23,7 +23,6 @@ public class ThumbnailUtil {
 		g2d.drawString(text, x, y); // x == 25, y == 150
 		g2d.dispose(); // Graphics2D 객체 소멸
 		
-		
 		return image;
 	}
 	
@@ -34,10 +33,4 @@ public class ThumbnailUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
-	
-	
 }
