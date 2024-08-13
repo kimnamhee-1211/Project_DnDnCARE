@@ -26,6 +26,10 @@ public class Matching {
 	private String beginTime;
 	private String endTime;
 	private int matMode;
+	
+	private int matType;//MAT_TYPE
+	private String hospitalName;
+	
 }
 
 

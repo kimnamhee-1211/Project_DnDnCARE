@@ -26,6 +26,7 @@
 				</div>
 				<!-- <div class="text-start mb-3 text-center"><span class="mb-5">< <strong>김기룡</strong> 회원님의 정보 ></span></div> -->
 				<div class="icon-wrap d-flex justify-content-center">
+					<input type="hidden" name="service" id="selectedLocation">
 					<div class="icon-container d-flex flex-column" data-value="home" onclick="selectIcon(this)">
 						    <img width="50" height="50" src="https://img.icons8.com/ios/50/home--v1.png" alt="home--v1"/>
 						    <p class="fs-3">집</p>
@@ -67,12 +68,11 @@
 				    </div>
 				    <input type="hidden" id=ptAddress>
 				</div>
-				
 				<div class="basic-info-wrap d-flex justify-content-center">
 					<div class="basic-info">
 							<div class="form-floating mb-3">
 								<input type="text" class="form-control" id="floatingInput" name="ptName" th:value="${patient.ptName}">
-								<label for="floatingInput">[[${patient.ptName}]]</label>
+								<label for="floatingInput">이름</label>
 							</div>
 							<div class="form-group mb-3">
 	                            <div class="radio-group">
@@ -120,7 +120,12 @@
 		}
 		
 		function handleFormSubmit(event) {
-		    event.preventDefault();
+			const selectedLocation = document.getElementById('selectedLocation').value;
+		    if (!selectedLocation) {
+		        event.preventDefault(); // 폼 제출 중단
+		        alert('위치를 선택해주세요.');
+		        return;
+		    }
 
 		    // 선택된 아이콘 확인
 		    const selectedIcon = document.querySelector('.icon-container.selected');
@@ -160,6 +165,9 @@
 		    // 선택된 값 (예: 'home' 또는 'hospital')
 		    const selectedValue = element.getAttribute('data-value');	
 		    
+		    // hidden input에 선택된 값 저장
+		    document.getElementById('selectedLocation').value = selectedValue;
+
 		    // 두 입력 필드 모두 숨김
 		    document.getElementById('homeInput').classList.add('hidden');
 		    document.getElementById('hospitalInput').classList.add('hidden');

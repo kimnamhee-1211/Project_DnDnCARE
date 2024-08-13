@@ -23,27 +23,39 @@
 			<div><!-- 왼쪽 공백 --></div>
 			<div id="upperLeftContents">
 				<div><!-- AI 매칭 : 가로 700, 세로 200 -->
-					<table class="table mainTable">
-	                 <thead>
-	                     <tr>
-	                         <th colspan="5">나와 딱 맞는 일감을 찾아드려요.</th>
-	                         <th class="text-center">
-	                        	<img src="image/icon/refresh.png" id="refreshChoice" style="width:30px; height:30px;">
-	                        </th>
-	                     </tr>
-	                 </thead>
-	                 <tbody>
-	                     <tr class="text-center" th:if="${completeList}" th:each="l : ${completeList}">
-	                         <td>[[${l.ptName}]]</td>
-	                         <td>[[${l.ptGender == 'M' ? '남성' : '여성'}]]</td>
-	                         <td>[[${l.ptRealAge}]]</td>
-	                         <td>[[${l.ptAddress}]]</td>
-	                         <td>[[${l.ptDisease}]]</td>
-	                         <td>[[${l.money}]]</td>
-	                     </tr>
-	                 </tbody>
-	            </table>
-				</div>
+				<table class="table mainTable table-hover">
+                 <thead>
+                     <tr>
+                         <th colspan="5">[[${loginUserName}]]님과 딱 맞는 일감을 찾아드려요.</th>
+                         <th class="text-center">
+                        	<img src="image/icon/refresh.png" id="refreshChoice" style="width:30px; height:30px;">
+                        </th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <tr class="text-center" th:if="${completeList}" th:each="l : ${completeList}">
+                         <td>[[${l.ptName}]]</td>
+                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
+                         <td>[[${l.ptRealAge}]]</td>
+                         <td>[[${l.ptAddress}]]</td>
+                         <th:block th:with="arr = ${#strings.listSplit(l.ptDisease, '/')}">
+	                         <td>
+	                         	<th:block th:if="${#lists.size(arr) > 3}" th:each="d, dStat : ${arr}">
+	                         		<th:block th:if="${dStat.index < 3}">[[${d}]],</th:block>
+	                         		<th:block th:if="${dStat.index == 3}">[[${d}]] ...</th:block>
+	                         	</th:block>
+	                         	
+	                         	<th:block th:if="${#lists.size(arr) <= 3}" th:each="d : ${arr}">
+	                         		<th:block th:unless="${dStat.last}">[[${d}]],</th:block>
+	                         		<th:block th:if="${dStat.last}">[[${d}]]</th:block>
+	                         	</th:block>	
+	                         </td>
+                         </th:block>
+                         <td>[[${l.money}]] 원</td>
+                     </tr>
+                 </tbody>
+            </table>
+			</div>
 				<div id="upperContentsBtn" class="align-middle text-center"><!-- 메뉴판 -->
 					<div></div>
 					<table>
@@ -107,6 +119,7 @@
 				<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
 					<span style="margin-top:10px;">간병일감을 찾고 계신가요?</span>
            			<button type="button" class="btn-select">원하는 간병일감 찾기</button>
+
             	</div>
             	<br/><br/>
 			    <div id="carouselExampleIndicators" class="carousel slide">
@@ -283,35 +296,100 @@
     
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
-    <script th:inline="javascript">
     
-   //남희 오류때문에 주석처리중
-    	/*<![CDATA[*/
-/*    	document.addEventListener('DOMContentLoaded', function() {
-        	var calendarEl = document.getElementById('calendar');
-              	var request = $.ajax({
-        		url: 'caregiverCalendarEvent.me',
-//      		data: {memberNo : /*[[${session.loginUser.memberNo}]]*/    /*    0},   */
-//        	})
-        	
-/*      	request.done(function(data) {
-        		var calendar = new FullCalendar.Calendar(calendarEl, {
-  		          initialView: 'dayGridMonth',
-  		          events : data,
-  		          eventColor: '#8dd986',
-  		          eventClick: function(info) {
-  		        	    alert('Event: ' + info.event.title + '\n' + '금액: ' + '80,000원\n' + '장소 :' + '세브란스 병원' );
-  		        	  }
-  		        });
-  		        calendar.render();
-        	})*/
-        	
-/*        	var calendar = new FullCalendar.Calendar(calendarEl, {
-          		initialView: 'dayGridMonth'
-        	});
-        	calendar.render();
-      	});
-    	/*]]>*/
+    <!-- 캘린더 이벤트의 모달박스 (시작)-->
+    <div class="modal" id="calendarModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+		   		<div class="modal-header">
+		    		<div class="modal-title workInfo">
+		    			<div class="infomation">
+			    			<span class="badge bg-danger"><img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음</span><br/>
+			    			<span>혜민병원</span><br/>
+			    			<span>서울특별시 광진구</span>
+		    			</div>
+		    			<div class="text-end align-middle imgDiv">
+		    				<br/>
+				    		<img src="image/icon/hospital.png" aria-label="Close" style="width:60px; height:60px;">
+		    			</div>
+		    		</div>
+		    		<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+		   		</div>
+		    	<div class="modal-body workInfo">
+		    		<div>
+		    			<span>시작 시간</span><br/>
+		    			<span>종료 시간</span><br/>
+		    			<span>일 간병비</span><br/>
+		    		</div>
+		    		<div class="text-end fw-bold infoDetail">
+		    			<span></span><br/>
+		    			<span></span><br/>
+		    			<span></span>
+		    		</div>
+		    	</div>
+		    	<div class="modal-footer">
+		    		<input type="hidden" name="matNo"/>
+	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">Close</button>
+	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">자세히 보기</button>	    			
+		    	</div>
+		  	</div>
+		</div>
+	</div>
+    <!-- 캘린더 이벤트의 모달박스 (끝) -->
+    
+    
+    
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+	document.addEventListener('DOMContentLoaded', function() {
+    	var calendarEl = document.getElementById('calendar');
+    	var request = $.ajax({
+    		url: 'caregiverCalendarEvent.me',
+    		datatype: 'json',
+    		data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0},
+    	})
+    	
+    	const getTimeFormat = (date) => {
+    		const hour = date.getHours();
+    		const minutes = date.getMinutes();
+    		const seconds = date.getSeconds();
+    		return hour + "시간 " + minutes + "분 " + seconds +"초" ;
+    	}
+    	const getDateFormat = (date) => {
+    		const year = (date.getFullYear()+"").slice(-2);
+    		const month = ('0' + (date.getMonth()+1)).slice(-2);
+    		const day = ('0' + date.getDate()).slice(-2);
+    		
+    		return year + '-' + month + '-' + day;
+    	}
+    	
+    	request.done(function(data) {
+    		console.log(data);
+    		var calendar = new FullCalendar.Calendar(calendarEl, {
+		          initialView: 'dayGridMonth',
+		          events : data,
+		          eventColor: '#8dd986',
+		          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
+		        		let d = new Date(info.event.start - new Date())
+		        	   	let infomation = document.querySelector('.infomation').children;
+		          		console.log(infomation);
+		          		infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + getTimeFormat(d) + '남음';
+					infomation[2].innerHTML = '병원명이 들어올 자리';
+		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
+		          		
+		          		let infoDetail = document.querySelector('.infoDetail').children;
+		          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
+		          		infoDetail[2].innerHTML = info.event.extendedProps.endDate;
+		          		infoDetail[4].innerHTML = info.event.extendedProps.money + '원';
+		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
+		        	  	$('#calendarModal').modal('show');
+		        	  }
+		        });
+		        calendar.render();
+    	}) 
+  	});
+	/*]]>*/
+	/*<![CDATA[*/
    	
     	
     	
@@ -327,35 +405,66 @@
     			if(/*[[${completeList}]]*/'arrList' != null) {
     				const tbody = this.parentElement.parentElement.parentElement.nextElementSibling;
     				
+    				
     				$.ajax({
-	    				url: 'refreshChoice.me',
-	    				data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0},
-	    				success: data => {
+	    				url: 'refreshPatientChoice.me',
+	    				data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0, selectNum: 5},
+	    				success: data => { // 배열로 넘어옴
 	    					// 새로 추천받은 목록으로 교체(시작)
+	    					console.log(data);
 	    					tbody.innerText = '';
 	    					for(let d of data) {
 	    						const tr = document.createElement('tr');
+	    						tr.classList.add('text-center');
 	    						const td0 = document.createElement('td');
 	    						td0.innerText = d.ptName;
 	    						const td1 = document.createElement('td');
-	    						td1.innerText = d.ptGender == 'M' ? '남성' : '여성';
+	    						td1.innerText = d.ptGender == 'M' ? '남' : '여';
 	    						const td2 = document.createElement('td');
 	    						td2.innerText = d.ptRealAge;
 	    						const td3 = document.createElement('td');
 	    						td3.innerText = d.ptAddress;
 	    						const td4 = document.createElement('td');
-	    						td4.innerText = d.ptDisease;
-	    						const td5 = document.createElement('td');
-	    						td5.innerText = d.money;
 	    						
-	    						tr.append(td0);
-	    						tr.append(td1);
-	    						tr.append(td2);
-	    						tr.append(td3);
-	    						tr.append(td4);
-	    						tr.append(td5);
+	    						
+								let diseaseArr = d.ptDisease.split('/');
+								let arrLength = diseaseArr.length;
+	    						let disease = '';
+								if(arrLength > 4){ // 보유 질병이 5개 이상인 경우
+	    							for(let i = 0; i < 4; i++){
+	    								if(i < 3) { // 마지막 인덱스가 아닌 경우에 끝에 쉼표(,)를 붙인다.
+		    								disease += diseaseArr[i] + ', ';
+	    								} else{
+	    									disease += diseaseArr[i] + ' ...';
+	    								}
+	    							}
+	    						} else{ // 보유 질병이 4개 이하인 경우
+	    							for(let i = 0; i < arrLength; i++){
+	    								if(i != arrLength - 1) { // 마지막 인덱스가 아닌 경우에 끝에 쉼표(,)를 붙인다.
+		    								disease += diseaseArr[i] + ', ';
+	    								} else{
+	    									disease += diseaseArr[i];
+	    								}
+	    							}
+	    						}
+	    						td4.innerText = disease;
+	    						
+	    						
+	    						
+	    						
+	    						const td5 = document.createElement('td');
+	    						td5.innerText = d.money + '원';
+	    						
+	    						tbody.appendChild(tr);
+	    						tr.appendChild(td0);
+	    						tr.appendChild(td1);
+	    						tr.appendChild(td2);
+	    						tr.appendChild(td3);
+	    						tr.appendChild(td4);
+	    						tr.appendChild(td5);
 	    						// 새로 추천받은 목록으로 교체(끝)
 	    					}
+	    					alert('새고운 추천목록으로 갱신되었습니다.');
 	    				},
 	    				error: data => {
 	    					console.log('에러')
@@ -370,25 +479,6 @@
     		
  
     		
-//남희 작업중 주석 처리
-    		// 일감 목록에서 모달창으로 정보 보기(시작)
-/*    		const infoBtnList = document.querySelectorAll('.workInfo');
-    		for(let btn of infoBtnList) {
-    			btn.addEventListener('click', () => {
-    				$('.modal').modal('show');
-    			})
-    		}
-    		// 일감 목록에서 모달창으로 정보 보기(끝)
-    		
-    		// 일감 목록 모달창에서 자세한 정보 보기(시작)
-    		const detailInfo = document.querySelector('#detailInfo');
-    		detailInfo.addEventListener('click', () => {
-    			// location.href = '';
-    			   			
-    		})
-    		// 일감 목록 모달창에서 자세한 정보 보기(끝)   		
-    	}
-    	/*]]>*/
     	 	
     
 	   		 //정보보기 버튼 클릭	

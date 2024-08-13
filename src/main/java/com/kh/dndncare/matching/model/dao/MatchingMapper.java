@@ -2,6 +2,7 @@ package com.kh.dndncare.matching.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,7 +83,8 @@ public interface MatchingMapper {
 
 	int insertReview(HashMap<String, Object> map);
 	
-	MatMatptInfo selecMatPtInfo(@Param("matNo")int matNo,@Param("memberNo") int memberNo);
+	MatMatptInfo selecMatPtInfo(@Param("matNo")int matNo, @Param("memberNo") int memberNo);
+	
 	int requestMatching(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
 
 	String getMatPtName(@Param("matNo") int matNo, @Param("ptCount") int ptCount);
@@ -116,6 +118,15 @@ public interface MatchingMapper {
 	String getNameC(int memberNo);
 
 
+	int insertMemberInfo(Map<String, Object> memberInfoParams);
+
+	int deleteMemberInfo(Map<String, Object> memberInfoParams);
+
+	List<Integer> getCategoryNo(int memberNo);
+
+	int updateMatC(@Param("matNo") int matNo, @Param("memberNoC") int memberNoC);
+
+	
 
 
 }

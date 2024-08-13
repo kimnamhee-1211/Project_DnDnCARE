@@ -4,6 +4,7 @@ package com.kh.dndncare.matching.model.service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -90,6 +91,10 @@ public interface MatchingService {
 	int insertMatPtInfo(MatPtInfo matPtInfo);
 	
 	int deleteWantInfo(int memberNo);
+	int insertMemberInfo(Map<String, Object> memberInfoParams);
+	int deleteMemberInfo(Map<String, Object> memberInfoParams);
+	List<Integer> getCategoryNo(int memberNo);
+	
 	
 	CareGiver selectIntro(int memberNo);
 	
@@ -135,7 +140,12 @@ public interface MatchingService {
 	
 	//나(환자)의 현재 매칭 정보-- 간병인이 환자(나) 신청
 	ArrayList<CareGiverMin> getMyMatchingPN(int ptNo);
+	
+	//member 이름 가져오기
 	String getNameC(int memberNo);
+	
+	//환자 -> 간병인 매칭 신청했을 경우 macthing 테이블에 간병인 memberNo 넣기
+	int updateMatC(int matNo, int memberNoC);
 
 
 

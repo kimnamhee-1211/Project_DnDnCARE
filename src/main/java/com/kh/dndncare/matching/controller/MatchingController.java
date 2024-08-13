@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,7 +60,9 @@ public class MatchingController {
 	public String publicMatchingView(HttpSession session,Model model,
 			@RequestParam(value="memberNoC", required=false) int memberNoC) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		if(loginUser !=null) {
+		
+		
+		if(loginUser !=null) {			
 			int memberNo = loginUser.getMemberNo();
 			Patient patient = mcService.getPatient(memberNo);
 			model.addAttribute("patient",patient);
@@ -70,17 +73,24 @@ public class MatchingController {
 			return "publicMatching";
 			
 		}
-		throw new MatchingException("하하");
+		throw new MatchingException("페이지 이동에 실패하였습니다.");
 	}
 	
 	//2번째 페이지로 정보 전달 및 이동
 	@PostMapping("publicMatching2.mc")
-	public String publicMatching2(@ModelAttribute Patient patient,Model model,HttpSession session,
+	public String publicMatching2(@ModelAttribute Patient patient, Model model, HttpSession session,
+			@RequestParam("service") String service,
 			@RequestParam(value="memberNoC", required=false) int memberNoC) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
+		int memberNo = loginUser.getMemberNo();
+		List<Integer> categoryList= mcService.getCategoryNo(memberNo);
 		if(loginUser !=null && patient !=null) {
+			if(categoryList !=null) {
+				model.addAttribute("categoryList",categoryList);
+			}
 			patient.setMemberNo(loginUser.getMemberNo());
 			session.setAttribute("tempPatient", patient);
+			session.setAttribute("service", service);
 			return "publicMatching2";
 		} else {
 			throw new MatchingException("다음 페이지로 이동하는중 오류가 발생하였습니다.");
@@ -90,30 +100,50 @@ public class MatchingController {
 	@PostMapping("publicMatchingApply.mc")
 	   public String publicMatchingApply(HttpSession session,@ModelAttribute Matching matching,@RequestParam("selectedSymptoms") String selectedSymptoms,
 	                              @RequestParam("selectedMobility") String selectedMobility,@RequestParam("selectedGender") String selectedGender,
-	                              @RequestParam(value="selectedDays",required =false) String selectDays,@RequestParam("selectedCareer") String selectedCareer
-	                              ,@RequestParam("selectedLocal") String selectedLocal,@RequestParam("selectedAge") String selectedAge,
-	                              @RequestParam(value="memberNoC", required=false) int memberNoC) {
+	                              @RequestParam(value="selectedDays",required =false) String selectDays,@RequestParam("selectedCareer") String selectedCareer,
+	                              @RequestParam("selectedLocal") String selectedLocal, @RequestParam("selectedAge") String selectedAge,
+	                              @RequestParam(value="memberNoC", required=false) int memberNoC, RedirectAttributes re,
+	                              @RequestParam("selectedDiseaseLevels") String selectedDiseaseLevels) {
+
 	      Patient patient = (Patient)session.getAttribute("tempPatient");
 	      int memberNo = patient.getMemberNo();
 	      String formattedDates = null;
 	      int dateResult = 0;
-	      // 문자열을 Integer 리스트로 변환
-	      Map<String, Object> params = new HashMap<>();
-	        params.put("symptoms", Arrays.stream(selectedSymptoms.split(","))
+	        // member_Info에 들어갈 값 맵에 넣기
+	      	Map<String,Object> memberInfoParams= new HashMap<>();
+	      
+	      	memberInfoParams.put("symptoms", Arrays.stream(selectedSymptoms.split(","))
 	                                     .map(Integer::parseInt)
 	                                     .collect(Collectors.toList()));
-	        System.out.println(params);
-	        // 단일 값들도 Integer로 변환
-	        params.put("mobility", selectedMobility != null ? Integer.parseInt(selectedMobility) : null);
-	        params.put("gender", selectedGender != null ? Integer.parseInt(selectedGender) : null);
-	        params.put("career", selectedCareer != null ? Integer.parseInt(selectedCareer) : null);
-	        params.put("local", selectedLocal != null ? Integer.parseInt(selectedLocal) : null);
-	        params.put("age", selectedAge != null ? Integer.parseInt(selectedAge) : null);
-	        params.put("memberNo",memberNo);
+	      	memberInfoParams.put("selectedDiseaseLevels", Arrays.stream(selectedDiseaseLevels.split(","))
+					                    .map(Integer::parseInt)
+					                    .collect(Collectors.toList()));
+	      	memberInfoParams.put("mobility", selectedMobility != null ? Integer.parseInt(selectedMobility) : null);
+	      	memberInfoParams.put("memberNo",memberNo);
+	      	memberInfoParams.put("service", session.getAttribute("service").equals("hospital") ? 1 : 2);
+	  
+	      	
+	      	
+	      	// memberInfo 삭제 및 인설트
+	      	int deleteMemberInfoResult = mcService.deleteMemberInfo(memberInfoParams);
+	        int memberInfoResult = mcService.insertMemberInfo(memberInfoParams);
+	        
+
+	       
+	      	
+	        // want_info에 들어갈 값 맵에 넣기
+	        Map<String, Object> wantInfoparams = new HashMap<>();
+	        wantInfoparams.put("gender", selectedGender != null ? Integer.parseInt(selectedGender) : null);
+	        wantInfoparams.put("career", selectedCareer != null ? Integer.parseInt(selectedCareer) : null);
+	        wantInfoparams.put("local", selectedLocal != null ? Integer.parseInt(selectedLocal) : null);
+	        wantInfoparams.put("age", selectedAge != null ? Integer.parseInt(selectedAge) : null);
+	        wantInfoparams.put("memberNo",memberNo);
+	        
+	        
 	        
 	        //원래있던 memberNo에 해당하는 want-info 삭제후 want_info insert
 	        int deleteWantInfo = mcService.deleteWantInfo(memberNo);
-	        int wantInfoResult = mcService.insertWantInfo(params);
+	        int wantInfoResult = mcService.insertWantInfo(wantInfoparams);
 
 	        	      
 	      if(patient != null && matching != null && selectedSymptoms !=null
@@ -134,45 +164,69 @@ public class MatchingController {
 	         } else {
 	            matching.setMatMode(2);
 	         }
-	         System.out.println("matching : " + matching);
+	         
 	         //Matching 정보 삽입
 	         int matchingResult = mcService.enrollMatching(matching);
 	         
 	         int matNo = matching.getMatNo();
-	         
+	         	               	         
 	         //시간제일 때 Matching_date 테이블 insert
 	         if(matching.getMatMode() == 2 && selectDays != null) {
 	            formattedDates = convertDates(selectDays);
 	            HashMap<String,Object> map = new HashMap<String,Object>();
 	            map.put("formattedDates", formattedDates);
 	            map.put("matNo", matNo);
+	            
 	            dateResult = mcService.insertMatchingDate(map);
 	         }
 
 	         //mat_pt_info insert
+	         
 	         MatPtInfo matPtInfo = new MatPtInfo();
 	         matPtInfo.setMatNo(matNo);
 	         matPtInfo.setPtNo(ptNo);
 	         matPtInfo.setAntePay(matching.getMoney());
-	         matPtInfo.setService("개인간병");
+	         if (session.getAttribute("service").equals("hospital")) {
+        	    matPtInfo.setService("병원돌봄");
+	         } else {
+	    	    matPtInfo.setService("가정돌봄");
+	         }
+	         
 	         matPtInfo.setMatAddressInfo(patient.getPtAddress());
 	         matPtInfo.setMatRequest("일단없음");
 	         matPtInfo.setGroupLeader("N");
 
 	         int ptInfoResult = mcService.enrollMatPtInfo(matPtInfo);
-	         int finalResult = wantInfoResult + patientResult + ptInfoResult + dateResult + matchingResult + deleteWantInfo;
+	         
+	         //채팅방 생성 (간병인 후기 보기에서 매칭방 신청하고 바로 채팅방 생성할때)
+	         
+	         int finalResult = wantInfoResult + patientResult + ptInfoResult + dateResult + matchingResult + deleteWantInfo + deleteMemberInfoResult + memberInfoResult;
 	         
 	         
-	         
-	         
-	         
-	         
-	         
-	         
-	         
+	         String result ="";
+	         //공개 매칭 신청 시
 	         if(finalResult!=0) {
-	            return "redirect:myInfo.me";	            
-	            
+	        	 
+		         //환자 -> 간병인 정보보기 ->  매칭 신청했을 경우 macthing 테이블에 간병인 memberNo 넣기
+		        if(memberNoC > 0) {
+		        	int updateMatCResult = mcService.updateMatC(matNo, memberNoC);
+		        	//모달용
+		        	if(updateMatCResult > 0) {		        	
+			        	String matCName = mcService.getNameC(memberNo);
+			    		re.addAttribute("matCName", matCName);
+			    		result = "request";
+		        	}
+		        }
+		        
+	        	session.removeAttribute("tempPatient"); // 세션에 담아놨던 patient 객체 삭제 
+	        	session.removeAttribute("service");
+	        	
+	        	//모달용
+	        	result = "insert";
+	        	re.addAttribute("result", result);
+	        	
+	        	//환자 메인페이지로
+	            return "redirct:patientMain.me";
 	         } else {
 	            throw new MatchingException("공개구인 신청에 실패하였습니다");
 	         }
@@ -370,6 +424,7 @@ public class MatchingController {
 			String diseaseLevel = null;
 			if(jmPtInfos != null) {
 				for(InfoCategory jmPtInfo : jmPtInfos) {
+					
 					if(jmPtInfo.getLCategory().equals("disease")) {
 						disease.add(jmPtInfo.getSCategory());					
 					}else if(jmPtInfo.getLCategory().equals("diseaseLevel")) {
@@ -697,6 +752,8 @@ public class MatchingController {
 		}		
 		model.addAttribute("mPI", mPI);
 		model.addAttribute("matCheck", matCheck);
+		//채팅테스트용 matNo
+		model.addAttribute("matNo",matNo);
 		
 		return "caregiverPtInfo";
 	}
@@ -1015,7 +1072,6 @@ public class MatchingController {
 		
 		//매칭 간병인 이름 얻어오기
 		String matCName = mcService.getNameC(memberNo);
-		
 		
 		if(result > 0) {
 			re.addAttribute("matCName", matCName);

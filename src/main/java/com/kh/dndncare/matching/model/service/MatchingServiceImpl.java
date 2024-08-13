@@ -2,6 +2,7 @@ package com.kh.dndncare.matching.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -269,7 +270,7 @@ public class MatchingServiceImpl implements MatchingService {
 	public int insertMatPtInfo(MatPtInfo matPtInfo) {
 		// TODO Auto-generated method stub
 		return 0;//없는메소드	
-		}
+	}
 	
 	
 	//나(환자)의 현재 매칭 정보- 진행 + 결제대기 + 환자자 신청
@@ -290,6 +291,28 @@ public class MatchingServiceImpl implements MatchingService {
 	public String getNameC(int memberNo) {
 		// TODO Auto-generated method stub
 		return mMapper.getNameC(memberNo);
+	}
+	
+	@Override
+	public int insertMemberInfo(Map<String, Object> memberInfoParams) {
+		return mMapper.insertMemberInfo(memberInfoParams);
+	}
+
+	@Override
+	public int deleteMemberInfo(Map<String, Object> memberInfoParams) {
+		return mMapper.deleteMemberInfo(memberInfoParams);
+	}
+
+	@Override
+	public List<Integer> getCategoryNo(int memberNo) {
+		return mMapper.getCategoryNo(memberNo);
+	}
+	
+	//환자 -> 간병인 매칭 신청했을 경우 macthing 테이블에 간병인 memberNo 넣기
+	@Override
+	public int updateMatC(int matNo, int memberNoC) {
+		// TODO Auto-generated method stub
+		return mMapper.updateMatC(matNo, memberNoC);
 	}
 
 

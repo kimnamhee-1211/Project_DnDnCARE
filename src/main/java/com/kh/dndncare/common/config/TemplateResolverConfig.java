@@ -97,6 +97,24 @@ public class TemplateResolverConfig {
 		return dotLo;
 	}
 	
+	@Bean
+	public ClassLoaderTemplateResolver dotChResolver() {
+		ClassLoaderTemplateResolver dotCh = new ClassLoaderTemplateResolver();
+		dotCh.setPrefix("templates/views/chat/");
+		dotCh.setSuffix(".html");
+		dotCh.setTemplateMode(TemplateMode.HTML);
+		dotCh.setCharacterEncoding("UTF-8");
+		dotCh.setCacheable(false);
+		dotCh.setOrder(6);
+		dotCh.setCheckExistence(true);
+		
+		return dotCh;
+	}
+	
+
+	
+	
+	
 	
 	
 	
