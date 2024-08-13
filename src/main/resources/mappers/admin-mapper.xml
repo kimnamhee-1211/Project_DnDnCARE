@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.kh.dndncare.admin.model.dao.AdminMapper">
+
+	<!-- 간병백과 게시글 정보를 삽입 -->
+	<insert id="insertCareInfomation" useGeneratedKeys="true">
+		<selectKey resultType="_int" keyProperty="boardNo" order="BEFORE">
+			SELECT SEQ_BID.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO BOARD 
+		VALUES(${boardNo}, ${memberNo}, #{boardTitle}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, ${categoryNo}, ${areaNo}, #{boardContent})
+	</insert>
+
+	<!-- 간병백과 게시글에 대한 첨부파일을 삽입 -->
+	<insert id="insertAttachment">
+		INSERT ALL
+		<foreach collection="list" item="attm" separator=" ">
+			INTO ATTACHMENT 
+			VALUES(NEW_AID, ${attm.refBoardNo}, #{attm.originalName}, #{attm.renameName}, 
+												#{attm.attmPath}, #{attm.attmLevel}, DEFAULT)
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+
+
+
+
+
+
+
+
+
+
+</mapper>
