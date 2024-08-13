@@ -12,7 +12,7 @@ import com.kh.dndncare.chating.model.vo.ChatingRoomMessage;
 @Mapper
 public interface ChatingMapper {
 
-	ChatingRoom getChatRoom(@Param("memberNo") int memberNo, @Param("matNo") int matNo);
+	ChatingRoom getChatRoom(@Param("memberNo") int memberNo, @Param("chatRoomNo") int chatRoomNo);
 
 	int getMatMemberNo(int matPtNo);
 
@@ -27,5 +27,7 @@ public interface ChatingMapper {
 	List<ChatingRoomMessage> getMessagesByChatRoomNo(int chatRoomNo);
 
 	ArrayList<ChatingRoom> getChatRoomList(int memberNo);
+
+	List<ChatingRoomMessage> getLatestMessages(int memberNo);
 
 }

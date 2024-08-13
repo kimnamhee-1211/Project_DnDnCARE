@@ -29,32 +29,53 @@ public class ChatingController {
 	@Autowired
 	private ChatingService chService;
 	
-	@GetMapping("getChatList.ch")
-	public String getChatList(HttpSession session) {
-		Member loginUser = (Member)session.getAttribute("loginUser");
+//	@GetMapping("getChatList.ch")
+//	public String getChatList(HttpSession session) {
+//		Member loginUser = (Member)session.getAttribute("loginUser");
+//		int memberNo = loginUser.getMemberNo();
+//		
+//		ArrayList<ChatingRoom> chatRoomList = chService.getChatRoomList(memberNo);
+//		System.out.println(chatRoomList);
+//		//ArrayList<ChatingRoomMessage> lastChatList = chService.getLastChatList
+//		
+//		
+//		return null;
+//	}
+	
+    @GetMapping("getChatList.ch")
+    public String getChatRooms(Model model, HttpSession session) {
+    	Member loginUser = (Member)session.getAttribute("loginUser");
 		int memberNo = loginUser.getMemberNo();
-		
-		ArrayList<ChatingRoom> chatRoomList = chService.getChatRoomList(memberNo);
-		
-		
-		return null;
-	}
+        List<ChatingRoomMessage> latestMessages = chService.getLatestMessages(memberNo);
+        if(latestMessages !=null) {    	
+        model.addAttribute("latestMessages", latestMessages);
+        return "chatList";
+    } else {
+    	throw new MemberException("채팅리스트 넘어가기 실패");
+    }
+       
+}
+	
+	
 	
 
 	
 	@GetMapping("createAndGetChat.ch")
-	public String createAndGetChat(@RequestParam("matNo") int matNo,
-	                               @RequestParam("matPtNo") int matPtNo,
+	public String createAndGetChat(@RequestParam(value="matNo" ,required=false ) Integer matNo,
+	                               @RequestParam(value= "matPtNo",required=false) Integer matPtNo,
+	                               @RequestParam(value= "chatRoomNo",required=false) Integer chatRoomNo,
 	                               HttpSession session,
 	                               Model model) {
 	    Member loginUser = (Member) session.getAttribute("loginUser");
 	    int memberNo = loginUser.getMemberNo();
+	    String memberName = loginUser.getMemberName();
 
-	    ChatingRoom existingChatingRoom = chService.getChatRoom(memberNo, matNo);
+	    ChatingRoom existingChatingRoom = chService.getChatRoom(memberNo, chatRoomNo);
 	    if (existingChatingRoom != null) {
 	        // Chat room already exists, redirect to it
 	        model.addAttribute("chatRoomId", existingChatingRoom.getChatRoomNo());
 	        model.addAttribute("userId", memberNo);
+	        model.addAttribute("memberName", memberName);
 	        return "chatRoom";
 	    }
 
@@ -69,14 +90,14 @@ public class ChatingController {
 	        throw new MemberException("채팅방 생성에 실패했습니다.");
 	    }
 
-	    int chatRoomNo = chService.getChatRoomNo(matPtNo);
-	    int chatRoomMemberResult = chService.insertChatRoomMember(chatRoomNo, memberNo, matMemberNo);
+	    int newChatRoomNo = chService.getChatRoomNo(matPtNo);
+	    int chatRoomMemberResult = chService.insertChatRoomMember(newChatRoomNo, memberNo, matMemberNo);
 
 	    if (chatRoomMemberResult <= 0) {
 	        throw new MemberException("채팅방 멤버 추가에 실패했습니다.");
 	    }
 
-	    model.addAttribute("chatRoomId", chatRoomNo);
+	    model.addAttribute("chatRoomId", newChatRoomNo);
 	    model.addAttribute("userId", memberNo);
 	    return "chatRoom";
 	}

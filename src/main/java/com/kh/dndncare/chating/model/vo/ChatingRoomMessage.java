@@ -20,4 +20,5 @@ public class ChatingRoomMessage {
 	private String chatContent;
 	private int readCount;
 	private Date writeDate;
+	private String memberName;
 }

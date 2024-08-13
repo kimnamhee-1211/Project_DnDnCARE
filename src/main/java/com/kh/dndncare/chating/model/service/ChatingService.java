@@ -8,7 +8,7 @@ import com.kh.dndncare.chating.model.vo.ChatingRoomMessage;
 
 public interface ChatingService {
 
-	ChatingRoom getChatRoom(int memberNo, int matNo);
+	ChatingRoom getChatRoom(int memberNo, int chatRoomNo);
 
 	int getMatMemberNo(int matPtNo);
 
@@ -23,5 +23,7 @@ public interface ChatingService {
     List<ChatingRoomMessage> getMessagesByChatRoomNo(int chatRoomNo);
 
 	ArrayList<ChatingRoom> getChatRoomList(int memberNo);
+
+	List<ChatingRoomMessage> getLatestMessages(int memberNo);
 
 }
