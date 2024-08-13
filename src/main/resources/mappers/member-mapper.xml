@@ -321,9 +321,7 @@
     		left join matching ON mat_pt_info.mat_no = matching.mat_no
             left join member on matching.member_no =member.member_no
             left join caregiver on matching.member_no = caregiver.member_no
-		where mat_confirm != 'N' and pt_no = (select pt_no
-						from patient
-						where member_no = #{memberNo})
+		where mat_confirm != 'N' and pt_no = #{ptNo}
 	</select>
 	<!-- 추천된 환자 정보조회 : 이름, 성별, 나이, 지역, 금액 -->
 	<select id="choicePatientList" resultType="Patient">
@@ -757,6 +755,12 @@
 		     join matching m on cr.mat_no = m.mat_no
 		     where cr.member_no = #{memberNo})
 		group by to_char(end_dt, 'YYYY-MM')
+	</select>
+	
+	<select id="sumAvgScore" resultType="CareReview">
+	select sum(review_score) sumScore, avg(review_score) avgScore, count(review_score) countReview
+	from care_review
+	where member_no = #{memberNo}
 	</select>
 	
 </mapper>

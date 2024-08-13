@@ -839,22 +839,49 @@ public class MemberController {
 	// 매칭이력
 	@GetMapping("myInfoMatchingHistory.me")
 	public String myInfoMatchingHistory(HttpSession session,Model model) {		//마이페이지 매칭 이력 확인용
+		LocalDate currentDate = LocalDate.now();
+		String currentMonth = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
+		// 회원번호
+		int memberNo = loginUser.getMemberNo();
+		
 		if(loginUser != null) {
-			char check = loginUser.getMemberCategory().charAt(0);
-			switch(check) {
-				case 'C': return "myInfoMatchingHistory";
+				char check = loginUser.getMemberCategory().charAt(0);
+				switch(check) {
 				
+				case 'C':
+					ArrayList<CareReview> monthScoreList = mService.monthScoreList(memberNo);
+					System.out.println("월간"+monthScoreList);
+		
+					CareReview monthScore = null;
+					for (CareReview score : monthScoreList) {
+						if(score.getMonth().equals(currentMonth)) {
+							monthScore = score;
+							break;
+						}
+					}
+					System.out.println(monthScore);
+					if (monthScore != null) {
+						model.addAttribute("month",monthScore.getMonth());
+			            model.addAttribute("sumScore", monthScore.getSumScore());
+			            model.addAttribute("avgScore", monthScore.getAvgScore());
+			        } else {
+			            model.addAttribute("message", "이달의 데이터가 없습니다.");
+			        }
+					 return "myInfoMatchingHistory";
 				case 'P':
-					ArrayList<MatMatptInfo> mciList = mService.selectMatList(loginUser.getMemberNo());	//환자측 매칭방번호 리스트.ptNo가들어가서무조건
+					// 환자번호
+					int ptNo = mService.getPtNo(memberNo);
+					ArrayList<MatMatptInfo> mciList = mService.selectMatList(ptNo);	//환자측 매칭방번호 리스트.ptNo가들어가서무조건
 					System.out.println("매칭이력"+mciList);
 					for(MatMatptInfo i : mciList) {
 						System.out.println(i);
-						i.setAfterDate(LocalDate.now().isAfter(i.getBeginDt().toLocalDate()));
-						
+						i.setAfterDate(currentDate.isAfter(i.getEndDt().toLocalDate()));
 					}
+					//ArrayList<MatMatptInfoPt> monthPatient = mService.useMonth(ptNo);
+					
 					model.addAttribute("mciList",mciList);
 					model.addAttribute("today", LocalDate.now());
 					return "myInfoMatchingHistoryP";
@@ -872,36 +899,23 @@ public class MemberController {
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		int memberNo = loginUser.getMemberNo();
 		
-		LocalDate currentDate = LocalDate.now();
-		String currentMonth = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
-
-		
 		
 		if (loginUser != null) {
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch (check) {
 			case 'C':
 				ArrayList<CareReview> caregiverList = mService.caregiverReviewList(memberNo);
-				ArrayList<CareReview> monthScoreList = mService.monthScoreList(memberNo);
-				System.out.println("월간"+monthScoreList);
-
-				CareReview monthScore = null;
-				for (CareReview score : monthScoreList) {
-					if(score.getMonth().equals(currentMonth)) {
-						monthScore = score;
-						break;
-					}
-				}
-				System.out.println(monthScore);
-				if (monthScore != null) {
-					model.addAttribute("month",monthScore.getMonth());
-		            model.addAttribute("sumScore", monthScore.getSumScore());
-		            model.addAttribute("avgScore", monthScore.getAvgScore());
-		        } else {
-		            model.addAttribute("message", "이달의 데이터가 없습니다.");
-		        }
+				ArrayList<CareReview> sumAvgScore = mService.sumAvgScore(memberNo);
+				System.out.println("합계평균"+sumAvgScore);
+				
+				double avgScore = sumAvgScore.get(0).getAvgScore();
+				int sumScore = sumAvgScore.get(0).getSumScore();
+				int countScore = sumAvgScore.get(0).getCountReview();
+				
 				model.addAttribute("cList", caregiverList);
-				System.out.println("간병인입장후기"+caregiverList);
+				model.addAttribute("avgScore", avgScore);
+				model.addAttribute("sumScore", sumScore);
+				model.addAttribute("countScore", countScore);
 				return "myInfoMatchingReview";
 			case 'P':
 				// 회원번호로 환자번호 get

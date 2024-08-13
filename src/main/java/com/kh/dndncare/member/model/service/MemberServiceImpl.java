@@ -461,4 +461,10 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.monthScoreList(memberNo);
 	}
 
+
+	@Override
+	public ArrayList<CareReview> sumAvgScore(int memberNo) {
+		return mMapper.sumAvgScore(memberNo);
+	}
+
 }

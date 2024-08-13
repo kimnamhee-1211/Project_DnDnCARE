@@ -47,7 +47,6 @@
 						
 							<div class="m-2 d-flex justify-content-between">
 								<div class="h3 myInfo-title">[[${session.loginUser.MemberName}]]님 이용일수/지출</div>
-								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">검색란?</button>
 							</div>
 							
 							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
@@ -61,36 +60,42 @@
 							<div class="m-2 d-flex justify-content-between">
 								<div class="h3 myInfo-title">[[${session.loginUser.MemberName}]]님 매칭 이력</div>
 								<div>
-									<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">최근</button>
+									<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">대기</button>
 									<button class="btn-outline-maincolor btn-sm" style="width:85px; height:40px;">종료</button>
 								</div>
 							</div>
 							
-							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
-								<table class="m-2">
-		      						<tr>
-										<th width="170px">간호 시작일</th>
-										<th width="10">   </th>
-										<th width="170px">간호 종료일</th>
-										<th width="820px">간병인 정보</th>
-										<th width="150px">매칭 상태</th>
-										<th width="120px">후기 작성</th>
-		      						</tr>
-		      						<tr th:each="i : ${mciList}">
-		      							<td>[[${i.beginDt}]]</td>
-		      							 <td> ~ </td>
-		      							 <td>[[${i.endDt}]]</td>
-		      							<td> 이름 : [[${i.memberName}]] 비용 : [[${i.money}]]</td>
-		      							<input type="hidden" id="hiddenMemberNo" name="memberNo" th:value="${i.memberNo}"/>
-		      							<input type="hidden" id="hiddenMatchingNo" name="matNo" th:value="${i.matNo}"/>
-		      							<td><span th:if="${!i.isAfterDate}">진행 중</span><span th:if="${i.isAfterDate}">완료</span></td>
-		      							<td><button class="myInfo-btn btn-sm" onclick="reviewDetail('myInfoMatchingHistoryP')">후기 가능</button></td>
-		      						</tr>
-		      						
-		      					
-		      						
-	      						</table>
+
+							<div id="contentContainer" class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
+							    <table class="m-2" id="matchingTable">
+							        <tr>
+							            <th width="170px">간호 시작일</th>
+							            <th width="10"></th>
+							            <th width="170px">간호 종료일</th>
+							            <th width="820px">간병인 정보</th>
+							            <th width="150px">매칭 상태</th>
+							            <th width="150px">간병 상태</th>
+							            <th width="120px">후기 작성</th>
+							        </tr>
+							        <tr th:each="i : ${mciList}" class="matching-row" data-mat-confirm="${i.matConfirm}" data-is-after-date="${i.isAfterDate}">
+							            <td>[[${i.beginDt}]]</td>
+							            <td> ~ </td>
+							            <td>[[${i.endDt}]]</td>
+							            <td> 이름 : [[${i.memberName}]] 비용 : [[${i.money}]]원</td>
+							            <input type="hidden" th:id="'hiddenMemberNo' + ${i.memberNo}" name="memberNo" th:value="${i.memberNo}"/>
+							            <input type="hidden" th:id="'hiddenMatNo' + ${i.matNo}" name="matNo" th:value="${i.matNo}"/>
+							            <td><span th:if="${i.matConfirm == 'W'}">대기 중</span><span th:if="${i.matConfirm == 'Y'}">완료</span></td>
+							            <td><span th:if="${!i.isAfterDate}">진행 중</span><span th:if="${i.isAfterDate}">완료</span></td>
+							            <td th:if="${i.isAfterDate && i.matConfirm == 'Y'}">
+							                <button class="myInfo-btn btn-sm" onclick="reviewDetail('myInfoMatchingHistoryP')">후기 가능</button>
+							            </td>
+							            <td th:unless="${i.isAfterDate && i.matConfirm == 'Y'}">
+							                <button class="myInfo-btn btn btn-dark btn-sm">진행중</button>
+							            </td>
+							        </tr>
+							    </table>
 							</div>
+
 						</div>
 						
 						
@@ -115,10 +120,14 @@
 				}
 			};
 			
+			
 		}
-		
+
+			
 		function reviewDetail(beforePage){
-			location.href = 'reviewDetail.mc?memberNo=' + hiddenMemberNo.value + '&matNo='+ hiddenMatchingNo.value+ '&from=' + beforePage;
+			var memberNo = document.querySelector('input[name="memberNo"]').value;
+		    var matNo = document.querySelector('input[name="matNo"]').value;
+			location.href = 'reviewDetail.mc?memberNo=' + memberNo + '&matNo='+ matNo+ '&from=' + beforePage;
 		}
 	
 	</script>

@@ -180,6 +180,8 @@ public interface MemberService {
 
 	ArrayList<CareReview> monthScoreList(int memberNo);
 
+	ArrayList<CareReview> sumAvgScore(int memberNo);
+
 
 
 }

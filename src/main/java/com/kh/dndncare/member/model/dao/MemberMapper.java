@@ -176,4 +176,6 @@ public interface MemberMapper {
 
 	ArrayList<CareReview> monthScoreList(int memberNo);
 
+	ArrayList<CareReview> sumAvgScore(int memberNo);
+
 }

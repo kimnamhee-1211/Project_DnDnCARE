@@ -31,6 +31,7 @@ public class CareReview {
 	private String month;
 	private int sumScore;
 	private double avgScore;
+	private int countReview;
 	private int sumMoney; 
 	
 }

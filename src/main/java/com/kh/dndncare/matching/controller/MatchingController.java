@@ -492,6 +492,7 @@ public class MatchingController {
 			case "license" : 
 				if (!caregiverInfoList.containsKey("license")) {
                 caregiverInfoList.put("license", new ArrayList<String>());
+                System.out.println(caregiverInfoList);
             }
             ((ArrayList<String>)caregiverInfoList.get("license")).add(info.getSCategory());
 			}
@@ -530,6 +531,7 @@ public class MatchingController {
 
 	}
 	
+	//후기 작성
 	@PostMapping("writeReview.mc")
 	public String insertReview(@RequestParam("memberNo") int memberNo, @RequestParam(value="reviewScore", defaultValue = "10") int reviewScore, @RequestParam(value="matNo",required = false) int matNo , @RequestParam("reviewContent") String reviewContent, HttpSession session) {
 		int loginUserNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
