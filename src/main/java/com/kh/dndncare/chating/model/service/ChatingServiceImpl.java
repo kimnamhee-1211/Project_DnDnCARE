@@ -1,5 +1,6 @@
 package com.kh.dndncare.chating.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,9 @@ public class ChatingServiceImpl implements ChatingService {
     public List<ChatingRoomMessage> getMessagesByChatRoomNo(int chatRoomNo) {
         return chMapper.getMessagesByChatRoomNo(chatRoomNo);
     }
+	@Override
+	public ArrayList<ChatingRoom> getChatRoomList(int memberNo) {
+		return chMapper.getChatRoomList(memberNo);
+	}
 
 }

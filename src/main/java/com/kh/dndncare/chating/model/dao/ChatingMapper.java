@@ -1,5 +1,6 @@
 package com.kh.dndncare.chating.model.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -24,5 +25,7 @@ public interface ChatingMapper {
 	void insertMessage(ChatingRoomMessage message);
 	
 	List<ChatingRoomMessage> getMessagesByChatRoomNo(int chatRoomNo);
+
+	ArrayList<ChatingRoom> getChatRoomList(int memberNo);
 
 }

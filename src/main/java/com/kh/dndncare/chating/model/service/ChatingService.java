@@ -1,5 +1,6 @@
 package com.kh.dndncare.chating.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.kh.dndncare.chating.model.vo.ChatingRoom;
@@ -20,5 +21,7 @@ public interface ChatingService {
     void saveMessage(ChatingRoomMessage message);
     
     List<ChatingRoomMessage> getMessagesByChatRoomNo(int chatRoomNo);
+
+	ArrayList<ChatingRoom> getChatRoomList(int memberNo);
 
 }

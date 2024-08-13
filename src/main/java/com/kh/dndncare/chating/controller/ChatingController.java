@@ -1,6 +1,7 @@
 package com.kh.dndncare.chating.controller;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,17 @@ public class ChatingController {
 	
 	@Autowired
 	private ChatingService chService;
+	
+	@GetMapping("getChatList.ch")
+	public String getChatList(HttpSession session) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		int memberNo = loginUser.getMemberNo();
+		
+		ArrayList<ChatingRoom> chatRoomList = chService.getChatRoomList(memberNo);
+		
+		
+		return null;
+	}
 	
 
 	

@@ -50,5 +50,11 @@
         WHERE chat_room_no = #{chatRoomNo}
         ORDER BY write_date ASC
     </select>
+    
+    <select id="getChatRoomList" resultType="ChatingRoom">
+    	select * 
+    	from chat_room
+    		join chat_room_member
+    </select>
 	
 </mapper>

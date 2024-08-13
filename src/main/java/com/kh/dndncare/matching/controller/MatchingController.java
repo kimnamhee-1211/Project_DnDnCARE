@@ -172,6 +172,7 @@ public class MatchingController {
 	            HashMap<String,Object> map = new HashMap<String,Object>();
 	            map.put("formattedDates", formattedDates);
 	            map.put("matNo", matNo);
+	            
 	            dateResult = mcService.insertMatchingDate(map);
 	         }
 

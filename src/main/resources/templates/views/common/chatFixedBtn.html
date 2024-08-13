@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="chatFixedBtn">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<style>
+	
+	.chatFixed-container {
+		position:fixed;
+		bottom:50px;
+		right:50px;
+		background-color:#c2efb2;
+		border-radius:50%;
+	}
+	
+	.chatFixed-wrap {
+		display:flex;
+		flex-direction:column;
+		margin-bottom:10px;
+		width:100px;
+		height:100px;
+		align-items:center;
+		color:black;
+	}
+</style>
+<body>
+	<div class="chatFixed-container">
+		<div class="chatFixed-wrap" id="chatFixedBtn">
+		    <img width="70" height="70" src="https://img.icons8.com/carbon-copy/100/chat.png" alt="chat"/>
+		    <strong class="fs-6">채팅</strong>
+		</div>
+	</div>
+	
+	<script th:inline="javascript">
+		const chatFixedBtn = document.getElementById("chatFixedBtn");
+		chatFixedBtn.addEventListener('click',()=>{
+			location.href="getChatList.ch";
+		})
+	</script>
+</body>
+</html>

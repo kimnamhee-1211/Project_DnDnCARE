@@ -1,15 +1,118 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <title>Chat Room</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>트렌디 채팅방</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #chat-page {
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+        #chat-header {
+            background-color: #4a76a8;
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            font-size: 1.2em;
+        }
+        #chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            max-width: 80%;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+        }
+        .message .sender {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .message .content {
+            padding: 10px;
+            border-radius: 18px;
+            display: inline-block;
+            word-wrap: break-word;
+        }
+        .message:not(.self) {
+            align-self: flex-start;
+        }
+        .message:not(.self) .content {
+            background-color: #e9eaeb;
+            color: #000;
+        }
+        .message.self {
+            align-self: flex-end;
+        }
+        .message.self .content {
+            background-color: #4a76a8;
+            color: white;
+        }
+        #message-form {
+            display: flex;
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        #message {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 30px;
+            margin-right: 10px;
+            font-size: 1em;
+        }
+        #send-button {
+            background-color: #4a76a8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        #send-button:hover {
+            background-color: #3a5a78;
+        }
+    </style>
 </head>
 <body>
     <div id="chat-page">
+        <div id="chat-header">**님과의 대화</div>
         <div id="chat-messages"></div>
-        <input type="text" id="message" placeholder="Type a message..."/>
-        <button onclick="sendMessage()">Send</button>
+        <form id="message-form">
+            <input type="text" id="message" placeholder="메시지를 입력하세요..." autocomplete="off">
+            <button type="submit" id="send-button">전송</button>
+        </form>
     </div>
 
     <script th:inline="javascript">
@@ -30,7 +133,8 @@
         });
     }
 
-    function sendMessage() {
+    function sendMessage(event) {
+        event.preventDefault();
         const messageInput = document.getElementById('message');
         const messageContent = messageInput.value.trim();
         if (messageContent && stompClient) {
@@ -48,8 +152,16 @@
 
     function showMessage(message) {
         const messageElement = document.createElement('div');
-        messageElement.textContent = `${message.memberNo}: ${message.chatContent}`;
+        messageElement.className = 'message';
+        if (message.memberNo === userId) {
+            messageElement.classList.add('self');
+        }
+        messageElement.innerHTML = `
+            <span class="sender">${message.memberNo}</span>
+            <span class="content">${message.chatContent}</span>
+        `;
         document.getElementById('chat-messages').appendChild(messageElement);
+        scrollToBottom();
     }
 
     function loadChatHistory() {
@@ -65,8 +177,16 @@
             .catch(error => console.error('Error loading chat history:', error));
     }
 
+    function scrollToBottom() {
+        const chatMessages = document.getElementById('chat-messages');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
     // Connect to WebSocket when the page loads
     connect();
+
+    // Add event listener for form submission
+    document.getElementById('message-form').addEventListener('submit', sendMessage);
     /*]]>*/
     </script>
 </body>
