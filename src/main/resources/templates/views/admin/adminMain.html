@@ -2,47 +2,83 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-	<title>Insert title here</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-<style>
-	#adminContainer{display:grid; grid-template-columns:1fr 200px 1080px 1fr;}
-
-
-</style>
-
+<title>Insert title here</title>
 </head>
 <body>
-	<div><!-- 헤더 -->
-		<nav class="navbar navbar-dark bg-dark" style="height:50px;">
-		  <!-- Navbar content -->
-		</nav>
-	</div>
-	<div id="adminContainer">
-		<div><!-- 왼쪽 공백 --></div>
-		<div><!-- 사이드바 -->
-			<ul class="nav flex-column">
-				<li class="nav-item">
-			    	<a class="nav-link active" aria-current="page" href="#">Active</a>
-			  	</li>
-			  	<li class="nav-item">
-			    	<a class="nav-link" href="#">link</a>
-			  	</li>
-			  	<li class="nav-item">
-			    	<a class="nav-link" href="careInformation.adm">간병백과</a>
-			  	</li>
-			  	<li class="nav-item">
-			    	<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-			  	</li>
-			</ul>
+	<div th:replace="~{common/adminNavbarTemp :: navbarTemp}"></div>
+	<div th:replace="~{common/adminSymbolTemp :: symbolTemp}"></div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div th:replace="~{common/adminbarTemp :: sidebar}"></div>
+
+			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+				<div
+					class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+					<h1 class="h2">Admin DashBoard</h1>
+				</div>
+
+				<h4>최근 일주일 로그인 수</h4>
+				<canvas class="my-4 w-100" id="sevenDays" width="900" height="250"></canvas>
+				
+				<br> 
+				
+				<h4>모든 날짜 로그인 수</h4>
+				<canvas class="my-4 w-100" id="allDays" width="900" height="250"></canvas>
+				
+				<br><br>
+				
+				<div class="row align-items-md-stretch">
+					<div class="col-md-6">
+						<div class="h-100 p-5 text-bg-dark rounded-3">
+							<h2>The Newest Board</h2>
+							<table style="text-align: center; width: 100%;">
+								<tr>
+									<th>No.</th>
+									<th>Title</th>
+									<th>Writer</th>
+									<th>Date</th>
+									<th>Views</th>
+								</tr>
+								<tr th:each="b : ${newestList}" th:if="${b.BOARD_TYPE == 1}">
+									<td>[[${b.BOARD_ID}]]</td>
+									<td>[[${b.BOARD_TITLE}]]</td>
+									<td>[[${b.NICKNAME}]]</td>
+								 	<td>[[${b.BOARD_MODIFY_DATE}]]</td>
+								 	<td>[[${b.BOARD_COUNT}]]</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="h-100 p-5 bg-light border rounded-3">
+							<h2>The Newest Photo Board</h2>
+							<table style="text-align: center; width: 100%;">
+								<tr>
+									<th>No.</th>
+									<th>Title</th>
+									<th>Writer</th>
+									<th>Date</th>
+									<th>Views</th>
+								</tr>
+								<tr th:each="b : ${newestList}" th:if="${b.BOARD_TYPE == 2}">
+									<td>[[${b.BOARD_ID}]]</td>
+									<td>[[${b.BOARD_TITLE}]]</td>
+									<td>[[${b.NICKNAME}]]</td>
+								 	<td>[[${b.BOARD_MODIFY_DATE}]]</td>
+								 	<td>[[${b.BOARD_COUNT}]]</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</main>
 		</div>
-		<div> <!-- 관리자 컨텐츠 -->
-		
-		
-		
-		</div>
-		<div><!-- 오른쪽 공백 --></div>
 	</div>
+	
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
+    <script>
+		
+	</script>
 </body>
 </html>
