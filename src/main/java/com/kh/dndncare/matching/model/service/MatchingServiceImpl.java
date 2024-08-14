@@ -331,8 +331,13 @@ public class MatchingServiceImpl implements MatchingService {
 	//환자 매칭 신청 취소
 	@Override
 	public int matchingCancelP(int matNo, int memberNo) {
-		// TODO Auto-generated method stub
 		return mMapper.matchingCancelP(matNo, memberNo);
+	}
+
+	//간병인 매칭 신청 취소
+	@Override
+	public int matchingCancelC(int matNo, int memberNo) {
+		return mMapper.matchingCancelC(matNo, memberNo);
 	}
 
 
