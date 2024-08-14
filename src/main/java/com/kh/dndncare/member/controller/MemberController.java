@@ -1599,12 +1599,15 @@ public class MemberController {
 	public String moreCaregiverInfo(@RequestParam(value = "page", defaultValue="1") int currentPage, HttpSession session, Model model) {
 		// 자동추천 목록 받아오기
 		Member loginUser = (Member)session.getAttribute("loginUser");
+		System.out.println("소셜로그인 확인 " + loginUser);
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo();
 			ArrayList<CareGiver> completeList = openAiCaregiverChoice(memberNo, 10);
+			System.out.println("컴플리트리스트 " + completeList);
 			
-			if(!completeList.isEmpty()) {
+			if(completeList != null) {
+				
 				model.addAttribute("completeList", completeList);
 			} 
 		}
@@ -2428,7 +2431,7 @@ public class MemberController {
 	public String socialLogin(@RequestParam("code") String code,HttpSession session,Model model,RedirectAttributes ra) {
 		//소셜로그인 없으면 회원가입으로, 있으면 로그인 바로하게 하기
 		System.out.println(code);
-		Member m = mService.selectSocialLogin(code);
+		Member m = mService.selectSocialLogin(code); //loginUser
 		if(m == null) {		//검사해서 없으면 회원가입창으로
 			session.setAttribute("code", code);
 			return "redirect:enroll1View.me";
@@ -2439,6 +2442,7 @@ public class MemberController {
 				ra.addAttribute("memberNo", m.getMemberNo());
 
 				return "redirect:caregiverMain.me";
+				
 			} else if(m.getMemberCategory().equalsIgnoreCase("P")) {
 				
 				
