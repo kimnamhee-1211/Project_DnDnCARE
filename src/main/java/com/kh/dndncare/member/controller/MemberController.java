@@ -732,7 +732,7 @@ public class MemberController {
 		//Info memberInfo = categoryFunction(loginUser.getMemberNo(), true); // 간병인 멤퍼인포정보
 		ArrayList<CareGiver> cg = mService.selectCareGiverList(); // 간병인 정보
 		model.addAttribute("cg",cg);
-		ArrayList<MatMatptInfo> mc = mService.selectMatList(loginUser.getMemberNo());
+		ArrayList<MatMatptInfo> mc = mService.selectMatListPay(loginUser.getMemberNo());
 		System.out.println("메소드 잘되나 확인하기 mc : "+ mc);
 		int payCount = 0;
 		for(MatMatptInfo mcc : mc) {
