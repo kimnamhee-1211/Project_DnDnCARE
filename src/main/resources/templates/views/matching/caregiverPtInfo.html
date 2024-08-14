@@ -60,8 +60,15 @@
 				</table>
 				<!--  종규 삽입부분 아래 -->
 				<div align="center" id="map-size">
-					<div align="cente" class="m2" style="height:350px; width:500px; border:1px solid black;" >
-						<iframe id="myIframe" src="https://map.naver.com/p/search/서울 강북구 솔매로22길 3?c=12.00,0,0,0,dh"></iframe>
+					<div  class="" style="height:350px; width:500px; border:1px solid black;" >
+						<iframe id="myIframe" src="https://map.naver.com/p/search/서울 중구 세종대로 74?c=12.00,0,0,0,dh"></iframe>
+					</div>
+					
+				</div>
+				<div align="center">
+					<div style="width: 500px;border:1px solid black; margin-left: ">
+					<div>서울 중구 세종대로 74</div>
+					<div align="right" style="font-size:12px;"><a href="https://map.naver.com/p/search/서울 중구 세종대로 74">자세히보기</a></div>
 					</div>
 				</div>
 				<!-- 종규 삽입부분 위 -->			
@@ -203,6 +210,19 @@
 	
 	
 	<script th:inline="javascript">
+	
+	
+	//종규 맵
+	const iframe = document.getElementById('myIframe');
+
+        iframe.onload = function() {
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            const scrollWidth = doc.documentElement.scrollWidth;
+            const scrollHeight = doc.documentElement.scrollHeight;
+
+            // 중앙으로 스크롤
+        };
+	
 	
 	/*<![CDATA[*/
 	const matCheck = /*[[${matCheck}]]*/'matCheck';

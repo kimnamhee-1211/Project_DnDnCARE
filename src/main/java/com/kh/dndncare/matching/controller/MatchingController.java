@@ -754,6 +754,8 @@ public class MatchingController {
 		model.addAttribute("matCheck", matCheck);
 		//채팅테스트용 matNo
 		model.addAttribute("matNo",matNo);
+		//종규 주소[1]만 삽입하기
+		
 		
 		return "caregiverPtInfo";
 	}

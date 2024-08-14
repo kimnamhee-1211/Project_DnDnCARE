@@ -74,16 +74,16 @@ iframe {
             width: 2000px;
             height: 2000px;
             position: absolute;
-            top: -150%;
+            top: -250%;
             left: -245%;
             border: none;
         }
         
 #map-size {
             width: 500px;
-            height: 500px;
+            height: 350px;
             border: 1px solid #ccc;
             overflow: hidden;
             position: relative;
-            left: 15%;
+            left: 16.7%;
         }
