@@ -741,17 +741,8 @@ public class MatchingController {
 			m.setDiseaseLevel(diseaseLevel.toString().replace("[", "").replace("]", ""));
 			m.setMobilityStatus(mobilityStatus);
 		}
-		
 	
-		int count = mcService.requestMatCheck(loginUser.getMemberNo(), matNo);
-		String matCheck = "";
-		if(count == 0) {
-			matCheck = "N";
-		}else {
-			matCheck = "Y";
-		}		
 		model.addAttribute("mPI", mPI);
-		model.addAttribute("matCheck", matCheck);
 		//채팅테스트용 matNo
 		model.addAttribute("matNo",matNo);
 		
