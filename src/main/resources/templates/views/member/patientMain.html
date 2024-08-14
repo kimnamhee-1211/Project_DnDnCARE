@@ -26,8 +26,6 @@
 		
 		<div id="upperLeftContents">
 			<div style="height:270px;"><!-- 결제 요청 카드 -->
-				<div class="p-2" th:unless="${payCount != 0}">[[${session.loginUser.memberName}]]님! 현재 결제 건은 없습니다! </div>
-				<th:block th:if="${payCount != 0}">
 					<div class="p-2" id="viewPayList">[[${session.loginUser.memberName}]]님! 결제 요청 건이 [[${payCount}]]개 있어요</div>
 					<div class="pay-content">
 						<th:block th:each="m : ${mc}" th:if="${m.matConfirm == 'W'}">
@@ -44,7 +42,6 @@
 							</table>
 						</th:block>
 					</div>
-				</th:block>
 				<div id="upperContentsBtn" class="m-1 align-middle text-center" style="height:200px;"><!-- 메뉴판 -->
 					<div><button class="custom-btn btn-14" th:onclick="'location.href=\'' + @{/publicMatching.mc} + '\''" style="width:600px; height:100px;">간병인 공개 매칭 신청</button></div>
 					<div>
