@@ -22,7 +22,7 @@ import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.common.ImageUtil;
-import com.kh.dndncare.common.Pagination;
+import com.kh.dndncare.common.Pagination2;
 import com.kh.dndncare.common.ThumbnailUtil;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.Member;
@@ -55,12 +55,13 @@ public class AdminController {
 									HttpServletRequest request) {
 		// 페이징처리된 게시글 목록 조회 : BoardLimit == 7 (**가정**)
 		int listCount = aService.getCareInformationListCount();
-		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 7);
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 7);
 		ArrayList<Board> bList = aService.selectAllCareInformation(pi); // 이래도 되나?
 		
 		if(!bList.isEmpty()) {
 			model.addAttribute("bList", bList);
 			model.addAttribute("pi", pi);
+			System.out.println(pi);
 			model.addAttribute("loc", request.getRequestURI());
 			return "careInformation";
 		} else {
