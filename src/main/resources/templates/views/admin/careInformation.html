@@ -113,11 +113,14 @@
 			})
 			// 간병백과 글 쓰기 페이지로 이동(끝)
 			
-			//글 상세보기 요청(시작)
+			// td에 대한 클릭 이벤트 : 글 상세보기 요청(시작)
 			const tdList = document.getElementById('careInformationTable').querySelectorAll('td');
 			const detailDiv = document.querySelector('#careInformationDetail'); // 글 내용을 삽입해야할 div
+			let boardContent = '';
+			let boardTitle = '';
+			let boardNo = '';
 			const btnDiv = detailDiv.nextElementSibling;
-			const btnList = btnDiv.children;
+			const btnList = btnDiv.children; // 수정하기, 내리기 버튼
 			
 			for(let i = 0; i < tdList.length; i++){
 				let index = i % 6;
@@ -129,6 +132,14 @@
 								other.parentElement.style.background = 'white'; // 클릭하지 않은 tr의 배경색을 white로 변경
 							}
 						}
+						
+						if(btnList.length == 4) { 
+							btnList[3].remove(); // [등록하기], [취소하기] 버튼을 삭제한다.
+							btnList[2].remove();
+							btnList[1].style.display = 'inline';
+							btnList[0].style.display = 'inline';
+						}
+						
 						this.parentElement.style.background = 'lightgray'; // 클릭한 tr의 배경색을 lightgray로 변경
 						
 						// 상세보기 div에 출력할 노드 작성(시작)
@@ -138,18 +149,19 @@
 						
 						const br = document.createElement('br');
 						
-						let content = '';
 						/*<![CDATA[*/
 						const bList = /*[[${bList}]]*/'bList'
 						/*]]>*/
 						for(const b of bList){
 							if(this.parentElement.children[0].innerText == b.boardNo){
-								content = b.boardContent;
+								boardContent = b.boardContent;
+								boardTitle = b.boardTitle;
+								boardNo = b.boardNo;
 								break;
 							}
 						}
 						
-						detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + content;
+						detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + boardContent;
 						
 						for(let btn of btnList){
 							btn.classList.remove('btn-light');
@@ -162,7 +174,7 @@
 			
 			// 글 조회에서 수정과 삭제 요청 (시작)
 			for(let i = 0; i < btnList.length; i++){
-				btnList[i].addEventListener('click', () => {
+				btnList[i].addEventListener('click', function() {
 					// 현재 조회중인 글에 대한 번호를 가져온다.
 					const trList = document.querySelectorAll('tr');
 					let targetTr = '';
@@ -175,14 +187,86 @@
 					}
 					
 					if(i == 0){ // 수정하기 버튼 클릭
+						const form = document.createElement('form');
+						form.setAttribute('method', 'post');
+						form.setAttribute('action', 'modifyCareInformation.adm');
+						form.setAttribute('id', id="modifyForm");
+						
+						const bNoInput = document.createElement('input'); // 글 번호 
+						bNoInput.setAttribute('type', 'hidden');
+						bNoInput.setAttribute('name', 'boardNo');
+						bNoInput.value = boardNo;
+						
+						const bContentInput = document.createElement('input'); // 글 내용 저장용  
+						bContentInput.setAttribute('type', 'hidden');
+						bContentInput.setAttribute('name', 'boardContent');
+						
+						
+						const titleSpan = document.createElement('span');
+						titleSpan.className = 'badge rounded-pill text-bg-dark';
+						titleSpan.style.fontSize = 18;
+						titleSpan.innerText = '제목';
+						
+						const br1 = document.createElement('br');
+						const br2 = document.createElement('br');
+						
+						const input = document.createElement('input');
+						input.setAttribute('type', 'text');
+						input.setAttribute('name', 'boardTitle');
+						input.value = boardTitle;
+						input.className = 'form-control';
+						
+						const br3 = document.createElement('br');
+						
 						const editorDiv = document.createElement('div');
-						editorDiv.setAttribute('id', 'editor');	
+						editorDiv.setAttribute('id', 'editor');
 						
-						// 여기여기
+					
+						form.append(bNoInput);
+						form.append(bContentInput);
+						form.append(titleSpan);
+						form.append(br1);
+						form.append(br2);
+						form.append(input);
+						form.append(br3);
+						form.append(editorDiv);
 						
+						detailDiv.innerHTML = '';
+						detailDiv.append(form);
 						
+					 	const editor = new toastui.Editor({
+				            el: document.querySelector('#editor'), // 에디터를 적용할 요소 (컨테이너)
+				            height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
+				            initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
+				            initialValue: '내용을 입력해 주세요.',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
+				            previewStyle: 'vertical'                // 마크다운 프리뷰 스타일 (tab || vertical)
+				        });
 						
+					 	editor.setHTML(boardContent); // ** 기존글 내용 삽입 **
 						
+					 	// 등록하기 버튼 생성
+					 	this.style.display = 'none';
+					 	let insertBtn = document.createElement('button');
+					 	insertBtn.className = 'btn btn-primary';
+					 	insertBtn.innerText = '등록하기';
+					 	
+					 	// 취소하기 버튼 생성
+					 	this.nextElementSibling.style.display = 'none';
+					 	let cancleBtn = document.createElement('button');
+					 	cancleBtn.className = 'btn btn-danger';
+					 	cancleBtn.innerText = '취소하기';
+					 	
+					 	// 버튼 Div에 [등록하기], [취소하기] 버튼을 넣어주기
+					 	btnDiv.append(insertBtn);
+					 	btnDiv.append(' ');
+					 	btnDiv.append(cancleBtn);
+					 	
+					 	
+					 	insertBtn.addEventListener('click', () => { // 테이블의 다른 행을 클릭하면 제거될 요소이기 때문에 여기서 이벤트를 지정해도 괜찮음
+					 		document.getElementsByName('boardContent')[0].value = editor.getHTML();
+					 		document.querySelector('#modifyForm').submit();
+					 	});
+					 	
 					} else if(i == 1){ // 삭제하기 버튼 클릭
 						$.ajax({
 							url: 'deleteCareInformation.adm',
