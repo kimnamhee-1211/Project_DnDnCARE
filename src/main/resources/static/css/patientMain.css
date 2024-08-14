@@ -279,7 +279,6 @@ a {
 	margin:16px;
 	margin-bottom:0px;
 	border-bottom:2px solid #8dd986;
-<<<<<<< HEAD
 }
 
 
@@ -305,3 +304,9 @@ a {
 	display:grid; grid-template-columns: 1fr 1fr;
 }
 
+.card-title {
+    white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis; /* 넘치는 부분에 ... 표시 */
+    width:96px;
+}
