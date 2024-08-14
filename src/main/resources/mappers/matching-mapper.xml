@@ -423,7 +423,7 @@
 	<!--//나(환자)의 현재 매칭 정보- 간병인이 신청 -->
 	<select id="getMyMatchingPN">
         select mat_care_pending.mat_no, mat_care_pending.member_no, careGiver.care_img, member.member_national, 
-				member.member_gender, member.member_name, member.member_age
+				member.member_gender, member.member_name, member.member_age, mat_pt_info.group_leader, matching.pt_count
 		from careGiver
 			join member on (careGiver.member_no = member.member_no)
 			join mat_care_pending on (member.member_no = mat_care_pending.member_no)
