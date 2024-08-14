@@ -2527,6 +2527,29 @@ public class MemberController {
 		
 	}
 	
+	@GetMapping("goCMoreRequest.me")
+	public String goCMoreRequestView(HttpSession session, Model model) {		
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		ArrayList<RequestMatPt> requestMatPt = mService.getRequestMatPt(loginUser.getMemberNo());
+		System.out.println(requestMatPt);
+		
+		for(int i = 0 ; i < requestMatPt.size(); i ++) {
+			int realAge = AgeCalculator.calculateAge(requestMatPt.get(i).getPtAge());
+			requestMatPt.get(i).setPtRealAge(realAge);
+			
+			if((Integer)requestMatPt.get(i).getPtCount()> 1) {
+				if(requestMatPt.get(i).getGroupLeader().equals("N")) {
+					requestMatPt.remove(i);
+				}
+			}
+		}
+		model.addAttribute("requestMatPt", requestMatPt);		
+		return "cMoreRequest";
+	}
+	
+	
 	
 	
 	@GetMapping("nn.me")

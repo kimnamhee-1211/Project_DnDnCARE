@@ -83,7 +83,7 @@
 	        <div><!--매칭정보 : 가로 500, 세로 700-->
 	        	<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
 					<span style="margin-top:10px;">[[${loginUserName}]]님에게 들어온 매칭 신청</span>
-           			<button type="button" class="btn-select">전체 보기</button>
+           			<button type="button" class="btn-select" onclick="location.href='goCMoreRequest.me'">전체 보기</button>
             	</div>
             	<br/>
 	            <table class="table mainTable">
@@ -302,10 +302,11 @@
 		     <div class="modal-footer">
 		       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 		     </div>
-		  </div>
-		</div>     
-   	 </div>
+		   </div>
+		 </div>     
+   	   </div>
     
+    </div>
     
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
@@ -522,6 +523,8 @@
 	    	// 간병정보(간병백과) 페이지로 이동 (끝)
 	    	
 	    	
+	    	
+
 	    	
     	}
     	
