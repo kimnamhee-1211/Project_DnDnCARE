@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.dndncare.member.model.vo.Member;
+
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -15,7 +17,18 @@ public class HomeController {
 	
 	
 	@GetMapping("home.do")
-	public String home() {
+	public String home(HttpSession session) {
+		
+		Member loginUser =(Member)session.getAttribute("loginUser");
+		
+		if(loginUser != null) {
+			switch(loginUser.getMemberCategory()) {
+			case "C":
+				return "redirect:caregiverMain.me"; 
+			case "P": 
+				return "redirect:patientMain.me";
+			}
+		}
 		return "home";
 	}
 	
