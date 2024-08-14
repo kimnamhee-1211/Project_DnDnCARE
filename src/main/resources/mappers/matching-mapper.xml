@@ -411,8 +411,8 @@
 	<!--//나(환자)의 현재 매칭 정보- 진행 + 결제대기 + 환자가 신청 -->
 	<select id="getMyMatchingP" resultType="CareGiverMin">
 		select matching.mat_no, matching.member_no, careGiver.care_img, member.member_national, 
-				member.member_gender, member.member_name, member.member_age,
-				matching.end_dt, matching.begin_dt, matching.mat_confirm
+				member.member_gender, member.member_name, member.member_age, mat_pt_info.group_leader,
+				matching.end_dt, matching.begin_dt, matching.mat_confirm, matching.pt_count
 		from careGiver
 			join member on (careGiver.member_no = member.member_no)
 			join matching on (member.member_no = matching.member_no)
@@ -494,6 +494,21 @@
 		where mat_no = #{matNo}
 			and member_no = #{memberNo}		
 	</delete>
+
+
+	<!--pt_count get  -->
+	<select id="getPtCount" resultType="_int">
+		select pt_count
+		from matching
+		where mat_no = #{matNo};	
+	</select>
+
+	
+	<select id="getGroupLeader" resultType="string">
+		select group_leader
+		from mat_pt_info
+		where mat_no = #{matNo} and pt_no = #{ptNo}	
+	</select>
 
 
 

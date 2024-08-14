@@ -137,6 +137,10 @@ public interface MatchingMapper {
 	
 	int matchingCancelC(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
 
+	int getPtCount(int matNo);
+
+	String getGroupLeader(@Param("matNo") int matNo, @Param("ptNo") int ptNo);
+
 	
 
 

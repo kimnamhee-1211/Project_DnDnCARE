@@ -160,6 +160,12 @@ public interface MatchingService {
 	
 	//간병인 매칭 신청 취소
 	int matchingCancelC(int matNo,  int memberNo);
+	
+	//ptCount get
+	int getPtCount(int matNo);
+	
+	//loginUser가 그룹 리더인지 아닌지 확인
+	String getGroupLeader(int matNo, int ptNo);
 
 
 

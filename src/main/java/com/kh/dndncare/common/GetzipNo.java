@@ -11,11 +11,11 @@ public class GetzipNo {
 	
 
 	public static String ApiExplorer(String addBefor){
-	        StringBuilder urlBuilder = new StringBuilder("http://openapi.epost.go.kr/postal/retrieveNewAdressAreaCdSearchAllService/retrieveNewAdressAreaCdSearchAllService/getNewAddressListAreaCdSearchAll"); /*URL*/
 	        StringBuilder sb = new StringBuilder();
 	        
 	        try {
-				urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=AcjBypl1iy8gVIWLl%2B%2FmdUCYl0DqiUIxQrZbFaQzHNOUyRlcWEM88%2BNaOzYz2r6B9TBYowERnVXRq19kr%2Fwzyw%3D%3D");
+	        	 StringBuilder urlBuilder = new StringBuilder("http://openapi.epost.go.kr/postal/retrieveNewAdressAreaCdSearchAllService/retrieveNewAdressAreaCdSearchAllService/getNewAddressListAreaCdSearchAll"); /*URL*/
+	        	 urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=" + URLEncoder.encode("AcjBypl1iy8gVIWLl%2B%2FmdUCYl0DqiUIxQrZbFaQzHNOUyRlcWEM88%2BNaOzYz2r6B9TBYowERnVXRq19kr%2Fwzyw%3D%3D", "UTF-8")); /*검색어*/
 				/*Service Key*/
 		        urlBuilder.append("&" + URLEncoder.encode("srchwrd","UTF-8") + "=" + URLEncoder.encode(addBefor, "UTF-8")); /*검색어*/
 		        urlBuilder.append("&" + URLEncoder.encode("countPerPage","UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); /*페이지당 출력될 개수를 지정(최대50)*/
@@ -41,8 +41,6 @@ public class GetzipNo {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} 
-	        
-	        System.out.println(sb.toString());
 	        
 	        return sb.toString();
 	}

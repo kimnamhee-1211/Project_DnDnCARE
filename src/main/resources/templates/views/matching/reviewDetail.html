@@ -23,8 +23,8 @@
 			      			<div style="display:none" th:text="${memberNo}" class="memberNo"></div>	
 			      		<div align="center">
 							<button th:if="${matNo == null && beforePage == null}" type="button" class="m-4 btn-maincolor" id="requestMatModal">매칭 신청하기</button>
-							<button th:if="${matNo != null && beforePage == 'want'}" type="button" class="m-4 btn-maincolor" id="cancellMatModal">매칭 신청 취소</button>
-							<button th:if="${matNo != null && beforePage == 'wanted'}" type="button" class="m-4 btn-maincolor" id="matOkModal">매칭 승낙하기</button>	
+							<button th:if="${matNo != null && beforePage == 'want' && leader == 'Y'}" type="button" class="m-4 btn-maincolor" id="cancellMatModal">매칭 신청 취소</button>
+							<button th:if="${matNo != null && beforePage == 'wanted' && leader == 'Y'}" type="button" class="m-4 btn-maincolor" id="matOkModal">매칭 승낙하기</button>	
 							<button th:if="${matNo != null && beforePage == 'myInfoMatchingHistoryP'}" type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton">후기 작성하기</button>		
 						</div>		      		
 		      		</div>

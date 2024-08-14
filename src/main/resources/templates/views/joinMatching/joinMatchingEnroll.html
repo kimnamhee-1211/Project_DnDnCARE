@@ -160,10 +160,10 @@
 	<script th:inline="javascript">
 		
 		//입력값 검사 
-		const check(data)=>{
+		const check=(data)=>{
 			for(const i of data){
 				if(i.value.trim() == ''){
-					input.focus();
+					i.focus();
 					return false;
 				}
 			}

@@ -90,7 +90,8 @@
 									<thead></thead>
 								</table>
 								<div id="cInfo"></div>
-								<button class="btn btn-success mx-auto matCan" style="margin:10px 45%;">매칭 신청 취소</button>
+								<button th:if="${myMat.groupLeader == 'Y'}" class="btn btn-success mx-auto matCan" style="margin:10px 45%;">매칭 신청 취소</button>
+								
 							</div>
 						</div>
 					</div>
@@ -117,7 +118,7 @@
 								<thead></thead>
 							</table>
 							<div id="cInfo"></div>
-							<button class="btn btn-success mx-auto justify-content-md-center matOk">매칭 승낙</button>
+							<button th:if="${myMat.groupLeader == 'Y'}" class="btn btn-success mx-auto justify-content-md-center matOk">매칭 승낙</button>
 						</div>
 				    </div>
 				  </div>

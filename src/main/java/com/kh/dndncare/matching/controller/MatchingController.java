@@ -307,7 +307,11 @@ public class MatchingController {
 		
 		String zipCode = GetzipNo.ApiExplorer(hospitalAddress);
 		System.out.println("zipCode = " + zipCode);
-	
+//		String[] strArr = zipCode.split(">");
+//		System.out.println(strArr.toString());
+//		String code = strArr[4].substring(10, 15);
+//		System.out.println(code);
+		
 		return "joinMatchingEnroll";
 	}
 	
@@ -592,6 +596,25 @@ public class MatchingController {
 		System.out.println("이전페이지"+beforePage);
 		System.out.println("매칭"+caregiverInfoList);
 		
+		
+		//공동매칭일 경우 loginUser가 방장인지 아닌지 알아보기
+		String leader = "N";
+		if(matNo != null) {
+			leader = "Y";
+			int matNo2 = (int)matNo;
+			int ptCount = mcService.getPtCount(matNo2);			
+			if(ptCount > 1){
+				//loginUser가 그룹 리더인지 아닌지 확인
+				Member loginUser = (Member)session.getAttribute("loginUser");	
+				int loginPtNo = mcService.getPtNo(loginUser.getMemberNo());
+				String gl = mcService.getGroupLeader(matNo2, loginPtNo);
+				if(gl.equals("N")) {
+					leader = "N";
+				}
+			}
+		}
+				
+		model.addAttribute("leader", leader);
 		model.addAttribute("memberNo", memberNo);
 		model.addAttribute("matNo", matNo);
 		model.addAttribute("beforePage", beforePage);
@@ -1010,8 +1033,8 @@ public class MatchingController {
 	@GetMapping("goMyMatchingP.mc")
 	public String goMyMatchingP(HttpSession session, Model model) {
 		
-		Member loginUser = (Member)session.getAttribute("loginUser");
-		
+		Member loginUser = (Member)session.getAttribute("loginUser"); 
+			
 		int loginPt = mcService.getPtNo(loginUser.getMemberNo());
 		
 		//매칭 내역 (진행 + 결제대기 + 환자자 신청)
@@ -1028,6 +1051,12 @@ public class MatchingController {
 			//노출 나이 set
 			int realAge = AgeCalculator.calculateAge(i.getMemberAge());
 			i.setAge(realAge);
+
+			
+			if(i.getPtCount() == 1) {
+				i.setGroupLeader("Y");
+			}			
+			
 						
 			//매칭 진행 중
 			if(i.getMatConfirm().equals("Y")) {
@@ -1047,7 +1076,7 @@ public class MatchingController {
 		        }
 			}
 			
-			//매칭신청 받은 내역
+			//매칭신청한 내역
 			if(i.getMatConfirm().equals("N")) {
 		        Date beginDt = i.getBeginDt(); 
 		        LocalDate beginLocalDate = beginDt.toLocalDate();		        
@@ -1057,21 +1086,26 @@ public class MatchingController {
 			}	
 		}
 		
-		//매칭 내역 (간병인이 나(환자)를 신청)
+		//매칭 신청 받은 내역 (간병인이 나(환자)를 신청)
 		ArrayList<CareGiverMin> myMatchingMat = mcService. getMyMatchingPN(loginPt);
 		for(CareGiverMin i : myMatchingMat) {
 			
 			//노출 나이 set
 			int realAge = AgeCalculator.calculateAge(i.getMemberAge());
 			i.setAge(realAge);
+			
+			if(i.getPtCount() == 1) {
+				i.setGroupLeader("Y");
+			}	
+			
 		}
 		
-
+		
 		System.out.println("myMatching : " +  myMatching);
 		System.out.println("myMatchingW : " +  myMatchingW);
 		System.out.println("myRequestMatC : " +  myRequestMatC);
 		System.out.println("myMatchingMat : " +  myMatchingMat);
-			
+		
 		model.addAttribute("myMatching", myMatching);
 		model.addAttribute("myMatchingW", myMatchingW);
 		model.addAttribute("myRequestMatC", myRequestMatC);
