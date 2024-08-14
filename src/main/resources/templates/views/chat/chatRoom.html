@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>트렌디 채팅방</title>
+    <title>든든케어 채팅</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <style>
@@ -31,7 +31,7 @@
             height: 80vh;
         }
         #chat-header {
-            background-color: #4a76a8;
+            background-color: #8dd986;
             color: white;
             padding: 20px;
             border-radius: 8px 8px 0 0;
@@ -50,6 +50,8 @@
             line-height: 1.4;
             display: flex;
             flex-direction: column;
+            position: relative;
+        	padding-bottom: 20px;
         }
         .message .sender {
             font-weight: bold;
@@ -62,7 +64,23 @@
             border-radius: 18px;
             display: inline-block;
             word-wrap: break-word;
+
         }
+        
+		.write-date {
+	        position: absolute;
+	        bottom: 0;
+	        font-size: 12px;
+	        color: #888;
+	    }
+	    .message:not(.self) .write-date {
+	 
+	         right: 200;
+	    }
+	    .message.self .write-date {
+	        
+	         left: 200;
+	    }
         .message:not(.self) {
             align-self: flex-start;
         }
@@ -74,7 +92,7 @@
             align-self: flex-end;
         }
         .message.self .content {
-            background-color: #4a76a8;
+            background-color: #8dd986;
             color: white;
         }
         #message-form {
@@ -91,7 +109,7 @@
             font-size: 1em;
         }
         #send-button {
-            background-color: #4a76a8;
+            background-color: black;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -101,7 +119,7 @@
             transition: background-color 0.3s;
         }
         #send-button:hover {
-            background-color: #3a5a78;
+            background-color: gray;
         }
     </style>
 </head>
@@ -119,6 +137,8 @@
     /*<![CDATA[*/
     const chatRoomId = /*[[${chatRoomId}]]*/ 'default-room-id';
     const userId = /*[[${userId}]]*/ 'default-user-id';
+    const memberName = /*[[${memberName}]]*/ 'default-member-name';
+    
     let stompClient = null;
 
     function connect() {
@@ -127,38 +147,96 @@
         stompClient.connect({}, function(frame) {
             console.log('Connected: ' + frame);
             stompClient.subscribe('/room/chat/' + chatRoomId, function(message) {
-                showMessage(JSON.parse(message.body));
+                showMessage2(JSON.parse(message.body));
             });
             loadChatHistory();
         });
     }
+    
+    
 
     function sendMessage(event) {
         event.preventDefault();
         const messageInput = document.getElementById('message');
         const messageContent = messageInput.value.trim();
         if (messageContent && stompClient) {
+            const now = new Date();
+            const koreaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
             const chatMessage = {
                 chatRoomNo: chatRoomId,
                 memberNo: userId,
+                memberName:memberName,
                 chatContent: messageContent,
-                readCount: 0,
-                writeDate: new Date()
+                writeDate: koreaTime.toISOString() // 서버로 ISO 형식의 문자열 전송
             };
             stompClient.send("/send/chat/" + chatRoomId, {}, JSON.stringify(chatMessage));
+            
             messageInput.value = '';
         }
     }
 
-    function showMessage(message) {
+/*     function showMessage(message) {
         const messageElement = document.createElement('div');
         messageElement.className = 'message';
         if (message.memberNo === userId) {
             messageElement.classList.add('self');
         }
+
+        // 날짜 파싱 및 포맷팅
+        let date;
+        if (message.writeDate && message.writeDate.includes('-')) {
+            // 서버에서 받은 날짜가 유효한 경우
+            const [year, month, day] = message.writeDate.split('-');
+            date = new Date(year, month - 1, day);
+            // 현재 시간 정보 추가
+            date.setHours(new Date().getHours());
+            date.setMinutes(new Date().getMinutes());
+        } else {
+            // 유효하지 않은 경우 현재 시간 사용
+            date = new Date();
+        }
+
+        //console.log("Parsed date:", date);
+
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const ampm = hours >= 12 ? '오후' : '오전';
+        const formattedHours = hours % 12 || 12;
+        const formattedTime = `${ampm} ${formattedHours}:${minutes.toString().padStart(2, '0')}`;
+
         messageElement.innerHTML = `
-            <span class="sender">${message.memberNo}</span>
+            <span class="sender">${message.memberName}</span>
             <span class="content">${message.chatContent}</span>
+            <span class="write-date">${formattedTime}</span>
+        `;
+        document.getElementById('chat-messages').appendChild(messageElement);
+        scrollToBottom();
+    } */
+    
+    function showMessage2(message) {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message';
+        if (message.memberNo === userId) {
+            messageElement.classList.add('self');
+        }
+
+        let formattedTime;
+        if (message.writeDate) {
+            const date = new Date(message.writeDate);
+            const koreaTime = new Date(date.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
+            const hours = koreaTime.getHours();
+            const minutes = koreaTime.getMinutes();
+            const ampm = hours >= 12 ? '오후' : '오전';
+            const formattedHours = hours % 12 || 12;
+            formattedTime = `${ampm} ${formattedHours}:${minutes.toString().padStart(2, '0')}`;
+        } else {
+            formattedTime = 'Invalid Date';
+        }
+
+        messageElement.innerHTML = `
+            <span class="sender">${message.memberName}</span>
+            <span class="content">${message.chatContent}</span>
+            <span class="write-date">${formattedTime}</span>
         `;
         document.getElementById('chat-messages').appendChild(messageElement);
         scrollToBottom();
@@ -169,7 +247,8 @@
             .then(response => response.json())
             .then(data => {
                 if (Array.isArray(data)) {
-                    data.forEach(showMessage);
+                	console.log(data);
+                    data.forEach(showMessage2);
                 } else {
                     console.error('Unexpected data format:', data);
                 }

@@ -16,8 +16,8 @@ public class ChatingServiceImpl implements ChatingService {
 	@Autowired
 	private ChatingMapper chMapper;
 	@Override
-	public ChatingRoom getChatRoom(int memberNo, int matNo) {
-		return chMapper.getChatRoom(memberNo,matNo);
+	public ChatingRoom getChatRoom(int memberNo, int chatRoomNo) {
+		return chMapper.getChatRoom(memberNo,chatRoomNo);
 	}
 	@Override
 	public int getMatMemberNo(int matPtNo) {
@@ -47,6 +47,10 @@ public class ChatingServiceImpl implements ChatingService {
 	@Override
 	public ArrayList<ChatingRoom> getChatRoomList(int memberNo) {
 		return chMapper.getChatRoomList(memberNo);
+	}
+	@Override
+	public List<ChatingRoomMessage> getLatestMessages(int memberNo) {
+		return chMapper.getLatestMessages(memberNo);
 	}
 
 }

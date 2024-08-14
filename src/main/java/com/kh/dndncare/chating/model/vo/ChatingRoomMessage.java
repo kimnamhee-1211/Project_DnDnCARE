@@ -1,6 +1,6 @@
 package com.kh.dndncare.chating.model.vo;
 
-import java.sql.Date;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,4 +20,5 @@ public class ChatingRoomMessage {
 	private String chatContent;
 	private int readCount;
 	private Date writeDate;
+	private String memberName;
 }

@@ -5,7 +5,7 @@
 		select *
 		from chat_room
 			join chat_room_member using(chat_room_no)
-		where member_no = #{memberNo} and mat_no = #{matNo}
+		where member_no = #{memberNo} and chat_room_no = #{chatRoomNo}
 	</select>
 	
 	<select id="getMatMemberNo" resultType="_int">
@@ -46,15 +46,32 @@
     </insert>
 
     <select id="getMessagesByChatRoomNo" parameterType="int" resultType="ChatingRoomMessage">
-        SELECT * FROM chat_room_message
+        SELECT * 
+        FROM chat_room_message
+        	JOIN MEMBER USING(MEMBER_NO)
         WHERE chat_room_no = #{chatRoomNo}
         ORDER BY write_date ASC
     </select>
     
-    <select id="getChatRoomList" resultType="ChatingRoom">
+    <select id="getChatRoomList" resultType="map">
     	select * 
     	from chat_room
-    		join chat_room_member
+    		join chat_room_member using(chat_room_no)
+    	where member_no = #{memberNo}
+    </select>
+    
+    <select id="getLatestMessages"  resultType="ChatingRoomMessage">
+        SELECT m.*
+        FROM chat_room_message m
+        INNER JOIN (
+            SELECT chat_room_no, MAX(chat_massage_no) as max_massage_no
+            FROM chat_room_message
+            GROUP BY chat_room_no
+        ) latest ON m.chat_room_no = latest.chat_room_no 
+            AND m.chat_massage_no = latest.max_massage_no
+        INNER JOIN chat_room_member crm ON m.chat_room_no = crm.chat_room_no
+        WHERE crm.member_no = #{memberNo}
+        ORDER BY m.write_date DESC
     </select>
 	
 </mapper>

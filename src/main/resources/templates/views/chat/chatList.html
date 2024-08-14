@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 채팅방 목록</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .chat-list-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .chat-room-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .chat-room-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 10px;
+            transition: background-color 0.3s ease;
+        }
+        .chat-room-item:last-child {
+            border-bottom: none;
+        }
+        .chat-room-item:hover {
+            background-color: #f9f9f9;
+        }
+        .chat-room-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-room-info {
+            flex-grow: 1;
+        }
+        .chat-room-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .latest-message {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .message-time {
+            font-size: 0.8em;
+            color: #95a5a6;
+        }
+        .no-messages {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-list-container">
+        <h1>내 채팅방 목록</h1>
+        <ul class="chat-room-list" th:if="${not #lists.isEmpty(latestMessages)}">
+            <li class="chat-room-item" th:each="message : ${latestMessages}">
+                <a th:href="@{createAndGetChat.ch(chatRoomNo=${message.chatRoomNo})}" class="chat-room-link">
+				    <div class="chat-room-info">
+				        <div class="chat-room-name" th:text="${'채팅방 ' + message.chatRoomNo}">채팅방 이름</div>
+				        <div class="latest-message" th:text="${message.chatContent}">최근 메시지</div>
+				    </div>
+				    <div class="message-time" th:text="${#dates.format(message.writeDate, 'yyyy-MM-dd HH:mm')}">시간</div>
+				</a>
+
+            </li>
+        </ul>
+        <div class="no-messages" th:if="${#lists.isEmpty(latestMessages)}">
+            참여 중인 채팅방이 없습니다.
+        </div>
+    </div>
+</body>
+</html>
