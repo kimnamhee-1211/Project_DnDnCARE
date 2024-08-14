@@ -499,4 +499,10 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.avgReviewScore2(memberNo);
 	}
 
+
+	@Override
+	public ArrayList<MatMatptInfo> selectMatListPay(int memberNo) {
+		return mMapper.selectMatListPay(memberNo);
+	}
+
 }

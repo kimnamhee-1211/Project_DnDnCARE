@@ -813,4 +813,15 @@
 		where member_no=#{memberNo} and review_status='Y'
 	</select>
 	
+	<select id="selectMatListPay" resultType="MatMatptInfo">
+		select *
+		from mat_pt_info
+    		left join matching ON mat_pt_info.mat_no = matching.mat_no
+            left join member on matching.member_no =member.member_no
+            left join caregiver on matching.member_no = caregiver.member_no
+		where mat_confirm != 'N' and pt_no = (select pt_no
+						from patient
+						where member_no = #{memberNo})
+	</select>
+	
 </mapper>

@@ -191,6 +191,8 @@ public interface MemberService {
 
 	Double avgReviewScore2(int memberNo);
 
+	ArrayList<MatMatptInfo> selectMatListPay(int memberNo);
+
 
 
 }
