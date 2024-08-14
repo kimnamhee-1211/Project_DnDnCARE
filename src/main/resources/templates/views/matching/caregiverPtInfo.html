@@ -107,8 +107,7 @@
 				<button type="button" th:if="${MatMemberNo >= 0}" class="signIn-btn mt-4" id="modalOfenOk"><span>매칭 승낙</span></button>
 				<button type="button" th:if="${MatMemberNo < 0}" class="signIn-btn mt-4" id="modalOfen"><span>매칭 신청</span></button>
 				<button type="button" id="startChat">채팅하기</button>
-				<button type="button" class="signUp-btn mt-4" id="backButton"><span>이전으로</span></button>
-				[[${mPI[0].ptNo}]]
+				<button type="button" onclick="history.go(-1)" class="signUp-btn mt-4" id="backButton"><span>이전으로</span></button>
 			</div>
 		</main>
 	</div>

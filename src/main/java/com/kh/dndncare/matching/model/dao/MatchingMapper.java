@@ -130,6 +130,8 @@ public interface MatchingMapper {
 
 	int CheckMatMemNo(int matNo);
 
+	int matchingCancelP(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
+
 	
 
 

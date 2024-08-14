@@ -23,8 +23,9 @@
 			      			<div style="display:none" th:text="${memberNo}" class="memberNo"></div>	
 			      		<div align="center">
 							<button th:if="${matNo == null && beforePage == null}" type="button" class="m-4 btn-maincolor" id="requestMatModal">매칭 신청하기</button>
-							<button th:if="${matNo != null && beforePage == null}" type="button" class="m-4 btn-maincolor" id="matOkModal">매칭 승낙하기</button>	
-							<button th:if="${matNo != null && beforePage != null}" type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton">후기 작성하기</button>		
+							<button th:if="${matNo != null && beforePage == 'want'}" type="button" class="m-4 btn-maincolor" id="cancellMatModal">매칭 신청 취소</button>
+							<button th:if="${matNo != null && beforePage == 'wanted'}" type="button" class="m-4 btn-maincolor" id="matOkModal">매칭 승낙하기</button>	
+							<button th:if="${matNo != null && beforePage == 'myInfoMatchingHistoryP'}" type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton">후기 작성하기</button>		
 						</div>		      		
 		      		</div>
 		      		<div class="col-7 m-3 p-3 testBorder justify-content-md-center">
@@ -173,8 +174,8 @@
 					<div>[[${rList.reviewContent}]]</div>
 			</div>
 		</div>
-		<div class="sign-btn d-flex justify-content-center mx-auto" style="weight:300px;" th:if="${beforePage == null}">
-			<button type="button" class="signUp-btn mt-4 justify-content-md-center" id="backButton"><span>이전으로</span></button>		
+		<div class="sign-btn d-flex justify-content-center mx-auto" style="weight:300px; margin-bottom:100px;">
+			<button type="button" onclick="history.go(-1)" class="signUp-btn mt-4 justify-content-md-center" id="backButton"><span>이전으로</span></button>		
 		</div>
 	</main> 
 	
@@ -226,11 +227,11 @@
 	</div>	
 	
 		<!-- 이미 해당 매칭방에 매칭 신청을 한 경우 -->	
-	<div class="modal fade" id="matCheckY" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="matCheckY" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-centered modal-lg">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청</h3>
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel2">매칭 신청</h3>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body" style="margin:30px;">
@@ -242,6 +243,30 @@
 	        </h5>    
 	      </div>
 	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	
+	
+	<!-- 매칭 신청 취소 모달 -->	
+	<div class="modal fade" id="matCanModal" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel3">매칭 신청 취소</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h4 class="h4 mb-4 fw-bold">
+	        	[[${caregiverIntro.memberName}]]님에게 보낸 매칭 신청을 취소하시겠습니까?
+	        </h4>
+	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청이 취소됩니다.<br>한 번 취소한 매칭 신청은 회복이 불가능합니다.</h5>	        
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" id="matCan">매칭 신청</button>
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 	      </div>
 	    </div>
@@ -329,7 +354,7 @@
 			//남희 : 매칭 신청
 			const requestMatModal = document.querySelector('#requestMatModal');
 			if(requestMatModal){
-				requestMatModal.addEventListener('click', ()=>{
+				requestMatModal.addEventListener('click', ()=>{									
 					$('#matCheckN').modal('show');	
 
 				});
@@ -349,6 +374,20 @@
 			document.querySelector('#requestMatchingOk').addEventListener('click', ()=>{
 				location.href = 'matchingApproveP.mc?matNo=' + matNo + '&memberNo=' + memberNo;
 			});
+			
+						
+						
+			//남희 : 매칭 신청 취소
+			const cancellMatModal = document.querySelector('#cancellMatModal');
+			if(cancellMatModal){
+				cancellMatModal.addEventListener('click', ()=>{
+					$('#matCanModal').modal('show');	
+				});
+			}
+			document.querySelector('#matCan').addEventListener('click', ()=>{
+				location.href = 'matchingCancelP.mc?matNo=' + matNo + '&memberNo=' + memberNo;
+			});
+								
 		}
 		
 		

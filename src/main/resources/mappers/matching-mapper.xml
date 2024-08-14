@@ -472,7 +472,12 @@
 		where mat_no = #{matNo}	
 	</select>
 	
-
+	<update id="matchingCancelP">
+		update matching
+		set member_no = null
+		where mat_no = #{matNo}
+			and member_no = #{memberNo}
+	</update>
 
 
 
