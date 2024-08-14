@@ -463,4 +463,34 @@ public class MemberServiceImpl implements MemberService {
 		mMapper.nn(mId);
 	}
 
+
+	@Override
+	public ArrayList<CareReview> caregiverReviewList(int memberNo) {
+		return mMapper.caregiverReviewList(memberNo);
+	}
+
+
+	@Override
+	public ArrayList<CareReview> monthScoreList(int memberNo) {
+		return mMapper.monthScoreList(memberNo);
+	}
+
+
+	@Override
+	public ArrayList<CareReview> sumAvgScore(int memberNo) {
+		return mMapper.sumAvgScore(memberNo);
+	}
+
+
+	@Override
+	public ArrayList<MatMatptInfoPt> useMonth(int ptNo) {
+		return mMapper.useMonth(ptNo);
+	}
+
+
+	@Override
+	public int selectReviewYn(int matNo, int ptNo) {
+		return mMapper.selectReviewYn(matNo, ptNo);
+	}
+
 }

@@ -321,9 +321,8 @@
     		left join matching ON mat_pt_info.mat_no = matching.mat_no
             left join member on matching.member_no =member.member_no
             left join caregiver on matching.member_no = caregiver.member_no
-		where mat_confirm != 'N' and pt_no = (select pt_no
-						from patient
-						where member_no = #{memberNo})
+            left join matching_date on matching.mat_no = matching_date.mat_no
+		where mat_confirm != 'N' and pt_no = #{ptNo}
 	</select>
 	<!-- 추천된 환자 정보조회 : 이름, 성별, 나이, 지역, 금액 -->
 	<select id="choicePatientList" resultType="Patient">
@@ -391,6 +390,7 @@
 		from member
 		where member_Pay = #{code}
 	</select>
+	
 	<!-- 내가 작성한 리뷰조회 -->
 	<select id="reviewList" resultType="CareReview">
 		select distinct review_no, c.pt_no, c.mat_no, review_content, review_score, review_create_date, review_update_date, m.member_name
@@ -407,11 +407,13 @@
 		where review_no = #{reviewNo}
 	</select>
 	
+	<!-- 환자번호 -->
 	<select id="getPtNo" resultType="_int">
 		select pt_no
 		from patient
 		where member_no=#{memberNo}
 	</select>
+	
 	<!-- 환자 메인 : 환자 본인 정보 조회 1번 -->
 	<select id="getPatientMyInfo" resultType="map">
 		select DECODE(pt_gender, 'M', '남성', '여성') AS "성별", 
@@ -760,6 +762,46 @@
 			and mat_confirm = 'N'			 
 	</select>
 	
+	<!-- 간병인 후기 조회 -->
+	<select id="caregiverReviewList" resultType="CareReview">
+		select *
+		from care_review cr
+		    join patient p on(p.pt_no = cr.pt_no)
+		where cr.member_No = #{memberNo}
+	</select>
 	
+	<!-- 월간 점수 -->
+	<select id="monthScoreList" resultType="CareReview">
+		select to_char(end_dt, 'YYYY-MM') as month, sum(review_score) "sumScore", avg(review_score) "avgScore", sum(money) sumMoney
+		from (select cr.review_No, cr.review_score, m.end_dt, cr.member_no, m.money
+		     from care_review cr
+		     join patient p on p.pt_no = cr.pt_no
+		     join matching m on cr.mat_no = m.mat_no
+		     where cr.member_no = #{memberNo})
+		group by to_char(end_dt, 'YYYY-MM')
+	</select>
 	
+	<!-- 평균점수 -->
+	<select id="sumAvgScore" resultType="CareReview">
+		select sum(review_score) sumScore, avg(review_score) avgScore, count(review_score) countReview
+		from care_review
+		where member_no = #{memberNo}
+	</select>
+	
+	<!-- 월별 정보 -->
+	<select id="useMonth" resultType="MatMatptInfoPt">
+		select to_char(end_dt, 'YYYY-MM') as month, sum(end_dt - begin_dt) useCount, sum(ante_pay) ante_pay
+		from matching
+		    join mat_pt_info using(mat_no)
+		where pt_no = #{ptNo} and mat_confirm != 'N'
+		group by to_char(end_dt, 'YYYY-MM')
+		order by  to_char(end_dt, 'YYYY-MM')
+	</select>
+	
+	<!-- 후기 작성 유무 -->
+	<select id="selectReviewYn" resultType="_int">
+		select count(*)
+		from care_review
+		where mat_no = #{matNo} and pt_no = #{ptNo}
+	</select>
 </mapper>

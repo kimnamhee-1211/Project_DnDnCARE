@@ -28,9 +28,9 @@
 	      		</div>
 	      		<div class="row m-4">
 	      			<div class="m-4 col">
-					  <button type="button" class="btn-outline-maincolor-2" onclick="showContent('boards')">내가 쓴 게시글 보기</button>
-					  <button type="button" class="btn-outline-maincolor-2" onclick="showContent('replys')">내가 단 댓글 보기</button>
-					  <button type="button" class="btn-outline-maincolor-2" onclick="showContent('likeBoards')">내가 좋아요 한 글 보기</button>
+					  <button id="myWriteBoardBtn" type="button" class="btn-outline-maincolor-2" onclick="showContent('boards')">내가 쓴 게시글 보기</button>
+					  <button id="myWriteReplyBtn" type="button" class="btn-outline-maincolor-2" onclick="showContent('replys')">내가 단 댓글 보기</button>
+					  <button id="myLikeBoardBtn" type="button" class="btn-outline-maincolor-2" onclick="showContent('likeBoards')">내가 추천한 글 보기</button>
 	      			</div>
 	      		</div>
 	      		
@@ -205,14 +205,33 @@
 				document.getElementById('boards-section').style.display = 'block';
 				document.getElementById('replys-section').style.display = 'none';
 				document.getElementById('likeBoards-section').style.display = 'none';
+				document.getElementById('myWriteBoardBtn').classList.remove('btn-outline-maincolor-2');
+				document.getElementById('myWriteBoardBtn').classList.add('myInfo-btn')
+				document.getElementById('myWriteReplyBtn').classList.remove('myInfo-btn');
+				document.getElementById('myWriteReplyBtn').classList.add('btn-outline-maincolor-2');
+				document.getElementById('myLikeBoardBtn').classList.remove('myInfo-btn');
+				document.getElementById('myLikeBoardBtn').classList.add('btn-outline-maincolor-2');
+				
 			} else if (type === 'replys') {
 				document.getElementById('boards-section').style.display = 'none';
 				document.getElementById('replys-section').style.display = 'block';
 				document.getElementById('likeBoards-section').style.display = 'none';
+				document.getElementById('myWriteReplyBtn').classList.remove('btn-outline-maincolor-2');
+				document.getElementById('myWriteReplyBtn').classList.add('myInfo-btn')
+				document.getElementById('myWriteBoardBtn').classList.remove('myInfo-btn');
+				document.getElementById('myWriteBoardBtn').classList.add('btn-outline-maincolor-2');
+				document.getElementById('myLikeBoardBtn').classList.remove('myInfo-btn');
+				document.getElementById('myLikeBoardBtn').classList.add('btn-outline-maincolor-2');
 			} else if (type === 'likeBoards') {
 				document.getElementById('boards-section').style.display = 'none';
 				document.getElementById('replys-section').style.display = 'none';
 				document.getElementById('likeBoards-section').style.display = 'block';
+				document.getElementById('myLikeBoardBtn').classList.remove('btn-outline-maincolor-2');
+				document.getElementById('myLikeBoardBtn').classList.add('myInfo-btn')
+				document.getElementById('myWriteBoardBtn').classList.remove('myInfo-btn');
+				document.getElementById('myWriteBoardBtn').classList.add('btn-outline-maincolor-2');
+				document.getElementById('myWriteReplyBtn').classList.remove('myInfo-btn');
+				document.getElementById('myWriteReplyBtn').classList.add('btn-outline-maincolor-2');
 			}
 		}
 		

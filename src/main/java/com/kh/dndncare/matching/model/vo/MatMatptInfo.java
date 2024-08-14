@@ -43,7 +43,11 @@ public class MatMatptInfo {
 	private int matMode;
 	
 	//endDT를 지난 날짜 체크
+	private boolean isBeforeDate;
 	private boolean isAfterDate;
+	
+	// 후기 파악
+	private int reviewYn;
 	
 	//loginUser의 그룹 간병 참여 여부 확인용
 	private String join;
@@ -54,4 +58,6 @@ public class MatMatptInfo {
 	private long days;
 	private long times;
 	private int hourly;
+	
+	private String matDate;
 }

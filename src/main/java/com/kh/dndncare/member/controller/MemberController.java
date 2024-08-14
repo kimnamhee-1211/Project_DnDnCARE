@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -884,25 +885,66 @@ public class MemberController {
 	public String myInfoMatching() { // 마이페이지 현재매칭정보 확인용
 		return "myInfoMatching";
 	}
-
+	
+	// 매칭이력
 	@GetMapping("myInfoMatchingHistory.me")
 	public String myInfoMatchingHistory(HttpSession session,Model model) {		//마이페이지 매칭 이력 확인용
+		LocalDate currentDate = LocalDate.now();
+		String currentMonth = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
+		// 회원번호
+		int memberNo = loginUser.getMemberNo();
+		
 		if(loginUser != null) {
-			char check = loginUser.getMemberCategory().charAt(0);
-			switch(check) {
-				case 'C': return "myInfoMatchingHistory";
+				char check = loginUser.getMemberCategory().charAt(0);
+				switch(check) {
 				
-				case 'P':
-					ArrayList<MatMatptInfo> mciList = mService.selectMatList(loginUser.getMemberNo());	//환자측 매칭방번호 리스트.ptNo가들어가서무조건
-					System.out.println(mciList);
-					for(MatMatptInfo i : mciList) {
-						System.out.println(i);
-						i.setAfterDate(LocalDate.now().isAfter(i.getBeginDt().toLocalDate()));
-						
+				case 'C':
+					ArrayList<CareReview> monthScoreList = mService.monthScoreList(memberNo);
+					System.out.println("월간"+monthScoreList);
+		
+					CareReview monthScore = null;
+					for (CareReview score : monthScoreList) {
+						if(score.getMonth().equals(currentMonth)) {
+							monthScore = score;
+							break;
+						}
 					}
+					System.out.println(monthScore);
+					if (monthScore != null) {
+						model.addAttribute("month",monthScore.getMonth());
+			            model.addAttribute("sumScore", monthScore.getSumScore());
+			            model.addAttribute("avgScore", monthScore.getAvgScore());
+			        } else {
+			            model.addAttribute("message", "이달의 데이터가 없습니다.");
+			        }
+					 return "myInfoMatchingHistory";
+				case 'P':
+					// 환자번호
+					int ptNo = mService.getPtNo(memberNo);
+					ArrayList<MatMatptInfo> mciList = mService.selectMatList(ptNo);	//환자측 매칭방번호 리스트.ptNo가들어가서무조건
+					System.out.println("매칭이력"+mciList);
+					System.out.println("=======================");
+					ArrayList<CareReview> reviewList = mService.reviewList(ptNo);
+					int reviewYn = 0;
+					for(MatMatptInfo i : mciList) {
+						i.setBeforeDate(currentDate.isBefore(i.getBeginDt().toLocalDate()));
+						i.setAfterDate(currentDate.isAfter(i.getEndDt().toLocalDate()));
+						reviewYn= mService.selectReviewYn(i.getMatNo(), ptNo);
+						i.setReviewYn(reviewYn);
+						if(i.getMatDate()!=null) {
+							String matDatearr[] = i.getMatDate().split(",");
+						}
+						System.out.println(i);
+					}
+					ArrayList<MatMatptInfoPt> monthPatient = mService.useMonth(ptNo);
+					
+					if(monthPatient != null) {
+						model.addAttribute("monthPatient",monthPatient);
+					}
+					model.addAttribute("reviewList",reviewList);
 					model.addAttribute("mciList",mciList);
 					model.addAttribute("today", LocalDate.now());
 					return "myInfoMatchingHistoryP";
@@ -913,32 +955,52 @@ public class MemberController {
 		throw new MemberException("로그인없음. 인터셉터설정");
 	}
 
+	// 내가 쓴 후기
 	@GetMapping("myInfoMatchingReview.me")
 	public String myInfoMatchingReview(HttpSession session, Model model) { // 마이페이지 매칭 이력 확인용
 
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		int memberNo = loginUser.getMemberNo();
 		
-		int ptNo = mService.getPtNo(memberNo);
-		ArrayList<CareReview> list = mService.reviewList(ptNo);
-		System.out.println("123"+list);
-		HashMap<Integer, Object> reviewList = new HashMap<Integer, Object>();
-		
-		
-		for(CareReview reviewsInfo:list) {
-                ArrayList<CareReview> selectReviewList = mService.selectReviewList(reviewsInfo.getReviewNo());
-                reviewList.put(reviewsInfo.getReviewNo(), selectReviewList);
-            }
-		System.out.println(reviewList);
-		
-		model.addAttribute("list", list);
 		
 		if (loginUser != null) {
 			char check = loginUser.getMemberCategory().charAt(0);
 			switch (check) {
 			case 'C':
+				ArrayList<CareReview> caregiverList = mService.caregiverReviewList(memberNo);
+				ArrayList<CareReview> sumAvgScore = mService.sumAvgScore(memberNo);
+				System.out.println("합계평균"+sumAvgScore);
+				
+				double avgScore = sumAvgScore.get(0).getAvgScore();
+				int sumScore = sumAvgScore.get(0).getSumScore();
+				int countScore = sumAvgScore.get(0).getCountReview();
+				
+				model.addAttribute("cList", caregiverList);
+				model.addAttribute("avgScore", avgScore);
+				model.addAttribute("sumScore", sumScore);
+				model.addAttribute("countScore", countScore);
 				return "myInfoMatchingReview";
 			case 'P':
+				// 회원번호로 환자번호 get
+				int ptNo = mService.getPtNo(memberNo);
+				
+				// 환자가 작성한 후기글
+				ArrayList<CareReview> list = mService.reviewList(ptNo);
+
+				HashMap<Integer, Object> reviewList = new HashMap<Integer, Object>();
+				
+				
+				for(CareReview reviewsInfo:list) {
+					// 리뷰번호로 간병인별로 작성한 리뷰 조회
+		                ArrayList<CareReview> selectReviewList = mService.selectReviewList(reviewsInfo.getReviewNo());
+		                reviewList.put(reviewsInfo.getReviewNo(), selectReviewList);
+		                
+		            }
+				System.out.println("lll"+reviewList);
+				
+				model.addAttribute("list", list);
+				
+				
 				return "myInfoMatchingReviewP";
 			case 'A':
 				return null;

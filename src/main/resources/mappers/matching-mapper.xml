@@ -356,6 +356,7 @@
 		where mat_no = #{matNo}
 	</select>
 
+	<!-- 간병인 정보 -->
 	<select id="selecMatPtInfo" resultType="MatMatptInfo">
 		select *
 		from mat_pt_info
@@ -390,6 +391,7 @@
 		from matching_date
 		where mat_no = #{matNo} 
 	</select>
+	
 	<!-- 리뷰삭제 -->
 	<update id="deleteReview">
 		update care_review
@@ -473,30 +475,12 @@
 	</select>
 	
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	<!-- 리뷰 수정 -->
+	<update id="updateReview">
+		update care_review
+		set review_content = #{reviewContent}, review_score = #{reviewScore}, review_update_date = sysdate
+		where review_no = #{reviewNo}
+	</update>
 
 
 </mapper>

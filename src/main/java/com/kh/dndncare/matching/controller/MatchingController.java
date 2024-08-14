@@ -551,17 +551,15 @@ public class MatchingController {
 		avgReviewScore= (avgReviewScore != null) ? avgReviewScore : 0.0;
 		
 		// 간병인 소개
-		CareGiver caregiverIntro = mcService.selectIntro(memberNo);	
-		System.out.println(caregiverIntro);		
+		CareGiver caregiverIntro = mcService.selectIntro(memberNo);
+		AgeCalculator ageCalculator = new AgeCalculator();
+		int age = ageCalculator.calculateAge(caregiverIntro.getMemberAge());
 		
-		//남희 : 나이세팅
-		int age = AgeCalculator.calculateAge(caregiverIntro.getMemberAge());
-		caregiverIntro.setAge(age);
-		
-		
+		System.out.println(age);
 		// 간병인 정보(국적, 경력, 자격증)
 		ArrayList<InfoCategory> caregiverInfo = mcService.getCaregiverInfo(memberNo);
 		HashMap<String, Object> caregiverInfoList = new HashMap<String, Object>();
+		boolean hasLicense = false;
 		for(InfoCategory info:caregiverInfo) {
 			switch(info.getLCategory()) {
 			case "career" : caregiverInfoList.put("career", info.getSCategory()); break;
@@ -569,10 +567,15 @@ public class MatchingController {
 				if (!caregiverInfoList.containsKey("license")) {
                 caregiverInfoList.put("license", new ArrayList<String>());
 				}
-				((ArrayList<String>)caregiverInfoList.get("license")).add(info.getSCategory().replace("[", "").replace("]", ""));
+            ((ArrayList<String>)caregiverInfoList.get("license")).add(info.getSCategory());
+            hasLicense = true;
+            break;
 			}
+				
 		}
-		
+		if (!hasLicense) {
+		    caregiverInfoList.put("license", null);
+		}
 		System.out.println("이전페이지"+beforePage);
 		System.out.println("매칭"+caregiverInfoList);
 		
@@ -584,6 +587,7 @@ public class MatchingController {
 		model.addAttribute("avgReviewScore",avgReviewScore);
 		model.addAttribute("caregiverIntro",caregiverIntro);
 		model.addAttribute("caregiverInfoList", caregiverInfoList);
+		model.addAttribute("age",age);
 		return "reviewDetail";
 	}
 	
@@ -607,6 +611,7 @@ public class MatchingController {
 
 	}
 	
+	//후기 작성
 	@PostMapping("writeReview.mc")
 	public String insertReview(@RequestParam("memberNo") int memberNo, @RequestParam(value="reviewScore", defaultValue = "10") int reviewScore, @RequestParam(value="matNo",required = false) int matNo , @RequestParam("reviewContent") String reviewContent, HttpSession session) {
 		int loginUserNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
@@ -971,6 +976,7 @@ public class MatchingController {
 		}
 	}
 	
+	// 후기삭제
 	@PostMapping("deleteReview.mc")
 	public String deleteReview(@RequestParam("reviewNo") int reviewNo) {
 		int result = mcService.deleteReivew(reviewNo);
@@ -981,11 +987,17 @@ public class MatchingController {
 			}
 	}
 	
+	// 후기 수정
 	@PostMapping("updateReview.mc")
 	public String updateReview(@ModelAttribute CareReview cr) {
-		
 		System.out.println("updateReview"+cr);
-		return "redirect:myInfoMatchingReview.me";
+		
+		int result = mcService.updateReview(cr);
+		if(result > 0) {
+			return "redirect:myInfoMatchingReview.me";
+		}else {
+			throw new MatchingException("후기 수정 실패");
+		}
 	}
 	
 	

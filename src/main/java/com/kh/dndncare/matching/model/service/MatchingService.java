@@ -109,6 +109,8 @@ public interface MatchingService {
 	
 	ArrayList<InfoCategory> getCaregiverInfo(int memberNo);
 	
+	int updateReview(CareReview cr);
+	
 	
 	
 	//매칭/매칭인포/환자/병원 한번에 가져오기

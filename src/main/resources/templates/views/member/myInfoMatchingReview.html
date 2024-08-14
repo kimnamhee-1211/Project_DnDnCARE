@@ -5,6 +5,41 @@
 <title>Insert title here</title>
 <link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<style>
+	.btn-star{
+		background: transparent;
+		border:0px solid black;
+		width:20px;
+		height:43px;
+		padding:0;
+		margin-left:0px;
+		margin-right:-1.5px;
+		background-repeat: no-repeat;
+	}
+	.btn-icon-star-review{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 90px 90px;
+	padding:0px;
+	margin-left:0px;
+	background-repeat: no-repeat;	
+	}
+	
+	.btn-icon-star-review-half{
+		background-image:url(../image/icon_star2.svg);
+		background-size: 90px 90px;
+		padding:0px;
+		margin-left:0px;
+		background-repeat: no-repeat;
+		width:11px;
+	}
+	
+	.icon-star-review{
+		background-image:url(../image/icon_star.svg);
+		background-size: 90px 90px;
+		padding:0px;
+		width:26px; height:27px;
+	}
+</style>
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
@@ -36,13 +71,14 @@
 	      		
 	      		<div align="center"class="row m-4" style="border-bottom:5px solid #8dd986;width:950px"> <!-- 여기로규격정햇다 -->
 		      		<div class="col-5 m-4" >
-		      			<div >든든 지수 : 88</div>
+		      			<div >든든 지수 : [[${sumScore}]]</div>
 		      			<img src="image/icon_score.png"/>
 		      		</div>
 		      		<div  class="col d-flex align-items-center m-2">
 		      			<div align="left"class="m-4">
-		      				<div class="h2">이번달 든든 지수 : 0점</div>
-		      				<div class="h2">평균 든든 지수 : 0점</div>
+		      				<div class="h2">후기 수 : [[${countScore}]]개</div>
+		      				<div class="h2">총 든든 지수 : [[${sumScore}]]점</div>
+		      				<div class="h2">평균 든든 지수 : [[${avgScore}]]점</div>
 		      			</div>
 		      		</div>
 	      		</div>
@@ -51,32 +87,41 @@
 	      		
 	      		
 	      		<div class="row m-4">
-	      			<div class="col m-3"><!-- 실제 데이터 넣고 for문 돌리기  -->
+	      			<div class="row m-2" th:each="c:${cList}"><!-- 실제 데이터 넣고 for문 돌리기  -->
 						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
 							<div class="m-1 d-flex justify-content-between">
-								<div class="h5 m-1">OOO님의 후기</div>
+								<div class="h5 m-1">[[${c.ptName}]]님의 후기</div>
 								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
 							</div>
-							<div class="review-content m-2">확인</div>
-						</div>
-						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
-							<div class="m-1 d-flex justify-content-between">
-								<div class="h5 m-1">OOO님의 후기</div>
-								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
-							</div>
-							<div class="review-content m-2">확인</div>
-						</div>
-						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
-							<div class="m-1 d-flex justify-content-between">
-								<div class="h5 m-1">OOO님의 후기</div>
-								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
-							</div>
-							<div class="review-content m-2">확인</div>
+							<div class="review-content m-2"><div align="center"  class="d-flex justify-content-left" style="min-width:600px;">
+			      			<div align="left"class="icon-star-review">
+								<button th:if="${1 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+								<button th:if="${1 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
+			      			</div>
+			      			<div align="left"class="icon-star-review">
+								<button th:if="${3 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+								<button th:if="${3< c.reviewScore}" class="btn-star btn-icon-star-review"></button>
+			      			</div>
+			      			<div align="left"class="icon-star-review">
+								<button th:if="${5 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+								<button th:if="${5 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
+			      			</div>
+			      			<div align="left"class="icon-star-review">
+								<button th:if="${7 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+								<button th:if="${7 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
+			      			</div>
+			      			<div align="left"class="icon-star-review">
+								<button th:if="${9 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+								<button th:if="${9 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
+			      			</div>
+			      			<div>평점 : [[${c.reviewScore}]]</div>
+		      		</div>
+			      			<hr/>
+			      			<div>[[${c.reviewContent}]]</div>
 						</div>
 						
 						
 	      			</div>
-	      		</div>
 	      		
 	    	</div>
     	</div>

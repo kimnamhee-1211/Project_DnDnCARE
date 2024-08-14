@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.dndncare.board.model.vo.Board;
@@ -175,5 +176,14 @@ public interface MemberMapper {
 
 	void nn(int mId);
 	ArrayList<CareGiverMin> getRequestCaregiver(int ptNo);
+	ArrayList<CareReview> caregiverReviewList(int memberNo);
+
+	ArrayList<CareReview> monthScoreList(int memberNo);
+
+	ArrayList<CareReview> sumAvgScore(int memberNo);
+
+	ArrayList<MatMatptInfoPt> useMonth(int ptNo);
+
+	int selectReviewYn(@Param("matNo") int matNo, @Param("ptNo")int ptNo);
 
 }

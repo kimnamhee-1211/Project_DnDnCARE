@@ -67,6 +67,9 @@ public class MatMatptInfoPt {
 	private String mobilityStatus;
 	private String diseaseLevel;
 	
+	// 환자 월간 정보
+	private String month;
+	private int useCount;
 
 	
 }

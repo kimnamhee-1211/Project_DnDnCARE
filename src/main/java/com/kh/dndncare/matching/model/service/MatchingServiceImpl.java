@@ -267,6 +267,10 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	@Override
+	public int updateReview(CareReview cr) {
+		return mMapper.updateReview(cr);
+	}
+
 	public int insertMatPtInfo(MatPtInfo matPtInfo) {
 		// TODO Auto-generated method stub
 		return 0;//없는메소드	

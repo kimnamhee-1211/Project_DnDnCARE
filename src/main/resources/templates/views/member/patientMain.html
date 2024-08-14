@@ -539,10 +539,11 @@
     <script th:inline="javascript">//종규삽입
     
     //결제목록 보이기
-    document.getElementById('viewPayList').addEventListener('click',function(){
-    	this.nextElementSibling.classList.toggle('showPay');
-    })
-    
+    if(document.getElementById('viewPayList') != null){
+	    document.getElementById('viewPayList').addEventListener('click',function(){
+	    	this.nextElementSibling.classList.toggle('showPay');
+	    })
+    }
     
     //남희 가공
     window.onload=()=>{

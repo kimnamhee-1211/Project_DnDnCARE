@@ -117,6 +117,8 @@ public interface MatchingMapper {
 
 	String getNameC(int memberNo);
 
+	int updateReview(CareReview cr);
+
 
 	int insertMemberInfo(Map<String, Object> memberInfoParams);
 
