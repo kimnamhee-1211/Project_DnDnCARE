@@ -10,18 +10,24 @@ import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.dndncare.admin.model.exception.AdminException;
 import com.kh.dndncare.admin.model.service.AdminService;
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.common.ImageUtil;
+import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.common.ThumbnailUtil;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.Member;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -45,9 +51,21 @@ public class AdminController {
 
 	// 간병정보(간병백과) 페이지로 이동하는 메소드
 	@GetMapping("careInformation.adm")
-	public String careInformation() {
-
-		return "careInformation";
+	public String careInformation(@RequestParam(value="page", defaultValue="1") int currentPage, Model model,
+									HttpServletRequest request) {
+		// 페이징처리된 게시글 목록 조회 : BoardLimit == 7 (**가정**)
+		int listCount = aService.getCareInformationListCount();
+		PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 7);
+		ArrayList<Board> bList = aService.selectAllCareInformation(pi); // 이래도 되나?
+		
+		if(!bList.isEmpty()) {
+			model.addAttribute("bList", bList);
+			model.addAttribute("pi", pi);
+			model.addAttribute("loc", request.getRequestURI());
+			return "careInformation";
+		} else {
+			throw new AdminException("서비스 요청에 실패하였습니다.");
+		}
 	}
 
 	// 간병백과 작성 페이지로 이동

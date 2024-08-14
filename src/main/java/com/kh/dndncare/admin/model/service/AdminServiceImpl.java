@@ -2,12 +2,14 @@ package com.kh.dndncare.admin.model.service;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.dndncare.admin.model.dao.AdminMapper;
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.PageInfo;
 
 @Service
 public class AdminServiceImpl implements AdminService{
@@ -23,5 +25,16 @@ public class AdminServiceImpl implements AdminService{
 	@Override
 	public int insertAttachment(ArrayList<Attachment> aList) {
 		return aMapper.insertAttachment(aList);
+	}
+
+	@Override
+	public int getCareInformationListCount() {
+		return aMapper.getCareInformationListCount();
+	}
+
+	@Override
+	public ArrayList<Board> selectAllCareInformation(PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return aMapper.selectAllCareInformation(rowBounds); // 하나만 넘겨도 되려나?
 	}
 }

@@ -26,12 +26,16 @@
 	</insert>
 
 
+	<!-- 간병백과의 컨텐츠 전체갯수 조회 : 삭제여부 무시 -->
+	<select id="getCareInformationListCount" resultType="_int">
+		SELECT COUNT(*) FROM BOARD WHERE CATEGORY_NO = 7
+	</select>
 
 
-
-
-
-
+	<!-- 간병백과의 일반 글 정보 조회 -->
+	<select id="selectAllCareInformation" resultType="Board">
+		SELECT * FROM BOARD WHERE CATEGORY_NO = 7 ORDER BY BOARD_UPDATE_DATE DESC
+	</select>
 
 
 </mapper>

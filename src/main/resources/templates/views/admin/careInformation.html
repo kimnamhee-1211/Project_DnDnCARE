@@ -43,44 +43,8 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>제목1</td>
-									<td>관리자1</td>
-									<td>2024-08-15</td>
-									<td>10</td>
-								</tr>
-								<tr>
-									<td>제목이 엄청 길어진다면</td>
-									<td>관리자1</td>
-									<td>2024-08-15</td>
-									<td>10</td>
-								</tr>
-								<tr>
-									<td>제목이 몇글자까지 레이아웃을 깨지 않을까?</td>
-									<td>관리자1</td>
-									<td>2024-08-15</td>
-									<td>10</td>
-								</tr>
-								<tr>
-									<td>제목1</td>
-									<td>관리자1</td>
-									<td>2024-08-15</td>
-									<td>10</td>
-								</tr>
-								<tr>
-									<td>제목1</td>
-									<td>관리자1</td>
-									<td>2024-08-15</td>
-									<td>10</td>
-								</tr>
-								<tr>
-									<td>제목1</td>
-									<td>관리자1</td>
-									<td>2024-08-15</td>
-									<td>10</td>
-								</tr>
-								<tr>
-									<td>제목1</td>
+								<tr th:each="b : ${bList}">
+									<td>[[${b.boardTitle}]]</td>
 									<td>관리자1</td>
 									<td>2024-08-15</td>
 									<td>10</td>
