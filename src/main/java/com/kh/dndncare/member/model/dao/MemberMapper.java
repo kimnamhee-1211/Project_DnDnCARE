@@ -186,4 +186,6 @@ public interface MemberMapper {
 
 	int selectReviewYn(@Param("matNo") int matNo, @Param("ptNo")int ptNo);
 
+	Double avgReviewScore2(int memberNo);
+
 }

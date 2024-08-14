@@ -148,23 +148,29 @@
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
 				                		<h5 class="card-title">[[${cg[num].memberName}]]님</h5>
-				                		<div align="center"  class="d-flex justify-content-left" >
+				                		<div th:unless="${cg[num].getAvgReviewScoreDouble !=null}" style="font-size:10px">아직 리뷰가 없어요!</div>
+				                		<div th:if="${cg[num].getAvgReviewScoreDouble !=null}" align="center"  class="d-flex justify-content-left" >
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${1 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${1 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${3 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${3 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+							      				<button th:if="${5 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${5 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${7 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${7 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${9 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${9 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
-							      			<span style="margin-top:-4px">10</span>
+							      			<span style="margin-top:-4px">[[${cg[num].getAvgReviewScoreDouble}]]</span>
 						    			</div>
 			                		</div>
 			                		<p class="card-text">[[${cg[num].memberGender == "M" ? "남" : "여"}]] [[${cg[num].age}]]세 [[${cg[num].memberNational}]]</p>
@@ -190,23 +196,29 @@
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
 				                		<h5 class="card-title">[[${cg[num].memberName}]]님</h5>
-				                		<div align="center"  class="d-flex justify-content-left" >
+				                		<div th:unless="${cg[num].getAvgReviewScoreDouble !=null}" style="font-size:10px">아직 리뷰가 없어요!</div>
+				                		<div th:if="${cg[num].getAvgReviewScoreDouble !=null}" align="center"  class="d-flex justify-content-left" >
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${1 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${1 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${3 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${3 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+							      				<button th:if="${5 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${5 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${7 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${7 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${9 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${9 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
-							      			<span style="margin-top:-4px">10</span>
+							      			<span style="margin-top:-4px">[[${cg[num].getAvgReviewScoreDouble}]]</span>
 						    			</div>
 			                		</div>
 			                		<p class="card-text">[[${cg[num].memberGender == "M" ? "남" : "여"}]] [[${cg[num].age}]]세 [[${cg[num].memberNational}]]</p>
@@ -232,23 +244,29 @@
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
 				                		<h5 class="card-title">[[${cg[num].memberName}]]님</h5>
-				                		<div align="center"  class="d-flex justify-content-left" >
+				                		<div th:unless="${cg[num].getAvgReviewScoreDouble !=null}" style="font-size:10px">아직 리뷰가 없어요!</div>
+				                		<div th:if="${cg[num].getAvgReviewScoreDouble !=null}" align="center"  class="d-flex justify-content-left" >
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${1 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${1 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${3 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${3 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+							      				<button th:if="${5 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${5 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${7 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${7 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
 							      			<div align="left"class="icon-star-review">
-												<button class="btn-star btn-icon-star-review"></button>
+												<button th:if="${9 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
+												<button th:if="${9 < cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review"></button>
 							      			</div>
-							      			<span style="margin-top:-4px">10</span>
+							      			<span style="margin-top:-4px">[[${cg[num].getAvgReviewScoreDouble}]]</span>
 						    			</div>
 			                		</div>
 			                		<p class="card-text">[[${cg[num].memberGender == "M" ? "남" : "여"}]] [[${cg[num].age}]]세 [[${cg[num].memberNational}]]</p>

@@ -189,6 +189,8 @@ public interface MemberService {
 
 	int selectReviewYn(int matNo, int ptNo);
 
+	Double avgReviewScore2(int memberNo);
+
 
 
 }

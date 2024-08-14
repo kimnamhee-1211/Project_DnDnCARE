@@ -745,6 +745,9 @@ public class MemberController {
 		for(CareGiver c : cg) {
 			LocalDate birthDateParsed = c.getMemberAge().toLocalDate();
 			LocalDate today = LocalDate.now();
+			Double avgReviewScore = mService.avgReviewScore2(c.getMemberNo());
+			c.setAvgReviewScoreDouble(avgReviewScore);
+			System.out.println("리뷰점수 확인하기 : " + c.getAvgReviewScoreDouble());
 			
 			c.setAge(Period.between(birthDateParsed, today).getYears());
 			//System.out.println(c);

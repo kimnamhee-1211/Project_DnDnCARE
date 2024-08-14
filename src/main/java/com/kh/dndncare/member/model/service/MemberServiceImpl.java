@@ -493,4 +493,10 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectReviewYn(matNo, ptNo);
 	}
 
+
+	@Override
+	public Double avgReviewScore2(int memberNo) {
+		return mMapper.avgReviewScore2(memberNo);
+	}
+
 }

@@ -804,4 +804,11 @@
 		from care_review
 		where mat_no = #{matNo} and pt_no = #{ptNo}
 	</select>
+	
+	<select id="avgReviewScore2" resultType="Double">
+		select round(avg(review_score),2)
+		from care_review
+		where member_no=#{memberNo} and review_status='Y'
+	</select>
+	
 </mapper>
