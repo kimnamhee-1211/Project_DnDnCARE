@@ -115,12 +115,23 @@
 					titleSpan.setAttribute("class", "badge rounded-pill bg-dark fs-6");
 					titleSpan.innerText = '내용';
 					
-					//const br = document.
+					const br = document.createElement('br');
 					
+					let content = '';
+					/*<![CDATA[*/
+					const bList = /*[[${bList}]]*/'bList'
+					/*]]>*/
+					for(const b of bList){
+						if(this.parentElement.children[0].innerText == b.boardNo){
+							content = b.boardContent;
+							break;
+						}
+					}
 					
-					
-					
-					//detailDiv.append
+					detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + content;
+					/* detailDiv.append(titleSpan);
+					detailDiv.append(br);
+					detailDiv.append(content); */
 				})
 				
 				
