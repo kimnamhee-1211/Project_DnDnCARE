@@ -52,4 +52,35 @@ public class AdminServiceImpl implements AdminService{
 	public int hideAttachment(int boardNo) {
 		return aMapper.hideAttachment(boardNo);
 	}
+
+	@Override
+	public ArrayList<Attachment> selectOneAttachment(int boardNo) {
+		return aMapper.selectOneAttachment(boardNo);
+	}
+
+	@Override
+	public int deleteAttachment(ArrayList<Integer> removeAttmNoList) {
+		return aMapper.deleteAttachment(removeAttmNoList);
+	}
+
+	@Override
+	public Board selectOneBoard(int boardNo) {
+		return aMapper.selectOneBoard(boardNo);
+	}
+
+	@Override
+	public int deleteThumbnail(int boardNo) {
+		return aMapper.deleteThumbnail(boardNo);
+	}
+
+	@Override
+	public int insertThumbnail(Attachment thumbnail) {
+		return aMapper.insertThumbnail(thumbnail);
+	}
+
+	@Override
+	public int updateCareInformation(Board b) {
+		return aMapper.updateCareInformation(b);
+	}
+
 }

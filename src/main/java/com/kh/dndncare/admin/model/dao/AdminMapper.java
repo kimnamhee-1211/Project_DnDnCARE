@@ -25,4 +25,17 @@ public interface AdminMapper {
 
 	int hideAttachment(int boardNo);
 
+	ArrayList<Attachment> selectOneAttachment(int boardNo);
+
+	int deleteAttachment(ArrayList<Integer> removeAttmNoList);
+
+	Board selectOneBoard(int boardNo);
+
+	int deleteThumbnail(int boardNo);
+
+	int insertThumbnail(Attachment thumbnail);
+
+	int updateCareInformation(Board b);
+
+
 }

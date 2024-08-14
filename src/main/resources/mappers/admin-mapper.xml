@@ -59,4 +59,45 @@
 		WHERE REF_BOARD_NO = ${boardNo}
 	</update>
 
+	<!-- 하나의 게시글에 대한 첨부파일 조회  -->
+	<select id="selectOneAttachment" resultType="Attachment">
+		SELECT *
+		FROM ATTACHMENT
+		WHERE REF_BOARD_NO = ${boardNo}
+	</select>
+	
+	<!-- 간병백과 수정결과 기존의 첨부파일(썸네일은 대상에서 제외)을 삭제해야하는 경우 -->
+	<delete id="deleteAttachment">
+		DELETE FROM ATTACHMENT
+		WHERE ATTM_NO IN
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</delete>
+	
+	<!-- 간병백과 기존 글을 조회 -->
+	<select id="selectOneBoard" resultType="Board">
+		SELECT * FROM BOARD WHERE BOARD_NO = ${boardNo}
+	</select>
+	
+	<!-- 기존의 썸네일을 삭제한다. -->
+	<delete id="deleteThumbnail">
+		DELETE FROM ATTACHMENT
+		WHERE REF_BOARD_NO = ${boardNo} AND ATTM_LEVEL = 0
+	</delete>
+	
+	
+	<insert id="insertThumbnail">
+		INSERT INTO ATTACHMENT
+		VALUES(NEW_AID, ${attm.refBoardNo}, #{attm.originalName}, #{attm.renameName}, 
+												#{attm.attmPath}, #{attm.attmLevel}, DEFAULT)
+	</insert>
+	
+	<!-- 간병백과 게시글 수정 : MEMBER_NO, BOARD_TITLE, BOARD_UPDATE_DATE, BOARD_CONTENT -->
+	<update id="updateCareInformation">
+		UPDATE BOARD
+		SET MEMBER_NO = ${memberNo}, BOARD_TITLE = #{boardTitle}, BOARD_UPDATE_DATE = SYSDATE, 
+			BOARD_CONTENT = #{boardContent}
+		WHERE BOARD_NO = ${boardNo}
+	</update>
+	
+	
 </mapper>
