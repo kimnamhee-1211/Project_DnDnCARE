@@ -154,6 +154,9 @@ public interface MatchingService {
 	
 	//환자가 이미 신청한 내역인지 확인
 	int CheckMatMemNo(int matNo);
+	
+	//환자 매칭 신청 취소
+	int matchingCancelP(int matNo, int memberNo);
 
 
 

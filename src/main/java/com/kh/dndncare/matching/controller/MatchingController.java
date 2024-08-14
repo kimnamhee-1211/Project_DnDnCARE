@@ -1115,7 +1115,7 @@ public class MatchingController {
 	}
 	
 	//환자 현황 만드는 중
-	@PostMapping(value="getMatPtToMatNo.mc", produces="application/json; charset=UTF-8")
+	@PostMapping(value="getMatCToMatNoMemNo.mc", produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public void getMatCToMatNoMemNo(@RequestParam("matNo") int matNo, @RequestParam("memberNo") int memberNo, HttpServletResponse response) {
 		
@@ -1128,10 +1128,6 @@ public class MatchingController {
 			String[] addArrMin = addArr[1].split(" ");
 			String addMin = addArrMin[0] + " " +  addArrMin[1];
 			i.setMatAddressMin(addMin);
-			
-			//노출 나이 set
-			int realAge = AgeCalculator.calculateAge(i.getPtAge());
-			i.setPtRealAge(realAge);
 			
 			//상세 주소 set
 			String add = i.getMatAddressInfo().replace("//", " ");
@@ -1181,12 +1177,14 @@ public class MatchingController {
 
 		
 		System.out.println(matInfo);
+		System.out.println(caregiverIntro);
 		Map<String, Object> responseMap = new HashMap<>();
 		responseMap.put("matInfo", matInfo);
 		responseMap.put("reviewList", reviewList);
 		responseMap.put("reviewCount", reviewCount);
 		responseMap.put("avgReviewScore", avgReviewScore);
 		responseMap.put("caregiverIntro", caregiverIntro);
+		responseMap.put("caregiverInfoList", caregiverInfoList);
 
 	
 		response.setContentType("application/json; charset=UTF-8");
@@ -1203,7 +1201,25 @@ public class MatchingController {
 	}
 	
 	
-	
+	//환자 매칭 신청 취소
+	@GetMapping("matchingCancelP.mc")
+	public String matchingCancelP(@RequestParam("matNo") int matNo, @RequestParam("memberNo") int memberNo,
+									RedirectAttributes re) {
+		
+		int result = mcService.matchingCancelP(matNo, memberNo);
+				
+		//매칭 간병인 이름 얻어오기
+		String matCName = mcService.getNameC(memberNo);
+		
+		if(result > 0) {
+			re.addAttribute("matCName", matCName);
+			re.addAttribute("result", "cancell");
+			return "redirect:patientMain.me";
+		}else {
+			throw new MatchingException(" 환자 매칭 신청 취소 실패");
+		}
+
+	}
 	
 	
 	

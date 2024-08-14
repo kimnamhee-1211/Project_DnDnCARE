@@ -7,6 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link th:href="@{css/myMatching.css}" rel="stylesheet" type="text/css"/>
+<link th:href="@{css/reviewDetail.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
@@ -17,7 +18,7 @@
 			<h1 class="h1 mb-4 fw-bold text-center">나의 매칭 현황</h1><br>
 		</div>
 		
-		<main class="container align-items-center mx-auto" style="width:900px;">
+		<main class="container-lg align-items-center mx-auto" style="width:900px;">
 		
 			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">현재 진행중인 매칭 내역</h3>
 			<br>
@@ -26,6 +27,7 @@
 				  <div class="accordion-item"  th:each="myMat : ${myMatching}">
 				  	<div style="display:none" th:text="${myMat.memberNo}" class="memberNo"></div>
 				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
+				  	<div style="display:none" th:text="ing" class="from"></div>
 				    <h2 class="accordion-header">
 				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseOne' + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
 				      		[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭이 진행 중입니다.
@@ -33,7 +35,7 @@
 				    </h2>
 				    <div th:id="'collapseOne' + ${myMat.memberNo}" class="accordion-collapse collapse " data-bs-parent="#accordionExample">
 						<div class="accordion-body">
-							<table class="table mx-auto">
+							<table class="table mx-auto"  style="width:800px;">
 								<thead></thead>  		
 				      		</table>
 				      		<div id="cInfo"></div>
@@ -43,20 +45,22 @@
 				</div>
 			</div>
 			
-			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">현재 결제 대기 중인 매칭 내역</h3>
+			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel2">현재 결제 대기 중인 매칭 내역</h3>
 			<br>
 			<div class="form-floating mb-5 mx-auto">
-				<div class="accordion" id="accordionExample">
+				<div class="accordion" id="accordionExample2">
 				  <div class="accordion-item"  th:each="myMat : ${myMatchingW}">
 				  	<div style="display:none" th:text="${myMat.memberNo}" class="memberNo"></div>
+				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
+				  	<div style="display:none" th:text="wait" class="from"></div>
 				    <h2 class="accordion-header">
 				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsetwo' + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
 							[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭이 결제 대기 중입니다.
 				      </button>
 				    </h2>
-				    <div th:id="'collapsetwo' + ${myMat.memberNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+				    <div th:id="'collapsetwo' + ${myMat.memberNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
 						<div class="accordion-body">
-							<table class="table mx-auto">
+							<table class="table mx-auto" style="width:800px;">
 								<thead></thead>
 							</table>
 							<div id="cInfo"></div>
@@ -67,24 +71,26 @@
 			</div>
 			
 			
-			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">[[${loginUserName}]]님이 신청한 매칭 내역</h3>
+			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel3">[[${loginUserName}]]님이 신청한 매칭 내역</h3>
 			<br>
 			<div class="form-floating mb-5 mx-auto">
-				<div class="accordion" id="accordionExample">
+				<div class="accordion" id="accordionExample3">
 					<div class="accordion-item"  th:each="myMat : ${myRequestMatC}">
 						<div style="display:none" th:text="${myMat.memberNo}" class="memberNo"></div>
 						<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
+						<div style="display:none" th:text="want" class="from"></div>
 				    	<h2 class="accordion-header">
 				      		<button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsethree' + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
 				        		[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭을 신청하셨습니다.
 				      		</button>
 				    	</h2>
-				   		<div th:id="'collapsethree' + ${myMat.memberNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+				   		<div th:id="'collapsethree' + ${myMat.memberNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample3">
 							<div class="accordion-body">
-								<table class="table mx-auto">
+								<table class="table mx-auto" style="width:800px;">
 									<thead></thead>
 								</table>
 								<div id="cInfo"></div>
+								<button class="btn btn-success mx-auto matCan">매칭 신청 취소</button>
 							</div>
 						</div>
 					</div>
@@ -92,21 +98,22 @@
 			</div>
 			
 			
-			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">[[${loginUserName}]]님이 받은 매칭 신청 내역</h3>
+			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel4">[[${loginUserName}]]님이 받은 매칭 신청 내역</h3>
 			<br>
 			<div class="form-floating mb-5 mx-auto">
-				<div class="accordion" id="accordionExample">
+				<div class="accordion" id="accordionExample4">
 				  <div class="accordion-item"  th:each="myMat : ${myMatchingMat}">
 				  	<div style="display:none" th:text="${myMat.memberNo}" class="memberNo"></div>
 				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
+				  	<div style="display:none" th:text="wanted" class="from"></div>
 				    <h2 class="accordion-header">
 				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsefour' + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
 				      	[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])이 매칭을 신청하셨습니다.
 				      </button>
 				    </h2>
-				    <div th:id="'collapsefour' + ${myMat.memberNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+				    <div th:id="'collapsefour' + ${myMat.memberNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample4">
 						<div class="accordion-body" style="text-align: center;">
-							<table class="table mx-auto">
+							<table class="table mx-auto" style="width:800px;">
 								<thead></thead>
 							</table>
 							<div id="cInfo"></div>
@@ -118,6 +125,7 @@
 			</div>
 		</main>
 	</div>
+	
 	
 	<!-- 매칭 승낙 모달 -->	
 	<div class="modal fade" id="matOkModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -139,6 +147,27 @@
 	  </div>
 	</div>	
 	
+		<!-- 매칭 취소 모달 -->	
+	<div class="modal fade" id="matCancelModal" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-xl">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel2">매칭 신청 취소</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h4 class="h4 mb-4 fw-bold" id="modalBody2"></h4> 
+	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청이 취소됩니다.<br>한 번 취소한 매칭 신청은 회복이 불가능합니다.</h5>	        
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" id="matCancel">매칭 신청 취소</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>	
+	
+	
 	
 	
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
@@ -151,7 +180,7 @@
 			
 			for(const accordionButton of accordionButtons){
 				accordionButton.addEventListener('click', function(){
-					const matNo = this.parentElement.parentElement.querySelector('.matNO').innerHTML;
+					const matNo = this.parentElement.parentElement.querySelector('.matNo').innerHTML;
 					const memberNo = this.parentElement.parentElement.querySelector('.memberNo').innerHTML;
 					
 					const thead = this.parentElement.parentElement.querySelector('thead')
@@ -168,6 +197,7 @@
 							const reviewCount = data.reviewCount;
 							const avgReviewScore = data.avgReviewScore;
 							const caregiverIntro = data.caregiverIntro;
+							const caregiverInfoList = data.caregiverInfoList;
 						
 							let addMin = '';
 							if(matInfo[0].ptCount == 1){
@@ -267,14 +297,14 @@
 							
 							
 							let cInfoInner=`
-								<div class="row justify-content-md-center">
-								<div align="center" class="col-4 m-3 p-3 testBorder" >
-						      		<img id="profile-image" src="image/icon_profile.png"/>
-						      		<hr>
-						      		<div class="h3">${caregiverIntro.memberName}님</div>
-						      		<div align="center">
-										<button type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton">후기 보기</button>		
-									</div>		      		
+								<div class="row justify-content-center" >
+									<div align="center" class="col-4 m-3 p-3 testBorder" >
+						      			<img id="profile-image" src="image/icon_profile.png"/>
+						      			<hr>
+						      			<div class="h3">${caregiverIntro.memberName}님</div>
+						      			<div align="center">
+											<button type="button" class="m-4 btn-outline-maincolor reviewButton">후기 보기</button>		
+										</div>		      		
 					      		</div>
 					      		<div class="col-7 m-3 p-3 testBorder justify-content-md-center">					      				      		
 						      		<div class="row m-2 p-4">
@@ -288,7 +318,7 @@
 						      		<div class="d-flex justify-content-md-center" style="margin-top:-10px">${re}</div>
 						      		<div class="col-11 m-3 p-3 testBorder">
 						      			<h6>
-						      				나이 : [[${caregiverIntro.age}]]세&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						      				나이 : ${caregiverIntro.age}세&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						      				${gender}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						      				국적 : ${caregiverIntro.memberNational}</h6>
 						      			<h6>경력 : ${caregiverInfoList.career}년</h6>
@@ -301,7 +331,12 @@
 					      		</div>
 				      		</div>`;
 				      		
-							 cInfo.innerHTML = cInfoInner;							
+							 cInfo.innerHTML = cInfoInner;
+							 
+							 
+							 //후기보기 버튼
+							 reviewButton();
+							 
 						},
 						error : data=>console.log(data)			
 					});
@@ -310,6 +345,8 @@
 				
 			}
 			
+			
+			//매칭 신청
 			const matOks = document.querySelectorAll('.matOk');
 			const modalBody = document.querySelector('#modalBody');
 			let modalMatNo = '';
@@ -337,42 +374,68 @@
 
 			
 			document.querySelector('#requestMatchingOk').addEventListener('click', ()=>{
-				location.href='MatchingapproveP.mc?matNo='+ modalMatNo + '&memberNo=' + modaMemberNo;
+				location.href='matchingApproveP.mc?matNo='+ modalMatNo + '&memberNo=' + modaMemberNo;
 			});
 			
+					
 			
 			
+			//매칭 취소			
+			const matCans = document.querySelectorAll('.matCan');
+			const modalBody2 = document.querySelector('#modalBody2');
 			
+			/*<![CDATA[*/
+			const myRequestMatC = /*[[${myRequestMatC}]]*/'[]';
+			/*]]>*/
 			
+			if(matCans){
+				for(const matCan of matCans){
+					matCan.addEventListener('click', function(){
+						modalMatNo = this.parentElement.parentElement.parentElement.querySelector('.matNo').innerHTML;
+						modaMemberNo = this.parentElement.parentElement.parentElement.querySelector('.memberNo').innerHTML;
+						let modalBodyInner = '';						
+						for(const mat of myRequestMatC){
+							if(modalMatNo = mat.matNo)
+							modalBody.innerHTML = mat.memberName + '님에게 보낸 매칭 신청을 취소하시겠습니까?'	
+						}
+						$('#matCancelModal').modal('show');
+						
+					});
+				}
+			}
 			
+			document.querySelector('#matCancel').addEventListener('click', ()=>{
+				location.href='matchingCancelP.mc?matNo='+ modalMatNo + '&memberNo=' + modaMemberNo;
+			});
+		
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			//후기보기 버튼
+			reviewButton();
+	
+		
 		}
+		
+		//후기보기 버튼
+		const reviewButton =()=>{
+			const reviewButtons = document.querySelectorAll('.reviewButton');
+			for(const reviewButton of reviewButtons){
+				if(reviewButton){
+					reviewButton.addEventListener('click', function(){
+						
+						const matNo = this.closest('.accordion-item').querySelector('.matNo').innerHTML;
+						const memberNo = this.closest('.accordion-item').querySelector('.memberNo').innerHTML;
+						const from = this.closest('.accordion-item').querySelector('.from').innerHTML;
+						
+						location.href='reviewDetail.mc?matNo=' + matNo + '&memberNo=' + memberNo + '&from=' + from;
+						
+					})
+				}
+			}
+		}
+		
+		
+		
+		
 		
 			
 	

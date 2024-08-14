@@ -328,6 +328,13 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.CheckMatMemNo(matNo);
 	}
 
+	//환자 매칭 신청 취소
+	@Override
+	public int matchingCancelP(int matNo, int memberNo) {
+		// TODO Auto-generated method stub
+		return mMapper.matchingCancelP(matNo, memberNo);
+	}
+
 
 
 

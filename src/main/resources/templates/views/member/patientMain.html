@@ -378,6 +378,18 @@
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 	      </div>
 	   </div>
+	    <div class="modal-content" th:if ="${ matCName != null && result == 'cancell'}">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 취소 완료</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h4 class="h4 mb-4 fw-bold">[[${matCName}]]님에게 보낸 매칭 신청이 취소되었습니다.</h4>	
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	   </div>
 	 </div>
 	</div> 
     
@@ -577,7 +589,7 @@
 	    			memberNo = this.parentElement.parentElement.querySelector('.memberNo').innerHTML;
 	    			matNo = this.parentElement.parentElement.querySelector('.matNo').innerHTML;
 	    			
-	    			location.href = 'reviewDetail.mc?memberNo='+ memberNo +'&matNo=' + matNo;
+	    			location.href = 'reviewDetail.mc?memberNo='+ memberNo +'&matNo=' + matNo + '&from=wanted';
 	    		}else{
 	    			memberNo = this.nextElementSibling.value;
 	    			location.href = 'reviewDetail.mc?memberNo='+ memberNo;
