@@ -115,7 +115,19 @@ public class TemplateResolverConfig {
 	
 	
 	
-	
+	@Bean
+	ClassLoaderTemplateResolver dotAdmResolver() {
+		ClassLoaderTemplateResolver dotAdm = new ClassLoaderTemplateResolver();
+		dotAdm.setPrefix("templates/views/admin/");
+		dotAdm.setSuffix(".html");
+		dotAdm.setTemplateMode(TemplateMode.HTML);
+		dotAdm.setCharacterEncoding("UTF-8");
+		dotAdm.setCacheable(false);
+		dotAdm.setOrder(7);
+		dotAdm.setCheckExistence(true);
+
+		return dotAdm;
+	}
 	
 	
 	

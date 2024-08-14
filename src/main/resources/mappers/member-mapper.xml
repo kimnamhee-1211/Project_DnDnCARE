@@ -144,6 +144,7 @@
 		        JOIN CAREGIVER C ON(M.MEMBER_NO = C.MEMBER_NO) 
 		WHERE M.MEMBER_NO = ${memberNo}
 	</select>
+	
 	<!-- 간병인 메인페이지에서의 자동 추천을 위한 간병인 본인 정보 조회 : 2번 -->
 	<select id="getCaregiverExp" resultType="map">
 		SELECT L_CATEGORY, S_CATEGORY
