@@ -85,12 +85,12 @@
 				      		</button>
 				    	</h2>
 				   		<div th:id="'collapsethree' + ${myMat.memberNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample3">
-							<div class="accordion-body">
+							<div class="accordion-body" style="text-align: center;">
 								<table class="table mx-auto" style="width:800px;">
 									<thead></thead>
 								</table>
 								<div id="cInfo"></div>
-								<button class="btn btn-success mx-auto matCan">매칭 신청 취소</button>
+								<button class="btn btn-success mx-auto matCan" style="margin:10px 45%;">매칭 신청 취소</button>
 							</div>
 						</div>
 					</div>
@@ -117,7 +117,7 @@
 								<thead></thead>
 							</table>
 							<div id="cInfo"></div>
-							<button class="btn btn-success mx-auto matOk">매칭 승낙</button>
+							<button class="btn btn-success mx-auto justify-content-md-center matOk">매칭 승낙</button>
 						</div>
 				    </div>
 				  </div>
@@ -383,6 +383,7 @@
 			//매칭 취소			
 			const matCans = document.querySelectorAll('.matCan');
 			const modalBody2 = document.querySelector('#modalBody2');
+			modalBody2.innerHTML = '';
 			
 			/*<![CDATA[*/
 			const myRequestMatC = /*[[${myRequestMatC}]]*/'[]';
@@ -392,11 +393,10 @@
 				for(const matCan of matCans){
 					matCan.addEventListener('click', function(){
 						modalMatNo = this.parentElement.parentElement.parentElement.querySelector('.matNo').innerHTML;
-						modaMemberNo = this.parentElement.parentElement.parentElement.querySelector('.memberNo').innerHTML;
-						let modalBodyInner = '';						
+						modaMemberNo = this.parentElement.parentElement.parentElement.querySelector('.memberNo').innerHTML;				
 						for(const mat of myRequestMatC){
 							if(modalMatNo = mat.matNo)
-							modalBody.innerHTML = mat.memberName + '님에게 보낸 매칭 신청을 취소하시겠습니까?'	
+							modalBody2.innerHTML = mat.memberName + '님에게 보낸 매칭 신청을 취소하시겠습니까?'	
 						}
 						$('#matCancelModal').modal('show');
 						

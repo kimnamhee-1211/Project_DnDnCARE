@@ -858,7 +858,7 @@ public class MatchingController {
 	}
 	
 		//이거 어느꺼찌? 종규 수정 남흰ㅁ한테물어보기
-	@PostMapping(value="getMatPtToMatNo2.mc", produces="application/json; charset=UTF-8")
+	@PostMapping(value="getMatPtToMatNo.mc", produces="application/json; charset=UTF-8")
 	@ResponseBody
 	public void getMatPtToMatNo(@RequestParam("matNo") int matNo, HttpServletResponse response) {
 		

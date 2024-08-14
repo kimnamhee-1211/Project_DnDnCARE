@@ -81,11 +81,13 @@
 				      		</button>
 				    	</h2>
 				   		<div th:id="'collapsethree' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-							<div class="accordion-body">
+							<div class="accordion-body" style="text-align: center;">
+								<div style="display:none" th:text="${myMat.ptCount}" class="ptCount"></div>
 								<table class="table mx-auto">
 									<thead></thead>
 									<tbody></tbody>
 								</table>
+								<button class="btn btn-success matCan">매칭 신청 취소</button>
 							</div>
 						</div>
 					</div>
@@ -116,7 +118,7 @@
 								<thead></thead>
 								<tbody></tbody>
 							</table>
-							<button class="btn btn-success mx-auto matOk">매칭 승낙</button>
+							<button class="btn btn-success matOk">매칭 승낙</button>
 						</div>
 				    </div>
 				  </div>
@@ -144,6 +146,27 @@
 	    </div>
 	  </div>
 	</div>	
+	
+	<!-- 매칭 취소 모달 -->	
+	<div class="modal fade" id="matCancelModal" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-xl">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel2">매칭 신청 취소</h3>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="margin:30px;">
+	        <h4 class="h4 mb-4 fw-bold" id="modalBody2"></h4> 
+	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청이 취소됩니다.<br>한 번 취소한 매칭 신청은 회복이 불가능합니다.</h5>	        
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-primary" id="matCancel">매칭 신청 취소</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>	
+	
 	
 	
 	
@@ -311,9 +334,33 @@
 			});
 			
 			
+			//매칭 취소			
+			const matCans = document.querySelectorAll('.matCan');
+			const modalBody2 = document.querySelector('#modalBody2');
+			modalBody2.innerHTML = '';
 			
+			/*<![CDATA[*/
+			const myRequestMat = /*[[${myRequestMat}]]*/'[]';
+			/*]]>*/
 			
+			if(matCans){
+				for(const matCan of matCans){
+					matCan.addEventListener('click', function(){
+						modalMatNo = this.parentElement.parentElement.parentElement.querySelector('.matNo').innerHTML;
+						modalPtCount = this.parentElement.querySelector('.ptCount').innerHTML;
+						for(const mat of myRequestMat){
+							if(modalMatNo = mat.matNo)
+							modalBody2.innerHTML = mat.memberName + '님에게 보낸 매칭 신청을 취소하시겠습니까?'	
+						}
+						$('#matCancelModal').modal('show');
+						
+					});
+				}
+			}
 			
+			document.querySelector('#matCancel').addEventListener('click', ()=>{
+				location.href='matchingCancelC.mc?matNo='+ modalMatNo + '&ptCount=' + modalPtCount;
+			});
 			
 			
 			

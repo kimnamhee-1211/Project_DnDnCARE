@@ -254,57 +254,55 @@
 	    <!-- 매칭 신청 성공/승낙/매칭 신청 취소 시 모달 -->
 		<div class="modal fade" id="matSuccesseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		  <div class="modal-dialog modal-dialog-centered modal-lg">
-		    <div class="modal-content" th:if ="${result == 'request'}">
-		      <div class="modal-header">
-		        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 완료</h3>
-		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		      </div>
-		      <div class="modal-body" style="margin:30px;" th:if ="${result == 'request'}">
-		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
-		        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹에 매칭을 신청하셨습니다.
-		        </h4>
-		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
-		        	[[${matPtName}]]님에게 매칭을 신청하셨습니다.
-		        </h4>	
-		      </div>
+		    <div class="modal-content">
+		    	<th:block th:if ="${result == 'request'}">
+			      <div class="modal-header">
+			        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 완료</h3>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body" style="margin:30px;" th:if ="${result == 'request'}">
+			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
+			        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹에 매칭을 신청하셨습니다.
+			        </h4>
+			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
+			        	[[${matPtName}]]님에게 매칭을 신청하셨습니다.
+			        </h4>	
+			      </div>			
+		    	 </th:block>
+		    	 <th:block th:if ="${result == 'approve'}">
+			      <div class="modal-header">
+			        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 승낙 완료</h3>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body" style="margin:30px;" th:if ="${result == 'approve'}">
+			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
+			        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹의 매칭 신청을 승낙하셨습니다. 
+			        </h4>
+			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
+			        	[[${matPtName}]]님의 매칭 신청을 승낙하셨습니다.
+			        </h4>	
+			      </div>
+		     	</th:block>
+			    <th:block th:if ="${result == 'cancell'}">
+			      <div class="modal-header">
+			        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 취소 완료</h3>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body" style="margin:30px;" th:if ="${result == 'approve'}">
+			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
+			        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹에 보낸 매칭 신청을 취소하셨습니다. 
+			        </h4>
+			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
+			        	[[${matPtName}]]님에게 보낸 매칭 신청을 취소하셨습니다.
+			        </h4>	
+			      </div>
+		     	</th:block>    
+		     <div class="modal-footer">
+		       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 		     </div>
-		     <div class="modal-content" th:if ="${result == 'approve'}">
-		      <div class="modal-header">
-		        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 승낙 완료</h3>
-		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		      </div>
-		      <div class="modal-body" style="margin:30px;" th:if ="${result == 'approve'}">
-		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
-		        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹의 매칭 신청을 승낙하셨습니다. 
-		        </h4>
-		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
-		        	[[${matPtName}]]님의 매칭 신청을 승낙하셨습니다.
-		        </h4>	
-		      </div>
-		      <div class="modal-content" th:if ="${result == 'cancell'}">
-		      <div class="modal-header">
-		        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 승낙 완료</h3>
-		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		      </div>
-		      <div class="modal-body" style="margin:30px;" th:if ="${result == 'approve'}">
-		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
-		        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹의 매칭 신청을 승낙하셨습니다. 
-		        </h4>
-		        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount == 1}">
-		        	[[${matPtName}]]님의 매칭 신청을 승낙하셨습니다.
-		        </h4>	
-		      </div>     
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-		      </div>
-		    </div>
 		  </div>
-		</div> 
-    
-    
-    
-    
-    </div>
+		</div>     
+   	 </div>
     
     
     <th:block th:replace="~{common/footer :: footer}"></th:block>
