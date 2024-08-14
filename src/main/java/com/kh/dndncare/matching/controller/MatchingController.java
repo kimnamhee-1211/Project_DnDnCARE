@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.kh.dndncare.common.AgeCalculator;
+import com.kh.dndncare.common.GetzipNo;
 import com.kh.dndncare.matching.model.exception.MatchingException;
 import com.kh.dndncare.matching.model.service.MatchingService;
 import com.kh.dndncare.matching.model.vo.CareReview;
@@ -303,6 +304,9 @@ public class MatchingController {
 		hospital.setHospitalName(hospitalName);
 		hospital.setHospitalAddress(hospitalAddress);
 		model.addAttribute("hospital", hospital);
+		
+		String zipCode = GetzipNo.ApiExplorer(hospitalAddress);
+		System.out.println("zipCode = " + zipCode);
 	
 		return "joinMatchingEnroll";
 	}
@@ -320,6 +324,15 @@ public class MatchingController {
 		//병원이 테이블에 없을 경우 등록 && 매칭 테이블 병원 셋
 		Hospital ho = mcService.getHospital(hospital);
 		if(ho == null) {
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			int result = mcService.enrollHospital(hospital);
 			if(result > 0) {
 				jm.setHospitalNo(hospital.getHospitalNo());

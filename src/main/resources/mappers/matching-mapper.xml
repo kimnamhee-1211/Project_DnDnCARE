@@ -458,7 +458,7 @@
 	</update>
 
 
-	<!-- 간병인의 매칭 승낙 -->
+	<!-- 환자의 매칭 승낙 -->
 	<update id="matchingApproveP">
 		update matching
 		set mat_confirm = 'W',
