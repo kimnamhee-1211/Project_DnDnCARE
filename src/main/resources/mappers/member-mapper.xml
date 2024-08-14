@@ -389,6 +389,7 @@
 		from member
 		where member_Pay = #{code}
 	</select>
+	
 	<!-- 내가 작성한 리뷰조회 -->
 	<select id="reviewList" resultType="CareReview">
 		select distinct review_no, c.pt_no, c.mat_no, review_content, review_score, review_create_date, review_update_date, m.member_name
@@ -405,11 +406,13 @@
 		where review_no = #{reviewNo}
 	</select>
 	
+	<!-- 환자번호 -->
 	<select id="getPtNo" resultType="_int">
 		select pt_no
 		from patient
 		where member_no=#{memberNo}
 	</select>
+	
 	<!-- 환자 메인 : 환자 본인 정보 조회 1번 -->
 	<select id="getPatientMyInfo" resultType="map">
 		select DECODE(pt_gender, 'M', '남성', '여성') AS "성별", 
@@ -740,6 +743,7 @@
 		ORDER BY MEMBER_NO DESC
 	</select>
 	
+	<!-- 간병인 후기 조회 -->
 	<select id="caregiverReviewList" resultType="CareReview">
 		select *
 		from care_review cr
@@ -747,6 +751,7 @@
 		where cr.member_No = #{memberNo}
 	</select>
 	
+	<!-- 원간 점수 -->
 	<select id="monthScoreList" resultType="CareReview">
 		select to_char(end_dt, 'YYYY-MM') as month, sum(review_score) "sumScore", avg(review_score) "avgScore", sum(money) sumMoney
 		from (select cr.review_No, cr.review_score, m.end_dt, cr.member_no, m.money
@@ -757,6 +762,7 @@
 		group by to_char(end_dt, 'YYYY-MM')
 	</select>
 	
+	<!-- 평균점수 -->
 	<select id="sumAvgScore" resultType="CareReview">
 		select sum(review_score) sumScore, avg(review_score) avgScore, count(review_score) countReview
 		from care_review
@@ -768,8 +774,9 @@
 		select to_char(end_dt, 'YYYY-MM') as month, sum(end_dt - begin_dt) useCount, sum(ante_pay) ante_pay
 		from matching
 		    join mat_pt_info using(mat_no)
-		where pt_no = #{ptNo}
+		where pt_no = #{ptNo} and mat_confirm != 'N'
 		group by to_char(end_dt, 'YYYY-MM')
+		order by  to_char(end_dt, 'YYYY-MM')
 	</select>
 	
 </mapper>

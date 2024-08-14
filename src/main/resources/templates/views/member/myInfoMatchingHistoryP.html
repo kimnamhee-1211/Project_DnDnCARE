@@ -48,15 +48,19 @@
 							<div class="m-2 d-flex justify-content-between">
 								<div class="h3 myInfo-title">[[${session.loginUser.MemberName}]]님 이용일수/지출</div>
 								<div>
-									<button class="myInfo-btn btn-sm" style="width:85px;">이용일</button>
-									<button class="btn-outline-maincolor btn-sm" style="width:85px;">지출</button>
+									<button id="countDayBtn" class="myInfo-btn btn-sm" style="width:85px;" onclick="showGraph('count')" >이용일</button>
+									<button id="countPayBtn" class="btn-outline-maincolor btn-sm" style="width:85px;" onclick="showGraph('pay')">지출</button>
 								</div>
 							</div>
 							
-							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
-								<div> -------------------------------------------------꺽은선그래프-------------------------------------------------
-								<canvas class="my-4 w-100" id="userMonthCount" width="900" height="250"></canvas>
-									
+								<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6" id="count-section">
+									<canvas class="my-4 w-100" id="useMonthCount" width="900" height="250"></canvas>
+										
+								</div>
+								
+								<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6; display:none" id="pay-section">
+									<canvas class="my-4 w-100" id="sumMonthPay" width="900" height="250"></canvas>
+										
 								</div>
 							</div>
 						</div>
@@ -67,42 +71,61 @@
 							<div class="m-2 d-flex justify-content-between">
 								<div class="h3 myInfo-title">[[${session.loginUser.MemberName}]]님 매칭 이력</div>
 								<div>
-									<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">대기</button>
-									<button class="btn-outline-maincolor btn-sm" style="width:85px; height:40px;">종료</button>
+									<button id='matchingWaitBtn' class="myInfo-btn btn-sm" style="width:85px; height:40px;" onclick="showStatus('wait')">매칭중</button>
+									<button id='matchingEndBtn' class="btn-outline-maincolor btn-sm" style="width:85px; height:40px;" onclick="showStatus('end')">종료</button>
 								</div>
 							</div>
 							
 
-							<div id="contentContainer" class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
+							<div id="matching" class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
 							    <table class="m-2" id="matchingTable">
+							        <tr>
+							            <th width="170px">간호 신청일</th>
+							            <th width="10"></th>
+							            <th width="170px">간호 종료일</th>
+							            <th width="820px">간병인 정보</th>
+							            <th width="120px">현재상태</th>
+							        </tr>
+							        <tr th:each="i : ${mciList}" th:if="${!i.isAfterDate}" class="matching-row" data-mat-confirm="${i.matConfirm}" data-is-after-date="${i.isAfterDate}">
+								            <td>[[${i.beginDt}]]</td>
+								            <td> ~ </td>
+								            <td>[[${i.endDt}]]</td>
+								            <td> 이름 : [[${i.memberName}]] 비용 : [[${i.money}]]원</td>
+								            <input type="hidden" th:id="'hiddenMemberNo' + ${i.memberNo}" name="memberNo" th:value="${i.memberNo}"/>
+								            <input type="hidden" th:id="'hiddenMatNo' + ${i.matNo}" name="matNo" th:value="${i.matNo}"/>
+								            <td><span th:if="${i.isBeforeDate}">시작 전</span><span th:if="${!i.isBeforeDate}">진행중</span></td>
+							        </tr>
+							        
+							    </table>
+							</div>
+							
+							<div id="endMatching" class="m-3 p-2" style="border-bottom:1px solid #dee2e6; display:none">
+							    <table class="m-2" id="matchingTable" >
 							        <tr>
 							            <th width="170px">간호 시작일</th>
 							            <th width="10"></th>
 							            <th width="170px">간호 종료일</th>
 							            <th width="820px">간병인 정보</th>
-							            <th width="150px">매칭 상태</th>
-							            <th width="150px">간병 상태</th>
 							            <th width="120px">후기 작성</th>
 							        </tr>
-							        <tr th:each="i : ${mciList}" class="matching-row" data-mat-confirm="${i.matConfirm}" data-is-after-date="${i.isAfterDate}">
-							            <td>[[${i.beginDt}]]</td>
-							            <td> ~ </td>
-							            <td>[[${i.endDt}]]</td>
-							            <td> 이름 : [[${i.memberName}]] 비용 : [[${i.money}]]원</td>
-							            <input type="hidden" th:id="'hiddenMemberNo' + ${i.memberNo}" name="memberNo" th:value="${i.memberNo}"/>
-							            <input type="hidden" th:id="'hiddenMatNo' + ${i.matNo}" name="matNo" th:value="${i.matNo}"/>
-							            <td><span th:if="${i.matConfirm == 'W'}">대기 중</span><span th:if="${i.matConfirm == 'Y'}">완료</span></td>
-							            <td><span th:if="${!i.isAfterDate}">진행 중</span><span th:if="${i.isAfterDate}">완료</span></td>
-							            <td th:if="${i.isAfterDate && i.matConfirm == 'Y'}">
-							                <button class="myInfo-btn btn-sm" onclick="reviewDetail('myInfoMatchingHistoryP')">후기 가능</button>
-							            </td>
-							            <td th:unless="${i.isAfterDate && i.matConfirm == 'Y'}">
-							                <button class="myInfo-btn btn btn-dark btn-sm">진행중</button>
-							            </td>
+							        <tr th:each="i : ${mciList}" th:if="${i.isAfterDate}" class="matching-row" data-mat-confirm="${i.matConfirm}" data-is-after-date="${i.isAfterDate}">
+								            <td>[[${i.beginDt}]]</td>
+								            <td> ~ </td>
+								            <td>[[${i.endDt}]]</td>
+								            <td> 이름 : [[${i.memberName}]] 비용 : [[${i.money}]]원</td>
+								            <input type="hidden" th:id="'hiddenMemberNo' + ${i.memberNo}" name="memberNo" th:value="${i.memberNo}"/>
+								            <input type="hidden" th:id="'hiddenMatNo' + ${i.matNo}" name="matNo" th:value="${i.matNo}"/>
+								            <td th:if="${i.isAfterDate && i.matConfirm == 'Y'}">
+								                <button class="myInfo-btn btn-sm" onclick="reviewDetail('myInfoMatchingHistoryP')">후기 가능</button>
+								            </td>
+								           
+								            <td th:unless="${i.isAfterDate && i.matConfirm == 'Y'}">
+								                <button class="myInfo-btn btn btn-dark btn-sm">진행중</button>
+								            </td>
 							        </tr>
+							        
 							    </table>
 							</div>
-
 						</div>
 						
 						
@@ -121,6 +144,32 @@
 			
 		window.onload =() =>{
 	        const monthPatient = /*[[${monthPatient}]]*/;
+	        console.log(monthPatient)
+	        
+	        const lastSixMonths = [];
+		    const currentDate = new Date();
+		    
+		    for (let i = 5; i >= 0; i--) {
+		        // 새로운 날짜 객체를 생성하여 월을 감소시킴
+		        const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+		        const year = date.getFullYear();
+		        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+		        
+		        lastSixMonths.push(`${year}-${month}`);
+		    }
+	        
+	        
+	       
+	        
+		    const counts = lastSixMonths.map(month => {
+		        const patientData = monthPatient.find(item => item.month == month);
+		        return patientData ? patientData.useCount : 0;  // 해당 월에 데이터가 없으면 0으로 채움
+		    });
+	        
+	        const pays = lastSixMonths.map(month =>{
+	       		const payData = monthPatient.find(item => item.month == month);
+	        	return payData ? payData.antePay : 0;
+	        })
 	        
 			const menuAtag = document.getElementsByClassName('my-menu');
 			const menuName = document.getElementsByClassName('menu-name')[0];
@@ -130,17 +179,45 @@
 				}
 			};
 			
+			
 			// 이용일수 차트
-			const ctx = document.getElementById('userMonthCount');
+			const ctx = document.getElementById('useMonthCount');
 			const myChart = new Chart(ctx, {
 			    type: 'line',
 			    data: {
-			        labels: ["1","2","3"], // x좌표
+			        labels: lastSixMonths, // x좌표
 			        datasets: [{
-			            data: ["1000","2000","3000"], // y좌표 (데이터 값)
+			            data: counts, // y좌표 (데이터 값)
+			            label: '이용일',
 			            backgroundColor: 'white', // 배경 색상
-			            borderColor: 'black', // 선 색상
-			            borderWidth: 1 // 선의 두께
+			            borderColor: 'skyblue', // 선 색상
+			            borderWidth: 3 // 선의 두께
+			        }]
+			    },
+			    options: {
+			        scales: {
+			            x: {
+			                beginAtZero: true
+			            },
+			            y: {
+			                beginAtZero: true
+			            }
+			        }
+			    }
+		});
+			
+			// 사용금액 그래프
+			const ctxP = document.getElementById('sumMonthPay');
+			const myChartP = new Chart(ctxP, {
+			    type: 'line',
+			    data: {
+			        labels: lastSixMonths, // x좌표
+			        datasets: [{
+			            data: pays, // y좌표 (데이터 값)
+			            label:'결제금액',
+			            backgroundColor: 'white', // 배경 색상
+			            borderColor: 'skyblue', // 선 색상
+			            borderWidth: 3 // 선의 두께
 			        }]
 			    },
 			    options: {
@@ -155,11 +232,50 @@
 			    }
 		});
 		}
-			
+		
+
 		function reviewDetail(beforePage){
 			var memberNo = document.querySelector('input[name="memberNo"]').value;
 		    var matNo = document.querySelector('input[name="matNo"]').value;
 			location.href = 'reviewDetail.mc?memberNo=' + memberNo + '&matNo='+ matNo+ '&from=' + beforePage;
+		}
+		
+		function showGraph(type) {
+			if (type == 'count') {
+				document.getElementById('count-section').style.display = 'block';
+				document.getElementById('pay-section').style.display = 'none';
+				document.getElementById('countDayBtn').classList.add('myInfo-btn')
+				document.getElementById('countDayBtn').classList.remove('btn-outline-maincolor');
+				document.getElementById('countPayBtn').classList.add('btn-outline-maincolor')
+				document.getElementById('countPayBtn').classList.remove('myInfo-btn')
+				
+			} else if (type == 'pay') {
+				document.getElementById('count-section').style.display = 'none';
+				document.getElementById('pay-section').style.display = 'block';
+				document.getElementById('countDayBtn').classList.remove('myInfo-btn')
+				document.getElementById('countDayBtn').classList.add('btn-outline-maincolor');
+				document.getElementById('countPayBtn').classList.remove('btn-outline-maincolor')
+				document.getElementById('countPayBtn').classList.add('myInfo-btn')
+			}
+		}
+		
+		function showStatus(status){
+			if(status == 'wait'){
+				document.getElementById('matching').style.display = 'block';
+				document.getElementById('endMatching').style.display = 'none';
+				document.getElementById('matchingWaitBtn').classList.remove('btn-outline-maincolor');
+				document.getElementById('matchingWaitBtn').classList.add('myInfo-btn');
+				document.getElementById('matchingEndBtn').classList.remove('myInfo-btn');
+				document.getElementById('matchingEndBtn').classList.add('btn-outline-maincolor');
+				
+			} else if(status == 'end'){
+				document.getElementById('matching').style.display = 'none';
+				document.getElementById('endMatching').style.display = 'block';
+				document.getElementById('matchingWaitBtn').classList.add('btn-outline-maincolor');
+				document.getElementById('matchingWaitBtn').classList.remove('myInfo-btn');
+				document.getElementById('matchingEndBtn').classList.add('myInfo-btn');
+				document.getElementById('matchingEndBtn').classList.remove('btn-outline-maincolor');
+			}
 		}
 		/*]]>*/
 	</script>

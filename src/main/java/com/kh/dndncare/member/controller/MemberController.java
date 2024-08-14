@@ -876,16 +876,21 @@ public class MemberController {
 					int ptNo = mService.getPtNo(memberNo);
 					ArrayList<MatMatptInfo> mciList = mService.selectMatList(ptNo);	//환자측 매칭방번호 리스트.ptNo가들어가서무조건
 					System.out.println("매칭이력"+mciList);
+					System.out.println("=======================");
+					ArrayList<CareReview> reviewList = mService.reviewList(ptNo);
+					int reviewYn = 0;
 					for(MatMatptInfo i : mciList) {
 						System.out.println(i);
+						i.setBeforeDate(currentDate.isBefore(i.getBeginDt().toLocalDate()));
 						i.setAfterDate(currentDate.isAfter(i.getEndDt().toLocalDate()));
+						//reviewYn= mService.selectReviewYn(i.getMatNo(), ptNo);
 					}
 					ArrayList<MatMatptInfoPt> monthPatient = mService.useMonth(ptNo);
 					
 					if(monthPatient != null) {
 						model.addAttribute("monthPatient",monthPatient);
 					}
-					
+					model.addAttribute("reviewList",reviewList);
 					model.addAttribute("mciList",mciList);
 					model.addAttribute("today", LocalDate.now());
 					return "myInfoMatchingHistoryP";
