@@ -321,6 +321,7 @@
     		left join matching ON mat_pt_info.mat_no = matching.mat_no
             left join member on matching.member_no =member.member_no
             left join caregiver on matching.member_no = caregiver.member_no
+            left join matching_date on matching.mat_no = matching_date.mat_no
 		where mat_confirm != 'N' and pt_no = #{ptNo}
 	</select>
 	<!-- 추천된 환자 정보조회 : 이름, 성별, 나이, 지역, 금액 -->
@@ -751,7 +752,7 @@
 		where cr.member_No = #{memberNo}
 	</select>
 	
-	<!-- 원간 점수 -->
+	<!-- 월간 점수 -->
 	<select id="monthScoreList" resultType="CareReview">
 		select to_char(end_dt, 'YYYY-MM') as month, sum(review_score) "sumScore", avg(review_score) "avgScore", sum(money) sumMoney
 		from (select cr.review_No, cr.review_score, m.end_dt, cr.member_no, m.money
@@ -779,4 +780,10 @@
 		order by  to_char(end_dt, 'YYYY-MM')
 	</select>
 	
+	<!-- 후기 작성 유무 -->
+	<select id="selectReviewYn" resultType="_int">
+		select count(*)
+		from care_review
+		where mat_no = #{matNo} and pt_no = #{ptNo}
+	</select>
 </mapper>

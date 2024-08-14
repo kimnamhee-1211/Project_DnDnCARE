@@ -880,10 +880,14 @@ public class MemberController {
 					ArrayList<CareReview> reviewList = mService.reviewList(ptNo);
 					int reviewYn = 0;
 					for(MatMatptInfo i : mciList) {
-						System.out.println(i);
 						i.setBeforeDate(currentDate.isBefore(i.getBeginDt().toLocalDate()));
 						i.setAfterDate(currentDate.isAfter(i.getEndDt().toLocalDate()));
-						//reviewYn= mService.selectReviewYn(i.getMatNo(), ptNo);
+						reviewYn= mService.selectReviewYn(i.getMatNo(), ptNo);
+						i.setReviewYn(reviewYn);
+						if(i.getMatDate()!=null) {
+							String matDatearr[] = i.getMatDate().split(",");
+						}
+						System.out.println(i);
 					}
 					ArrayList<MatMatptInfoPt> monthPatient = mService.useMonth(ptNo);
 					

@@ -184,6 +184,8 @@ public interface MemberService {
 
 	ArrayList<MatMatptInfoPt> useMonth(int ptNo);
 
+	int selectReviewYn(int matNo, int ptNo);
+
 
 
 }

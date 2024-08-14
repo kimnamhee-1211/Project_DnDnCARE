@@ -473,4 +473,10 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.useMonth(ptNo);
 	}
 
+
+	@Override
+	public int selectReviewYn(int matNo, int ptNo) {
+		return mMapper.selectReviewYn(matNo, ptNo);
+	}
+
 }
