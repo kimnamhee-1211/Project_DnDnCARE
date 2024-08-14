@@ -303,6 +303,7 @@ public class MatchingController {
 		Hospital hospital = new Hospital();
 		hospital.setHospitalName(hospitalName);
 		hospital.setHospitalAddress(hospitalAddress);
+		System.out.println(hospitalAddress);
 		model.addAttribute("hospital", hospital);
 		
 		String zipCode = GetzipNo.ApiExplorer(hospitalAddress);
