@@ -34,7 +34,7 @@
 
 	<!-- 간병백과의 일반 글 정보 조회 -->
 	<select id="selectAllCareInformation" resultType="Board">
-		SELECT * FROM BOARD WHERE CATEGORY_NO = 7 ORDER BY BOARD_UPDATE_DATE DESC
+		SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_NO) WHERE CATEGORY_NO = 7 ORDER BY BOARD_UPDATE_DATE DESC
 	</select>
 
 

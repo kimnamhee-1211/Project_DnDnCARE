@@ -33,9 +33,10 @@
 				
 				<div>	
 					<div>
-						<table class="table table-hover">
+						<table class="table table-hover" id="careInformationTable">
 							<thead>
 								<tr>
+									<th>번호</th>
 									<th>제목</th>
 									<th>작성자</th>
 									<th>작성일</th>
@@ -44,14 +45,15 @@
 							</thead>
 							<tbody>
 								<tr th:each="b : ${bList}">
+									<td>[[${b.boardNo}]]</td>
 									<td>[[${b.boardTitle}]]</td>
-									<td>관리자1</td>
-									<td>2024-08-15</td>
-									<td>10</td>
+									<td>[[${b.memberNickName}]]</td>
+									<td>[[${b.boardUpdateDate}]]</td>
+									<td>[[${b.boardCount}]]</td>
 								</tr>
 							</tbody>
 						</table>
-						<div style="display:grid; grid-template-columns:100px 1fr 230px;">
+						<div style="display:grid; grid-template-columns:100px 1fr 300px;">
 							<form>
 								<button type="button" class="btn btn-primary" id="writeBtn">글 쓰기</button>
 							</form>
@@ -59,11 +61,18 @@
 							<div>
 								<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
 									<div class="btn-group me-2 text-end" role="group" aria-label="First group">
-										<button type="button" class="btn btn-outline-secondary">이전</button>
-								    	<button type="button" class="btn btn-outline-secondary">1</button>
-									    <button type="button" class="btn btn-outline-secondary">2</button>
-									    <button type="button" class="btn btn-outline-secondary">3</button>
-									    <button type="button" class="btn btn-outline-secondary">다음</button>
+										<!-- 이전 버튼 -->
+										<button type="button" class="btn btn-outline-secondary" th:if="${pi.currentPage <= 1}" disabled>Previous</button>
+	 									<button type="button" class="btn btn-outline-secondary" th:if="${pi.currentPage > 1}" th:onclick="|location.href='@{${loc}(page=${pi.currentPage - 1})}'|">Previous</button>
+										
+										<!-- 숫자 버튼 -->
+										<th:block th:each="p: ${#numbers.sequence(pi.startPage, pi.endPage)}">
+								    		<button type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{${loc}(page=${p})}'|">[[${p}]]</button>
+										</th:block> 
+									    
+									    <!-- 다음 버튼 -->
+									    <button type="button" class="btn btn-outline-secondary" th:if="${pi.currentPage >= pi.maxPage}" disabled>Next</button>
+									    <button type="button" class="btn btn-outline-secondary" th:if="${pi.currentPage < pi.maxPage}" th:onclick="|location.href='@{${loc}(page=${pi.currentPage+1})}'|">Next</button>
 									</div>
 								</div>
 							</div>
@@ -72,7 +81,9 @@
 					
 					<div><!-- 사이공백 --></div>
 					
-					<div class="h-100 p-5 bg-light border rounded-3">글 내용 출력할자리</div>
+					<div class="h-100 p-5 bg-light border rounded-3" id="careInformationDetail">
+						<!-- 글 상세내용이 들어올 공간 -->
+					</div>
 				</div>
 			</main>
 		</div>
@@ -87,12 +98,36 @@
 			})
 			// 간병백과 글 쓰기 페이지로 이동(끝)
 			
+			//글 상세보기 요청(시작)
+			const tdList = document.getElementById('careInformationTable').querySelectorAll('td');
+			const detailDiv = document.querySelector('#careInformationDetail');
+			for(const td of tdList){
+				td.addEventListener('click', function() {
+					for(const other of tdList){
+						if(other != this){
+							other.parentElement.style.background = 'white'; // 클릭하지 않은 tr의 배경색을 white로 변경
+						}
+					}
+					this.parentElement.style.background = 'lightgray'; // 클릭한 tr의 배경색을 lightgray로 변경
+					
+					// 상세보기 div에 출력할 노드 작성(시작)
+					const titleSpan = document.createElement('span');
+					titleSpan.setAttribute("class", "badge rounded-pill bg-dark fs-6");
+					titleSpan.innerText = '내용';
+					
+					//const br = document.
+					
+					
+					
+					
+					//detailDiv.append
+				})
+				
+				
+			}
 			
 			
 		}
-	
-	
-	
 	</script>
 </body>
 </html>
