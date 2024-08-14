@@ -324,10 +324,6 @@ public class BoardController {
 		return json.toString();
 	}
 	
-	@GetMapping("chat.bo")
-	public String chatTest() {
-		return "chatTest";
-	}
 
 	
 	

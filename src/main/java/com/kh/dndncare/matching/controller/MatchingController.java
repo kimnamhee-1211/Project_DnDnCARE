@@ -555,7 +555,14 @@ public class MatchingController {
 		AgeCalculator ageCalculator = new AgeCalculator();
 		int age = ageCalculator.calculateAge(caregiverIntro.getMemberAge());
 		
-		System.out.println(age);
+		//통계용
+		ArrayList<MatMatptInfo> serviceList = mcService.serviceList(memberNo);
+		if(serviceList != null) {
+			System.out.println("서비스1"+serviceList);
+			model.addAttribute("serviceList", serviceList);
+		}
+		System.out.println("서비스2"+serviceList);
+				
 		// 간병인 정보(국적, 경력, 자격증)
 		ArrayList<InfoCategory> caregiverInfo = mcService.getCaregiverInfo(memberNo);
 		HashMap<String, Object> caregiverInfoList = new HashMap<String, Object>();
@@ -1149,6 +1156,8 @@ public class MatchingController {
 		//남희 : 나이세팅
 		int age = AgeCalculator.calculateAge(caregiverIntro.getMemberAge());
 		caregiverIntro.setAge(age);
+		
+		
 		
 		
 		// 간병인 정보(국적, 경력, 자격증)

@@ -340,6 +340,11 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.matchingCancelC(matNo, memberNo);
 	}
 
+	@Override
+	public ArrayList<MatMatptInfo> serviceList(int memberNo) {
+		return mMapper.serviceList(memberNo);
+	}
+
 
 
 

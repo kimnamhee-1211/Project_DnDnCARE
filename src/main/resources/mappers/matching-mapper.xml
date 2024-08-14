@@ -495,6 +495,13 @@
 			and member_no = #{memberNo}		
 	</delete>
 
-
-
+	<!-- 통계용 서비스 -->
+	<select id="serviceList" resultType="MatMatptInfo">
+		select service, count(service) serviceCount
+		from mat_pt_info
+			join matching using(mat_no)
+		where member_no = #{memberNo}
+		group by service
+	</select>
+	
 </mapper>

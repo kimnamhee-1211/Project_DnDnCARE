@@ -160,6 +160,9 @@ public interface MatchingService {
 	
 	//간병인 매칭 신청 취소
 	int matchingCancelC(int matNo,  int memberNo);
+	
+	// 서비스 통계
+	ArrayList<MatMatptInfo> serviceList(int memberNo);
 
 
 

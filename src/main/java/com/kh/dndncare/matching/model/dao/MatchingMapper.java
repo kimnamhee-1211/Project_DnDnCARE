@@ -137,6 +137,9 @@ public interface MatchingMapper {
 	
 	int matchingCancelC(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
 
+	ArrayList<MatMatptInfo> serviceList(int memberNo);
+
+
 	
 
 
