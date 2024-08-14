@@ -37,4 +37,19 @@ public class AdminServiceImpl implements AdminService{
 		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
 		return aMapper.selectAllCareInformation(rowBounds); // 하나만 넘겨도 되려나?
 	}
+
+	@Override
+	public ArrayList<Attachment> selectAttachment(ArrayList<Integer> bNoList) {
+		return aMapper.selectAttachment(bNoList);
+	}
+
+	@Override
+	public int hideCareInformation(int boardNo) {
+		return aMapper.hideCareInformation(boardNo);
+	}
+
+	@Override
+	public int hideAttachment(int boardNo) {
+		return aMapper.hideAttachment(boardNo);
+	}
 }

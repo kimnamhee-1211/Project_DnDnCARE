@@ -37,5 +37,26 @@
 		SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_NO) WHERE CATEGORY_NO = 7 ORDER BY BOARD_UPDATE_DATE DESC
 	</select>
 
+	<!-- 간병백과의 첨부파일 조회 -->
+	<select id="selectAttachment" resultType="Attachment">
+		SELECT *
+		FROM ATTACHMENT
+		WHERE REF_BOARD_NO IN 
+		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
+	</select>
+
+	<!-- 간병백과 글 내리기 -->
+	<update id="hideCareInformation">
+		UPDATE BOARD
+		SET BOARD_STATUS = 'N'
+		WHERE BOARD_NO = ${boardNo}
+	</update>
+	
+	<!-- 간병백과 첨부파일 내리기 -->
+	<update id="hideAttachment">
+		UPDATE ATTACHMENT
+		SET ATTM_STATUS = 'N'
+		WHERE REF_BOARD_NO = ${boardNo}
+	</update>
 
 </mapper>

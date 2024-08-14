@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.dndncare.admin.model.exception.AdminException;
 import com.kh.dndncare.admin.model.service.AdminService;
@@ -57,9 +58,17 @@ public class AdminController {
 		int listCount = aService.getCareInformationListCount();
 		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 7);
 		ArrayList<Board> bList = aService.selectAllCareInformation(pi); // 이래도 되나?
+		ArrayList<Integer> bNoList = new ArrayList<Integer>();
+		for(Board b : bList) {
+			bNoList.add(b.getBoardNo());
+		}
+		ArrayList<Attachment> aList = aService.selectAttachment(bNoList);
+		
+		
 		
 		if(!bList.isEmpty()) {
 			model.addAttribute("bList", bList);
+			model.addAttribute("aList", aList);
 			model.addAttribute("pi", pi);
 			System.out.println(pi);
 			model.addAttribute("loc", request.getRequestURI());
@@ -191,8 +200,21 @@ public class AdminController {
 		return now + random;
 	}
 	
-	
-	
+	// 간병백과 게시글 삭제
+	@PostMapping("deleteCareInformation.adm")
+	@ResponseBody
+	public String deleteCareInformation(@RequestParam("boardNo") int boardNo) {
+		System.out.println("삭제할 글 번호 : " + boardNo); // 삭제할 글 번호 : 181
+		
+		int bResult = aService.hideCareInformation(boardNo);
+		int aResult = aService.hideAttachment(boardNo);
+		
+		if(bResult == 1) {
+			return "success";
+		} else {
+			return "fail";
+		}
+	}
 	
 	
 }

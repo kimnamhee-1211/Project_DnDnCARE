@@ -16,4 +16,10 @@ public interface AdminService {
 
 	ArrayList<Board> selectAllCareInformation(PageInfo pi);
 
+	ArrayList<Attachment> selectAttachment(ArrayList<Integer> bNoList);
+
+	int hideCareInformation(int boardNo);
+
+	int hideAttachment(int boardNo);
+
 }
