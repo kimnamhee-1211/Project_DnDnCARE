@@ -733,12 +733,16 @@ public class MemberController {
 		ArrayList<CareGiver> cg = mService.selectCareGiverList(); // 간병인 정보
 		model.addAttribute("cg",cg);
 		ArrayList<MatMatptInfo> mc = mService.selectMatList(loginUser.getMemberNo());
+		System.out.println("메소드 잘되나 확인하기 mc : "+ mc);
 		int payCount = 0;
 		for(MatMatptInfo mcc : mc) {
+			System.out.println(mcc.getMatConfirm());
 			if(mcc.getMatConfirm().equals("W")) {
+				System.out.println("포문"+mcc.getMatConfirm());
 				payCount += 1;
 			}
 		}
+		System.out.println("여기도확인"+payCount);
 		
 		model.addAttribute("payCount",payCount);
 		model.addAttribute("mc",mc);
