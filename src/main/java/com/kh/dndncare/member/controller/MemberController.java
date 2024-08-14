@@ -732,8 +732,15 @@ public class MemberController {
 		ArrayList<CareGiver> cg = mService.selectCareGiverList(); // 간병인 정보
 		model.addAttribute("cg",cg);
 		ArrayList<MatMatptInfo> mc = mService.selectMatList(loginUser.getMemberNo());
+		int payCount = 0;
+		for(MatMatptInfo mcc : mc) {
+			if(mcc.getMatConfirm().equals("W")) {
+				payCount += 1;
+			}
+		}
+		
+		model.addAttribute("payCount",payCount);
 		model.addAttribute("mc",mc);
-		System.out.println(mc);
 		for(CareGiver c : cg) {
 			LocalDate birthDateParsed = c.getMemberAge().toLocalDate();
 			LocalDate today = LocalDate.now();
