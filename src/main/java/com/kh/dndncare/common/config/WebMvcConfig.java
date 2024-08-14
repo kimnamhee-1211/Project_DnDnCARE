@@ -1,8 +1,13 @@
 package com.kh.dndncare.common.config;
 
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.kh.dndncare.common.interceptor.CheckLoginInterceptor;
+
+@Configuration
 public class WebMvcConfig implements WebMvcConfigurer{
 	
 	@Override
@@ -12,6 +17,17 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		WebMvcConfigurer.super.addResourceHandlers(registry);
 	}
 	
-	
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+
+		
+		//기본적인 로그인 인터셉터 넣기
+		registry.addInterceptor(new CheckLoginInterceptor())
+		.addPathPatterns("/myInfo.me","/patientMain.me","/caregiverMain.me","/moreCaregiverInfo.me","/joinMatchingMainView.jm","/communityBoardList.bo");
+		
+		
+		
+		WebMvcConfigurer.super.addInterceptors(registry);
+	}
 	
 }
