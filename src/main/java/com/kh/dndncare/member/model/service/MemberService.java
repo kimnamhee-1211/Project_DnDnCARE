@@ -164,7 +164,7 @@ public interface MemberService {
 
 	ArrayList<MatMatptInfo> selectMatList(int i);
 
-	ArrayList<MatMatptInfoPt> getMatMatptInfoPt();
+	ArrayList<MatMatptInfoPt> getMatMatptInfoPt(int memberNo);
 
 	ArrayList<RequestMatPt> getRequestMatPt(int memberNo);
 

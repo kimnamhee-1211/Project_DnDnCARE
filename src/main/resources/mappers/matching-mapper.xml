@@ -472,14 +472,24 @@
 		where mat_no = #{matNo}	
 	</select>
 	
-	<update id="matchingCancelP">
+	<!-- //환자 매칭 신청 취소 -->
+	<update id="matchingCancelC">
 		update matching
 		set member_no = null
 		where mat_no = #{matNo}
 			and member_no = #{memberNo}
 	</update>
 
-
+	<!--간병인 매칭 신청 취소 -->
+	<delete id="matchingCancelC">
+		delete table mat_care_pending
+		where mat_no = #{matNo}
+			and member_no = #{memberNo}
+	
+	
+	
+	
+	</delete>
 
 
 

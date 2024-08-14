@@ -160,7 +160,7 @@ public interface MemberMapper {
 	ArrayList<MatMatptInfo> selectMatList(int memberNo);
 
 
-	ArrayList<MatMatptInfoPt> getMatMatptInfoPt();
+	ArrayList<MatMatptInfoPt> getMatMatptInfoPt(int memberNo);
 
 	ArrayList<RequestMatPt> getRequestMatPt(int memberNo);
 

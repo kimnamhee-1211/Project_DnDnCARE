@@ -933,6 +933,7 @@ public class MatchingController {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
 		int result = mcService.matchingApproveC(matNo, loginUser.getMemberNo());
+		
 		if(result > 0) {		
 			String matPtName = mcService.getMatPtName(matNo, ptCount);			
 			re.addAttribute("matPtName", matPtName);
@@ -1210,6 +1211,25 @@ public class MatchingController {
 	
 	
 	
+	//간병인 매칭 신청 취소
+	@GetMapping("matchingCancelC.mc")
+	public String matchingCancelC(@RequestParam("matNo") int matNo, @RequestParam("ptCount") int ptCount, 
+								RedirectAttributes re, HttpSession session) {
+		
+		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();		
+		int result = mcService.matchingCancelC(matNo, memberNo);
+
+		if(result > 0) {		
+			String matPtName = mcService.getMatPtName(matNo, ptCount);			
+			re.addAttribute("matPtName", matPtName);
+			re.addAttribute("matPtCount", ptCount);
+			re.addAttribute("result", "cancell");
+			return "redirect:caregiverMain.me";
+		}else {
+			throw new MemberException("간병인 매칭 신청 취소 실패");
+		}
+
+	}
 	
 	
 	

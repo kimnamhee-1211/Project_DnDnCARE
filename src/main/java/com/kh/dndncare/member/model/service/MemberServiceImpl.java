@@ -410,8 +410,8 @@ public class MemberServiceImpl implements MemberService {
 	
 	//MatMatptInfoPt get - 환자매칭 모든 정보
 	@Override
-	public ArrayList<MatMatptInfoPt> getMatMatptInfoPt() {
-		return mMapper.getMatMatptInfoPt();
+	public ArrayList<MatMatptInfoPt> getMatMatptInfoPt(int memberNo) {
+		return mMapper.getMatMatptInfoPt(memberNo);
 	}
 	
 	//loginUser(간병인)에게 매칭을 신청한 대상 이름 불러오기
