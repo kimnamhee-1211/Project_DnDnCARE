@@ -599,7 +599,7 @@ public class MatchingController {
 		
 		//공동매칭일 경우 loginUser가 방장인지 아닌지 알아보기
 		String leader = "N";
-		if(matNo != null) {
+		if(matNo != null){
 			leader = "Y";
 			int matNo2 = (int)matNo;
 			int ptCount = mcService.getPtCount(matNo2);			

@@ -193,6 +193,8 @@ public interface MemberService {
 
 	ArrayList<MatMatptInfo> selectMatListPay(int memberNo);
 
+	int getCountPendingMe(int matNo, int memberNo);
+
 
 
 }

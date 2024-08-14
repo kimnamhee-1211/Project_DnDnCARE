@@ -610,9 +610,9 @@ public class MemberController {
 		model.addAttribute("loginUserName", loginUser.getMemberName());
 		
 		// 1. 자동 추천 목록 받아오기
-		int memberNo = 0;
+		int memberNo = loginUser.getMemberNo();
+				
 		if(loginUser != null) {
-			memberNo = loginUser.getMemberNo();
 			System.out.println(memberNo);
 			System.out.println("전");
 			ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
@@ -631,6 +631,15 @@ public class MemberController {
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList3 = new ArrayList<MatMatptInfoPt>();
 		
 		for(int i = 0; i < matMatptInfoPtListBefore.size(); i++) {
+			
+			//이미 신청한 환자 매칭방인지 확인
+			int iMatNo = matMatptInfoPtListBefore.get(i).getMatNo();			
+			int countResult =  mService.getCountPendingMe(iMatNo, loginUser.getMemberNo());
+			if(countResult > 0) {
+				matMatptInfoPtListBefore.remove(i);
+			}
+			
+			
 			//나이 계산
 			int ptRealAge = AgeCalculator.calculateAge(matMatptInfoPtListBefore.get(i).getPtAge());
 			matMatptInfoPtListBefore.get(i).setPtRealAge(ptRealAge);
@@ -694,6 +703,7 @@ public class MemberController {
 	
 		return "caregiverMain";
 	}
+	
 	
 	// 자동추천을 비동기 통신으로 요청
 	@GetMapping("refreshPatientChoice.me")

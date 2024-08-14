@@ -190,4 +190,6 @@ public interface MemberMapper {
 
 	ArrayList<MatMatptInfo> selectMatListPay(int memberNo);
 
+	int getCountPendingMe(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
+
 }

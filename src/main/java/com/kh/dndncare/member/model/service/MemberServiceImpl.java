@@ -505,4 +505,11 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectMatListPay(memberNo);
 	}
 
+
+	@Override
+	public int getCountPendingMe(int matNo, int memberNo) {
+		// TODO Auto-generated method stub
+		return mMapper.getCountPendingMe(matNo, memberNo);
+	}
+
 }
