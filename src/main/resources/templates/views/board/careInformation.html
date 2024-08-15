@@ -20,11 +20,12 @@
 	
 		<div>
 			<div class="container-fluid px-4">
-                        <h1 class="mt-4">Tables</h1>
-                        <ol class="breadcrumb mb-4">
+                        <h1 class="mt-4">간병백과</h1>
+                        <!-- <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
                             <li class="breadcrumb-item active">Tables</li>
-                        </ol>
+                        </ol> -->
+                        <br/>
                         <div class="card mb-4">
                             <div class="card-body">
                                 DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
@@ -35,7 +36,7 @@
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                DataTable Example
+                               	간병에 대한 지식을 공유합니다.
                             </div>
                             <div class="card-body">
                                 <table id="datatablesSimple">
@@ -530,16 +531,6 @@
 	
 	</div>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	<div th:replace="~{common/footer :: footer}"></div>
 	
 	<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> -->
@@ -553,6 +544,8 @@
 		    if (datatablesSimple) {
 		        new simpleDatatables.DataTable(datatablesSimple);
 		    }
+
+		    
 		});
 	
 	
