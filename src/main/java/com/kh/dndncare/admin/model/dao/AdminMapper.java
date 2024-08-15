@@ -1,6 +1,7 @@
 package com.kh.dndncare.admin.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
@@ -21,9 +22,9 @@ public interface AdminMapper {
 
 	ArrayList<Attachment> selectAttachment(ArrayList<Integer> bNoList);
 
-	int hideCareInformation(int boardNo);
+	int changeStatusCareInformation(HashMap<String, Object> map);
 
-	int hideAttachment(int boardNo);
+	int changeStatusAttachment(HashMap<String, Object> map);
 
 	ArrayList<Attachment> selectOneAttachment(int boardNo);
 

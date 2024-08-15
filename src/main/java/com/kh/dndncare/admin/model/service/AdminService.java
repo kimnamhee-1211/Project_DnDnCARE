@@ -1,6 +1,7 @@
 package com.kh.dndncare.admin.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
@@ -18,9 +19,9 @@ public interface AdminService {
 
 	ArrayList<Attachment> selectAttachment(ArrayList<Integer> bNoList);
 
-	int hideCareInformation(int boardNo);
+	int changeStatusCareInformation(HashMap<String, Object> map);
 
-	int hideAttachment(int boardNo);
+	int changeStatusAttachment(HashMap<String, Object> map);
 
 	ArrayList<Attachment> selectOneAttachment(int boardNo);
 

@@ -1,6 +1,7 @@
 package com.kh.dndncare.admin.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +45,13 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public int hideCareInformation(int boardNo) {
-		return aMapper.hideCareInformation(boardNo);
+	public int changeStatusCareInformation(HashMap<String, Object> map) {
+		return aMapper.changeStatusCareInformation(map);
 	}
 
 	@Override
-	public int hideAttachment(int boardNo) {
-		return aMapper.hideAttachment(boardNo);
+	public int changeStatusAttachment(HashMap<String, Object> map) {
+		return aMapper.changeStatusAttachment(map);
 	}
 
 	@Override

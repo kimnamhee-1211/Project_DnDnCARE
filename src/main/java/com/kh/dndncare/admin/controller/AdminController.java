@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import javax.imageio.ImageIO;
@@ -208,13 +209,17 @@ public class AdminController {
 	}
 	
 	// 간병백과 게시글 삭제
-	@PostMapping("deleteCareInformation.adm")
+	@PostMapping("changeStatusCareInformation.adm")
 	@ResponseBody
-	public String deleteCareInformation(@RequestParam("boardNo") int boardNo) {
+	public String changeStatusCareInformation(@RequestParam("boardNo") int boardNo,
+												@RequestParam("status") String status) {
 		System.out.println("삭제할 글 번호 : " + boardNo); // 삭제할 글 번호 : 181
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("boardNo", boardNo);
+		map.put("status", status);
 		
-		int bResult = aService.hideCareInformation(boardNo);
-		int aResult = aService.hideAttachment(boardNo);
+		int bResult = aService.changeStatusCareInformation(map);
+		int aResult = aService.changeStatusAttachment(map);
 		
 		if(bResult == 1) {
 			return "success";
@@ -225,6 +230,7 @@ public class AdminController {
 	
 	// 간병백과 게시글 수정
 	@PostMapping("modifyCareInformation.adm")
+	@ResponseBody
 	public String modifyCareInformation(@ModelAttribute Board b, HttpSession session) {
 //		테스트
 //			원본에 이미지파일이 없었던 경우
@@ -303,7 +309,7 @@ public class AdminController {
 			ArrayList<Integer> removeAttmNoList = new ArrayList<Integer>(); // 기존의 첨부파일 중 삭제해야할 첨부파일 번호를 담을 그릇
 			ArrayList<String> removeFileNameList = new ArrayList<String>();
 			
-			if(oldAttmList != null) { // 원래의 첨부파일이 존재하는 경우를 가르킨다.
+			if(oldAttmList != null && !oldAttmList.isEmpty()) { // 원래의 첨부파일이 존재하는 경우를 가르킨다.
 				for(Attachment attm : oldAttmList) {
 					if(attm.getAttmLevel() == 1) { // 썸네일이 아닌 첨부파일들만을 대상으로 한다.
 						if(!content.contains(attm.getRenameName())) { // 수정한 boardContent에서 기존의 이미지가 제거된 경우를 가르킴
@@ -338,6 +344,7 @@ public class AdminController {
 				//thumbnailUtil.saveImage(image, "\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
 				thumbnailUtil.saveImage(image, "C:\\\\uploadFinalFiles/" + thumbnailName);
 				
+				
 				// 새로운 썸네일을 DB에 저장한다.
 				Attachment thumbnail = new Attachment(); // 자동생성한 썸네일에 대한 정보를 주입
 				thumbnail.setRefBoardNo(b.getBoardNo());
@@ -350,14 +357,13 @@ public class AdminController {
 			}
 			
 			
+			
 			// (4) 수정한 이미지 이름을 이용하여 글 내용을 업데이트한다. : MEMBER_NO, BOARD_TITLE, BOARD_UPDATE_DATE, BOARD_CONTENT
 			int updateBoardResut = aService.updateCareInformation(b);
 			
-			if(updateBoardResut > 0) { // 성공 기준을 게시글 업데이트만을 고려하기엔 너무 대충하는 것 같은데? **추후에 보완하자**
-				return "redirect:careInformation.adm";
-			} else {
-				throw new AdminException("서비스 요청에 실패하였습니다.");
-			}
+			
+			// 성공 기준을 게시글 업데이트만을 고려하기엔 너무 대충하는 것 같은데? **추후에 보완하자**
+			return updateBoardResut == 1 ? "success" : "fail";
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -116,9 +116,9 @@
 			// td에 대한 클릭 이벤트 : 글 상세보기 요청(시작)
 			const tdList = document.getElementById('careInformationTable').querySelectorAll('td');
 			const detailDiv = document.querySelector('#careInformationDetail'); // 글 내용을 삽입해야할 div
-			let boardContent = '';
-			let boardTitle = '';
-			let boardNo = '';
+			let boardContent = ''; // 원본 내용을 저장할 변수
+			let boardTitle = ''; // 원본 제목을 저장할 변수
+			let boardNo = ''; // 원본 글 번호를 저장할 변수
 			const btnDiv = detailDiv.nextElementSibling;
 			const btnList = btnDiv.children; // 수정하기, 내리기 버튼
 			
@@ -133,6 +133,24 @@
 							}
 						}
 						
+						let myStatusDivList = this.parentElement.children[5].children;
+						let status; // 현재 상태를 저장할 변수 선언
+						for(const div of myStatusDivList){
+							if(div.className.includes('selectState')){
+								status = div.innerText; // 현재 상태를 변수에 저장한다.
+							}
+						}
+						
+						if(status == 'Y'){ // 현재 글의 상태가 Y인 경우
+							btnList[1].innerText = '내리기';
+							btnList[1].classList.remove('btn-primary');
+							btnList[1].classList.add('btn-danger');
+						} else { // 현재 글의 상태가 N인 경우
+							btnList[1].innerText = '올리기';
+							btnList[1].classList.remove('btn-danger');
+							btnList[1].classList.add('btn-primary');
+						}
+						
 						if(btnList.length == 4) { 
 							btnList[3].remove(); // [등록하기], [취소하기] 버튼을 삭제한다.
 							btnList[2].remove();
@@ -141,13 +159,6 @@
 						}
 						
 						this.parentElement.style.background = 'lightgray'; // 클릭한 tr의 배경색을 lightgray로 변경
-						
-						// 상세보기 div에 출력할 노드 작성(시작)
-						const titleSpan = document.createElement('span');
-						titleSpan.setAttribute("class", "badge rounded-pill bg-dark fs-6");
-						titleSpan.innerText = '내용';
-						
-						const br = document.createElement('br');
 						
 						/*<![CDATA[*/
 						const bList = /*[[${bList}]]*/'bList'
@@ -210,7 +221,7 @@
 						const br1 = document.createElement('br');
 						const br2 = document.createElement('br');
 						
-						const input = document.createElement('input');
+						const input = document.createElement('input'); // 글 제목 저장
 						input.setAttribute('type', 'text');
 						input.setAttribute('name', 'boardTitle');
 						input.value = boardTitle;
@@ -220,7 +231,6 @@
 						
 						const editorDiv = document.createElement('div');
 						editorDiv.setAttribute('id', 'editor');
-						
 					
 						form.append(bNoInput);
 						form.append(bContentInput);
@@ -261,38 +271,156 @@
 					 	btnDiv.append(' ');
 					 	btnDiv.append(cancleBtn);
 					 	
-					 	
+					 	// [등록하기] 버튼을 클릭
 					 	insertBtn.addEventListener('click', () => { // 테이블의 다른 행을 클릭하면 제거될 요소이기 때문에 여기서 이벤트를 지정해도 괜찮음
-					 		document.getElementsByName('boardContent')[0].value = editor.getHTML();
-					 		document.querySelector('#modifyForm').submit();
+					 		const newContent = editor.getHTML();
+					 		
+					 		$.ajax({
+					 			url: 'modifyCareInformation.adm',
+					 			type: 'post',
+					 			data: {
+					 				boardNo: document.getElementsByName('boardNo')[0].value,
+					 				boardTitle: document.getElementsByName('boardTitle')[0].value,
+					 				boardContent: newContent
+					 			},
+					 			success: data => {
+					 				if(data == 'success'){// 글 수정에 성공한 경우 
+					 					// 상세보기 div에 출력할 HTML 작성(시작)
+										detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + newContent;
+
+										let nextDiv = detailDiv.nextElementSibling;
+										let fourBtnList = nextDiv.children;
+										for(let i = fourBtnList.length-1; i >= 0; i--){
+											if(i > 1) fourBtnList[i].remove(); // [등록하기],[취소하기] 버튼을 페이지에서 삭제
+											else fourBtnList[i].style.display = 'inline'; // [수정하기], [내리기] 버튼을 화면에 표시
+										}
+					 				} else{
+					 					alert('서비스 요청에 실패하였습니다.');
+					 				}
+					 			},
+					 			error: data => console.log(data)
+					 		});
 					 	});
 					 	
-					} else if(i == 1){ // 삭제하기 버튼 클릭
-						$.ajax({
-							url: 'deleteCareInformation.adm',
-							type: 'POST',
-							data: {boardNo : bNo},
-							success: data => {
-								console.log(data);
-								console.log(targetTr.querySelectorAll('div'));
-								if(data == 'success'){ // 삭제 성공
-									detailDiv.innerHTML = ''; // 원래 있던 내용 초기화
-									const divList = targetTr.querySelectorAll('div'); // 클릭한 tr에 있는 상태 div들에게 접근
-									divList[0].className = ''; // Y에 대한 배경을 OFF
-									divList[1].className = 'selectState'; // N에 대한 배경을 ON 
-								} else if(data == 'fail') { // 삭제 실패
-									alert('서비스 요청에 실패하였습니다');
-								}
-							},
-							error: data=> console.log(data)
-						});
+					 	// [취소하기] 버튼을 클릭 : 테이블의 다른 행을 클릭하면 제거될 요소이기 때문에 여기서 이벤트를 지정해도 된다.
+					 	cancleBtn.addEventListener('click', () => {
+							detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + boardContent;
+		
+							let nextDiv = detailDiv.nextElementSibling;
+							let fourBtnList = nextDiv.children;
+							for(let i = fourBtnList.length-1; i >= 0; i--){
+								if(i > 1) fourBtnList[i].remove(); // [등록하기],[취소하기] 버튼을 페이지에서 삭제
+								else fourBtnList[i].style.display = 'inline'; // [수정하기], [내리기] 버튼을 화면에 표시
+							}
+					 	});
+					} else if(i == 1){ // 클릭한 버튼이 [내리기] 또는 [올리기] 버튼일 때
+						if(this.innerText == '내리기'){ // [내리기] 버튼 클릭
+							$.ajax({
+								url: 'changeStatusCareInformation.adm',
+								type: 'POST',
+								data: {boardNo : bNo, status: 'N'},
+								success: data => {
+									console.log(data);
+									console.log(targetTr.querySelectorAll('div'));
+									if(data == 'success'){ // 삭제 성공
+										detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + boardContent;
+
+										const divList = targetTr.querySelectorAll('div'); // 클릭한 tr에 있는 상태 div들에게 접근
+										divList[0].className = ''; // Y에 대한 배경을 OFF
+										divList[1].className = 'selectState'; // N에 대한 배경을 ON 
+										
+										// [내리기] 버튼의 이름을 [올리기] 버튼으로 수정한다.
+										this.innerText = '올리기';
+										this.classList.remove('btn-danger');
+										this.classList.add('btn-primary');
+										
+									} else if(data == 'fail') { // 삭제 실패
+										alert('서비스 요청에 실패하였습니다');
+									}
+								},
+								error: data=> console.log(data)
+							});
+						} else if(this.innerText == '올리기'){
+							$.ajax({
+								url: 'changeStatusCareInformation.adm',
+								type: 'POST',
+								data: {boardNo : bNo, status: 'Y'},
+								success: data => {
+									console.log(data);
+									console.log(targetTr.querySelectorAll('div'));
+									if(data == 'success'){ // Y인 상태로 변경을 성공
+										detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + boardContent;
+
+										const divList = targetTr.querySelectorAll('div'); // 클릭한 tr에 있는 상태 div들에게 접근
+										divList[1].className = ''; // N에 대한 배경을 OFF
+										divList[0].className = 'selectState'; // Y에 대한 배경을 ON 
+										
+										// [올리기] 버튼의 이름을 [내리기] 버튼으로 수정한다.
+										this.innerText = '내리기';
+										this.classList.remove('btn-primary');
+										this.classList.add('btn-danger');
+										
+									} else if(data == 'fail') { // 삭제 실패
+										alert('서비스 요청에 실패하였습니다');
+									}
+								},
+								error: data=> console.log(data)
+							});
+						}
 					}
 				})
 			}
 			// 글 조회에서 수정과 삭제 요청 (끝)
 			
-			
-			
+			// 테이블에서 상태를 비동기 통신으로 변경(시작)
+			const statusDivList = document.querySelectorAll('td div'); // 테이블의 모든 상태div에 접근한다.
+			for(const div of statusDivList){
+				 // 클릭이벤트가 발생하였을 때 className이 selectState가 아닐 때만 ajax를 실행한다.
+				div.addEventListener('click', function() {
+					if(!div.className.includes('selectState')){
+						const siblingDivList = this.parentElement.children;
+						const upOrDownBtn = detailDiv.nextElementSibling.children[1];
+						
+						$.ajax({
+							url: 'changeStatusCareInformation.adm',
+							type: 'post',
+							data: {
+								boardNo: this.parentElement.parentElement.children[0].innerText,
+								status: this.innerText
+							},
+							success: data => {
+								if(data == 'success'){ // 상태변경에 성공한 경우
+									// 해당 div의 클래스명을 교체해주어야한다.
+									// 만약 해당 글이 조회중인 경우 올리기, 내리기 버튼을 교체해주어야 한다.
+									if(this.innerText == 'Y'){ // Y로 변경이 되버린 경우
+										siblingDivList[0].className = 'selectState';
+										siblingDivList[1].className = '';
+										
+										upOrDownBtn.innerText = '내리기';
+										if(upOrDownBtn.disabled == false){ // 해당 글이 조회 중인 경우
+											upOrDownBtn.classList.remove('btn-primary');
+											upOrDownBtn.classList.add('btn-danger');
+										}	
+									} else{ // N으로 변경이 되버린 경우
+										siblingDivList[0].className = '';
+										siblingDivList[1].className = 'selectState';
+										
+										upOrDownBtn.innerText = '올리기';
+										if(upOrDownBtn.disabled == false){ // 해당 글이 조회 중인 경우
+											upOrDownBtn.classList.remove('btn-danger');
+											upOrDownBtn.classList.add('btn-primary');
+										}	
+									}
+								} else {
+									alert('서비스 요청에 실패하였습니다.');
+								}
+							},
+							error: data => console.log(data)
+						});
+					} 
+				})
+			}
+			// 테이블에서 상태를 비동기 통신으로 변경(끝)
 		}
 	</script>
 </body>

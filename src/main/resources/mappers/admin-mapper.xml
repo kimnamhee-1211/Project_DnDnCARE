@@ -46,16 +46,16 @@
 	</select>
 
 	<!-- 간병백과 글 내리기 -->
-	<update id="hideCareInformation">
+	<update id="changeStatusCareInformation">
 		UPDATE BOARD
-		SET BOARD_STATUS = 'N'
+		SET BOARD_STATUS = #{status}
 		WHERE BOARD_NO = ${boardNo}
 	</update>
 	
 	<!-- 간병백과 첨부파일 내리기 -->
-	<update id="hideAttachment">
+	<update id="changeStatusAttachment">
 		UPDATE ATTACHMENT
-		SET ATTM_STATUS = 'N'
+		SET ATTM_STATUS = #{status}
 		WHERE REF_BOARD_NO = ${boardNo}
 	</update>
 
@@ -87,8 +87,8 @@
 	
 	<insert id="insertThumbnail">
 		INSERT INTO ATTACHMENT
-		VALUES(NEW_AID, ${attm.refBoardNo}, #{attm.originalName}, #{attm.renameName}, 
-												#{attm.attmPath}, #{attm.attmLevel}, DEFAULT)
+		VALUES(NEW_AID, ${refBoardNo}, #{originalName}, #{renameName}, 
+												#{attmPath}, #{attmLevel}, DEFAULT)
 	</insert>
 	
 	<!-- 간병백과 게시글 수정 : MEMBER_NO, BOARD_TITLE, BOARD_UPDATE_DATE, BOARD_CONTENT -->
