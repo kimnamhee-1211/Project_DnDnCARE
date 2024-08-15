@@ -13,6 +13,8 @@ import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -69,6 +71,8 @@ public class MemberController {
 
 	@Autowired
 	private BCryptPasswordEncoder bCrypt;
+	
+	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
 	@GetMapping("loginView.me")
 	public String loginView() {
@@ -275,7 +279,7 @@ public class MemberController {
 	@PostMapping("login.me")
 	public String login(@ModelAttribute Member m, Model model, RedirectAttributes ra) {
 		Member loginUser = mService.login(m);
-
+		
 		if (bCrypt.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
 			model.addAttribute("loginUser", loginUser);
 
@@ -2506,14 +2510,17 @@ public class MemberController {
 	@GetMapping("socialLogin.me")
 	public String socialLogin(@RequestParam("code") String code,HttpSession session,Model model,RedirectAttributes ra) {
 		//소셜로그인 없으면 회원가입으로, 있으면 로그인 바로하게 하기
-		System.out.println(code);
+		//System.out.println(code);
 		Member m = mService.selectSocialLogin(code); //loginUser
 		if(m == null) {		//검사해서 없으면 회원가입창으로
 			session.setAttribute("code", code);
+			
+			
+			
 			return "redirect:enroll1View.me";
 		}else {				//검사해서 있으면 바로 로그인하기
 			model.addAttribute("loginUser", m);
-
+			logger.info("소셜 로그인 아이디 : " +  m.getMemberId());
 			if (m.getMemberCategory().equalsIgnoreCase("C")) {
 				ra.addAttribute("memberNo", m.getMemberNo());
 

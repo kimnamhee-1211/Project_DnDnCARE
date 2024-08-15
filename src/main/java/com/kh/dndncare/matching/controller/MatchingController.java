@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +41,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
+import com.kh.dndncare.member.controller.MemberController;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.CareGiverMin;
@@ -56,11 +59,12 @@ public class MatchingController {
 	@Autowired
 	private MatchingService mcService;
 	
+	private static Logger logger = LoggerFactory.getLogger(MatchingController.class);
+	
 	@GetMapping("publicMatching.mc")
 	public String publicMatchingView(HttpSession session,Model model,
 			@RequestParam(value="memberNoC", defaultValue = "0" ) int memberNoC) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		
 		
 		if(loginUser !=null) {			
 			int memberNo = loginUser.getMemberNo();
@@ -169,9 +173,13 @@ public class MatchingController {
 	         }
 	         
 	         //Matching 정보 삽입
+	         System.out.println("종규 매칭 정보 확인하기 : "+matching);
 	         int matchingResult = mcService.enrollMatching(matching);
 	         
 	         int matNo = matching.getMatNo();
+	         System.out.println("종규 매칭 정보 확인하기2 : "+matNo);
+	         System.out.println("종규 매칭 정보 확인하기 : "+matching);
+	         System.out.println("종규 매칭 정보 확인하기 : "+matching.getMatNo());
 	         	               	         
 	         //시간제일 때 Matching_date 테이블 insert
 	         if(matching.getMatMode() == 2 && selectDays != null) {
@@ -200,6 +208,8 @@ public class MatchingController {
 	         matPtInfo.setGroupLeader("N");
 
 	         int ptInfoResult = mcService.enrollMatPtInfo(matPtInfo);
+	         
+	         
 	         
 	         //채팅방 생성 (간병인 후기 보기에서 매칭방 신청하고 바로 채팅방 생성할때)
 	         
