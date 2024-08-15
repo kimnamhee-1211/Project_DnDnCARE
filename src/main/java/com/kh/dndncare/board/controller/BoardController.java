@@ -335,7 +335,8 @@ public class BoardController {
 		
 		
 		
-		return null;
+		return "board/careInformation";
+		
 	}
 	
 	

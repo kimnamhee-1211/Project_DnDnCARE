@@ -73,7 +73,7 @@ public class AdminController {
 			model.addAttribute("pi", pi);
 			System.out.println(pi);
 			model.addAttribute("loc", request.getRequestURI());
-			return "careInformation";
+			return "admin/careInformation";
 		} else {
 			throw new AdminException("서비스 요청에 실패하였습니다.");
 		}
