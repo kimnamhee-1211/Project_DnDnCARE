@@ -4,13 +4,12 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
-<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script><!-- 도로명주소api -->
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	
-	<form action="updatePwd.me" method="post" id="updatePwdForm">
+	<form action="deleteMember.me" method="post" id="updatePwdForm">
 		<div class="container" >
 		
 			 <div class="row">
@@ -30,28 +29,17 @@
 			      		<div class="m-3 h1 menu-name" >내 정보</div>
 		      		</div>
 		      		<div class="m-3">
-		      			<div class="m-3 h2">비밀번호 변경</div>
+		      			<div class="m-3 h2">회원탈퇴</div>
 		      			<div class="m-3" style="width:400px;">
-			    		<p class="info">현재 비밀번호를 입력해주세요</p>
+			    		<p class="info">현재 비밀번호를 다시 입력해주세요</p>
 							<div class="form-floating mb-5">
 								<input type="password" class="form-control" id="checkPwd" name="checkPwd">
 								<label for="checkPwd" id="">현재 비밀번호</label>
 							</div>
 						</div>
-			      		<div class="m-3" style="width:400px;">
-			      			<p class="info" style="margin-bottom:0">변경할 비밀번호를 입력해주세요.</p>
-							<p style="font-size:16px" class="info">비밀번호는 영어소문자, 숫자, 특수문자(!,@,#,$,%,&)를 조합해 6~10자로 작성입니다.</p>
-							<div class="form-floating mb-5">
-								<input type="password" class="form-control" id="pwdInput" name="memberPwd">
-								<label for="pwdInput" id="pwdInputLabel">비밀번호</label>
-							</div>
-			    		</div>
 			    		<div class="m-3" style="width:400px;">
-			    		<p class="info">비밀번호를 한번 더 입력해주세요.</p>
 							<div class="form-floating mb-5">
-								<input type="password" class="form-control" id="pwdInput2">
-								<label for="pwdInput2" id="pwdInput2Label">비밀번호 확인</label>
-								<div align="center" class="m-4"><button class="myInfo-btn updatePwdButton" disabled>수정하기</button></div>
+								<div align="center" class="m-4"><button type="button" class="myInfo-btn">탈퇴하기</button></div>
 							</div>
 							
 						</div>
@@ -61,47 +49,11 @@
 		    </div>
 		    
 		</div><!-- 컨테이너 끝 -->
+		
 	</form>
 	<script>
-	//비밀번호 검사
-	const regExp1 = /[0-9]/;			
-	const regExp2 = /[!@#$%&]/;			
-	const regExp3 = /[a-z]/;	
-	const regExp4 = /[A-Z]/; 
-	const pwdInput = document.getElementById("pwdInput");
-	const pwdInput2 = document.getElementById("pwdInput2");
+
 	
-	function pwdCheck(){
-		const pwdInputLabel = document.getElementById("pwdInputLabel");
-		if(!regExp1.test(pwdInput.value) || !regExp2.test(pwdInput.value) || !regExp3.test(pwdInput.value) || regExp4.test(pwdInput.value) || pwdInput.value.length<6 || pwdInput.value.length>10){
-			pwdInputLabel.innerText = "비밀번호를 양식에 맞게 설정해주세요."; 
-			pwdInputLabel.style.color="red";					
-			return false;
-			
-		}else{
-			pwdInputLabel.innerText = "비밀번호"; 
-			pwdInputLabel.style.color="green";					
-			return true;
-		}
-	}		
-	pwdInput.addEventListener('focusout', pwdCheck);
-	
-	//비밀번호 확인 검사
-	function pwdCheck2(){
-		const pwdInput2Label = document.getElementById("pwdInput2Label");
-		if(pwdInput.value !== pwdInput2.value){							
-			pwdInput2Label.innerText = "비밀번호가 일치하지 않습니다.";
-			pwdInput2Label.style.color="red";
-			document.getElementsByClassName('updatePwdButton')[0].disabled = true;
-			return false;				
-		}else{
-			pwdInput2Label.innerText = "비밀번호 확인";
-			pwdInput2Label.style.color="green";
-			document.getElementsByClassName('updatePwdButton')[0].disabled = false;
-			return true;	
-		}
-	}
-	pwdInput2.addEventListener('focusout', pwdCheck2);	
 	
 	</script>
 </body>

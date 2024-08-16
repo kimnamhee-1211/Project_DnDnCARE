@@ -2636,6 +2636,10 @@ public class MemberController {
 		return "login";
 	}
 	
+	@GetMapping("deleteMember.me")
+	public String deleteMember() {
+		return "deleteMember";
+	}
 	
 	
 }//클래스 끝
