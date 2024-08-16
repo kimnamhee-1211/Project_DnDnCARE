@@ -560,7 +560,7 @@ public class MatchingController {
 		// 보낼때, 매칭번호가 필수다
 		
 		Member m = (Member)session.getAttribute("loginUser");
-		MatMatptInfo matInfo = mcService.selecMatching(matNo);
+		MatMatptInfo matInfo = mcService.selectMatching(matNo);
 		MatMatptInfo matPtInfo = mcService.selecMatPtInfo(matNo,m.getMemberNo());
 		matInfo.setPtNo(matPtInfo.getPtNo());
 		matInfo.setAntePay(matPtInfo.getAntePay());
