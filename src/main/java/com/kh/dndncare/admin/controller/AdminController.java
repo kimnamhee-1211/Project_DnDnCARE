@@ -57,7 +57,7 @@ public class AdminController {
 									HttpServletRequest request) {
 		// 페이징처리된 게시글 목록 조회 : BoardLimit == 7 (**가정**)
 		int listCount = aService.getCareInformationListCount();
-		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 7);
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 7, 5);
 		ArrayList<Board> bList = aService.selectAllCareInformation(pi); // 이래도 되나?
 		ArrayList<Integer> bNoList = new ArrayList<Integer>();
 		for(Board b : bList) {
