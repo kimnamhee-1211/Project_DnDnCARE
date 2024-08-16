@@ -2527,6 +2527,7 @@ public class MemberController {
 		
 	}
 	
+	//간병인에게 매칭 신청한 목록 더보기
 	@GetMapping("goCMoreRequest.me")
 	public String goCMoreRequestView(HttpSession session, Model model) {		
 		
@@ -2535,21 +2536,43 @@ public class MemberController {
 		ArrayList<RequestMatPt> requestMatPt = mService.getRequestMatPt(loginUser.getMemberNo());
 		System.out.println(requestMatPt);
 		
-		for(int i = 0 ; i < requestMatPt.size(); i ++) {
-			int realAge = AgeCalculator.calculateAge(requestMatPt.get(i).getPtAge());
-			requestMatPt.get(i).setPtRealAge(realAge);
+		for(RequestMatPt i : requestMatPt) {
+			int realAge = AgeCalculator.calculateAge(i.getPtAge());
+			i.setPtRealAge(realAge);
 			
-			if((Integer)requestMatPt.get(i).getPtCount()> 1) {
-				if(requestMatPt.get(i).getGroupLeader().equals("N")) {
+			if(i.getPtCount()> 1) {
+				if(i.getGroupLeader().equals("N")) {
 					requestMatPt.remove(i);
 				}
 			}
 		}
+		model.addAttribute("loginUserName", loginUser.getMemberName());
 		model.addAttribute("requestMatPt", requestMatPt);		
 		return "cMoreRequest";
 	}
 	
-	
+	//환자에게 매칭 신청한 목록 더보기
+	@GetMapping("goPMoreRequest.me")
+	public String goPMoreRequestView(HttpSession session, Model model) {		
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		//ptno 뽑기
+		int loginPt = mService.getPtNo(loginUser.getMemberNo());
+		// 환자 입장에서 나를 선택한 간병인 정보 불러오기
+
+		ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
+		for(CareGiverMin i : requestCaregiver){
+			int age = AgeCalculator.calculateAge(i.getMemberAge());
+			i.setAge(age);
+
+		}
+		model.addAttribute("requestCaregiver", requestCaregiver);	
+		
+		//loginUser Name
+		model.addAttribute("loginUserName", loginUser.getMemberName());	
+		
+		return "pMoreRequest";
+	}
 	
 	
 	@GetMapping("nn.me")

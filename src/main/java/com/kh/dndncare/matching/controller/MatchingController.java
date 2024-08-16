@@ -1,6 +1,8 @@
 package com.kh.dndncare.matching.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +18,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +31,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -303,15 +312,8 @@ public class MatchingController {
 		Hospital hospital = new Hospital();
 		hospital.setHospitalName(hospitalName);
 		hospital.setHospitalAddress(hospitalAddress);
-		System.out.println(hospitalAddress);
-		model.addAttribute("hospital", hospital);
 		
-		String zipCode = GetzipNo.ApiExplorer(hospitalAddress);
-		System.out.println("zipCode = " + zipCode);
-//		String[] strArr = zipCode.split(">");
-//		System.out.println(strArr.toString());
-//		String code = strArr[4].substring(10, 15);
-//		System.out.println(code);
+		model.addAttribute("hospital", hospital);
 		
 		return "joinMatchingEnroll";
 	}
@@ -330,18 +332,56 @@ public class MatchingController {
 		Hospital ho = mcService.getHospital(hospital);
 		if(ho == null) {
 			
-			
-			
-			
-			
-			
-			
-			
-			
+			//우편번호 삽입
+			String test2 = "";
+			String[] testArr =  hospital.getHospitalAddress().split(" ");	
+			for(int i= 0; i < testArr.length; i ++) {
+				if(testArr[i].contains("로") || testArr[i].contains("길")) {
+					test2 = testArr[i];
+					if(i+1 < testArr.length && testArr[i+1].matches("\\d+")) {
+						 test2 += " " + testArr[i + 1];
+					}					
+	 			}
+			}
+					
+			String zipCode = GetzipNo.ApiExplorer(test2);
+			NodeList zipNoList = null;
+			try {
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	            DocumentBuilder builder = factory.newDocumentBuilder();
+
+	            // XML 문자열을 Document로 변환
+	            ByteArrayInputStream input = new ByteArrayInputStream(zipCode.getBytes(StandardCharsets.UTF_8));
+	            Document document = builder.parse(input);
+	
+	            // <newAddressListAreaCd> 요소의 zipNo 추출
+	            zipNoList = document.getElementsByTagName("zipNo");
+            
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+            
+            // zipNo 값을 출력
+			String zipNo = null;
+            for (int i = 0; i < zipNoList.getLength(); i++) {
+                Element zipNoElement = (Element) zipNoList.item(i);
+                zipNo = zipNoElement.getTextContent();
+            }
+            
+            String addZipNo = "";
+            if(zipNo != null) {            	
+            	addZipNo = zipNo + "//" + hospital.getHospitalAddress();
+            }else {
+            	addZipNo =  "00000//" + hospital.getHospitalAddress();
+            }
+            hospital.setHospitalAddress(addZipNo);  
+            
 			int result = mcService.enrollHospital(hospital);
+			
 			if(result > 0) {
 				jm.setHospitalNo(hospital.getHospitalNo());
 			}
+			
 		}else {
 			jm.setHospitalNo(ho.getHospitalNo());
 		}

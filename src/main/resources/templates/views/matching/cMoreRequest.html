@@ -17,17 +17,12 @@
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	
-	<div id="wrap">
-	
-	    <!-- 아래쪽 컨텐츠-->
-	    <div id="underContents" style="margin: 100px; 0;">
-	        <div><!--왼쪽 공백--></div>
+	<div id="wrap"  class="align-items-center">
 	                
 	        <!-- 남희 좌측 하단 -->
-	        <div><!--매칭정보 : 가로 500, 세로 700-->
-	        	<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
-					<span style="margin-top:10px;">[[${loginUserName}]]님에게 들어온 매칭 신청</span>
-           			<button type="button" class="btn-select">전체 보기</button>
+	        <div class="mx-auto" style="width:800px;"><!--매칭정보 : 가로 500, 세로 700-->
+	        	<div class="d-flex" style="border-bottom:2px solid #8dd986;">
+					<span style="margin-top:10px;font-size:20px;">[[${loginUserName}]]님에게 들어온 매칭 신청</span>
             	</div>
             	<br/>
 	            <table class="table mainTable">
@@ -40,11 +35,13 @@
 	                    <tr class="align-middle text-center" th:each="matPt : ${requestMatPt}">
 	                    	<td style="display:none" th:text="${matPt.matNo}"></td>
 	                        <td colspan="4" th:if="${matPt.ptCount == 1}" class="align-middle">
+	                        	<span style="font-style:bold;" >[[${matPt.service}]]&nbsp;&nbsp;&nbsp;</span>
 	                        	<img th:if="${matPt.ptCount == 1 && matPt.service =='병원돌봄'}" src="image/icon/hospital.png"/>
 	                       		<img th:if="${matPt.ptCount == 1 && matPt.service =='가정돌봄'}" src="image/icon/home.pn/">
 	                       		[[${matPt.ptName}]]님([[${matPt.ptRealAge}]]세 [[${matPt.ptGender =='M' ? '남':'여' }]])이 매칭을 원하고 있어요.
-	                       		 </td>
+	                       	</td>
 	                        <td colspan="4" th:if="${matPt.ptCount > 1}" class="align-middle">
+	                        	<span style="font-style:bold;" >[[${matPt.service}]]&nbsp;&nbsp;&nbsp;</span>
 	                        	<img src="image/icon/users.png"/>
 	                        	[[${matPt.ptName}]]님 등 [[${matPt.ptCount}]]명이 매칭을 원하고 있어요.
 	                        </td>
@@ -65,8 +62,7 @@
 	    </div>
 	    
 	    
-	  
-    	</div>
+
     </div>
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
@@ -80,13 +76,7 @@
 	  		const workInfos = document.querySelectorAll('.workInfo');    	
 	    	for(const workInfo of workInfos){
 	        	workInfo.addEventListener('click', function(){
-	        		let matNo = '';
-	        		if(this.className.includes('two')){
-	        			matNo = this.parentElement.parentElement.firstElementChild.innerHTML;
-	        		}else{
-	        			matNo = this.parentElement.parentElement.previousElementSibling.innerHTML;
-	        		}
-	        		
+	        		let matNo = this.parentElement.parentElement.firstElementChild.innerHTML;
 	        		if(matNo){
 	        			location.href = 'goCaregiverPtInfo.mc?matNo='+ matNo;
 	        		}
