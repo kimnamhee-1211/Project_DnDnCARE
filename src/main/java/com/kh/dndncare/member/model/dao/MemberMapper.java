@@ -190,4 +190,8 @@ public interface MemberMapper {
 
 	ArrayList<MatMatptInfo> selectMatListPay(int memberNo);
 
+	int updateImageProfile(@Param("memberNo") String memberNo,@Param("rename") String rename);
+
+	CareGiver selectProfile(String memberNo);
+
 }

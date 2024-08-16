@@ -26,6 +26,7 @@
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내 든든지수/후기</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
 	     		</div>
+	     		<span class="m-4" style="color:gray;"><button style="background:white; border:0" onclick="location.href='deleteMember.me'">탈퇴하기 ▶</button></span>
 	    	</div>
 	    	
 	    	<div class="col" >
@@ -35,8 +36,12 @@
 	      		</div>
 	      		<div align="center"class="row m-4" style="border:2px solid #8dd986;width:950px"> <!-- 여기로규격정햇다 -->
 		      		<div class="col-2 m-4">
-			      		<img id="profile-image" src="image/icon_profile.png"/>
-			      		<span><br>프로필 사진</span>
+<!-- 			      		<img id="profile-image" src="image/icon_profile.png" onclick="profileImageUpdate()"/> -->
+			      		<img class="m-2" style="margin-left:-20px"id="profile-image" th:src="${cg.careImg} ? ${cg.careImg} : icon_profile.png" onclick="profileImageUpdate()"/>
+			      		<span><button class="myInfo-btn" onclick="profileImageUpdate()">사진변경</button></span>
+			      		<script> function profileImageUpdate(){
+			      			window.open('http://localhost:8096/profileImageUpdate.me','_blank','width=700,height=400');
+			      		}</script>
 		      		</div>
 		      		<div class="col-2 m-4">
 		      			<div><button class="myInfo-btn m-2" onclick="location.href='updateMemberView.me'"style="height:50px">내 계정 정보 수정하기</button></div>
@@ -343,6 +348,8 @@
 	</div>
 	<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	
+	
 	
 	
 	<script th:inline="javascript">

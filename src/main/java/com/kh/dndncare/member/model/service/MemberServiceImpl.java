@@ -505,4 +505,16 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectMatListPay(memberNo);
 	}
 
+
+	@Override
+	public int updateImageProfile(String memberNo, String rename) {
+		return mMapper.updateImageProfile(memberNo,rename);
+	}
+
+
+	@Override
+	public CareGiver selectProfile(String memberNo) {
+		return mMapper.selectProfile(memberNo);
+	}
+
 }

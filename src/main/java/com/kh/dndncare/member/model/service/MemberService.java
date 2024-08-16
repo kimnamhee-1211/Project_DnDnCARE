@@ -193,6 +193,10 @@ public interface MemberService {
 
 	ArrayList<MatMatptInfo> selectMatListPay(int memberNo);
 
+	int updateImageProfile(String memberNo, String rename);
+
+	CareGiver selectProfile(String memberNo);
+
 
 
 }

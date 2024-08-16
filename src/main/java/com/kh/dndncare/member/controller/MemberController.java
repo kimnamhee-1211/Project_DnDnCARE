@@ -1,7 +1,9 @@
 package com.kh.dndncare.member.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -652,7 +655,7 @@ public class MemberController {
 			}
 			
 			if(i < 6) {
-				matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
+				//matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
 			}else if(i < 12) {
 				matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
 			}else if(i < 18) {
@@ -2537,7 +2540,91 @@ public class MemberController {
 		
 	}
 	
+	@GetMapping("profileImageUpdate.me")
+	public String profileImageUpdate(HttpSession session, Model model) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+		System.out.println(cg);
+		
+		model.addAttribute("cg",cg);
+		return "profileImageUpdate";
+	}
 	
+	@PostMapping("updateImage.me")
+	public String updateImageProfile(@RequestParam("files") MultipartFile files,@RequestParam("memberNo")String memberNo ) {
+		//1.사진이 없으면 새로 넣어야한다
+		//2.사진이 있으면 수정을 해야한다
+		//3.사진을 아예 지울수 있어야 한다		
+		
+		System.out.println("이미지 이름3 : " + files.isEmpty());
+		System.out.println(files.getOriginalFilename());
+		System.out.println("이미지 이름2 : " + files.toString());
+		
+		String rename = null;
+		CareGiver cg = mService.selectProfile(memberNo);
+		System.out.println(cg);
+		if(cg != null) {
+			deleteFile(cg.getCareImg());
+		}
+		if(!files.isEmpty()) {	//파일 추가했을때
+			
+			rename = saveProfileImage(files);	//새 이름으로 파일 생성완료
+			
+			
+		}else {					//파일 삭제했을때
+			
+		}
+		
+		
+		//care img dB접근하자
+		
+		int result = mService.updateImageProfile(memberNo,rename);
+		
+		if(result>0) {
+			return "deleteWindow";
+		}else {
+			throw new MemberException("프로필 저장이 실패했습니다");
+		}
+		
+		
+		
+		
+	}
+	
+	//프로필 파일 추가하기
+	public String saveProfileImage(MultipartFile file) {
+		
+		String renamePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		int ranNum = (int)(Math.random()*100000);
+		String originFileName = file.getOriginalFilename();
+		String renameFileName = sdf.format(new java.util.Date()) + ranNum+ originFileName.substring(originFileName.lastIndexOf("."));		
+		
+		
+		try {
+			file.transferTo(new File(renamePath + renameFileName));
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return renameFileName;
+	}
+	
+	//프로필 파일 삭제하기
+	public void deleteFile(String fileName) {
+		String savePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		File f = new File(savePath +fileName);
+		if(f.exists()) {
+			f.delete();
+		}
+	}
 	
 	@GetMapping("nn.me")
 	public String nn() {
@@ -2548,6 +2635,8 @@ public class MemberController {
 		
 		return "login";
 	}
+	
+	
 	
 }//클래스 끝
 

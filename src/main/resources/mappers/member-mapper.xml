@@ -824,4 +824,20 @@
 						where member_no = #{memberNo})
 	</select>
 	
+	
+	<!-- 프로필 사진 넣기 -->
+	<update id="updateImageProfile">
+		update caregiver
+		set care_img = #{rename}
+		where member_no = #{memberNo}
+	
+	</update>
+	
+	<!-- 이전 프로필사진 찾기 -->
+	<select id="selectProfile" resultType="CareGiver">
+		select care_img
+		from caregiver
+		where member_no = #{memberNo}
+	</select>
+	
 </mapper>
