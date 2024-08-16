@@ -656,7 +656,7 @@ public class MatchingController {
 		// 보낼때, 매칭번호가 필수다
 		
 		Member m = (Member)session.getAttribute("loginUser");
-		MatMatptInfo matInfo = mcService.selecMatching(matNo);
+		MatMatptInfo matInfo = mcService.selectMatching(matNo);
 		MatMatptInfo matPtInfo = mcService.selecMatPtInfo(matNo,m.getMemberNo());
 		matInfo.setPtNo(matPtInfo.getPtNo());
 		matInfo.setAntePay(matPtInfo.getAntePay());
@@ -666,11 +666,14 @@ public class MatchingController {
 		matInfo.setDeposit(matPtInfo.getDeposit());
 		matInfo.setGroupLeader(matPtInfo.getGroupLeader());
 		
-		String hourly = mcService.selectMatDate(matNo);
-		int hourly2 = hourly.split(",").length;
-		matInfo.setHourly(hourly2);
-		
-		//며칠 몇시간 하는건지 계산해보자
+		String hourly = null;
+		hourly = mcService.selectMatDate(matNo);
+		if(hourly != null) {
+			int hourly2 = hourly.split(",").length;
+			matInfo.setHourly(hourly2);
+		}
+
+			//며칠 몇시간 하는건지 계산해보자
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         
         // LocalDateTime 객체로 변환

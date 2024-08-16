@@ -98,7 +98,7 @@ public interface MatchingService {
 	
 	CareGiver selectIntro(int memberNo);
 	
-	MatMatptInfo selecMatching(int matNo);
+	MatMatptInfo selectMatching(int matNo);
 	MatMatptInfo selecMatPtInfo(int matNo, int i);
 	int insertPay(Member loginUser, Pay p);
 	String selectMatDate(int matNo);
