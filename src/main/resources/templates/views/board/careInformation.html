@@ -21,17 +21,24 @@
 		<div><!-- 왼쪽 공백 --></div>
 	
 		<div>
-			<select class="form-select" name="searchOption">
-				<option value="none">검색 유형 선택</option>
-				<option value="title">제목</option>
-				<option value="content">내용</option>
-			</select>
-			<input type="search" class="form-control" name="searchContent"/>
-			<button class="btn btn-primary" type="button" id="searchBtn">나버튼</button>
-			
-			<a title="일반형 게시판 보기" href="careInformation.bo"><img src="image/icon/boardIcon.png" id="boardIcon" width="60px" height="60px" alt="일반 게시판"></a>
-			<a title="앨범형 게시판 보기" href="albumCareInformation.bo"><img src="image/icon/albumIcon.png" id="albumIcon" alt="앨범형 게시판"></a>
-			
+			<div id="upperContents" style="display:grid; grid-template-columns: 700px 1fr 400px;">
+				<div id="searchContents" style="display:grid; grid-template-columns: 200px 200px 100px 100px;">
+					<select class="form-select" name="searchOption">
+						<option value="none">검색 유형 선택</option>
+						<option value="title">제목</option>
+						<option value="content">내용</option>
+					</select>
+					
+					<input type="search" class="form-control" name="searchContent"/>
+					<button class="btn btn-primary" type="button" id="searchBtn">검색하기</button>
+					<button class="btn btn-warning" type="button" id="selectAllBtn">전체보기</button>
+				</div>
+				<div><!-- 공백 --></div>
+				<div class="text-end">
+					<a title="일반형 게시판 보기" href="careInformation.bo"><img src="image/icon/boardIcon.png" id="boardIcon" width="60px" height="60px" alt="일반 게시판"></a>
+					<a title="앨범형 게시판 보기" href="albumCareInformation.bo"><img src="image/icon/albumIcon.png" id="albumIcon" alt="앨범형 게시판"></a>
+				</div>
+			</div>
 			<table class="table table-hover">
 				<thead>
 					<tr>
@@ -202,7 +209,9 @@
 			//const tbody = document.querySelector('tbody');
 			
 			tbody.addEventListener('mouseover', function() { // 컨텐츠 목록에 마우스 오버시 손가락 포인터로 변경
-				this.style.cursor = 'pointer';
+				if(tbody.children[0].children[0].innerText != '검색결과가 존재하지 않습니다.'){
+					this.style.cursor = 'pointer';
+				}
 			})
 			
 			
@@ -243,43 +252,46 @@
 				// 조회수 증가 : 로그인한 유저와 글 작성자가 다를 때만 동작해야 한다. (시작)
 				/*<![CDATA[*/
 				if(/*[[session.loginUser.memberNo]]*/0 != clickBoard.memberNo){
-					
-					$.ajax({
-						url: 'updateCareInformationCount.bo',
-						data: {boardNo: clickBoard.boardNo},
-						success: data => {
-							console.log(data);
-							
-							if(data == 'success'){ // 조회수 증가 성공 : 현재 View에서 조회수를 업데이트해야 한다.
-								// table에서 해당 글에 대한 tr에 접근 => 조회수 +1 시키자.
-								for(const present of presentBoardList){
-									if(present.boardNo == bNo){ // 클릭한 글에 대한 정보를 전역변수에서 최신화한다.
-										present.boardCount += 1; 
-										bCountTd.innerText = present.boardCount; 
-										break;
+					//console.log(tbody.children[0].children[0].innerText);
+					if(tbody.children[0].children[0].innerText != '검색결과가 존재하지 않습니다.'){
+						$.ajax({
+							url: 'updateCareInformationCount.bo',
+							data: {boardNo: clickBoard.boardNo},
+							success: data => {
+								console.log(data);
+								
+								if(data == 'success'){ // 조회수 증가 성공 : 현재 View에서 조회수를 업데이트해야 한다.
+									// table에서 해당 글에 대한 tr에 접근 => 조회수 +1 시키자.
+									for(const present of presentBoardList){
+										if(present.boardNo == bNo){ // 클릭한 글에 대한 정보를 전역변수에서 최신화한다.
+											present.boardCount += 1; 
+											bCountTd.innerText = present.boardCount; 
+											break;
+										}
 									}
+								} else{
+									alert('서비스 요청에 실패하였습니다.');
+									location.reload();
 								}
-							} else{
-								alert('서비스 요청에 실패하였습니다.');
-								location.reload();
-							}
-						},
-						error: data => console.log(data)
-					});
+							},
+							error: data => console.log(data)
+						});
+						
+						modalTitle.innerText = clickBoard.boardTitle;
+						
+						modalContent.innerHTML = '';
+						if(clickThumbnail != undefined) {
+							modalContent.insertAdjacentHTML('afterbegin', `<img src=${clickThumbnail.renameName}><br/>`);
+						}
+						modalContent.insertAdjacentHTML('beforeend', clickBoard.boardContent);
+						
+						$('#staticBackdrop').modal('show'); 
+					}
 				}
 				/*]]>*/
 				// 조회수 증가 (끝)
-				
-				modalTitle.innerText = clickBoard.boardTitle;
-				
-				modalContent.innerHTML = '';
-				if(clickThumbnail != undefined) {
-					modalContent.insertAdjacentHTML('afterbegin', `<img src=${clickThumbnail.renameName}><br/>`);
-				}
-				modalContent.insertAdjacentHTML('beforeend', clickBoard.boardContent);
-				
-				$('#staticBackdrop').modal('show'); // 여기여기
 			})
+			
 			
 			// 앨범형 아이콘 클릭(시작) : 컨텐츠 출력하는 구조가 달라지기 때문에 별도의 페이지로 제작하는 것이 안전할 것이라고 생각됨
 			// 앨범형 아이콘 클릭(끝)
@@ -303,22 +315,26 @@
 					success: data => {
 						console.log("검색한 data :");
 						console.log(data);
-						
-						let aList = data.aList;
-						presentAttmList = [];
-						presentAttmList = presentAttmList.concat(aList);
-						let bList = data.bList;
-						presentBoardList = [];
-						presentBoardList = presentBoardList.concat(bList);
-						searchMaxPage = data.pList[0];
-						
-						// 요소.insertAdjacentHTML() : 보안강화를 위한 연습하기
-						tbody.innerHTML = '';
-						for(const board of bList){ // 글번호, 글제목, 작성자, 조회수 를 출력해야한다.
-							tbody.insertAdjacentHTML('beforeend', `<tr><td>${board.boardNo}</td><td>${board.boardTitle}</td><td>${board.boardUpdateDate}</td><td>${board.boardCount}</td></tr>`);
+						if(data != null){
+							let aList = data.aList;
+							presentAttmList = [];
+							presentAttmList = presentAttmList.concat(aList);
+							let bList = data.bList;
+							presentBoardList = [];
+							presentBoardList = presentBoardList.concat(bList);
+							searchMaxPage = data.pList[0];
+							
+							// 요소.insertAdjacentHTML() : 보안강화를 위한 연습하기
+							tbody.innerHTML = '';
+							for(const board of bList){ // 글번호, 글제목, 작성자, 조회수 를 출력해야한다.
+								tbody.insertAdjacentHTML('beforeend', `<tr><td>${board.boardNo}</td><td>${board.boardTitle}</td><td>${board.boardUpdateDate}</td><td>${board.boardCount}</td></tr>`);
+							}
+							
+							searchPage++;
+						} else{
+							tbody.innerHTML = '';
+							tbody.insertAdjacentHTML('beforeend', `<tr><td>검색결과가 존재하지 않습니다.</td><td></td><td></td><td></td></tr>`);
 						}
-						
-						searchPage++;
 					},
 					error: data => console.log(data)
 				});
@@ -341,6 +357,12 @@
 			});
 			// 검색 기능 (끝)
 			
+			// 전체보기 버튼 기능 (시작)
+			document.querySelector('#selectAllBtn').addEventListener('click', () => {
+				defaultPage = 1;
+				defaultList(defaultPage);
+			});
+			// 전체보기 버튼 기능 (끝)
 			
 			
 		}

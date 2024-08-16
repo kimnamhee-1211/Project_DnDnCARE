@@ -33,7 +33,9 @@ import com.kh.dndncare.member.model.vo.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 public class BoardController {
 	
@@ -408,6 +410,10 @@ public class BoardController {
 				map.put("searchContent", searchContent);
 				
 				int listCount = bService.getCareInfomationListCount(map);
+				if(listCount == 0) {
+					log.info("{} : {}", searchOption, searchContent);
+				}
+				
 				PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 10, 5);
 				
 				if(currentPage > pi.getMaxPage()) {
@@ -415,10 +421,6 @@ public class BoardController {
 				} else {
 					HashMap<String, ArrayList<?>> result = new HashMap<String, ArrayList<?>>();
 					ArrayList<Board> bList = bService.searchCareInformation(map, pi);
-					
-					System.out.println(bList);
-					
-					
 					
 					ArrayList<Attachment> aList = bService.selectAttachment(bList);
 					ArrayList<Integer> pList = new ArrayList<Integer>();
