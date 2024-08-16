@@ -82,10 +82,48 @@
 	<!-- 간병백과 조회용 Scrollable modal (끝) -->
 	
 	
+	<!-- 검색결과 없을 때 openai 호출확인 Modal (시작)-->
+	<div class="modal fade" id="confirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		    <div class="modal-content">
+			    <div class="modal-header">
+			        <h5 class="modal-title" id="confirmModalLabel">검색결과가 존재하지 않습니다.</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			    </div>
+		      <div class="modal-body" id="confirmModalBody">
+		        
+		      </div>
+		      <div class="modal-footer">
+		      	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+		      	<input type="hidden"/>
+		      	<button type="button" class="btn btn-primary" id="confirmYes">추가검색</button>
+		      </div>
+		    </div>
+		</div>
+	</div>
+	<!-- 검색결과 없을 때 openai 호출확인 Modal (끝)-->
 	
-	
-	
-	
+	<!-- openai 답변용 모달 (시작) -->
+	<div class="modal fade" id="answerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="answerModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		    <div class="modal-content">
+		    	<div class="modal-header">
+			        <h1 class="modal-title fs-5" id="answerModalLabel"></h1>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		        </div>
+			    <div class="modal-body">
+			    	<div class="modal-dialog modal-dialog-scrollable" id="answerModalContent">
+			        
+			        </div>
+			    </div>
+			    <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+			        <!-- <button type="button" class="btn btn-primary">확인</button> -->
+			    </div>
+		    </div>
+		</div>
+	</div>
+	<!-- openai 답변용 모달 (끝) -->
 	
 	<div id="footer-section">
 	    <div class="inner">
@@ -315,7 +353,7 @@
 					success: data => {
 						console.log("검색한 data :");
 						console.log(data);
-						if(data != null){
+						if(data != null && data != 'empty'){
 							let aList = data.aList;
 							presentAttmList = [];
 							presentAttmList = presentAttmList.concat(aList);
@@ -331,9 +369,14 @@
 							}
 							
 							searchPage++;
-						} else{
+						} else if(data == 'empty'){
 							tbody.innerHTML = '';
 							tbody.insertAdjacentHTML('beforeend', `<tr><td>검색결과가 존재하지 않습니다.</td><td></td><td></td><td></td></tr>`);
+							
+							let codition = searchOption.value == 'title' ? '제목' : '내용';
+							document.querySelector('#confirmModalBody').innerHTML = `<span style="color: red;">'${codition}'</span>이 <span style="color: red;">'${searchContent.value}'</span>인 글이 존재하지 않습니다.<br/>Ai에게 질문하시겠습니까?`;
+							document.querySelector('#confirmYes').previousElementSibling.value = searchContent.value;
+							$('#confirmModal').modal('show');
 						}
 					},
 					error: data => console.log(data)
@@ -364,6 +407,24 @@
 			});
 			// 전체보기 버튼 기능 (끝)
 			
+			// ai추가 검색 (시작)
+			document.querySelector('#confirmYes').addEventListener('click', function() {
+				let condition = this.previousElementSibling.value;
+				$.ajax({
+					url: 'searchOpenAi.bo',
+					data: {condition: condition},
+					success: data => {
+						console.log(data);
+						
+						document.querySelector('#answerModalLabel').insertAdjacentHTML('afterbegin', `${condition}에 대한 AI 검색결과`);
+						document.querySelector('#answerModalContent').insertAdjacentHTML('afterbegin', data);
+						$('#confirmModal').modal('hide');
+						$('#answerModal').modal('show');
+					},
+					error: data => console.log(data)
+				});
+			});
+			// ai추가 검색 (끝)
 			
 		}
 	</script>

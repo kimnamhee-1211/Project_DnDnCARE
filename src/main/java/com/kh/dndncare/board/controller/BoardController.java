@@ -28,6 +28,7 @@ import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.common.Pagination2;
+import com.kh.dndncare.member.controller.CustomBotController;
 import com.kh.dndncare.member.model.vo.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,6 +42,9 @@ public class BoardController {
 	
 	@Autowired
 	private BoardService bService;
+	
+	@Autowired
+	private CustomBotController bot;
 	
 	// 커뮤니티클릭하면 이동
 	@GetMapping("communityBoardList.bo") 
@@ -411,26 +415,27 @@ public class BoardController {
 				
 				int listCount = bService.getCareInfomationListCount(map);
 				if(listCount == 0) {
-					log.info("{} : {}", searchOption, searchContent);
-				}
-				
-				PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 10, 5);
-				
-				if(currentPage > pi.getMaxPage()) {
-					gson.toJson(null, response.getWriter());
+					log.info("{} : {}", searchOption, searchContent); // 검색결과가 없을 때 로그를 발생시킨다.
+					gson.toJson("empty", response.getWriter());
 				} else {
-					HashMap<String, ArrayList<?>> result = new HashMap<String, ArrayList<?>>();
-					ArrayList<Board> bList = bService.searchCareInformation(map, pi);
+					PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 10, 5);
 					
-					ArrayList<Attachment> aList = bService.selectAttachment(bList);
-					ArrayList<Integer> pList = new ArrayList<Integer>();
-					pList.add(pi.getMaxPage());
-					
-					result.put("bList", bList);
-					result.put("aList", aList);
-					result.put("pList", pList);
-					
-					gson.toJson(result, response.getWriter());
+					if(currentPage > pi.getMaxPage()) {
+						gson.toJson(null, response.getWriter());
+					} else {
+						HashMap<String, ArrayList<?>> result = new HashMap<String, ArrayList<?>>();
+						ArrayList<Board> bList = bService.searchCareInformation(map, pi);
+						
+						ArrayList<Attachment> aList = bService.selectAttachment(bList);
+						ArrayList<Integer> pList = new ArrayList<Integer>();
+						pList.add(pi.getMaxPage());
+						
+						result.put("bList", bList);
+						result.put("aList", aList);
+						result.put("pList", pList);
+						
+						gson.toJson(result, response.getWriter());
+					}
 				}
 			}
 		} catch(Exception e) {
@@ -438,7 +443,12 @@ public class BoardController {
 		}
 	}
 	
-	
+	// 간병백과 ai 검색 요청
+	@GetMapping("searchOpenAi.bo")
+	@ResponseBody
+	public String searchOpenAi(@RequestParam("condition") String condition) {
+		return bot.chat(condition + "에 대한 간병정보를 300자로 요약해줘.");
+	}
 	
 	
 	// 간병백과 앨범형 페이지로 이동 요청

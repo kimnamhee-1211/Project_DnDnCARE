@@ -1,20 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<configuration>
+	<!-- property : 설정파일에서 사용할 상수 변수 선언 -->
+	<property name="LOG_PATH" value="C:\logs\dndnCare"/> <!-- 로깅할 파일의 디렉토리를 상수로 지정해두면 편리함 -->
+	
+	<!-- 색상코드 등록 -->
+	<conversionRule conversionWord="color" converterClass="org.springframework.boot.logging.logback.ColorConverter"></conversionRule>
+	
+	<!-- Appender : 로그의 출력 위치를 지정 -->
+	<appender name="myConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %color(%-5level) %color(${PID:-}){magenta} --- [%15.15thread] %color(%-40.40logger{36}){cyan} : %msg%n</Pattern>
+		</layout>
+	</appender>
+	
+	
+	<appender name="careInformationFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/careInformation/careInformation.log</file> <!-- 기록할 파일의 경로를 지정 -->
+		
+		<!-- 출력 서식 지정 : 24-07-03 12:10:50 [INFO] LoginLogInterceptor.afterCompletion{25} - user02 -->
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yy-MM-dd HH:mm:SS} [%p] %C{1}.%M{%L} - %m%n</pattern>
+		</encoder>
+		
+		<!-- RollingFile의 정책 기준을 지정 : TimeBased는 매 정시를 기준으로 파일을 나누어준다. -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/careInformation.log.%d{yyyyMMdd}</fileNamePattern>
+		</rollingPolicy>
+	</appender>
 
+	<!-- 로그 등록 -->
+	<logger name="com.kh.dndncare.board.controller.BoardController" level="info" additivity="false">
+		<appender-ref ref="careInformationFileAppender"/>
+	</logger>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	<!-- 루트로그 등록 : 전역로그이기 때문에 name을 지정하지 않는다. -->
+	<root level="info">
+		<appender-ref ref="myConsoleAppender"/>
+	</root>
+</configuration>
