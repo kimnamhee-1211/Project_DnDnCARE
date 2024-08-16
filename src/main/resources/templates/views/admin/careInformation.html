@@ -6,12 +6,18 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<!-- Editor's Style -->
+	<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+	<link href="css/careInformation.css" rel="stylesheet" type="text/css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
 	<style>
-		main>div {
+		#graphDiv {
 			display: grid; grid-template-columns: 1fr 50px 1fr; grid-template-rows: 400px;
 		}
-	
-	
+		.selectState{background: lightyellow;}
+		.table td{cursor: pointer;}
+		.table td>div{border: 1px solid black; height: 80%; width: 45%; display: inline-block; padding-top: 3%; cursor: pointer;}
 	</style>
 </head>
 <body>
@@ -21,19 +27,27 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div th:replace="~{common/adminbarTemp :: sidebar}"></div>
-
+			
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-				<div>
-					<div class="h-100 p-5 bg-light border rounded-3">그래프 자리</div>
+				<div id="graphDiv">
+					<div class="h-100 p-2 bg-light border rounded-3 text-center">
+						조회수
+						<canvas id="barChart"></canvas>
+					</div>
+					
 					<div><!-- 사이공백 --></div>
-					<div class="h-100 p-5 bg-light border rounded-3">그래프 자리</div>
+					
+					<div class="h-100 p-2 bg-light border rounded-3 text-center">
+						검색어
+						<canvas id="pieChart"></canvas>
+					</div>
 				</div>	
 				
 				<br/>
 				
 				<div>	
 					<div>
-						<table class="table table-hover" id="careInformationTable">
+						<table class="table table-hover text-center" id="careInformationTable">
 							<thead>
 								<tr>
 									<th>번호</th>
@@ -41,6 +55,7 @@
 									<th>작성자</th>
 									<th>작성일</th>
 									<th>조회수</th>
+									<th>상태</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -50,6 +65,10 @@
 									<td>[[${b.memberNickName}]]</td>
 									<td>[[${b.boardUpdateDate}]]</td>
 									<td>[[${b.boardCount}]]</td>
+									<td>
+										<div th:class="${b.boardStatus == 'Y' ? 'selectState' : ''}">Y</div>
+										<div th:class="${b.boardStatus == 'N' ? 'selectState' : ''}">N</div>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -81,14 +100,21 @@
 					
 					<div><!-- 사이공백 --></div>
 					
-					<div class="h-100 p-5 bg-light border rounded-3" id="careInformationDetail">
+					<div class="h-100 p-1 bg-light border rounded-3">
 						<!-- 글 상세내용이 들어올 공간 -->
+						<div id="careInformationDetail" style="height: 85%">글 상세 내용이 들어올 공간</div>
+						
+						<div class="text-center align-middle" style="height:15%;">
+							<button class="btn btn-light" disabled>수정하기</button>&nbsp;&nbsp;&nbsp;&nbsp;
+							<button class="btn btn-light" disabled>내리기</button>
+						</div>
 					</div>
 				</div>
 			</main>
 		</div>
 	</div>
 	
+	<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
 	<script th:inline="javascript">
 		window.onload = () => {
@@ -98,36 +124,370 @@
 			})
 			// 간병백과 글 쓰기 페이지로 이동(끝)
 			
-			//글 상세보기 요청(시작)
+			// td에 대한 클릭 이벤트 : 글 상세보기 요청(시작)
 			const tdList = document.getElementById('careInformationTable').querySelectorAll('td');
-			const detailDiv = document.querySelector('#careInformationDetail');
-			for(const td of tdList){
-				td.addEventListener('click', function() {
-					for(const other of tdList){
-						if(other != this){
-							other.parentElement.style.background = 'white'; // 클릭하지 않은 tr의 배경색을 white로 변경
+			const detailDiv = document.querySelector('#careInformationDetail'); // 글 내용을 삽입해야할 div
+			let boardContent = ''; // 원본 내용을 저장할 변수
+			let boardTitle = ''; // 원본 제목을 저장할 변수
+			let boardNo = ''; // 원본 글 번호를 저장할 변수
+			const btnDiv = detailDiv.nextElementSibling;
+			const btnList = btnDiv.children; // 수정하기, 내리기 버튼
+			
+			for(let i = 0; i < tdList.length; i++){
+				let index = i % 6;
+				
+				if(index != 5) {
+					tdList[i].addEventListener('click', function() {
+						for(const other of tdList){
+							if(other != this){
+								other.parentElement.style.background = 'white'; // 클릭하지 않은 tr의 배경색을 white로 변경
+							}
 						}
-					}
-					this.parentElement.style.background = 'lightgray'; // 클릭한 tr의 배경색을 lightgray로 변경
-					
-					// 상세보기 div에 출력할 노드 작성(시작)
-					const titleSpan = document.createElement('span');
-					titleSpan.setAttribute("class", "badge rounded-pill bg-dark fs-6");
-					titleSpan.innerText = '내용';
-					
-					//const br = document.
-					
-					
-					
-					
-					//detailDiv.append
-				})
-				
-				
+						
+						let myStatusDivList = this.parentElement.children[5].children;
+						let status; // 현재 상태를 저장할 변수 선언
+						for(const div of myStatusDivList){
+							if(div.className.includes('selectState')){
+								status = div.innerText; // 현재 상태를 변수에 저장한다.
+							}
+						}
+						
+						if(status == 'Y'){ // 현재 글의 상태가 Y인 경우
+							btnList[1].innerText = '내리기';
+							btnList[1].classList.remove('btn-primary');
+							btnList[1].classList.add('btn-danger');
+						} else { // 현재 글의 상태가 N인 경우
+							btnList[1].innerText = '올리기';
+							btnList[1].classList.remove('btn-danger');
+							btnList[1].classList.add('btn-primary');
+						}
+						
+						if(btnList.length == 4) { 
+							btnList[3].remove(); // [등록하기], [취소하기] 버튼을 삭제한다.
+							btnList[2].remove();
+							btnList[1].style.display = 'inline';
+							btnList[0].style.display = 'inline';
+						}
+						
+						this.parentElement.style.background = 'lightgray'; // 클릭한 tr의 배경색을 lightgray로 변경
+						
+						/*<![CDATA[*/
+						const bList = /*[[${bList}]]*/'bList'
+						/*]]>*/
+						for(const b of bList){
+							if(this.parentElement.children[0].innerText == b.boardNo){
+								boardContent = b.boardContent;
+								boardTitle = b.boardTitle;
+								boardNo = b.boardNo;
+								break;
+							}
+						}
+						
+						detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + boardContent;
+						
+						for(let btn of btnList){
+							btn.classList.remove('btn-light');
+							btn.classList.add('btn-primary');
+							btn.disabled = false;
+						}
+					})
+				}
 			}
 			
+			// 글 조회에서 수정과 삭제 요청 (시작)
+			for(let i = 0; i < btnList.length; i++){
+				btnList[i].addEventListener('click', function() {
+					// 현재 조회중인 글에 대한 번호를 가져온다.
+					const trList = document.querySelectorAll('tr');
+					let targetTr = '';
+					let bNo = '';
+					for(let tr of trList){
+						if(tr.style.background == 'lightgray') {
+							bNo = tr.children[0].innerText; // 현재 선택중인 tr에 접근하여 글 번호를 가져옴
+							targetTr = tr;
+						}
+					}
+					
+					if(i == 0){ // 수정하기 버튼 클릭
+						const form = document.createElement('form');
+						form.setAttribute('method', 'post');
+						form.setAttribute('action', 'modifyCareInformation.adm');
+						form.setAttribute('id', id="modifyForm");
+						
+						const bNoInput = document.createElement('input'); // 글 번호 
+						bNoInput.setAttribute('type', 'hidden');
+						bNoInput.setAttribute('name', 'boardNo');
+						bNoInput.value = boardNo;
+						
+						const bContentInput = document.createElement('input'); // 글 내용 저장용  
+						bContentInput.setAttribute('type', 'hidden');
+						bContentInput.setAttribute('name', 'boardContent');
+						
+						
+						const titleSpan = document.createElement('span');
+						titleSpan.className = 'badge rounded-pill text-bg-dark';
+						titleSpan.style.fontSize = 18;
+						titleSpan.innerText = '제목';
+						
+						const br1 = document.createElement('br');
+						const br2 = document.createElement('br');
+						
+						const input = document.createElement('input'); // 글 제목 저장
+						input.setAttribute('type', 'text');
+						input.setAttribute('name', 'boardTitle');
+						input.value = boardTitle;
+						input.className = 'form-control';
+						
+						const br3 = document.createElement('br');
+						
+						const editorDiv = document.createElement('div');
+						editorDiv.setAttribute('id', 'editor');
+					
+						form.append(bNoInput);
+						form.append(bContentInput);
+						form.append(titleSpan);
+						form.append(br1);
+						form.append(br2);
+						form.append(input);
+						form.append(br3);
+						form.append(editorDiv);
+						
+						detailDiv.innerHTML = '';
+						detailDiv.append(form);
+						
+					 	const editor = new toastui.Editor({
+				            el: document.querySelector('#editor'), // 에디터를 적용할 요소 (컨테이너)
+				            height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
+				            initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
+				            initialValue: '내용을 입력해 주세요.',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
+				            previewStyle: 'vertical'                // 마크다운 프리뷰 스타일 (tab || vertical)
+				        });
+						
+					 	editor.setHTML(boardContent); // ** 기존글 내용 삽입 **
+						
+					 	// 등록하기 버튼 생성
+					 	this.style.display = 'none';
+					 	let insertBtn = document.createElement('button');
+					 	insertBtn.className = 'btn btn-primary';
+					 	insertBtn.innerText = '등록하기';
+					 	
+					 	// 취소하기 버튼 생성
+					 	this.nextElementSibling.style.display = 'none';
+					 	let cancleBtn = document.createElement('button');
+					 	cancleBtn.className = 'btn btn-danger';
+					 	cancleBtn.innerText = '취소하기';
+					 	
+					 	// 버튼 Div에 [등록하기], [취소하기] 버튼을 넣어주기
+					 	btnDiv.append(insertBtn);
+					 	btnDiv.append(' ');
+					 	btnDiv.append(cancleBtn);
+					 	
+					 	// [등록하기] 버튼을 클릭
+					 	insertBtn.addEventListener('click', () => { // 테이블의 다른 행을 클릭하면 제거될 요소이기 때문에 여기서 이벤트를 지정해도 괜찮음
+					 		const newContent = editor.getHTML();
+					 		
+					 		$.ajax({
+					 			url: 'modifyCareInformation.adm',
+					 			type: 'post',
+					 			data: {
+					 				boardNo: document.getElementsByName('boardNo')[0].value,
+					 				boardTitle: document.getElementsByName('boardTitle')[0].value,
+					 				boardContent: newContent
+					 			},
+					 			success: data => {
+					 				if(data == 'success'){// 글 수정에 성공한 경우 
+					 					// 상세보기 div에 출력할 HTML 작성(시작)
+										detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + newContent;
+
+										let nextDiv = detailDiv.nextElementSibling;
+										let fourBtnList = nextDiv.children;
+										for(let i = fourBtnList.length-1; i >= 0; i--){
+											if(i > 1) fourBtnList[i].remove(); // [등록하기],[취소하기] 버튼을 페이지에서 삭제
+											else fourBtnList[i].style.display = 'inline'; // [수정하기], [내리기] 버튼을 화면에 표시
+										}
+					 				} else{
+					 					alert('서비스 요청에 실패하였습니다.');
+					 				}
+					 			},
+					 			error: data => console.log(data)
+					 		});
+					 	});
+					 	
+					 	// [취소하기] 버튼을 클릭 : 테이블의 다른 행을 클릭하면 제거될 요소이기 때문에 여기서 이벤트를 지정해도 된다.
+					 	cancleBtn.addEventListener('click', () => {
+							detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + boardContent;
+		
+							let nextDiv = detailDiv.nextElementSibling;
+							let fourBtnList = nextDiv.children;
+							for(let i = fourBtnList.length-1; i >= 0; i--){
+								if(i > 1) fourBtnList[i].remove(); // [등록하기],[취소하기] 버튼을 페이지에서 삭제
+								else fourBtnList[i].style.display = 'inline'; // [수정하기], [내리기] 버튼을 화면에 표시
+							}
+					 	});
+					} else if(i == 1){ // 클릭한 버튼이 [내리기] 또는 [올리기] 버튼일 때
+						if(this.innerText == '내리기'){ // [내리기] 버튼 클릭
+							$.ajax({
+								url: 'changeStatusCareInformation.adm',
+								type: 'POST',
+								data: {boardNo : bNo, status: 'N'},
+								success: data => {
+									console.log(data);
+									console.log(targetTr.querySelectorAll('div'));
+									if(data == 'success'){ // 삭제 성공
+										detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + boardContent;
+
+										const divList = targetTr.querySelectorAll('div'); // 클릭한 tr에 있는 상태 div들에게 접근
+										divList[0].className = ''; // Y에 대한 배경을 OFF
+										divList[1].className = 'selectState'; // N에 대한 배경을 ON 
+										
+										// [내리기] 버튼의 이름을 [올리기] 버튼으로 수정한다.
+										this.innerText = '올리기';
+										this.classList.remove('btn-danger');
+										this.classList.add('btn-primary');
+										
+									} else if(data == 'fail') { // 삭제 실패
+										alert('서비스 요청에 실패하였습니다');
+									}
+								},
+								error: data=> console.log(data)
+							});
+						} else if(this.innerText == '올리기'){
+							$.ajax({
+								url: 'changeStatusCareInformation.adm',
+								type: 'POST',
+								data: {boardNo : bNo, status: 'Y'},
+								success: data => {
+									console.log(data);
+									console.log(targetTr.querySelectorAll('div'));
+									if(data == 'success'){ // Y인 상태로 변경을 성공
+										detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + boardContent;
+
+										const divList = targetTr.querySelectorAll('div'); // 클릭한 tr에 있는 상태 div들에게 접근
+										divList[1].className = ''; // N에 대한 배경을 OFF
+										divList[0].className = 'selectState'; // Y에 대한 배경을 ON 
+										
+										// [올리기] 버튼의 이름을 [내리기] 버튼으로 수정한다.
+										this.innerText = '내리기';
+										this.classList.remove('btn-primary');
+										this.classList.add('btn-danger');
+										
+									} else if(data == 'fail') { // 삭제 실패
+										alert('서비스 요청에 실패하였습니다');
+									}
+								},
+								error: data=> console.log(data)
+							});
+						}
+					}
+				})
+			}
+			// 글 조회에서 수정과 삭제 요청 (끝)
 			
+			// 테이블에서 상태를 비동기 통신으로 변경(시작)
+			const statusDivList = document.querySelectorAll('td div'); // 테이블의 모든 상태div에 접근한다.
+			for(const div of statusDivList){
+				 // 클릭이벤트가 발생하였을 때 className이 selectState가 아닐 때만 ajax를 실행한다.
+				div.addEventListener('click', function() {
+					if(!div.className.includes('selectState')){
+						const siblingDivList = this.parentElement.children;
+						const upOrDownBtn = detailDiv.nextElementSibling.children[1];
+						
+						$.ajax({
+							url: 'changeStatusCareInformation.adm',
+							type: 'post',
+							data: {
+								boardNo: this.parentElement.parentElement.children[0].innerText,
+								status: this.innerText
+							},
+							success: data => {
+								if(data == 'success'){ // 상태변경에 성공한 경우
+									// 해당 div의 클래스명을 교체해주어야한다.
+									// 만약 해당 글이 조회중인 경우 올리기, 내리기 버튼을 교체해주어야 한다.
+									if(this.innerText == 'Y'){ // Y로 변경이 되버린 경우
+										siblingDivList[0].className = 'selectState';
+										siblingDivList[1].className = '';
+										
+										upOrDownBtn.innerText = '내리기';
+										if(upOrDownBtn.disabled == false){ // 해당 글이 조회 중인 경우
+											upOrDownBtn.classList.remove('btn-primary');
+											upOrDownBtn.classList.add('btn-danger');
+										}	
+									} else{ // N으로 변경이 되버린 경우
+										siblingDivList[0].className = '';
+										siblingDivList[1].className = 'selectState';
+										
+										upOrDownBtn.innerText = '올리기';
+										if(upOrDownBtn.disabled == false){ // 해당 글이 조회 중인 경우
+											upOrDownBtn.classList.remove('btn-danger');
+											upOrDownBtn.classList.add('btn-primary');
+										}	
+									}
+								} else {
+									alert('서비스 요청에 실패하였습니다.');
+								}
+							},
+							error: data => console.log(data)
+						});
+					} 
+				})
+			}
+			// 테이블에서 상태를 비동기 통신으로 변경(끝)
 		}
+		
+		// 막대그래프 (시작)
+		const barCtx = document.getElementById('barChart');
+
+		new Chart(barCtx, {
+		    type: 'bar',
+		    data: {
+		      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+		      datasets: [{
+		        label: '# of Votes',
+		        data: [12, 19, 3, 5, 2, 3],
+		        borderWidth: 1
+		      }]
+		    },
+		    options: {
+		      scales: {
+		        y: {
+		          beginAtZero: true
+		        }
+		      }
+		    }
+		});
+		// 막대그래프 (끝)
+		
+		// 원 그래프(시작)
+		const pieCtx = document.getElementById('pieChart');
+
+		new Chart(pieCtx, {
+		    type: 'pie',
+		    data: {
+		    	labels: [
+		    	    'Red',
+		    	    'Blue',
+		    	    'Yellow'
+		    	  ],
+		    	  datasets: [{
+		    	    label: 'My First Dataset',
+		    	    data: [300, 50, 100],
+		    	    backgroundColor: [
+		    	      'rgb(255, 99, 132)',
+		    	      'rgb(54, 162, 235)',
+		    	      'rgb(255, 205, 86)'
+		    	    ],
+		    	    hoverOffset: 4
+		    	  }]
+		    }
+		    
+		});
+		
+		
+		
+		
+		// 원 그래프(끝)
+		
+		
 	</script>
 </body>
 </html>

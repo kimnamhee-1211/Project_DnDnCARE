@@ -1,7 +1,7 @@
 package com.kh.dndncare.chating.controller;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,17 +11,21 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.dndncare.chating.model.service.ChatingService;
 import com.kh.dndncare.chating.model.vo.ChatingRoom;
 import com.kh.dndncare.chating.model.vo.ChatingRoomMessage;
+import com.kh.dndncare.chating.model.vo.ReadStatusMessage;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.Member;
 
@@ -32,6 +36,9 @@ public class ChatingController {
 	
 	@Autowired
 	private ChatingService chService;
+	
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 	
 //	@GetMapping("getChatList.ch")
 //	public String getChatList(HttpSession session) {
@@ -80,6 +87,8 @@ public class ChatingController {
 	        model.addAttribute("chatRoomId", existingChatingRoom.getChatRoomNo());
 	        model.addAttribute("userId", memberNo);
 	        model.addAttribute("memberName", memberName);
+	        
+	        chService.markAsRead(existingChatingRoom.getChatRoomNo(), memberNo);
 	        return "chatRoom";
 	    }
 
@@ -111,7 +120,9 @@ public class ChatingController {
     @SendTo("/room/chat/{chatRoomId}")
     public ChatingRoomMessage sendMessage(@DestinationVariable("chatRoomId") int chatRoomId, ChatingRoomMessage chatMessage) {
         chatMessage.setChatRoomNo(chatRoomId);
-        chatMessage.setReadCount(0);
+        // 채팅방 참여자 수를 조회하여 readCount 설정
+        int participantCount = chService.getParticipantCount(chatRoomId);
+        chatMessage.setReadCount(participantCount - 1);  // 발신자를 제외한 참여자 수
         
         TimeZone koreaTimeZone = TimeZone.getTimeZone("Asia/Seoul");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
@@ -148,4 +159,39 @@ public class ChatingController {
 //    public List<ChatingRoomMessage> getChatHistory(@PathVariable("chatRoomId") int chatRoomId) {
 //        return chService.getMessagesByChatRoomNo(chatRoomId);
 //    }
+    
+    //읽음 표시 관련 메소드 
+    @PostMapping("/api/chat/markAsRead")
+    @ResponseBody
+    public Map<String, Object> markMessagesAsRead(@RequestParam("chatRoomNo") int chatRoomNo, @RequestParam("memberNo") int memberNo) {
+        chService.markAsRead(chatRoomNo, memberNo);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        return response;
+    }
+    
+    @MessageMapping("/chat/read/{chatRoomId}")
+    public void markAsRead(@DestinationVariable("chatRoomId") String chatRoomId, 
+                           @Payload ReadStatusMessage readStatusMessage) {
+        chService.markAsRead(Integer.parseInt(chatRoomId), readStatusMessage.getMemberNo());
+
+        // 읽음 상태 업데이트를 모든 참여자에게 브로드캐스트
+        messagingTemplate.convertAndSend("/room/chat/" + chatRoomId + "/read", readStatusMessage);
+    }
+
+    @GetMapping("/api/chat/unreadCount")
+    @ResponseBody
+    public Map<String, Object> getUnreadMessageCount(@RequestParam("chatRoomNo") int chatRoomNo, @RequestParam("memberNo") int memberNo) {
+        int unreadCount = chService.getUnreadMessageCount(chatRoomNo, memberNo);
+        Map<String, Object> response = new HashMap<>();
+        response.put("unreadCount", unreadCount);
+        return response;
+    }
+    
+    
+    
+    
+    
+    
+    
 }

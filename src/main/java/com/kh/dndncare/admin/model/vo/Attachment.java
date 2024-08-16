@@ -16,5 +16,5 @@ public class Attachment {
 	private String renameName; //RENAME_NAME
 	private String attmPath; //ATTM_PATH
 	private int attmLevel; //ATTM_LEVEL
-	private int attmStatus; //ATTM_STATUS
+	private String attmStatus; //ATTM_STATUS
 }

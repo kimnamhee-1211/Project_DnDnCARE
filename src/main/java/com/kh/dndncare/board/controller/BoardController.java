@@ -328,7 +328,20 @@ public class BoardController {
 	public String chatTest() {
 		return "chatTest";
 	}
-
+	
+	@GetMapping("careInformation.bo")
+	public String careInformation() {
+		
+		
+		
+		
+		return "board/careInformation";
+		
+	}
+	
+	
+	
+	
 	
 	
 }
