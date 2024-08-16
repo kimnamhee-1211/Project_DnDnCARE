@@ -73,5 +73,30 @@
         WHERE crm.member_no = #{memberNo}
         ORDER BY m.write_date DESC
     </select>
+    
+    <!-- 읽음표시 -->
+    <select id="getParticipantCount" resultType="int">
+        SELECT COUNT(*) FROM chat_room_member WHERE chat_room_no = #{chatRoomNo}
+    </select>
+
+    <update id="updateMessageReadCount">
+        UPDATE chat_room_message 
+        SET read_count = #{readCount} 
+        WHERE chat_massage_no = #{chatMessageNo}
+    </update>
+
+    <select id="getUnreadMessages" resultType="ChatingRoomMessage">
+        SELECT * FROM chat_room_message 
+        WHERE chat_room_no = #{chatRoomNo} 
+        AND member_no != #{memberNo} 
+        AND read_count > 0
+    </select>
+
+    <select id="getUnreadMessageCount" resultType="int">
+        SELECT COUNT(*) FROM chat_room_message 
+        WHERE chat_room_no = #{chatRoomNo} 
+        AND member_no != #{memberNo} 
+        AND read_count > 0
+    </select>
 	
 </mapper>
