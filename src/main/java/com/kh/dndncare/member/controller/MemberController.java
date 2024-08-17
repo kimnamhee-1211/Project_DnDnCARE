@@ -485,11 +485,12 @@ public class MemberController {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
 				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
+			} else if(choice[i].contains(" ")){
+				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
 				choiceNoList.add(Integer.parseInt(choice[i]));
 			}
 		} // [2, 5, 8, 10, 14] 
-//			
 		// 7. View로 전달한 결과값만 추리기
 		// 이름, 성별, 나이, 지역, 질환, 금액, 매칭번호, 멤버번호
 		ArrayList<Patient> completeList = mService.choicePatientList(choiceNoList);
@@ -2171,6 +2172,8 @@ public class MemberController {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
 				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
+			} else if(choice[i].contains(" ")){
+				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
 				choiceNoList.add(Integer.parseInt(choice[i]));
 			}

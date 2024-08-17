@@ -336,6 +336,9 @@
 			
 			
 			// 검색 요청 함수 정의(시작)
+			/*<![CDATA[*/
+			let aiCount = /*[[${aiCount}]]*/'aiCount';	 // 사용자의 ai검색 요청 횟수
+			/*]]>*/	
 			const searchOption = document.getElementsByName('searchOption')[0];
 			const optionList = searchOption.children;
 			const searchContent = document.getElementsByName('searchContent')[0];
@@ -374,8 +377,12 @@
 							tbody.insertAdjacentHTML('beforeend', `<tr><td>검색결과가 존재하지 않습니다.</td><td></td><td></td><td></td></tr>`);
 							
 							let codition = searchOption.value == 'title' ? '제목' : '내용';
-							document.querySelector('#confirmModalBody').innerHTML = `<span style="color: red;">'${codition}'</span>이 <span style="color: red;">'${searchContent.value}'</span>인 글이 존재하지 않습니다.<br/>Ai에게 질문하시겠습니까?`;
+							document.querySelector('#confirmModalBody').innerHTML = `<span style="color: red;">'${codition}'</span>이 <span style="color: red;">'${searchContent.value}'</span>인 글이 존재하지 않습니다.<br/>Ai에게 질문하시겠습니까?<span style="color: red;">(${3-aiCount}회 남음)</span>`;
 							document.querySelector('#confirmYes').previousElementSibling.value = searchContent.value;
+							if(aiCount >= 3) {
+								document.querySelector('#confirmYes').disabled = true; // 검색횟수가 3회이상일 때는 추가검색 버튼을 비활성화
+							}
+							
 							$('#confirmModal').modal('show');
 						}
 					},
@@ -409,6 +416,8 @@
 			
 			// ai추가 검색 (시작)
 			document.querySelector('#confirmYes').addEventListener('click', function() {
+				aiCount++;
+				
 				let condition = this.previousElementSibling.value;
 				$.ajax({
 					url: 'searchOpenAi.bo',

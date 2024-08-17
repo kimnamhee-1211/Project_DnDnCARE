@@ -1,6 +1,9 @@
 package com.kh.dndncare.board.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -345,25 +348,29 @@ public class BoardController {
 	
 	// 간병백과 페이지로의 이동요청을 처리
 	@GetMapping("careInformation.bo")
-	public String careInformation(HttpSession session) {
+	public String careInformation(HttpSession session, Model model) {
 		// ai 검색 횟수를 파악해서 넘어가야 한다.
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		if(loginUser != null) {
 			String id = loginUser.getMemberId();
-			File file = new File("C:/logs/dndnCare/careInformationAi/"); // 로그 파일이 저장된 폴더 '내'까지 접근
-			File[] fileList = file.listFiles(); // 폴더 내의 각 파일에 접근한 File객체들로 이루어진 배열을 반환
-			
+			// 오늘 작성된 로그파일들에게만 접근한다.
+			File file = new File("C:/logs/dndnCare/careInformationAi/careInformationAi.log"); // 로그 파일이 저장된 폴더 '내'까지 접근
 			int aiCount = 0;
 			
-			
-			
-			
-			
+			try(BufferedReader br = new BufferedReader(new FileReader(file));) {
+				String data;
+				
+				while((data = br.readLine()) != null) {
+					// 24-08-17 20:24:44 [INFO] c.k.d.c.i.CheckCareInfomationAiSearch.preHandle - test-m-p20
+					String[] arr = data.split(" ");
+					if(arr[arr.length-1].equals(id)) aiCount++; // 검색기록에 사용자 아이디가 있는 경우 검색횟수를 1증가 시킨다.
+				}
+				
+				model.addAttribute("aiCount", aiCount);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
 		}
-		
-		
-		
-		
 		
 		return "board/careInformation";
 		
