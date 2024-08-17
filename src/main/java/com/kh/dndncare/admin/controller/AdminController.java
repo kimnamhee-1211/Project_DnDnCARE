@@ -1,11 +1,15 @@
 package com.kh.dndncare.admin.controller;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
@@ -55,6 +59,69 @@ public class AdminController {
 	@GetMapping("careInformation.adm")
 	public String careInformation(@RequestParam(value="page", defaultValue="1") int currentPage, Model model,
 									HttpServletRequest request) {
+		// 로그 파일 : 페이지 이용량을 조회 (시작)
+		File usageFolder = new File("C:/logs/dndnCare/careInformationUsage/");
+		File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+		
+		TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
+		try { 
+			for(File f : usageFileList) {
+				BufferedReader br = new BufferedReader(new FileReader(f));
+				String data;
+				while((data=br.readLine())!=null) {
+					// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
+					String date = data.split(" ")[0];
+					if(usageMap.containsKey(date)) { // map에 해당 날짜의 key가 존재하는 경우
+						usageMap.put(date, usageMap.get(date) + 1);
+					} else { // map에 해당 날짜의 key가 존재하지 않는 경우
+						usageMap.put(date, 1);
+					}
+				}
+				br.close();
+			}
+			model.addAttribute("usage", usageMap);
+		} catch(Exception e) {
+			e.printStackTrace();
+		} 
+		// 로그 파일 : 페이지 이용량을 조회 (끝)
+			
+		// 로그 파일 : 최근 일주일 검색어 조회 (시작)	
+		File searchFolder = new File("C:/logs/dndnCare/careInformation/");
+		File[] searchFileList = searchFolder.listFiles();
+		
+		TreeMap<String, Integer> searchMap = new TreeMap<String, Integer>(); // key(검색어), value(횟수)
+		try {
+			for(File f : searchFileList) {
+				BufferedReader br = new BufferedReader(new FileReader(f));
+				String data;
+				while((data = br.readLine())!=null) {
+					String[] arr = data.split(" ");
+					String search = arr[arr.length - 1];
+					
+					if(searchMap.containsKey(search)) {
+						searchMap.put(search, searchMap.get(search) + 1);
+					} else {
+						searchMap.put(search, 1);
+					}
+				}
+				br.close();
+			}
+			
+			model.addAttribute("search", searchMap);
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		
+		// 로그 파일 : 검색어 조회 (끝)	
+		
+		
+		
 		// 페이징처리된 게시글 목록 조회 : BoardLimit == 7 (**가정**)
 		int listCount = aService.getCareInformationListCount();
 		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 7, 5);

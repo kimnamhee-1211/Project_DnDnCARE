@@ -434,7 +434,13 @@
 			// 테이블에서 상태를 비동기 통신으로 변경(끝)
 		}
 		
-		// 막대그래프 (시작)
+		// 막대그래프 (시작) : usage 로 전달받음
+		/*<![CDATA[*/
+		const usageResult = /*[[${usage}]]*/'obj';
+		/*]]>*/
+		
+		console.log(usageResult);
+		
 		const barCtx = document.getElementById('barChart');
 
 		new Chart(barCtx, {
@@ -457,7 +463,14 @@
 		});
 		// 막대그래프 (끝)
 		
-		// 원 그래프(시작)
+		// 원 그래프(시작) : search 로 전달받음
+		/*<![CDATA[*/
+		const searchResult = /*[[${search}]]*/'obj';
+		/*]]>*/
+		
+		console.log(searchResult);
+		
+		
 		const pieCtx = document.getElementById('pieChart');
 
 		new Chart(pieCtx, {
