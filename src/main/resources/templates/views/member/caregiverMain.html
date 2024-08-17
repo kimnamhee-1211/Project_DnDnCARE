@@ -23,6 +23,10 @@
 			<div><!-- 왼쪽 공백 --></div>
 			<div id="upperLeftContents">
 				<div><!-- AI 매칭 : 가로 700, 세로 200 -->
+				<div class="m-2 d-flex justify-content-between">
+					<div class="m-2">[[${loginUserName}]]님. 그동안 일한 금액 [[${money}]]원을 받으실 수 있어요!</div>
+					<div class="m-2"><button class="btn btn-success payButton" onclick="location.href='insertPayTransfer.mc'">[[${money}]]원 받기</button></div>
+				</div>
 				<table class="table mainTable table-hover">
                  <thead>
                      <tr>

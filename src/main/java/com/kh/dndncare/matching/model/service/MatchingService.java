@@ -160,6 +160,12 @@ public interface MatchingService {
 	
 	//간병인 매칭 신청 취소
 	int matchingCancelC(int matNo,  int memberNo);
+	
+	//간병인 결제 금액 받기
+	ArrayList<Pay> selectPayTransfer(int memberNo);
+	
+	//간병인 결제 금액 받기 2
+	int insertPayTransfer(Member loginUser, Pay p);
 
 
 

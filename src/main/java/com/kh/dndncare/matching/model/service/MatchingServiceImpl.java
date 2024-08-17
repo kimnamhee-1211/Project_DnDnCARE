@@ -340,6 +340,20 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.matchingCancelC(matNo, memberNo);
 	}
 
+	//간병인 결제 금액 받기 jg
+	@Override
+	public ArrayList<Pay> selectPayTransfer(int memberNo) {
+		
+		return mMapper.selectPayTransfer2(memberNo);
+	}
+
+
+	//간병인  결제 금액 받기 jg 2 
+	@Override
+	public int insertPayTransfer(Member loginUser, Pay p) {
+		return mMapper.insertPayTransfer(loginUser,p);
+	}
+
 
 
 

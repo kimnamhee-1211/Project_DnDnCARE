@@ -177,9 +177,9 @@ public class MatchingController {
 	         int matchingResult = mcService.enrollMatching(matching);
 	         
 	         int matNo = matching.getMatNo();
-	         System.out.println("종규 매칭 정보 확인하기2 : "+matNo);
-	         System.out.println("종규 매칭 정보 확인하기 : "+matching);
-	         System.out.println("종규 매칭 정보 확인하기 : "+matching.getMatNo());
+	         //System.out.println("종규 매칭 정보 확인하기2 : "+matNo);
+	         //System.out.println("종규 매칭 정보 확인하기 : "+matching);
+	         //System.out.println("종규 매칭 정보 확인하기 : "+matching.getMatNo());
 	         	               	         
 	         //시간제일 때 Matching_date 테이블 insert
 	         if(matching.getMatMode() == 2 && selectDays != null) {
@@ -1250,6 +1250,30 @@ public class MatchingController {
 	}
 	
 	
+
+	//간병인 금액 받기
+	@GetMapping("insertPayTransfer.mc")
+	public String insertPayTransfer(HttpSession session) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		ArrayList<Pay> pArr = mcService.selectPayTransfer(loginUser.getMemberNo()); 	///matNo를 전부 가져와야한다.왜냐? 공동간병 거래한사람도 있을꺼잖아
+		System.out.println("페이정보" + pArr);
+		int result = 0;
+		int money = 0;
+		if(!pArr.isEmpty()) {
+			for(Pay p : pArr) {
+				result += mcService.insertPayTransfer(loginUser,p);
+				money += p.getPayMoney();
+			} 
+		}
+		
+		System.out.println(" 총 매칭건" + result);
+		System.out.println(" 총 금액" + money);
+		
+		
+		
+		return "redirect:careGiverMain.me";
+	}
 	
 	
 	

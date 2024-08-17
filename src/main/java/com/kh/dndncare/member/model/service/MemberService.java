@@ -16,6 +16,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.CareGiverMin;
@@ -198,6 +199,8 @@ public interface MemberService {
 	CareGiver selectProfile(String memberNo);
 
 	int deleteMember(int memberNo);
+
+	ArrayList<Pay> selectPayTransfer(int memberNo);
 
 
 

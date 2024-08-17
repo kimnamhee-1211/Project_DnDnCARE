@@ -49,6 +49,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
@@ -698,7 +699,20 @@ public class MemberController {
 		//현재 매칭중인 pt정보
 		//ArrayList<MatMatptInfoPt> matConfirmPt = mService.getMatConfirmPt();
 		
-	
+		//종규 결제대금 받기 추가함  ↓
+		
+		ArrayList<Pay> pArr = mService.selectPayTransfer(loginUser.getMemberNo()); 	///matNo를 전부 가져와야한다.왜냐? 공동간병 거래한사람도 있을꺼잖아
+		System.out.println("페이정보" + pArr);
+		int money = 0;
+		if(!pArr.isEmpty()) {
+			for(Pay p : pArr) {
+				money += p.getPayMoney();
+			}
+		}
+		//종규 결제대금 받기       ↑
+		model.addAttribute("money",money);
+		model.addAttribute("pArr",pArr);
+		
 		return "caregiverMain";
 	}
 	
