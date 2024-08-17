@@ -130,12 +130,12 @@ public class AdminController {
 						}
 					}
 					
-					String copyName = copyNameCreate(); // 첨부파일명(확장자가 없음)을 생성한다.
-					renameName = copyName + "." + type; // 첨부파일명 + ".확장자"를 DB에 저장할 리네임으로 지정한다.
-					ImageUtil.base64ToFile(copyName, b64);  // 첨부파일명과 암호화된 이미지src를 전달한다.
+					String copyName = copyNameCreate(); 				// 첨부파일명(확장자가 없음)을 생성한다.
+					renameName = copyName + "." + type; 				// 첨부파일명 + ".확장자"를 DB에 저장할 리네임으로 지정한다.
+				ImageUtil.base64ToFile(copyName, b64);  				// 첨부파일명과 암호화된 이미지src를 전달한다.
 					
 					if(content.contains(b64)) {
-						content = content.replace(b64, renameName); // HTML의 암호화부분을 "첨부파일명.확장자"로 바꾸어 둔다. (View에서 출력하기 편리하게 하기 위함)
+						content = content.replace(b64, renameName); 	// HTML의 암호화부분을 "첨부파일명.확장자"로 바꾸어 둔다. (View에서 출력하기 편리하게 하기 위함)
 					}
 					Attachment a = new Attachment();
 					a.setRenameName(renameName); // 첨부파일에 대한 리네임을 명시한다.

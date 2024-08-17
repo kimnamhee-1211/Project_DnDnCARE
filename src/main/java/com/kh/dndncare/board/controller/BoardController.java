@@ -1,5 +1,6 @@
 package com.kh.dndncare.board.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -344,7 +345,26 @@ public class BoardController {
 	
 	// 간병백과 페이지로의 이동요청을 처리
 	@GetMapping("careInformation.bo")
-	public String careInformation() {
+	public String careInformation(HttpSession session) {
+		// ai 검색 횟수를 파악해서 넘어가야 한다.
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		if(loginUser != null) {
+			String id = loginUser.getMemberId();
+			File file = new File("C:/logs/dndnCare/careInformationAi/"); // 로그 파일이 저장된 폴더 '내'까지 접근
+			File[] fileList = file.listFiles(); // 폴더 내의 각 파일에 접근한 File객체들로 이루어진 배열을 반환
+			
+			int aiCount = 0;
+			
+			
+			
+			
+			
+		}
+		
+		
+		
+		
+		
 		return "board/careInformation";
 		
 	}
@@ -446,7 +466,7 @@ public class BoardController {
 	// 간병백과 ai 검색 요청
 	@GetMapping("searchOpenAi.bo")
 	@ResponseBody
-	public String searchOpenAi(@RequestParam("condition") String condition) {
+	public String searchOpenAi(@RequestParam("condition") String condition, HttpSession session) {
 		return bot.chat(condition + "에 대한 간병정보를 300자로 요약해줘.");
 	}
 	

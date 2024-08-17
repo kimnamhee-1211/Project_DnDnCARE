@@ -25,15 +25,35 @@
 		
 		<!-- RollingFile의 정책 기준을 지정 : TimeBased는 매 정시를 기준으로 파일을 나누어준다. -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_PATH}/careInformation.log.%d{yyyyMMdd}</fileNamePattern>
+			<fileNamePattern>${LOG_PATH}/careInformation/careInformation.log.%d{yyyyMMdd}</fileNamePattern>
 		</rollingPolicy>
 	</appender>
+
+	<appender name="careInformationAiFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/careInformationAi/careInformationAi.log</file> <!-- 기록할 파일의 경로를 지정 -->
+		
+		<!-- 출력 서식 지정 : 24-07-03 12:10:50 [INFO] LoginLogInterceptor.afterCompletion{25} - user02 -->
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yy-MM-dd HH:mm:SS} [%p] %C{1}.%M{%L} - %m%n</pattern>
+		</encoder>
+		
+		<!-- RollingFile의 정책 기준을 지정 : TimeBased는 매 정시를 기준으로 파일을 나누어준다. -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/careInformationAi/careInformationAi.log.%d{yyyyMMdd}</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+
 
 	<!-- 로그 등록 -->
 	<logger name="com.kh.dndncare.board.controller.BoardController" level="info" additivity="false">
 		<appender-ref ref="careInformationFileAppender"/>
 	</logger>
-
+	
+	<logger name="com.kh.dndncare.common.interceptor.CheckCareInfomationAiSearch" level="info" additivity="false">
+		<appender-ref ref="careInformationAiFileAppender"/>
+	</logger>
+	
+	
 	<!-- 루트로그 등록 : 전역로그이기 때문에 name을 지정하지 않는다. -->
 	<root level="info">
 		<appender-ref ref="myConsoleAppender"/>

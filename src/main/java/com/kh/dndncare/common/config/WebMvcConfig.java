@@ -1,8 +1,11 @@
 package com.kh.dndncare.common.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.kh.dndncare.common.interceptor.CheckCareInfomationAiSearch;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer{
@@ -15,6 +18,14 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		WebMvcConfigurer.super.addResourceHandlers(registry);
 	}
 	
-	
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		// 간병백과 페이지에서 ai검색 요청을 가로챌 인터셉터를 등록한다.
+		registry.addInterceptor(new CheckCareInfomationAiSearch())
+				.addPathPatterns("/searchOpenAi.bo"); // 인터셉터 등록
+		
+		
+		WebMvcConfigurer.super.addInterceptors(registry);
+	}
 	
 }
