@@ -197,6 +197,8 @@ public interface MemberService {
 
 	CareGiver selectProfile(String memberNo);
 
+	int deleteMember(int memberNo);
+
 
 
 }

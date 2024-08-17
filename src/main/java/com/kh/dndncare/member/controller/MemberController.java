@@ -758,7 +758,7 @@ public class MemberController {
 			LocalDate today = LocalDate.now();
 			Double avgReviewScore = mService.avgReviewScore2(c.getMemberNo());
 			c.setAvgReviewScoreDouble(avgReviewScore);
-			System.out.println("리뷰점수 확인하기 : " + c.getAvgReviewScoreDouble());
+			//ystem.out.println("리뷰점수 확인하기 : " + c.getAvgReviewScoreDouble());
 			
 			c.setAge(Period.between(birthDateParsed, today).getYears());
 			//System.out.println(c);
@@ -2636,8 +2636,40 @@ public class MemberController {
 		return "login";
 	}
 	
-	@GetMapping("deleteMember.me")
-	public String deleteMember() {
+	@PostMapping("deleteMember.me")
+	public String deleteMember(@RequestParam("password") String password,HttpSession session,HttpServletResponse response) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		if (bCrypt.matches(password, loginUser.getMemberPwd())) {
+			int result = mService.deleteMember(loginUser.getMemberNo());
+			
+			if(result>0) {
+				try {
+					response.setContentType("text/html; charset=UTF-8");
+					response.getWriter().write("<script> alert('계정 탈퇴 성공');</script>");
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return "redirect:home.do";
+			}else {
+				throw new MemberException("탈퇴 오류");
+			}
+		}else {
+			try {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().write("<script> alert('비밀번호가 맞지 않습니다');</script>");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return "deleteMember";
+		}
+	}
+	
+	@GetMapping("deleteMemberView.me")
+	public String deleteMemberView() {
 		return "deleteMember";
 	}
 	

@@ -517,4 +517,10 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectProfile(memberNo);
 	}
 
+
+	@Override
+	public int deleteMember(int memberNo) {
+		return mMapper.deleteMember(memberNo);
+	}
+
 }

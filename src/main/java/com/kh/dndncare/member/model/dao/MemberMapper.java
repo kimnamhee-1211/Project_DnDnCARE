@@ -194,4 +194,6 @@ public interface MemberMapper {
 
 	CareGiver selectProfile(String memberNo);
 
+	int deleteMember(int memberNo);
+
 }

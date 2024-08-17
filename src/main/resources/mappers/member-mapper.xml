@@ -840,4 +840,13 @@
 		where member_no = #{memberNo}
 	</select>
 	
+	<!-- 늦엇지만 계정탈퇴하기 -->
+	<update id="deleteMember">
+		update member
+		set member_status = 'N'
+		where member_no = #{memberNo}
+	
+	</update>
+	
+	
 </mapper>
