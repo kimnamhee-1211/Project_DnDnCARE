@@ -31,14 +31,12 @@
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 				<div id="graphDiv">
 					<div class="h-100 p-2 bg-light border rounded-3 text-center">
-						조회수
 						<canvas id="barChart"></canvas>
 					</div>
 					
 					<div><!-- 사이공백 --></div>
 					
 					<div class="h-100 p-2 bg-light border rounded-3 text-center">
-						검색어
 						<canvas id="pieChart"></canvas>
 					</div>
 				</div>	
@@ -120,7 +118,7 @@
 		window.onload = () => {
 			// 간병백과 글 쓰기 페이지로 이동(시작)
 			document.querySelector('#writeBtn').addEventListener('click', () => {
-				location.href = 'writeCareInformationPage.adm';
+				location.href = `writeCareInformationPage.adm?labels=${labels}&data=${data}`;
 			})
 			// 간병백과 글 쓰기 페이지로 이동(끝)
 			
@@ -438,18 +436,40 @@
 		/*<![CDATA[*/
 		const usageResult = /*[[${usage}]]*/'obj';
 		/*]]>*/
+		//console.log(usageResult);
 		
-		console.log(usageResult);
+		// 최근 일주일을 yy-MM-dd형식으로 뽑아내기
+		const dateFormat = date => {
+			return date.toISOString().split('T')[0].substring(2); // 24-08-18
+		}
+		
+		// 현재로부터 n일 이전에 대한 Date 객체 생성하기
+		const dateAgo = ago => {
+			return new Date(new Date().setDate(new Date().getDate() - ago));
+		}
+		
+		// 최근 일주일에 대한 날짜를 yy-MM-dd형식으로 뽑아내기
+		const nearWeek = [];
+		for(let i = 6; i >= 0; i--){
+			nearWeek.push(dateFormat(dateAgo(i)));
+		}
+		
+		// 최근 일주일에 대한 방문자의 수를 전달받기
+		const weekUsage = [];
+		for(const near of nearWeek){
+			//console.log(near); // 24-08-12
+			usageResult[near] == undefined ? weekUsage.push(0) : weekUsage.push(usageResult[near]);
+		}
 		
 		const barCtx = document.getElementById('barChart');
 
 		new Chart(barCtx, {
 		    type: 'bar',
 		    data: {
-		      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+		      labels: nearWeek, // x축
 		      datasets: [{
-		        label: '# of Votes',
-		        data: [12, 19, 3, 5, 2, 3],
+		        label: '방문자 수',
+		        data: weekUsage, // y축
 		        borderWidth: 1
 		      }]
 		    },
@@ -468,22 +488,55 @@
 		const searchResult = /*[[${search}]]*/'obj';
 		/*]]>*/
 		
-		console.log(searchResult);
+		//console.log(searchResult);
 		
+		// 검색어가 가장 많았던 3개 항목만 뽑아보기
+		// 1) value에 대해서 정렬해보기
+		const topResult = {};
+		
+		let keys = Object.keys(searchResult);
+		let values = Object.values(searchResult);
+		
+		const calc = {}; // 필터링한 검색어와 검색횟수를 저장할 객체를 선언
+		
+		const maxCalc = (keyArr, valArr) => {
+			let maxKey = keyArr[0]; // 최대값을 갖는 검색어를 저장할 변수 선언 및 초기화
+			let maxValue = valArr[0]; // 최대값을 저장할 변수 선언 및 초기화
+			let index;
+			for(let i = 1; i < valArr.length; i++){
+				if(maxValue < valArr[i]){
+					index = i;
+					maxValue = valArr[i];
+					maxKey = keyArr[i];
+				}
+			}
+			calc[maxKey] = maxValue;// 최대값을 갖는 key와 value를 결과객체에 추가한다.
+			keyArr.splice(index, 1); // 원본배열에서 이미 선택된 프로퍼티를 제거한다.
+			valArr.splice(index, 1);
+		}
+		
+		// 검색 횟수를 기준으로 탑3 항목을 배열calc에 담는다.
+		for(let i = 0; i < 3; i++){
+			maxCalc(keys, values);
+		}
+		
+		const ent = Object.entries(calc); // 이중배열
+		let labels = [];
+		let data = [];
+		for(const arr of ent){
+			labels.push(arr[0]);
+			data.push(arr[1]);
+		}
 		
 		const pieCtx = document.getElementById('pieChart');
 
 		new Chart(pieCtx, {
 		    type: 'pie',
 		    data: {
-		    	labels: [
-		    	    'Red',
-		    	    'Blue',
-		    	    'Yellow'
-		    	  ],
+		    	labels: labels,
 		    	  datasets: [{
-		    	    label: 'My First Dataset',
-		    	    data: [300, 50, 100],
+		    	    label: '검색어',
+		    	    data: data,
 		    	    backgroundColor: [
 		    	      'rgb(255, 99, 132)',
 		    	      'rgb(54, 162, 235)',
@@ -492,15 +545,8 @@
 		    	    hoverOffset: 4
 		    	  }]
 		    }
-		    
 		});
-		
-		
-		
-		
 		// 원 그래프(끝)
-		
-		
 	</script>
 </body>
 </html>

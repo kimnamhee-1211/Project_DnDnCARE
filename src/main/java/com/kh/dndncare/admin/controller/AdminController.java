@@ -90,13 +90,14 @@ public class AdminController {
 		File[] searchFileList = searchFolder.listFiles();
 		
 		TreeMap<String, Integer> searchMap = new TreeMap<String, Integer>(); // key(검색어), value(횟수)
+		//TreeMap<Integer, String> searchMap2 = new TreeMap<Integer, String>();
 		try {
 			for(File f : searchFileList) {
 				BufferedReader br = new BufferedReader(new FileReader(f));
 				String data;
 				while((data = br.readLine())!=null) {
 					String[] arr = data.split(" ");
-					String search = arr[arr.length - 1];
+					String search = arr[arr.length - 1]; // 검색어
 					
 					if(searchMap.containsKey(search)) {
 						searchMap.put(search, searchMap.get(search) + 1);
@@ -107,19 +108,14 @@ public class AdminController {
 				br.close();
 			}
 			
+			//System.out.println(searchMap2);
+			
+			
 			model.addAttribute("search", searchMap);
-			
-			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		
-		
-		
 		// 로그 파일 : 검색어 조회 (끝)	
-		
 		
 		
 		// 페이징처리된 게시글 목록 조회 : BoardLimit == 7 (**가정**)
@@ -148,10 +144,18 @@ public class AdminController {
 
 	// 간병백과 작성 페이지로 이동
 	@GetMapping("writeCareInformationPage.adm")
-	public String writeCareInformation(HttpSession session) {
+	public String writeCareInformation(HttpSession session, Model model,
+										@RequestParam("labels") ArrayList<String> labels,
+										@RequestParam("data") ArrayList<String> data) {
+		System.out.println(labels); // [이건없어, 아아, test-m-p20]
+		System.out.println(data); // [19, 5, 3]
+		
+		
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		if (loginUser != null) {
 			if (loginUser.getMemberCategory().equals("A")) {
+				model.addAttribute("labels", labels);
+				model.addAttribute("data", data);
 				return "writeCareInformation";
 			} else {
 				throw new MemberException("관리자로 로그인 후 이용해주세요.");
