@@ -375,4 +375,12 @@ public class AdminController {
 		if(saveFile.exists()) saveFile.delete(); // 저장소 내에 파일이 존재할 때만 삭제한다.
 	}
 	
-}
+	
+	//결제정보 어드민
+	@GetMapping("payInfoView.adm")
+	public String payInfoView() {
+		return "payInfo";
+	}
+	
+}//클래스 끝
+
