@@ -3,10 +3,11 @@ package com.kh.dndncare.admin.controller;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
@@ -88,28 +89,50 @@ public class AdminController {
 		// 로그 파일 : 최근 일주일 검색어 조회 (시작)	
 		File searchFolder = new File("C:/logs/dndnCare/careInformation/");
 		File[] searchFileList = searchFolder.listFiles();
+		//System.out.println(Arrays.toString(searchFileList));
+		//[C:\logs\dndnCare\careInformation\careInformation.log, C:\logs\dndnCare\careInformation\careInformation.log.20240816]
+		
+		// 최근 일주일의 날짜에 접근
+		Calendar c = GregorianCalendar.getInstance();
+		int year = c.get(Calendar.YEAR); // 2024
+		int month = c.get(Calendar.MONTH) + 1; // 7 + 1 == 8 (0부터 시작)
+		String realMonth = month < 10 ? "0"+month : month+""; // 08
+		int date = c.get(Calendar.DATE); // 18
+		String now = year + realMonth + date; // 20240818
+		int nowInteger = Integer.parseInt(now);
+		
+		// 일주일전 날짜를 20240811 로 출력하기
+		c.set(year, month, date-7); 
+		int agoYear = c.get(Calendar.YEAR);
+		int agoMonth = c.get(Calendar.MONTH);
+		String agoRealMonth = agoMonth < 10 ? "0"+agoMonth : agoMonth+"";
+		int agoDate = c.get(Calendar.DATE);
+		String ago = agoYear + agoRealMonth + agoDate; // 20240811
+		int agoInteger = Integer.parseInt(ago);
 		
 		TreeMap<String, Integer> searchMap = new TreeMap<String, Integer>(); // key(검색어), value(횟수)
 		//TreeMap<Integer, String> searchMap2 = new TreeMap<Integer, String>();
 		try {
 			for(File f : searchFileList) {
-				BufferedReader br = new BufferedReader(new FileReader(f));
-				String data;
-				while((data = br.readLine())!=null) {
-					String[] arr = data.split(" ");
-					String search = arr[arr.length - 1]; // 검색어
-					
-					if(searchMap.containsKey(search)) {
-						searchMap.put(search, searchMap.get(search) + 1);
-					} else {
-						searchMap.put(search, 1);
+				String[] fileName = f.getName().split("log.");
+				// log를 기준으로 자른 배열의 길이가 1인 경우 : fileName.length == 1)
+				// log를 기준으로 자른 배열의 길이가 2인 경우 : Integer.parseInt(fileName[1]) >= agoInteger
+				if(fileName.length == 1 ||  Integer.parseInt(fileName[1]) >= agoInteger) {
+					BufferedReader br = new BufferedReader(new FileReader(f));
+					String data;
+					while((data = br.readLine())!=null) {
+						String[] arr = data.split(" ");
+						String search = arr[arr.length - 1]; // 검색어
+						
+						if(searchMap.containsKey(search)) {
+							searchMap.put(search, searchMap.get(search) + 1);
+						} else {
+							searchMap.put(search, 1);
+						}
 					}
+					br.close();
 				}
-				br.close();
 			}
-			
-			//System.out.println(searchMap2);
-			
 			
 			model.addAttribute("search", searchMap);
 		} catch(Exception e) {
