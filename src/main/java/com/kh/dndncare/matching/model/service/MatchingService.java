@@ -166,6 +166,8 @@ public interface MatchingService {
 	
 	//간병인 결제 금액 받기 2
 	int insertPayTransfer(Member loginUser, Pay p);
+	// 서비스 통계
+	ArrayList<MatMatptInfo> serviceList(int memberNo);
 
 
 

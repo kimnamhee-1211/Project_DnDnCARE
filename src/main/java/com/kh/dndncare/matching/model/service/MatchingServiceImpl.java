@@ -353,6 +353,10 @@ public class MatchingServiceImpl implements MatchingService {
 	public int insertPayTransfer(Member loginUser, Pay p) {
 		return mMapper.insertPayTransfer(loginUser,p);
 	}
+	@Override
+	public ArrayList<MatMatptInfo> serviceList(int memberNo) {
+		return mMapper.serviceList(memberNo);
+	}
 
 
 
