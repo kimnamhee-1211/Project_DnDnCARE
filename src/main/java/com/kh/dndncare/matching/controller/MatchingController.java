@@ -1,5 +1,7 @@
 package com.kh.dndncare.matching.controller;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
@@ -11,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -573,6 +576,61 @@ public class MatchingController {
 		}
 		System.out.println("서비스2"+serviceList);
 				
+		
+		
+		
+		// 여기서 로그 테스트
+		// 기존 로그의 데이터
+		Set<String> loggedMatNos = new HashSet<>();
+
+		// 기존 로그 파일의 모든 메시지를 읽어와 Set에 저장
+		try (BufferedReader br = new BufferedReader(new FileReader("C:\\logs\\matching\\matchingDisease.log"))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+	            String loggedList= line.substring(line.indexOf("_")+1).trim(); 
+		    	String loggedMatNo = loggedList.split("//")[0];
+		        loggedMatNos.add(loggedMatNo);  
+		        System.out.println("기존의 matNo " + loggedMatNo);
+		    }
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+		
+		// 매칭번호, 시작시간, 종료시간, 나이, 성별, 질환
+		ArrayList<Matching> matPatientInfoLists = mcService.matPatientList(memberNo);
+		for (Matching matPatientInfoList : matPatientInfoLists) {
+			System.out.println("매칭번호"+matPatientInfoList.getMatNo());
+			System.out.println("시작시간"+matPatientInfoList.getBeginDt());
+			System.out.println("종료시간"+matPatientInfoList.getEndDt());
+			System.out.println("나이"+matPatientInfoList.getPtAge());
+			System.out.println("성별"+matPatientInfoList.getMemberGender());
+			System.out.println("Scategory"+matPatientInfoList.getSCategory());
+			System.out.println("회원번호" + matPatientInfoList.getMemberNo());
+			
+			// 나이 계산
+			matPatientInfoList.setAge(AgeCalculator.calculateAge(matPatientInfoList.getPtAge()));
+			
+			
+			// 비교가 계속 안되니까 String 타입으로 바꿔서
+			String strMatNo = (matPatientInfoList.getMatNo()+"").trim();
+			
+			// 날짜도 비교
+			Date today = new Date(age);
+				// 이미 로그된 matNo인지 확인
+			    if (!loggedMatNos.contains(strMatNo)) {
+			       String logInfo = matPatientInfoList.getMatNo() + "//" + matPatientInfoList.getAge() + "//" + matPatientInfoList.getMemberGender() + "//" + matPatientInfoList.getSCategory() + "+" + matPatientInfoList.getMemberNo();
+			       System.out.println("로그에 저장할 정보"+logInfo);
+			        
+			        logger.info(logInfo);
+			        
+			    }
+        }
+		
+		
+		
+		
+		
+		
 		// 간병인 정보(국적, 경력, 자격증)
 		ArrayList<InfoCategory> caregiverInfo = mcService.getCaregiverInfo(memberNo);
 		HashMap<String, Object> caregiverInfoList = new HashMap<String, Object>();

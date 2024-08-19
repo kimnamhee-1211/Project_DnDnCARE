@@ -2,10 +2,15 @@
 <configuration>
    
    <!-- log 파일경로 설정 -->
+   <!-- 
    <property name="LOG_PATH" value="\\192.168.40.37\sharedFolder\dndnCare\logs"/>
    <property name="LOG_PATH_MATCHING" value="\\192.168.40.37\sharedFolder\dndnCare\logs\matching"/>
+   -->
    
-   <!-- 컬러설정하기 -->
+   <property name="LOG_PATH" value="C:\logs"/>
+   <property name="LOG_PATH_MATCHING" value="C:\logs\matching"/>
+   
+   
    <conversionRule conversionWord="color" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
    <!-- 내콘솔에나오게하기 -->
    <appender name="myConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
@@ -27,24 +32,19 @@
       </encoder>
       
       <!-- Rolling 중에서도 TimeBased -->
-      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">	
          <fileNamePattern>${LOG_PATH}/login.log.%d{yyyyMMdd}</fileNamePattern>
       </rollingPolicy>
    
    </appender>
    
-   <appender name="myFileAppenderMatching" class="ch.qos.logback.core.rolling.RollingFileAppender">
+   <appender name="myFileAppenderMatching" class="ch.qos.logback.core.FileAppender">
    		<file>${LOG_PATH_MATCHING}/matchingDisease.log</file>
       	<!--property에서 변수화 시킨 경로를 사용 -->
-      	
+   		<append>true</append> <!-- 기존 파일을 덮어씀 -->
       	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-         	<pattern>매칭정보%d{yy-MM-dd HH:mm:ss} {%p} %c{1}.%M{%L} - %m%n</pattern>      
+         	<pattern>매칭정보%d{yy-MM-dd HH:mm:ss} _ %m%n</pattern>      
       	</encoder>
-      
-      	<!-- Rolling 중에서도 TimeBased -->
-      	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-         	<fileNamePattern>${LOG_PATH_MATCHING}/matchingDisease.log.%d{yyyyMMdd}</fileNamePattern>
-      	</rollingPolicy>
    
    </appender>
    
@@ -53,8 +53,8 @@
 	<!-- 멤버컨트롤러 -->
    <logger name="com.kh.dndncare.member.controller.MemberController" level="info" additivity="false">
       <appender-ref ref="myFileAppender"/> 
-   
    </logger>
+   
    <!-- 매칭컨트롤러 -->
    <logger name="com.kh.dndncare.matching.controller.MatchingController" lever="info" additivity="false">
    		<appender-ref ref="myFileAppenderMatching"/>
@@ -66,7 +66,6 @@
    </root>
    
 </configuration>
-
 <!-- 공부하라고 정리글 남깁니다 -->
 
 

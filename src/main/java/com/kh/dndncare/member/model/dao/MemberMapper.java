@@ -190,4 +190,8 @@ public interface MemberMapper {
 
 	ArrayList<MatMatptInfo> selectMatListPay(int memberNo);
 
+	ArrayList<MatMatptInfoPt> selectMatRecord(int memberNo);
+
+	ArrayList<MatMatptInfoPt> monthCountList(int memberNo);
+
 }

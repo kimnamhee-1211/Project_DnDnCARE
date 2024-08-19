@@ -505,4 +505,16 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectMatListPay(memberNo);
 	}
 
+
+	@Override
+	public ArrayList<MatMatptInfoPt> selectMatRecord(int memberNo) {
+		return mMapper.selectMatRecord(memberNo);
+	}
+
+
+	@Override
+	public ArrayList<MatMatptInfoPt> monthCountList(int memberNo) {
+		return mMapper.monthCountList(memberNo);
+	}
+
 }

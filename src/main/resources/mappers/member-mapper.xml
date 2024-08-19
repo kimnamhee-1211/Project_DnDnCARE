@@ -824,4 +824,23 @@
 						where member_no = #{memberNo})
 	</select>
 	
+	<!-- 매칭이력 -->
+	<select id="selectMatRecord" resultType="MatMatptInfoPt" >
+		select distinct(mc.mat_no), p.pt_name,mc.begin_dt, mc.end_dt, p.pt_age, p.pt_gender,mc.money,mpi.service, p.pt_address
+		from matching mc
+		    left join mat_pt_info mpi on(mc.mat_no = mpi.mat_no)
+		    left join patient p on(p.pt_no = mpi.pt_no)
+		    left join member m on(m.member_no = p.member_no)
+		where mc.member_no=#{memberNo} and mat_confirm = 'Y' and sysdate > end_dt
+		order by mc.mat_no
+	</select>
+	
+	<!-- 원간 수익/ 이용자수 -->
+	<select id="monthCountList" resultType="MatMatptInfoPt">
+		select to_char(m.end_dt, 'YYYY-MM') as month, sum(m.end_dt - m.begin_dt) useCount<!--,sum(p.pay_money) money-->
+		from matching m
+		   <!-- join pay p on(m.mat_no=p.mat_no) -->
+		where m.member_NO = #{memberNo}  <!--and p.pay_deposit = 'N'-->
+		group by to_char(m.end_dt, 'YYYY-MM')
+	</select>
 </mapper>

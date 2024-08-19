@@ -62,4 +62,5 @@ public class MatMatptInfo {
 	private String matDate;
 	
 	private int serviceCount;
+	
 }

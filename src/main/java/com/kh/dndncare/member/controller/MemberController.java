@@ -1,13 +1,18 @@
 package com.kh.dndncare.member.controller;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -904,34 +909,235 @@ public class MemberController {
 		String currentMonth = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		
+		HashMap<String, Object> matInfoList = null;
 		// 회원번호
 		int memberNo = loginUser.getMemberNo();
 		
+		// 이용대상 통계
 		if(loginUser != null) {
 				char check = loginUser.getMemberCategory().charAt(0);
-				switch(check) {
+				// 성별 카운트
+				int genderMCount = 0;
+				int genderFCount = 0;
 				
+				// 연령층 카운트
+				int age10Count = 0;
+				int age20Count = 0;
+				int age30Count = 0;
+				int age40Count = 0;
+				int age50Count = 0;
+				int age60Count = 0;
+				
+				// 질환종류 카운트
+				int dementiaCount = 0; // 치매
+				int delriumCount = 0;// 섬망
+				int bedsoresCount = 0;// 욕창
+				int paraplegiaCount = 0;// 하반신마비
+				int fullbodyCount = 0;// 전신마비
+				int bedriddenCount = 0;// 와상환자
+				int diaperCount = 0;// 기저귀케어
+				int unconsciousCount = 0;// 의식없음
+				int suctionCount = 0;// 석션
+				int feedingCount = 0;// 피딩
+				int urineCount = 0;// 소변줄
+				int stomaCount = 0;// 장루
+				int dialysisCount = 0;// 투석
+				int infectiousCount = 0;// 전염성질환
+				int parkinsonCount = 0;// 파킨슨
+				int mentalCount = 0;// 정신질환
+				
+				HashMap<String, Integer> genderCountMap = new HashMap<String, Integer>();
+				HashMap<String, Integer> ageCountMap = new HashMap<String, Integer>();
+				HashMap<String, Integer> categoryCountMap = new HashMap<String, Integer>();
+				
+				switch(check) {
 				case 'C':
-					ArrayList<CareReview> monthScoreList = mService.monthScoreList(memberNo);
-					System.out.println("월간"+monthScoreList);
-		
-					CareReview monthScore = null;
-					for (CareReview score : monthScoreList) {
-						if(score.getMonth().equals(currentMonth)) {
-							monthScore = score;
-							break;
-						}
+					try {
+						BufferedReader br = new BufferedReader(new FileReader("C:\\logs\\matching\\matchingDisease.log"));
+						String line;
+			            while ((line = br.readLine()) != null) {
+			            	String[] allInfo = line.split(" _ ");
+			     	        String patientInfo = allInfo[1]; 
+
+			     	        // 나이, 성별, 카테고리, 회원번호 목록 구분
+			     	        String[] infoParts = patientInfo.split("//");
+			     	        String strMatNo = infoParts[0];
+			     	        String strAge = infoParts[1]; 
+			     	        String gender = infoParts[2]; 
+			     	        String categorys = infoParts[3];
+			     	        String strMatMemberNo = infoParts[4];
+			     	        HashMap<String, Object> processLineList = new HashMap<String, Object>();
+			     	        
+			     	        // 타입 변경
+			     	        int matNo = Integer.parseInt(strMatNo);	
+			     	        int age= Integer.parseInt(strAge);
+			     	        int matMemberNo = Integer.parseInt(strMatMemberNo);
+			     	        
+			     	        // 카테고리 목록 구분
+			     	        String[] categoryArray = categorys.split(", ");
+
+			     	        
+			     	        for(String categoryList : categoryArray) {
+			     	        	System.out.println(categoryList);
+			     	        // 매칭된 환자의 질병정보
+				     	        if(categoryList.equals("치매")) {
+				     	        	dementiaCount++;
+				     	        } else if(categoryList.equals("섬망")) {
+				     	        	delriumCount++;
+				     	        } else if(categoryList.equals("욕창")) {
+				     	        	bedsoresCount++;
+				     	        } else if(categoryList.equals("하반신 마비")) {
+				     	        	paraplegiaCount++;
+				     	        } else if(categoryList.equals("전신 마비")) {
+				     	        	fullbodyCount++;
+				     	        } else if(categoryList.equals("와상 환자")) {
+				     	        	bedriddenCount++;
+				     	        } else if(categoryList.equals("기저귀 케어")) {
+				     	        	diaperCount++;
+				     	        } else if(categoryList.equals("의식 없음")) {
+				     	        	unconsciousCount++;
+				     	        } else if(categoryList.equals("석션")) {
+				     	        	suctionCount++;
+				     	        } else if(categoryList.equals("피딩")) {
+				     	        	feedingCount++;
+				     	        } else if(categoryList.equals("소변줄")) {
+				     	        	urineCount++;
+				     	        } else if(categoryList.equals("장루")) {
+				     	        	stomaCount++;
+				     	        } else if(categoryList.equals("투석")) {
+				     	        	dialysisCount++;
+				     	        } else if(categoryList.equals("전염성 질환")) {
+				     	        	infectiousCount++;
+				     	        } else if(categoryList.equals("파킨슨")) {
+				     	        	parkinsonCount++;
+				     	        } else if(categoryList.equals("정신 질환")) {
+				     	        	mentalCount++;
+				     	        }
+			     	        }
+			     	        System.out.println("회원번호" + matMemberNo);
+			     	        
+			     	       // 매칭된 환자의 성별
+			     	        if(gender.equals("M")) {
+			     	        	genderMCount++;
+			     	        }else {
+			     	        	genderFCount++;
+			     	        }
+			     	        
+			     	        
+			     	       genderCountMap.put("남자", genderMCount);
+			     	       genderCountMap.put("여자", genderFCount);
+			     	        // 매칭된 환자의 연령대
+			     	        if(age<20) {
+			     	        	age10Count++;
+			     	        } else if(age>=20 && age<30) {
+			     	        	age20Count++;
+			     	        } else if(age>=30 && age<40) {
+			     	        	age30Count++;
+			     	        } else if(age>=40 && age<50) {
+			     	        	age40Count++;
+			     	        } else if(age>=50 && age<60) {
+			     	        	age50Count++;
+			     	        } else {
+			     	        	age60Count++;
+			     	        }
+			     	        // 연령 데이터 map에 추가
+			     	        ageCountMap.put("10대이하", age10Count);
+			     	        ageCountMap.put("20대", age20Count);
+			     	        ageCountMap.put("30대", age30Count);
+			     	        ageCountMap.put("40대", age40Count);
+			     	        ageCountMap.put("50대", age50Count);
+			     	        ageCountMap.put("60대이상", age60Count);
+			     	        
+			     	        
+			     	       
+			     	        
+			     	        
+			     	        // 질환정보 map에 저장
+			     	        categoryCountMap.put("치매", dementiaCount);
+			     	        categoryCountMap.put("섬망", delriumCount);
+			     	        categoryCountMap.put("욕창", bedsoresCount);
+			     	        categoryCountMap.put("하반신마비", paraplegiaCount);
+			     	        categoryCountMap.put("전신마비", fullbodyCount);
+			     	        categoryCountMap.put("와상환자", bedriddenCount);
+			     	        categoryCountMap.put("기저귀케어", diaperCount);
+			     	        categoryCountMap.put("의식없음", unconsciousCount);
+			     	        categoryCountMap.put("석션", suctionCount);
+			     	        categoryCountMap.put("피딩", feedingCount);
+			     	        categoryCountMap.put("소변줄", urineCount);
+			     	        categoryCountMap.put("장루", stomaCount);
+			     	        categoryCountMap.put("투석", dialysisCount);
+			     	        categoryCountMap.put("전염성질환", infectiousCount);
+			     	        categoryCountMap.put("파킨슨", parkinsonCount);
+			     	        categoryCountMap.put("정신질환", mentalCount);
+			     	        
+			            }
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
-					System.out.println(monthScore);
-					if (monthScore != null) {
-						model.addAttribute("month",monthScore.getMonth());
-			            model.addAttribute("sumScore", monthScore.getSumScore());
-			            model.addAttribute("avgScore", monthScore.getAvgScore());
-			        } else {
-			            model.addAttribute("message", "이달의 데이터가 없습니다.");
+					
+					
+					// 월간 근무수익/일수
+					// 수익은 일단 주석처리 
+					// 임의로 시작년도는 22년부터 현재년도까지
+					int startYear = 2024;
+				        int endYear = Year.now().getValue(); // 현재 연도 가져오기
+
+				        // 월간 이용 횟수를 저장할 맵 초기화 (모든 월을 0으로 설정)
+				        LinkedHashMap<String, Integer> monthCountMap = new LinkedHashMap<String, Integer>();
+				        
+				        // 데이터를 연도와 월 순서대로 삽입
+				        for (int year = startYear; year <= endYear; year++) {
+				            for (int month = 1; month <= 12; month++) {
+				                String monthKey = String.format("%d-%02d", year, month);
+				                monthCountMap.put(monthKey, 0);
+				            }
+				        }
+					ArrayList<MatMatptInfoPt> monthMatInfos = mService.monthCountList(memberNo);
+					
+			        // 실제 데이터가 있으면 추가
+			        for (MatMatptInfoPt info : monthMatInfos) {
+			            String month = info.getMonth();
+			            int useCount = info.getUseCount();
+			            //int pay = info.getMoney();
+			            monthCountMap.put(month, useCount);
 			        }
+			        System.out.println("맵맵"+monthCountMap);
+			        
+					// 매칭이력조회 
+					ArrayList<MatMatptInfoPt> matRecord = mService.selectMatRecord(memberNo);
+					System.out.println("이력조회======= "+ matRecord + "============");
+					
+					// 가공 나이, 지역
+					for (MatMatptInfoPt ptRecord : matRecord) {
+						int realAge =AgeCalculator.calculateAge(ptRecord.getPtAge());
+						ptRecord.setPtRealAge(realAge);
+						String[] splitAddress = ptRecord.getPtAddress().split("//");
+						System.out.println("지역"+splitAddress[1]);
+						String[] AreaAddress = splitAddress[1].split(" ");
+						System.out.println(AreaAddress[0]);
+						ptRecord.setPtAddress(AreaAddress[0]);
+					}
+					
+					
+					//매칭 이력 view로
+					model.addAttribute("matRecord", matRecord);
+					
+					// 월간 정보
+					model.addAttribute("monthCountMap",monthCountMap);
+					
+					// 성별
+					model.addAttribute("genderCountMap", genderCountMap);
+					// 연령
+					model.addAttribute("ageCountMap", ageCountMap);
+					// 질환
+					model.addAttribute("categoryCountMap", categoryCountMap);
+					
 					 return "myInfoMatchingHistory";
+					 
+					 
+					 
 				case 'P':
 					// 환자번호
 					int ptNo = mService.getPtNo(memberNo);
@@ -965,6 +1171,7 @@ public class MemberController {
 
 		throw new MemberException("로그인없음. 인터셉터설정");
 	}
+	
 
 	// 내가 쓴 후기
 	@GetMapping("myInfoMatchingReview.me")
@@ -991,6 +1198,7 @@ public class MemberController {
 				model.addAttribute("sumScore", sumScore);
 				model.addAttribute("countScore", countScore);
 				return "myInfoMatchingReview";
+				
 			case 'P':
 				// 회원번호로 환자번호 get
 				int ptNo = mService.getPtNo(memberNo);
