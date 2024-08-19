@@ -218,14 +218,14 @@
 			const nextButton = document.getElementById('nextButton');
 			const form = document.getElementById('enrollForm');
 			const ifCheck = document.querySelector('.ifCheck');
-			const inputCheck = document.querySelectorAll('.inputCheck');
+			const inputCheckElements  = document.querySelectorAll('.inputCheck');
 			const checkedPtGender = document.querySelector('input[name="ptGender"]:checked');
 			const checkedCheckService = document.querySelector('input.checkService:checked');
 			
 			nextButton.addEventListener('click', ()=>{
 				let isValid = true;		
 				
-				if(!inputCheck(inputCheck)){
+				if(!inputCheck(inputCheckElements)){
 					isValid = false;
 				}
 				if(!checkedPtGender){
