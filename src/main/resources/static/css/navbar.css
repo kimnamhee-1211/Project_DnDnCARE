@@ -43,3 +43,16 @@
     object-fit: contain; /* 추가: 이미지 비율 유지 */
 }
 
+.logoImage{
+	width:51px;	
+	height:42px;
+	margin-bottom:10px !important;;
+}
+
+.logo{
+	font-size:48px;
+	color: #133B5C;
+	font-weight:bold;
+	text-decoration:none;
+	text-decoration: none;
+}
