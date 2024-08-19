@@ -54,11 +54,11 @@ textPath{text-align: center; min-width: 60px}
 }
 
 #before, #after{
-	background:#8dd986;
+	background:#1E5F74;
 	color:white;
 	height:40px;
 	font-size:20px;
-	border-radius:15px;
+	border-radius:5px;
 	border:none;
 	padding:auto 35px;
 }

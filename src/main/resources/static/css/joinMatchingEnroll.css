@@ -43,6 +43,8 @@ body {
 
 
 
+
+
 #block{width: 30px;}
 
 .inner-content {
@@ -64,9 +66,9 @@ body {
 }
 
 .signIn-btn {
-	background:#8dd986;
+	background:#1E5F74;
 	color:white;
-	width:400px;
+	width:700px;
 	height:60px;
 	border-radius:20px;
 	border:none;
@@ -74,14 +76,35 @@ body {
 }
 
 #nextButton{
-	background:#8dd986;
+	background:#1E5F74;
 	color:white;
 	width:700px;
 	height:60px;
 	border-radius:20px;
 	border:none;
 	font-size:25px;
-	
+	}
+
+
+.btn-outline {	
+	color: #1D2D50;
+	border: 2px solid #1D2D50;
+	width: 120px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
+
+/* .btn-check가 체크된 상태에서 .btn-outline 스타일 */
+.btn-check:checked + .btn-outline {
+	color: white;
+	background: #1D2D50;
+}
+
+/* .btn-outline이 활성화된 상태 (클릭된 상태) */
+.btn-outline:active {
+	color: white;
+	background: #1D2D50;
 }
 
 

@@ -80,34 +80,47 @@ body {
     text-align: center;
 }
 
-.form-check{
-	background-color: #8dd986;
-	border: 1px solid #8dd986;
-	
+
+
+.btn-outline {	
+	color: #1D2D50;
+	border: 2px solid #1D2D50;
+	width: 220px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
 }
 
-.btn, .btn-check{
-	font-size: 16px;
-    color: #8dd986;
-    background-color: #8dd986;
-	border: 1px solid #8dd986;
-    border-radius: 5px;
-    width: 200px;
+/* .btn-check가 체크된 상태에서 .btn-outline 스타일 */
+.btn-check:checked + .btn-outline {
+	color: white;
+	background: #1D2D50;
+}
+
+/* .btn-outline이 활성화된 상태 (클릭된 상태) */
+.btn-outline:active , .btn-outline:hover, .btn-outline:focus{
+	color: white;
+	background: #1D2D50;
 }
 
 
 
 
+.sign-btn button {
+	font-size:25px;
+	border-radius:20px;
+	border:none;
+}
 
-
-
-
-
-
-
-
-
-
+.signIn-btn {
+	background:#1E5F74;
+	color:white;
+	width:700px;
+	height:60px;
+	border-radius:20px;
+	border:none;
+	font-size:25px;
+}
 
 
 

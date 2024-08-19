@@ -59,28 +59,28 @@
 						</div>
 					</div>
 
-			<!--		<div id="enroll2" style="display: none;">		  -->			
+					<div id="enroll2" style="display: none;">			
 						<p class="info">성별을 선택해 주세요.</p>
 						<div class="form-floating mb-5">
 							<div class="form-check form-check-inline">
 							 	 <input class="btn-check" type="radio" name="memberGender" id="menInput" th:value="M" checked>
-							 	 <label class="btn" for="menInput">남성</label>
+							 	 <label class="btn-outline" for="menInput">남성</label>
 							</div>							
 							<div class="form-check form-check-inline">
 							  <input class="btn-check" type="radio" name="memberGender" id="womenInput" th:value="F">
-							  <label  class="btn" for="womenInput">여성</label>
+							  <label  class="btn-outline" for="womenInput">여성</label>
 							</div>
 						</div>
 						
 						<p class="info">국적을 입력해 주세요.</p>
 						<div class="form-floating mb-5">
 							<div class="form-check form-check-inline">
-								<input class="btn-radio" type="radio" name="memberNational" id="national1Input" th:value="내국인" checked>
-								<label class="btn-radio-label" for="menInput">내국인</label>
+								<input class="btn-check" type="radio" name="memberNational" id="national1Input" th:value="내국인" checked>
+								<label class="btn-outline" for="national1Input">내국인</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="btn-radio" type="radio" name="memberNational" th:value="외국인">
-								<label class="btn-radio-label" for="menInput">외국인</label>
+								<input class="btn-check" type="radio" name="memberNational" id="national1Input2"  th:value="외국인">
+								<label class="btn-outline" for="national1Input2">외국인</label>
 							</div>
 						</div>
 												
@@ -102,7 +102,7 @@
 						<p class="info">주소를 입력해주세요.</p>
 						<p style="font-size:16px" class="info">주소는 반드시 도로명 주소를 선택/입력해주세요.</p>
 						<div class="form-floating mb-1" >
-							<button type="button" onclick="sample4_execDaumPostcode()" class="signIn-btn" style="border:none;">주소 검색</button>
+							<button type="button" onclick="sample4_execDaumPostcode()" class="btn-outline" style="border:none;">주소 검색</button>
 						</div> 
 						<div class="form-floating mb-1" >
 	   						<input type="text" class="form-control" id="sample4_postcode" name="postcode">
@@ -145,7 +145,7 @@
 						</div>
 						<div class="sign-btn d-flex flex-column">
 							<p class="text-center ifCheck" style="font-size:20px"> </p>
-							<button type="button" class="signIn-btn mt-4" id="nextButton2"><span>다음</span></button>
+							<button type="button" class="signIn-btn mt-5" id="nextButton2"><span>다음</span></button>
 						</div>								
 						
 					</div>					
@@ -213,8 +213,8 @@
 						const enroll1 = document.getElementById("enroll1");
 						const enroll2 = document.getElementById("enroll2");
 						
-						//enroll1.style.display="none";
-						//enroll2.style.display="block";			            	
+						enroll1.style.display="none";
+						enroll2.style.display="block";			            	
 		            }
 				
 				});
