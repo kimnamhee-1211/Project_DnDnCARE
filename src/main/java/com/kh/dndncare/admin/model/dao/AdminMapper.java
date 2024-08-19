@@ -8,6 +8,7 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.member.model.vo.Member;
 
 @Mapper
 public interface AdminMapper {
@@ -37,6 +38,18 @@ public interface AdminMapper {
 	int insertThumbnail(Attachment thumbnail);
 
 	int updateCareInformation(Board b);
+
+	int getMembersListCount();
+
+	ArrayList<Member> selectWeekMembers(Object object, RowBounds rowBounds);
+
+	int getAllMembersListCount();
+
+	ArrayList<Member> selectAllMembers(Object object, RowBounds rowBounds);
+
+	int getSearchMemberListCount(HashMap<String, String> map);
+
+	ArrayList<Member> searchMembers(HashMap<String, String> map, RowBounds rowBounds);
 
 
 }

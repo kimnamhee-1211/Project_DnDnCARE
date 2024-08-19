@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.kh.dndncare.admin.model.exception.AdminException;
 import com.kh.dndncare.admin.model.service.AdminService;
 import com.kh.dndncare.admin.model.vo.Attachment;
@@ -35,6 +36,7 @@ import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -468,5 +470,107 @@ public class AdminController {
 		File saveFile = new File("C:\\uploadFinalFiles\\" + fileName);
 		if(saveFile.exists()) saveFile.delete(); // 저장소 내에 파일이 존재할 때만 삭제한다.
 	}
+	
+	// 회원관리 페이지로 이동을 요청
+	@GetMapping("members.adm")
+	public String members(@RequestParam(value="page", defaultValue="1") int currentPage, Model model,
+							HttpServletRequest request) {
+		int listCount = aService.getMembersListCount();
+		
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 10, 5);
+		
+		ArrayList<Member> mList = aService.selectWeekMembers(null, pi); // 일주일내 가입자만 조회
+		//[Member(memberNo=126, memberId=comp3, memberName=환자삼, memberGender=F, memberNickName=환자삼, memberAge=1995-08-19, memberPhone=101019950819, memberEmail=comp3@naver.com, memberCreateDate=2024-08-19, memberAddress=16979//경기 용인시 기흥구 갈곡로 5//603호, memberCategory=P, memberStatus=Y, memberNational=외국인, memberPay=null, memberUpdateDate=2024-08-19, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=125, memberId=com4, memberPwd=$2a$10$0O.0xJyjMbftmE248Q66l.RBY8HFICp/0Rw5bQbhkB5cG1IN.di/2, memberName=간병사, memberGender=M, memberNickName=간병사, memberAge=1995-08-19, memberPhone=01019950919, memberEmail=com4@naver.com, memberCreateDate=2024-08-19, memberAddress=16296//경기 수원시 장안구 수원북부순환로 188//1층, memberCategory=C, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-19, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=124, memberId=wododowo, memberPwd=$2a$10$47/mtsXP4MqBMivalH5ylefTVzgNGQvZzA2ALmbSfkjW3UHousVpe, memberName=vefi, memberGender=M, memberNickName=qpwl, memberAge=2018-11-29, memberPhone=231020, memberEmail=qwdqdqd@hanmail.net, memberCreateDate=2024-08-19, memberAddress=46732//부산 강서구 녹산산업북로221번가길 12//123, memberCategory=P, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-19, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=123, memberId=test444, memberPwd=$2a$10$AUnATtheupsBs/uXNWcZaez9xU7PtH1udvo0KzL69Uo.UiQk1AN8O, memberName=김장군, memberGender=M, memberNickName=하하슴사, memberAge=2019-05-08, memberPhone=01077651258, memberEmail=rlarlfyd1258@naver.com, memberCreateDate=2024-08-19, memberAddress=02179//서울 중랑구 망우로74가길 16//3층, memberCategory=C, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-19, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=121, memberId=test888, memberPwd=$2a$10$gO7yt0za5L6UQozzgO54ye9MSDl4S5ntjziMJpMBY5KXcl6.79jhm, memberName=테스트, memberGender=M, memberNickName=ㄹㅇㄷㅇ, memberAge=1996-12-30, memberPhone=02023232, memberEmail=fwefq@naver.com, memberCreateDate=2024-08-16, memberAddress=06231//서울 강남구 도곡로33길 5//23424, memberCategory=C, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-16, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=120, memberId=comp2, memberPwd=$2a$10$lsWB0g12D0kD94lwWgETTOmJVCxjzqVJ9WgSsS.g7bvsBfhQFFObS, memberName=환자이, memberGender=M, memberNickName=환자이, memberAge=1991-01-09, memberPhone=01019910109, memberEmail=comp222@nate.com, memberCreateDate=2024-08-14, memberAddress=30121//세종특별자치시 가름로 170-14//501호, memberCategory=P, memberStatus=N, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-14, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=119, memberId=com3, memberPwd=$2a$10$QotyvaK.GnWajEhT8x30Ve7g4BRJ3zqGEr.mRy8sdSqOeI2q5BD12, memberName=환자이, memberGender=M, memberNickName=간병삼, memberAge=1989-09-08, memberPhone=01019890908, memberEmail=com3333@gmail.com, memberCreateDate=2024-08-14, memberAddress=22233//인천 미추홀구 경원대로 627//202호, memberCategory=C, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-14, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=118, memberId=test333, memberPwd=$2a$10$Ct1pdkKLUVYwnIT0FYs49eFTeGr/.9qRlYvIZnOCkxp2JPlNF/2hO, memberName=test333, memberGender=M, memberNickName=test333, memberAge=1988-12-06, memberPhone=00055559999, memberEmail=test333@gmail.com, memberCreateDate=2024-08-14, memberAddress=05571//서울 송파구 올림픽로 지하 23//야구장, memberCategory=P, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-14, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=117, memberId=rlfyd1235, memberPwd=$2a$10$K5qYH6czqEU6F3IXp9gMiO2cBWmk4HtnEQd78.rcYg9JwJRf3rmZy, memberName=김기룡, memberGender=M, memberNickName=하하하하, memberAge=2012-02-13, memberPhone=01077651258, memberEmail=rlarlfyd1258@naver.com, memberCreateDate=2024-08-13, memberAddress=02179//서울 중랑구 망우로74가길 16//3층, memberCategory=P, memberStatus=N, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-13, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=116, memberId=wodudkakao, memberPwd=$2a$10$Ec0hjucM2GQWQxykPAhVq.TX2F4QrZRBrwwmCZOADhbOb218RROjG, memberName=재영님, memberGender=M, memberNickName=재영님꺼, memberAge=1990-09-02, memberPhone=01055434392, memberEmail=doddoxl@naver.com, memberCreateDate=2024-08-12, memberAddress=05259//서울 강동구 구천면로55길 5//220호, memberCategory=C, memberStatus=N, memberNational=내국인, memberPay=3661421183, memberUpdateDate=2024-08-12, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null)]
+		
+		// 나이 계산
+		Calendar c = GregorianCalendar.getInstance();
+		int year = c.get(Calendar.YEAR);
+		for(Member m : mList) {
+			String memberYear = m.getMemberAge().toString().split("-")[0];
+			m.setMemberRealAge(year - Integer.parseInt(memberYear));
+		}
+		
+		model.addAttribute("mList", mList);
+		model.addAttribute("pi", pi);
+		model.addAttribute("loc", request.getRequestURI());
+		
+		return "members";
+	}
+	
+	
+	// 전체 회원 목록 조회 요청
+	@GetMapping("allMembers.adm")
+	public String allMembers(@RequestParam(value="page", defaultValue="1") int currentPage,
+								HttpServletRequest request, Model model) {
+		int listCount = aService.getAllMembersListCount();
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 10, 5);
+		
+		ArrayList<Member> mList = aService.selectAllMembers(null, pi);
+		
+		// 나이 계산
+		Calendar c = GregorianCalendar.getInstance();
+		int year = c.get(Calendar.YEAR);
+		for(Member m : mList) {
+			String memberYear = m.getMemberAge().toString().split("-")[0];
+			m.setMemberRealAge(year - Integer.parseInt(memberYear));
+		}
+		
+		model.addAttribute("mList", mList);
+		model.addAttribute("pi", pi);
+		model.addAttribute("loc", request.getRequestURI());
+		
+		return "members";
+	}
+	
+	// 회원검색
+	@GetMapping("searchMembers.adm")
+	public String searchMembers(@RequestParam("searchOption") String searchOption, @RequestParam("searchContent") String searchContent,
+								@RequestParam(value="page", defaultValue="1") int currentPage, HttpServletRequest request,
+								Model model) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		if(searchOption.equals("memberId")) {
+			map.put("column", "MEMBER_ID");
+		} else {
+			map.put("column", "MEMBER_NO");
+		}
+		map.put("data", searchContent);
+		
+		int listCount = aService.getSearchMemberListCount(map);
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 10, 5);
+		ArrayList<Member> mList = aService.searchMembers(map, pi);
+		
+		// 나이 계산
+		Calendar c = GregorianCalendar.getInstance();
+		int year = c.get(Calendar.YEAR);
+		for(Member m : mList) {
+			String memberYear = m.getMemberAge().toString().split("-")[0];
+			m.setMemberRealAge(year - Integer.parseInt(memberYear));
+		}
+			
+		model.addAttribute("pi", pi);
+		model.addAttribute("mList", mList);
+		model.addAttribute("loc", request.getRequestURI());
+		model.addAttribute("searchOption", searchOption);
+		model.addAttribute("searchContent", searchContent);
+		return "members";
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

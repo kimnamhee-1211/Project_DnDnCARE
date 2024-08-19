@@ -61,7 +61,6 @@
 		<div><!-- 오른쪽 공백 --></div>
 	</div>
 	
-	<!--  -->
 	<!-- 간병백과 조회용 Scrollable modal (시작) -->
 	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -601,15 +600,6 @@
 				}
 			})
 			
-			
-			
-			// 앨범형 아이콘 클릭(시작) : 컨텐츠 출력하는 구조가 달라지기 때문에 별도의 페이지로 제작하는 것이 안전할 것이라고 생각됨
-			// isAlbum 을 true로 바꾸어야 함
-			// searchFlag 를 false로 바꾸어야 함
-			
-			// 앨범형 아이콘 클릭(끝)
-			
-			
 			// 일반형 검색 요청 함수 정의(시작)
 			/*<![CDATA[*/
 			let aiCount = /*[[${aiCount}]]*/'aiCount';	 // 사용자의 ai검색 요청 횟수
@@ -878,14 +868,13 @@
 			
 			// 전체보기 버튼 기능 (시작)
 			document.querySelector('#selectAllBtn').addEventListener('click', () => {
+				searchFlag = false;
 				if(!isAlbum){
 					defaultPage = 1;
 					defaultList(defaultPage);
 				} else{ // 앨범형일 때 코드 작성
-					
-					
-					
-					
+					defaultPage = 1;
+					defaultAlbumList(defaultPage);
 				}
 			});
 			// 전체보기 버튼 기능 (끝)
