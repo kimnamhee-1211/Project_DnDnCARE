@@ -15,7 +15,7 @@
 	</select>
 	
 	<select id="getChatRoomNo" resultType="_int">
-		select chat_room_no
+		select MAX(chat_room_no) as chat_room_no
 		from chat_room
 		where mat_no in (select mat_no
 					    from mat_pt_info
@@ -42,7 +42,7 @@
 			select seq_chat_message.nextval from dual
 		</selectKey>
         INSERT INTO chat_room_message (chat_massage_no, chat_room_no, member_no, chat_content, read_count, write_date)
-        VALUES (#{chatMassageNo}, #{chatRoomNo}, #{memberNo}, #{chatContent}, default, #{writeDate})
+        VALUES (#{chatMassageNo}, #{chatRoomNo}, #{memberNo}, #{chatContent}, default, sysdate)
     </insert>
 
     <select id="getMessagesByChatRoomNo" parameterType="int" resultType="ChatingRoomMessage">

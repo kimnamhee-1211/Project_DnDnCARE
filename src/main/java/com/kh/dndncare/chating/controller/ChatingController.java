@@ -110,6 +110,12 @@ public class ChatingController {
             if (chatRoomMemberResult <= 0) {
                 throw new MemberException("채팅방 멤버 추가에 실패했습니다.");
             }
+            
+            ChatingRoomMessage systemMessage = new ChatingRoomMessage();
+            systemMessage.setChatRoomNo(finalChatRoomNo);
+            systemMessage.setMemberNo(memberNo);  // 시스템 메시지를 나타내는 특별한 memberNo
+            systemMessage.setChatContent("안녕하세요.");
+            chService.saveMessage(systemMessage);
         }
 
         model.addAttribute("chatRoomId", finalChatRoomNo);
