@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+   
+   <!-- log 파일경로 설정 -->
+   <property name="LOG_PATH" value="\\192.168.40.37\sharedFolder\dndnCare\logs"/>
+   <property name="LOG_PATH_MATCHING" value="\\192.168.40.37\sharedFolder\dndnCare\logs\matching"/>
+   
+   <!-- 컬러설정하기 -->
+   <conversionRule conversionWord="color" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+   <!-- 내콘솔에나오게하기 -->
+   <appender name="myConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+         <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %color(%-5level) %color(${PID:-}){magenta} --- [%15.15thread] %color(%-40.40logger{36}){cyan} : %msg%n</Pattern>
+         </layout>
+   </appender>
+   
+   
+   
+   <!-- 이건 로그인기록 -->
+   <appender name="myFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+   
+      <file>${LOG_PATH}/login.log</file>
+      <!--property에서 변수화 시킨 경로를 사용 -->
+      
+      <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+         <pattern>확인하기%d{yy-MM-dd HH:mm:ss} {%p} %c{1}.%M{%L} - %m%n</pattern>      
+      </encoder>
+      
+      <!-- Rolling 중에서도 TimeBased -->
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+         <fileNamePattern>${LOG_PATH}/login.log.%d{yyyyMMdd}</fileNamePattern>
+      </rollingPolicy>
+   
+   </appender>
+   
+   <appender name="myFileAppenderMatching" class="ch.qos.logback.core.rolling.RollingFileAppender">
+   		<file>${LOG_PATH_MATCHING}/matchingDisease.log</file>
+      	<!--property에서 변수화 시킨 경로를 사용 -->
+      	
+      	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+         	<pattern>매칭정보%d{yy-MM-dd HH:mm:ss} {%p} %c{1}.%M{%L} - %m%n</pattern>      
+      	</encoder>
+      
+      	<!-- Rolling 중에서도 TimeBased -->
+      	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+         	<fileNamePattern>${LOG_PATH_MATCHING}/matchingDisease.log.%d{yyyyMMdd}</fileNamePattern>
+      	</rollingPolicy>
+   
+   </appender>
+   
+   
+	<!-- 어느 로그기록인지 컨트롤러 지정 -->
+	<!-- 멤버컨트롤러 -->
+   <logger name="com.kh.dndncare.member.controller.MemberController" level="info" additivity="false">
+      <appender-ref ref="myFileAppender"/> 
+   
+   </logger>
+   <!-- 매칭컨트롤러 -->
+   <logger name="com.kh.dndncare.matching.controller.MatchingController" lever="info" additivity="false">
+   		<appender-ref ref="myFileAppenderMatching"/>
+   </logger>
+   
+   <!-- 루트가..뭐더라? -->
+   <root level="info">
+         <appender-ref ref="myConsoleAppender"/>
+   </root>
+   
+</configuration>
+
+<!-- 공부하라고 정리글 남깁니다 -->
+
+
+<!-- Appenders :전달된 로그를 어디에 출력할지 결정 -->	<!-- 1 -->
+<!-- Application Loggers : 등록된 로그들을 받아주는 역할-->  <!-- 2 -->
+<!-- Root Logger : 모든 자식 logger들의 출력이 root logger를 통해 일어남 -->  <!-- 3. 로그4j.xml은 크게 3가지로나뉜다 -->
+	<!--  어플리케이션 로거들은 모두 루트 로거를 거쳐서 갈수밖에없음 -->
+
+<!-- 
+		ConsolAppender	:	로그를 콘솔에 출력하기 위한 appender 
+		JDBCAppender	:	로그를  DB에 출력하기 위한 appender
+		fileAppender 	:	로그를 파일에 출력하기 위한 appender
+						단점 : 지정 파일에 로그가 계속 남기 때문에 크기가 지나치게 커질 수 있고 지속적인 로그 관리가 어려움
+		RollingFileAppender : 일정 조건 후에 기존 파일을 백업파일로 바꾸고 다시 처음부터 기록을 시작한다.(ex.DailyRollingFileAppender)
+		
+		Layout : 로그를 어떤 형식으로 출력할지 결정 (PatternLayout 디버깅에 가장 적합)
+			%p debug, info, warn, error, fatal 등의 priority 출력
+			%m 		로그 내용 출력
+			
+			%d 		로그 이벤트가 발생한 시간 출력
+			   		포맷을 %d{HH:mm:ss, SSS} 같은 형태로 사용(SimpleDateFormat과 일치)
+			   		
+			%t 		로그 이벤트가 발생된 스레드 이름 출력
+			%% 		% 표시
+			%n 		줄바꿈
+			%c 		package(클래스 명 포함) 출력
+			%C{n}	호출자의 클래스 명 출력
+					n(숫자) 만큼의 package를 하단부터 역으로 출력 (ex.a.b.c 일 때, %C{2} = b.c)
+			$F		로그가 발생한 프로그램 파일 명 출력
+			%l		로그가 발생한 caller의 정보 출력
+			%L		로그가 발생한 caller의 라인 수 출력
+			%M		로그가 발생한 method 이름 출력
+			%r		애플리케이션 시작 이후부터 로그가 발생한 시점의 시간(밀리세컨) 출력
+	 -->
+
+
+<!-- 
+		log4j의 로그 레벨 : trace < debug <info < warn < error < fatal       뒤로갈수록 더 심각한 문제
+			설정한 level 속성 값 이상만 화면에 보임
+			
+			fatal	아주 심각한 에러
+			error	어떤 요청 처리 중 문제 발생
+			warn	프로그램 실행에는 문제 없지만, 향후 시스템 에러의 원인이 될 수 있음
+			info	정보성 메세지(ex.상태변경)
+			debug	개발 시 디버그 용도로 사용하는 메세지
+			trace	디버그 레벨이 너무 광범위하기 때문에 이를 해결하기 위해 좀더 상세한 이벤트를 나타냄(ex.경로 추적)		
+	 -->
+	 
+	<!--  <logger name="com.kh.spring">		이렇게, 전체만 명시해도 이 아래있는 것들을 받아준다.
+		<level value="info" />				dndncare라면 com.kh.dndncare였을것
+	</logger> -->

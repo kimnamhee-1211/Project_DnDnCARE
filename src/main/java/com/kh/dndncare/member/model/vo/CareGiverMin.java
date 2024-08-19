@@ -23,9 +23,11 @@ public class CareGiverMin {
 	private String memberName;
 	private Date memberAge;
 	private int age;
+	private int ptCount;
 	private Date beginDt;
 	private Date endDt;
 	private String matConfirm;
+	private String groupLeader;
 
 	
 }

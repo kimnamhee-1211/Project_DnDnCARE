@@ -1,5 +1,10 @@
 package com.kh.dndncare.board.controller;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,22 +21,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.exception.BoardException;
 import com.kh.dndncare.board.model.service.BoardService;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.Pagination;
+import com.kh.dndncare.common.Pagination2;
+import com.kh.dndncare.member.controller.CustomBotController;
 import com.kh.dndncare.member.model.vo.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 public class BoardController {
 	
 	@Autowired
 	private BoardService bService;
+	
+	@Autowired
+	private CustomBotController bot;
 	
 	// 커뮤니티클릭하면 이동
 	@GetMapping("communityBoardList.bo") 
@@ -324,7 +341,151 @@ public class BoardController {
 		return json.toString();
 	}
 	
-
+	@GetMapping("chat.bo")
+	public String chatTest() {
+		return "chatTest";
+	}
+	
+	// 간병백과 페이지로의 이동요청을 처리
+	@GetMapping("careInformation.bo")
+	public String careInformation(HttpSession session, Model model) {
+		// ai 검색 횟수를 파악해서 넘어가야 한다.
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		if(loginUser != null) {
+			String id = loginUser.getMemberId();
+			// 오늘 작성된 로그파일들에게만 접근한다.
+			File file = new File("C:/logs/dndnCare/careInformationAi/careInformationAi.log"); // 로그 파일이 저장된 폴더 '내'까지 접근
+			int aiCount = 0;
+			
+			try(BufferedReader br = new BufferedReader(new FileReader(file));) {
+				String data;
+				
+				while((data = br.readLine()) != null) {
+					// 24-08-17 20:24:44 [INFO] c.k.d.c.i.CheckCareInfomationAiSearch.preHandle - test-m-p20
+					String[] arr = data.split(" ");
+					if(arr[arr.length-1].equals(id)) aiCount++; // 검색기록에 사용자 아이디가 있는 경우 검색횟수를 1증가 시킨다.
+				}
+				
+				model.addAttribute("aiCount", aiCount);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+		}
+		
+		return "board/careInformation";
+		
+	}
+	
+	// 간병백과 컨텐츠의 목록을 조회 : 검색조건X
+	@PostMapping("selectCareInformationList.bo")
+	@ResponseBody
+	public void selectCareInformationList(@RequestParam(value="page", defaultValue="1") int currentPage, 
+												HttpServletResponse response) {
+		// 페이징 처리된 컨텐츠 목록 조회
+		int listCount = bService.getCareInfomationListCount(null);
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 10, 5);
+		
+		response.setContentType("application/json; charset=UTF-8"); // MIME타입, 인코딩타입 지정
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
+		Gson gson = gb.create(); 
+		
+		try {
+			if(currentPage > pi.getMaxPage()) {
+				gson.toJson(null, response.getWriter());
+			} else {
+				HashMap<String, ArrayList<?>> result = new HashMap<String, ArrayList<?>>();
+				ArrayList<Board> bList = bService.selectCareInformation(null, pi);
+				ArrayList<Attachment> aList = bService.selectAttachment(bList);
+				ArrayList<Integer> pList = new ArrayList<Integer>();
+				pList.add(pi.getMaxPage());
+				
+				result.put("bList", bList);
+				result.put("aList", aList);
+				result.put("pList", pList);
+				gson.toJson(result, response.getWriter());
+			}
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// 간병백과 글 상세조회 시 조회수 증가 요청
+	@GetMapping("updateCareInformationCount.bo")
+	@ResponseBody
+	public String updateCareInformationCount(@RequestParam("boardNo") int boardNo) {
+		int result = bService.updateCareInformationCount(boardNo);
+		return result == 1 ? "success" : "fail";
+	}
+	
+	// 간병백과 글 검색 요청
+	@GetMapping("searchCareInformation.bo")
+	@ResponseBody
+	public void searchCareInformation(@RequestParam(value="page", defaultValue="1") int currentPage,
+										@RequestParam("searchOption") String searchOption,
+										@RequestParam("searchContent") String searchContent,
+										HttpServletResponse response) {
+		response.setContentType("application/json; charset=UTF-8");
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
+		Gson gson = gb.create();
+		
+		try {
+			if(searchOption.equals("none")) { // 검색조건이 올바르지 않을 때 : 백에서도 안전하게 fail로 반환
+				gson.toJson(null, response.getWriter());
+			} else { // 올바른 검색조건을 선택했을 때
+				HashMap<String, String> map = new HashMap<String, String>();
+				if(searchOption.equals("title")) {
+					map.put("column", "BOARD_TITLE");
+				} else if(searchOption.equals("content")) {
+					map.put("column", "BOARD_CONTENT");
+				}
+				map.put("searchContent", searchContent);
+				
+				int listCount = bService.getCareInfomationListCount(map);
+				if(listCount == 0) {
+					log.info("{} : {}", searchOption, searchContent); // 검색결과가 없을 때 로그를 발생시킨다.
+					gson.toJson("empty", response.getWriter());
+				} else {
+					PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 10, 5);
+					
+					if(currentPage > pi.getMaxPage()) {
+						gson.toJson(null, response.getWriter());
+					} else {
+						HashMap<String, ArrayList<?>> result = new HashMap<String, ArrayList<?>>();
+						ArrayList<Board> bList = bService.searchCareInformation(map, pi);
+						
+						ArrayList<Attachment> aList = bService.selectAttachment(bList);
+						ArrayList<Integer> pList = new ArrayList<Integer>();
+						pList.add(pi.getMaxPage());
+						
+						result.put("bList", bList);
+						result.put("aList", aList);
+						result.put("pList", pList);
+						
+						gson.toJson(result, response.getWriter());
+					}
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// 간병백과 ai 검색 요청
+	@GetMapping("searchOpenAi.bo")
+	@ResponseBody
+	public String searchOpenAi(@RequestParam("condition") String condition, HttpSession session) {
+		return bot.chat(condition + "에 대한 간병정보를 300자로 요약해줘.");
+	}
+	
+	
+	// 간병백과 앨범형 페이지로 이동 요청
+	@GetMapping("albumCareInformation.bo")
+	public String albumCareInformation(@RequestParam(value="page", defaultValue="1") int currentPage) {
+		
+		
+		
+		return "albumCareInformation";
+	}
 	
 	
 }

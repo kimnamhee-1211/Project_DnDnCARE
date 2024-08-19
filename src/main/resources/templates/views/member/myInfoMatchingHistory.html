@@ -23,6 +23,7 @@
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내 든든지수/후기</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
 	     		</div>
+	      			<span class="m-4" style="color:gray;"><button style="background:white; border:0" onclick="location.href='deleteMemberView.me'">탈퇴하기 ▶</button></span>
 	    	</div>
 	    	
 	    	<div class="col" >
@@ -37,6 +38,7 @@
 					  <button type="button" id="matchingStatisticsBtn" class="myInfo-btn" onclick="showMatching('statistic')">매칭별 대상 통계</button>
 					  <button type="button" id="matchingPayBtn" class="btn-outline-maincolor-2" onclick="showMatching('dayPay')">매칭 일수/수익</button>
 					  <button type="button" id="matchingRecordBtn"class="btn-outline-maincolor-2" onclick="showMatching('record')">매칭 이력</button>
+
 	      			</div>
 	      		</div>
 	      		
@@ -47,7 +49,7 @@
 	      			<div class="col m-3">
 						<div class="myInfo-Border-maincolor mt-2 mb-3" id="statistic-section">
 							<div class="d-flex m-4">
-								<div class="h2 myInfo-title">내가 간호한 피간병인 통계
+								<div class="h2 myInfo-title" th:if="${!genderCountMap.isEmpty()}">내가 간호한 피간병인 통계
 								
 									<div class="">
 										<canvas class="w-100" id="genderGraph" width="500" height="100">
@@ -62,11 +64,8 @@
 										<canvas class="w-100" id="categoryGraph" width="100" height="100"></canvas>
 									</div>
 									</div>
-								<div class="d-flex m-4">
-									남자 : [[${genderCountMap.values[1]}]]
-									<br>
-									여자 : [[${genderCountMap.values[0]}]]
-								</div>
+									<div class="h2 myInfo-title" th:if="${genderCountMap.isEmpty()}">아직 간병이력이 없습니다.
+									</div>
 								</div>
 						</div>
 						
@@ -78,7 +77,7 @@
 									
 							</div>
 							
-							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
+							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6" >
 								<div>
 							        <label for="yearSelect">연도 선택:</label>
 							        <select id="yearSelect"></select>
@@ -135,9 +134,9 @@
 												            <td>[[${m.service}]]</td>
 												        </tr>
 											        </th:block>
-												   <th:block th:unless="${matRecord}!=null">
+												   <th:block th:if="${matRecord.isEmpty()}">
 														<tr align="center">
-															<td colspan="8" class="h4">매칭 이력이 없습니다.</td>
+															<td colspan="9" class="h4">	<hr>매칭 이력이 없습니다.</td>
 														</tr>
 													</th:block>											        		
 											    </table>
@@ -235,6 +234,7 @@
 			
 			// 연령 그래프
 			const ageCountMap = /*[[${ageCountMap}]]*/;
+			console.log(ageCountMap);
 			const ageArray = [];
 			for(const age of Object.keys(ageCountMap)){
 				ageArray.push(age);
@@ -394,16 +394,25 @@
 			        }
 			    }
 		});
-		
+			
+			
+			
+			
+			const monthPayMap = /*[[${monthPayMap}]]*/;
+			const payCountArray = [];
+			for(const payCount of Object.values(monthPayMap)){
+				payCountArray.push(payCount);
+			}
 			
 			// 월간 수익 그래프
+			
 			const monthPay= document.getElementById('monthPayCountGraph');
 			const monthPayChart = new Chart(monthPay, {
 			    type: 'line',
 			    data: {
 			        labels: monthArray, // x좌표
 			        datasets: [{
-			            data: [100,200], // y좌표 (데이터 값)
+			            data: payCountArray, // y좌표 (데이터 값)
 			            label:'수익금',
 			            backgroundColor: 'white', // 배경 색상
 			            borderColor: 'orange', // 선 색상

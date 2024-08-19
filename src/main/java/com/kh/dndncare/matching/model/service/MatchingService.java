@@ -98,7 +98,7 @@ public interface MatchingService {
 	
 	CareGiver selectIntro(int memberNo);
 	
-	MatMatptInfo selecMatching(int matNo);
+	MatMatptInfo selectMatching(int matNo);
 	MatMatptInfo selecMatPtInfo(int matNo, int i);
 	int insertPay(Member loginUser, Pay p);
 	String selectMatDate(int matNo);
@@ -161,6 +161,11 @@ public interface MatchingService {
 	//간병인 매칭 신청 취소
 	int matchingCancelC(int matNo,  int memberNo);
 	
+	//간병인 결제 금액 받기
+	ArrayList<Pay> selectPayTransfer(int memberNo);
+	
+	//간병인 결제 금액 받기 2
+	int insertPayTransfer(Member loginUser, Pay p);
 	// 서비스 통계
 	ArrayList<MatMatptInfo> serviceList(int memberNo);
 
@@ -168,6 +173,11 @@ public interface MatchingService {
 	ArrayList<Matching> matPatientList(int memberNo);
 
 
+	//ptCount get
+	int getPtCount(int matNo);
+	
+	//loginUser가 그룹 리더인지 아닌지 확인
+	String getGroupLeader(int matNo, int ptNo);
 
 
 }

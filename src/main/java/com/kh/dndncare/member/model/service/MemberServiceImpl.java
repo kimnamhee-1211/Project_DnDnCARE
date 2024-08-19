@@ -16,6 +16,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.member.model.dao.MemberMapper;
@@ -515,6 +516,32 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public ArrayList<MatMatptInfoPt> monthCountList(int memberNo) {
 		return mMapper.monthCountList(memberNo);
+	}
+	
+	public int updateImageProfile(String memberNo, String rename) {
+		return mMapper.updateImageProfile(memberNo,rename);
+	}
+
+
+	@Override
+	public CareGiver selectProfile(String memberNo) {
+		return mMapper.selectProfile(memberNo);
+	}
+
+
+	@Override
+	public int deleteMember(int memberNo) {
+		return mMapper.deleteMember(memberNo);
+	}
+
+
+	@Override
+	public ArrayList<Pay> selectPayTransfer(int memberNo) {
+		return mMapper.selectPayTransfer(memberNo);
+	}
+	public int getCountPendingMe(int matNo, int memberNo) {
+		// TODO Auto-generated method stub
+		return mMapper.getCountPendingMe(matNo, memberNo);
 	}
 
 }
