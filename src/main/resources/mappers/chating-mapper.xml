@@ -42,7 +42,7 @@
 			select seq_chat_message.nextval from dual
 		</selectKey>
         INSERT INTO chat_room_message (chat_massage_no, chat_room_no, member_no, chat_content, read_count, write_date)
-        VALUES (#{chatMassageNo}, #{chatRoomNo}, #{memberNo}, #{chatContent}, #{readCount}, #{writeDate})
+        VALUES (#{chatMassageNo}, #{chatRoomNo}, #{memberNo}, #{chatContent}, default, #{writeDate})
     </insert>
 
     <select id="getMessagesByChatRoomNo" parameterType="int" resultType="ChatingRoomMessage">
@@ -85,18 +85,37 @@
         WHERE chat_massage_no = #{chatMessageNo}
     </update>
 
-    <select id="getUnreadMessages" resultType="ChatingRoomMessage">
-        SELECT * FROM chat_room_message 
-        WHERE chat_room_no = #{chatRoomNo} 
-        AND member_no != #{memberNo} 
-        AND read_count > 0
-    </select>
 
-    <select id="getUnreadMessageCount" resultType="int">
-        SELECT COUNT(*) FROM chat_room_message 
-        WHERE chat_room_no = #{chatRoomNo} 
-        AND member_no != #{memberNo} 
-        AND read_count > 0
+
+    <select id="getMessageReadCount" resultType="int">
+        SELECT read_count
+        FROM chat_room_message
+        WHERE chat_massage_no = #{messageId}
+    </select>
+    
+        <update id="markMessagesAsRead">
+        UPDATE chat_room_message
+        SET read_count = read_count - 1
+        WHERE chat_room_no = #{chatRoomNo}
+          AND member_no != #{memberNo}
+          AND read_count > 0
+    </update>
+
+    
+        <update id="markAsReadAndGetUpdatedMessages">
+        UPDATE chat_room_message
+        SET read_count = read_count - 1
+        WHERE chat_room_no = #{chatRoomNo}
+          AND member_no != #{memberNo}
+          AND read_count > 0
+        RETURNING chat_massage_no
+    </update>
+
+    <select id="getMessageReadCounts" resultType="map">
+        SELECT chat_massage_no, read_count
+        FROM chat_room_message
+        WHERE chat_room_no = #{chatRoomNo}
+        ORDER BY chat_massage_no ASC
     </select>
 	
 </mapper>

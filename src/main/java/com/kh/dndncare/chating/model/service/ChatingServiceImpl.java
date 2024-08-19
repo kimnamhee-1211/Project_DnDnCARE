@@ -2,6 +2,7 @@ package com.kh.dndncare.chating.model.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,14 +60,6 @@ public class ChatingServiceImpl implements ChatingService {
         chMapper.insertMessage(message);
     }
 
-    @Override
-    public void markAsRead(int chatRoomNo, int memberNo) {
-        List<ChatingRoomMessage> unreadMessages = chMapper.getUnreadMessages(chatRoomNo, memberNo);
-        for (ChatingRoomMessage message : unreadMessages) {
-            int newReadCount = message.getReadCount() - 1;
-            chMapper.updateMessageReadCount(message.getChatMassageNo(), newReadCount);
-        }
-    }
 
     @Override
     public int getUnreadMessageCount(int chatRoomNo, int memberNo) {
@@ -77,5 +70,24 @@ public class ChatingServiceImpl implements ChatingService {
     public int getParticipantCount(int chatRoomId) {
         return chMapper.getParticipantCount(chatRoomId);
     }
+    
+    @Override
+    public int getMessageReadCount(int messageId) {
+        return chMapper.getMessageReadCount(messageId);
+    }
+    @Override
+    public void markAsRead(int chatRoomNo, int memberNo) {
+        chMapper.markMessagesAsRead(chatRoomNo, memberNo);
+    }
+    @Override
+    public List<Integer> markAsReadAndGetUpdatedMessages(int chatRoomNo, int memberNo) {
+        return chMapper.markAsReadAndGetUpdatedMessages(chatRoomNo, memberNo);
+    }
+
+    @Override
+    public List<Map<String, Object>> getMessageReadCounts(int chatRoomNo) {
+        return chMapper.getMessageReadCounts(chatRoomNo);
+    }
+    
 
 }

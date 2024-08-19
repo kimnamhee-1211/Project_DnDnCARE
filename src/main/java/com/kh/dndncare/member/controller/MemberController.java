@@ -1,7 +1,9 @@
 package com.kh.dndncare.member.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +16,8 @@ import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,6 +50,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
@@ -70,6 +76,8 @@ public class MemberController {
 
 	@Autowired
 	private BCryptPasswordEncoder bCrypt;
+	
+	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
 	@GetMapping("loginView.me")
 	public String loginView() {
@@ -276,7 +284,7 @@ public class MemberController {
 	@PostMapping("login.me")
 	public String login(@ModelAttribute Member m, Model model, RedirectAttributes ra) {
 		Member loginUser = mService.login(m);
-
+		
 		if (bCrypt.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
 			model.addAttribute("loginUser", loginUser);
 
@@ -486,11 +494,12 @@ public class MemberController {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
 				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
+			} else if(choice[i].contains(" ")){
+				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
 				choiceNoList.add(Integer.parseInt(choice[i]));
 			}
 		} // [2, 5, 8, 10, 14] 
-//			
 		// 7. View로 전달한 결과값만 추리기
 		// 이름, 성별, 나이, 지역, 질환, 금액, 매칭번호, 멤버번호
 		ArrayList<Patient> completeList = mService.choicePatientList(choiceNoList);
@@ -611,9 +620,9 @@ public class MemberController {
 		model.addAttribute("loginUserName", loginUser.getMemberName());
 		
 		// 1. 자동 추천 목록 받아오기
-		int memberNo = 0;
+		int memberNo = loginUser.getMemberNo();
+				
 		if(loginUser != null) {
-			memberNo = loginUser.getMemberNo();
 			System.out.println(memberNo);
 			System.out.println("전");
 			//ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
@@ -631,42 +640,40 @@ public class MemberController {
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList2 = new ArrayList<MatMatptInfoPt>();
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList3 = new ArrayList<MatMatptInfoPt>();
 
-		Iterator<MatMatptInfoPt> iterator = matMatptInfoPtListBefore.iterator();
-		int count = 0;
-
-		while (iterator.hasNext() && count < 18) {
-		    MatMatptInfoPt matMatptInfoPt = iterator.next();
-		    
-		    // Calculate age
-		    int ptRealAge = AgeCalculator.calculateAge(matMatptInfoPt.getPtAge());
-		    matMatptInfoPt.setPtRealAge(ptRealAge);
-		    
-		    // Process address
-		    String[] addr = matMatptInfoPt.getMatAddressInfo().split("//");
-		    if (addr.length > 1) {
-		        String[] addressMin = addr[1].split(" ");
-		        if (addressMin.length >= 2) {
-		            String addressMinStr = addressMin[0] + " " + addressMin[1];
-		            matMatptInfoPt.setMatAddressMin(addressMinStr);
-		        }
-		    }
-		    
-		    // Check if the element should be removed
-		    if (matMatptInfoPt.getPtCount() > 1 && matMatptInfoPt.getGroupLeader().equals("N")) {
-		        iterator.remove();
-		        continue;
-		    }
-		    
-		    // Add to appropriate list
-		    if (count < 6) {
-		        matMatptInfoPtList1.add(matMatptInfoPt);
-		    } else if (count < 12) {
-		        matMatptInfoPtList2.add(matMatptInfoPt);
-		    } else {
-		        matMatptInfoPtList3.add(matMatptInfoPt);
-		    }
-		    
-		    count++;
+		for(int i = 0; i < matMatptInfoPtListBefore.size(); i++) {
+			
+			//이미 신청한 환자 매칭방인지 확인
+			int iMatNo = matMatptInfoPtListBefore.get(i).getMatNo();			
+			int countResult =  mService.getCountPendingMe(iMatNo, loginUser.getMemberNo());
+			if(countResult > 0) {
+				matMatptInfoPtListBefore.remove(i);
+			}
+			
+			
+			//나이 계산
+			int ptRealAge = AgeCalculator.calculateAge(matMatptInfoPtListBefore.get(i).getPtAge());
+			matMatptInfoPtListBefore.get(i).setPtRealAge(ptRealAge);
+			
+			//노출 주소
+			String[] addr = matMatptInfoPtListBefore.get(i).getMatAddressInfo().split("//");			
+			String[] addressMin = addr[1].split(" ");
+			String addressMinStr = addressMin[0] + " " + addressMin[1]; //00도 00시//
+			matMatptInfoPtListBefore.get(i).setMatAddressMin(addressMinStr);
+			
+			if(matMatptInfoPtListBefore.get(i).getPtCount() > 1) {
+				if(matMatptInfoPtListBefore.get(i).getGroupLeader().equals("N")) {
+					matMatptInfoPtListBefore.remove(i);
+				}
+			}
+			
+			if(i < 6) {
+				matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
+			}else if(i < 12) {
+				matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
+			}else if(i < 18) {
+				matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
+			}			
+					
 		}
 		
 		if(matPtCount > 0  && matPtName != null) {
@@ -703,9 +710,23 @@ public class MemberController {
 		//현재 매칭중인 pt정보
 		//ArrayList<MatMatptInfoPt> matConfirmPt = mService.getMatConfirmPt();
 		
-	
+		//종규 결제대금 받기 추가함  ↓
+		
+		ArrayList<Pay> pArr = mService.selectPayTransfer(loginUser.getMemberNo()); 	///matNo를 전부 가져와야한다.왜냐? 공동간병 거래한사람도 있을꺼잖아
+		System.out.println("페이정보" + pArr);
+		int money = 0;
+		if(!pArr.isEmpty()) {
+			for(Pay p : pArr) {
+				money += p.getPayMoney();
+			}
+		}
+		//종규 결제대금 받기       ↑
+		model.addAttribute("money",money);
+		model.addAttribute("pArr",pArr);
+		
 		return "caregiverMain";
 	}
+	
 	
 	// 자동추천을 비동기 통신으로 요청
 	@GetMapping("refreshPatientChoice.me")
@@ -763,7 +784,7 @@ public class MemberController {
 			LocalDate today = LocalDate.now();
 			Double avgReviewScore = mService.avgReviewScore2(c.getMemberNo());
 			c.setAvgReviewScoreDouble(avgReviewScore);
-			System.out.println("리뷰점수 확인하기 : " + c.getAvgReviewScoreDouble());
+			//ystem.out.println("리뷰점수 확인하기 : " + c.getAvgReviewScoreDouble());
 			
 			c.setAge(Period.between(birthDateParsed, today).getYears());
 			//System.out.println(c);
@@ -2036,9 +2057,7 @@ public class MemberController {
 		HashMap<String, String> infoMap =  mService.getPatientMyInfo(memberNo); 
 					//{연령=40, 국적=내국인, 키=180, 몸무게=79, 주소=서울 동대문구 망우로 82 202호777, 성별=여성}
 		
-		
 		System.out.println("인포맵 : " + infoMap);
-		
 		
 		if(Integer.parseInt(String.valueOf(infoMap.get("연령"))) < 0 ) {
 			infoMap.put("연령", (Integer.parseInt(infoMap.get("연령").toString() + 100)) + "");
@@ -2047,8 +2066,6 @@ public class MemberController {
 		ArrayList<HashMap<String, String>> myExpList = mService.getPatientMyExp(memberNo); 
 //		[{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=섬망, L_CATEGORY=disease}, 
 //			{S_CATEGORY=경증, L_CATEGORY=diseaseLevel}]
-
-		
 		
 		ArrayList<HashMap<String, String>> myWantList = mService.getCaregiverMyWant(memberNo); // 마이페이지에서 선택적으로 입력
 		
@@ -2118,12 +2135,10 @@ public class MemberController {
 		condition.put("address", myAddress);
 		condition.put("selectNum", selectNum*2);
 		ArrayList<HashMap<String, Object>> cList = mService.selectCaregiverList(condition); // 길이 : 0~10 // **프롬프트**
-		//[{연령=58, 국적=내국인, 최소요구금액=10000, 주소=서울 강북구 삼양로22길 4 102호, 성별=남성, 회원번호=49},
 		
 		if(cList.isEmpty()) { // 조건에 맞는 후보 환자가 없을 땐 null로 넘겨야 한다.
 			return null;
 		}
-		
 		
 		ArrayList<Integer> mNoList = new ArrayList<Integer>();
 		for(HashMap<String,Object> m : cList) {
@@ -2136,7 +2151,6 @@ public class MemberController {
 		
 		
 		ArrayList<HashMap<String, Object>> cExpList = mService.selectCaregiverInfo(mNoList);
-//		[{S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=55}, {S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=15}, {S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=54}, {S_CATEGORY=가정돌봄, L_CATEGORY=service, MEMBER_NO=15}, {S_CATEGORY=치매, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=치매, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=욕창, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=하반신 마비, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=와상 환자, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=55}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=의식 없음, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=중증, L_CATEGORY=diseaseLevel, MEMBER_NO=55}, {S_CATEGORY=중증, L_CATEGORY=diseaseLevel, MEMBER_NO=54}, {S_CATEGORY=경증, L_CATEGORY=diseaseLevel, MEMBER_NO=15}]
 		
 		// ArrayList<HashMap<String, Object>> promptCaregiverList 에 담아야함
 		
@@ -2181,15 +2195,17 @@ public class MemberController {
 						+ "환자의 정보를 바탕으로 가장 적절한 회원번호 " + selectNum + "개만 숫자로만 짧게 대답해줘.";
 		
 		// 6. 프롬프트를 전달하고 결과값 받아오기
-		String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
-		System.out.println("GPT가 추천한 매칭번호 : " + result); //83, 82, 57, 85, 14, 46, 23, 22, 79, 84.
+		String result = botController.chat(prompt); 
+		System.out.println("GPT가 추천한 매칭번호 : " + result); 
 		String[] choice = result.split(", "); 
-		System.out.println("GPT가 추천한 매칭번호의 스플릿 : " + Arrays.toString(choice)); // [90, 42, 83, 50, 23, 82, 85, 57, 14, 79.]
+		System.out.println("GPT가 추천한 매칭번호의 스플릿 : " + Arrays.toString(choice)); 
 		ArrayList<Integer> choiceNoList = new ArrayList<Integer>();
 		for(int i = 0; i < choice.length; i++) {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
 				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
+			} else if(choice[i].contains(" ")){
+				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
 				choiceNoList.add(Integer.parseInt(choice[i]));
 			}
@@ -2433,20 +2449,7 @@ public class MemberController {
 		
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -2518,14 +2521,17 @@ public class MemberController {
 	@GetMapping("socialLogin.me")
 	public String socialLogin(@RequestParam("code") String code,HttpSession session,Model model,RedirectAttributes ra) {
 		//소셜로그인 없으면 회원가입으로, 있으면 로그인 바로하게 하기
-		System.out.println(code);
+		//System.out.println(code);
 		Member m = mService.selectSocialLogin(code); //loginUser
 		if(m == null) {		//검사해서 없으면 회원가입창으로
 			session.setAttribute("code", code);
+			
+			
+			
 			return "redirect:enroll1View.me";
 		}else {				//검사해서 있으면 바로 로그인하기
 			model.addAttribute("loginUser", m);
-
+			logger.info("소셜 로그인 아이디 : " +  m.getMemberId());
 			if (m.getMemberCategory().equalsIgnoreCase("C")) {
 				ra.addAttribute("memberNo", m.getMemberNo());
 
@@ -2542,7 +2548,139 @@ public class MemberController {
 		
 	}
 	
+	@GetMapping("profileImageUpdate.me")
+	public String profileImageUpdate(HttpSession session, Model model) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+		System.out.println(cg);
+		
+		model.addAttribute("cg",cg);
+		return "profileImageUpdate";
+		
+	}
 	
+	//간병인에게 매칭 신청한 목록 더보기
+	@GetMapping("goCMoreRequest.me")
+	public String goCMoreRequestView(HttpSession session, Model model) {		
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		ArrayList<RequestMatPt> requestMatPt = mService.getRequestMatPt(loginUser.getMemberNo());
+		System.out.println(requestMatPt);
+		
+		for(RequestMatPt i : requestMatPt) {
+			int realAge = AgeCalculator.calculateAge(i.getPtAge());
+			i.setPtRealAge(realAge);
+			
+			if(i.getPtCount()> 1) {
+				if(i.getGroupLeader().equals("N")) {
+					requestMatPt.remove(i);
+				}
+			}
+		}
+		model.addAttribute("loginUserName", loginUser.getMemberName());
+		model.addAttribute("requestMatPt", requestMatPt);		
+		return "cMoreRequest";
+	}
+	
+	//환자에게 매칭 신청한 목록 더보기
+	@GetMapping("goPMoreRequest.me")
+	public String goPMoreRequestView(HttpSession session, Model model) {		
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		//ptno 뽑기
+		int loginPt = mService.getPtNo(loginUser.getMemberNo());
+		// 환자 입장에서 나를 선택한 간병인 정보 불러오기
+
+		ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
+		for(CareGiverMin i : requestCaregiver){
+			int age = AgeCalculator.calculateAge(i.getMemberAge());
+			i.setAge(age);
+
+		}
+		model.addAttribute("requestCaregiver", requestCaregiver);	
+		
+		//loginUser Name
+		model.addAttribute("loginUserName", loginUser.getMemberName());	
+		
+		return "pMoreRequest";
+	}
+	
+	@PostMapping("updateImage.me")
+	public String updateImageProfile(@RequestParam("files") MultipartFile files,@RequestParam("memberNo")String memberNo ) {
+		//1.사진이 없으면 새로 넣어야한다
+		//2.사진이 있으면 수정을 해야한다
+		//3.사진을 아예 지울수 있어야 한다		
+		
+		System.out.println("이미지 이름3 : " + files.isEmpty());
+		System.out.println(files.getOriginalFilename());
+		System.out.println("이미지 이름2 : " + files.toString());
+		
+		String rename = null;
+		CareGiver cg = mService.selectProfile(memberNo);
+		System.out.println(cg);
+		if(cg != null) {
+			deleteFile(cg.getCareImg());
+		}
+		if(!files.isEmpty()) {	//파일 추가했을때
+			
+			rename = saveProfileImage(files);	//새 이름으로 파일 생성완료
+			
+			
+		}else {					//파일 삭제했을때
+			
+		}
+		
+		
+		//care img dB접근하자
+		
+		int result = mService.updateImageProfile(memberNo,rename);
+		
+		if(result>0) {
+			return "deleteWindow";
+		}else {
+			throw new MemberException("프로필 저장이 실패했습니다");
+		}
+		
+		
+		
+		
+	}
+	
+	//프로필 파일 추가하기
+	public String saveProfileImage(MultipartFile file) {
+		
+		String renamePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		int ranNum = (int)(Math.random()*100000);
+		String originFileName = file.getOriginalFilename();
+		String renameFileName = sdf.format(new java.util.Date()) + ranNum+ originFileName.substring(originFileName.lastIndexOf("."));		
+		
+		
+		try {
+			file.transferTo(new File(renamePath + renameFileName));
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return renameFileName;
+	}
+	
+	//프로필 파일 삭제하기
+	public void deleteFile(String fileName) {
+		String savePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		File f = new File(savePath +fileName);
+		if(f.exists()) {
+			f.delete();
+		}
+	}
 	
 	@GetMapping("nn.me")
 	public String nn() {
@@ -2553,6 +2691,44 @@ public class MemberController {
 		
 		return "login";
 	}
+	
+	@PostMapping("deleteMember.me")
+	public String deleteMember(@RequestParam("password") String password,HttpSession session,HttpServletResponse response) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		if (bCrypt.matches(password, loginUser.getMemberPwd())) {
+			int result = mService.deleteMember(loginUser.getMemberNo());
+			
+			if(result>0) {
+				try {
+					response.setContentType("text/html; charset=UTF-8");
+					response.getWriter().write("<script> alert('계정 탈퇴 성공');</script>");
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return "redirect:home.do";
+			}else {
+				throw new MemberException("탈퇴 오류");
+			}
+		}else {
+			try {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().write("<script> alert('비밀번호가 맞지 않습니다');</script>");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return "deleteMember";
+		}
+	}
+	
+	@GetMapping("deleteMemberView.me")
+	public String deleteMemberView() {
+		return "deleteMember";
+	}
+	
 	
 }//클래스 끝
 

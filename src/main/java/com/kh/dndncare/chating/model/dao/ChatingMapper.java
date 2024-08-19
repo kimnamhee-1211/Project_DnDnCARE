@@ -2,6 +2,7 @@ package com.kh.dndncare.chating.model.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -42,6 +43,14 @@ public interface ChatingMapper {
     // 읽지 않은 메시지 수 조회
     int getUnreadMessageCount(@Param("chatRoomNo") int chatRoomNo, @Param("memberNo") int memberNo);
     
+    int getMessageReadCount(int messageId);
 
+	void markMessagesAsRead(@Param("chatRoomNo") int chatRoomNo, @Param("memberNo") int memberNo);
+
+	List<Integer> markAsReadAndGetUpdatedMessages(int chatRoomNo, int memberNo);
+
+	List<Map<String, Object>> getMessageReadCounts(int chatRoomNo);
+	
+ 
 
 }

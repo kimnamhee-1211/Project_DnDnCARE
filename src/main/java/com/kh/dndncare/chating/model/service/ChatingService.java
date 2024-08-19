@@ -2,6 +2,7 @@ package com.kh.dndncare.chating.model.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.kh.dndncare.chating.model.vo.ChatingRoom;
 import com.kh.dndncare.chating.model.vo.ChatingRoomMessage;
@@ -30,5 +31,10 @@ public interface ChatingService {
     void markAsRead(int chatRoomNo, int memberNo);
     int getUnreadMessageCount(int chatRoomNo, int memberNo);
     int getParticipantCount(int chatRoomId);
+    
+    int getMessageReadCount(int messageId);
+    List<Integer> markAsReadAndGetUpdatedMessages(int chatRoomNo, int memberNo);
+    List<Map<String, Object>> getMessageReadCounts(int chatRoomNo);
+    
 
 }

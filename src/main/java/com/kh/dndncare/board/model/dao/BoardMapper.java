@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
+import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.Reply;
 
@@ -47,5 +48,17 @@ public interface BoardMapper {
 	int insertReplyLike(HashMap<String, Integer> map);
 
 	int replyLikeCount(int rId);
+
+	int getCareInfomationListCount(HashMap<String, String> map);
+
+	ArrayList<Board> selectCareInformation(HashMap<String, String> map, RowBounds rowBounds);
+
+	ArrayList<Attachment> selectAttachment(ArrayList<Board> bList);
+
+	int updateCareInformationCount(int boardNo);
+
+	ArrayList<Board> searchCareInformation(HashMap<String, String> map, RowBounds rowBounds);
+
+
 
 }
