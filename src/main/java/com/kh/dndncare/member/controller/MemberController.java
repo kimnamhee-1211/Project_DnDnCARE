@@ -619,9 +619,9 @@ public class MemberController {
 		model.addAttribute("loginUserName", loginUser.getMemberName());
 		
 		// 1. 자동 추천 목록 받아오기
-		int memberNo = 0;
+		int memberNo = loginUser.getMemberNo();
+				
 		if(loginUser != null) {
-			memberNo = loginUser.getMemberNo();
 			System.out.println(memberNo);
 			System.out.println("전");
 			ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
@@ -640,6 +640,15 @@ public class MemberController {
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList3 = new ArrayList<MatMatptInfoPt>();
 		
 		for(int i = 0; i < matMatptInfoPtListBefore.size(); i++) {
+			
+			//이미 신청한 환자 매칭방인지 확인
+			int iMatNo = matMatptInfoPtListBefore.get(i).getMatNo();			
+			int countResult =  mService.getCountPendingMe(iMatNo, loginUser.getMemberNo());
+			if(countResult > 0) {
+				matMatptInfoPtListBefore.remove(i);
+			}
+			
+			
 			//나이 계산
 			int ptRealAge = AgeCalculator.calculateAge(matMatptInfoPtListBefore.get(i).getPtAge());
 			matMatptInfoPtListBefore.get(i).setPtRealAge(ptRealAge);
@@ -716,6 +725,7 @@ public class MemberController {
 		
 		return "caregiverMain";
 	}
+	
 	
 	// 자동추천을 비동기 통신으로 요청
 	@GetMapping("refreshPatientChoice.me")
@@ -2438,20 +2448,7 @@ public class MemberController {
 		
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -2560,6 +2557,54 @@ public class MemberController {
 		
 		model.addAttribute("cg",cg);
 		return "profileImageUpdate";
+		
+	}
+	
+	//간병인에게 매칭 신청한 목록 더보기
+	@GetMapping("goCMoreRequest.me")
+	public String goCMoreRequestView(HttpSession session, Model model) {		
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		ArrayList<RequestMatPt> requestMatPt = mService.getRequestMatPt(loginUser.getMemberNo());
+		System.out.println(requestMatPt);
+		
+		for(RequestMatPt i : requestMatPt) {
+			int realAge = AgeCalculator.calculateAge(i.getPtAge());
+			i.setPtRealAge(realAge);
+			
+			if(i.getPtCount()> 1) {
+				if(i.getGroupLeader().equals("N")) {
+					requestMatPt.remove(i);
+				}
+			}
+		}
+		model.addAttribute("loginUserName", loginUser.getMemberName());
+		model.addAttribute("requestMatPt", requestMatPt);		
+		return "cMoreRequest";
+	}
+	
+	//환자에게 매칭 신청한 목록 더보기
+	@GetMapping("goPMoreRequest.me")
+	public String goPMoreRequestView(HttpSession session, Model model) {		
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		//ptno 뽑기
+		int loginPt = mService.getPtNo(loginUser.getMemberNo());
+		// 환자 입장에서 나를 선택한 간병인 정보 불러오기
+
+		ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
+		for(CareGiverMin i : requestCaregiver){
+			int age = AgeCalculator.calculateAge(i.getMemberAge());
+			i.setAge(age);
+
+		}
+		model.addAttribute("requestCaregiver", requestCaregiver);	
+		
+		//loginUser Name
+		model.addAttribute("loginUserName", loginUser.getMemberName());	
+		
+		return "pMoreRequest";
 	}
 	
 	@PostMapping("updateImage.me")

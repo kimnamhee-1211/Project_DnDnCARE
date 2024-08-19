@@ -198,5 +198,7 @@ public interface MemberMapper {
 	int deleteMember(int memberNo);
 
 	ArrayList<Pay> selectPayTransfer(int memberNo);
+	
+	int getCountPendingMe(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
 
 }

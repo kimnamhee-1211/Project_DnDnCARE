@@ -168,8 +168,11 @@ public interface MatchingService {
 	int insertPayTransfer(Member loginUser, Pay p);
 	// 서비스 통계
 	ArrayList<MatMatptInfo> serviceList(int memberNo);
-
-
+	//ptCount get
+	int getPtCount(int matNo);
+	
+	//loginUser가 그룹 리더인지 아닌지 확인
+	String getGroupLeader(int matNo, int ptNo);
 
 
 }

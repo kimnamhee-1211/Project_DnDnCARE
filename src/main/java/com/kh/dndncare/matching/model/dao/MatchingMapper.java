@@ -144,6 +144,9 @@ public interface MatchingMapper {
 	
 	ArrayList<MatMatptInfo> serviceList(int memberNo);
 
+	int getPtCount(int matNo);
+
+	String getGroupLeader(@Param("matNo") int matNo, @Param("ptNo") int ptNo);
 
 	
 

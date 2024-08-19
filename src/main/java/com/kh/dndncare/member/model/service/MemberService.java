@@ -201,6 +201,8 @@ public interface MemberService {
 	int deleteMember(int memberNo);
 
 	ArrayList<Pay> selectPayTransfer(int memberNo);
+	
+	int getCountPendingMe(int matNo, int memberNo);
 
 
 

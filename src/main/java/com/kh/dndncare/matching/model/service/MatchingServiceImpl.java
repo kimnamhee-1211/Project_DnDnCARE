@@ -339,6 +339,17 @@ public class MatchingServiceImpl implements MatchingService {
 	public int matchingCancelC(int matNo, int memberNo) {
 		return mMapper.matchingCancelC(matNo, memberNo);
 	}
+	
+	//ptCount get
+	@Override
+	public int getPtCount(int matNo) {
+		return mMapper.getPtCount(matNo);
+	}
+
+	@Override
+	public String getGroupLeader(int matNo, int ptNo) {
+		return mMapper.getGroupLeader(matNo, ptNo);
+	}
 
 	//간병인 결제 금액 받기 jg
 	@Override
