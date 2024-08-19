@@ -144,6 +144,7 @@
 	function connect() {
 	    const serverUrl = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/ws-stomp';
 	    const socket = new SockJS(serverUrl);
+	    console.log("host:" + window.location.host);
 	    stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
 	        console.log('Connected: ' + frame);
