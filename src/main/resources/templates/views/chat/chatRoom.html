@@ -142,10 +142,10 @@
 	let stompClient = null;
 	
 	function connect() {
-	    const serverUrl = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/ws-stomp';
-	    const socket = new SockJS(serverUrl);
-	    console.log("host:" + window.location.host);
-	    stompClient = Stomp.over(socket);
+	    const serverIP = "192.168.40.19"; // 서버 역할을 하는 컴퓨터의 IP 주소
+        const serverUrl = `http://${serverIP}:8096/ws-stomp`;
+        const socket = new SockJS(serverUrl);
+        stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
 	        console.log('Connected: ' + frame);
 	        stompClient.subscribe('/room/chat/' + chatRoomId, function(message) {
