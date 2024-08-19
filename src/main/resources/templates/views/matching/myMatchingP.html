@@ -55,7 +55,7 @@
 				  	<div style="display:none" th:text="wait" class="from"></div>
 				    <h2 class="accordion-header">
 				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsetwo' + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
-							[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭이 결제 대기 중입니다.
+							   [[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭이 결제 대기 중입니다.
 				      </button>
 				    </h2>
 				    <div th:id="'collapsetwo' + ${myMat.memberNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
@@ -79,6 +79,7 @@
 						<div style="display:none" th:text="${myMat.memberNo}" class="memberNo"></div>
 						<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 						<div style="display:none" th:text="want" class="from"></div>
+						<div style="display:none" th:text="${myMat.ptNo}" class="ptNo"></div>
 				    	<h2 class="accordion-header">
 				      		<button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsethree' + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
 				        		[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭을 신청하셨습니다.
@@ -90,7 +91,8 @@
 									<thead></thead>
 								</table>
 								<div id="cInfo"></div>
-								<button class="btn btn-success mx-auto matCan" style="margin:10px 45%;">매칭 신청 취소</button>
+								<button th:if="${myMat.groupLeader == 'Y'}" class="btn btn-success mx-auto matCan" style="margin:10px 45%;">매칭 신청 취소</button>
+								
 							</div>
 						</div>
 					</div>
@@ -117,7 +119,7 @@
 								<thead></thead>
 							</table>
 							<div id="cInfo"></div>
-							<button class="btn btn-success mx-auto justify-content-md-center matOk">매칭 승낙</button>
+							<button th:if="${myMat.groupLeader == 'Y'}" class="btn btn-success mx-auto justify-content-md-center matOk">매칭 승낙</button>
 						</div>
 				    </div>
 				  </div>
@@ -201,9 +203,9 @@
 						
 							let addMin = '';
 							if(matInfo[0].ptCount == 1){
-								addMin = `<th scope="col"colspan="3">&nbsp;&nbsp;&nbsp;${matInfo[0].matAddressMin}</th>`;
+								addMin = `<th scope="col"colspan="4">&nbsp;&nbsp;&nbsp;${matInfo[0].matAddressMin}</th>`;
 							}else if(matInfo[0].ptCount > 1){
-								addMin = `<th scope="col"colspan="3">&nbsp;${matInfo[0].matAddressMin}&nbsp;&nbsp;&nbsp;&nbsp;${matInfo[0].hospitalName}</th>`;
+								addMin = `<th scope="col"colspan="4">&nbsp;${matInfo[0].matAddressMin}&nbsp;&nbsp;&nbsp;&nbsp;${matInfo[0].hospitalName}</th>`;
 							}
 							
 							
@@ -304,7 +306,10 @@
 						      			<div class="h3">${caregiverIntro.memberName}님</div>
 						      			<div align="center">
 											<button type="button" class="m-4 btn-outline-maincolor reviewButton">후기 보기</button>		
-										</div>		      		
+										</div>
+										<div align="center">
+											<button type="button" class="m-4 btn-outline-maincolor startChat">채팅하기</button>		
+										</div>		 
 					      		</div>
 					      		<div class="col-7 m-3 p-3 testBorder justify-content-md-center">					      				      		
 						      		<div class="row m-2 p-4">
@@ -427,6 +432,25 @@
 						const from = this.closest('.accordion-item').querySelector('.from').innerHTML;
 						
 						location.href='reviewDetail.mc?matNo=' + matNo + '&memberNo=' + memberNo + '&from=' + from;
+						
+					})
+				}
+			}
+		}
+		
+		
+		//채팅하기 버튼
+		const startChat =()=>{
+			const startChatButtons = document.querySelectorAll('.startChat');
+			for(const startChatButton of startChatButtons){
+				if(startChatButton){
+					startChatButton.addEventListener('click', function(){
+						
+						const matNo = this.closest('.accordion-item').querySelector('.matNo').innerHTML;
+						const matPtNo = this.closest('.accordion-item').querySelector('.ptNo').innerHTML;
+						let url = "/createAndGetChat.ch?matNo=" + matNo +'&matPtNo=' + matPtNo ;
+						
+						window.location.href = url;
 						
 					})
 				}

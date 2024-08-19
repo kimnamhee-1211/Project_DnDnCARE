@@ -210,6 +210,14 @@ a {
    border:3px solid #8dd986;
 }
 
+.profile-image {
+   width: 60px; /* 원하는 크기로 설정 */
+   height: 60px; /* 원하는 크기로 설정 */
+   border-radius: 50%; /* 이미지를 동그랗게 만듦 */
+   object-fit: cover; /* 이미지 비율을 유지하며 잘라냄 */
+   border:3px solid #8dd986;
+}
+
 /* 리뷰에나오는별쓰자*/
 
 .btn-star{

@@ -133,7 +133,7 @@
         </form>
     </div>
 
-	<script th:inline="javascript">
+<script th:inline="javascript">
 	/*<![CDATA[*/
 	const chatRoomId = /*[[${chatRoomId}]]*/ 'default-room-id';
 	const userId = /*[[${userId}]]*/ 'default-user-id';
@@ -141,22 +141,40 @@
 	
 	let stompClient = null;
 	
+	function loadChatHistory() {
+	    fetch(`/api/chat/messages/${chatRoomId}`)
+	        .then(response => response.json())
+	        .then(data => {
+	            if (Array.isArray(data)) {
+	                data.forEach(showMessage);
+	            } else {
+	                console.error('Unexpected data format:', data);
+	            }
+	        })
+	        .catch(error => console.error('Error loading chat history:', error));
+	}
+	
 	function connect() {
-	    const serverUrl = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/ws-stomp';
+	    const serverIP = "192.168.40.19";
+	    const serverUrl = `http://${serverIP}:8096/ws-stomp`;
 	    const socket = new SockJS(serverUrl);
-	    console.log("host:" + window.location.host);
 	    stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
 	        console.log('Connected: ' + frame);
+	        
 	        stompClient.subscribe('/room/chat/' + chatRoomId, function(message) {
 	            showMessage(JSON.parse(message.body));
+	            
+	            sendReadStatus();  // 새 메시지를 받을 때마다 읽음 상태 업데이트
 	        });
-	        // 읽음 상태 업데이트를 위한 새로운 구독
+
 	        stompClient.subscribe('/room/chat/' + chatRoomId + '/read', function(message) {
-	            updateReadStatus(JSON.parse(message.body));
+	            console.log('Received read status update:', message.body);
+	            updateReadStatusRealtime(JSON.parse(message.body));
 	        });
+
 	        loadChatHistory();
-	        sendReadStatus();
+	        sendReadStatus();  // 연결 직후 읽음 상태 전송
 	    });
 	}
 	
@@ -203,83 +221,70 @@
 	        <span class="sender">${message.memberName}</span>
 	        <span class="content">${message.chatContent}</span>
 	        <span class="write-date">${formattedTime}</span>
-	        <span class="read-status" data-message-id="${message.chatMassageNo}">${message.readCount > 0 ? '1' : ''}</span>
+	        <span class="read-status" data-message-id="${message.chatMessageNo || message.chatMassageNo}">${message.readCount > 0 ? '1' : ''}</span>
 	    `;
 	    document.getElementById('chat-messages').appendChild(messageElement);
 	    scrollToBottom();
 	}
 	
-	function loadChatHistory() {
-	    fetch(`/api/chat/messages/${chatRoomId}`)
-	        .then(response => response.json())
-	        .then(data => {
-	            if (Array.isArray(data)) {
-	                data.forEach(showMessage);
-	            } else {
-	                console.error('Unexpected data format:', data);
-	            }
-	        })
-	        .catch(error => console.error('Error loading chat history:', error));
-	}
+	
 	
 	function scrollToBottom() {
 	    const chatMessages = document.getElementById('chat-messages');
 	    chatMessages.scrollTop = chatMessages.scrollHeight;
 	}
 	
-	function markMessagesAsRead() {
-	    fetch(`/api/chat/markAsRead?chatRoomNo=${chatRoomId}&memberNo=${userId}`, {
-	        method: 'POST'
-	    })
-	    .then(response => response.json())
-	    .then(data => {
-	        if (data.success) {
-	            console.log('Messages marked as read');
-	            updateReadStatus();
+	function updateReadStatusRealtime(readStatus) {
+	    console.log('Raw read status:', JSON.stringify(readStatus, null, 2));
+	    const allMessages = document.querySelectorAll('.message .read-status');
+	    const messageReadCounts = readStatus.messageReadCounts;
+
+	    allMessages.forEach(statusElement => {
+	        const messageId = statusElement.getAttribute('data-message-id');
+	        console.log('Checking message:', messageId);
+	        
+	        const matchingMessage = messageReadCounts.find(item => 
+	            item.CHAT_MASSAGE_NO.toString() === messageId
+	        );
+	        
+	        if (matchingMessage) {
+	            console.log('Found matching message:', matchingMessage);
+	            const readCount = matchingMessage.READ_COUNT;
+	            statusElement.textContent = readCount > 0 ? '1' : '';
+	        } else {
+	            console.log('No matching message found for:', messageId);
 	        }
-	    })
-	    .catch(error => console.error('Error marking messages as read:', error));
-	}
-	
-	function updateReadStatus() {
-	    const messages = document.querySelectorAll('.message:not(.self) .read-status');
-	    messages.forEach(statusElement => {
-	        statusElement.textContent = '';
 	    });
-	}
-	
-	function getUnreadMessageCount() {
-	    fetch(`/api/chat/unreadCount?chatRoomNo=${chatRoomId}&memberNo=${userId}`)
-	        .then(response => response.json())
-	        .then(data => {
-	            const unreadCount = data.unreadCount;
-	            updateUnreadCountDisplay(unreadCount);
-	        })
-	        .catch(error => console.error('Error getting unread message count:', error));
-	}
-	
-	function updateUnreadCountDisplay(count) {
-	    const unreadCountElement = document.getElementById('unread-count');
-	    if (unreadCountElement) {
-	        unreadCountElement.textContent = count > 0 ? `(${count})` : '';
-	    }
 	}
 	
 	function sendReadStatus() {
-	    if (stompClient) {
+	    if (stompClient && stompClient.connected) {
 	        const readStatusMessage = {
 	            memberNo: userId
 	        };
-	        stompClient.send("/app/chat/read/" + chatRoomId, {}, JSON.stringify(readStatusMessage));
+	        console.log("Sending read status for user:", userId);
+	        stompClient.send("/send/chat/read/" + chatRoomId, {}, JSON.stringify(readStatusMessage));
+	    } else {
+	        console.log("WebSocket is not connected. Cannot send read status.");
 	    }
 	}
+	
+	// 페이지 로드 시 읽음 상태 전송
+	window.addEventListener('load', sendReadStatus);
 
-	function updateReadStatus(readerMemberNo) {
-	    const messages = document.querySelectorAll('.message:not(.self) .read-status');
-	    messages.forEach(statusElement => {
-	        statusElement.textContent = '읽음';
-	    });
-	}
+	// 페이지 포커스 시 읽음 상태 전송
+	window.addEventListener('focus', function() {
+	    console.log('Window focused, sending read status');
+	    sendReadStatus();
+	});
+
+	document.getElementById('chat-messages').addEventListener('scroll', function() {
+	    if (this.scrollTop + this.clientHeight >= this.scrollHeight) {
+	        sendReadStatus();  // 스크롤이 맨 아래에 도달하면 읽음 상태 업데이트
+	    }
+	});
+
+	
 	
 	// Connect to WebSocket when the page loads
 	connect();
@@ -287,15 +292,21 @@
 	// Add event listener for form submission
 	document.getElementById('message-form').addEventListener('submit', sendMessage);
 	
-	// Mark messages as read when the chat window gets focus
-	window.addEventListener('focus', markMessagesAsRead);
-	
 	// 페이지 포커스 시 읽음 상태 전송
-	window.addEventListener('focus', sendReadStatus);
+	window.addEventListener('focus', function() {
+	    console.log('Window focused, sending read status');
+	    sendReadStatus();
+	    
+	});
 	
-	// Update unread message count periodically
-	setInterval(getUnreadMessageCount, 1000); // 매 30초마다 업데이트
+/* 	setInterval(function() {
+	    if (document.hasFocus()) {
+	        sendReadStatus();
+	    }
+	}, 30000);
+ */
+	
 	/*]]>*/
-	</script>
+</script>
 </body>
 </html>

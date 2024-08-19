@@ -3,8 +3,7 @@ package com.kh.dndncare.common;
 import com.kh.dndncare.board.model.vo.PageInfo;
 
 public class Pagination2 {
-	public static PageInfo getPageInfo(int currentPage, int listCount, int boardLimit) {
-		int pageLimit = 5;
+	public static PageInfo getPageInfo(int currentPage, int listCount, int boardLimit, int pageLimit) {
 		int maxPage;
 		int startPage;
 		int endPage;

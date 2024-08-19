@@ -103,7 +103,7 @@
 					    	<div id="plus">
 						        <div class="d-flex" style="width:400px;">
 						            <label for="underDayPicker">간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
-						            <input type="text" class="underDayPicker" name="day" readonly class="checkTime"> 
+						            <input type="text" class="underDayPicker checkTime" name="day" readonly> 
 						            <button type="button" class="btn btn-secondary" id="plusunderDayPicker">
 							          	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
 	 									 	<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
@@ -160,10 +160,10 @@
 	<script th:inline="javascript">
 		
 		//입력값 검사 
-		const check(data)=>{
+		const check=(data)=>{
 			for(const i of data){
 				if(i.value.trim() == ''){
-					input.focus();
+					i.focus();
 					return false;
 				}
 			}

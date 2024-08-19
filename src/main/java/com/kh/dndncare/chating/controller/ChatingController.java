@@ -77,11 +77,17 @@ public class ChatingController {
 	                               @RequestParam(value= "chatRoomNo",required=false) Integer chatRoomNo,
 	                               HttpSession session,
 	                               Model model) {
+		System.out.println("확인확인");
 	    Member loginUser = (Member) session.getAttribute("loginUser");
 	    int memberNo = loginUser.getMemberNo();
 	    String memberName = loginUser.getMemberName();
-
-	    ChatingRoom existingChatingRoom = chService.getChatRoom(memberNo, chatRoomNo);
+	    int finalChatRoomNo;
+	    
+	    ChatingRoom existingChatingRoom = new ChatingRoom();
+	    if(chatRoomNo !=null) {
+	    	existingChatingRoom = chService.getChatRoom(memberNo, chatRoomNo);
+	    }
+	    
 	    if (existingChatingRoom != null) {
 	        // Chat room already exists, redirect to it
 	        model.addAttribute("chatRoomId", existingChatingRoom.getChatRoomNo());
@@ -102,8 +108,10 @@ public class ChatingController {
 	    if (chatRoomResult <= 0) {
 	        throw new MemberException("채팅방 생성에 실패했습니다.");
 	    }
-
+	    
+	    //새로 생성한 채팅방 번호
 	    int newChatRoomNo = chService.getChatRoomNo(matPtNo);
+	    System.out.println(newChatRoomNo);
 	    int chatRoomMemberResult = chService.insertChatRoomMember(newChatRoomNo, memberNo, matMemberNo);
 
 	    if (chatRoomMemberResult <= 0) {
@@ -116,8 +124,8 @@ public class ChatingController {
 	    return "chatRoom";
 	}
 	
-	@MessageMapping("/chat/{chatRoomId}")
-    @SendTo("/room/chat/{chatRoomId}")
+   @MessageMapping("/chat/{chatRoomId}")
+   @SendTo("/room/chat/{chatRoomId}")
     public ChatingRoomMessage sendMessage(@DestinationVariable("chatRoomId") int chatRoomId, ChatingRoomMessage chatMessage) {
         chatMessage.setChatRoomNo(chatRoomId);
         // 채팅방 참여자 수를 조회하여 readCount 설정
@@ -171,12 +179,26 @@ public class ChatingController {
     }
     
     @MessageMapping("/chat/read/{chatRoomId}")
-    public void markAsRead(@DestinationVariable("chatRoomId") String chatRoomId, 
+    public void markAsRead(@DestinationVariable("chatRoomId") String chatRoomId,
                            @Payload ReadStatusMessage readStatusMessage) {
-        chService.markAsRead(Integer.parseInt(chatRoomId), readStatusMessage.getMemberNo());
+        int chatRoomNoInt = Integer.parseInt(chatRoomId);
+        int memberNo = readStatusMessage.getMemberNo();
 
-        // 읽음 상태 업데이트를 모든 참여자에게 브로드캐스트
-        messagingTemplate.convertAndSend("/room/chat/" + chatRoomId + "/read", readStatusMessage);
+        // 읽음 상태 업데이트
+        chService.markAsRead(chatRoomNoInt, memberNo);
+
+        // 채팅방의 모든 메시지에 대한 읽지 않은 수 계산
+        List<Map<String, Object>> messageReadCounts = chService.getMessageReadCounts(chatRoomNoInt);
+      
+
+        // 클라이언트에게 전송할 Map 객체 생성
+        Map<String, Object> response = new HashMap<>();
+        response.put("memberNo", memberNo);
+        response.put("messageReadCounts", messageReadCounts);
+        
+
+        // 업데이트된 읽음 상태를 모든 참여자에게 브로드캐스트
+        messagingTemplate.convertAndSend("/room/chat/" + chatRoomNoInt + "/read", response);
     }
 
     @GetMapping("/api/chat/unreadCount")
@@ -185,6 +207,27 @@ public class ChatingController {
         int unreadCount = chService.getUnreadMessageCount(chatRoomNo, memberNo);
         Map<String, Object> response = new HashMap<>();
         response.put("unreadCount", unreadCount);
+        return response;
+    }
+    
+    @GetMapping("/api/chat/messageReadCounts/{chatRoomId}")
+    @ResponseBody
+    public List<Map<String, Object>> getMessageReadCounts(@PathVariable("chatRoomId") int chatRoomId) {
+        return chService.getMessageReadCounts(chatRoomId);
+    }
+    
+    @MessageMapping("/chat/checkRead/{chatRoomId}")
+    @SendTo("/room/chat/{chatRoomId}/read")
+    public Map<String, Object> checkReadStatus(@DestinationVariable String chatRoomId, @Payload ReadStatusMessage readStatusMessage) {
+        int chatRoomNoInt = Integer.parseInt(chatRoomId);
+        chService.markAsRead(chatRoomNoInt, readStatusMessage.getMemberNo());
+        
+        int unreadCount = chService.getUnreadMessageCount(chatRoomNoInt, readStatusMessage.getMemberNo());
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("memberNo", readStatusMessage.getMemberNo());
+        response.put("unreadCount", unreadCount);
+        
         return response;
     }
     
