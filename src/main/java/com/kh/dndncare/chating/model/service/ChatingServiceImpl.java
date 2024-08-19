@@ -52,5 +52,30 @@ public class ChatingServiceImpl implements ChatingService {
 	public List<ChatingRoomMessage> getLatestMessages(int memberNo) {
 		return chMapper.getLatestMessages(memberNo);
 	}
+    @Override
+    public void sendMessage(ChatingRoomMessage message) {
+        int participantCount = chMapper.getParticipantCount(message.getChatRoomNo());
+        message.setReadCount(participantCount - 1);
+        chMapper.insertMessage(message);
+    }
+
+    @Override
+    public void markAsRead(int chatRoomNo, int memberNo) {
+        List<ChatingRoomMessage> unreadMessages = chMapper.getUnreadMessages(chatRoomNo, memberNo);
+        for (ChatingRoomMessage message : unreadMessages) {
+            int newReadCount = message.getReadCount() - 1;
+            chMapper.updateMessageReadCount(message.getChatMassageNo(), newReadCount);
+        }
+    }
+
+    @Override
+    public int getUnreadMessageCount(int chatRoomNo, int memberNo) {
+        return chMapper.getUnreadMessageCount(chatRoomNo, memberNo);
+    }
+    
+    @Override
+    public int getParticipantCount(int chatRoomId) {
+        return chMapper.getParticipantCount(chatRoomId);
+    }
 
 }

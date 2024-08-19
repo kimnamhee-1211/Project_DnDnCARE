@@ -137,6 +137,13 @@ public interface MatchingMapper {
 	
 	int matchingCancelC(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
 
+	ArrayList<Pay> selectPayTransfer2(int memberNo);
+
+	
+	int insertPayTransfer(@Param("loginUser") Member loginUser, @Param("p") Pay p);
+	
+	ArrayList<MatMatptInfo> serviceList(int memberNo);
+
 	int getPtCount(int matNo);
 
 	String getGroupLeader(@Param("matNo") int matNo, @Param("ptNo") int ptNo);

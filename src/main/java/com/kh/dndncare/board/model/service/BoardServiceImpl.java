@@ -7,6 +7,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.dao.BoardMapper;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
@@ -110,6 +111,35 @@ public class BoardServiceImpl implements BoardService {
 	public int replyLikeCount(int rId) {
 		return bMapper.replyLikeCount(rId);
 	}
+
+	@Override
+	public int getCareInfomationListCount(HashMap<String, String> map) {
+		return bMapper.getCareInfomationListCount(map);
+	}
+
+	@Override
+	public ArrayList<Board> selectCareInformation(HashMap<String, String> map, PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return bMapper.selectCareInformation(map, rowBounds);
+	}
+
+	@Override
+	public ArrayList<Attachment> selectAttachment(ArrayList<Board> bList) {
+		return bMapper.selectAttachment(bList);
+	}
+
+	@Override
+	public int updateCareInformationCount(int boardNo) {
+		return bMapper.updateCareInformationCount(boardNo);
+	}
+
+	@Override
+	public ArrayList<Board> searchCareInformation(HashMap<String, String> map, PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return bMapper.searchCareInformation(map, rowBounds);
+	}
+
+
 
 
 	

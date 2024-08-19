@@ -85,7 +85,11 @@
 			</div>
 			<div class="col-3 m-3 p-2 text-center testBorder" >
 				<div class="row m-3 text-center" align="center"><h5>매칭 기록</h5></div>
-				<img style="width:200px;"src="image/icon_PieChart.png"/>
+				<h3 th:if="${serviceList.isEmpty()}">기록이 없습니다.</h3>
+				<div th:unless="${serviceList.isEmpty()}" class="m-3 p-2" style="border-bottom:1px solid #dee2e6" id="count-section">
+					<canvas class="my-4 w-100" id="matchingRecord" width="900" height="250"></canvas>
+						
+				</div>
 			</div>
 			
 			
@@ -275,8 +279,8 @@
 	
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
 	<script th:inline="javascript">
-		
 	
 		const reviewWriteButton = document.getElementById('reviewWriteButton')
 		if(reviewWriteButton){
@@ -387,7 +391,56 @@
 			document.querySelector('#matCan').addEventListener('click', ()=>{
 				location.href = 'matchingCancelP.mc?matNo=' + matNo + '&memberNo=' + memberNo;
 			});
-								
+				
+			// 매칭 통계
+			
+			/*<![CADATA[*/
+			const serviceList = /*[[${serviceList}]]*/'null'
+				/*]]>*/
+			console.log(serviceList)
+			
+			const service = [];
+			for(let i=0; i < serviceList.length; i++){
+				if(serviceList[i].service != null){
+					service.push(serviceList[i].service)
+				}
+			}
+				console.log(service)
+			
+			const serviceCount = [];
+			for(let i=0; i< serviceList.length; i++){
+				serviceCount.push(serviceList[i].serviceCount)
+			}
+				console.log(serviceCount)		
+				
+				
+			const matchingDoughnut = document.getElementById('matchingRecord')
+			const matchingDoughnutChart = new Chart(matchingDoughnut, {
+			    type: 'doughnut',
+			    data: {
+			        labels: service,
+			        datasets: [{
+			            data: serviceCount,
+			            backgroundColor: [ 		
+								'orange', 'skyblue', 'green'
+			            	],
+			            borderColor: [
+			                	'black'
+			                ],
+			            borderWidth: 2
+			        }]
+			    },
+			    options: {
+			        plugins: {
+			            legend: {
+			                display: true,
+			                position: 'right'
+			            },
+			           
+			        }
+			    }
+		});
+		
 		}
 		
 		
@@ -411,15 +464,6 @@
 		
 	</script>
 	
-	<!-- 
-	 랠릿 도메인 알고리즘 김영학 스프링부트강의 시큐어코딩 코딩테스트
-	 -->
-	
-	<!-- 종규 -->
-	<!-- 재영 -->
-	<!--  review pt_no >> patient pt_no
-		  review matching >> mat_no 
-	 -->
 
 
 </body>

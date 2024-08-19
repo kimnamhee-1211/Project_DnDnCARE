@@ -97,10 +97,14 @@
     <div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
     <main class="bg-board-main container p-5">
         <div class="row h-50 p-3">
+
       	  <div class="text-center m-4">
             <h1 class="text-center m-4" style="font-weight: bold;" id="target">로고로고 커뮤니티</h1>
            </div>
             <br><br>
+            <h1 class="text-center" id="target">간병인 커뮤니티</h1>
+            <hr>
+
             <div class="col-md-9 p-4" align="center">
             <!-- 지역 hidden -->
                <form th:action="@{/communityBoardList.bo}" method="get" id="areaForm">

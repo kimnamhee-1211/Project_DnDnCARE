@@ -15,6 +15,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.vo.CalendarEvent;
 import com.kh.dndncare.member.model.vo.CareGiver;
@@ -190,6 +191,14 @@ public interface MemberMapper {
 
 	ArrayList<MatMatptInfo> selectMatListPay(int memberNo);
 
+	int updateImageProfile(@Param("memberNo") String memberNo,@Param("rename") String rename);
+
+	CareGiver selectProfile(String memberNo);
+
+	int deleteMember(int memberNo);
+
+	ArrayList<Pay> selectPayTransfer(int memberNo);
+	
 	int getCountPendingMe(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
 
 }

@@ -52,7 +52,7 @@
 						<table>
 		                    <tr>
 		                        <td><button class="custom-btn btn-14" onclick="location.href='myInfo.me'">내 정보</button></td>
-		                        <td><button class="custom-btn btn-14">간병 정보</button></td>
+		                        <td><button class="custom-btn btn-14" onclick="location.href='careInformation.bo'">간병 정보</button></td>
 		                        <td><button class="custom-btn btn-14">커뮤니티</button></td>
 		                    </tr>
 		                </table>
@@ -143,7 +143,7 @@
 			              <div class="card-body" style="max-height:150px;">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" >
-			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
@@ -471,6 +471,19 @@
         		
         		return year + '-' + month + '-' + day;
         	}
+        	
+        	// 시간계산
+        	const remainCalc = (miseconds) => {
+        		let hours = Number.parseInt(miseconds/3600000);  // 시간 계산
+        		let temp1 = miseconds%3600000; // 시간을 뺀 나머지 계산
+        		let mins = Number.parseInt(temp1/60000); // 분 계산
+        		let temp2 = mins%60000; // 분을 뺀 나머지 계산
+        		let seconds = Number.parseInt(temp2/1000)
+        		
+        		return hours + "시간 " + mins + "분 " + seconds +"초";
+        	}
+        	
+        	
         	// 이벤트 등록
         	request.done(function(data) {
         		console.log(data);
@@ -479,10 +492,13 @@
   		          events : data,
   		          eventColor: '#8dd986',
   		          eventClick: function(info) {
-  		        		let d = new Date(info.event.start - new Date())
-		        	   	let infomation = document.querySelector('.infomation').children;
-		          		console.log(infomation);
-		          		infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + getTimeFormat(d) + '남음';
+	  		          	let mils = info.event.start - new Date()
+	  		        	let infomation = document.querySelector('.infomation').children;
+	  		        	if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
+	  		        		infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남';
+	  		        	} else { // 이벤트 날짜가 미래인 경우
+	  		        		infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '남음';
+	  		        	}
 						infomation[2].innerHTML = '병원명이 들어올 자리';
 		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
 		          		
