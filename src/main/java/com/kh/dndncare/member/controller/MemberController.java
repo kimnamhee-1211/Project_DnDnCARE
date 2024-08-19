@@ -1,7 +1,9 @@
 package com.kh.dndncare.member.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -13,6 +15,8 @@ import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -44,6 +49,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
@@ -69,6 +75,8 @@ public class MemberController {
 
 	@Autowired
 	private BCryptPasswordEncoder bCrypt;
+	
+	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
 	@GetMapping("loginView.me")
 	public String loginView() {
@@ -275,7 +283,7 @@ public class MemberController {
 	@PostMapping("login.me")
 	public String login(@ModelAttribute Member m, Model model, RedirectAttributes ra) {
 		Member loginUser = mService.login(m);
-
+		
 		if (bCrypt.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
 			model.addAttribute("loginUser", loginUser);
 
@@ -648,7 +656,7 @@ public class MemberController {
 			}
 			
 			if(i < 6) {
-				matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
+				//matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
 			}else if(i < 12) {
 				matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
 			}else if(i < 18) {
@@ -691,7 +699,20 @@ public class MemberController {
 		//현재 매칭중인 pt정보
 		//ArrayList<MatMatptInfoPt> matConfirmPt = mService.getMatConfirmPt();
 		
-	
+		//종규 결제대금 받기 추가함  ↓
+		
+		ArrayList<Pay> pArr = mService.selectPayTransfer(loginUser.getMemberNo()); 	///matNo를 전부 가져와야한다.왜냐? 공동간병 거래한사람도 있을꺼잖아
+		System.out.println("페이정보" + pArr);
+		int money = 0;
+		if(!pArr.isEmpty()) {
+			for(Pay p : pArr) {
+				money += p.getPayMoney();
+			}
+		}
+		//종규 결제대금 받기       ↑
+		model.addAttribute("money",money);
+		model.addAttribute("pArr",pArr);
+		
 		return "caregiverMain";
 	}
 	
@@ -751,7 +772,7 @@ public class MemberController {
 			LocalDate today = LocalDate.now();
 			Double avgReviewScore = mService.avgReviewScore2(c.getMemberNo());
 			c.setAvgReviewScoreDouble(avgReviewScore);
-			System.out.println("리뷰점수 확인하기 : " + c.getAvgReviewScoreDouble());
+			//ystem.out.println("리뷰점수 확인하기 : " + c.getAvgReviewScoreDouble());
 			
 			c.setAge(Period.between(birthDateParsed, today).getYears());
 			//System.out.println(c);
@@ -2506,14 +2527,17 @@ public class MemberController {
 	@GetMapping("socialLogin.me")
 	public String socialLogin(@RequestParam("code") String code,HttpSession session,Model model,RedirectAttributes ra) {
 		//소셜로그인 없으면 회원가입으로, 있으면 로그인 바로하게 하기
-		System.out.println(code);
+		//System.out.println(code);
 		Member m = mService.selectSocialLogin(code); //loginUser
 		if(m == null) {		//검사해서 없으면 회원가입창으로
 			session.setAttribute("code", code);
+			
+			
+			
 			return "redirect:enroll1View.me";
 		}else {				//검사해서 있으면 바로 로그인하기
 			model.addAttribute("loginUser", m);
-
+			logger.info("소셜 로그인 아이디 : " +  m.getMemberId());
 			if (m.getMemberCategory().equalsIgnoreCase("C")) {
 				ra.addAttribute("memberNo", m.getMemberNo());
 
@@ -2530,7 +2554,91 @@ public class MemberController {
 		
 	}
 	
+	@GetMapping("profileImageUpdate.me")
+	public String profileImageUpdate(HttpSession session, Model model) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+		System.out.println(cg);
+		
+		model.addAttribute("cg",cg);
+		return "profileImageUpdate";
+	}
 	
+	@PostMapping("updateImage.me")
+	public String updateImageProfile(@RequestParam("files") MultipartFile files,@RequestParam("memberNo")String memberNo ) {
+		//1.사진이 없으면 새로 넣어야한다
+		//2.사진이 있으면 수정을 해야한다
+		//3.사진을 아예 지울수 있어야 한다		
+		
+		System.out.println("이미지 이름3 : " + files.isEmpty());
+		System.out.println(files.getOriginalFilename());
+		System.out.println("이미지 이름2 : " + files.toString());
+		
+		String rename = null;
+		CareGiver cg = mService.selectProfile(memberNo);
+		System.out.println(cg);
+		if(cg != null) {
+			deleteFile(cg.getCareImg());
+		}
+		if(!files.isEmpty()) {	//파일 추가했을때
+			
+			rename = saveProfileImage(files);	//새 이름으로 파일 생성완료
+			
+			
+		}else {					//파일 삭제했을때
+			
+		}
+		
+		
+		//care img dB접근하자
+		
+		int result = mService.updateImageProfile(memberNo,rename);
+		
+		if(result>0) {
+			return "deleteWindow";
+		}else {
+			throw new MemberException("프로필 저장이 실패했습니다");
+		}
+		
+		
+		
+		
+	}
+	
+	//프로필 파일 추가하기
+	public String saveProfileImage(MultipartFile file) {
+		
+		String renamePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		int ranNum = (int)(Math.random()*100000);
+		String originFileName = file.getOriginalFilename();
+		String renameFileName = sdf.format(new java.util.Date()) + ranNum+ originFileName.substring(originFileName.lastIndexOf("."));		
+		
+		
+		try {
+			file.transferTo(new File(renamePath + renameFileName));
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return renameFileName;
+	}
+	
+	//프로필 파일 삭제하기
+	public void deleteFile(String fileName) {
+		String savePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		File f = new File(savePath +fileName);
+		if(f.exists()) {
+			f.delete();
+		}
+	}
 	
 	@GetMapping("nn.me")
 	public String nn() {
@@ -2541,6 +2649,44 @@ public class MemberController {
 		
 		return "login";
 	}
+	
+	@PostMapping("deleteMember.me")
+	public String deleteMember(@RequestParam("password") String password,HttpSession session,HttpServletResponse response) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		if (bCrypt.matches(password, loginUser.getMemberPwd())) {
+			int result = mService.deleteMember(loginUser.getMemberNo());
+			
+			if(result>0) {
+				try {
+					response.setContentType("text/html; charset=UTF-8");
+					response.getWriter().write("<script> alert('계정 탈퇴 성공');</script>");
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return "redirect:home.do";
+			}else {
+				throw new MemberException("탈퇴 오류");
+			}
+		}else {
+			try {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().write("<script> alert('비밀번호가 맞지 않습니다');</script>");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return "deleteMember";
+		}
+	}
+	
+	@GetMapping("deleteMemberView.me")
+	public String deleteMemberView() {
+		return "deleteMember";
+	}
+	
 	
 }//클래스 끝
 

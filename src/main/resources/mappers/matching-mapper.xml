@@ -383,7 +383,8 @@
 			#{loginUser.memberPhone},
 			#{loginUser.memberEmail},
 			#{p.merchantUid},
-			#{p.payService}
+			#{p.payService},
+			'Y'
 		)
 	</insert>
 	<select id="selectMatDate" resultType="String">
@@ -495,6 +496,29 @@
 			and member_no = #{memberNo}		
 	</delete>
 
+	<!-- 간병인 결제 대금 받기 -->
+	<select id="selectPayTransfer2" resultType="Pay">
+		select *
+		from pay
+		where mat_no in(select mat_no
+						from matching 
+						where member_no = #{memberNo}) and pay_deposit = 'N'
+	</select>	
 
-
+	<!-- 간병인 결제 대금 받기 -->
+	<insert id="insertPayTransfer">
+		insert into pay values(
+			seq_pay.nextval,
+			#{p.matNo},
+			#{loginUser.memberNo},
+			sysdate,
+			#{p.payMoney},
+			#{loginUser.memberName},
+			#{loginUser.memberPhone},
+			#{loginUser.memberEmail},
+			#{p.merchantUid},
+			#{p.payService},
+			'N'
+		)
+	</insert>
 </mapper>

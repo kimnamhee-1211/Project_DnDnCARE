@@ -243,8 +243,8 @@ public class MatchingServiceImpl implements MatchingService {
 	public MatMatptInfo selecMatPtInfo(int matNo, int memberNo) {
 		return mMapper.selecMatPtInfo(matNo,memberNo);
 	}
-	public MatMatptInfo selecMatching(int matNo) {
-		return mMapper.selecMatching(matNo);
+	public MatMatptInfo selectMatching(int matNo) {
+		return mMapper.selectMatching(matNo);
 	}
 
 
@@ -338,6 +338,20 @@ public class MatchingServiceImpl implements MatchingService {
 	@Override
 	public int matchingCancelC(int matNo, int memberNo) {
 		return mMapper.matchingCancelC(matNo, memberNo);
+	}
+
+	//간병인 결제 금액 받기 jg
+	@Override
+	public ArrayList<Pay> selectPayTransfer(int memberNo) {
+		
+		return mMapper.selectPayTransfer2(memberNo);
+	}
+
+
+	//간병인  결제 금액 받기 jg 2 
+	@Override
+	public int insertPayTransfer(Member loginUser, Pay p) {
+		return mMapper.insertPayTransfer(loginUser,p);
 	}
 
 

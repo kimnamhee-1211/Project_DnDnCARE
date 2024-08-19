@@ -26,4 +26,9 @@ public interface ChatingService {
 
 	List<ChatingRoomMessage> getLatestMessages(int memberNo);
 
+	void sendMessage(ChatingRoomMessage message);
+    void markAsRead(int chatRoomNo, int memberNo);
+    int getUnreadMessageCount(int chatRoomNo, int memberNo);
+    int getParticipantCount(int chatRoomId);
+
 }
