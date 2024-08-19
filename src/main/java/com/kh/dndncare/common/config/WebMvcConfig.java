@@ -11,9 +11,10 @@ import com.kh.dndncare.common.interceptor.CheckLoginInterceptor;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer{
 	
+	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		// 임시 경로로 테스트 수행 후 공유 폴더로 변경할 것
+		// 임시 경로로 테스트 수행 후 공유 폴더로 변경할 것																				//종규 프로필 추가
 		registry.addResourceHandler("/**").addResourceLocations("file:///c:/uploadFinalFiles/", "classpath:static/", "file://192.168.40.37/sharedFolder/dndnCare/","file://192.168.40.37/sharedFolder/dndnCare/profile/");  
 		WebMvcConfigurer.super.addResourceHandlers(registry);
 	}
