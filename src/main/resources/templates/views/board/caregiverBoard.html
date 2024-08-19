@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-    @font-face {
+   @font-face {
     font-family: 'Pretendard-Regular';
     src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
     font-weight: 400;
@@ -16,15 +16,15 @@
 	}
 	
     .hidden { display: none; }
-    .text-primary { color: #66cc66; }
     .text-primary:hover { color: #55aa55; }
-    .badge-primary { background-color: orange; }
+    .badge-primary { background-color: #FCDAB7; }
     
     .btn-outline-area {
     color: black;
-    border: 4px solid #8DD986;
-    border-radius:15px; 
+    border: 1px solid #1E5F74;
+    border-radius:10px; 
     width: 80px;
+    margin : 10px 0;
     
 	}
 	
@@ -32,25 +32,34 @@
 	.btn-outline-area:active, 
 	.btn-outline-area:focus, 
 	.btn-outline-area.active {
-	    color: black; 
-	    background-color: #8DD986;
-	    border-color: #8DD986;
+	    color: black; /* 텍스트 색상 */
+	    background-color: white; /* 배경색 */
+	    border: 3px solid #1E5F74;
+    	border-radius:10px; 
 	}
 	
 	.btn-check:checked + .btn-outline-area {
     color: black;
-    background-color: #8DD986;
-    border-color: #8DD986;
+	background-color: white; /* 배경색 */
+	border: 3px solid #1E5F74;
     font-weight: bold;
+    box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+  						7px 7px 20px 0px rgba(0,0,0,.1),
+  						4px 4px 5px 0px rgba(0,0,0,.1);
 }
 
     .btn-write {
 	    height:40px;
 		font-size:18px;
-		border-radius:25px; 
+		font-weight: bold;
+		border-radius:5px; 
 		border:none;
-        background-color: #cdf2c9;
-        color: black;
+        background-color: #1E5F74;
+        color: white;
+        margin : 10px 0;
+        box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+  						7px 7px 20px 0px rgba(0,0,0,.1),
+  						4px 4px 5px 0px rgba(0,0,0,.1);
     }
     .bg-board-main{
     	background: white;
@@ -60,7 +69,7 @@
     	border: 0;
     	border-style:solid;
     	border-color: #cdf2c9;
-    	border-radius:25px; 
+    	border-radius:15px; 
     }
     .bh-area-list{
     	background-color: white;
@@ -79,21 +88,8 @@
         width:60px;
     }
     
-	
-	hr{
-		border: 0; 
-		height: 4px;
-		background-color: #8DD986;
-		margin: 20px 0; 
-	}
-	
-	.sidebar-section{
-		border: 0;
-		background-color: #8DD986;
-	}
-	
+    .text-dark{text-decoration: none;}
 
-    
    
 </style>
 </head>
@@ -101,10 +97,10 @@
     <div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
     <main class="bg-board-main container p-5">
         <div class="row h-50 p-3">
-            <h1 class="text-center" id="target">간병인 커뮤니티</h1>
-            <button class="btn btn-primary" onclick="openChatPopup()">Open Chat</button>
-            <br>
-            <hr>
+      	  <div class="text-center m-4">
+            <h1 class="text-center m-4" style="font-weight: bold;" id="target">로고로고 커뮤니티</h1>
+           </div>
+            <br><br>
             <div class="col-md-9 p-4" align="center">
             <!-- 지역 hidden -->
                <form th:action="@{/communityBoardList.bo}" method="get" id="areaForm">
@@ -138,6 +134,7 @@
 				    <label class="btn-outline-area btn-sm me-2" for="jeju">제주</label>
 				    <input type="checkbox" class="btn-check" id="gyeongi" name="area" value="8" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 8)}">
+				           				           				     <br> 
 				    <label class="btn-outline-area btn-sm me-2" for="gyeongi">경기도</label>
 				    <input type="checkbox" class="btn-check" id="gangwon" name="area" value="9" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 9)}">
@@ -178,7 +175,7 @@
                         </tr>
                     </thead>
                     <tbody align="center">
-                        <tr class="table-light" th:each="b:${list}" th:if="${list != null}">
+                        <tr class="table" th:each="b:${list}" th:if="${list != null}">
                             <td th:text="${b.boardNo}">1</td>
                                 <td th:text="${b.categoryName}">카테고리</td>
                                 <td>
@@ -197,30 +194,12 @@
                 </table>
 			</div>
 		
-                <hr>
+              
+
                 <!-- 페이지네이션 -->
-                <div class="d-flex justify-content-end align-items-center mb-5">
-                    <nav aria-label="Standard pagination example">
-                        <ul class="pagination mb-3" th:with="loc=${loc}">
-                            <li class="page-item">
-                                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage-1})}" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li class="page-item" th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}">
-                                <a class="page-link" th:href="@{${loc}(page=${p})}">[[${ p }]]</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage+1})}" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="d-flex justify-content-center align-items-center mb-5">
-				    <div class="input-group" style="width: 70%;">
-				        <form id="searchBoardForm" action="searchBoard.bo" method="get" class="d-flex w-100">
+                <div class="d-flex justify-content-end align-items-center m-5">
+                	<div class="input-group" style="width: 70%;">
+                		<form id="searchBoardForm" action="searchBoard.bo" method="get" class="d-flex w-100">
 				            <select id="searchType" name="searchType" class="form-select form-select-sm" aria-label="Small select example" style="max-width: 15%;">
 				                <option th:value="boardTitle" selected>제목</option>
 				                <option th:value="memberNickName">작성자</option>
@@ -229,12 +208,31 @@
 				            <input id="searchText" name="searchText" type="text" class="form-control" aria-label="Text input with dropdown buttons" style="max-width: 65%;">
 				            <button class="btn btn-outline-secondary" type="button" id="searchBtn" th:onclick="searchBoard()">검색</button>
 				        </form>
-				    </div>
-				</div>
+				    </div>               
+	                <div class="d-flex justify-content-end align-items-center">
+	                    <nav aria-label="Standard pagination example">
+	                        <ul class="pagination" th:with="loc=${loc}" style="margin:auto 0;color:black;">
+	                            <li class="page-item">
+	                                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage-1})}" aria-label="Previous">
+	                                    <span aria-hidden="true" style="color:black;">&laquo;</span>
+	                                </a>
+	                            </li>
+	                            <li class="page-item" th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}">
+	                                <a class="page-link" th:href="@{${loc}(page=${p})}" style="color:black;">[[${ p }]]</a>
+	                            </li>
+	                            <li class="page-item">
+	                                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage+1})}" aria-label="Next">
+	                                    <span aria-hidden="true" style="color:black;">&raquo;</span>
+	                                </a>
+	                            </li>
+	                        </ul>
+	                    </nav>
+                    </div>
+                </div>
 
                 <br>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 p-4">
             	<th:block th:if="${session.loginUser !=null}">
                    	<button type="button" class="btn-write w-100"  th:onclick="location.href='writeBoard.bo'">글쓰기</button>
                    </th:block>
@@ -244,27 +242,24 @@
 				        <ul class="list-group">
 				            <li class="list-group-item fs-5 fw-bold">간병인 게시판</li>
 				            <li class="list-group-item"><a href="#" class="text-dark" onclick="selectCategory(-1)">전체글보기</a></li>
-				            <hr/>
 				            <li class="list-group-item fs-5 fw-bold">공지사항</li>
 				            <li class="list-group-item"><a href="#" class="text-dark" onclick="selectCategory(0)">공지사항</a></li>
-				            <hr/>
 				            <li class="list-group-item fs-5 fw-bold">자유게시판</li>
 				            <li class="list-group-item"><a href="#" class="text-dark" onclick="selectCategory(1)">응원의 한마디</a></li>
 				            <li class="list-group-item"><a href="#" class="text-dark" onclick="selectCategory(2)">수다방</a></li>
-				            <hr/>
 				            <li class="list-group-item fs-5 fw-bold">똑똑한 간병인 생활</li>
 				            <li class="list-group-item"><a href="#" class="text-dark" onclick="selectCategory(3)">일감찾기 팁</a></li>
 				            <li class="list-group-item"><a href="#" class="text-dark" onclick="selectCategory(4)">자격증 정보</a></li>
 				        </ul>
 				    </div>
 				</div>
-                <hr>
             </div>
             <form th:action="@{/communityBoardList.bo}" method="get" id="filterForm">
 			    <input type="hidden" name="categoryNo" id="categoryNo" value="-1">
 			</form>
             
         </div>
+        <br><br>
     </main>
     <div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 </body>
