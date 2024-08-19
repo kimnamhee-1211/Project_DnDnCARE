@@ -11,7 +11,8 @@
 	height:80px;
 	font-family: 'Pretendard-Regular';	
 	background-color: white !important;
-	border-bottom:solid #8dd986 1px;
+	border-bottom:solid #133b5c 2px;
+	/* box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.2); */
 }
 .nav-item {
 	padding:0 15px 0 15px;

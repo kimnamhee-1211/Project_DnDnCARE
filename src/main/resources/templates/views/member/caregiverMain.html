@@ -22,7 +22,7 @@
 		<div id="upperContents">
 			<div><!-- 왼쪽 공백 --></div>
 			<div id="upperLeftContents">
-				<div><!-- AI 매칭 : 가로 700, 세로 200 -->
+				<div style="max-width:725px; height:480px;"><!-- AI 매칭 : 가로 700, 세로 200 -->
 				<div class="m-2 d-flex justify-content-between">
 					<div class="m-2">[[${loginUserName}]]님. 그동안 일한 금액 [[${money}]]원을 받으실 수 있어요!</div>
 					<div class="m-2"><button class="btn btn-success payButton" onclick="location.href='insertPayTransfer.mc'">[[${money}]]원 받기</button></div>
@@ -60,8 +60,7 @@
                  </tbody>
             </table>
 			</div>
-				<div id="upperContentsBtn" class="align-middle text-center"><!-- 메뉴판 -->
-					<div></div>
+				<div align="center"id="upperContentsBtn" class="align-middle text-center"><!-- 메뉴판 -->
 					<table>
 	                    <tr>
 	                        <td><button class="custom-btn btn-14">내 정보</button></td>
@@ -70,7 +69,7 @@
 	                    </tr>
 	                </table>
 	                <div></div>
-				</div>
+				</div>	
 			</div>
 			<div><!-- 공백 --></div>
 			<div id="calendar"></div>
@@ -85,13 +84,13 @@
 	                
 	        <!-- 남희 좌측 하단 -->
 	        <div><!--매칭정보 : 가로 500, 세로 700-->
-	        	<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
+	        	<div class="d-flex justify-content-between" style="border-bottom:2px solid #1E5F74;">
 					<span style="margin-top:10px;">[[${loginUserName}]]님에게 들어온 매칭 신청</span>
            			<button type="button" class="btn-select">전체 보기</button>
             	</div>
             	<br/>
-	            <table class="table mainTable">
-	                <thead>
+	            <table class="table mainTable matCard">
+	                <thead >
 	                    <tr>
 	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님과의 매칭을 원하는 분들이 있습니다.</th>
 	                    </tr>
@@ -120,17 +119,16 @@
 	        
 	        <!-- 남희 우측 하단 -->
 	        <div id="findWorkList" class="text-center"><!--대상검색 : 가로 700, 세로 700-->
-				<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
+				<div class="d-flex justify-content-between" style="border-bottom:2px solid #1E5F74;">
 					<span style="margin-top:10px;">간병일감을 찾고 계신가요?</span>
            			<button type="button" class="btn-select" onclick="location.href='moreWorkInfo.me'">원하는 간병일감 찾기</button>
 
             	</div>
-            	<br/><br/>
 			    <div id="carouselExampleIndicators" class="carousel slide">
 			  		<div class="carousel-indicators" style="margin-bottom:-40px; ">
-			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;" data-bs-slide-to="0" class="active btn-test" aria-current="true" aria-label="Slide 1"></button>
-			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="1" aria-label="Slide 2"></button>
-			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="2" aria-label="Slide 3"></button>
+			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#133B5C; width:25px;height:25px; border-radius: 50%;" data-bs-slide-to="0" class="active btn-test" aria-current="true" aria-label="Slide 1"></button>
+			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#133B5C; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="1" aria-label="Slide 2"></button>
+			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#133B5C; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="2" aria-label="Slide 3"></button>
 			  		</div>
 					<div class="carousel-inner">					
 						<div class="carousel-item active" th:if="${matMatptInfoPtList1 != null}">
@@ -308,7 +306,7 @@
 		</div>     
    	 </div>
     
-    
+    <div class="m-5"></div>
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     
@@ -389,6 +387,31 @@
     		return hours + "시간 " + mins + "분 " + seconds +"초";
     	}
     	
+    	//종규 삽입
+    	
+    	function calenderEdit(){
+    		const dateTitle = document.getElementById('fc-dom-1')
+    		dateTitle.style.color = '#1E5F74';
+    		dateTitle.style.fontWeight = 'bold';
+    		
+    		const bts = document.getElementsByClassName('fc-button');
+    		const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
+    		
+    		const cala = cal.querySelectorAll('a');
+    		for(i in cala){
+    			if(i % 7 == 0){
+    				console.log(i);
+    			cala[i].style.color = 'red';
+    			}else if(i % 7 == 6){
+    				cala[i].style.color = '$0a58ca';
+    			}else{
+    				cala[i].style.color = '#1D2D50';
+    			}
+    		}
+    	} 
+    	
+    	//종규 삽입 끝
+    	
     	
     	request.done(function(data) {
     		console.log(data);
@@ -416,6 +439,7 @@
 	        	  }
 		        });
 		        calendar.render();
+		        calenderEdit();
     	}) 
   	});
 	/*]]>*/
