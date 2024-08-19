@@ -1,11 +1,16 @@
 package com.kh.dndncare.admin.controller;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
@@ -55,9 +60,90 @@ public class AdminController {
 	@GetMapping("careInformation.adm")
 	public String careInformation(@RequestParam(value="page", defaultValue="1") int currentPage, Model model,
 									HttpServletRequest request) {
+		// 로그 파일 : 페이지 이용량을 조회 (시작)
+		File usageFolder = new File("C:/logs/dndnCare/careInformationUsage/");
+		File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+		
+		TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
+		try { 
+			for(File f : usageFileList) {
+				BufferedReader br = new BufferedReader(new FileReader(f));
+				String data;
+				while((data=br.readLine())!=null) {
+					// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
+					String date = data.split(" ")[0];
+					if(usageMap.containsKey(date)) { // map에 해당 날짜의 key가 존재하는 경우
+						usageMap.put(date, usageMap.get(date) + 1);
+					} else { // map에 해당 날짜의 key가 존재하지 않는 경우
+						usageMap.put(date, 1);
+					}
+				}
+				br.close();
+			}
+			model.addAttribute("usage", usageMap);
+		} catch(Exception e) {
+			e.printStackTrace();
+		} 
+		// 로그 파일 : 페이지 이용량을 조회 (끝)
+			
+		// 로그 파일 : 최근 일주일 검색어 조회 (시작)	
+		File searchFolder = new File("C:/logs/dndnCare/careInformation/");
+		File[] searchFileList = searchFolder.listFiles();
+		//System.out.println(Arrays.toString(searchFileList));
+		//[C:\logs\dndnCare\careInformation\careInformation.log, C:\logs\dndnCare\careInformation\careInformation.log.20240816]
+		
+		// 최근 일주일의 날짜에 접근
+		Calendar c = GregorianCalendar.getInstance();
+		int year = c.get(Calendar.YEAR); // 2024
+		int month = c.get(Calendar.MONTH) + 1; // 7 + 1 == 8 (0부터 시작)
+		String realMonth = month < 10 ? "0"+month : month+""; // 08
+		int date = c.get(Calendar.DATE); // 18
+		String now = year + realMonth + date; // 20240818
+		int nowInteger = Integer.parseInt(now);
+		
+		// 일주일전 날짜를 20240811 로 출력하기
+		c.set(year, month, date-7); 
+		int agoYear = c.get(Calendar.YEAR);
+		int agoMonth = c.get(Calendar.MONTH);
+		String agoRealMonth = agoMonth < 10 ? "0"+agoMonth : agoMonth+"";
+		int agoDate = c.get(Calendar.DATE);
+		String ago = agoYear + agoRealMonth + agoDate; // 20240811
+		int agoInteger = Integer.parseInt(ago);
+		
+		TreeMap<String, Integer> searchMap = new TreeMap<String, Integer>(); // key(검색어), value(횟수)
+		//TreeMap<Integer, String> searchMap2 = new TreeMap<Integer, String>();
+		try {
+			for(File f : searchFileList) {
+				String[] fileName = f.getName().split("log.");
+				// log를 기준으로 자른 배열의 길이가 1인 경우 : fileName.length == 1)
+				// log를 기준으로 자른 배열의 길이가 2인 경우 : Integer.parseInt(fileName[1]) >= agoInteger
+				if(fileName.length == 1 ||  Integer.parseInt(fileName[1]) >= agoInteger) {
+					BufferedReader br = new BufferedReader(new FileReader(f));
+					String data;
+					while((data = br.readLine())!=null) {
+						String[] arr = data.split(" ");
+						String search = arr[arr.length - 1]; // 검색어
+						
+						if(searchMap.containsKey(search)) {
+							searchMap.put(search, searchMap.get(search) + 1);
+						} else {
+							searchMap.put(search, 1);
+						}
+					}
+					br.close();
+				}
+			}
+			
+			model.addAttribute("search", searchMap);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		// 로그 파일 : 검색어 조회 (끝)	
+		
+		
 		// 페이징처리된 게시글 목록 조회 : BoardLimit == 7 (**가정**)
 		int listCount = aService.getCareInformationListCount();
-		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 7);
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 7, 5);
 		ArrayList<Board> bList = aService.selectAllCareInformation(pi); // 이래도 되나?
 		ArrayList<Integer> bNoList = new ArrayList<Integer>();
 		for(Board b : bList) {
@@ -81,10 +167,18 @@ public class AdminController {
 
 	// 간병백과 작성 페이지로 이동
 	@GetMapping("writeCareInformationPage.adm")
-	public String writeCareInformation(HttpSession session) {
+	public String writeCareInformation(HttpSession session, Model model,
+										@RequestParam("labels") ArrayList<String> labels,
+										@RequestParam("data") ArrayList<String> data) {
+		System.out.println(labels); // [이건없어, 아아, test-m-p20]
+		System.out.println(data); // [19, 5, 3]
+		
+		
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		if (loginUser != null) {
 			if (loginUser.getMemberCategory().equals("A")) {
+				model.addAttribute("labels", labels);
+				model.addAttribute("data", data);
 				return "writeCareInformation";
 			} else {
 				throw new MemberException("관리자로 로그인 후 이용해주세요.");
@@ -130,12 +224,12 @@ public class AdminController {
 						}
 					}
 					
-					String copyName = copyNameCreate(); // 첨부파일명(확장자가 없음)을 생성한다.
-					renameName = copyName + "." + type; // 첨부파일명 + ".확장자"를 DB에 저장할 리네임으로 지정한다.
-					ImageUtil.base64ToFile(copyName, b64);  // 첨부파일명과 암호화된 이미지src를 전달한다.
+					String copyName = copyNameCreate(); 				// 첨부파일명(확장자가 없음)을 생성한다.
+					renameName = copyName + "." + type; 				// 첨부파일명 + ".확장자"를 DB에 저장할 리네임으로 지정한다.
+				ImageUtil.base64ToFile(copyName, b64);  				// 첨부파일명과 암호화된 이미지src를 전달한다.
 					
 					if(content.contains(b64)) {
-						content = content.replace(b64, renameName); // HTML의 암호화부분을 "첨부파일명.확장자"로 바꾸어 둔다. (View에서 출력하기 편리하게 하기 위함)
+						content = content.replace(b64, renameName); 	// HTML의 암호화부분을 "첨부파일명.확장자"로 바꾸어 둔다. (View에서 출력하기 편리하게 하기 위함)
 					}
 					Attachment a = new Attachment();
 					a.setRenameName(renameName); // 첨부파일에 대한 리네임을 명시한다.

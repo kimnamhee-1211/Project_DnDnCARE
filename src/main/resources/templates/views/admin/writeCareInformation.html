@@ -24,8 +24,14 @@
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 				<div id="writeContainer">
 					<div id="writeContents">
-						<div style="background:orange;">
-							로그파일 읽어들일 자리
+						<br/>
+						<div class="alert alert-warning" role="alert">
+							<h3>서비스 제공이 필요한 주제</h3>
+							<th:block th:each="s : ${labels}">
+								<th:block th:each="d : ${data}">
+									<span class="badge rounded-pill bg-warning text-dark fs-6" th:if="${sStat.index == dStat.index}">[[${s}]]([[${d}]]회 검색요청)</span>&nbsp;
+								</th:block>
+							</th:block>
 						</div>
 						<br/>
 						<div class="h-100 p-5 bg-light border rounded-3">

@@ -493,11 +493,12 @@ public class MemberController {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
 				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
+			} else if(choice[i].contains(" ")){
+				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
 				choiceNoList.add(Integer.parseInt(choice[i]));
 			}
 		} // [2, 5, 8, 10, 14] 
-//			
 		// 7. View로 전달한 결과값만 추리기
 		// 이름, 성별, 나이, 지역, 질환, 금액, 매칭번호, 멤버번호
 		ArrayList<Patient> completeList = mService.choicePatientList(choiceNoList);
@@ -656,7 +657,7 @@ public class MemberController {
 			}
 			
 			if(i < 6) {
-				//matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
+				matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
 			}else if(i < 12) {
 				matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
 			}else if(i < 18) {
@@ -2045,9 +2046,7 @@ public class MemberController {
 		HashMap<String, String> infoMap =  mService.getPatientMyInfo(memberNo); 
 					//{연령=40, 국적=내국인, 키=180, 몸무게=79, 주소=서울 동대문구 망우로 82 202호777, 성별=여성}
 		
-		
 		System.out.println("인포맵 : " + infoMap);
-		
 		
 		if(Integer.parseInt(String.valueOf(infoMap.get("연령"))) < 0 ) {
 			infoMap.put("연령", (Integer.parseInt(infoMap.get("연령").toString() + 100)) + "");
@@ -2056,8 +2055,6 @@ public class MemberController {
 		ArrayList<HashMap<String, String>> myExpList = mService.getPatientMyExp(memberNo); 
 //		[{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=섬망, L_CATEGORY=disease}, 
 //			{S_CATEGORY=경증, L_CATEGORY=diseaseLevel}]
-
-		
 		
 		ArrayList<HashMap<String, String>> myWantList = mService.getCaregiverMyWant(memberNo); // 마이페이지에서 선택적으로 입력
 		
@@ -2127,12 +2124,10 @@ public class MemberController {
 		condition.put("address", myAddress);
 		condition.put("selectNum", selectNum*2);
 		ArrayList<HashMap<String, Object>> cList = mService.selectCaregiverList(condition); // 길이 : 0~10 // **프롬프트**
-		//[{연령=58, 국적=내국인, 최소요구금액=10000, 주소=서울 강북구 삼양로22길 4 102호, 성별=남성, 회원번호=49},
 		
 		if(cList.isEmpty()) { // 조건에 맞는 후보 환자가 없을 땐 null로 넘겨야 한다.
 			return null;
 		}
-		
 		
 		ArrayList<Integer> mNoList = new ArrayList<Integer>();
 		for(HashMap<String,Object> m : cList) {
@@ -2145,7 +2140,6 @@ public class MemberController {
 		
 		
 		ArrayList<HashMap<String, Object>> cExpList = mService.selectCaregiverInfo(mNoList);
-//		[{S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=55}, {S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=15}, {S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=54}, {S_CATEGORY=가정돌봄, L_CATEGORY=service, MEMBER_NO=15}, {S_CATEGORY=치매, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=치매, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=욕창, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=하반신 마비, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=와상 환자, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=15}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=55}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=의식 없음, L_CATEGORY=disease, MEMBER_NO=54}, {S_CATEGORY=중증, L_CATEGORY=diseaseLevel, MEMBER_NO=55}, {S_CATEGORY=중증, L_CATEGORY=diseaseLevel, MEMBER_NO=54}, {S_CATEGORY=경증, L_CATEGORY=diseaseLevel, MEMBER_NO=15}]
 		
 		// ArrayList<HashMap<String, Object>> promptCaregiverList 에 담아야함
 		
@@ -2190,15 +2184,17 @@ public class MemberController {
 						+ "환자의 정보를 바탕으로 가장 적절한 회원번호 " + selectNum + "개만 숫자로만 짧게 대답해줘.";
 		
 		// 6. 프롬프트를 전달하고 결과값 받아오기
-		String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
-		System.out.println("GPT가 추천한 매칭번호 : " + result); //83, 82, 57, 85, 14, 46, 23, 22, 79, 84.
+		String result = botController.chat(prompt); 
+		System.out.println("GPT가 추천한 매칭번호 : " + result); 
 		String[] choice = result.split(", "); 
-		System.out.println("GPT가 추천한 매칭번호의 스플릿 : " + Arrays.toString(choice)); // [90, 42, 83, 50, 23, 82, 85, 57, 14, 79.]
+		System.out.println("GPT가 추천한 매칭번호의 스플릿 : " + Arrays.toString(choice)); 
 		ArrayList<Integer> choiceNoList = new ArrayList<Integer>();
 		for(int i = 0; i < choice.length; i++) {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
 				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
+			} else if(choice[i].contains(" ")){
+				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
 				choiceNoList.add(Integer.parseInt(choice[i]));
 			}
