@@ -239,3 +239,46 @@ body {
 	z-index : 10;
 }
 
+/* 별*/
+
+.btn-icon-star-review{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 140px 140px;
+	padding:0px;
+	margin-left:0px;
+	margin-top:-1px;
+	color:red;
+	background-repeat: no-repeat;
+	z-index:1;
+	min-width:32px;	
+	min-height:32px;	
+}
+
+.btn-icon-star-review-half{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 140px 140px;
+	padding:0px;
+	margin-left:0px;
+	margin-top:-1px;
+	background-repeat: no-repeat;
+	max-width:17px;
+	min-height:32px;
+}
+
+.icon-star-review{
+	background-image:url(../image/icon_star.svg);
+	background-size: 140px 140px;
+	padding:0px;
+	width:32px; height:32px;
+}
+
+.btn-star{
+	background: transparent;
+	border:0px solid black;
+	width:20px;
+	height:20px;
+	padding:0;
+	margin-left:0px;
+	margin-right:-1.5px;
+	background-repeat: no-repeat;
+}
