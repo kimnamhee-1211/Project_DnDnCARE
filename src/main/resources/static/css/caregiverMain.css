@@ -20,11 +20,13 @@ body { font-family: 'Pretendard-Regular'; background-color:white; color: #333; }
 /* #cardDiv {display:grid; grid-template-columns: 350px 350px; grid-template-rows: 200px;} */
 /* #findWorkList {border: 2px solid black;} */
 #upperContentsBtn {display:grid; grid-template-columns: 1fr 600px 1fr;grid-template-rows: 180px;}
-#myPresentMatching { 
-    position:fixed; top:80%; left:85%; 
-    border : 3px solid green; border-radius:20px;
-    background: #8dd986;
-    font-size: 18px;
+#myPresentMatching {
+	width:175px;
+    position:fixed; top:25%; left:85%; 
+    border : 3px solid #133B5C; border-radius:15px;
+    background: #white;
+    font-size: 20px;
+    cursor:pointer;
 }
 
 /* 대빵 버튼 */
