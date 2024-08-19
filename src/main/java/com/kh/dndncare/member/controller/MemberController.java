@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
@@ -615,46 +616,57 @@ public class MemberController {
 			memberNo = loginUser.getMemberNo();
 			System.out.println(memberNo);
 			System.out.println("전");
-			ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
+			//ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
 			System.out.println(memberNo);
 			System.out.println("후");
-			System.out.println(completeList);
-			model.addAttribute("completeList", completeList);
+			//System.out.println(completeList);
+			//model.addAttribute("completeList", completeList);
 		}
 				
 		
 		//남희 - 환자정보 불러오기
 		//MatMatptInfoPt 18개 뽑기 
-		ArrayList<MatMatptInfoPt> matMatptInfoPtListBefore = mService.getMatMatptInfoPt(loginUser.getMemberNo());		
+		ArrayList<MatMatptInfoPt> matMatptInfoPtListBefore = mService.getMatMatptInfoPt(loginUser.getMemberNo());
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList1 = new ArrayList<MatMatptInfoPt>();
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList2 = new ArrayList<MatMatptInfoPt>();
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList3 = new ArrayList<MatMatptInfoPt>();
-		
-		for(int i = 0; i < matMatptInfoPtListBefore.size(); i++) {
-			//나이 계산
-			int ptRealAge = AgeCalculator.calculateAge(matMatptInfoPtListBefore.get(i).getPtAge());
-			matMatptInfoPtListBefore.get(i).setPtRealAge(ptRealAge);
-			
-			//노출 주소
-			String[] addr = matMatptInfoPtListBefore.get(i).getMatAddressInfo().split("//");			
-			String[] addressMin = addr[1].split(" ");
-			String addressMinStr = addressMin[0] + " " + addressMin[1]; //00도 00시//
-			matMatptInfoPtListBefore.get(i).setMatAddressMin(addressMinStr);
-			
-			if(matMatptInfoPtListBefore.get(i).getPtCount() > 1) {
-				if(matMatptInfoPtListBefore.get(i).getGroupLeader().equals("N")) {
-					matMatptInfoPtListBefore.remove(i);
-				}
-			}
-			
-			if(i < 6) {
-				matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
-			}else if(i < 12) {
-				matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
-			}else if(i < 18) {
-				matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
-			}			
-					
+
+		Iterator<MatMatptInfoPt> iterator = matMatptInfoPtListBefore.iterator();
+		int count = 0;
+
+		while (iterator.hasNext() && count < 18) {
+		    MatMatptInfoPt matMatptInfoPt = iterator.next();
+		    
+		    // Calculate age
+		    int ptRealAge = AgeCalculator.calculateAge(matMatptInfoPt.getPtAge());
+		    matMatptInfoPt.setPtRealAge(ptRealAge);
+		    
+		    // Process address
+		    String[] addr = matMatptInfoPt.getMatAddressInfo().split("//");
+		    if (addr.length > 1) {
+		        String[] addressMin = addr[1].split(" ");
+		        if (addressMin.length >= 2) {
+		            String addressMinStr = addressMin[0] + " " + addressMin[1];
+		            matMatptInfoPt.setMatAddressMin(addressMinStr);
+		        }
+		    }
+		    
+		    // Check if the element should be removed
+		    if (matMatptInfoPt.getPtCount() > 1 && matMatptInfoPt.getGroupLeader().equals("N")) {
+		        iterator.remove();
+		        continue;
+		    }
+		    
+		    // Add to appropriate list
+		    if (count < 6) {
+		        matMatptInfoPtList1.add(matMatptInfoPt);
+		    } else if (count < 12) {
+		        matMatptInfoPtList2.add(matMatptInfoPt);
+		    } else {
+		        matMatptInfoPtList3.add(matMatptInfoPt);
+		    }
+		    
+		    count++;
 		}
 		
 		if(matPtCount > 0  && matPtName != null) {
@@ -724,8 +736,8 @@ public class MemberController {
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo(); 
-			ArrayList<CareGiver> completeList = openAiCaregiverChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
-			model.addAttribute("completeList", completeList);
+			//ArrayList<CareGiver> completeList = openAiCaregiverChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
+			//model.addAttribute("completeList", completeList);
 		}
 			
 		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--

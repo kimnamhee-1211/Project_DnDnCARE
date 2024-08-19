@@ -277,7 +277,7 @@
 	function updateReadStatus(readerMemberNo) {
 	    const messages = document.querySelectorAll('.message:not(.self) .read-status');
 	    messages.forEach(statusElement => {
-	        statusElement.textContent = '읽음';
+	        statusElement.textContent = '';
 	    });
 	}
 	
