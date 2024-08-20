@@ -254,7 +254,7 @@ a {
 
 .btn-icon-star-review{
 	background-image:url(../image/icon_star2.svg);
-	background-size: 70px 70px;
+	background-size: 60px 60px;
 	padding:0px;
 	margin-left:0px;
 	background-repeat: no-repeat;
@@ -262,7 +262,7 @@ a {
 
 .btn-icon-star-review-half{
 	background-image:url(../image/icon_star2.svg);
-	background-size: 90px 90px;
+	background-size: 60px 60px;
 	padding:0px;
 	margin-left:0px;
 	background-repeat: no-repeat;
@@ -271,7 +271,7 @@ a {
 
 .icon-star-review{
 	background-image:url(../image/icon_star.svg);
-	background-size: 70px 70px;
+	background-size: 60px 60px;
 	padding:0px;
 	width:16px; height:16px;
 }

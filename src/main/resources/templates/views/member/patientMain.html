@@ -140,8 +140,8 @@
 			            <div class="card h-95 w-80">
 			              <div class="card-body" style="max-height:150px;">
 			              	<div class="row m-2">
-			              		<div align="left" class="col-3 test-left" >
-			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="width:60px;">
+			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
@@ -188,13 +188,13 @@
 			            <div class="card h-95 w-80">
 			              <div class="card-body">
 			              	<div class="row m-2">
-			              		<div align="left" class="col-3 test-left" >
+			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
 			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
 				                		<h5 class="card-title">[[${cg[num].memberName}]]님</h5>
-				                		<div th:unless="${cg[num].getAvgReviewScoreDouble !=null}" style="font-size:10px">아직 리뷰가 없어요!</div>
+				                		<div th:unless="${cg[num].getAvgReviewScoreDouble !=null}" style="font-size:10px" >아직 리뷰가 없어요!</div>
 				                		<div th:if="${cg[num].getAvgReviewScoreDouble !=null}" align="center"  class="d-flex justify-content-left" >
 							      			<div align="left"class="icon-star-review">
 												<button th:if="${1 == cg[num].getAvgReviewScoreDouble}" class="btn-star btn-icon-star-review-half"></button>
@@ -236,7 +236,7 @@
 			            <div class="card h-95 w-80">
 			              <div class="card-body">
 			              	<div class="row m-2">
-			              		<div align="left" class="col-3 test-left" >
+			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
 			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >

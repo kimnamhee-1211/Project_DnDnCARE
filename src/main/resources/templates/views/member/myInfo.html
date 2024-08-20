@@ -48,25 +48,30 @@
 		      			<div><button class="myInfo-btn m-2" onclick="location.href='updatePwdView.me'"style="height:50px">비밀번호 변경하기</button></div>
 		      		</div>
 		      		<div class="col"></div>
-		      		<div class="col-3">
-		      			<div  style="margin-left:26px;"align="center"  class="d-flex justify-content-left" >
+		      		<div class="col-3 " >
+		      			<div  style="margin-left:26px;"align="center"  class="m-4 d-flex  justify-content-left" >
 			      			<div align="left"class="icon-star-review">
-								<div align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble > 1}" align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 1}" align="left"class="btn-icon-star-review-half"></div>
 			      			</div>
 			      			<div align="left"class="icon-star-review">
-								<div align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble > 3}" align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 3}" align="left"class="btn-icon-star-review-half"></div>
 			      			</div>
 			      			<div align="left"class="icon-star-review">
-								<div align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble > 5}" align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 5}" align="left"class="btn-icon-star-review-half"></div>
 			      			</div>
 			      			<div align="left"class="icon-star-review">
-								<div align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble > 7}" align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 7}" align="left"class="btn-icon-star-review-half"></div>
 			      			</div>
 			      			<div align="left"class="icon-star-review">
-								<div align="left"class="btn-icon-star-review-half"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble > 9}" align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 9}" align="left"class="btn-icon-star-review-half"></div>
 			      			</div>
 		    			</div>
-		      			<img src="image/icon_score.png"/>
+		    			<div class="h2">내 후기 점수 <br>[[${cg.getAvgReviewScoreDouble == null ? '0' : 'cg.getAvgReviewScoreDouble'}]]</div>
 		      		</div>
 		      		<div  class="col-3 m-2 d-flex align-items-center m-2">
 		      			<div><button class="myInfo-btn" style="height:120px">일감 찾기</button></div>

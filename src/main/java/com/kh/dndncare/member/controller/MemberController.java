@@ -135,7 +135,11 @@ public class MemberController {
 			switch (check) {
 			case 'C':
 				CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+				Double avgReviewScore = mService.avgReviewScore2(cg.getMemberNo());
+				cg.setAvgReviewScoreDouble(avgReviewScore);
+				System.out.println(cg.getAvgReviewScoreDouble());
 				model.addAttribute("cg", cg);
+				
 				return "myInfo";
 
 			case 'P':
@@ -2182,22 +2186,18 @@ public class MemberController {
 
 	
 	@PostMapping("careGiverUpdate.me")
-	public String updateCareGiver(@ModelAttribute Member m,@ModelAttribute CareGiver cg,HttpSession session, @RequestParam("memInfo") String memInfo) {
+	public String updateCareGiver(@ModelAttribute Member m,@ModelAttribute CareGiver cg,HttpSession session, @RequestParam("memInfo") String memInfo,Model model) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
 		m.setMemberNo(loginUser.getMemberNo());
 		cg.setMemberNo(loginUser.getMemberNo());
 		
-		System.out.println(m);
-		System.out.println(cg);
-		System.out.println(memInfo);
 		int result = mService.updateCareGiver(cg);	//간병인정보바꾸기
 		int result4 = mService.updateMemberVer2(m); //간병인은 같은 페이지에서 이름,나이,성별 세가지만 따로 바로 바꿀수있다!
 
 		if(result==0 || result4 ==0) {
 			throw new MemberException("에러!");
 		}
-		
 		
 		if(!memInfo.equals("fail")) {
 			
@@ -2212,6 +2212,10 @@ public class MemberController {
 			}
 			
 		}
+		Member m2 = mService.login(loginUser);
+		System.out.println("q변경ㅎ두절ㅇ"+m2);
+		//session.setAttribute("loginUser", m2);
+		model.addAttribute("loginUser", mService.login(m2));
 		return "redirect:home.do";
 		
 	};
