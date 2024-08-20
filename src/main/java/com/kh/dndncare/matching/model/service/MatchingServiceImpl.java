@@ -369,6 +369,11 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.serviceList(memberNo);
 	}
 
+	@Override
+	public ArrayList<Matching> matPatientList(int memberNo) {
+		return mMapper.matPatientList(memberNo);
+	}
+
 
 
 
