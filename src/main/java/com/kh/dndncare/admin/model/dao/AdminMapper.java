@@ -1,7 +1,9 @@
 package com.kh.dndncare.admin.model.dao;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
@@ -50,6 +52,12 @@ public interface AdminMapper {
 	int getSearchMemberListCount(HashMap<String, String> map);
 
 	ArrayList<Member> searchMembers(HashMap<String, String> map, RowBounds rowBounds);
+
+	int updateMembers(HashMap<String, Object> map);
+
+	String getMemberAge(int memberNo);
+
+	ArrayList<HashMap<String, Object>> getEnrollCount(HashMap<String, Integer> map);
 
 
 }

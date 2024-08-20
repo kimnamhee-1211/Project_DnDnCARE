@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.kh.dndncare.common.interceptor.CheckCareInformationAiSearch;
 import com.kh.dndncare.common.interceptor.CheckCareInformationUsage;
+import com.kh.dndncare.common.interceptor.CheckLoginUser;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer{
@@ -28,6 +29,12 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		
 		registry.addInterceptor(new CheckCareInformationUsage())
 				.addPathPatterns("/careInformation.bo");
+		
+		// 로그인에 성공시 요청을 가로챌 인터셉터를 등록한다.
+		registry.addInterceptor(new CheckLoginUser())
+				.addPathPatterns("/login.me");
+		
+		
 		
 		WebMvcConfigurer.super.addInterceptors(registry);
 	}

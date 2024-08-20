@@ -137,6 +137,30 @@
 		ORDER BY MEMBER_CREATE_DATE DESC
 	</select>
 	
+	<update id="updateMembers">
+		UPDATE MEMBER
+		SET ${column} = #{data}
+		WHERE MEMBER_NO = ${memberNo}
+	</update>
+	
+	<select id="getMemberAge" resultType="string">
+		SELECT TO_CHAR(MEMBER_AGE, 'YYYY-MM-DD')
+		FROM MEMBER
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
+	
+	<select id="getEnrollCount" resultType="map">
+		SELECT TO_DATE(MEMBER_CREATE_DATE, 'YYYY-MM-DD') AS DT, COUNT(*) AS CNT
+		FROM MEMBER
+		WHERE TO_DATE(MEMBER_CREATE_DATE, 'YYYY-MM-DD') BETWEEN TO_DATE(SYSDATE - ${begin}, 'YYYY-MM-DD') AND TO_DATE(SYSDATE - ${end}, 'YYYY-MM-DD')
+		GROUP BY TO_DATE(MEMBER_CREATE_DATE, 'YYYY-MM-DD')
+		ORDER BY 1
+	</select>
+	
+	
+	
+	
+	
 	
 	
 	

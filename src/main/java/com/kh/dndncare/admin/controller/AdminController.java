@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
 import com.kh.dndncare.admin.model.exception.AdminException;
 import com.kh.dndncare.admin.model.service.AdminService;
 import com.kh.dndncare.admin.model.vo.Attachment;
@@ -36,7 +36,6 @@ import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -109,7 +108,8 @@ public class AdminController {
 		int agoMonth = c.get(Calendar.MONTH);
 		String agoRealMonth = agoMonth < 10 ? "0"+agoMonth : agoMonth+"";
 		int agoDate = c.get(Calendar.DATE);
-		String ago = agoYear + agoRealMonth + agoDate; // 20240811
+		String agoRealDate = agoDate < 10 ? "0"+agoDate : agoDate+"";
+		String ago = agoYear + agoRealMonth + agoRealDate; // 20240811
 		int agoInteger = Integer.parseInt(ago);
 		
 		TreeMap<String, Integer> searchMap = new TreeMap<String, Integer>(); // key(검색어), value(횟수)
@@ -119,7 +119,7 @@ public class AdminController {
 				String[] fileName = f.getName().split("log.");
 				// log를 기준으로 자른 배열의 길이가 1인 경우 : fileName.length == 1)
 				// log를 기준으로 자른 배열의 길이가 2인 경우 : Integer.parseInt(fileName[1]) >= agoInteger
-				if(fileName.length == 1 ||  Integer.parseInt(fileName[1]) >= agoInteger) {
+				if(fileName.length == 1 ||  Integer.parseInt(fileName[1]) > agoInteger) {
 					BufferedReader br = new BufferedReader(new FileReader(f));
 					String data;
 					while((data = br.readLine())!=null) {
@@ -494,9 +494,119 @@ public class AdminController {
 		model.addAttribute("pi", pi);
 		model.addAttribute("loc", request.getRequestURI());
 		
+		membersGraph(model);
+		
+		
 		return "members";
 	}
 	
+	
+	// 그래프 작업용 메소드를 따로 만들기
+	public void membersGraph(Model model) {
+		// 로그 읽어오기 : C:\logs\dndnCare\loginUser
+		File folder = new File("C:/logs/dndnCare/loginUser");
+		File[] fileList = folder.listFiles();
+		
+		// 2주치의 로그파일을 1주일씩 각각 읽어오기
+		TreeMap<String, Integer> oneWeekAgo = new TreeMap<String, Integer>();
+		TreeMap<String, Integer> twoWeekAgo = new TreeMap<String, Integer>();
+		
+		// 일주일 전의 날짜를 yyyyMMdd로 뽑아내기
+		Calendar now = GregorianCalendar.getInstance();
+		int nowYear = now.get(Calendar.YEAR);
+		int nowMonth = now.get(Calendar.MONTH) + 1;
+		int nowDate = now.get(Calendar.DATE);
+		
+		Calendar oneWeek = GregorianCalendar.getInstance();
+		Calendar twoWeek = GregorianCalendar.getInstance();
+		oneWeek.set(nowYear, nowMonth, nowDate - 7);
+		twoWeek.set(nowYear, nowMonth, nowDate - 14);
+		
+		int oneWeekYear = oneWeek.get(Calendar.YEAR);
+		int oneWeekMonth = oneWeek.get(Calendar.MONTH);
+		String oneWeekRealMonth = oneWeekMonth < 10 ? "0" + oneWeekMonth : oneWeekMonth + "";
+		int oneWeekDate = oneWeek.get(Calendar.DATE);
+		String oneWeekRealDate = oneWeekDate < 10 ? "0" + oneWeekDate : oneWeekDate + "";
+		
+		int twoWeekYear = twoWeek.get(Calendar.YEAR);
+		int twoWeekMonth = twoWeek.get(Calendar.MONTH);
+		String twoWeekRealMonth = twoWeekMonth < 10 ? "0" + twoWeekMonth : twoWeekMonth + "";
+		int twoWeekDate = twoWeek.get(Calendar.DATE);
+		String twoWeekRealDate = twoWeekDate < 10 ? "0" + twoWeekDate : twoWeekDate + "";
+		
+		String oneWeekFormat = oneWeekYear + oneWeekRealMonth + oneWeekRealDate;
+		Integer oneWeekInteger = Integer.parseInt(oneWeekFormat);
+		String twoWeekFormat = twoWeekYear + twoWeekRealMonth + twoWeekRealDate;
+		Integer twoWeekInteger = Integer.parseInt(twoWeekFormat);
+		
+		// 파일명의 형식 => careInformation.log, careInformation.log.20240816
+		try {
+			for(File f : fileList) {
+				String fileName = f.getName();
+				String[] nameArr = fileName.split(".log");
+				
+				BufferedReader br = new BufferedReader(new FileReader(f));
+				
+				if(nameArr.length == 1 || Integer.parseInt(nameArr[1]) > oneWeekInteger) {
+					// 최근 일주일치의 로그파일들
+					String read;
+					while((read = br.readLine()) != null) {
+						//24-08-20 13:55:78 [INFO] c.k.d.c.i.CheckLoginUser.postHandle - test-m-a
+						String date = read.split(" ")[0];
+						if(oneWeekAgo.containsKey(date)) {
+							oneWeekAgo.put(date, oneWeekAgo.get(date) + 1);
+						} else {
+							oneWeekAgo.put(date, 1);
+						}
+					} // if문 (끝)
+				} else if(Integer.parseInt(nameArr[1]) > twoWeekInteger) {
+					// 14일 이전 ~ 7일 이전까지의 로그파일들
+					String read;
+					while((read = br.readLine()) != null) {
+						//24-08-20 13:55:78 [INFO] c.k.d.c.i.CheckLoginUser.postHandle - test-m-a
+						String date = read.split(" ")[0];
+						if(twoWeekAgo.containsKey(date)) {
+							twoWeekAgo.put(date, twoWeekAgo.get(date) + 1);
+						} else {
+							twoWeekAgo.put(date, 1);
+						}
+					}
+				} // else if문 (끝)
+				
+				br.close();
+			}
+			
+			model.addAttribute("oneWeekAgo", oneWeekAgo);
+			model.addAttribute("twoWeekAgo", twoWeekAgo);
+			
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		// 가입자 수 조회
+		HashMap<String, Integer> oneWeekOption = new HashMap<String, Integer>();
+		oneWeekOption.put("begin", 6);
+		oneWeekOption.put("end", 0);
+		
+		HashMap<String, Integer> twoWeekOption = new HashMap<String, Integer>();
+		twoWeekOption.put("begin", 13);
+		twoWeekOption.put("end", 7);
+		
+		ArrayList<HashMap<String, Object>> oneWeekEnroll = aService.getEnrollCount(oneWeekOption);
+		ArrayList<HashMap<String, Object>> twoWeekEnroll = aService.getEnrollCount(twoWeekOption);
+		// [{DT=0024-08-14 00:00:00.0, CNT=3}, {DT=0024-08-20 00:00:00.0, CNT=3}, {DT=0024-08-16 00:00:00.0, CNT=1}, {DT=0024-08-19 00:00:00.0, CNT=6}]
+		
+		for(HashMap<String, Object> m : oneWeekEnroll) {
+			m.put("DT", String.valueOf(m.get("DT")).split(" ")[0].substring(2)); // [{DT=24-08-14, CNT=3}, {DT=24-08-16, CNT=1}, {DT=24-08-19, CNT=6}, {DT=24-08-20, CNT=3}]
+		}
+		
+		for(HashMap<String, Object> m : twoWeekEnroll) {
+			m.put("DT", String.valueOf(m.get("DT")).split(" ")[0].substring(2)); 
+		}
+		
+		model.addAttribute("oneWeekEnroll", oneWeekEnroll);
+		model.addAttribute("twoWeekEnroll", twoWeekEnroll);
+	}
 	
 	// 전체 회원 목록 조회 요청
 	@GetMapping("allMembers.adm")
@@ -518,6 +628,8 @@ public class AdminController {
 		model.addAttribute("mList", mList);
 		model.addAttribute("pi", pi);
 		model.addAttribute("loc", request.getRequestURI());
+		
+		membersGraph(model);
 		
 		return "members";
 	}
@@ -556,11 +668,65 @@ public class AdminController {
 		
 	}
 	
+	// 회원의 상태와 카테고리를 변경 요청
+	@PostMapping("updateMembers.adm")
+	@ResponseBody
+	public String updateMembers(@RequestParam("memberNo") int memberNo, @RequestParam("column") String column, 
+								@RequestParam("data") String data) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("memberNo", memberNo);
+		map.put("data", data);
+		// 확장성을 고려하여 switch문으로 작성
+		switch(column) {
+		case "status": map.put("column", "MEMBER_STATUS"); break;
+		case "category" : map.put("column", "MEMBER_CATEGORY"); break;
+		case "MEMBER_AGE":  
+			Calendar c = GregorianCalendar.getInstance();
+			int year = c.get(Calendar.YEAR); // 현재년도
+			String memberAge = aService.getMemberAge(memberNo); // yyyy-MM-dd의 포맷으로 조회한다.
+			int month = Integer.parseInt(memberAge.split("-")[1]);
+			int day = Integer.parseInt(memberAge.split("-")[2]);
+			
+			c.set(year - Integer.parseInt(data), month, day);
+			
+			map.put("data", new Date(c.getTimeInMillis()));
+			map.put("column", column);
+			
+			break; // data를 덮어씀으로써 DB에 적합하게 가공해야 한다.
+		default: map.put("column", column);
+		}
+		
+		int result = aService.updateMembers(map);
+		
+		return result == 1 ? "success" : "fail";
+	}
 	
-	
-	
-	
-	
+	@PostMapping("selectMemberInfo.adm")
+	@ResponseBody
+	public void selectMemberInfo(@RequestParam("memberNo") int memberNo) {
+		// 어떤 정보를 조회해야하는가? 미쳤네
+//		<간병인 회원가입시 입력사항>
+//		원하는 서비스 (1~3개, 필수)				: MEMBER_INFO
+//		공동간병 매칭서비스 참여여부 (1개, 필수) 	: CAREGIVER
+//		경력기간 (1개, 필수) 					: MEMBER_INFO 
+//		서비스경험 (0~3개, 선택)				: MEMBER_INFO 
+//		돌봄경험 (0~10개, 선택)					: MEMBER_INFO 
+//		자격증 (0~3개, 선택)					: MEMBER_INFO 
+//		적정비용 (최소&최대, 필수)				: CAREGIVER
+//
+//		<환자 회원가입시 입력사항>
+//		이름, 성별, 생년월일 (필수)
+//		원하는 서비스 (1~3개, 필수)				: MEMBER_INFO 
+//		서비스받을 주소 (필수)					: PATIENT
+//		보유질환 (0~10개, 선택)					: MEMBER_INFO 
+//		키	(필수)							: PATIENT
+//		몸무게  (필수)							: PATIENT
+		
+		
+		
+		
+	}
 	
 	
 	

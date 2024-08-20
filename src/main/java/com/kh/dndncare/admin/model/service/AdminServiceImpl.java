@@ -1,7 +1,9 @@
 package com.kh.dndncare.admin.model.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +118,21 @@ public class AdminServiceImpl implements AdminService{
 	public ArrayList<Member> searchMembers(HashMap<String, String> map, PageInfo pi) {
 		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
 		return aMapper.searchMembers(map, rowBounds);
+	}
+
+	@Override
+	public int updateMembers(HashMap<String, Object> map) {
+		return aMapper.updateMembers(map);
+	}
+
+	@Override
+	public String getMemberAge(int memberNo) {
+		return aMapper.getMemberAge(memberNo);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Object>> getEnrollCount(HashMap<String, Integer> map) {
+		return aMapper.getEnrollCount(map);
 	}
 
 }

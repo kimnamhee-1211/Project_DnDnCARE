@@ -1,7 +1,9 @@
 package com.kh.dndncare.admin.model.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
@@ -47,6 +49,12 @@ public interface AdminService {
 	int getSearchMemberListCount(HashMap<String, String> map);
 
 	ArrayList<Member> searchMembers(HashMap<String, String> map, PageInfo pi);
+
+	int updateMembers(HashMap<String, Object> map);
+
+	String getMemberAge(int memberNo);
+
+	ArrayList<HashMap<String, Object>> getEnrollCount(HashMap<String, Integer> map);
 
 
 
