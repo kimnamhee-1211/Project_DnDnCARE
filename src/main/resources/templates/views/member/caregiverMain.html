@@ -62,9 +62,9 @@
 				<div align="center"id="upperContentsBtn" class="align-middle text-center"><!-- 메뉴판 -->
 					<table>
 	                    <tr>
-	                        <td><button class="custom-btn btn-14">내 정보</button></td>
+	                        <td><button class="custom-btn btn-14" onclick="location.href='myInfo.me'">내 정보</button></td>
 	                        <td><button class="custom-btn btn-14" id="careInformation" onclick="location.href='careInformation.bo'">간병 정보</button></td>
-	                        <td><button class="custom-btn btn-14">커뮤니티</button></td>
+	                        <td><button class="custom-btn btn-14" onclick="location.href='communityBoardList.bo'">커뮤니티</button></td>
 	                    </tr>
 	                </table>
 	                <div></div>
@@ -377,43 +377,6 @@
     		return year + '-' + month + '-' + day;
     	}
     	
-    	// 시간계산
-    	const remainCalc = (miseconds) => {
-    		let hours = Number.parseInt(miseconds/3600000);  // 시간 계산
-    		let temp1 = miseconds%3600000; // 시간을 뺀 나머지 계산
-    		let mins = Number.parseInt(temp1/60000); // 분 계산
-    		let temp2 = mins%60000; // 분을 뺀 나머지 계산
-    		let seconds = Number.parseInt(temp2/1000)
-    		
-    		return hours + "시간 " + mins + "분 " + seconds +"초";
-    	}
-    	
-    	//종규 삽입
-    	
-    	function calenderEdit(){
-    		const dateTitle = document.getElementById('fc-dom-1')
-    		dateTitle.style.color = '#1E5F74';
-    		dateTitle.style.fontWeight = 'bold';
-    		
-    		const bts = document.getElementsByClassName('fc-button');
-    		const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
-    		
-    		const cala = cal.querySelectorAll('a');
-    		for(i in cala){
-    			if(i % 7 == 0){
-    				console.log(i);
-    			cala[i].style.color = 'red';
-    			}else if(i % 7 == 6){
-    				cala[i].style.color = '$0a58ca';
-    			}else{
-    				cala[i].style.color = '#1D2D50';
-    			}
-    		}
-    	} 
-    	
-    	//종규 삽입 끝
-    	
-    	
     	request.done(function(data) {
     		console.log(data);
     		var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -421,15 +384,12 @@
 		          events : data,
 		          eventColor: '#8dd986',
 		          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
-		        	  let mils = info.event.start - new Date();
+		        	  let d = info.event.start - new Date();
 		        	  let infomation = document.querySelector('.infomation').children;
-		        	  if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
-		        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남';
-		        	  } else { // 이벤트 날짜가 미래인 경우
+		        	  
 		        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '남음';
-		        	  }
-					infomation[2].innerHTML = '병원명이 들어올 자리';
-	          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
+						infomation[2].innerHTML = '병원명이 들어올 자리';
+		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
 	          		
 	          		let infoDetail = document.querySelector('.infoDetail').children;
 	          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
@@ -440,7 +400,6 @@
 	        	  }
 		        });
 		        calendar.render();
-		        calenderEdit();
     	}) 
   	});
 	/*]]>*/

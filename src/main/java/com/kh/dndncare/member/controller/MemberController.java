@@ -1280,7 +1280,9 @@ public class MemberController {
 		                reviewList.put(reviewsInfo.getReviewNo(), selectReviewList);
 		                
 		            }
-				System.out.println("lll"+reviewList);
+				System.out.println("+++++++++++++++");
+				System.out.println(list);
+				System.out.println("+++++++++++++++");
 				
 				model.addAttribute("list", list);
 				
