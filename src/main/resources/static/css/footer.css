@@ -18,7 +18,7 @@
     flex-shrink: 0;
     height: auto; /* 높이를 자동으로 조정 */
     min-height: 100px; /* 최소 높이 설정 */
-    border-top:solid #8dd986 1px;
+    border-top:solid #133B5C 2px;
 }
 
 .inner {
@@ -72,7 +72,7 @@
     margin-bottom: 14px;  /* 15px에서 줄임 */
     text-decoration:underline;
     text-underline-offset:7px;
-    text-decoration-color:#8dd986;
+    text-decoration-color:#133B5C;
 }
 
 .footer-column p {
