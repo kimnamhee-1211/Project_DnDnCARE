@@ -540,8 +540,13 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.selectPayTransfer(memberNo);
 	}
 	public int getCountPendingMe(int matNo, int memberNo) {
-		// TODO Auto-generated method stub
 		return mMapper.getCountPendingMe(matNo, memberNo);
+	}
+
+	//공동간병 참여중인 환자수
+	@Override
+	public int getCountPt(int matNo) {
+		return mMapper.getCountPt(matNo);
 	}
 
 }

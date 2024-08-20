@@ -205,4 +205,6 @@ public interface MemberMapper {
 	
 	int getCountPendingMe(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
 
+	int getCountPt(int matNo);
+
 }

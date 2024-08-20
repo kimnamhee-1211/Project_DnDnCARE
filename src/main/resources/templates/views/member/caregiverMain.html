@@ -178,6 +178,7 @@
 	                       						<img th:if="${mat.ptCount > 1}"  src="image/icon/users.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='병원돌봄'}" src="image/icon/hospital.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='가정돌봄'}"  src="image/icon/home.png"/>
+	                       						<span>[[${mat.service}]]</span>
 	                      					</h6>
 	                      					<p class="card-text">
 	                       						<span>[[${mat.beginDt}]]</span>
@@ -213,6 +214,7 @@
 	                       						<img th:if="${mat.ptCount > 1}"  src="image/icon/users.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='병원돌봄'}" src="image/icon/hospital.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='가정돌봄'}"  src="image/icon/home.png"/>
+	                       						<span>[[${mat.service}]]</span>
 	                      					</h6>
 	                      					<p class="card-text">
 	                       						<span>[[${mat.beginDt}]]</span>

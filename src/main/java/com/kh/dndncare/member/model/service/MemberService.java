@@ -208,6 +208,8 @@ public interface MemberService {
 	
 	int getCountPendingMe(int matNo, int memberNo);
 
+	int getCountPt(int matNo);
+
 
 
 }
