@@ -131,7 +131,7 @@
 	      		</div>
 
 	      		<div class="col m-2" >
-		      		<div class="col m-2" th:if="${list} == null">
+		      		<div class="col m-2" th:if="${list.isEmpty()}">
 		      				<h2 align="center">작성한 후기가 없습니다.</h2>
 	      			</div>
 	      			<div class="col m-2" th:each="r:${list}" th:unless="${list} == null" ><!-- 실제 데이터 넣고 for문 돌리기  -->

@@ -769,6 +769,8 @@
 		from care_review cr
 		    join patient p on(p.pt_no = cr.pt_no)
 		where cr.member_No = #{memberNo}
+		
+		
 	</select>
 	
 	<!-- 월간 점수 -->
@@ -801,9 +803,9 @@
 	
 	<!-- 후기 작성 유무 -->
 	<select id="selectReviewYn" resultType="_int">
-		select count(*)
+		select count(review_no)
 		from care_review
-		where mat_no = #{matNo} and pt_no = #{ptNo}
+		where mat_no = #{matNo} and pt_no = #{ptNo} and review_status='Y'
 	</select>
 	
 	<select id="avgReviewScore2" resultType="Double">

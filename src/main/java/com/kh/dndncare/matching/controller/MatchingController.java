@@ -676,7 +676,7 @@ public class MatchingController {
 			Date today = new Date(age);
 				// 이미 로그된 matNo인지 확인
 			    if (!loggedMatNos.contains(strMatNo)) {
-			       String logInfo = matPatientInfoList.getMatNo() + "//" + matPatientInfoList.getAge() + "//" + matPatientInfoList.getMemberGender() + "//" + matPatientInfoList.getSCategory() + "+" + matPatientInfoList.getMemberNo();
+			       String logInfo = matPatientInfoList.getMatNo() + "//" + matPatientInfoList.getAge() + "//" + matPatientInfoList.getMemberGender() + "//" + matPatientInfoList.getSCategory() + "//" + matPatientInfoList.getMemberNo();
 			       System.out.println("로그에 저장할 정보"+logInfo);
 			        
 			        logger.info(logInfo);
@@ -765,7 +765,7 @@ public class MatchingController {
 	
 	//후기 작성
 	@PostMapping("writeReview.mc")
-	public String insertReview(@RequestParam("memberNo") int memberNo, @RequestParam(value="reviewScore", defaultValue = "10") int reviewScore, @RequestParam(value="matNo",required = false) int matNo , @RequestParam("reviewContent") String reviewContent, HttpSession session) {
+	public String insertReview(@RequestParam("memberNo") int memberNo, @RequestParam(value="reviewScore", defaultValue = "10") int reviewScore, @RequestParam(value="matNo",required = false) int matNo , @RequestParam("reviewContent") String reviewContent, HttpSession session, RedirectAttributes ra) {
 		int loginUserNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		int ptNo = mcService.getPtNo(loginUserNo);
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -785,7 +785,7 @@ public class MatchingController {
 		System.out.println("후기작성데이터"+map);
 		int result = mcService.insertReview(map);
 		if(result>0) {
-			return "myInfoMatchingReview.me";
+			return "redirect:myInfoMatchingReview.me";
 		}else {
 			throw new MatchingException("후기 작성 실패");
 		}

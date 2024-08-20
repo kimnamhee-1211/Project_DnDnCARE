@@ -1200,17 +1200,24 @@ public class MemberController {
 					System.out.println("매칭이력"+mciList);
 					System.out.println("=======================");
 					ArrayList<CareReview> reviewList = mService.reviewList(ptNo);
+					
 					int reviewYn = 0;
-					for(MatMatptInfo i : mciList) {
-						i.setBeforeDate(currentDate.isBefore(i.getBeginDt().toLocalDate()));
-						i.setAfterDate(currentDate.isAfter(i.getEndDt().toLocalDate()));
-						reviewYn= mService.selectReviewYn(i.getMatNo(), ptNo);
-						i.setReviewYn(reviewYn);
-						if(i.getMatDate()!=null) {
-							String matDatearr[] = i.getMatDate().split(",");
+						for(MatMatptInfo i : mciList) {
+							i.setBeforeDate(currentDate.isBefore(i.getBeginDt().toLocalDate()));
+							i.setAfterDate(currentDate.isAfter(i.getEndDt().toLocalDate()));
+							reviewYn= mService.selectReviewYn(i.getMatNo(), ptNo);
+							i.setReviewYn(reviewYn);
+							System.out.println("매칭번호");
+							System.out.println(i.getMatNo());
+							System.out.println("환자번호");
+							System.out.println(i.getPtNo());
+							System.out.println("리뷰유무");
+							System.out.println(i.getReviewYn());
+							System.out.println("=========================");
+							if(i.getMatDate()!=null) {
+								String matDatearr[] = i.getMatDate().split(",");
+							}
 						}
-						System.out.println(i);
-					}
 					ArrayList<MatMatptInfoPt> monthPatient = mService.useMonth(ptNo);
 					
 					if(monthPatient != null) {
@@ -1218,6 +1225,9 @@ public class MemberController {
 					}
 					model.addAttribute("reviewList",reviewList);
 					model.addAttribute("mciList",mciList);
+					System.out.println("=========================");
+					System.out.println(mciList);
+					System.out.println("=========================");
 					model.addAttribute("today", LocalDate.now());
 					return "myInfoMatchingHistoryP";
 				case 'A': return null;
