@@ -88,7 +88,7 @@
 	      		
 	      		
 	      		<div class="row m-4">
-	      			<div class="row m-2" th:each="c:${cList}"><!-- 실제 데이터 넣고 for문 돌리기  -->
+	      			<div class="row m-2" th:if="${!cList.isEmpty()}" th:each="c:${cList}"><!-- 실제 데이터 넣고 for문 돌리기  -->
 						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
 							<div class="m-1 d-flex justify-content-between">
 								<div class="h5 m-1">[[${c.ptName}]]님의 후기</div>
@@ -124,6 +124,9 @@
 						
 	      			</div>
 	      		
+	    	</div>
+	    	<div th:if="${cList.isEmpty()}" align="center">
+	    		<h2>아직 작성된 후기가 없습니다.</h2>
 	    	</div>
     	</div>
 	

@@ -532,7 +532,7 @@
 	
 	<!-- 통계용 매칭 환자 정보 -->
 	<select id="matPatientList" resultType="Matching">
-		select mc.mat_no, mc.begin_dt, mc.end_dt, mc.mat_confirm, p.pt_age, m.member_gender, listagg(cn.s_category, ', ') within group (order by cn.s_category) s_category, mc.member_no
+		select mc.mat_no, mc.begin_dt, mc.end_dt, mc.mat_confirm, p.pt_age, p.pt_gender, listagg(cn.s_category, ', ') within group (order by cn.s_category) s_category, mc.member_no
 		from matching mc
 		    left join mat_pt_info mpi on(mc.mat_no = mpi.mat_no)
 		    left join patient p on(p.pt_no = mpi.pt_no)
@@ -540,7 +540,7 @@
 		    left join member_info mi on(m.member_no = mi.member_no)
 		    left join info_category cn on(mi.category_no = cn.category_no)
 		where mc.member_no=#{memberNo} and l_category = 'disease' and sysdate > end_dt
-		group by mc.mat_no, mc.begin_dt, mc.end_dt, mc.mat_confirm, p.pt_age, m.member_gender, mc.member_no
+		group by mc.mat_no, mc.begin_dt, mc.end_dt, mc.mat_confirm, p.pt_age, p.pt_gender, mc.member_no
 		order by mc.mat_no
 	</select>
 	
@@ -548,7 +548,7 @@
 	<select id="getPtCount" resultType="_int">
 		select pt_count
 		from matching
-		where mat_no = #{matNo};	
+		where mat_no = #{matNo}	
 	</select>
 
 	

@@ -803,7 +803,7 @@
 	<select id="selectReviewYn" resultType="_int">
 		select count(*)
 		from care_review
-		where mat_no = #{matNo} and pt_no = #{ptNo}
+		where mat_no = #{matNo} and pt_no = #{ptNo} and review_status='Y'
 	</select>
 	
 	<select id="avgReviewScore2" resultType="Double">

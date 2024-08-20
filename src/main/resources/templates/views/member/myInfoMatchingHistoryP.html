@@ -56,13 +56,31 @@
 							
 								<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6" id="count-section">
 									<canvas class="my-4 w-100" id="useMonthCount" width="900" height="250"></canvas>
-										
+									<div>
+										<table align="center" class="table table-bordered boarder-dark">
+											
+											<tr>
+												<th id="lastSixMonthsTable"></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+											</tr>
+											
+										</table>
+									</div>
 								</div>
 								
 								<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6; display:none" id="pay-section">
 									<canvas class="my-4 w-100" id="sumMonthPay" width="900" height="250"></canvas>
-										
+									<div>
+									???????
+									</div>
 								</div>
+								
 							</div>
 						</div>
 						
@@ -119,7 +137,7 @@
 								            <td th:if="${i.isAfterDate && i.matConfirm == 'Y' && i.reviewYn == 0}">
 								                <button class="myInfo-btn btn-sm" onclick="reviewDetail('myInfoMatchingHistoryP')">작성 가능</button>
 								            </td>
-								            <td th:if="${i.reviewYn == 1}">
+								            <td th:if="${i.isAfterDate && i.matConfirm == 'Y' && i.reviewYn != 0}"}>
 								                <button class="myInfo-btn btn btn-warning btn-sm">작성 완료</button>
 								            </td>
 								           
@@ -161,8 +179,14 @@
 		        
 		        lastSixMonths.push(`${year}-${month}`);
 		    }
-	        
-	        
+		    
+		    const lastSixMonthsTableArray = []
+		    lastSixMonthsTable = document.getElementById('lastSixMonthsTable')
+		    for(let i = 0; i<lastSixMonths.length; i++){
+			    lastSixMonthsTableArray.innerHTML = lastSixMonths[i];
+			}
+		    console.log(lastSixMonths[2])
+
 	       
 	        
 		    const counts = lastSixMonths.map(month => {

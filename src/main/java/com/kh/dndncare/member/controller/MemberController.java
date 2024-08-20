@@ -1191,10 +1191,13 @@ public class MemberController {
 						i.setAfterDate(currentDate.isAfter(i.getEndDt().toLocalDate()));
 						reviewYn= mService.selectReviewYn(i.getMatNo(), ptNo);
 						i.setReviewYn(reviewYn);
+						System.out.println(i.getReviewYn());
+						System.out.println("--------------------");
+						System.out.println(i);
+						System.out.println("----------------------");
 						if(i.getMatDate()!=null) {
 							String matDatearr[] = i.getMatDate().split(",");
 						}
-						System.out.println(i);
 					}
 					ArrayList<MatMatptInfoPt> monthPatient = mService.useMonth(ptNo);
 					

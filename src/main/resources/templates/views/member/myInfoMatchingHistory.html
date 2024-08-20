@@ -5,6 +5,12 @@
 <title>Insert title here</title>
 <link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<style>
+	th,td{
+		font-size:18px;
+		text-align: "center"
+	}
+</style>
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
@@ -48,20 +54,104 @@
 	      		<div class="row m-4">
 	      			<div class="col m-3">
 						<div class="myInfo-Border-maincolor mt-2 mb-3" id="statistic-section">
-							<div class="d-flex m-4">
+							<div class="d-flex m-4 justify-content-center" >
 								<div class="h2 myInfo-title" th:if="${!genderCountMap.isEmpty()}">내가 간호한 피간병인 통계
-								
-									<div class="">
-										<canvas class="w-100" id="genderGraph" width="500" height="100">
+									<div class="d-flex justify-content-start">
+										<canvas class="w-100" id="genderGraph" width="100" height="80">
 										</canvas>
 									</div>
-									<hr>
-									<div class="">
-										<canvas class="w-100" id="ageGraph" width="300" height="100"></canvas>
+									<div> 
+										<table align="center" class="table table-bordered boarder-dark">
+											<tr>
+												<th>남자</th>
+												<td>[[${genderCountMap['남자']}]]명</td>
+											</tr>
+											<tr>	
+												<th>여자</th>
+												<td>[[${genderCountMap["여자"]}]]명</td>
+											</tr>
+										</table>
 									</div>
 									<hr>
-									<div class="">
-										<canvas class="w-100" id="categoryGraph" width="100" height="100"></canvas>
+									<div class="d-flex justify-content-center">
+										<canvas class="w-100" id="ageGraph" width="100" height="100"></canvas>
+									</div>
+									<div> 
+										<table align="center" class="table table-bordered boarder-dark">
+											<tr>
+												<th>10대이하</th>
+												<td>[[${ageCountMap['10대이하']}]]명</td>
+											</tr>
+											<tr>	
+												<th>20대</th>
+												<td>[[${ageCountMap['20대']}]]명</td>
+											</tr>
+											<tr>	
+												<th>30대</th>
+												<td>[[${ageCountMap['30대']}]]명</td>
+											</tr>
+											<tr>	
+												<th>40대</th>
+												<td>[[${ageCountMap['40대']}]]명</td>
+											</tr>
+											<tr>	
+												<th>50대</th>
+												<td>[[${ageCountMap['50대']}]]명</td>
+											</tr>
+											<tr>	
+												<th>60대이상</th>
+												<td>[[${ageCountMap['60대이상']}]]명</td>
+											</tr>
+										</table>
+									</div>
+									<hr>
+									<div class="d-flex justify-content-end">
+										<canvas class="w-100" id="categoryGraph" width="250" height="100"></canvas>
+									</div>
+									<div class="categoryTable"> 
+										<table align="center" class="table table-bordered boarder-dark">
+											<tr>
+												<th>석션</th>
+												<th>하반신마비</th>
+												<th>전신마비</th>
+												<th>섬망</th>
+												<th>기저귀케어</th>
+												<th>전염성질환</th>
+												<th>투석</th>
+												<th>욕창</th>
+											</tr>
+											<tr>	
+												<td>[[${categoryCountMap['석션']}]]회</td>
+												<td>[[${categoryCountMap['하반신마비']}]]회</td>
+												<td>[[${categoryCountMap['전신마비']}]]회</td>
+												<td>[[${categoryCountMap['섬망']}]]회</td>
+												<td>[[${categoryCountMap['기저귀케어']}]]회</td>
+												<td>[[${categoryCountMap['전염성질환']}]]회</td>
+												<td>[[${categoryCountMap['투석']}]]회</td>
+												<td>[[${categoryCountMap['욕창']}]]회</td>
+											</tr>
+											<tr>
+												
+												<th>정신질환</th>
+												<th>치매</th>
+												<th>와상환자</th>
+												<th>피딩</th>
+												<th>의식없음</th>
+												<th>장루</th>
+												<th>소변줄</th>
+												<th>파킨슨</th>
+											</tr>
+											<tr>
+												<td>[[${categoryCountMap['정신질환']}]]회</td>
+												<td>[[${categoryCountMap['치매']}]]회</td>
+												<td>[[${categoryCountMap['와상환자']}]]회</td>
+												<td>[[${categoryCountMap['피딩']}]]회</td>
+												<td>[[${categoryCountMap['의식없음']}]]회</td>
+												<td>[[${categoryCountMap['장루']}]]회</td>
+												<td>[[${categoryCountMap['소변줄']}]]회</td>
+												<td>[[${categoryCountMap['파킨슨']}]]회</td>
+											</tr>
+										</table>
 									</div>
 									</div>
 									<div class="h2 myInfo-title" th:if="${genderCountMap.isEmpty()}">아직 간병이력이 없습니다.
@@ -73,7 +163,7 @@
 						<div class="myInfo-Border-maincolor mt-2 mb-3" style="display:none;" id="matchingDayPay-section">
 						
 							<div class="m-2 d-flex justify-content-between">
-								<div class="h3 myInfo-title">월별 근무수익 일수</div>
+								<div class="h3 myInfo-title">월별 근무일수/수익</div>
 									
 							</div>
 							
@@ -85,9 +175,87 @@
 									<div>
 										<canvas class="w-100" id="monthUseCountGraph" width="500" height="100"></canvas>
 									</div>
+									<div>
+										<table class="table table-boarded">
+											<tr>
+												<th>1월</th>
+												<th>2월</th>
+												<th>3월</th>
+												<th>4월</th>
+												<th>5월</th>
+												<th>6월</th>
+											</tr>
+											<tr>
+												<td>[[${monthCountMap['2024-01']}]]일</td>
+												<td>[[${monthCountMap['2024-02']}]]일</td>
+												<td>[[${monthCountMap['2024-03']}]]일</td>
+												<td>[[${monthCountMap['2024-04']}]]일</td>
+												<td>[[${monthCountMap['2024-05']}]]일</td>
+												<td>[[${monthCountMap['2024-06']}]]일</td>
+											<tr>
+											<tr>
+												<th>7월</th>
+												<th>8월</th>
+												<th>9월</th>
+												<th>10월</th>
+												<th>11월</th>
+												<th>12월</th>
+											</tr>
+											<tr>
+												<td>[[${monthCountMap['2024-07']}]]일</td>
+												<td>[[${monthCountMap['2024-08']}]]일</td>
+												<td>[[${monthCountMap['2024-09']}]]일</td>
+												<td>[[${monthCountMap['2024-10']}]]일</td>
+												<td>[[${monthCountMap['2024-11']}]]일</td>
+												<td>[[${monthCountMap['2024-12']}]]일</td>
+											<tr>
+											<tr>
+												<th colspan="6" id="yearUseCount"> </th>
+											</tr>
+										</table>
+									</div>
 									<hr>
 									<div>
 										<canvas class="w-100" id="monthPayCountGraph" width="500" height="100"></canvas>
+									</div>
+									<div>
+										<table class="table table-boarded">
+											<tr>
+												<th>1월</th>
+												<th>2월</th>
+												<th>3월</th>
+												<th>4월</th>
+												<th>5월</th>
+												<th>6월</th>
+											</tr>
+											<tr>
+												<td>[[${monthPayMap['2024-01']}]]원</td>
+												<td>[[${monthPayMap['2024-02']}]]원</td>
+												<td>[[${monthPayMap['2024-03']}]]원</td>
+												<td>[[${monthPayMap['2024-04']}]]원</td>
+												<td>[[${monthPayMap['2024-05']}]]원</td>
+												<td>[[${monthPayMap['2024-06']}]]원</td>
+											<tr>
+											<tr>
+												<th>7월</th>
+												<th>8월</th>
+												<th>9월</th>
+												<th>10월</th>
+												<th>11월</th>
+												<th>12월</th>
+											</tr>
+											<tr>
+												<td>[[${monthPayMap['2024-07']}]]원</td>
+												<td>[[${monthPayMap['2024-08']}]]원</td>
+												<td>[[${monthPayMap['2024-09']}]]원</td>
+												<td>[[${monthPayMap['2024-10']}]]원</td>
+												<td>[[${monthPayMap['2024-11']}]]원</td>
+												<td>[[${monthPayMap['2024-12']}]]원</td>
+											<tr>
+											<tr>
+												<th colspan="6" id="yearPayCount">연간 수익 : </th>
+											</tr>
+										</table>
 									</div>
 							</div>
 						</div>
@@ -297,7 +465,7 @@
 			
 			const categoryDoughnut = document.getElementById('categoryGraph')
 			const categoryDoughnutChart = new Chart(categoryDoughnut, {
-			    type: 'doughnut',
+			    type: 'bar',
 			    data: {
 			        labels: categoryArray,
 			        datasets: [{
@@ -316,17 +484,19 @@
 			    },
 			    options: {
 			        plugins: {
+			        	legend: {
+			                display: false,
+			                position: 'right'
+			            },
 			        	title:{
 			        		text: '질환',
 			        		display: true,
 			        		 font: {
 			                     size: 24 
 			                 }
-			        	},
-			            legend: {
-			                display: true,
-			                position: 'right'
-			            },
+			        	}
+			        	
+			            
 			           
 			        }
 			    }
@@ -364,11 +534,18 @@
 			}
 			
 			const useCountArray = [];
+			let sumCount = 0;
 			for(const useCount of Object.values(monthCountMap)){
 				useCountArray.push(useCount);
 			}
+			for(let i=0; i<useCountArray.length; i++){
+				sumCount += useCountArray[i];
+				console.log(useCountArray[i])
+			}
+			yearUseCount.innerHTML = "연간 이용횟수 : "+sumCount + "일"
 			console.log(monthArray);
-			console.log(useCountArray);
+			console.log(useCountArray[8]);
+			console.log(sumCount);
 			
 			const monthUse= document.getElementById('monthUseCountGraph');
 			const monthUseChart = new Chart(monthUse, {
@@ -404,6 +581,13 @@
 				payCountArray.push(payCount);
 			}
 			
+			let sumPay = 0;
+			
+			for(let j = 0; j<payCountArray.length; j++){
+				sumPay += payCountArray[j]
+			}
+			console.log(sumPay)
+			yearPayCount.innerHTML = '연간 수익 : ' + sumPay + '원'
 			// 월간 수익 그래프
 			
 			const monthPay= document.getElementById('monthPayCountGraph');
