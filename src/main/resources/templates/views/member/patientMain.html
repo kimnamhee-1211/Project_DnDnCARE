@@ -518,13 +518,13 @@
   		          events : data,
   		          eventColor: '#8dd986',
   		          eventClick: function(info) {
-	  		          	let mils = info.event.start - new Date()
-	  		        	let infomation = document.querySelector('.infomation').children;
-	  		        	if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
-	  		        		infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남';
-	  		        	} else { // 이벤트 날짜가 미래인 경우
-	  		        		infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '남음';
-	  		        	}
+  		        		let mils = info.event.start - new Date()
+		        	   	let infomation = document.querySelector('.infomation').children;
+		        	   	if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
+			          		infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남';
+		        	   	} else { // 이벤트 날짜가 미래인 경우
+		        	   		infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '남음';
+		        	   	}
 						infomation[2].innerHTML = '병원명이 들어올 자리';
 		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
 		          		
