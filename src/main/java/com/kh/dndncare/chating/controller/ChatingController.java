@@ -210,12 +210,15 @@ public class ChatingController {
         if (finalChatRoomNo == null) {
             throw new MemberException("채팅방 번호를 가져오는데 실패했습니다.");
         }
-
-        ChatingRoomMessage systemMessage = new ChatingRoomMessage();
-        systemMessage.setChatRoomNo(finalChatRoomNo);
-        systemMessage.setMemberNo(memberNo);  // 시스템 메시지를 나타내는 특별한 memberNo
-        systemMessage.setChatContent("안녕하세요.");
-        chService.saveMessage(systemMessage);
+        int firstChat = chService.getChatCount(finalChatRoomNo);
+        if(firstChat == 0) {
+        	ChatingRoomMessage systemMessage = new ChatingRoomMessage();
+	        systemMessage.setChatRoomNo(finalChatRoomNo);
+	        systemMessage.setMemberNo(memberNo);  // 시스템 메시지를 나타내는 특별한 memberNo
+	        systemMessage.setChatContent("안녕하세요.");
+	        chService.saveMessage(systemMessage);
+        }
+        
         
         model.addAttribute("chatRoomId", finalChatRoomNo);
         model.addAttribute("userId", memberNo);
@@ -231,6 +234,7 @@ public class ChatingController {
         chatMessage.setChatRoomNo(chatRoomId);
         // 채팅방 참여자 수를 조회하여 readCount 설정
         int participantCount = chService.getParticipantCount(chatRoomId);
+        System.out.println(participantCount);
         chatMessage.setReadCount(participantCount - 1);  // 발신자를 제외한 참여자 수
         
         TimeZone koreaTimeZone = TimeZone.getTimeZone("Asia/Seoul");
@@ -285,20 +289,14 @@ public class ChatingController {
         int chatRoomNoInt = Integer.parseInt(chatRoomId);
         int memberNo = readStatusMessage.getMemberNo();
 
-        // 읽음 상태 업데이트
         chService.markAsRead(chatRoomNoInt, memberNo);
 
-        // 채팅방의 모든 메시지에 대한 읽지 않은 수 계산
         List<Map<String, Object>> messageReadCounts = chService.getMessageReadCounts(chatRoomNoInt);
-      
 
-        // 클라이언트에게 전송할 Map 객체 생성
         Map<String, Object> response = new HashMap<>();
         response.put("memberNo", memberNo);
         response.put("messageReadCounts", messageReadCounts);
-        
 
-        // 업데이트된 읽음 상태를 모든 참여자에게 브로드캐스트
         messagingTemplate.convertAndSend("/room/chat/" + chatRoomNoInt + "/read", response);
     }
 

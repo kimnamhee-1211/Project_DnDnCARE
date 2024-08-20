@@ -1,8 +1,10 @@
 package com.kh.dndncare.chating.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,7 +88,15 @@ public class ChatingServiceImpl implements ChatingService {
 
     @Override
     public List<Map<String, Object>> getMessageReadCounts(int chatRoomNo) {
-        return chMapper.getMessageReadCounts(chatRoomNo);
+        List<ChatingRoomMessage> messages = chMapper.getMessagesByChatRoomNo(chatRoomNo);
+        int participantCount = chMapper.getParticipantCount(chatRoomNo);
+        
+        return messages.stream().map(message -> {
+            Map<String, Object> readCountInfo = new HashMap<>();
+            readCountInfo.put("CHAT_MASSAGE_NO", message.getChatMassageNo());
+            readCountInfo.put("READ_COUNT", participantCount - message.getReadCount());
+            return readCountInfo;
+        }).collect(Collectors.toList());
     }
 	@Override
 	public int getPtCount(Integer matNo) {
@@ -113,6 +123,11 @@ public class ChatingServiceImpl implements ChatingService {
 	@Override
 	public List<Integer> getMatMemberNos3(Integer firstPtNo, Integer secondPtNo, Integer thirdPtNo) {
 		return chMapper.getMatMemberNos3(firstPtNo,secondPtNo,thirdPtNo);
+	}
+	@Override
+	public int getChatCount(Integer finalChatRoomNo) {
+		// TODO Auto-generated method stub
+		return chMapper.getChatCount(finalChatRoomNo);
 	}
     
 

@@ -64,6 +64,8 @@ public interface ChatingMapper {
 
 	List<Integer> getMatMemberNos3(@Param("firstPtNo") Integer firstPtNo, @Param("secondPtNo") Integer secondPtNo, @Param("thirdPtNo") Integer thirdPtNo);
 
+	int getChatCount(Integer finalChatRoomNo);
+
 	
  
 }

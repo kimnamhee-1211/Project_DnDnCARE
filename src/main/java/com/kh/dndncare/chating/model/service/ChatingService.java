@@ -48,6 +48,8 @@ public interface ChatingService {
 	List<Integer> getMatMemberNos2(Integer firstPtNo, Integer secondPtNo);
 
 	List<Integer> getMatMemberNos3(Integer firstPtNo, Integer secondPtNo, Integer thirdPtNo);
+
+	int getChatCount(Integer finalChatRoomNo);
     
 
 }

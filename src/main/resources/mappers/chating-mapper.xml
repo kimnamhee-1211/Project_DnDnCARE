@@ -59,7 +59,7 @@
 			select seq_chat_message.nextval from dual
 		</selectKey>
         INSERT INTO chat_room_message (chat_massage_no, chat_room_no, member_no, chat_content, read_count, write_date)
-        VALUES (#{chatMassageNo}, #{chatRoomNo}, #{memberNo}, #{chatContent}, default, sysdate)
+        VALUES (#{chatMassageNo}, #{chatRoomNo}, #{memberNo}, #{chatContent}, #{readCount}, sysdate)
     </insert>
 
     <select id="getMessagesByChatRoomNo" parameterType="int" resultType="ChatingRoomMessage">
@@ -92,8 +92,10 @@
     </select>
     
     <!-- 읽음표시 -->
-    <select id="getParticipantCount" resultType="int">
-        SELECT COUNT(*) FROM chat_room_member WHERE chat_room_no = #{chatRoomNo}
+   <select id="getParticipantCount" resultType="int">
+        SELECT COUNT(*) 
+        FROM chat_room_member 
+        WHERE chat_room_no = #{chatRoomNo}
     </select>
 
     <update id="updateMessageReadCount">
@@ -110,16 +112,33 @@
         WHERE chat_massage_no = #{messageId}
     </select>
     
-        <update id="markMessagesAsRead">
+    <update id="markMessagesAsRead">
         UPDATE chat_room_message
-        SET read_count = read_count - 1
+        SET read_count = (
+            SELECT COUNT(*) 
+            FROM chat_room_member 
+            WHERE chat_room_no = #{chatRoomNo}
+        ) - 1
         WHERE chat_room_no = #{chatRoomNo}
-          AND member_no != #{memberNo}
-          AND read_count > 0
+        AND member_no != #{memberNo}
+        AND read_count > 0
     </update>
+    
+    <select id="getUnreadMessages" resultType="ChatingRoomMessage">
+        SELECT * 
+        FROM chat_room_message
+        WHERE chat_room_no = #{chatRoomNo}
+        AND member_no != #{memberNo}
+        AND read_count > 0
+    </select>
+    
+    <insert id="insertMessageRead">
+        INSERT INTO chat_room_message_read (chat_massage_no, member_no)
+        VALUES (#{chatMessageNo}, #{memberNo})
+    </insert>
 
     
-        <update id="markAsReadAndGetUpdatedMessages">
+      <update id="markAsReadAndGetUpdatedMessages">
         UPDATE chat_room_message
         SET read_count = read_count - 1
         WHERE chat_room_no = #{chatRoomNo}
@@ -157,6 +176,12 @@
     	select member_no
 		from patient
 		where pt_no in(#{firstPtNo},#{secondPtNo},#{thirdPtNo})
+    </select>
+    
+    <select id="getChatCount" resultType="int">
+    	select count(CHAT_MASSAGE_NO)
+		from chat_room_message
+		where chat_room_no = #{finalChatRoomNo}
     </select>
 	
 </mapper>
