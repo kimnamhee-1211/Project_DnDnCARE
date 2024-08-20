@@ -29,12 +29,12 @@ public class ChatingServiceImpl implements ChatingService {
 		return chMapper.insertChatRoom(chatingRoom);
 	}
 	@Override
-	public int insertChatRoomMember(int chatRoomNo, int memberNo, int matMemberNo) {
-		return chMapper.insertChatRoomMember(chatRoomNo,memberNo,matMemberNo);
+	public int insertChatRoomMember(Integer finalChatRoomNo, int memberNo, int relatedMemberNo) {
+		return chMapper.insertChatRoomMember(finalChatRoomNo,memberNo,relatedMemberNo);
 	}
 	@Override
-	public int getChatRoomNo(int matPtNo) {
-		return chMapper.getChatRoomNo(matPtNo);
+	public int getChatRoomNo(Integer relatedMatPtNo) {
+		return chMapper.getChatRoomNo(relatedMatPtNo);
 	}
 	@Override
     public void saveMessage(ChatingRoomMessage message) {
@@ -88,6 +88,32 @@ public class ChatingServiceImpl implements ChatingService {
     public List<Map<String, Object>> getMessageReadCounts(int chatRoomNo) {
         return chMapper.getMessageReadCounts(chatRoomNo);
     }
+	@Override
+	public int getPtCount(Integer matNo) {
+		return chMapper.getPtCount(matNo);
+	}
+	@Override
+	public List<Integer> getMatPtNos(Integer matNo) {
+		return chMapper.getMatPtNos(matNo);
+	}
+	@Override
+	public int insertChatRoomMember2(int finalChatRoomNo, int cMemberNo, Integer firstMemberNo,
+			Integer secondMemberNo) {
+		return chMapper.insertChatRoomMember2(finalChatRoomNo,cMemberNo,firstMemberNo,secondMemberNo);
+	}
+	@Override
+	public int insertChatRoomMember3(int finalChatRoomNo, int cMemberNo, Integer firstMemberNo, Integer secondMemberNo,
+			Integer thirdMemberNo) {
+		return chMapper.insertChatRoomMember3(finalChatRoomNo,cMemberNo,firstMemberNo,secondMemberNo,thirdMemberNo);
+	}
+	@Override
+	public List<Integer> getMatMemberNos2(Integer firstPtNo, Integer secondPtNo) {
+		return chMapper.getMatMemberNos2(firstPtNo,secondPtNo);
+	}
+	@Override
+	public List<Integer> getMatMemberNos3(Integer firstPtNo, Integer secondPtNo, Integer thirdPtNo) {
+		return chMapper.getMatMemberNos3(firstPtNo,secondPtNo,thirdPtNo);
+	}
     
 
 }
