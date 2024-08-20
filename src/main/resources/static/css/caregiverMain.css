@@ -19,12 +19,14 @@ body { font-family: 'Pretendard-Regular'; background-color:white; color: #333; }
 #underContents {display:grid; grid-template-columns:1fr 500px 80px 700px 1fr; grid-template-rows: 700px;}
 /* #cardDiv {display:grid; grid-template-columns: 350px 350px; grid-template-rows: 200px;} */
 /* #findWorkList {border: 2px solid black;} */
-#upperContentsBtn {display:grid; grid-template-columns: 1fr 600px 1fr; grid-template-rows: 250px;}
-#myPresentMatching { 
-    position:fixed; top:80%; left:85%; 
-    border : 3px solid green; border-radius:20px;
-    background: #8dd986;
-    font-size: 18px;
+#upperContentsBtn {display:grid; grid-template-columns: 1fr 600px 1fr;grid-template-rows: 180px;}
+#myPresentMatching {
+	width:175px;
+    position:fixed; top:25%; left:85%; 
+    border : 3px solid #133B5C; border-radius:15px;
+    background: #white;
+    font-size: 20px;
+    cursor:pointer;
 }
 
 /* 대빵 버튼 */
@@ -32,8 +34,8 @@ button {
     margin: 20px;
   }
  .custom-btn {
-    width: 200px;
-    height: 80px;
+    width: 240px;
+    height: 120px;
     color: #fff;
     border-radius: 5px;
     padding: 10px 25px;
@@ -52,9 +54,11 @@ button {
 
 .btn-14 {
   /* background: rgb(255,151,0); */
-  background: #8dd986;
+  background: #1E5F74;
   border: none;
   z-index: 1;
+  font-size:20px;
+  font-weight:bold;
 }
 .btn-14:after {
   position: absolute;
@@ -65,8 +69,8 @@ button {
   left: 0;
   z-index: -1;
   border-radius: 5px;
-  background-image: linear-gradient(315deg, #eaf818 0%, #f6fc9c 74%);
-  background-color: #eaf818;
+  background-image: linear-gradient(315deg, #FCDAB7 0%, #FCDAB7 74%);
+  background-color: #FCDAB7;
   /* background-color: #8dd986; */
   box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
   7px 7px 20px 0px rgba(0,0,0,.1),
@@ -89,7 +93,7 @@ button {
 .card {
     margin-bottom: 24px;
     /* box-shadow: 0 2px 3px #e4e8f0; */
-    box-shadow: 0 2px 3px #8dd986;
+    box-shadow: 0 2px 3px lightgray;
 }
 
 .card {
@@ -107,7 +111,7 @@ button {
 
 .card-text{ margin-bottom: 3px;  font-size: 15px;}
 
-.workInfo{margin-top: 5px;}
+.workInfo{margin-top: 5px; }
 
 
 
@@ -165,7 +169,7 @@ a {
 }
 
 /* table 효과 */
-.mainTable {box-shadow: 0 2px 3px #8dd986;}
+.mainTable {box-shadow: 0 2px 3px lightgray;}
 
 
 /* 페이징 버튼 효과 */
@@ -197,10 +201,30 @@ a {
 
 /*하단 더보기 버튼*/
 .btn-select{
-	background-color:#8dd986;
+	background-color:#1E5F74;
 	border: 0;
 	color:white;
 	width:40%;
 	height:40px;
+	box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+     7px 7px 20px 0px rgba(0,0,0,.1),
+     4px 4px 5px 0px rgba(0,0,0,.1) !important;
 }
 
+.btn-success{
+	background-color:#1D2D50 !important;
+	/* --bs-btn-bg:#E1e5F74 !important; */
+	box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+     7px 7px 20px 0px rgba(0,0,0,.1),
+     4px 4px 5px 0px rgba(0,0,0,.1) !important;
+     border:none !important;
+}
+
+.matCard{
+	min-height:620px;
+	border:1px solid lightgray;
+	
+}
+.ptDiv{
+	margin-top:17px !important;
+}
