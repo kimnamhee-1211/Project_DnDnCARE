@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link th:href="@{css/enroll.css}" rel="stylesheet" type="text/css"/>
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
@@ -17,20 +18,16 @@
 				<h5 class="h5 mb-3 fw-bold mb-5">이를 바탕으로 보다 정확한 매칭 서비스를 제공할 수 있습니다.</h5>
 				<div class="login-input">
 					
-					<p class="info">원하는 서비스를 선택해주세요.(1~3개)</p>
+					<p class="info" style="min-width:550px;">원하는 서비스를 선택해주세요.(1~2개)</p>
 					<p style="font-size:16px; color:red;" class="info">필수 입력사항입니다.</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio checkedService" type="checkbox" value="1" name="memberInfo" id="expS1Input" checked>
-						  <label class="btn-radio-label" for="expS1Input">병원돌봄</label>
+						  <input class="btn-check checkedService" type="checkbox" value="1" name="memberInfo" id="expS1Input" checked>
+						  <label class="btn-outline" for="expS1Input">병원돌봄</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio checkedService" type="checkbox" value="2" name="memberInfo" id="expS2Input">
-						  <label class="btn-radio-label" for="expS2Input">가정돌봄</label>
-						</div>
-						<div class="form-check form-check-inline">
-						  <input class="btn-radio checkedService" type="checkbox" value="3" name="memberInfo" id="expS3Input">
-						  <label class="btn-radio-label" for="expS3Input">동행서비스</label>
+						  <input class="btn-check checkedService" type="checkbox" value="2" name="memberInfo" id="expS2Input">
+						  <label class="btn-outline" for="expS2Input">가정돌봄</label>
 						</div>
 					</div>	
 					
@@ -39,127 +36,149 @@
 					<p style="font-size:16px;" class="info">공동 간병이란 한 명의 간병인이 경증의 피간병인 2~3을 동시에 케어하는 서비스입니다.</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
-							<input class="btn-check" type="radio" name="careJoinStatus" id="careJoinStatusInput" th:value="Y" checked>
-							<label class="btn-check-label" for="menInput">참여</label>
+							<input class="btn-check" type="radio" name="careJoinStatus" id="careJoinStatusInput1" th:value="Y" checked>
+							<label class="btn-outline" for="careJoinStatusInput1">참여</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="btn-check" type="radio" name="careJoinStatus" th:value="N">
-							<label class="btn-check-label" for="menInput">미참여</label>
+							<input class="btn-check" type="radio" name="careJoinStatus" id="careJoinStatusInput2" th:value="N">
+							<label class="btn-outline" for="careJoinStatusInput2">미참여</label>
 						</div>
 					</div>
 						
 									
 				
-					<p class="info">경력 기간을 선택해주세요.(1개)</p>
+					<p class="info">경력 기간을 선택해주세요.</p>
 					<p style="font-size:16px; color:red;" class="info">필수 입력사항입니다.</p>
-					<div class="form-floating mb-5">
-						<div class="form-check form-check-inline">
+					<div class="form-floating mb-5 p-1">
+						<div class="form-check form-check-inline m-1">
 						  <input class="btn-check checkY" type="radio" name="memberInfo" id="0Input" value="11" checked>
-						  <label class="btn-check-label" for="0Input">없음</label>
+						  <label class="btn-outline sm" for="0Input">없음</label>
 						</div>
-						<div class="form-check form-check-inline">
+						<div class="form-check form-check-inline p-1 m-1">
 						  <input class="btn-check checkY" type="radio" name="memberInfo" id="1Input" value="12">
-						  <label class="btn-check-label" for="1Input">1년미만</label>
+						  <label class="btn-outline sm" for="1Input">1년미만</label>
 						</div>
-						<div class="form-check form-check-inline">
+						<div class="form-check form-check-inline p-1 m-1">
 						  <input class="btn-check checkY" type="radio" name="memberInfo" id="2Input" value="13">
-						  <label class="btn-check-label" for="2Input">1~3년</label>
+						  <label class="btn-outline sm" for="2Input">1~3년</label>
 						</div>
-						<div class="form-check form-check-inline">
+						<div class="form-check form-check-inline p-1 m-1">
 						  <input class="btn-check checkY" type="radio" name="memberInfo" id="3Input" value="14">
-						  <label class="btn-check-label" for="3Input">3~5년</label>
+						  <label class="btn-outline sm" for="3Input">3~5년</label>
 						</div>
-						<div class="form-check form-check-inline">
+						<div class="form-check form-check-inline p-1 m-1">
 						  <input class="btn-check checkY" type="radio" name="memberInfo" id="5Input" value="15">
-						  <label class="btn-check-label" for="5Input">5년이상</label>
+						  <label class="btn-outline sm" for="5Input">5년이상</label>
 						</div>
 					</div>		
 					
-					<p class="info">만약 경력이 있다면, 어떤 서비스를 경험했는지 선택해주세요.(0~3개)</p>
+					<p class="info">만약 경력이 있다면, 어떤 서비스를 경험했는지 선택해주세요.(0~2개)</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="6" name="memberInfo" id="expS1Input">
-						  <label class="btn-radio-label" for="expS1Input">병원돌봄</label>
+						  <input class="btn-check" type="checkbox" value="6" name="memberInfo" id="expS4Input">
+						  <label class="btn-outline" for="expS4Input">병원돌봄</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="7" name="memberInfo" id="expS2Input">
-						  <label class="btn-radio-label" for="expS2Input">가정돌봄</label>
-						</div>
-						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="8" name="memberInfo" id="expS3Input">
-						  <label class="btn-radio-label" for="expS3Input">동행서비스</label>
+						  <input class="btn-check" type="checkbox" value="7" name="memberInfo" id="expS5Input">
+						  <label class="btn-outline" for="expS5Input">가정돌봄</label>
 						</div>
 					</div>		
 					
 					
-					<p class="info">만약 경력이 있다면, 어떤 질환 환자를 경험했는지 선택해주세요.(0~10개)</p>
-					<div class="form-floating mb-5">
+					<p class="info">만약 경력이 있다면, 어떤 질환 환자를 경험했는지 선택해주세요.(0~16개)</p>
+					<div class="form-floating mb-5 p-1">
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="21" name="memberInfo" id="expD1Input">
-						  <label class="btn-radio-label" for="expD1Input">치매</label>
+						  <input class="btn-check" type="checkbox" value="21" name="memberInfo" id="expD1Input">
+						  <label class="btn-outline sm" for="expD1Input">치매</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="22" name="memberInfo" id="expD2Input">
-						  <label class="btn-radio-label" for="expD2Input">호흡기 질환</label>
+						  <input class="btn-check" type="checkbox" value="22" name="memberInfo" id="expD2Input">
+						  <label class="btn-outline sm" for="expD2Input">섬망</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="23" name="memberInfo" id="expD3Input">
-						  <label class="btn-radio-label" for="expD3Input">거동불편</label>
+						  <input class="btn-check" type="checkbox" value="23" name="memberInfo" id="expD3Input">
+						  <label class="btn-outline sm" for="expD3Input">욕창</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="24" name="memberInfo" id="expD4Input">
-						  <label class="btn-radio-label" for="expD4Input">와상환자</label>
+						  <input class="btn-check" type="checkbox" value="24" name="memberInfo" id="expD4Input">
+						  <label class="btn-outline sm" for="expD4Input">하반신 마비</label>
+						</div>
+						<br>
+						<div class="form-check form-check-inline">
+						  <input class="btn-check" type="checkbox" value="25" name="memberInfo" id="expD5Input">
+						  <label class="btn-outline sm" for="expD5Input">전신마비</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="25" name="memberInfo" id="expD5Input">
-						  <label class="btn-radio-label" for="expD5Input">파킨슨</label>
-						</div></br>
-						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="26" name="memberInfo" id="expD6Input">
-						  <label class="btn-radio-label" for="expD6Input">수면질환</label>
+						  <input class="btn-check" type="checkbox" value="26" name="memberInfo" id="expD6Input">
+						  <label class="btn-outline sm" for="expD6Input">와상환자</label>
 						</div>						
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="27" name="memberInfo" id="expD7Input">
-						  <label class="btn-radio-label" for="expD8Input">정신질환</label>
+						  <input class="btn-check" type="checkbox" value="27" name="memberInfo" id="expD7Input">
+						  <label class="btn-outline sm" for="expD7Input">기저귀 케어</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="28" name="memberInfo" id="expD8Input">
-						  <label class="btn-radio-label" for="expD9Input">기저귀 케어</label>
+						  <input class="btn-check" type="checkbox" value="28" name="memberInfo" id="expD8Input">
+						  <label class="btn-outline sm" for="expD8Input">의식 없음</label>
+						</div>
+						<br>
+						<div class="form-check form-check-inline">
+						  <input class="btn-check" type="checkbox" value="29" name="memberInfo" id="expD9Input">
+						  <label class="btn-outline sm" for="expD9Input">석션</label>
+						</div>						
+						<div class="form-check form-check-inline">
+						     <input class="btn-check" type="checkbox" value="30" name="memberInfo" id="expD10Input">
+						  <label class="btn-outline sm" for="expD10Input">피딩</label>
+						</div>						
+						<div class="form-check form-check-inline">
+						     <input class="btn-check" type="checkbox" value="31" name="memberInfo" id="expD11Input">
+						  <label class="btn-outline sm" for="expD11Input">소변줄</label>
+						</div>						
+						<div class="form-check form-check-inline">
+						     <input class="btn-check" type="checkbox" value="32" name="memberInfo" id="expD12Input">
+						  <label class="btn-outline sm" for="expD12Input">장루</label>
+						</div>			
+						<br>			
+						<div class="form-check form-check-inline">
+						     <input class="btn-check" type="checkbox" value="33" name="memberInfo" id="expD13Input">
+						  <label class="btn-outline sm" for="expD13Input">투석</label>
+						</div>						
+						<div class="form-check form-check-inline">
+						     <input class="btn-check" type="checkbox" value="34" name="memberInfo" id="expD14Input">
+						  <label class="btn-outline sm" for="expD14Input">전염성 질환</label>
+						</div>						
+						<div class="form-check form-check-inline">
+						     <input class="btn-check" type="checkbox" value="35" name="memberInfo" id="expD15Input">
+						  <label class="btn-outline sm" for="expD15Input">파킨슨</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="29" name="memberInfo" id="expD9Input">
-						  <label class="btn-radio-label" for="expD10Input">재활</label>
+						     <input class="btn-check" type="checkbox" value="36" name="memberInfo" id="expD16Input">
+						  <label class="btn-outline sm" for="expD16Input">정신질환</label>
 						</div>
-						<div class="form-check form-check-inline">
-						     <input class="btn-radio" type="checkbox" value="30" name="memberInfo" id="expD10Input">
-						  <label class="btn-radio-label" for="expD11Input">기타</label>
-						</div>													
-					</div>	
+					</div>					
 					
 					
 					<p class="info">관련 자격사항이 있다면 선택해주세요.(0~3개)</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="51" name="memberInfo" id="license1Input">
-						  <label class="btn-radio-label" for="license1Input">간병사</label>
+						  <input class="btn-check" type="checkbox" value="51" name="memberInfo" id="license1Input">
+						  <label class="btn-outline" for="license1Input">간병사</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="52" name="memberInfo" id="license2Input">
-						  <label class="btn-radio-label" for="license2Input">요양보호사</label>
+						  <input class="btn-check" type="checkbox" value="52" name="memberInfo" id="license2Input">
+						  <label class="btn-outline" for="license2Input">요양보호사</label>
 						</div>
 						<div class="form-check form-check-inline">
-						  <input class="btn-radio" type="checkbox" value="53" name="memberInfo" id="license3Input">
-						  <label class="btn-radio-label" for="license3Input">간호조무사</label>
+						  <input class="btn-check" type="checkbox" value="53" name="memberInfo" id="license3Input">
+						  <label class="btn-outline" for="license3Input">간호조무사</label>
 						</div>
 					</div>		
 					
 					
 					<p class="info">생각하시는 적정 1일 돌봄 비용은 얼마인가요?</p>
-					<p style="font-size:18px; color:red;" class="info">필수 입력사항입니다.</p>
+					<p style="font-size:18px; color:red;" class="info money">필수 입력사항입니다.</p>
 					<div class="form-floating mb-5">
 						<div class="row">
 						  <div class="col">
-
 						    <input type="number" class="form-control" placeholder="최소 금액" min="0" step="100" name="minMoney" id="minMoneyInput">
 						  </div>
 						  <div class="col-md-1" style="font-size: 20px;">~</div>
@@ -181,8 +200,8 @@
 				<p class="text-center">버튼을 누르면<br>회원가입이 완료됩니다.</p>
 			</div>
 			<div class="sign-btn d-flex flex-column">
-				<p class="text-center ifCheck" style="font-size:20px;color:red;"> </p>
-				<button type="button" class="signIn-btn mt-4" id="nextButton"><span>회원가입</span></button>
+				<p class="text-center ifCheck" style="font-size:20px;color:red;"></p>
+				<button type="button" class="signIn-btn mt-3" id="nextButton"><span>회원가입</span></button>
 			</div>
 
 							
@@ -200,10 +219,11 @@
 			const ifCheck = document.querySelector('.ifCheck');
 			
 			const checkedCareJoinStatus = document.querySelector('input[name="careJoinStatus"]:checked');
-			const checkedCheckService = document.querySelector('input.checkService:checked')
+			const checkedCheckService = document.querySelector('input.checkedService:checked')
 			const checkedCheckY = document.querySelector('input.checkY:checked')
 			const minMoneyInput = document.getElementById('minMoneyInput');
 			const maxMoneyInput = document.getElementById('maxMoneyInput');	
+			const money = document.querySelector('.money');
 			nextButton.addEventListener('click', ()=>{
 				
 				let isValid = true;		
@@ -214,6 +234,15 @@
 				if(!inputCheck(maxMoneyInput)){
 					isValid = false;				
 				}
+				
+				if(minMoneyInput.value > maxMoneyInput.value){
+					money.innerText = "최소 금액은 최대 금액보다 작아야 합니다.";
+					isValid = false;
+				}else{
+					money.innerText = '필수 입력사항입니다.';
+				}			
+
+				
 				if(!checkedCareJoinStatus || !checkedCheckService || !checkedCheckY){
 					isValid = false;				
 				}
@@ -221,6 +250,7 @@
 				if(isValid){
 					ifCheck.innerText = "";
 					form.submit();
+					
 				}else if(!isValid){
 					ifCheck.innerText = "필수 입력 사항을 빠짐없이 작성해주세요."
 				}
@@ -231,7 +261,7 @@
 				
 		function inputCheck(data){ 
 			if(data.value.trim() == ''){
-				input.focus();
+				i.focus();
 				return false;
 			}
 			return true;
