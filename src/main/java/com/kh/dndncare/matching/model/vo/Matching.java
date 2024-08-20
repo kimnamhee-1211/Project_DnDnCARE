@@ -30,6 +30,12 @@ public class Matching {
 	private int matType;//MAT_TYPE
 	private String hospitalName;
 	
+	//통계용 정보
+	private Date ptAge;
+	private String memberGender;
+	private String LCategory;
+	private String SCategory;
+	private int age;
 }
 
 

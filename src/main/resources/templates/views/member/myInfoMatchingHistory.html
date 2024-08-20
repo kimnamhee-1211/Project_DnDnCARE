@@ -23,7 +23,7 @@
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내 든든지수/후기</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
 	     		</div>
-	     		<span class="m-4" style="color:gray;"><button style="background:white; border:0" onclick="location.href='deleteMemberView.me'">탈퇴하기 ▶</button></span>
+	      			<span class="m-4" style="color:gray;"><button style="background:white; border:0" onclick="location.href='deleteMemberView.me'">탈퇴하기 ▶</button></span>
 	    	</div>
 	    	
 	    	<div class="col" >
@@ -35,9 +35,10 @@
 	      		
 	      		<div class="row m-4">
 	      			<div class="m-4 col">
-					  <button type="button" class="myInfo-btn">매칭별 대상 통계</button>
-					  <button type="button" class="btn-outline-maincolor-2">매칭 일수/수익</button>
-					  <button type="button" class="btn-outline-maincolor-2">매칭 이력</button>
+					  <button type="button" id="matchingStatisticsBtn" class="myInfo-btn" onclick="showMatching('statistic')">매칭별 대상 통계</button>
+					  <button type="button" id="matchingPayBtn" class="btn-outline-maincolor-2" onclick="showMatching('dayPay')">매칭 일수/수익</button>
+					  <button type="button" id="matchingRecordBtn"class="btn-outline-maincolor-2" onclick="showMatching('record')">매칭 이력</button>
+
 	      			</div>
 	      		</div>
 	      		
@@ -46,50 +47,110 @@
 	      		
 	      		<div class="row m-4">
 	      			<div class="col m-3">
-						<div class="myInfo-Border-maincolor mt-2 mb-3">
-							<div class="m-2 d-flex justify-content-between">
-								<div class="h3 myInfo-title">내가 간호한 피간병인 통계</div>
-							
-							</div>
-	      						<table class="d-flex justify-content-center m-2">
-		      						<tr>
-										<td>10대</td>
-										<td rowspan="4"width="200px"><img width="200"src="image/icon_PieChart.png"/></td>
-										<td>뇌성 환자</td>
-										<td rowspan="4"width="200px"><img width="200"src="image/icon_PieChart.png"/></td>
-										<td>공동간병</td>
-										<td rowspan="4"width="200px"><img width="200"src="image/icon_PieChart.png"/></td>
-		      						</tr>
-		      						<tr>
-		      							<td>20대</td>
-		      							<td>암환자</td>
-		      							<td>동행</td>
-		      						</tr>
-		      						<tr>
-		      							<td>30대</td>
-		      							<td>치매</td>
-		      							<td>수발</td>
-		      						</tr>
-		      						<tr>
-		      							<td>50대</td>
-		      							<td>에이즈</td>
-		      							<td>재활</td>
-		      						</tr>
-	      						</table>
-			      				
+						<div class="myInfo-Border-maincolor mt-2 mb-3" id="statistic-section">
+							<div class="d-flex m-4">
+								<div class="h2 myInfo-title" th:if="${!genderCountMap.isEmpty()}">내가 간호한 피간병인 통계
+								
+									<div class="">
+										<canvas class="w-100" id="genderGraph" width="500" height="100">
+										</canvas>
+									</div>
+									<hr>
+									<div class="">
+										<canvas class="w-100" id="ageGraph" width="300" height="100"></canvas>
+									</div>
+									<hr>
+									<div class="">
+										<canvas class="w-100" id="categoryGraph" width="100" height="100"></canvas>
+									</div>
+									</div>
+									<div class="h2 myInfo-title" th:if="${genderCountMap.isEmpty()}">아직 간병이력이 없습니다.
+									</div>
+								</div>
 						</div>
 						
 						
-						<div class="myInfo-Border-maincolor mt-2 mb-3">
+						<div class="myInfo-Border-maincolor mt-2 mb-3" style="display:none;" id="matchingDayPay-section">
 						
 							<div class="m-2 d-flex justify-content-between">
 								<div class="h3 myInfo-title">월별 근무수익 일수</div>
-								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">검색란?</button>
+									
 							</div>
 							
-							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
-								<div>-------------------------------------------------꺽은선그래프-------------------------------------------------</div>
+							<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6" >
+								<div>
+							        <label for="yearSelect">연도 선택:</label>
+							        <select id="yearSelect"></select>
+							    </div>
+									<div>
+										<canvas class="w-100" id="monthUseCountGraph" width="500" height="100"></canvas>
+									</div>
+									<hr>
+									<div>
+										<canvas class="w-100" id="monthPayCountGraph" width="500" height="100"></canvas>
+									</div>
 							</div>
+						</div>
+						
+						<div class="myInfo-Border-maincolor mb-3" style="display:none;"id="matchingRecord-section">
+						
+							<div class="h2 myInfo-title m-4">매칭이력</div>
+							<div class="d-flex justify-content-between">
+								<div class="row m-4">
+				      			<div class="row"><!-- 실제 데이터 넣고 for문 돌리기  -->
+									<div class="myInfo-Border-maincolor mb-3">
+										<div class="m-2">
+											<div align="center" class="d-flex justify-content-left" style="min-width:700px;">
+						    	  			</div>
+						      				<hr/>
+						      				<div id="matching" class="m-2 p-2" style="border-bottom:1px solid #dee2e6">
+											    <table class="m-2" id="matchingTable" text-align="center">
+											        <tr>
+											            <th width="150px">간호 시작일</th>
+											            <th width="30"></th>
+											            <th width="150px">간호 종료일</th>
+											            <th width="120px">이름</th>
+											            <th width="100px">나이</th>
+											            <th width="100px">성별</th>
+											            <th width="130px">비용</th>
+											            <th width="100px">지역</th>
+											            <th width="150px">서비스</th>
+											        </tr>
+											        <th:block th:if="${matRecord}!=null">
+											        	<tr th:each="m:${matRecord}">
+												            <td>[[${m.beginDt}]]</td>
+												            <td> ~ </td>
+												            <td>[[${m.endDt}]]</td>
+												            <td>[[${m.ptName}]]님</td>
+												            <td>[[${m.ptRealAge}]]세</td>
+												        <thblock th:if="${m.ptGender == 'F'}">
+												            <td>여성</td>
+												         </thblock>
+												         <thblock th:if="${m.ptGender == 'M'}">
+												            <td>남성</td>
+												         </thblock>
+												            <td>[[${m.money}]]원</td>
+												            <td>[[${m.ptAddress}]]</td>
+												            <td>[[${m.service}]]</td>
+												        </tr>
+											        </th:block>
+												   <th:block th:if="${matRecord.isEmpty()}">
+														<tr align="center">
+															<td colspan="9" class="h4">	<hr>매칭 이력이 없습니다.</td>
+														</tr>
+													</th:block>											        		
+											    </table>
+											</div>
+					      		</div>
+						</div>
+						
+						
+	      			</div>
+	      		
+	    	</div>
+    	</div>
+							</div>
+							
 						</div>
 						
 						<!-- <div class="myInfo-Border-maincolor mt-2 mb-3">
@@ -108,9 +169,9 @@
 	
 	</div>
 	
-	
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
 	<script th:inline="javascript">
-		
+		/*<![CDATA[*/
 		window.onload =() =>{
 			const menuAtag = document.getElementsByClassName('my-menu');
 			const menuName = document.getElementsByClassName('menu-name')[0];
@@ -120,8 +181,301 @@
 				}
 			};
 			
+			// 성별 그래프
+			const genderCountMap = /*[[${genderCountMap}]]*/;
+			
+			const genderArray = [];
+			for(const gender of Object.keys(genderCountMap)){
+				genderArray.push(gender);
+			}
+				
+			const genderCountArray = [];
+			for (const genderCount of Object.values(genderCountMap)) {
+				genderCountArray.push(genderCount);				
+			}
+			console.log(genderArray)
+			console.log(genderCountArray)
+			
+			const genderDoughnut = document.getElementById('genderGraph')
+			const genderDoughnutChart = new Chart(genderDoughnut, {
+			    type: 'doughnut',
+			    data: {
+			        labels: genderArray,
+			        datasets: [{
+			            data: genderCountArray,
+			            backgroundColor: [ 		
+							'orange', 'skyblue'
+			            	],
+			            borderColor: [
+			                	'black'
+			                ],
+			            borderWidth: 1
+			        }]
+			    },
+			    options: {
+			        plugins: {
+			        	title:{
+			        		text: '성별',
+			        		display: true,
+			        		 font: {
+			                     size: 24 
+			                 }
+			        	},
+			            legend: {
+			                display: true,
+			                position: 'right'
+			            },
+			            cutout: '100%'
+			           
+			        }
+			    }
+			});
+			
+			
+			// 연령 그래프
+			const ageCountMap = /*[[${ageCountMap}]]*/;
+			console.log(ageCountMap);
+			const ageArray = [];
+			for(const age of Object.keys(ageCountMap)){
+				ageArray.push(age);
+			}
+				
+			const ageCountArray = [];
+			for (const ageCount of Object.values(ageCountMap)) {
+				ageCountArray.push(ageCount);				
+			}
+			console.log(ageArray)
+			console.log(ageCountArray)
+			
+			const ageDoughnut = document.getElementById('ageGraph')
+			const ageDoughnutChart = new Chart(ageDoughnut, {
+			    type: 'doughnut',
+			    data: {
+			        labels: ageArray,
+			        datasets: [{
+			            data: ageCountArray,
+			            backgroundColor: [ 		
+							'#FFA7A7', '#FAED7D', '#B7F0B1', '#B2CCFF', '#D1B2FF', '#747474'
+			            	],
+			            borderColor: [
+			                	'black'
+			                ],
+			            borderWidth: 1
+			        }]
+			    },
+			    options: {
+			        plugins: {
+			        	title:{
+			        		text: '연령',
+			        		display: true,
+			        		 font: {
+			                     size: 24 
+			                 }
+			        	},
+			            legend: {
+			                display: true,
+			                position: 'right'
+			            },
+			           
+			        }
+			    }
+			});
+			// 카테고리 그래프
+			const categoryCountMap = /*[[${categoryCountMap}]]*/;
+			
+			const categoryArray = [];
+			for(const category of Object.keys(categoryCountMap)){
+				categoryArray.push(category);
+			}
+				
+			const categoryCountArray = [];
+			for (const categoryCount of Object.values(categoryCountMap)) {
+				categoryCountArray.push(categoryCount);				
+			}
+			console.log(categoryArray)
+			console.log(categoryCountArray)
+			
+			const categoryDoughnut = document.getElementById('categoryGraph')
+			const categoryDoughnutChart = new Chart(categoryDoughnut, {
+			    type: 'doughnut',
+			    data: {
+			        labels: categoryArray,
+			        datasets: [{
+			            data: categoryCountArray,
+			            backgroundColor: [ 		
+							'#4682B4', '#FF8C42', '#4CAF50', '#E57373', '#9B77E0', 
+							'#A67C6C','#9E9E9E', '#F48FB1', '#4DB6AC', '#CDDC39',
+							'#7AC7C4', '#FF6F61', '#E4D9C3', '#D7A9D4', '#7F8C2F',
+							'#F2B800'
+			            	],
+			            borderColor: [
+			                	'black'
+			                ],
+			            borderWidth: 1
+			        }]
+			    },
+			    options: {
+			        plugins: {
+			        	title:{
+			        		text: '질환',
+			        		display: true,
+			        		 font: {
+			                     size: 24 
+			                 }
+			        	},
+			            legend: {
+			                display: true,
+			                position: 'right'
+			            },
+			           
+			        }
+			    }
+			});
+			
+			// 월간 이용 그래프
+			const monthCountMap = /*[[${monthCountMap}]]*/;
+			const years = new Set(); // 연도 저장
+			
+			//연도
+			for (const month of Object.keys(monthCountMap)) {
+	            const year = month.split("-")[0];
+	            years.add(year);
+	        }
+
+	        // 연도 선택 옵션
+	        const yearSelect = document.getElementById('yearSelect');
+	        years.forEach(year => {
+	            const option = document.createElement('option');
+	            option.value = year;
+	            option.text = year;
+	            yearSelect.appendChild(option);
+	        });
+
+	        // 초기 설정은 현재연도
+	        const currentYear = new Date().getFullYear().toString();
+			if (years.has(currentYear)) {
+			    yearSelect.value = currentYear;
+			}
+	        
+			
+			const monthArray = [];
+			for(const month of Object.keys(monthCountMap)){
+				monthArray.push(month);
+			}
+			
+			const useCountArray = [];
+			for(const useCount of Object.values(monthCountMap)){
+				useCountArray.push(useCount);
+			}
+			console.log(monthArray);
+			console.log(useCountArray);
+			
+			const monthUse= document.getElementById('monthUseCountGraph');
+			const monthUseChart = new Chart(monthUse, {
+			    type: 'line',
+			    data: {
+			        labels: monthArray, // x좌표
+			        datasets: [{
+			            data: useCountArray, // y좌표 (데이터 값)
+			            label:'이용일수',
+			            backgroundColor: 'white', // 배경 색상
+			            borderColor: 'skyblue', // 선 색상
+			            borderWidth: 2 // 선의 두께
+			        }]
+			    },
+			    options: {
+			        scales: {
+			            x: {
+			                beginAtZero: true
+			            },
+			            y: {
+			                beginAtZero: true
+			            }
+			        }
+			    }
+		});
+			
+			
+			
+			
+			const monthPayMap = /*[[${monthPayMap}]]*/;
+			const payCountArray = [];
+			for(const payCount of Object.values(monthPayMap)){
+				payCountArray.push(payCount);
+			}
+			
+			// 월간 수익 그래프
+			
+			const monthPay= document.getElementById('monthPayCountGraph');
+			const monthPayChart = new Chart(monthPay, {
+			    type: 'line',
+			    data: {
+			        labels: monthArray, // x좌표
+			        datasets: [{
+			            data: payCountArray, // y좌표 (데이터 값)
+			            label:'수익금',
+			            backgroundColor: 'white', // 배경 색상
+			            borderColor: 'orange', // 선 색상
+			            borderWidth: 2 // 선의 두께
+			        }]
+			    },
+			    options: {
+			        scales: {
+			            x: {
+			                beginAtZero: true
+			            },
+			            y: {
+			                beginAtZero: true
+			            }
+			        }
+			    }
+		});
 		}
-	
+		function showMatching(type) {
+			if (type == 'statistic') {
+				document.getElementById('statistic-section').style.display = 'block';
+				document.getElementById('matchingDayPay-section').style.display = 'none';
+				document.getElementById('matchingRecord-section').style.display = 'none';
+				document.getElementById('matchingStatisticsBtn').classList.remove('btn-outline-maincolor-2');
+				document.getElementById('matchingStatisticsBtn').classList.add('myInfo-btn');
+				document.getElementById('matchingPayBtn').classList.remove('myInfo-btn')
+				document.getElementById('matchingPayBtn').classList.add('btn-outline-maincolor-2');
+				document.getElementById('matchingRecordBtn').classList.remove('myInfo-btn')
+				document.getElementById('matchingRecordBtn').classList.add('btn-outline-maincolor-2');
+				
+			} else if (type == 'dayPay') {
+				document.getElementById('statistic-section').style.display = 'none';
+				document.getElementById('matchingDayPay-section').style.display = 'block';
+				document.getElementById('matchingRecord-section').style.display = 'none';
+				document.getElementById('matchingStatisticsBtn').classList.remove('myInfo-btn');
+				document.getElementById('matchingStatisticsBtn').classList.add('btn-outline-maincolor-2');
+				document.getElementById('matchingPayBtn').classList.remove('btn-outline-maincolor-2')
+				document.getElementById('matchingPayBtn').classList.add('myInfo-btn');
+				document.getElementById('matchingRecordBtn').classList.remove('myInfo-btn')
+				document.getElementById('matchingRecordBtn').classList.add('btn-outline-maincolor-2');
+			} else if (type == 'record'){
+				document.getElementById('statistic-section').style.display = 'none';
+				document.getElementById('matchingDayPay-section').style.display = 'none';
+				document.getElementById('matchingRecord-section').style.display = 'block';
+				document.getElementById('matchingStatisticsBtn').classList.remove('myInfo-btn');
+				document.getElementById('matchingStatisticsBtn').classList.add('btn-outline-maincolor-2');
+				document.getElementById('matchingPayBtn').classList.remove('myInfo-btn')
+				document.getElementById('matchingPayBtn').classList.add('btn-outline-maincolor-2');
+				document.getElementById('matchingRecordBtn').classList.remove('btn-outline-maincolor-2')
+				document.getElementById('matchingRecordBtn').classList.add('myInfo-btn');
+			}
+		}
+		
+		function yearDropdown(years) {
+            const yearSelect = document.getElementById('yearSelect');
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.text = year;
+                yearSelect.appendChild(option);
+            });
+        }
+		/*]]>*/
 	</script>
 	
 </body>

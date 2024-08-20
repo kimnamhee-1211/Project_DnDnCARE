@@ -168,6 +168,11 @@ public interface MatchingService {
 	int insertPayTransfer(Member loginUser, Pay p);
 	// 서비스 통계
 	ArrayList<MatMatptInfo> serviceList(int memberNo);
+
+	// 매칭 환자정보 통계용
+	ArrayList<Matching> matPatientList(int memberNo);
+
+
 	//ptCount get
 	int getPtCount(int matNo);
 	

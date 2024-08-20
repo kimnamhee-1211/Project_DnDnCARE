@@ -508,6 +508,16 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
+	public ArrayList<MatMatptInfoPt> selectMatRecord(int memberNo) {
+		return mMapper.selectMatRecord(memberNo);
+	}
+
+
+	@Override
+	public ArrayList<MatMatptInfoPt> monthCountList(int memberNo) {
+		return mMapper.monthCountList(memberNo);
+	}
+	
 	public int updateImageProfile(String memberNo, String rename) {
 		return mMapper.updateImageProfile(memberNo,rename);
 	}
