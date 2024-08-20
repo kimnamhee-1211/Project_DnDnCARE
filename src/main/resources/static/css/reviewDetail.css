@@ -117,7 +117,7 @@ input {
    height: 200px; /* 원하는 크기로 설정 */
    border-radius: 50%; /* 이미지를 동그랗게 만듦 */
    object-fit: cover; /* 이미지 비율을 유지하며 잘라냄 */
-   border:3px solid #8dd986;
+   border:3px solid #1D2D50;
 }
 
 .icon-star{
@@ -244,9 +244,9 @@ input {
 }
 .btn-outline-maincolor {
 	background:white;
-	border:1px solid #8dd986;
+	border:1px solid #1D2D50;
 	border-radius:10px;
-	color:#8dd986;
+	color:#1D2D50;
 	width:170px;
 	height:70px;
 	font-size:24px;
