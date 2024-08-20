@@ -125,19 +125,22 @@
 							            <th width="30"></th>
 							            <th width="320px">간호 종료일</th>
 							            <th width="520px">간병인 정보</th>
+							            <th></th>
 							            <th width="120px">후기 작성</th>
 							        </tr>
-							        <tr th:each="i : ${mciList}" th:if="${i.isAfterDate}" class="matching-row" data-mat-confirm="${i.matConfirm}" data-is-after-date="${i.isAfterDate}">
+							        <tr th:if="${i.isAfterDate}" th:each="i : ${mciList}"  class="matching-row">
 								            <td>[[${i.beginDt}]]일 [[${i.beginTime}]]시</td>
 								            <td> ~ </td>
 								            <td>[[${i.endDt}]]일 [[${i.endTime}]]시</td>
 								            <td> 이름 : [[${i.memberName}]] 비용 : [[${i.money}]]원</td>
+								            <td>
 								            <input type="hidden" th:id="'hiddenMemberNo' + ${i.memberNo}" name="memberNo" th:value="${i.memberNo}"/>
 								            <input type="hidden" th:id="'hiddenMatNo' + ${i.matNo}" name="matNo" th:value="${i.matNo}"/>
-								            <td th:if="${i.isAfterDate && i.matConfirm == 'Y' && i.reviewYn == 0}">
-								                <button class="myInfo-btn btn-sm" onclick="reviewDetail('myInfoMatchingHistoryP')">작성 가능</button>
 								            </td>
-								            <td th:if="${i.isAfterDate && i.matConfirm == 'Y' && i.reviewYn != 0}"}>
+								            <td th:if="${i.matConfirm == 'Y' && i.isAfterDate && i.reviewYn == 0}">
+								                <button class="myInfo-btn btn-sm" th:onclick="reviewDetail('myInfoMatchingHistoryP', [[${i.memberNo}]], [[${i.matNo}]])">작성 가능</button>
+								            </td>
+								            <td th:if="${i.matConfirm == 'Y' && i.isAfterDate && i.reviewYn != 0}">
 								                <button class="myInfo-btn btn btn-warning btn-sm">작성 완료</button>
 								            </td>
 								           
@@ -163,8 +166,11 @@
 	 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
 	<script th:inline="javascript">
 		 /*<![CDATA[*/
+			 
 			
 		window.onload =() =>{
+			const mciList = /*[[${mciList}]]*/
+			console.log(mciList)
 	        const monthPatient = /*[[${monthPatient}]]*/;
 	        console.log(monthPatient)
 	        
@@ -262,9 +268,8 @@
 		}
 		
 
-		function reviewDetail(beforePage){
-			var memberNo = document.querySelector('input[name="memberNo"]').value;
-		    var matNo = document.querySelector('input[name="matNo"]').value;
+		function reviewDetail(beforePage, memberNo, matNo){
+			
 			location.href = 'reviewDetail.mc?memberNo=' + memberNo + '&matNo='+ matNo+ '&from=' + beforePage;
 		}
 		
