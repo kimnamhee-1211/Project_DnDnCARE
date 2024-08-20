@@ -11,21 +11,22 @@
     <link th:href="@{css/footer.css}" rel="stylesheet" type="text/css"/>
     
 </head>
-<body>
-	<div th:replace="~{common/navbar :: navbar}">></div>
+<body class="baseFont">
+	<div th:replace="~{common/navbar :: navbar}"></div>
 	
+	<div style="height:70px"></div>
 	<div id="contents">
 		<div><!-- 왼쪽 공백 --></div>
 		<div><!-- 컨텐츠 --> 
-			<div class="">
-				<span class="badge rounded-pill bg-primary" style="font-size: 25px;">나와 딱 맞는 간병일감을 찾아드려요.</span>
-				<img src="image/icon/refresh.gif" id="refreshChoice" width="40px;" height="40px"/>	
+			<div class="d-flex justify-content-between">
+				<span class="badge bg-color" style="font-size: 24px;">AI가 추천하는 일감이에요!</span>
+				<span class="btn-outline-maincolor" id="refreshChoice" style="font-size: 24px;">새 추천 받기</span>
 			</div>
 			
 			<br/>
 			
 			<div id="upperContents"><!-- 자동매칭 -->
-				<table class="table table-hover autoMatching" style="border-right: 1px solid gray;">
+				<table class="table table-hover autoMatching" style="border-right: 3px solid #1E5F74;">
                 	<thead>
                     	<tr class="text-center">
                         	<th>성함</th>
@@ -48,7 +49,7 @@
                  	</tbody>
              	</table>
 				
-				<table class="table table-hover autoMatching">
+				<table class="table table-hover autoMatching" >
                 	<thead>
                     	<tr class="text-center">
                         	<th>성함</th>
@@ -75,16 +76,16 @@
 			<br/>
 			
 			<div id="lowerContents"><!-- 검색목록 -->
-				<div style="position: sticky; top: 0px; z-index: 10; background:white; ">
+				<div style="position: sticky; top: 0px; z-index: 10; background:white; margin-bottom:24px;" >
 					<div id="lowerContentsTitle">
-						<div><span class="badge rounded-pill bg-primary" style="font-size: 25px;">간병일감 목록</span></div>
+						<div><span class="badge bg-color" style="font-size: 25px;">간병일감 목록</span></div>
 						<div class="text-end">
-							<button type="button" class="btn btn-light" id="goClear">검색조건 초기화하기</button>
-							<button type="button" class="btn btn-light goSearch">검색하기</button>
+							<button type="button" class="btn-outline-maincolor" id="goClear">검색조건 초기화하기</button>
+							<button type="button" class="btn-outline-maincolor goSearch">검색하기</button>
 						</div>
 					</div>
 					<br/>
-					<div id="tagBtnDiv"> <!-- 각 태그의 value값이 ON/OFF인지에 따라서 어떤 검색조건을 선택하였는지 확인가능함 -->
+					<div id="tagBtnDiv" class="d-flex justify-content-start"> <!-- 각 태그의 value값이 ON/OFF인지에 따라서 어떤 검색조건을 선택하였는지 확인가능함 -->
 						<div>
 							<button type="button" class="btn btn-light mainBtn" id="allTagBtn">태그 전체</button>
 						</div>
@@ -315,7 +316,7 @@
 		</div>
 	</div>
 	
-	<div id="footer-section">
+	<div id="footer-section" style="margin-top:32px;">
 	    <div class="inner">
 	        <div class="footer-logo">
 	            <a href="home.do"><img th:src="@{/image/logo-removebg.png}" alt="로고" id="footer-logo"></a>
@@ -1426,6 +1427,7 @@
 							let matList = data.matList;
 							let memList = data.memList;
 							let mpiList = data.mpiList;
+							//console.log(data.pList);
 							let matNo = '';
 							for(let mat of matList){
 								for(let mpi of mpiList) {
