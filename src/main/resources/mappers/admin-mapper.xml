@@ -99,5 +99,9 @@
 		WHERE BOARD_NO = ${boardNo}
 	</update>
 	
-	
+	<select id="selectPayDeposit" resultType="Pay">
+		select *
+		from pay
+		where pay_deposit = #{type}
+	</select>
 </mapper>

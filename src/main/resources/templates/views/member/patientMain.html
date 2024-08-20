@@ -302,12 +302,12 @@
     </div> -->
     <div th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
     
-	<!-- Modal -->
+	<!-- Modal 결제모달-->
 	<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice2">
 		<div class="modal-dialog modal-dialog-centered" role="document" style="max-width:700px;">
     		<div class="modal-content rounded-3 shadow" style="min-width:700px;">
     			<div class="m-5 text-center h2 ">결제 정보</div>
-    			<div class="m-4 h5" style="border-bottom:1px solid #8dd986;"><span class="h2" id="careName"></span>님과 매칭되었습니다!</div>
+    			<div class="m-4 h5" style="border-bottom:2px solid #133B5C;"><span class="h2" id="careName"></span>님과 매칭되었습니다!</div>
 				<div class="d-flex justify-content-start">    			
 	    			<div >
 	    				<div class="m-4 text-center">매칭 서비스</div>
@@ -736,7 +736,7 @@
 		    		  document.getElementsByName('merchantUid')[0].value = response.merchant_uid;
 		    		  document.getElementsByName('matNo')[0].value = payBt.nextElementSibling.value;
 		    		  //document.getElementsByName('payMoney')[0].value = response.merchant_uid; 위에서미리넘기자
-		    		  document.getElementsByName('payService')[0].value = response.merchant_uid;
+		    		  document.getElementsByName('payService')[0].value = document.getElementById('payService').innerText;
 		    		  form.action = 'successPay.mc';
 		  	    	  form.submit();
 		    		  

@@ -25,11 +25,23 @@
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 				<div class="row m-4" style="border:1px solid black;">
 					<div class="col m-2">
-					<h4>이번 달 매칭 금액</h2>
+					<div class="h4">이번 달 매칭 금액</div>
 					<canvas id="barChart"></canvas>
 					</div>
 					<div class="col m-2">
-					<h4>총 매칭 금액</h2>
+					<h4>총 매칭 금액</h4>
+					<div>[[${psDp}]]</div>
+					</div>
+				
+				</div>		
+				<div class="row m-4" style="border:1px solid black;">
+					<div class="col m-2">
+					<h4>이번 달 매칭 금액</h4>
+					<canvas id="labels"></canvas>
+					<canvas id="data"></canvas>
+					</div>
+					<div class="col m-2">
+					<h4>총 매칭 금액</h4>
 					<div>결제정보에 필요한게 뭐가잇을까</div>
 					<ul>
 						<ol>1.deposit이 Y인 금액</ol>
@@ -47,30 +59,62 @@
 	</div>
 	
 	
-	<script>
-	
-	// 막대그래프 (시작)
-	const barCtx = document.getElementById('barChart');
+	<script th:inline="javascript">
+		
+			
+		/*<![CDATA[*/
+		const test = /*[[${psDp[0].memberNo}]]*/ 3;
+		console.log(test);
+		/*]]>*/
 
-	new Chart(barCtx, {
-	    type: 'bar',
-	    data: {
-	      labels: ['월', '화', '수', '목', '금', '토','일'],
-	      datasets: [{
-	        label: '무슨차트로할깡',
-	        data: [12, 19, 3, 5, 2, 3],
-	        borderWidth: 1
-	      }]
-	    },
-	    options: {
-	      scales: {
-	        y: {
-	          beginAtZero: true
-	        }
-	      }
-	    }
-	});
-	// 막대그래프 (끝)
+		const today = new Date();
+		console.log(today);
+		
+		const getDateFormat = date => {
+			const year = (date.getFullYear());
+			const month = ('0'+(date.getMonth()+1)).slice(-2);
+			const day = ('0'+date.getDate()).slice(-2);
+			
+			return year + '-' + month + '-' + day;
+		}
+		
+		console.log(getDateFormat(today));
+		
+		
+		// 막대그래프 (시작)
+		const barCtx = document.getElementById('barChart');
+	
+		new Chart(barCtx, {
+		    type: 'line',
+		    data: {
+		      labels: ['월', '화', '수', '목', '금', '토','일'],
+		      datasets: [{
+		        		label: '시간제매칭',
+		        		data: [12, 19, 3, 5, 2, 3],
+		        		borderWidth: 2,
+		        		borderColor: '#1D2D50',
+		        		backgroundColor: 'transparent'
+		      			},
+		      			{
+	      				label: '기간제매칭',
+		        		data: [5, 4, 3, 5, 2, 3],
+		        		borderWidth: 1,
+		        		borderColor: '#1E5F74',
+		        		backgroundColor: 'transparent'
+		      			}]
+		    },
+		    options: {
+		      scales: {
+		        y: {
+		          beginAtZero: true
+		        }
+		      }
+		    }
+		});
+		// 막대그래프 (끝)
+	
+	
+	
 	
 	</script>
 	
