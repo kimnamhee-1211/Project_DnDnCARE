@@ -879,7 +879,10 @@ public class MatchingController {
 			String[] addressMin = addr[1].split(" ");
 			String addressMinStr = addressMin[0] + " " + addressMin[1];
 			m.setMatAddressMin(addressMinStr);
-			
+
+			//종규 맵에 넣을 주소 하나추가
+			m.setMatAddressMap(m.getMatAddressInfo().split("//")[1]);
+			System.out.println("확인하기종규" + m.getMatAddressMap());
 			//주소 full (//제외)
 			String address = m.getMatAddressInfo().replace("//", " "); 
 			m.setMatAddressInfo(address);
