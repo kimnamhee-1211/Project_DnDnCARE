@@ -54,13 +54,13 @@
 							<p class="text-center">다음으로 넘어가<br>회원가입을 계속 진행해주세요.</p>
 						</div>
 						<div class="sign-btn d-flex flex-column">
-							<p class="text-center ifCheck" style="font-size:20px"> </p>
-							<button type="button" id="nextButton" class="signIn-btn mt-5"><span>다음</span></button>
+							<p class="text-center ifCheck" style="font-size:20px"></p>
+							<button type="button" id="nextButton" class="signIn-btn mt-3"><span>다음</span></button>
 						</div>
 					</div>
 
 					<div id="enroll2" style="display: none;">			
-						<p class="info">성별을 선택해 주세요.</p>
+						<p class="info" style="min-width:550px;">성별을 선택해 주세요.</p>
 						<div class="form-floating mb-5">
 							<div class="form-check form-check-inline">
 							 	 <input class="btn-check" type="radio" name="memberGender" id="menInput" th:value="M" checked>
@@ -100,7 +100,6 @@
 											
 											
 						<p class="info">주소를 입력해주세요.</p>
-						<p style="font-size:16px" class="info">주소는 반드시 도로명 주소를 선택/입력해주세요.</p>
 						<div class="form-floating mb-1" >
 							<button type="button" onclick="sample4_execDaumPostcode()" class="btn-outline" style="border:none;">주소 검색</button>
 						</div> 
@@ -109,7 +108,7 @@
 	   						<label for="sample4_postcod">우편번호</label>
 						</div>
 						<div class="form-floating mb-1">
-							<input type="text" class="form-control" id="sample4_roadAddress" name="roadAddress" style="width:551.328px;">
+							<input type="text" class="form-control" id="sample4_roadAddress" name="roadAddress">
 							<label for="sample4_roadAddress">도로명주소</label>
 						</div>
 						<div class="form-floating mb-5">
@@ -144,8 +143,8 @@
 							<p class="text-center">다음으로 넘어가<br>회원가입을 계속 진행해주세요.</p>
 						</div>
 						<div class="sign-btn d-flex flex-column">
-							<p class="text-center ifCheck" style="font-size:20px"> </p>
-							<button type="button" class="signIn-btn mt-5" id="nextButton2"><span>다음</span></button>
+							<p class="text-center ifCheck" style="font-size:20px"></p>
+							<button type="button" class="signIn-btn mt-3" id="nextButton2"><span>다음</span></button>
 						</div>								
 						
 					</div>					

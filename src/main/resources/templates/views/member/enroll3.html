@@ -19,10 +19,10 @@
 				<div class="login-input">	
 					
 					
-					<p class="info">간병이 필요한 분의 성함을 입력해주세요.</p>
+					<p class="info" style="min-width:550px;">간병이 필요한 분의 성함을 입력해주세요.</p>
 					<p style="font-size:16px; color:red;" class="info">필수 입력사항입니다.</p>
 					<div class="form-floating mb-5">
-						<input type="text" class="form-control inputCheck" id="nameInput" name="ptName">
+						<input type="text" class="form-control" id="nameInput" name="ptName">
 						<label for="nameInput">성함</label>
 					</div>
 					
@@ -58,18 +58,13 @@
 						  <input class="btn-check checkService" type="checkbox" value="2" name="memberInfo" id="expS2Input">
 						  <label class="btn-outline" for="expS2Input">가정돌봄</label>
 						</div>
-						<div class="form-check form-check-inline">
-						  <input class="btn-check checkService" type="checkbox" value="3" name="memberInfo" id="expS3Input">
-						  <label class="btn-outline" for="expS3Input">동행서비스</label>
-						</div>
 					</div>		
 					
 					
 					<p class="info">돌봄 서비스를 진행할 정확한 주소를 입력해주세요.</p>
 					<p style="font-size:16px; color:red;" class="info">필수 입력사항입니다.</p>
-					<p style="font-size:16px" class="info">주소는 반드시 도로명 주소를 선택/입력해주세요.</p>
 					<div class="form-floating mb-1" >
-						<button type="button" onclick="sample4_execDaumPostcode()" class="signIn-btn" style="border:none;">주소 검색</button>
+						<button type="button" onclick="sample4_execDaumPostcode()" class="btn-outline" style="border:none;">주소 검색</button>
 					</div>
 					<div class="form-floating mb-1" >
    						<input type="text" class="form-control inputCheck" id="sample4_postcode" name="postcode">
@@ -89,83 +84,83 @@
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
 						  <input class="btn-check" type="radio" name="memberInfo" id="D1Input"  value="40" checked>
-						  <label class="btn-outline" for="D1Input">남성</label>
+						  <label class="btn-outline" for="D1Input">자가 보행</label>
 						</div>
 						<div class="form-check form-check-inline">
 						  <input class="btn-check" type="radio" name="memberInfo" id="D2Input"  value="41">
-						  <label class="btn-outline" for="D2Input">여성</label>
+						  <label class="btn-outline" for="D2Input">거동 불가</label>
 						</div>
 					</div>
 					
 					
-					<p class="info">어떤 질환이 있는지 선택해주세요.(0~10개)</p>
+					<p class="info">어떤 질환이 있는지 선택해주세요.(0~16개)</p>
 					<div class="form-floating mb-5">
 						<div class="form-check form-check-inline">
 						  <input class="btn-check" type="checkbox" value="21" name="memberInfo" id="expD1Input">
-						  <label class="btn-outline" for="expD1Input">치매</label>
+						  <label class="btn-outline sm" for="expD1Input">치매</label>
 						</div>
 						<div class="form-check form-check-inline">
 						  <input class="btn-check" type="checkbox" value="22" name="memberInfo" id="expD2Input">
-						  <label class="btn-outline" for="expD2Input">섬망</label>
+						  <label class="btn-outline sm" for="expD2Input">섬망</label>
 						</div>
 						<div class="form-check form-check-inline">
 						  <input class="btn-check" type="checkbox" value="23" name="memberInfo" id="expD3Input">
-						  <label class="btn-outline" for="expD3Input">욕창</label>
+						  <label class="btn-outline sm" for="expD3Input">욕창</label>
 						</div>
 						<div class="form-check form-check-inline">
 						  <input class="btn-check" type="checkbox" value="24" name="memberInfo" id="expD4Input">
-						  <label class="btn-outline" for="expD4Input">하반신 마비</label>
+						  <label class="btn-outline sm" for="expD4Input">하반신 마비</label>
 						</div>
 						<br>
 						<div class="form-check form-check-inline">
 						  <input class="btn-check" type="checkbox" value="25" name="memberInfo" id="expD5Input">
-						  <label class="btn-outline" for="expD5Input">전신마비</label>
-						</div></br>
+						  <label class="btn-outline sm" for="expD5Input">전신마비</label>
+						</div>
 						<div class="form-check form-check-inline">
 						  <input class="btn-check" type="checkbox" value="26" name="memberInfo" id="expD6Input">
-						  <label class="btn-outline" for="expD6Input">와상환자</label>
+						  <label class="btn-outline sm" for="expD6Input">와상환자</label>
 						</div>						
 						<div class="form-check form-check-inline">
 						  <input class="btn-check" type="checkbox" value="27" name="memberInfo" id="expD7Input">
-						  <label class="btn-outline" for="expD8Input">기저귀 케어</label>
+						  <label class="btn-outline sm" for="expD7Input">기저귀 케어</label>
 						</div>
 						<div class="form-check form-check-inline">
 						  <input class="btn-check" type="checkbox" value="28" name="memberInfo" id="expD8Input">
-						  <label class="btn-outline" for="expD9Input">의식 없음</label>
+						  <label class="btn-outline sm" for="expD8Input">의식 없음</label>
 						</div>
 						<br>
 						<div class="form-check form-check-inline">
 						  <input class="btn-check" type="checkbox" value="29" name="memberInfo" id="expD9Input">
-						  <label class="btn-outline" for="expD10Input">석션</label>
+						  <label class="btn-outline sm" for="expD9Input">석션</label>
 						</div>						
 						<div class="form-check form-check-inline">
 						     <input class="btn-check" type="checkbox" value="30" name="memberInfo" id="expD10Input">
-						  <label class="btn-outline" for="expD11Input">피딩</label>
+						  <label class="btn-outline sm" for="expD10Input">피딩</label>
 						</div>						
 						<div class="form-check form-check-inline">
-						     <input class="btn-check" type="checkbox" value="31" name="memberInfo" id="expD10Input">
-						  <label class="btn-outline" for="expD11Input">소변줄</label>
+						     <input class="btn-check" type="checkbox" value="31" name="memberInfo" id="expD11Input">
+						  <label class="btn-outline sm" for="expD11Input">소변줄</label>
 						</div>						
 						<div class="form-check form-check-inline">
-						     <input class="btn-check" type="checkbox" value="32" name="memberInfo" id="expD10Input">
-						  <label class="btn-outline" for="expD11Input">장루</label>
+						     <input class="btn-check" type="checkbox" value="32" name="memberInfo" id="expD12Input">
+						  <label class="btn-outline sm" for="expD12Input">장루</label>
 						</div>			
 						<br>			
 						<div class="form-check form-check-inline">
-						     <input class="btn-check" type="checkbox" value="33" name="memberInfo" id="expD10Input">
-						  <label class="btn-outline" for="expD11Input">투석</label>
+						     <input class="btn-check" type="checkbox" value="33" name="memberInfo" id="expD13Input">
+						  <label class="btn-outline sm" for="expD13Input">투석</label>
 						</div>						
 						<div class="form-check form-check-inline">
-						     <input class="btn-check" type="checkbox" value="34" name="memberInfo" id="expD10Input">
-						  <label class="btn-outline" for="expD11Input">전염성 질환</label>
+						     <input class="btn-check" type="checkbox" value="34" name="memberInfo" id="expD14Input">
+						  <label class="btn-outline sm" for="expD14Input">전염성 질환</label>
 						</div>						
 						<div class="form-check form-check-inline">
-						     <input class="btn-check" type="checkbox" value="35" name="memberInfo" id="expD10Input">
-						  <label class="btn-outline" for="expD11Input">파킨슨</label>
+						     <input class="btn-check" type="checkbox" value="35" name="memberInfo" id="expD15Input">
+						  <label class="btn-outline sm" for="expD15Input">파킨슨</label>
 						</div>
 						<div class="form-check form-check-inline">
-						     <input class="btn-check" type="checkbox" value="36" name="memberInfo" id="expD10Input">
-						  <label class="btn-outline" for="expD11Input">정신질환</label>
+						     <input class="btn-check" type="checkbox" value="36" name="memberInfo" id="expD16Input">
+						  <label class="btn-outline sm" for="expD16Input">정신질환</label>
 						</div>									
 					</div>	
 					
@@ -212,7 +207,8 @@
 				<p class="text-center">버튼을 누르면<br>회원가입이 완료됩니다.</p>
 			</div>
 			<div class="sign-btn d-flex flex-column">
-				<button type="button" class="signIn-btn mt-4" id="nextButton"><span>회원가입</span></button>
+				<p class="text-center ifCheck" style="font-size:20px;color:red;"></p>
+				<button type="button" class="signIn-btn mt-3" id="nextButton"><span>회원가입</span></button>
 			</div>
 
 		</form>
@@ -265,7 +261,7 @@
 			nextButton.addEventListener('click', ()=>{
 				let isValid = true;		
 				
-				if(!inputCheck(inputCheck)){
+				if(!inputCheckFunc(inputCheck)){
 					isValid = false;
 				}
 				if(!checkedPtGender){
@@ -286,10 +282,10 @@
 			});	
 		}
 						
-		function inputCheck(data){ 
+		function inputCheckFunc(data){ 
 			for(const i of data){
 				if(i.value.trim() == ''){
-					input.focus();
+					i.focus();
 					return false;
 				}
 			}
