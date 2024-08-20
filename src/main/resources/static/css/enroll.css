@@ -59,16 +59,20 @@ body {
 
 
 .sign-btn button {
-	height:60px;
-	font-size:18px;
-	border-radius:25px;
+	font-size:25px;
+	border-radius:20px;
 	border:none;
 }
 
 .signIn-btn {
-	background:#8dd986;
+	background:#1E5F74;
 	color:white;
+	height:60px;
+	border-radius:20px;
+	border:none;
 }
+
+
 
 .icon-section {
 	 list-style: none;
@@ -80,44 +84,51 @@ body {
     text-align: center;
 }
 
-.btn-check {
-    position: absolute;
-    clip: rect(0,0,0,0);
-    pointer-events: none;
+
+
+.btn-outline {	
+	color: #1D2D50;
+	border: 2px solid #1D2D50;
+	width: 190px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
 }
 
-.btn-radio {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 16px;
-        color: #495057;
-        background-color: #f8f9fa;
-        border: 1px solid #ced4da;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-        width: 100%;
-        text-align: center;
-    }
-    .btn-radio.selected {
-        background-color: #8dd986;
-        color: white;
-    }
 
-.btn-check:checked + .btn-radio {
-    color: #fff;
-    background-color: #8dd986;
-    border-color: #8dd986;
+.btn-outline.sm{	
+	width: 130px;
 }
 
-.btn-radio:hover {
-    background-color: #8dd986;
+/* .btn-check가 체크된 상태에서 .btn-outline 스타일 */
+.btn-check:checked + .btn-outline {
+	color: white;
+	background: #1D2D50;
 }
 
-.btn-check:checked + .btn-radio:hover {
-    background-color: #8dd986;
+/* .btn-outline이 활성화된 상태 (클릭된 상태) */
+.btn-outline:active , .btn-outline:hover, .btn-outline:focus{
+	color: white;
+	background: #1D2D50;
 }
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

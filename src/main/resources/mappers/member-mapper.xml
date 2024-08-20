@@ -877,12 +877,32 @@
 						where member_no = #{memberNo}) and pay_deposit = 'N'
 	
 	</select>
+	
 	<!-- 이미 신청한 환자 매칭방인지 확인 -->
 	<select id="getCountPendingMe" resultType="_int">
 		select count(*)
 		from mat_care_pending
 		where mat_no = #{matNo} and member_no = #{memberNo}		
 	</select>
+	
+	
+	<select id="getCountPt" resultType="_int">
+		select count(*)
+		from mat_pt_info
+		where mat_no = #{matNo}	
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
