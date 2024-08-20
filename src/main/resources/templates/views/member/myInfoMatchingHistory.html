@@ -61,7 +61,14 @@
 										</canvas>
 									</div>
 									<div> 
-										<table align="center" class="table table-bordered boarder-dark">
+										<table border="1" class="table table-bordered boarder-dark" style="text-align: center;">
+										<thead>
+										<tr>
+											<th colspan="2">내가 간호한 환자 성별</th>
+										</tr>
+										
+										</thead>
+										<tbody>
 											<tr>
 												<th>남자</th>
 												<td>[[${genderCountMap['남자']}]]명</td>
@@ -70,6 +77,15 @@
 												<th>여자</th>
 												<td>[[${genderCountMap["여자"]}]]명</td>
 											</tr>
+										</tbody>
+										<tfoot>
+											<tr>
+												<td>총 환자수 : </td>
+												<td th:with="totalMen=${genderCountMap['남자']}, totalWomen=${genderCountMap['여자']}, genderTotal= ${totalMen + totalWomen}">
+												    [[${genderTotal}]]명
+												</td>
+											</tr>
+										</tfoot>
 										</table>
 									</div>
 									<hr>
@@ -77,31 +93,47 @@
 										<canvas class="w-100" id="ageGraph" width="100" height="100"></canvas>
 									</div>
 									<div> 
-										<table align="center" class="table table-bordered boarder-dark">
+										<table class="table table-bordered boarder-dark" style="text-align: center;">
+											<thead>
+												<tr>
+													<th colspan="2">내가 간호한 환자 연령</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th>10대이하</th>
+													<td>[[${ageCountMap['10대이하']}]]명</td>
+												</tr>
+												<tr>	
+													<th>20대</th>
+													<td>[[${ageCountMap['20대']}]]명</td>
+												</tr>
+												<tr>	
+													<th>30대</th>
+													<td>[[${ageCountMap['30대']}]]명</td>
+												</tr>
+												<tr>	
+													<th>40대</th>
+													<td>[[${ageCountMap['40대']}]]명</td>
+												</tr>
+												<tr>	
+													<th>50대</th>
+													<td>[[${ageCountMap['50대']}]]명</td>
+												</tr>
+												<tr>	
+													<th>60대이상</th>
+													<td>[[${ageCountMap['60대이상']}]]명</td>
+												</tr>
+											</tbody>
+											<tfoot>
 											<tr>
-												<th>10대이하</th>
-												<td>[[${ageCountMap['10대이하']}]]명</td>
+												<td>총 환자수 : </td>
+												<td th:with="total10=${ageCountMap['10대이하']}, total20=${ageCountMap['20대']}, total30=${ageCountMap['30대']}, total40=${ageCountMap['40대']}, total50=${ageCountMap['50대']}, total60=${ageCountMap['60대이상']}, 
+															ageTotal= ${total10 + total20 + total30 + total40 + total50 + total60}">
+												    [[${ageTotal}]]명
+												</td>
 											</tr>
-											<tr>	
-												<th>20대</th>
-												<td>[[${ageCountMap['20대']}]]명</td>
-											</tr>
-											<tr>	
-												<th>30대</th>
-												<td>[[${ageCountMap['30대']}]]명</td>
-											</tr>
-											<tr>	
-												<th>40대</th>
-												<td>[[${ageCountMap['40대']}]]명</td>
-											</tr>
-											<tr>	
-												<th>50대</th>
-												<td>[[${ageCountMap['50대']}]]명</td>
-											</tr>
-											<tr>	
-												<th>60대이상</th>
-												<td>[[${ageCountMap['60대이상']}]]명</td>
-											</tr>
+										</tfoot>
 										</table>
 									</div>
 									<hr>
@@ -109,7 +141,13 @@
 										<canvas class="w-100" id="categoryGraph" width="250" height="100"></canvas>
 									</div>
 									<div class="categoryTable"> 
-										<table align="center" class="table table-bordered boarder-dark">
+										<table class="table table-bordered boarder-dark" style="text-align: center;">
+											<thead>
+												<tr>
+													<th colspan="8">내가 간호한 환자 질환</th>
+												</tr>
+											</thead>
+										<tbody>
 											<tr>
 												<th>석션</th>
 												<th>하반신마비</th>
@@ -151,6 +189,7 @@
 												<td>[[${categoryCountMap['소변줄']}]]회</td>
 												<td>[[${categoryCountMap['파킨슨']}]]회</td>
 											</tr>
+										</tbody>
 										</table>
 									</div>
 									</div>
@@ -176,7 +215,7 @@
 										<canvas class="w-100" id="monthUseCountGraph" width="500" height="100"></canvas>
 									</div>
 									<div>
-										<table class="table table-boarded">
+										<table class="table table-boarded" style="text-align: center;">
 											<tr>
 												<th>1월</th>
 												<th>2월</th>
@@ -219,7 +258,7 @@
 										<canvas class="w-100" id="monthPayCountGraph" width="500" height="100"></canvas>
 									</div>
 									<div>
-										<table class="table table-boarded">
+										<table class="table table-boarded" style="text-align: center;">
 											<tr>
 												<th>1월</th>
 												<th>2월</th>
@@ -272,7 +311,8 @@
 						    	  			</div>
 						      				<hr/>
 						      				<div id="matching" class="m-2 p-2" style="border-bottom:1px solid #dee2e6">
-											    <table class="m-2" id="matchingTable" text-align="center">
+											    <table class="m-2" id="matchingTable" style="text-align: center;">
+											    
 											        <tr>
 											            <th width="150px">간호 시작일</th>
 											            <th width="30"></th>

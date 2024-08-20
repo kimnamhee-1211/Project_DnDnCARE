@@ -81,6 +81,7 @@
 			join patient p on(p.pt_no = r.pt_no)
 			join member m on(m.member_no = r.member_no)
 		where review_status ='Y' and r.member_no = #{memberNo}
+		order by review_create_date desc
 	</select>
 	
 	<!-- 병원 get : 병원 존재 유무 확인-->
