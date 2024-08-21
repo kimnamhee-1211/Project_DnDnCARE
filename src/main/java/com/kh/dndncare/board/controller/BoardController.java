@@ -477,15 +477,104 @@ public class BoardController {
 		return bot.chat(condition + "에 대한 간병정보를 300자로 요약해줘.");
 	}
 	
-	
-	// 간병백과 앨범형 페이지로 이동 요청
+	// 삭제하지 말아주세요 ㅠ_ㅠ
+	// 간병백과 앨범형 페이지로 이동 요청 (**임시 징검다리**)
 	@GetMapping("albumCareInformation.bo")
 	public String albumCareInformation(@RequestParam(value="page", defaultValue="1") int currentPage) {
-		
-		
-		
 		return "albumCareInformation";
+	}// 삭제하지 말아주세요 ㅠ_ㅠ
+	
+	
+	// 간병백과 앨범형 컨텐츠 목록을 조회
+	@PostMapping("selectCareInformationAlbumList.bo")
+	@ResponseBody
+	public void selectCareInformationAlbumList(@RequestParam(value="page", defaultValue="1") int currentPage,
+												HttpServletResponse response) {
+		// 페이징 처리된 컨텐츠 목록 조회
+		int listCount = bService.getCareInfomationListCount(null);
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 9, 5);
+		
+		response.setContentType("application/json; charset=UTF-8"); // MIME타입, 인코딩타입 지정
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
+		Gson gson = gb.create(); 
+		
+		try {
+			if(currentPage > pi.getMaxPage()) {
+				gson.toJson(null, response.getWriter());
+			} else {
+				HashMap<String, ArrayList<?>> result = new HashMap<String, ArrayList<?>>();
+				ArrayList<Board> bList = bService.selectCareInformation(null, pi);
+				ArrayList<Attachment> aList = bService.selectAttachment(bList);
+				
+				ArrayList<Integer> pList = new ArrayList<Integer>();
+				pList.add(pi.getMaxPage());
+				
+				result.put("bList", bList);
+				result.put("aList", aList);
+				result.put("pList", pList);
+				gson.toJson(result, response.getWriter());
+			}
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
 	}
+	
+	
+	// 간병백과 앨범형 글 검색 요청
+	@GetMapping("searchCareInformationAlbum.bo")
+	@ResponseBody
+	public void searchCareInformationAlbum(@RequestParam(value="page", defaultValue="1") int currentPage,
+										@RequestParam("searchOption") String searchOption,
+										@RequestParam("searchContent") String searchContent,
+										HttpServletResponse response) {
+		response.setContentType("application/json; charset=UTF-8");
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
+		Gson gson = gb.create();
+		
+		try {
+			if(searchOption.equals("none")) { // 검색조건이 올바르지 않을 때 : 백에서도 안전하게 fail로 반환
+				gson.toJson(null, response.getWriter());
+			} else { // 올바른 검색조건을 선택했을 때
+				HashMap<String, String> map = new HashMap<String, String>();
+				if(searchOption.equals("title")) {
+					map.put("column", "BOARD_TITLE");
+				} else if(searchOption.equals("content")) {
+					map.put("column", "BOARD_CONTENT");
+				}
+				map.put("searchContent", searchContent);
+				
+				int listCount = bService.getCareInfomationListCount(map);
+				if(listCount == 0) {
+					log.info("{} : {}", searchOption, searchContent); // 검색결과가 없을 때 로그를 발생시킨다.
+					gson.toJson("empty", response.getWriter());
+				} else {
+					PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 9, 5);
+					
+					if(currentPage > pi.getMaxPage()) {
+						gson.toJson(null, response.getWriter());
+					} else {
+						HashMap<String, ArrayList<?>> result = new HashMap<String, ArrayList<?>>();
+						ArrayList<Board> bList = bService.searchCareInformation(map, pi);
+						
+						ArrayList<Attachment> aList = bService.selectAttachment(bList);
+						ArrayList<Integer> pList = new ArrayList<Integer>();
+						pList.add(pi.getMaxPage());
+						
+						result.put("bList", bList);
+						result.put("aList", aList);
+						result.put("pList", pList);
+						
+						gson.toJson(result, response.getWriter());
+					}
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 	
 	
 }
