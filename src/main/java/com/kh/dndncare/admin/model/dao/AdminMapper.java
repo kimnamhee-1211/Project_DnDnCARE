@@ -38,5 +38,13 @@ public interface AdminMapper {
 
 	int updateCareInformation(Board b);
 
+	ArrayList<Board> selectCaregiverBoardList(RowBounds rowBounds);
+
+	ArrayList<Board> selectPatientBoardList(RowBounds rowBounds);
+
+	int getCaregiverListCount();
+
+	int getPatientListCount();
+
 
 }

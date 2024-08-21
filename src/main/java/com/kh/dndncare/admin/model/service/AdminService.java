@@ -35,5 +35,13 @@ public interface AdminService {
 
 	int updateCareInformation(Board b);
 
+	ArrayList<Board> selectCaregiverBoardList(PageInfo cpi);
+
+	ArrayList<Board> selectPatientBoardList(PageInfo ppi);
+
+	int getCaregiverListCount();
+
+	int getPatientListCount();
+
 
 }

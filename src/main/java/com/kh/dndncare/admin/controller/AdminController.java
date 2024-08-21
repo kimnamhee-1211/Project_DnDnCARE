@@ -29,6 +29,7 @@ import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.common.ImageUtil;
+import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.common.Pagination2;
 import com.kh.dndncare.common.ThumbnailUtil;
 import com.kh.dndncare.member.model.Exception.MemberException;
@@ -476,5 +477,28 @@ public class AdminController {
 		return "payInfo";
 	}
 	
+	@GetMapping("adminBoard.adm")
+	public String adminBoardView(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model) {
+		// 간병인 커뮤니티 게시판 페이지네이션
+		int caregiverListCount = aService.getCaregiverListCount();
+		PageInfo cpi = Pagination2.getPageInfo(currentPage, caregiverListCount, 7, 5);
+		
+		// 환자 커뮤니티 게시판 페이지네이션
+		int patientListCount = aService.getPatientListCount();
+		PageInfo ppi = Pagination2.getPageInfo(currentPage, patientListCount, 7, 5);
+		
+		// 간병인 커뮤니티 게시판 type만들걸
+		ArrayList<Board> adminCaregiverBoardList = aService.selectCaregiverBoardList(cpi);
+		System.out.println(adminCaregiverBoardList);
+		// 환자 커뮤니티
+		ArrayList<Board> adminPatientBoardList = aService.selectPatientBoardList(ppi);
+		System.out.println(adminPatientBoardList);
+		
+		model.addAttribute("cpi",cpi);
+		model.addAttribute("ppi",ppi);
+		model.addAttribute("cbList", adminCaregiverBoardList);
+		model.addAttribute("pbList", adminPatientBoardList);
+		return "adminBoard";
+	}
 }//클래스 끝
 

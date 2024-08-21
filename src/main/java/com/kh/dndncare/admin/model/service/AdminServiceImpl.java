@@ -84,4 +84,26 @@ public class AdminServiceImpl implements AdminService{
 		return aMapper.updateCareInformation(b);
 	}
 
+	@Override
+	public ArrayList<Board> selectCaregiverBoardList(PageInfo cpi) {
+		RowBounds rowBounds = new RowBounds((cpi.getCurrentPage()-1)*cpi.getBoardLimit(), cpi.getBoardLimit());
+		return aMapper.selectCaregiverBoardList(rowBounds);
+	}
+
+	@Override
+	public ArrayList<Board> selectPatientBoardList(PageInfo ppi) {
+		RowBounds rowBounds = new RowBounds((ppi.getCurrentPage()-1)*ppi.getBoardLimit(), ppi.getBoardLimit());
+		return aMapper.selectPatientBoardList(rowBounds);
+	}
+
+	@Override
+	public int getCaregiverListCount() {
+		return aMapper.getCaregiverListCount();
+	}
+
+	@Override
+	public int getPatientListCount() {
+		return aMapper.getPatientListCount();
+	}
+
 }
