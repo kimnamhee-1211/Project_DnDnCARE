@@ -41,7 +41,7 @@
 							<div class="m-2 d-flex justify-content-between">
 								<div class="h3 myInfo-title">내가 쓴 글</div>
 							</div>
-      						<table class="m-2">
+      						<table class="m-2" >
       							<tr>
 		                            <th width="8%">번호</th>
 		                            <th width="15%">카테고리</th>
@@ -51,7 +51,7 @@
 		                            <th width="15%">작성일</th>
 			                        <th width="10%">조회수</th>
 		                        </tr>
-		                        <tr th:each="b:${boardList}">
+		                        <tr th:if="${!boardList.isEmpty()}" th:each="b:${boardList}">
 		                        	<td>[[${b.boardNo}]]</td>
 		                        	<td>[[${b.categoryName}]]</td>
 		                        	<td>[[${b.boardTitle}]]</td>
@@ -59,6 +59,9 @@
 		                        	<td>[[${b.areaName}]]</td>
 		                        	<td>[[${b.boardCreateDate}]]</td>
 		                        	<td>[[${b.boardCount}]]</td>
+		                        </tr>
+		                        <tr th:if="${boardList.isEmpty()}" align="center">
+		                        	<td colspan="7">작성한 게시글이 없습니다.</td>
 		                        </tr>
       						</table>
 						</div>
@@ -99,12 +102,15 @@
 					                            <th width="8%">추천</th>
 					                            <th width="15%">작성일</th>
 					                        </tr>
-					                        <tr th:each="r:${replyList}">
+					                        <tr th:if="${!replyList.isEmpty()}" th:each="r:${replyList}" >
 					                        	<td>[[${r.refBoardNo}]]</td>
 					                        	<td>[[${r.boardTitle}]]</td>
 					                        	<td>[[${r.replyContent}]]</td>
 					                        	<td>[[${replyLikeCounts[r.replyNo]}]]</td>
 					                        	<td>[[${r.replyCreateDate}]]</td>
+					                        </tr>
+					                        <tr th:if="${replyList.isEmpty()}" align="center">
+					                        	<td colspan="5">작성한 댓글이없습니다.</td>
 					                        </tr>
 			      						</table>
 					                </div>
@@ -145,7 +151,7 @@
 					                            <th width="15%">작성일</th>
 						                        <th width="10%">조회수</th>
 					                        </tr>
-					                        <tr th:each="l:${likeList}">
+					                        <tr th:if="${!likeList.isEmpty()}" th:each="l:${likeList}">
 					                        	<td>[[${l.boardNo}]]</td>
 					                        	<td>[[${l.categoryName}]]</td>
 					                        	<td>[[${l.boardTitle}]]</td>
@@ -153,6 +159,9 @@
 					                        	<td>[[${l.areaName}]]</td>
 					                        	<td>[[${l.boardCreateDate}]]</td>
 					                        	<td>[[${l.boardCount}]]</td>
+					                        </tr>
+					                        <tr th:if="${likeList.isEmpty()}" align="center">
+					                        	<td colspan="7">좋아요한 글이 없습니다.</td>
 					                        </tr>
 			      						</table>
 					                </div>

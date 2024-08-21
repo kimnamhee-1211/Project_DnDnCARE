@@ -75,8 +75,10 @@
                             <th:block th:if="${session.loginUser.memberCategory} == 'A'">
                             	<option value="0">공지사항</option>
                             </th:block>
-                            <option value="1">응원의 한마디</option>
-                            <option value="2">수다방</option>
+                            <th:block th:if="${session.loginUser.memberCategory == 'C' || session.loginUser.memberCategory == 'P'}">
+	                            <option value="1">응원의 한마디</option>
+	                            <option value="2">수다방</option>
+                            </th:block>
                             <th:block th:if="${session.loginUser.memberCategory == 'C'}">
 	                            <option value="3">일감찾기 팁</option>
 	                            <option value="4">자격증 정보</option>

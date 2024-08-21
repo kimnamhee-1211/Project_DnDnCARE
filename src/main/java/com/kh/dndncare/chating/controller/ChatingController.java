@@ -40,19 +40,6 @@ public class ChatingController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 	
-//	@GetMapping("getChatList.ch")
-//	public String getChatList(HttpSession session) {
-//		Member loginUser = (Member)session.getAttribute("loginUser");
-//		int memberNo = loginUser.getMemberNo();
-//		
-//		ArrayList<ChatingRoom> chatRoomList = chService.getChatRoomList(memberNo);
-//		System.out.println(chatRoomList);
-//		//ArrayList<ChatingRoomMessage> lastChatList = chService.getLastChatList
-//		
-//		
-//		return null;
-//	}
-	
     @GetMapping("getChatList.ch")
     public String getChatRooms(Model model, HttpSession session) {
     	Member loginUser = (Member)session.getAttribute("loginUser");
@@ -67,61 +54,187 @@ public class ChatingController {
        
 }
 	
+    @GetMapping("createAndGetChat.ch")
+    public String createAndGetChat(@RequestParam(value="matNo", required=false) Integer matNo,
+                                   @RequestParam(value="matPtNo", required=false) Integer matPtNo,
+                                   @RequestParam(value="chatRoomNo", required=false) Integer chatRoomNo,
+                                   @RequestParam(value ="caregiverMemberNo", required=false) Integer caregiverMemberNo,
+                                   HttpSession session,
+                                   Model model) {
+        Member loginUser = (Member) session.getAttribute("loginUser");
+        int memberNo = loginUser.getMemberNo();
+        String memberName = loginUser.getMemberName();
+
+        Integer finalChatRoomNo = null;
+        int relatedMemberNo = 0;
+        int relatedMatPtNo = 0;
+        int cMemberNo = 0;
+        int firstMemberNo;
+        int secondMemberNo;
+        int thirdMemberNo;
+        int firstPtNo;
+        int secondPtNo;
+        int thirdPtNo;
+        
+        
+        if (chatRoomNo != null) {
+            // 기존 채팅방으로 이동
+            ChatingRoom existingChatingRoom = chService.getChatRoom(memberNo, chatRoomNo);
+            if (existingChatingRoom != null) {
+                finalChatRoomNo = existingChatingRoom.getChatRoomNo();
+                chService.markAsRead(finalChatRoomNo, memberNo);
+            } else {
+                throw new MemberException("존재하지 않는 채팅방입니다.");
+            }
+        } else {
+            // 새 채팅방 생성
+            if (matNo == null) {
+                throw new MemberException("채팅방 생성에 필요한 정보가 부족합니다.");
+            }
+
+            ChatingRoom newChatingRoom = new ChatingRoom();
+            newChatingRoom.setMatNo(matNo);
+            
+            int ptCount = chService.getPtCount(matNo);
+            
+            // 개인간병일 때
+            if(ptCount == 1) {
+                //간병인이 공개구인 페이지에서 신청했을 때
+            	List<Integer> ptNos = chService.getMatPtNos(matNo);          
+                if("C".equals(loginUser.getMemberCategory())) {
+                	matPtNo = ptNos.get(0);
+                    relatedMemberNo = chService.getMatMemberNo(matPtNo);
+                } // 환자가 간병인 상세페이지에서 신청했을 때
+                else if("P".equals(loginUser.getMemberCategory())) {
+                    relatedMemberNo = caregiverMemberNo;
+                }
+                int chatRoomResult = chService.insertChatRoom(newChatingRoom);
+                
+                if (chatRoomResult <= 0) {
+                   throw new MemberException("채팅방 생성에 실패했습니다.");
+                }
+                relatedMatPtNo = matPtNo;
+                System.out.println(relatedMatPtNo);
+                finalChatRoomNo = chService.getChatRoomNo(relatedMatPtNo);
+                System.out.println("finalChatRoomNo" + finalChatRoomNo);
+                
+                if (finalChatRoomNo == null) {
+                    throw new MemberException("채팅방 번호를 가져오는데 실패했습니다.");
+                }
+                
+                int chatRoomMemberResult = chService.insertChatRoomMember(finalChatRoomNo, memberNo, relatedMemberNo);
+                 
+                if (chatRoomMemberResult <= 0) {
+                   throw new MemberException("채팅방 멤버 추가에 실패했습니다.");
+                }
+            }
+            //공동간병에서 참여환자수가 2일때 
+            else if(ptCount == 2) {
+                List<Integer> ptNos = chService.getMatPtNos(matNo);
+                System.out.println("ptNos 첫번째 :" + ptNos.get(0));
+                System.out.println("ptNos 두번째 :" + ptNos.get(1));
+                if("C".equals(loginUser.getMemberCategory())) {
+                    cMemberNo = memberNo;           		
+                } else if("P".equals(loginUser.getMemberCategory())) {
+                    cMemberNo = caregiverMemberNo;
+                }
+                
+                firstPtNo = ptNos.get(0);
+                secondPtNo = ptNos.get(1);
+                
+                List<Integer> memberNos = chService.getMatMemberNos2(firstPtNo,secondPtNo);
+                
+                firstMemberNo = memberNos.get(0);
+                secondMemberNo = memberNos.get(1);
+                
+                int chatRoomResult = chService.insertChatRoom(newChatingRoom);
+                
+                if (chatRoomResult <= 0) {
+                   throw new MemberException("채팅방 생성에 실패했습니다.");
+                }
+                relatedMatPtNo = firstPtNo;
+                finalChatRoomNo = chService.getChatRoomNo(relatedMatPtNo);
+                System.out.println("finalChatRoomNo" + finalChatRoomNo);
+                
+                if (finalChatRoomNo == null) {
+                    throw new MemberException("채팅방 번호를 가져오는데 실패했습니다.");
+                }
+                
+                int chatRoomMemberResult2 = chService.insertChatRoomMember2(finalChatRoomNo, cMemberNo,firstMemberNo,secondMemberNo);
+                
+                if(chatRoomMemberResult2 <=0) {
+                    throw new MemberException("채팅멤버 추가에 실패하였습니다");
+                }
+            }
+            //공동간병에서 참여환자수가 3일때
+            else if(ptCount == 3) {
+                List<Integer> ptNos = chService.getMatPtNos(matNo);
+                if("C".equals(loginUser.getMemberCategory())) {
+                    cMemberNo = memberNo;
+                } else if("P".equals(loginUser.getMemberCategory())) {
+                    cMemberNo = caregiverMemberNo;
+                }
+                
+                firstPtNo = ptNos.get(0);
+                secondPtNo = ptNos.get(1);
+                thirdPtNo = ptNos.get(2);
+                
+                List<Integer> memberNos = chService.getMatMemberNos3(firstPtNo,secondPtNo,thirdPtNo);
+                
+                firstMemberNo = memberNos.get(0);
+                secondMemberNo = memberNos.get(1);
+                thirdMemberNo = memberNos.get(2);
+                
+                int chatRoomResult = chService.insertChatRoom(newChatingRoom);
+                
+                if (chatRoomResult <= 0) {
+                    throw new MemberException("채팅방 생성에 실패했습니다.");
+                }
+                
+                relatedMatPtNo = firstPtNo;
+                finalChatRoomNo = chService.getChatRoomNo(relatedMatPtNo);
+                System.out.println("finalChatRoomNo" + finalChatRoomNo);
+                
+                if (finalChatRoomNo == null) {
+                    throw new MemberException("채팅방 번호를 가져오는데 실패했습니다.");
+                }
+                
+                int chatRoomMemberResult3 = chService.insertChatRoomMember3(finalChatRoomNo, cMemberNo,firstMemberNo,secondMemberNo,thirdMemberNo);
+                
+                if(chatRoomMemberResult3 <=0) {
+                    throw new MemberException("채팅멤버 추가에 실패하였습니다");
+                }
+            }
+        }
+
+        if (finalChatRoomNo == null) {
+            throw new MemberException("채팅방 번호를 가져오는데 실패했습니다.");
+        }
+        int firstChat = chService.getChatCount(finalChatRoomNo);
+        if(firstChat == 0) {
+        	ChatingRoomMessage systemMessage = new ChatingRoomMessage();
+	        systemMessage.setChatRoomNo(finalChatRoomNo);
+	        systemMessage.setMemberNo(memberNo);  // 시스템 메시지를 나타내는 특별한 memberNo
+	        systemMessage.setChatContent("안녕하세요.");
+	        chService.saveMessage(systemMessage);
+        }
+        
+        
+        model.addAttribute("chatRoomId", finalChatRoomNo);
+        model.addAttribute("userId", memberNo);
+        model.addAttribute("memberName", memberName);
+        
+        return "chatRoom";
+    }
 	
 	
-
-	
-	@GetMapping("createAndGetChat.ch")
-	public String createAndGetChat(@RequestParam(value="matNo" ,required=false ) Integer matNo,
-	                               @RequestParam(value= "matPtNo",required=false) Integer matPtNo,
-	                               @RequestParam(value= "chatRoomNo",required=false) Integer chatRoomNo,
-	                               HttpSession session,
-	                               Model model) {
-	    Member loginUser = (Member) session.getAttribute("loginUser");
-	    int memberNo = loginUser.getMemberNo();
-	    String memberName = loginUser.getMemberName();
-
-	    ChatingRoom existingChatingRoom = chService.getChatRoom(memberNo, chatRoomNo);
-	    if (existingChatingRoom != null) {
-	        // Chat room already exists, redirect to it
-	        model.addAttribute("chatRoomId", existingChatingRoom.getChatRoomNo());
-	        model.addAttribute("userId", memberNo);
-	        model.addAttribute("memberName", memberName);
-	        
-	        chService.markAsRead(existingChatingRoom.getChatRoomNo(), memberNo);
-	        return "chatRoom";
-	    }
-
-	    // Create new chat room
-	    ChatingRoom chatingRoom = new ChatingRoom();
-	    chatingRoom.setMatNo(matNo);
-
-	    int matMemberNo = chService.getMatMemberNo(matPtNo);
-	    int chatRoomResult = chService.insertChatRoom(chatingRoom);
-	    
-	    if (chatRoomResult <= 0) {
-	        throw new MemberException("채팅방 생성에 실패했습니다.");
-	    }
-
-	    int newChatRoomNo = chService.getChatRoomNo(matPtNo);
-	    int chatRoomMemberResult = chService.insertChatRoomMember(newChatRoomNo, memberNo, matMemberNo);
-
-	    if (chatRoomMemberResult <= 0) {
-	        throw new MemberException("채팅방 멤버 추가에 실패했습니다.");
-	    }
-
-	    model.addAttribute("chatRoomId", newChatRoomNo);
-	    model.addAttribute("userId", memberNo);
-	    model.addAttribute("memberName",memberName);
-	    return "chatRoom";
-	}
-	
-	@MessageMapping("/chat/{chatRoomId}")
-    @SendTo("/room/chat/{chatRoomId}")
+   @MessageMapping("/chat/{chatRoomId}")
+   @SendTo("/room/chat/{chatRoomId}")
     public ChatingRoomMessage sendMessage(@DestinationVariable("chatRoomId") int chatRoomId, ChatingRoomMessage chatMessage) {
         chatMessage.setChatRoomNo(chatRoomId);
         // 채팅방 참여자 수를 조회하여 readCount 설정
         int participantCount = chService.getParticipantCount(chatRoomId);
+        System.out.println(participantCount);
         chatMessage.setReadCount(participantCount - 1);  // 발신자를 제외한 참여자 수
         
         TimeZone koreaTimeZone = TimeZone.getTimeZone("Asia/Seoul");
@@ -171,12 +284,20 @@ public class ChatingController {
     }
     
     @MessageMapping("/chat/read/{chatRoomId}")
-    public void markAsRead(@DestinationVariable("chatRoomId") String chatRoomId, 
+    public void markAsRead(@DestinationVariable("chatRoomId") String chatRoomId,
                            @Payload ReadStatusMessage readStatusMessage) {
-        chService.markAsRead(Integer.parseInt(chatRoomId), readStatusMessage.getMemberNo());
+        int chatRoomNoInt = Integer.parseInt(chatRoomId);
+        int memberNo = readStatusMessage.getMemberNo();
 
-        // 읽음 상태 업데이트를 모든 참여자에게 브로드캐스트
-        messagingTemplate.convertAndSend("/room/chat/" + chatRoomId + "/read", readStatusMessage);
+        chService.markAsRead(chatRoomNoInt, memberNo);
+
+        List<Map<String, Object>> messageReadCounts = chService.getMessageReadCounts(chatRoomNoInt);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("memberNo", memberNo);
+        response.put("messageReadCounts", messageReadCounts);
+
+        messagingTemplate.convertAndSend("/room/chat/" + chatRoomNoInt + "/read", response);
     }
 
     @GetMapping("/api/chat/unreadCount")
@@ -185,6 +306,27 @@ public class ChatingController {
         int unreadCount = chService.getUnreadMessageCount(chatRoomNo, memberNo);
         Map<String, Object> response = new HashMap<>();
         response.put("unreadCount", unreadCount);
+        return response;
+    }
+    
+    @GetMapping("/api/chat/messageReadCounts/{chatRoomId}")
+    @ResponseBody
+    public List<Map<String, Object>> getMessageReadCounts(@PathVariable("chatRoomId") int chatRoomId) {
+        return chService.getMessageReadCounts(chatRoomId);
+    }
+    
+    @MessageMapping("/chat/checkRead/{chatRoomId}")
+    @SendTo("/room/chat/{chatRoomId}/read")
+    public Map<String, Object> checkReadStatus(@DestinationVariable String chatRoomId, @Payload ReadStatusMessage readStatusMessage) {
+        int chatRoomNoInt = Integer.parseInt(chatRoomId);
+        chService.markAsRead(chatRoomNoInt, readStatusMessage.getMemberNo());
+        
+        int unreadCount = chService.getUnreadMessageCount(chatRoomNoInt, readStatusMessage.getMemberNo());
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("memberNo", readStatusMessage.getMemberNo());
+        response.put("unreadCount", unreadCount);
+        
         return response;
     }
     

@@ -1,7 +1,9 @@
 package com.kh.dndncare.admin.model.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import com.kh.dndncare.admin.model.dao.AdminMapper;
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.matching.model.vo.Pay;
+import com.kh.dndncare.member.model.vo.Member;
 
 @Service
 public class AdminServiceImpl implements AdminService{
@@ -82,6 +86,58 @@ public class AdminServiceImpl implements AdminService{
 	@Override
 	public int updateCareInformation(Board b) {
 		return aMapper.updateCareInformation(b);
+	}
+
+	@Override
+	public ArrayList<Pay> selectPayDeposit(String type) {
+		return aMapper.selectPayDeposit(type);
+	}
+
+	public int getMembersListCount() {
+		return aMapper.getMembersListCount();
+	}
+
+	@Override
+	public ArrayList<Member> selectWeekMembers(Object object, PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return aMapper.selectWeekMembers(null, rowBounds);
+	}
+
+	@Override
+	public int getAllMembersListCount() {
+		return aMapper.getAllMembersListCount();
+	}
+
+	@Override
+	public ArrayList<Member> selectAllMembers(Object object, PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return aMapper.selectAllMembers(null, rowBounds);
+	}
+
+	@Override
+	public int getSearchMemberListCount(HashMap<String, String> map) {
+		return aMapper.getSearchMemberListCount(map);
+	}
+
+	@Override
+	public ArrayList<Member> searchMembers(HashMap<String, String> map, PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return aMapper.searchMembers(map, rowBounds);
+	}
+
+	@Override
+	public int updateMembers(HashMap<String, Object> map) {
+		return aMapper.updateMembers(map);
+	}
+
+	@Override
+	public String getMemberAge(int memberNo) {
+		return aMapper.getMemberAge(memberNo);
+	}
+
+	@Override
+	public ArrayList<HashMap<String, Object>> getEnrollCount(HashMap<String, Integer> map) {
+		return aMapper.getEnrollCount(map);
 	}
 
 }

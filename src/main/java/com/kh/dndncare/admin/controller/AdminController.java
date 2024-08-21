@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +32,7 @@ import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.common.ImageUtil;
 import com.kh.dndncare.common.Pagination2;
 import com.kh.dndncare.common.ThumbnailUtil;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.Member;
 
@@ -107,7 +109,8 @@ public class AdminController {
 		int agoMonth = c.get(Calendar.MONTH);
 		String agoRealMonth = agoMonth < 10 ? "0"+agoMonth : agoMonth+"";
 		int agoDate = c.get(Calendar.DATE);
-		String ago = agoYear + agoRealMonth + agoDate; // 20240811
+		String agoRealDate = agoDate < 10 ? "0"+agoDate : agoDate+"";
+		String ago = agoYear + agoRealMonth + agoRealDate; // 20240811
 		int agoInteger = Integer.parseInt(ago);
 		
 		TreeMap<String, Integer> searchMap = new TreeMap<String, Integer>(); // key(검색어), value(횟수)
@@ -117,7 +120,7 @@ public class AdminController {
 				String[] fileName = f.getName().split("log.");
 				// log를 기준으로 자른 배열의 길이가 1인 경우 : fileName.length == 1)
 				// log를 기준으로 자른 배열의 길이가 2인 경우 : Integer.parseInt(fileName[1]) >= agoInteger
-				if(fileName.length == 1 ||  Integer.parseInt(fileName[1]) >= agoInteger) {
+				if(fileName.length == 1 ||  Integer.parseInt(fileName[1]) > agoInteger) {
 					BufferedReader br = new BufferedReader(new FileReader(f));
 					String data;
 					while((data = br.readLine())!=null) {
@@ -472,9 +475,286 @@ public class AdminController {
 	
 	//결제정보 어드민
 	@GetMapping("payInfoView.adm")
-	public String payInfoView() {
+	public String payInfoView(Model model) {
+		ArrayList<Pay> psDp = aService.selectPayDeposit("Y");
+		for(Pay p : psDp) {
+			System.out.println(p);
+		}
+		
+		ArrayList<Pay> psDpN = aService.selectPayDeposit("N");
+		
+		model.addAttribute("psDp",psDp);
+		model.addAttribute("psDpN",psDpN);
+		System.out.println(psDp);
 		return "payInfo";
 	}
 	
-}//클래스 끝
-
+	// 회원관리 페이지로 이동을 요청
+	@GetMapping("members.adm")
+	public String members(@RequestParam(value="page", defaultValue="1") int currentPage, Model model,
+							HttpServletRequest request) {
+		int listCount = aService.getMembersListCount();
+		
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 10, 5);
+		
+		ArrayList<Member> mList = aService.selectWeekMembers(null, pi); // 일주일내 가입자만 조회
+		//[Member(memberNo=126, memberId=comp3, memberName=환자삼, memberGender=F, memberNickName=환자삼, memberAge=1995-08-19, memberPhone=101019950819, memberEmail=comp3@naver.com, memberCreateDate=2024-08-19, memberAddress=16979//경기 용인시 기흥구 갈곡로 5//603호, memberCategory=P, memberStatus=Y, memberNational=외국인, memberPay=null, memberUpdateDate=2024-08-19, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=125, memberId=com4, memberPwd=$2a$10$0O.0xJyjMbftmE248Q66l.RBY8HFICp/0Rw5bQbhkB5cG1IN.di/2, memberName=간병사, memberGender=M, memberNickName=간병사, memberAge=1995-08-19, memberPhone=01019950919, memberEmail=com4@naver.com, memberCreateDate=2024-08-19, memberAddress=16296//경기 수원시 장안구 수원북부순환로 188//1층, memberCategory=C, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-19, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=124, memberId=wododowo, memberPwd=$2a$10$47/mtsXP4MqBMivalH5ylefTVzgNGQvZzA2ALmbSfkjW3UHousVpe, memberName=vefi, memberGender=M, memberNickName=qpwl, memberAge=2018-11-29, memberPhone=231020, memberEmail=qwdqdqd@hanmail.net, memberCreateDate=2024-08-19, memberAddress=46732//부산 강서구 녹산산업북로221번가길 12//123, memberCategory=P, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-19, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=123, memberId=test444, memberPwd=$2a$10$AUnATtheupsBs/uXNWcZaez9xU7PtH1udvo0KzL69Uo.UiQk1AN8O, memberName=김장군, memberGender=M, memberNickName=하하슴사, memberAge=2019-05-08, memberPhone=01077651258, memberEmail=rlarlfyd1258@naver.com, memberCreateDate=2024-08-19, memberAddress=02179//서울 중랑구 망우로74가길 16//3층, memberCategory=C, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-19, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=121, memberId=test888, memberPwd=$2a$10$gO7yt0za5L6UQozzgO54ye9MSDl4S5ntjziMJpMBY5KXcl6.79jhm, memberName=테스트, memberGender=M, memberNickName=ㄹㅇㄷㅇ, memberAge=1996-12-30, memberPhone=02023232, memberEmail=fwefq@naver.com, memberCreateDate=2024-08-16, memberAddress=06231//서울 강남구 도곡로33길 5//23424, memberCategory=C, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-16, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=120, memberId=comp2, memberPwd=$2a$10$lsWB0g12D0kD94lwWgETTOmJVCxjzqVJ9WgSsS.g7bvsBfhQFFObS, memberName=환자이, memberGender=M, memberNickName=환자이, memberAge=1991-01-09, memberPhone=01019910109, memberEmail=comp222@nate.com, memberCreateDate=2024-08-14, memberAddress=30121//세종특별자치시 가름로 170-14//501호, memberCategory=P, memberStatus=N, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-14, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=119, memberId=com3, memberPwd=$2a$10$QotyvaK.GnWajEhT8x30Ve7g4BRJ3zqGEr.mRy8sdSqOeI2q5BD12, memberName=환자이, memberGender=M, memberNickName=간병삼, memberAge=1989-09-08, memberPhone=01019890908, memberEmail=com3333@gmail.com, memberCreateDate=2024-08-14, memberAddress=22233//인천 미추홀구 경원대로 627//202호, memberCategory=C, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-14, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=118, memberId=test333, memberPwd=$2a$10$Ct1pdkKLUVYwnIT0FYs49eFTeGr/.9qRlYvIZnOCkxp2JPlNF/2hO, memberName=test333, memberGender=M, memberNickName=test333, memberAge=1988-12-06, memberPhone=00055559999, memberEmail=test333@gmail.com, memberCreateDate=2024-08-14, memberAddress=05571//서울 송파구 올림픽로 지하 23//야구장, memberCategory=P, memberStatus=Y, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-14, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=117, memberId=rlfyd1235, memberPwd=$2a$10$K5qYH6czqEU6F3IXp9gMiO2cBWmk4HtnEQd78.rcYg9JwJRf3rmZy, memberName=김기룡, memberGender=M, memberNickName=하하하하, memberAge=2012-02-13, memberPhone=01077651258, memberEmail=rlarlfyd1258@naver.com, memberCreateDate=2024-08-13, memberAddress=02179//서울 중랑구 망우로74가길 16//3층, memberCategory=P, memberStatus=N, memberNational=내국인, memberPay=null, memberUpdateDate=2024-08-13, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null), Member(memberNo=116, memberId=wodudkakao, memberPwd=$2a$10$Ec0hjucM2GQWQxykPAhVq.TX2F4QrZRBrwwmCZOADhbOb218RROjG, memberName=재영님, memberGender=M, memberNickName=재영님꺼, memberAge=1990-09-02, memberPhone=01055434392, memberEmail=doddoxl@naver.com, memberCreateDate=2024-08-12, memberAddress=05259//서울 강동구 구천면로55길 5//220호, memberCategory=C, memberStatus=N, memberNational=내국인, memberPay=3661421183, memberUpdateDate=2024-08-12, memberRealAge=0, career=null, license=null, matNo=0, groupLeader=null)]
+		
+		// 나이 계산
+		Calendar c = GregorianCalendar.getInstance();
+		int year = c.get(Calendar.YEAR);
+		for(Member m : mList) {
+			String memberYear = m.getMemberAge().toString().split("-")[0];
+			m.setMemberRealAge(year - Integer.parseInt(memberYear));
+		}
+		
+		model.addAttribute("mList", mList);
+		model.addAttribute("pi", pi);
+		model.addAttribute("loc", request.getRequestURI());
+		
+		membersGraph(model);
+		
+		
+		return "members";
+	}
+	
+	
+	// 그래프 작업용 메소드를 따로 만들기
+	public void membersGraph(Model model) {
+		// 로그 읽어오기 : C:\logs\dndnCare\loginUser
+		File folder = new File("C:/logs/dndnCare/loginUser");
+		File[] fileList = folder.listFiles();
+		
+		// 2주치의 로그파일을 1주일씩 각각 읽어오기
+		TreeMap<String, Integer> oneWeekAgo = new TreeMap<String, Integer>();
+		TreeMap<String, Integer> twoWeekAgo = new TreeMap<String, Integer>();
+		
+		// 일주일 전의 날짜를 yyyyMMdd로 뽑아내기
+		Calendar now = GregorianCalendar.getInstance();
+		int nowYear = now.get(Calendar.YEAR);
+		int nowMonth = now.get(Calendar.MONTH) + 1;
+		int nowDate = now.get(Calendar.DATE);
+		
+		Calendar oneWeek = GregorianCalendar.getInstance();
+		Calendar twoWeek = GregorianCalendar.getInstance();
+		oneWeek.set(nowYear, nowMonth, nowDate - 7);
+		twoWeek.set(nowYear, nowMonth, nowDate - 14);
+		
+		int oneWeekYear = oneWeek.get(Calendar.YEAR);
+		int oneWeekMonth = oneWeek.get(Calendar.MONTH);
+		String oneWeekRealMonth = oneWeekMonth < 10 ? "0" + oneWeekMonth : oneWeekMonth + "";
+		int oneWeekDate = oneWeek.get(Calendar.DATE);
+		String oneWeekRealDate = oneWeekDate < 10 ? "0" + oneWeekDate : oneWeekDate + "";
+		
+		int twoWeekYear = twoWeek.get(Calendar.YEAR);
+		int twoWeekMonth = twoWeek.get(Calendar.MONTH);
+		String twoWeekRealMonth = twoWeekMonth < 10 ? "0" + twoWeekMonth : twoWeekMonth + "";
+		int twoWeekDate = twoWeek.get(Calendar.DATE);
+		String twoWeekRealDate = twoWeekDate < 10 ? "0" + twoWeekDate : twoWeekDate + "";
+		
+		String oneWeekFormat = oneWeekYear + oneWeekRealMonth + oneWeekRealDate;
+		Integer oneWeekInteger = Integer.parseInt(oneWeekFormat);
+		String twoWeekFormat = twoWeekYear + twoWeekRealMonth + twoWeekRealDate;
+		Integer twoWeekInteger = Integer.parseInt(twoWeekFormat);
+		
+		// 파일명의 형식 => careInformation.log, careInformation.log.20240816
+		try {
+			for(File f : fileList) {
+				String fileName = f.getName();
+				String[] nameArr = fileName.split(".log");
+				
+				BufferedReader br = new BufferedReader(new FileReader(f));
+				
+				if(nameArr.length == 1 || Integer.parseInt(nameArr[1]) > oneWeekInteger) {
+					// 최근 일주일치의 로그파일들
+					String read;
+					while((read = br.readLine()) != null) {
+						//24-08-20 13:55:78 [INFO] c.k.d.c.i.CheckLoginUser.postHandle - test-m-a
+						String date = read.split(" ")[0];
+						if(oneWeekAgo.containsKey(date)) {
+							oneWeekAgo.put(date, oneWeekAgo.get(date) + 1);
+						} else {
+							oneWeekAgo.put(date, 1);
+						}
+					} // if문 (끝)
+				} else if(Integer.parseInt(nameArr[1]) > twoWeekInteger) {
+					// 14일 이전 ~ 7일 이전까지의 로그파일들
+					String read;
+					while((read = br.readLine()) != null) {
+						//24-08-20 13:55:78 [INFO] c.k.d.c.i.CheckLoginUser.postHandle - test-m-a
+						String date = read.split(" ")[0];
+						if(twoWeekAgo.containsKey(date)) {
+							twoWeekAgo.put(date, twoWeekAgo.get(date) + 1);
+						} else {
+							twoWeekAgo.put(date, 1);
+						}
+					}
+				} // else if문 (끝)
+				
+				br.close();
+			}
+			
+			model.addAttribute("oneWeekAgo", oneWeekAgo);
+			model.addAttribute("twoWeekAgo", twoWeekAgo);
+			
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		// 가입자 수 조회
+		HashMap<String, Integer> oneWeekOption = new HashMap<String, Integer>();
+		oneWeekOption.put("begin", 6);
+		oneWeekOption.put("end", 0);
+		
+		HashMap<String, Integer> twoWeekOption = new HashMap<String, Integer>();
+		twoWeekOption.put("begin", 13);
+		twoWeekOption.put("end", 7);
+		
+		ArrayList<HashMap<String, Object>> oneWeekEnroll = aService.getEnrollCount(oneWeekOption);
+		ArrayList<HashMap<String, Object>> twoWeekEnroll = aService.getEnrollCount(twoWeekOption);
+		// [{DT=0024-08-14 00:00:00.0, CNT=3}, {DT=0024-08-20 00:00:00.0, CNT=3}, {DT=0024-08-16 00:00:00.0, CNT=1}, {DT=0024-08-19 00:00:00.0, CNT=6}]
+		
+		for(HashMap<String, Object> m : oneWeekEnroll) {
+			m.put("DT", String.valueOf(m.get("DT")).split(" ")[0].substring(2)); // [{DT=24-08-14, CNT=3}, {DT=24-08-16, CNT=1}, {DT=24-08-19, CNT=6}, {DT=24-08-20, CNT=3}]
+		}
+		
+		for(HashMap<String, Object> m : twoWeekEnroll) {
+			m.put("DT", String.valueOf(m.get("DT")).split(" ")[0].substring(2)); 
+		}
+		
+		model.addAttribute("oneWeekEnroll", oneWeekEnroll);
+		model.addAttribute("twoWeekEnroll", twoWeekEnroll);
+	}
+	
+	// 전체 회원 목록 조회 요청
+	@GetMapping("allMembers.adm")
+	public String allMembers(@RequestParam(value="page", defaultValue="1") int currentPage,
+								HttpServletRequest request, Model model) {
+		int listCount = aService.getAllMembersListCount();
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 10, 5);
+		
+		ArrayList<Member> mList = aService.selectAllMembers(null, pi);
+		
+		// 나이 계산
+		Calendar c = GregorianCalendar.getInstance();
+		int year = c.get(Calendar.YEAR);
+		for(Member m : mList) {
+			String memberYear = m.getMemberAge().toString().split("-")[0];
+			m.setMemberRealAge(year - Integer.parseInt(memberYear));
+		}
+		
+		model.addAttribute("mList", mList);
+		model.addAttribute("pi", pi);
+		model.addAttribute("loc", request.getRequestURI());
+		
+		membersGraph(model);
+		
+		return "members";
+	}
+	
+	// 회원검색
+	@GetMapping("searchMembers.adm")
+	public String searchMembers(@RequestParam("searchOption") String searchOption, @RequestParam("searchContent") String searchContent,
+								@RequestParam(value="page", defaultValue="1") int currentPage, HttpServletRequest request,
+								Model model) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		if(searchOption.equals("memberId")) {
+			map.put("column", "MEMBER_ID");
+		} else {
+			map.put("column", "MEMBER_NO");
+		}
+		map.put("data", searchContent);
+		
+		int listCount = aService.getSearchMemberListCount(map);
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 10, 5);
+		ArrayList<Member> mList = aService.searchMembers(map, pi);
+		
+		// 나이 계산
+		Calendar c = GregorianCalendar.getInstance();
+		int year = c.get(Calendar.YEAR);
+		for(Member m : mList) {
+			String memberYear = m.getMemberAge().toString().split("-")[0];
+			m.setMemberRealAge(year - Integer.parseInt(memberYear));
+		}
+			
+		model.addAttribute("pi", pi);
+		model.addAttribute("mList", mList);
+		model.addAttribute("loc", request.getRequestURI());
+		model.addAttribute("searchOption", searchOption);
+		model.addAttribute("searchContent", searchContent);
+		return "members";
+		
+	}
+	
+	// 회원의 상태와 카테고리를 변경 요청
+	@PostMapping("updateMembers.adm")
+	@ResponseBody
+	public String updateMembers(@RequestParam("memberNo") int memberNo, @RequestParam("column") String column, 
+								@RequestParam("data") String data) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("memberNo", memberNo);
+		map.put("data", data);
+		// 확장성을 고려하여 switch문으로 작성
+		switch(column) {
+		case "status": map.put("column", "MEMBER_STATUS"); break;
+		case "category" : map.put("column", "MEMBER_CATEGORY"); break;
+		case "MEMBER_AGE":  
+			Calendar c = GregorianCalendar.getInstance();
+			int year = c.get(Calendar.YEAR); // 현재년도
+			String memberAge = aService.getMemberAge(memberNo); // yyyy-MM-dd의 포맷으로 조회한다.
+			int month = Integer.parseInt(memberAge.split("-")[1]);
+			int day = Integer.parseInt(memberAge.split("-")[2]);
+			
+			c.set(year - Integer.parseInt(data), month, day);
+			
+			map.put("data", new Date(c.getTimeInMillis()));
+			map.put("column", column);
+			
+			break; // data를 덮어씀으로써 DB에 적합하게 가공해야 한다.
+		default: map.put("column", column);
+		}
+		
+		int result = aService.updateMembers(map);
+		
+		return result == 1 ? "success" : "fail";
+	}
+	
+	@PostMapping("selectMemberInfo.adm")
+	@ResponseBody
+	public void selectMemberInfo(@RequestParam("memberNo") int memberNo) {
+		// 어떤 정보를 조회해야하는가? 미쳤네
+//		<간병인 회원가입시 입력사항>
+//		원하는 서비스 (1~3개, 필수)				: MEMBER_INFO
+//		공동간병 매칭서비스 참여여부 (1개, 필수) 	: CAREGIVER
+//		경력기간 (1개, 필수) 					: MEMBER_INFO 
+//		서비스경험 (0~3개, 선택)				: MEMBER_INFO 
+//		돌봄경험 (0~10개, 선택)					: MEMBER_INFO 
+//		자격증 (0~3개, 선택)					: MEMBER_INFO 
+//		적정비용 (최소&최대, 필수)				: CAREGIVER
+//
+//		<환자 회원가입시 입력사항>
+//		이름, 성별, 생년월일 (필수)
+//		원하는 서비스 (1~3개, 필수)				: MEMBER_INFO 
+//		서비스받을 주소 (필수)					: PATIENT
+//		보유질환 (0~10개, 선택)					: MEMBER_INFO 
+//		키	(필수)							: PATIENT
+//		몸무게  (필수)							: PATIENT
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

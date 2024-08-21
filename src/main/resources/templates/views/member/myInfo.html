@@ -71,7 +71,7 @@
 								<div th:if="${cg.getAvgReviewScoreDouble == 9}" align="left"class="btn-icon-star-review-half"></div>
 			      			</div>
 		    			</div>
-		    			<div class="h2">내 후기 점수 <br>[[${cg.getAvgReviewScoreDouble == null ? '0' : 'cg.getAvgReviewScoreDouble'}]]</div>
+		    			<div class="h2">내 후기 점수 <br>[[${cg.getAvgReviewScoreDouble == null ? '0' : cg.getAvgReviewScoreDouble}]]</div>
 		      		</div>
 		      		<div  class="col-3 m-2 d-flex align-items-center m-2">
 		      			<div><button class="myInfo-btn" style="height:120px">일감 찾기</button></div>
