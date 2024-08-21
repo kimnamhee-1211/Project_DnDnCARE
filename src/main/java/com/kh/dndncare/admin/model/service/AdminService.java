@@ -65,6 +65,10 @@ public interface AdminService {
 
 	ArrayList<HashMap<String, Object>> getEnrollCount(HashMap<String, Integer> map);
 
+	int insertAnnouncement(Board b);
+
+	int updateAdminBoardStatus(int boardNo, String boardStatus);
+
 
 
 }

@@ -95,7 +95,12 @@
 					        </div>
 					        <div class="col-md-5 p-2">
 					            <label for="writer" class="form-label">작성자 : </label>
-					            <span>[[${b.memberNickName}]]</span>
+					            <th:block th:unless="${b.memberCategory == 'A'}">
+					            	<span>[[${b.memberNickName}]]</span>
+					            </th:block>
+					            <th:block th:if="${b.memberCategory == 'A'}">
+					            	<span><img width="25" height="25" src="https://img.icons8.com/color/48/crown.png" alt="crown"/>관리자</span>
+					            </th:block>
 					        </div>
 		                    <div class="col-md-4 p-2">
 		                        <label for="category" class="form-label">카테고리 : </label>

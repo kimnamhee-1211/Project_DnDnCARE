@@ -36,6 +36,24 @@
 			background:white;
 			cursor: pointer;
 		}
+		
+		#modalWriteAnnouncementBoard:hover{
+	    	background-color: #1E5F74	;
+	    	color: white;
+	    	border-color:black;
+	    }
+	    
+	    #modalBoardClose:hover{
+	    	background-color: lightgray	;
+	    	color: black;
+	    	border-color:black;
+	    }
+	    
+	    #writeAnnouncementBtn:hover{
+	    	background-color: #1E5F74;
+	    	color: white;
+	    	border-color:black;
+	    }
 	</style>
 </head>
 <body>
@@ -90,14 +108,14 @@
 								<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
 									<div class="btn-group me-2 text-end" role="group" aria-label="First group">
 										<button type="button" class="btn btn-outline-secondary" th:if="${cpi.currentPage <= 1}" disabled>이전</button>
-	 									<button type="button" class="btn btn-outline-secondary" th:if="${cpi.currentPage > 1}" th:onclick="|location.href='@{${loc}(page=${cpi.currentPage - 1})}'|">이전</button>
+	 									<button type="button" class="btn btn-outline-secondary" th:if="${cpi.currentPage > 1}" th:onclick="|location.href='@{${loc} (caregiverPage=${cpi.currentPage - 1})}'|">이전</button>
 										
 										<th:block th:each="cp: ${#numbers.sequence(cpi.startPage, cpi.endPage)}">
-								    		<button type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{${loc}(page=${cp})}'|">[[${cp}]]</button>
+								    		<button type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{${loc}(=${cp})}'|">[[${cp}]]</button>
 										</th:block> 
 									    
 									    <button type="button" class="btn btn-outline-secondary" th:if="${cpi.currentPage >= cpi.maxPage}" disabled>다음</button>
-									    <button type="button" class="btn btn-outline-secondary" th:if="${cpi.currentPage < cpi.maxPage}" th:onclick="|location.href='@{${loc}(page=${cpi.currentPage+1})}'|">다음</button>
+									    <button type="button" class="btn btn-outline-secondary" th:if="${cpi.currentPage < cpi.maxPage}" th:onclick="|location.href='@{${loc}(caregiverPage=${cpi.currentPage+1})}'|">다음</button>
 									</div>
 								</div>
 							</div>
@@ -130,48 +148,60 @@
 								</tr>
 							</tbody>
 						</table>
-						<div style="display:grid; grid-template-columns:100px 1fr 300px;">
+						<div style="display:grid; grid-template-columns:100px 1fr 300px;" >
 							<div></div>
 							<div>
-								<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolba with button groups">
-									<div class="btn-group me-2 text-end" role="group" aria-label="First group">
+								<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolba with button groups2" >
+									<div class="btn-group me-2 text-end" role="group" aria-label="Second group">
 										<button type="button" class="btn btn-outline-secondary" th:if="${ppi.currentPage <= 1}" disabled>이전</button>
 	 									<button type="button" class="btn btn-outline-secondary" th:if="${ppi.currentPage > 1}" th:onclick="|location.href='@{${loc}(page=${ppi.currentPage - 1})}'|">이전</button>
 										
 										<th:block th:each="pp: ${#numbers.sequence(ppi.startPage, ppi.endPage)}">
-								    		<button type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{${loc}(page=${pp})}'|">[[${pp}]]</button>
+								    		<button type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{${loc}(patientPage=${pp})}'|">[[${pp}]]</button>
 										</th:block> 
 									    
 									    <button type="button" class="btn btn-outline-secondary" th:if="${ppi.currentPage >= ppi.maxPage}" disabled>다음</button>
-									    <button type="button" class="btn btn-outline-secondary" th:if="${ppi.currentPage < ppi.maxPage}" th:onclick="|location.href='@{${loc}(page=${ppi.currentPage+1})}'|">다음</button>
+									    <button type="button" class="btn btn-outline-secondary" th:if="${ppi.currentPage < ppi.maxPage}" th:onclick="|location.href='@{${loc}(patientPage=${ppi.currentPage+1})}'|">다음</button>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-						<form>
-							<button type="button" class="btn btn-info" id="writeBtn">공지작성</button>
-						</form>
+					<form id="searchBoardForm" action="searchBoard.bo" method="get" class="d-flex w-100">
+			            <select id="searchType" name="searchType" class="form-select form-select-sm" aria-label="Small select example" style="max-width: 15%;">
+			                <option th:value="boardTitle" selected>제목</option>
+			                <option th:value="memberNickName">작성자</option>
+			                <option th:value="boardContent">글내용</option>
+			            </select>
+			            <input id="searchText" name="searchText" type="text" class="form-control" aria-label="Text input with dropdown buttons" style="max-width: 65%;">
+			            <button class="btn btn-outline-secondary" type="button" id="searchBtn" th:onclick="searchBoard()">검색</button>
+			        </form>
+			        <br>
+					<form align="right">
+						<button type="button"  id="writeAnnouncementBtn" class="btn" style="outline-color: #1E5F74; outline-style: solid;">공지작성</button>
+					</form>
 			</main>
 		</div>
 	</div>
 	<div class="modal fade" id="writeModal" tabindex="-1" aria-labelledby="writeModalLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-xl">
 	    <div class="modal-content">
-	      <div class="modal-header">
-	        <div class="modal-title h4 p-4 m-2 mt-1 row" id="writeModalTitle"><span>제목</span> 
-                 <input type="text" class="form-control" id="announcementBoardTitle" name="announcementBoardTitle" placeholder="제목을 입력해주세요" required>
-	        </div>
-	      </div>
-	      <div class="modal-body">
-	      	<div class="modal-body p-4 m-5 mt-1 row h5" style="min-height:100%;">내용
-                 <textarea class="form-control" id="summernote" name="announcementBoardContent" style="min-height:100%;"required></textarea>
-             </div>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">작성</button>
-	        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">닫기</button>
-	      </div>
+	    <form action="insertAnnouncement.adm" method="post">
+		      <div class="modal-header">
+		        <div class="modal-heaader h4 p-4 m-2 mt-1 row" id="writeModalTitle" style="min-height:100%;"><span>제목</span> 
+	                 <input type="text" class="form-control" id="announcementBoardTitle" name="boardTitle" placeholder="제목을 입력해주세요" required>
+		        </div>
+		      </div>
+		      <div class="modal-body">
+		      	<div class="modal-body p-4 m-5 mt-1 row h5" style="min-height:100%;">내용
+	                 <textarea class="form-control" id="summernote" name="boardContent" style="min-height:100%;"required></textarea>
+	             </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="submit" class="btn" data-bs-dismiss="modal" id="modalWriteAnnouncementBoard" style="outline-color: #1E5F74; outline-style: solid;">작성</button>
+		        <button type="button" class="btn" data-bs-dismiss="modal" id="modalBoardClose" style="outline-color: lightgray; outline-style: solid;">닫기</button>
+		      </div>
+	    </form>
 	    </div>
 	  </div>
 	</div>
@@ -180,8 +210,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
 	<script th:inline="javascript">
 		window.onload =() =>{
-			if (document.getElementById('writeBtn') != null) {
-				document.getElementById('writeBtn').addEventListener('click', function() {
+			if (document.getElementById('writeAnnouncementBtn') != null) {
+				document.getElementById('writeAnnouncementBtn').addEventListener('click', function() {
 				    const writeModal = new bootstrap.Modal(document.getElementById('writeModal'));
 				    writeModal.show();
 				});
@@ -192,7 +222,7 @@
 	        $('#summernote').summernote({
 	          placeholder: '내용을 입력해주세요',
 	          tabsize: 2,
-	          minHeight: 500,             
+	          minHeight: 400,             
 	          toolbar: [
 	        	['fontname', ['fontname']],
 	        	['fontsize', ['fontsize']],
@@ -207,7 +237,53 @@
 	         
 	        });
 	      });
+		
+		
+		const tbody = document.querySelector('tbody');
+		const tds = tbody.querySelectorAll('td');
+		/*<![CDATA[*/
+		const cbList = /*[[${cbList}]]*/1;
+		const pbList = /*[[${pbList}]]*/2;
+		/*]]>*/
+		let boardNo = null;
+		let status = null;		
+		
+		console.log(cbList)
+		console.log(pbList)
+		console.log(tds)
+		for(const td of tds){
+				td.addEventListener('click', function(){
+					const trTds = this.parentElement.querySelectorAll('td');
+					console.log(trTds)
+					boardNo = trTds[0].innerText;
+					console.log(boardNo)
+					const statusTd = trTds[5].querySelectorAll('div')
+					console.log(statusTd[0].className)
+					console.log(statusTd[1].className)
+					if(statusTd[0].className == 'selectState'){
+						status = 'N';
+					}else {
+						status = 'Y';
+					}
+					$.ajax({
+						url: 'updateAdminBoardStatus.adm',
+						data: {boardNo:boardNo, boardStatus:status},
+						success: data =>{
+							if(data == 'success'){
+								statusTd[0].classList.toggle('selectState');
+								statusTd[1].classList.toggle('selectState');
+							}
+						},
+						error: data => console.log(data)
+					})
+
+				})
 		}
+	}
+
+
+			
+		
 		
 		function showComunity(type) {
 		    if (type == 'caregiverComunity') {

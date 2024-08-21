@@ -27,4 +27,5 @@ public class Board {
 	private String categoryName;
 	private String areaName;
 	private String memberNickName;
+	private String memberCategory;
 }

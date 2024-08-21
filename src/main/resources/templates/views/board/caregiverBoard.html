@@ -187,7 +187,14 @@
                                     <span th:text="${b.boardTitle}">제목</span>
                                     <span th:if="${replyCounts != 0}" th:text="${replyCounts[b.boardNo]}" class="badge badge-primary rounded-pill">0</span>
                                 </td>
-                                <td th:text="${b.memberNickName}">작성자</td>
+                                <th:block th:if="${b.memberCategory == 'A'}">
+	                                <td>
+		                                <img width="25" height="25" src="https://img.icons8.com/color/48/crown.png" alt="crown"/>관리자
+									</td>
+                                </th:block>
+                                <th:block th:if="${b.memberCategory == 'C'}">
+	                                <td>[[${b.memberNickName}]]</td>
+                                </th:block>
                                 <td th:text="${b.areaName}">지역</td>
                                 <td th:text="${b.boardCreateDate}">작성일</td>
                                 <td th:text="${b.boardCount}">조회수</td>

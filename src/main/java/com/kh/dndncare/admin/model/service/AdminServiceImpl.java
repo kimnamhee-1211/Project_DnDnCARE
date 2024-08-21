@@ -160,4 +160,14 @@ public class AdminServiceImpl implements AdminService{
 		return aMapper.getEnrollCount(map);
 	}
 
+	@Override
+	public int insertAnnouncement(Board b) {
+		return aMapper.insertAnnouncement(b);
+	}
+
+	@Override
+	public int updateAdminBoardStatus(int boardNo, String boardStatus) {
+		return aMapper.updateAdminBoardStatus(boardNo, boardStatus);
+	}
+
 }

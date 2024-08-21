@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.dndncare.admin.model.vo.Attachment;
@@ -68,6 +69,10 @@ public interface AdminMapper {
 	String getMemberAge(int memberNo);
 
 	ArrayList<HashMap<String, Object>> getEnrollCount(HashMap<String, Integer> map);
+
+	int insertAnnouncement(Board b);
+
+	int updateAdminBoardStatus(@Param("boardNo") int boardNo, @Param("boardStatus") String boardStatus);
 
 
 }
