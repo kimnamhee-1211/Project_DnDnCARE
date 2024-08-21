@@ -334,7 +334,7 @@
       					<input type="hidden" name="matNo"/>
       					<input type="hidden" name="payMoney"/>
       					<input type="hidden" name="payService">
-      					<input type="hidden" name="merchantUid">
+      					<input type="hidden" name="mercharntUid">
       				</form>
       			</div>
     		</div>
@@ -714,7 +714,7 @@
 
     	const formattedTime = year+month+day+hours+minutes+seconds;
     	const form = document.getElementById('payForm');
-    	console.log(document.getElementsByName('merchantUid')[0]);
+    	console.log(document.getElementsByName('mercharntUid')[0]);
     	
 	    function requestPay() {
 	    	//const money = document.getElementById('customAmountInput').value;
@@ -733,7 +733,7 @@
 		    	  if(response.success){
 		    		  alert('결제 성공');
 		    		  console.log(response.merchant_uid);
-		    		  document.getElementsByName('merchantUid')[0].value = response.merchant_uid;
+		    		  document.getElementsByName('mercharntUid')[0].value = response.merchant_uid;
 		    		  document.getElementsByName('matNo')[0].value = payBt.nextElementSibling.value;
 		    		  //document.getElementsByName('payMoney')[0].value = response.merchant_uid; 위에서미리넘기자
 		    		  document.getElementsByName('payService')[0].value = document.getElementById('payService').innerText;

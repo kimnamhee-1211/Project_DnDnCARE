@@ -383,7 +383,7 @@
 			#{loginUser.memberName},
 			#{loginUser.memberPhone},
 			#{loginUser.memberEmail},
-			#{p.merchantUid},
+			#{p.mercharntUid},
 			#{p.payService},
 			'Y'
 		)
