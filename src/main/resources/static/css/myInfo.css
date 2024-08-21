@@ -79,12 +79,12 @@ body {
 		position: relative;
 		min-width:1280px;
 		margin: 0 auto;
-		margin-top: 50px;
+		margin-top: 0px;
 		font-family: 'Pretendard-Regular';
-		
+		box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 }
 .testBorder{
-	border:1px solid #dee2e6;
+	border:1px solid #1E5F74;
 	border-radius: 5px;
 }
 
@@ -96,7 +96,7 @@ body {
 
 .myInfo-Border-maincolor{
 	border-radius: 5px;
-	border:1px solid #8dd986;
+	border:1px solid lightgray;
 }
 
 
@@ -105,25 +105,36 @@ body {
    height: 100px; /* 원하는 크기로 설정 */
    border-radius: 50%; /* 이미지를 동그랗게 만듦 */
    object-fit: cover; /* 이미지 비율을 유지하며 잘라냄 */
-   border:3px solid #8dd986;
+   border:2px solid #1E5F74;
+}
+
+.profile-image {
+   width: 100px; /* 원하는 크기로 설정 */
+   height: 100px; /* 원하는 크기로 설정 */
+   border-radius: 50%; /* 이미지를 동그랗게 만듦 */
+   object-fit: cover; /* 이미지 비율을 유지하며 잘라냄 */
+   border:3px solid #1E5F74;
 }
 
 .myInfo-btn{
 	width:150px;
-	background-color: #8dd986;
-	border:1px solid #8dd986;
+	background-color: #1E5F74;
+	border:1px solid #1E5F74;
 	color:white;
 	border-radius: 5px;
 	padding:5px;
 	cursor: pointer;
+	box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+  7px 7px 20px 0px rgba(0,0,0,.1),
+  4px 4px 5px 0px rgba(0,0,0,.1);
 	
 }
 
 .btn-outline-maincolor-2{
-	color:#8dd986;
+	color:#1E5F74;
 	border-radius: 5px;
 	width:160px;
-	border:1px solid #8dd986;
+	border:1px solid #1E5F74;
 	padding:5px;
 	margin:8px;
 	background:white;
@@ -132,9 +143,9 @@ body {
 
 
 .btn-outline-maincolor{
-	color:#8dd986;
+	color:#1E5F74;
 	border-radius: 5px;
-	border:1px solid #8dd986;
+	border:1px solid #1E5F74;
 	padding:2px;
 	background:white;
 	
@@ -143,25 +154,27 @@ body {
 .btn-outline-maincolor:hover{
 	color:white;
 	border-radius: 5px;
-	border:1px solid #8dd986;
+	border:1px solid #1E5F74;
 	padding:2px;
-	background:#8dd986;
+	background:#1E5F74;
 	
 }
 
-
+/*켈린더*/
+.fc{max-width:415px !important; min-height:330px !important; }
 
 .btn-maincolor{
 	color:white;
 	border-radius: 5px;
-	border:1px solid #8dd986;
-	padding:2px;
-	background:#8dd986;
+	border:1px solid #1E5F74;
+	padding:5px;
+	background:#1E5F74;
 	cursor: pointer;
+	width:160px;
 }
 
 .myInfo-title{
-	border-bottom:2px solid #8dd986;
+	border-bottom:2px solid #1E5F74;
 }
 
 .reviewDetail{
@@ -174,7 +187,7 @@ body {
 	height:150px;
 	min-width:100px;
 	background:white;
-	border:1px solid #8dd986;
+	border:1px solid #1E5F74;
 	border-radius:5px;
 	z-index:1;
 }
@@ -185,7 +198,7 @@ body {
 	height:80px;
 	min-width:100px;
 	background:white;
-	border:1px solid #8dd986;
+	border:1px solid #1E5F74;
 	border-radius:5px;
 	z-index:1;
 }
@@ -200,7 +213,8 @@ body {
 }
 
 .select-block>div:hover{
-	background:#8dd986;
+	background:#1E5F74;
+	color:white;
 }
 
 #matchingNow>div:hover{
@@ -225,13 +239,46 @@ body {
 	z-index : 10;
 }
 
-<<<<<<< HEAD
+/* 별*/
 
+.btn-icon-star-review{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 140px 140px;
+	padding:0px;
+	margin-left:0px;
+	margin-top:-1px;
+	color:red;
+	background-repeat: no-repeat;
+	z-index:1;
+	min-width:32px;	
+	min-height:32px;	
+}
 
+.btn-icon-star-review-half{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 140px 140px;
+	padding:0px;
+	margin-left:0px;
+	margin-top:-1px;
+	background-repeat: no-repeat;
+	max-width:17px;
+	min-height:32px;
+}
 
+.icon-star-review{
+	background-image:url(../image/icon_star.svg);
+	background-size: 140px 140px;
+	padding:0px;
+	width:32px; height:32px;
+}
 
-
-
-
-=======
->>>>>>> refs/remotes/origin/jaeyoung
+.btn-star{
+	background: transparent;
+	border:0px solid black;
+	width:20px;
+	height:20px;
+	padding:0;
+	margin-left:0px;
+	margin-right:-1.5px;
+	background-repeat: no-repeat;
+}

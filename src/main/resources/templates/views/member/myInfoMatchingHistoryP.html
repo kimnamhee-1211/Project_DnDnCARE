@@ -23,6 +23,7 @@
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내가 쓴 후기</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
 	     		</div>
+	     			<span class="m-4" style="color:gray;"><button style="background:white; border:0" onclick="location.href='deleteMemberView.me'">탈퇴하기 ▶</button></span>
 	    	</div>
 	    	
 	    	<div class="col" >
@@ -55,13 +56,31 @@
 							
 								<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6" id="count-section">
 									<canvas class="my-4 w-100" id="useMonthCount" width="900" height="250"></canvas>
-										
+									<div>
+										<table align="center" class="table table-bordered boarder-dark">
+											
+											<tr>
+												<th id="lastSixMonthsTable"></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+											</tr>
+											
+										</table>
+									</div>
 								</div>
 								
 								<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6; display:none" id="pay-section">
 									<canvas class="my-4 w-100" id="sumMonthPay" width="900" height="250"></canvas>
-										
+									<div>
+									???????
+									</div>
 								</div>
+								
 							</div>
 						</div>
 						
@@ -106,19 +125,22 @@
 							            <th width="30"></th>
 							            <th width="320px">간호 종료일</th>
 							            <th width="520px">간병인 정보</th>
+							            <th></th>
 							            <th width="120px">후기 작성</th>
 							        </tr>
-							        <tr th:each="i : ${mciList}" th:if="${i.isAfterDate}" class="matching-row" data-mat-confirm="${i.matConfirm}" data-is-after-date="${i.isAfterDate}">
+							        <tr th:if="${i.isAfterDate}" th:each="i : ${mciList}"  class="matching-row">
 								            <td>[[${i.beginDt}]]일 [[${i.beginTime}]]시</td>
 								            <td> ~ </td>
 								            <td>[[${i.endDt}]]일 [[${i.endTime}]]시</td>
 								            <td> 이름 : [[${i.memberName}]] 비용 : [[${i.money}]]원</td>
+								            <td>
 								            <input type="hidden" th:id="'hiddenMemberNo' + ${i.memberNo}" name="memberNo" th:value="${i.memberNo}"/>
 								            <input type="hidden" th:id="'hiddenMatNo' + ${i.matNo}" name="matNo" th:value="${i.matNo}"/>
-								            <td th:if="${i.isAfterDate && i.matConfirm == 'Y' && i.reviewYn == 0}">
-								                <button class="myInfo-btn btn-sm" onclick="reviewDetail('myInfoMatchingHistoryP')">작성 가능</button>
 								            </td>
-								            <td th:if="${i.reviewYn == 1}">
+								            <td th:if="${i.matConfirm == 'Y' && i.isAfterDate && i.reviewYn == 0}">
+								                <button class="myInfo-btn btn-sm" th:onclick="reviewDetail('myInfoMatchingHistoryP', [[${i.memberNo}]], [[${i.matNo}]])">작성 가능</button>
+								            </td>
+								            <td th:if="${i.matConfirm == 'Y' && i.isAfterDate && i.reviewYn != 0}">
 								                <button class="myInfo-btn btn btn-warning btn-sm">작성 완료</button>
 								            </td>
 								           
@@ -144,8 +166,11 @@
 	 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
 	<script th:inline="javascript">
 		 /*<![CDATA[*/
+			 
 			
 		window.onload =() =>{
+			const mciList = /*[[${mciList}]]*/
+			console.log(mciList)
 	        const monthPatient = /*[[${monthPatient}]]*/;
 	        console.log(monthPatient)
 	        
@@ -160,8 +185,14 @@
 		        
 		        lastSixMonths.push(`${year}-${month}`);
 		    }
-	        
-	        
+		    
+		    const lastSixMonthsTableArray = []
+		    lastSixMonthsTable = document.getElementById('lastSixMonthsTable')
+		    for(let i = 0; i<lastSixMonths.length; i++){
+			    lastSixMonthsTableArray.innerHTML = lastSixMonths[i];
+			}
+		    console.log(lastSixMonths[2])
+
 	       
 	        
 		    const counts = lastSixMonths.map(month => {
@@ -237,9 +268,8 @@
 		}
 		
 
-		function reviewDetail(beforePage){
-			var memberNo = document.querySelector('input[name="memberNo"]').value;
-		    var matNo = document.querySelector('input[name="matNo"]').value;
+		function reviewDetail(beforePage, memberNo, matNo){
+			
 			location.href = 'reviewDetail.mc?memberNo=' + memberNo + '&matNo='+ matNo+ '&from=' + beforePage;
 		}
 		

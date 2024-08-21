@@ -577,9 +577,4 @@ public class BoardController {
 	
 	
 	
-	
-	
-	
-	
-	
 }

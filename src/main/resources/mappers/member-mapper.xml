@@ -356,10 +356,8 @@
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
 			join hospital on(hospital.hospital_no = matching.hospital_no)
-			join mat_care_pending on (matching.mat_no = mat_care_pending.mat_no )
 		where matching.mat_confirm = 'N' and matching.begin_dt > sysdate 
 			and matching.member_no is null
-			and mat_care_pending.member_no != #{memberNo}
 		order by matching.begin_dt
 	</select>
 	
@@ -761,6 +759,7 @@
 			115,11
 		)
 	</insert>
+	
 	<!-- 나(환자)에게 매칭 신청한 사람 목록 -->
 	<select id="getRequestCaregiver" resultType="CareGiverMin">
 		select careGiver.member_no, careGiver.care_img, member.member_national, member.member_gender, member.member_name, member.member_age,  matching.mat_no
@@ -780,6 +779,8 @@
 		from care_review cr
 		    join patient p on(p.pt_no = cr.pt_no)
 		where cr.member_No = #{memberNo}
+		
+		
 	</select>
 	
 	<!-- 월간 점수 -->
@@ -812,9 +813,9 @@
 	
 	<!-- 후기 작성 유무 -->
 	<select id="selectReviewYn" resultType="_int">
-		select count(*)
+		select count(review_no)
 		from care_review
-		where mat_no = #{matNo} and pt_no = #{ptNo}
+		where mat_no = #{matNo} and pt_no = #{ptNo} and review_status='Y'
 	</select>
 	
 	<select id="avgReviewScore2" resultType="Double">
@@ -833,5 +834,87 @@
 						from patient
 						where member_no = #{memberNo})
 	</select>
+	
+	<!-- 매칭이력 -->
+	<select id="selectMatRecord" resultType="MatMatptInfoPt" >
+		select distinct(mc.mat_no), p.pt_name,mc.begin_dt, mc.end_dt, p.pt_age, p.pt_gender,mc.money,mpi.service, p.pt_address
+		from matching mc
+		    left join mat_pt_info mpi on(mc.mat_no = mpi.mat_no)
+		    left join patient p on(p.pt_no = mpi.pt_no)
+		    left join member m on(m.member_no = p.member_no)
+		where mc.member_no=#{memberNo} and mat_confirm = 'Y' and sysdate > end_dt
+		order by mc.mat_no
+	</select>
+	
+	<!-- 원간 수익/ 이용자수 -->
+	<select id="monthCountList" resultType="MatMatptInfoPt">
+		select to_char(m.end_dt, 'YYYY-MM') as month, sum(m.end_dt - m.begin_dt) useCount, sum(p.pay_money) money
+		from matching m
+		   join pay p on(m.mat_no=p.mat_no) 
+		where m.member_NO = #{memberNo}  <!--and p.pay_deposit = 'N'-->
+		group by to_char(m.end_dt, 'YYYY-MM')
+	</select>
+	
+	<!-- 프로필 사진 넣기 -->
+	<update id="updateImageProfile">
+		update caregiver
+		set care_img = #{rename}
+		where member_no = #{memberNo}
+	
+	</update>
+	
+	<!-- 이전 프로필사진 찾기 -->
+	<select id="selectProfile" resultType="CareGiver">
+		select care_img
+		from caregiver
+		where member_no = #{memberNo}
+	</select>
+	
+	<!-- 늦엇지만 계정탈퇴하기 -->
+	<update id="deleteMember">
+		update member
+		set member_status = 'N'
+		where member_no = #{memberNo}
+	
+	</update>
+	
+	<!-- 간병인 시 결제대금 조회하기 -->
+	<select id="selectPayTransfer" resultType="Pay">
+		select *
+		from pay
+		where mat_no in(select mat_no
+						from matching 
+						where member_no = #{memberNo}) and pay_deposit = 'N'
+	
+	</select>
+	
+	<!-- 이미 신청한 환자 매칭방인지 확인 -->
+	<select id="getCountPendingMe" resultType="_int">
+		select count(*)
+		from mat_care_pending
+		where mat_no = #{matNo} and member_no = #{memberNo}		
+	</select>
+	
+	
+	<select id="getCountPt" resultType="_int">
+		select count(*)
+		from mat_pt_info
+		where mat_no = #{matNo}	
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 </mapper>

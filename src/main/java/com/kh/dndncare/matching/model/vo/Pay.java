@@ -16,12 +16,12 @@ import lombok.ToString;
 public class Pay {
 	private int payNo;
 	private int matNo;
-	private int mamberNo;
+	private int memberNo;
 	private Date payDate;
 	private int payMoney;
 	private String accountName;
 	private String accountPhone;
 	private String accountEmail;
-	private String merchantUid;
+	private String mercharntUid;
 	private String payService;
 }

@@ -10,6 +10,7 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.Member;
 
 @Mapper
@@ -40,6 +41,8 @@ public interface AdminMapper {
 	int insertThumbnail(Attachment thumbnail);
 
 	int updateCareInformation(Board b);
+
+	ArrayList<Pay> selectPayDeposit(String type);
 
 	int getMembersListCount();
 

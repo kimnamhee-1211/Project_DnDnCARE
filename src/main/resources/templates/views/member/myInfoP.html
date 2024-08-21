@@ -7,25 +7,24 @@
 <link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script><!-- 도로명주소api -->
-
 </head>
-<body >
+<body  >
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	
 	
-	
-	<div class="container" >
+	<div class="container" style="background:white">
 	
 		 <div class="row">
 			<div class="col" >
 	     		<div align="center"class="myInfo-Border m-4">
-	     			<div class="m-4" style="border-bottom:2px solid #8dd986;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
+	     			<div class="m-4" style="border-bottom:2px solid #1E5F74;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatching.me">현재 매칭 정보</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingHistory.me">매칭 이력</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내가 쓴 후기</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
 	     		</div>
+	     		<span class="m-4" style="color:gray;"><button style="background:white; border:0" onclick="location.href='deleteMemberView.me'">탈퇴하기 ▶</button></span>
 	    	</div>
 	    	
 	    	<div class="col" >
@@ -33,21 +32,25 @@
 	      		<div class="row m-4" style="width:950px"> <!-- 여기로규격정햇다 -->
 		      		<div class="m-3 h1 menu-name" >내 정보</div>
 	      		</div>
-	      		<div align="center"class="row m-4" style="border:2px solid #8dd986;width:950px"> <!-- 여기로규격정햇다 -->
-		      		<div class="col-2 m-4">
+	      		<div align="center"class="row m-4" style="width:950px"> <!-- 여기로규격정햇다 -->
+		      		<div class="col-2 m-2">
 		      			<div><button class="myInfo-btn m-2" onclick="location.href='updateMemberView.me'"style="height:50px">내 계정 정보 수정하기</button></div>
 		      			<div><button class="myInfo-btn m-2" onclick="location.href='updatePwdView.me'"style="height:50px">비밀번호 변경하기</button></div>
 		      		</div>
-		      		<div  class="col-3 d-flex align-items-center">
-		      			<div>[[${session.loginUser.memberName}]]님! 어서오세요!</div>
-		      		</div>
-		      		<div  class="col-3 d-flex align-items-center">
-		      			<div>
-		      				<span>[[${p.ptName}]]</span>
+		      		<div  class="col-3 d-flex align-items-top">
+		      			<div align="left"class="row d-flex align-items-top text-left">
+			      			<span class="h1" style="margin-top:24px;">[[${session.loginUser.memberName}]]</span>
+			      			<div style="margin-top:-5px;">
+			      				<div>[[${session.loginUser.memberEmail}]]</div>
+			      				<div>[[${session.loginUser.memberPhone}]]</div>
+			      			</div>
+			      			
 		      			</div>
 		      		</div>
-		      		<div  class="col-3 d-flex align-items-center m-2">
-		      			<div><button class="myInfo-btn" style="height:100px">공개 구인 신청하기</button></div>
+		      		<div class="col-1" ></div>
+		      		<div  class="col-5 d-flex align-items-center  justify-content-between m-1" style="min-width:440px;">
+		      			<div><button class="myInfo-btn" style="height:120px; font-size:24px;" onclick="location.href='publicMatching.mc'">공개 구인<br>신청 하기</button></div>
+		      			<div><button class="myInfo-btn" style="height:120px; font-size:24px; background:" onclick="location.href='joinMatchingMainView.jm'">공동 간병<Br>신청 하기</button></div>
 		      		</div>
 	      		</div>
 	      		
@@ -57,7 +60,7 @@
 	      				<form id="patientForm" method="post" action="patientUpdate.me">
 							<div class="myInfo-Border-maincolor mt-2 mb-3">
 								<div class="m-2 d-flex justify-content-between">
-									<div class="h3 myInfo-title">피간병인 정보([[${p.ptName}]])</div>
+									<div class="h3 myInfo-title">피간병인 정보</div>
 									<button type="button"class="myInfo-btn btn-sm" id="patientButton" style="width:85px; height:40px;">수정하기</button>
 								
 								</div>
@@ -218,9 +221,57 @@
 						</form>
 						
 						
-						<div class="myInfo-Border-maincolor mt-2 mb-3">
+						<div class=" mt-2 mb-3">
+							<div class=" d-flex justify-content-between">
+								<div class="h3 myInfo-title">내 일정 확인하기</div>
+							</div>
+							<div id='calendar'></div>
+							<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+							<script>
+							
+								//종규 삽입
+						    	
+						    	function calenderEdit(){
+						    		const dateTitle = document.getElementById('fc-dom-1')
+						    		dateTitle.style.color = '#1E5F74';
+						    		dateTitle.style.fontWeight = 'bold';
+						    		
+						    		const bts = document.getElementsByClassName('fc-button');
+						    		const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
+						    		
+						    		const cala = cal.querySelectorAll('a');
+						    		for(i = 0; i< cala.length ; i++){
+						    			if(i % 7 == 0){
+						    				console.log(i);
+						    			cala[i].style.color = 'red';
+						    			}else if(i % 7 == 6){
+						    				cala[i].style.color = '#0a58ca';
+						    			}else{
+						    				if(i != 'entries' && i !='keys'){
+						    					console.log(i);
+						    				cala[i].style.color = '#1D2D50';
+						    				}
+						    			}
+						    		}
+						    	} 
+						    	
+						    	//종규 삽입 끝
+							
+							    document.addEventListener('DOMContentLoaded', function() {
+							        var calendarEl = document.getElementById('calendar'); // full-calendar를 삽입할 요소
+							        var calendar = new FullCalendar.Calendar(calendarEl, {
+							          initialView: 'dayGridMonth' //  // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
+							        });
+							    calendar.render(); // calendar 렌더링을 지시
+							    calenderEdit();
+							    });
+						    	console.log(document.getElementsByClassName('fc-toolbar-chunk'));
+						    	
+						    	
+							    
+							</script>
 						
-							<div class="m-2 d-flex justify-content-between">
+							<!-- <div class="m-2 d-flex justify-content-between">
 								<div class="h3 myInfo-title">내 일정 확인하기</div>
 								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">수정하기</button>
 							</div>
@@ -234,7 +285,7 @@
 								<div>00님과의 매칭이 x일 남았습니다</div>
 								<div>00님과의 매칭이 x일 남았습니다</div>
 								<div>00님과의 매칭이 x일 남았습니다</div>
-							 </div>
+							 </div> -->
 						</div>
 						
 						<!-- <div class="myInfo-Border-maincolor mt-2 mb-3">
@@ -356,7 +407,7 @@
 			const menuName = document.getElementsByClassName('menu-name')[0];
 			for(i of menuAtag){
 				if(i.innerText == menuName.innerText){
-					i.innerHTML= '<span style="border-bottom:2px solid #8dd986; font-weight:bold;">'+i.innerText+'</span>';
+					i.innerHTML= '<span style="border-bottom:2px solid #1E5F74; font-weight:bold;">'+i.innerText+'</span>';
 				}
 			};
 			
@@ -602,7 +653,7 @@
 			
 			
 			
-			
+			/* 
 			// 현재매칭,매칭 남은기간 클릭하여 넘어가기
 			const matchingNow = document.getElementById('matchingNow'); 
 			const matchingLimit = document.getElementById('matchingLimit');
@@ -618,7 +669,7 @@
 					location.href= '#';
 				})
 			};
-			
+			 */
 			//매칭조건 설정하기
 			const setMatchingList = document.getElementById('setMatchingList');
 			const click = setMatchingList.querySelectorAll('.btn-outline-maincolor-2');

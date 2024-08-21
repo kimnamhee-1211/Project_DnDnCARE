@@ -13,6 +13,7 @@ import com.kh.dndncare.admin.model.dao.AdminMapper;
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.Member;
 
 @Service
@@ -88,6 +89,10 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
+	public ArrayList<Pay> selectPayDeposit(String type) {
+		return aMapper.selectPayDeposit(type);
+	}
+
 	public int getMembersListCount() {
 		return aMapper.getMembersListCount();
 	}

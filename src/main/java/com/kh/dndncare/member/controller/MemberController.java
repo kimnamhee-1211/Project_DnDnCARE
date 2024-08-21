@@ -1,18 +1,28 @@
 package com.kh.dndncare.member.controller;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -26,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -44,6 +55,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfo;
 import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.matching.model.vo.RequestMatPt;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.service.MemberService;
@@ -71,6 +83,8 @@ public class MemberController {
 
 	@Autowired
 	private BCryptPasswordEncoder bCrypt;
+	
+	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
 	@GetMapping("loginView.me")
 	public String loginView() {
@@ -124,7 +138,11 @@ public class MemberController {
 			switch (check) {
 			case 'C':
 				CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+				Double avgReviewScore = mService.avgReviewScore2(cg.getMemberNo());
+				cg.setAvgReviewScoreDouble(avgReviewScore);
+				System.out.println(cg.getAvgReviewScoreDouble());
 				model.addAttribute("cg", cg);
+				
 				return "myInfo";
 
 			case 'P':
@@ -277,7 +295,7 @@ public class MemberController {
 	@PostMapping("login.me")
 	public String login(@ModelAttribute Member m, Model model, RedirectAttributes ra) {
 		Member loginUser = mService.login(m);
-
+		
 		if (bCrypt.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
 			
 			model.addAttribute("loginUser", loginUser);
@@ -614,27 +632,36 @@ public class MemberController {
 		model.addAttribute("loginUserName", loginUser.getMemberName());
 		
 		// 1. 자동 추천 목록 받아오기
-		int memberNo = 0;
+		int memberNo = loginUser.getMemberNo();
+				
 		if(loginUser != null) {
-			memberNo = loginUser.getMemberNo();
 			System.out.println(memberNo);
 			System.out.println("전");
-			ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
+			//ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
 			System.out.println(memberNo);
 			System.out.println("후");
-			System.out.println(completeList);
-			model.addAttribute("completeList", completeList);
+			//System.out.println(completeList);
+			//model.addAttribute("completeList", completeList);
 		}
 				
 		
 		//남희 - 환자정보 불러오기
 		//MatMatptInfoPt 18개 뽑기 
-		ArrayList<MatMatptInfoPt> matMatptInfoPtListBefore = mService.getMatMatptInfoPt(loginUser.getMemberNo());		
+		ArrayList<MatMatptInfoPt> matMatptInfoPtListBefore = mService.getMatMatptInfoPt(loginUser.getMemberNo());
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList1 = new ArrayList<MatMatptInfoPt>();
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList2 = new ArrayList<MatMatptInfoPt>();
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList3 = new ArrayList<MatMatptInfoPt>();
-		
+
 		for(int i = 0; i < matMatptInfoPtListBefore.size(); i++) {
+			
+			//이미 신청한 환자 매칭방인지 확인
+			int iMatNo = matMatptInfoPtListBefore.get(i).getMatNo();			
+			int countResult =  mService.getCountPendingMe(iMatNo, loginUser.getMemberNo());
+			if(countResult > 0) {
+				matMatptInfoPtListBefore.remove(i);
+			}
+			
+			
 			//나이 계산
 			int ptRealAge = AgeCalculator.calculateAge(matMatptInfoPtListBefore.get(i).getPtAge());
 			matMatptInfoPtListBefore.get(i).setPtRealAge(ptRealAge);
@@ -645,16 +672,27 @@ public class MemberController {
 			String addressMinStr = addressMin[0] + " " + addressMin[1]; //00도 00시//
 			matMatptInfoPtListBefore.get(i).setMatAddressMin(addressMinStr);
 			
-			if(matMatptInfoPtListBefore.get(i).getPtCount() > 1) {
+
+			
+			
+			int ptCount = matMatptInfoPtListBefore.get(i).getPtCount();
+			if(ptCount > 1) {
+				int countPtInfo = mService.getCountPt(iMatNo);				
+				if(ptCount != countPtInfo) {
+					matMatptInfoPtListBefore.remove(i);
+				}			
 				if(matMatptInfoPtListBefore.get(i).getGroupLeader().equals("N")) {
 					matMatptInfoPtListBefore.remove(i);
 				}
 			}
+		
+			
+		
 			
 			if(i < 6) {
-				//matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
+				matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
 			}else if(i < 12) {
-				matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
+				//matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
 			}else if(i < 18) {
 				matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
 			}			
@@ -695,9 +733,23 @@ public class MemberController {
 		//현재 매칭중인 pt정보
 		//ArrayList<MatMatptInfoPt> matConfirmPt = mService.getMatConfirmPt();
 		
-	
+		//종규 결제대금 받기 추가함  ↓
+		
+		ArrayList<Pay> pArr = mService.selectPayTransfer(loginUser.getMemberNo()); 	///matNo를 전부 가져와야한다.왜냐? 공동간병 거래한사람도 있을꺼잖아
+		System.out.println("페이정보" + pArr);
+		int money = 0;
+		if(!pArr.isEmpty()) {
+			for(Pay p : pArr) {
+				money += p.getPayMoney();
+			}
+		}
+		//종규 결제대금 받기       ↑
+		model.addAttribute("money",money);
+		model.addAttribute("pArr",pArr);
+		
 		return "caregiverMain";
 	}
+	
 	
 	// 자동추천을 비동기 통신으로 요청
 	@GetMapping("refreshPatientChoice.me")
@@ -728,8 +780,8 @@ public class MemberController {
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo(); 
-			ArrayList<CareGiver> completeList = openAiCaregiverChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
-			model.addAttribute("completeList", completeList);
+			//ArrayList<CareGiver> completeList = openAiCaregiverChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
+			//model.addAttribute("completeList", completeList);
 		}
 			
 		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--
@@ -755,7 +807,7 @@ public class MemberController {
 			LocalDate today = LocalDate.now();
 			Double avgReviewScore = mService.avgReviewScore2(c.getMemberNo());
 			c.setAvgReviewScoreDouble(avgReviewScore);
-			System.out.println("리뷰점수 확인하기 : " + c.getAvgReviewScoreDouble());
+			//ystem.out.println("리뷰점수 확인하기 : " + c.getAvgReviewScoreDouble());
 			
 			c.setAge(Period.between(birthDateParsed, today).getYears());
 			//System.out.println(c);
@@ -904,34 +956,247 @@ public class MemberController {
 		String currentMonth = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		
+		HashMap<String, Object> matInfoList = null;
 		// 회원번호
 		int memberNo = loginUser.getMemberNo();
 		
+		// 이용대상 통계
 		if(loginUser != null) {
 				char check = loginUser.getMemberCategory().charAt(0);
-				switch(check) {
+				// 성별 카운트
+				int genderMCount = 0;
+				int genderFCount = 0;
 				
+				// 연령층 카운트
+				int age10Count = 0;
+				int age20Count = 0;
+				int age30Count = 0;
+				int age40Count = 0;
+				int age50Count = 0;
+				int age60Count = 0;
+				
+				// 질환종류 카운트
+				int dementiaCount = 0; // 치매
+				int delriumCount = 0;// 섬망
+				int bedsoresCount = 0;// 욕창
+				int paraplegiaCount = 0;// 하반신마비
+				int fullbodyCount = 0;// 전신마비
+				int bedriddenCount = 0;// 와상환자
+				int diaperCount = 0;// 기저귀케어
+				int unconsciousCount = 0;// 의식없음
+				int suctionCount = 0;// 석션
+				int feedingCount = 0;// 피딩
+				int urineCount = 0;// 소변줄
+				int stomaCount = 0;// 장루
+				int dialysisCount = 0;// 투석
+				int infectiousCount = 0;// 전염성질환
+				int parkinsonCount = 0;// 파킨슨
+				int mentalCount = 0;// 정신질환
+				
+				HashMap<String, Integer> genderCountMap = new HashMap<String, Integer>();
+				HashMap<String, Integer> ageCountMap = new HashMap<String, Integer>();
+				HashMap<String, Integer> categoryCountMap = new HashMap<String, Integer>();
+				
+				switch(check) {
 				case 'C':
-					ArrayList<CareReview> monthScoreList = mService.monthScoreList(memberNo);
-					System.out.println("월간"+monthScoreList);
-		
-					CareReview monthScore = null;
-					for (CareReview score : monthScoreList) {
-						if(score.getMonth().equals(currentMonth)) {
-							monthScore = score;
-							break;
-						}
+					try {
+						BufferedReader br = new BufferedReader(new FileReader("C:\\logs\\matching\\matchingDisease.log"));
+						String line;
+			            while ((line = br.readLine()) != null) {
+			            	String[] allInfo = line.split(" _ ");
+			     	        String patientInfo = allInfo[1]; 
+
+			     	        // 나이, 성별, 카테고리, 회원번호 목록 구분
+			     	        String[] infoParts = patientInfo.split("//");
+			     	        String strMatNo = infoParts[0];
+			     	        String strAge = infoParts[1]; 
+			     	        String gender = infoParts[2]; 
+			     	        String categorys = infoParts[3];
+			     	        String strMatMemberNo = infoParts[4];
+			     	        HashMap<String, Object> processLineList = new HashMap<String, Object>();
+			     	        
+			     	        // 타입 변경
+			     	        int matNo = Integer.parseInt(strMatNo);	
+			     	        int age= Integer.parseInt(strAge);
+			     	        int matMemberNo = Integer.parseInt(strMatMemberNo);
+			     	        
+			     	        System.out.println(matMemberNo);
+			     	        System.out.println(memberNo);
+			     	        
+			     	        // 카테고리 목록 구분
+			     	        String[] categoryArray = categorys.split(", ");
+
+			     	        if(matMemberNo == memberNo) {
+			     	        	
+			     	        for(String categoryList : categoryArray) {
+			     	        	System.out.println(categoryList);
+			     	        // 매칭된 환자의 질병정보
+				     	        if(categoryList.equals("치매")) {
+				     	        	dementiaCount++;
+				     	        } else if(categoryList.equals("섬망")) {
+				     	        	delriumCount++;
+				     	        } else if(categoryList.equals("욕창")) {
+				     	        	bedsoresCount++;
+				     	        } else if(categoryList.equals("하반신 마비")) {
+				     	        	paraplegiaCount++;
+				     	        } else if(categoryList.equals("전신 마비")) {
+				     	        	fullbodyCount++;
+				     	        } else if(categoryList.equals("와상 환자")) {
+				     	        	bedriddenCount++;
+				     	        } else if(categoryList.equals("기저귀 케어")) {
+				     	        	diaperCount++;
+				     	        } else if(categoryList.equals("의식 없음")) {
+				     	        	unconsciousCount++;
+				     	        } else if(categoryList.equals("석션")) {
+				     	        	suctionCount++;
+				     	        } else if(categoryList.equals("피딩")) {
+				     	        	feedingCount++;
+				     	        } else if(categoryList.equals("소변줄")) {
+				     	        	urineCount++;
+				     	        } else if(categoryList.equals("장루")) {
+				     	        	stomaCount++;
+				     	        } else if(categoryList.equals("투석")) {
+				     	        	dialysisCount++;
+				     	        } else if(categoryList.equals("전염성 질환")) {
+				     	        	infectiousCount++;
+				     	        } else if(categoryList.equals("파킨슨")) {
+				     	        	parkinsonCount++;
+				     	        } else if(categoryList.equals("정신 질환")) {
+				     	        	mentalCount++;
+				     	        }
+			     	        }
+			     	        System.out.println("회원번호" + matMemberNo);
+			     	        
+			     	       // 매칭된 환자의 성별
+			     	        if(gender.equals("M")) {
+			     	        	genderMCount++;
+			     	        }else {
+			     	        	genderFCount++;
+			     	        }
+			     	        
+			     	        
+			     	       genderCountMap.put("남자", genderMCount);
+			     	       genderCountMap.put("여자", genderFCount);
+			     	        // 매칭된 환자의 연령대
+			     	        if(age<20) {
+			     	        	age10Count++;
+			     	        } else if(age>=20 && age<30) {
+			     	        	age20Count++;
+			     	        } else if(age>=30 && age<40) {
+			     	        	age30Count++;
+			     	        } else if(age>=40 && age<50) {
+			     	        	age40Count++;
+			     	        } else if(age>=50 && age<60) {
+			     	        	age50Count++;
+			     	        } else {
+			     	        	age60Count++;
+			     	        }
+			     	        // 연령 데이터 map에 추가
+			     	        ageCountMap.put("10대이하", age10Count);
+			     	        ageCountMap.put("20대", age20Count);
+			     	        ageCountMap.put("30대", age30Count);
+			     	        ageCountMap.put("40대", age40Count);
+			     	        ageCountMap.put("50대", age50Count);
+			     	        ageCountMap.put("60대이상", age60Count);
+			     	        
+			     	        
+			     	       
+			     	        
+			     	        // 질환정보 map에 저장
+			     	        categoryCountMap.put("치매", dementiaCount);
+			     	        categoryCountMap.put("섬망", delriumCount);
+			     	        categoryCountMap.put("욕창", bedsoresCount);
+			     	        categoryCountMap.put("하반신마비", paraplegiaCount);
+			     	        categoryCountMap.put("전신마비", fullbodyCount);
+			     	        categoryCountMap.put("와상환자", bedriddenCount);
+			     	        categoryCountMap.put("기저귀케어", diaperCount);
+			     	        categoryCountMap.put("의식없음", unconsciousCount);
+			     	        categoryCountMap.put("석션", suctionCount);
+			     	        categoryCountMap.put("피딩", feedingCount);
+			     	        categoryCountMap.put("소변줄", urineCount);
+			     	        categoryCountMap.put("장루", stomaCount);
+			     	        categoryCountMap.put("투석", dialysisCount);
+			     	        categoryCountMap.put("전염성질환", infectiousCount);
+			     	        categoryCountMap.put("파킨슨", parkinsonCount);
+			     	        categoryCountMap.put("정신질환", mentalCount);
+			     	        
+			     	        }else {
+			     	        	System.out.println("회원번호"+genderCountMap);
+			     	        	System.out.println("없을때"+ageCountMap);
+			     	        	System.out.println("정보"+categoryCountMap);
+			     	        }
+			            }
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
-					System.out.println(monthScore);
-					if (monthScore != null) {
-						model.addAttribute("month",monthScore.getMonth());
-			            model.addAttribute("sumScore", monthScore.getSumScore());
-			            model.addAttribute("avgScore", monthScore.getAvgScore());
-			        } else {
-			            model.addAttribute("message", "이달의 데이터가 없습니다.");
+					
+					
+					// 월간 근무수익/일수
+					// 수익은 일단 주석처리 
+					// 임의로 시작년도는 22년부터 현재년도까지
+					int startYear = 2024;
+				        int endYear = Year.now().getValue(); // 현재 연도 가져오기
+
+				        // 월간 이용 횟수를 저장할 맵 초기화 (모든 월을 0으로 설정)
+				        LinkedHashMap<String, Integer> monthCountMap = new LinkedHashMap<String, Integer>();
+				        LinkedHashMap<String, Integer> monthPayMap = new LinkedHashMap<String, Integer>();
+				        
+				        // 데이터를 연도와 월 순서대로 삽입
+				        for (int year = startYear; year <= endYear; year++) {
+				            for (int month = 1; month <= 12; month++) {
+				                String monthKey = String.format("%d-%02d", year, month);
+				                monthCountMap.put(monthKey, 0);
+				                monthPayMap.put(monthKey, 0);
+				            }
+				        }
+					ArrayList<MatMatptInfoPt> monthMatInfos = mService.monthCountList(memberNo);
+					
+			        // 실제 데이터가 있으면 추가
+			        for (MatMatptInfoPt info : monthMatInfos) {
+			            String month = info.getMonth();
+			            int useCount = info.getUseCount();
+			            int pay = info.getMoney();
+			            monthCountMap.put(month, useCount);
+			            monthPayMap.put(month, pay);
 			        }
+			        System.out.println("맵맵"+monthCountMap);
+			        
+					// 매칭이력조회 
+					ArrayList<MatMatptInfoPt> matRecord = mService.selectMatRecord(memberNo);
+					System.out.println("이력조회======= "+ matRecord + "============");
+					
+					// 가공 나이, 지역
+					for (MatMatptInfoPt ptRecord : matRecord) {
+						int realAge =AgeCalculator.calculateAge(ptRecord.getPtAge());
+						ptRecord.setPtRealAge(realAge);
+						String[] splitAddress = ptRecord.getPtAddress().split("//");
+						System.out.println("지역"+splitAddress[1]);
+						String[] AreaAddress = splitAddress[1].split(" ");
+						System.out.println(AreaAddress[0]);
+						ptRecord.setPtAddress(AreaAddress[0]);
+					}
+					
+					
+					//매칭 이력 view로
+					model.addAttribute("matRecord", matRecord);
+					
+					// 월간 정보
+					model.addAttribute("monthCountMap",monthCountMap);
+					model.addAttribute("monthPayMap",monthPayMap);
+					
+					// 성별
+					model.addAttribute("genderCountMap", genderCountMap);
+					// 연령
+					model.addAttribute("ageCountMap", ageCountMap);
+					// 질환
+					model.addAttribute("categoryCountMap", categoryCountMap);
+					
 					 return "myInfoMatchingHistory";
+					 
+					 
+					 
 				case 'P':
 					// 환자번호
 					int ptNo = mService.getPtNo(memberNo);
@@ -939,17 +1204,24 @@ public class MemberController {
 					System.out.println("매칭이력"+mciList);
 					System.out.println("=======================");
 					ArrayList<CareReview> reviewList = mService.reviewList(ptNo);
+					
 					int reviewYn = 0;
-					for(MatMatptInfo i : mciList) {
-						i.setBeforeDate(currentDate.isBefore(i.getBeginDt().toLocalDate()));
-						i.setAfterDate(currentDate.isAfter(i.getEndDt().toLocalDate()));
-						reviewYn= mService.selectReviewYn(i.getMatNo(), ptNo);
-						i.setReviewYn(reviewYn);
-						if(i.getMatDate()!=null) {
-							String matDatearr[] = i.getMatDate().split(",");
+						for(MatMatptInfo i : mciList) {
+							i.setBeforeDate(currentDate.isBefore(i.getBeginDt().toLocalDate()));
+							i.setAfterDate(currentDate.isAfter(i.getEndDt().toLocalDate()));
+							reviewYn= mService.selectReviewYn(i.getMatNo(), ptNo);
+							i.setReviewYn(reviewYn);
+							System.out.println("매칭번호");
+							System.out.println(i.getMatNo());
+							System.out.println("환자번호");
+							System.out.println(i.getPtNo());
+							System.out.println("리뷰유무");
+							System.out.println(i.getReviewYn());
+							System.out.println("=========================");
+							if(i.getMatDate()!=null) {
+								String matDatearr[] = i.getMatDate().split(",");
+							}
 						}
-						System.out.println(i);
-					}
 					ArrayList<MatMatptInfoPt> monthPatient = mService.useMonth(ptNo);
 					
 					if(monthPatient != null) {
@@ -957,6 +1229,9 @@ public class MemberController {
 					}
 					model.addAttribute("reviewList",reviewList);
 					model.addAttribute("mciList",mciList);
+					System.out.println("=========================");
+					System.out.println(mciList);
+					System.out.println("=========================");
 					model.addAttribute("today", LocalDate.now());
 					return "myInfoMatchingHistoryP";
 				case 'A': return null;
@@ -965,6 +1240,7 @@ public class MemberController {
 
 		throw new MemberException("로그인없음. 인터셉터설정");
 	}
+	
 
 	// 내가 쓴 후기
 	@GetMapping("myInfoMatchingReview.me")
@@ -991,6 +1267,7 @@ public class MemberController {
 				model.addAttribute("sumScore", sumScore);
 				model.addAttribute("countScore", countScore);
 				return "myInfoMatchingReview";
+				
 			case 'P':
 				// 회원번호로 환자번호 get
 				int ptNo = mService.getPtNo(memberNo);
@@ -1007,7 +1284,9 @@ public class MemberController {
 		                reviewList.put(reviewsInfo.getReviewNo(), selectReviewList);
 		                
 		            }
-				System.out.println("lll"+reviewList);
+				System.out.println("+++++++++++++++");
+				System.out.println(list);
+				System.out.println("+++++++++++++++");
 				
 				model.addAttribute("list", list);
 				
@@ -1877,22 +2156,18 @@ public class MemberController {
 
 	
 	@PostMapping("careGiverUpdate.me")
-	public String updateCareGiver(@ModelAttribute Member m,@ModelAttribute CareGiver cg,HttpSession session, @RequestParam("memInfo") String memInfo) {
+	public String updateCareGiver(@ModelAttribute Member m,@ModelAttribute CareGiver cg,HttpSession session, @RequestParam("memInfo") String memInfo,Model model) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
 		m.setMemberNo(loginUser.getMemberNo());
 		cg.setMemberNo(loginUser.getMemberNo());
 		
-		System.out.println(m);
-		System.out.println(cg);
-		System.out.println(memInfo);
 		int result = mService.updateCareGiver(cg);	//간병인정보바꾸기
 		int result4 = mService.updateMemberVer2(m); //간병인은 같은 페이지에서 이름,나이,성별 세가지만 따로 바로 바꿀수있다!
 
 		if(result==0 || result4 ==0) {
 			throw new MemberException("에러!");
 		}
-		
 		
 		if(!memInfo.equals("fail")) {
 			
@@ -1907,6 +2182,10 @@ public class MemberController {
 			}
 			
 		}
+		Member m2 = mService.login(loginUser);
+		System.out.println("q변경ㅎ두절ㅇ"+m2);
+		//session.setAttribute("loginUser", m2);
+		model.addAttribute("loginUser", mService.login(m2));
 		return "redirect:home.do";
 		
 	};
@@ -2363,20 +2642,7 @@ public class MemberController {
 		
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -2448,14 +2714,17 @@ public class MemberController {
 	@GetMapping("socialLogin.me")
 	public String socialLogin(@RequestParam("code") String code,HttpSession session,Model model,RedirectAttributes ra) {
 		//소셜로그인 없으면 회원가입으로, 있으면 로그인 바로하게 하기
-		System.out.println(code);
+		//System.out.println(code);
 		Member m = mService.selectSocialLogin(code); //loginUser
 		if(m == null) {		//검사해서 없으면 회원가입창으로
 			session.setAttribute("code", code);
+			
+			
+			
 			return "redirect:enroll1View.me";
 		}else {				//검사해서 있으면 바로 로그인하기
 			model.addAttribute("loginUser", m);
-
+			logger.info("소셜 로그인 아이디 : " +  m.getMemberId());
 			if (m.getMemberCategory().equalsIgnoreCase("C")) {
 				ra.addAttribute("memberNo", m.getMemberNo());
 
@@ -2472,7 +2741,139 @@ public class MemberController {
 		
 	}
 	
+	@GetMapping("profileImageUpdate.me")
+	public String profileImageUpdate(HttpSession session, Model model) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+		System.out.println(cg);
+		
+		model.addAttribute("cg",cg);
+		return "profileImageUpdate";
+		
+	}
 	
+	//간병인에게 매칭 신청한 목록 더보기
+	@GetMapping("goCMoreRequest.me")
+	public String goCMoreRequestView(HttpSession session, Model model) {		
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		ArrayList<RequestMatPt> requestMatPt = mService.getRequestMatPt(loginUser.getMemberNo());
+		System.out.println(requestMatPt);
+		
+		for(RequestMatPt i : requestMatPt) {
+			int realAge = AgeCalculator.calculateAge(i.getPtAge());
+			i.setPtRealAge(realAge);
+			
+			if(i.getPtCount()> 1) {
+				if(i.getGroupLeader().equals("N")) {
+					requestMatPt.remove(i);
+				}
+			}
+		}
+		model.addAttribute("loginUserName", loginUser.getMemberName());
+		model.addAttribute("requestMatPt", requestMatPt);		
+		return "cMoreRequest";
+	}
+	
+	//환자에게 매칭 신청한 목록 더보기
+	@GetMapping("goPMoreRequest.me")
+	public String goPMoreRequestView(HttpSession session, Model model) {		
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		//ptno 뽑기
+		int loginPt = mService.getPtNo(loginUser.getMemberNo());
+		// 환자 입장에서 나를 선택한 간병인 정보 불러오기
+
+		ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
+		for(CareGiverMin i : requestCaregiver){
+			int age = AgeCalculator.calculateAge(i.getMemberAge());
+			i.setAge(age);
+
+		}
+		model.addAttribute("requestCaregiver", requestCaregiver);	
+		
+		//loginUser Name
+		model.addAttribute("loginUserName", loginUser.getMemberName());	
+		
+		return "pMoreRequest";
+	}
+	
+	@PostMapping("updateImage.me")
+	public String updateImageProfile(@RequestParam("files") MultipartFile files,@RequestParam("memberNo")String memberNo ) {
+		//1.사진이 없으면 새로 넣어야한다
+		//2.사진이 있으면 수정을 해야한다
+		//3.사진을 아예 지울수 있어야 한다		
+		
+		System.out.println("이미지 이름3 : " + files.isEmpty());
+		System.out.println(files.getOriginalFilename());
+		System.out.println("이미지 이름2 : " + files.toString());
+		
+		String rename = null;
+		CareGiver cg = mService.selectProfile(memberNo);
+		System.out.println(cg);
+		if(cg != null) {
+			deleteFile(cg.getCareImg());
+		}
+		if(!files.isEmpty()) {	//파일 추가했을때
+			
+			rename = saveProfileImage(files);	//새 이름으로 파일 생성완료
+			
+			
+		}else {					//파일 삭제했을때
+			
+		}
+		
+		
+		//care img dB접근하자
+		
+		int result = mService.updateImageProfile(memberNo,rename);
+		
+		if(result>0) {
+			return "deleteWindow";
+		}else {
+			throw new MemberException("프로필 저장이 실패했습니다");
+		}
+		
+		
+		
+		
+	}
+	
+	//프로필 파일 추가하기
+	public String saveProfileImage(MultipartFile file) {
+		
+		String renamePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		int ranNum = (int)(Math.random()*100000);
+		String originFileName = file.getOriginalFilename();
+		String renameFileName = sdf.format(new java.util.Date()) + ranNum+ originFileName.substring(originFileName.lastIndexOf("."));		
+		
+		
+		try {
+			file.transferTo(new File(renamePath + renameFileName));
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return renameFileName;
+	}
+	
+	//프로필 파일 삭제하기
+	public void deleteFile(String fileName) {
+		String savePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		File f = new File(savePath +fileName);
+		if(f.exists()) {
+			f.delete();
+		}
+	}
 	
 	@GetMapping("nn.me")
 	public String nn() {
@@ -2483,6 +2884,73 @@ public class MemberController {
 		
 		return "login";
 	}
+	
+	@PostMapping("deleteMember.me")
+	public String deleteMember(@RequestParam("password") String password,HttpSession session,HttpServletResponse response) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		if (bCrypt.matches(password, loginUser.getMemberPwd())) {
+			int result = mService.deleteMember(loginUser.getMemberNo());
+			
+			if(result>0) {
+				try {
+					response.setContentType("text/html; charset=UTF-8");
+					response.getWriter().write("<script> alert('계정 탈퇴 성공');</script>");
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return "redirect:home.do";
+			}else {
+				throw new MemberException("탈퇴 오류");
+			}
+		}else {
+			try {
+				response.setContentType("text/html; charset=UTF-8");
+				response.getWriter().write("<script> alert('비밀번호가 맞지 않습니다');</script>");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return "deleteMember";
+		}
+	}
+	
+	@GetMapping("deleteMemberView.me")
+	public String deleteMemberView() {
+		return "deleteMember";
+	}
+	
+	@GetMapping(value="loginInfo.me", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public void loginInfo(HttpSession session, HttpServletResponse response ) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		String memberCategory = loginUser.getMemberCategory();
+		
+		System.out.println(memberCategory);
+		Gson gson = new Gson();
+		response.setContentType("application/json; charset=UTF-8;");
+
+		try {
+			gson.toJson(memberCategory, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}						
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }//클래스 끝
 

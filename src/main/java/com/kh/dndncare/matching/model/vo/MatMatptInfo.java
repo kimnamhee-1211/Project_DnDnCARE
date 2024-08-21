@@ -60,4 +60,7 @@ public class MatMatptInfo {
 	private int hourly;
 	
 	private String matDate;
+	
+	private int serviceCount;
+	
 }

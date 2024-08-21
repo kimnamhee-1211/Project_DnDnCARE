@@ -1,6 +1,10 @@
 package com.kh.dndncare.matching.controller;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,10 +15,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,11 +36,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.kh.dndncare.common.AgeCalculator;
+import com.kh.dndncare.common.GetzipNo;
 import com.kh.dndncare.matching.model.exception.MatchingException;
 import com.kh.dndncare.matching.model.service.MatchingService;
 import com.kh.dndncare.matching.model.vo.CareReview;
@@ -39,6 +54,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
+import com.kh.dndncare.member.controller.MemberController;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.CareGiverMin;
@@ -56,11 +72,12 @@ public class MatchingController {
 	@Autowired
 	private MatchingService mcService;
 	
+	//private static Logger logger = LoggerFactory.getLogger(MatchingController.class);
+	
 	@GetMapping("publicMatching.mc")
 	public String publicMatchingView(HttpSession session,Model model,
 			@RequestParam(value="memberNoC", defaultValue = "0" ) int memberNoC) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		
 		
 		if(loginUser !=null) {			
 			int memberNo = loginUser.getMemberNo();
@@ -169,9 +186,13 @@ public class MatchingController {
 	         }
 	         
 	         //Matching 정보 삽입
+	         System.out.println("종규 매칭 정보 확인하기 : "+matching);
 	         int matchingResult = mcService.enrollMatching(matching);
 	         
 	         int matNo = matching.getMatNo();
+	         //System.out.println("종규 매칭 정보 확인하기2 : "+matNo);
+	         //System.out.println("종규 매칭 정보 확인하기 : "+matching);
+	         //System.out.println("종규 매칭 정보 확인하기 : "+matching.getMatNo());
 	         	               	         
 	         //시간제일 때 Matching_date 테이블 insert
 	         if(matching.getMatMode() == 2 && selectDays != null) {
@@ -200,6 +221,8 @@ public class MatchingController {
 	         matPtInfo.setGroupLeader("N");
 
 	         int ptInfoResult = mcService.enrollMatPtInfo(matPtInfo);
+	         
+	         
 	         
 	         //채팅방 생성 (간병인 후기 보기에서 매칭방 신청하고 바로 채팅방 생성할때)
 	         
@@ -302,8 +325,9 @@ public class MatchingController {
 		Hospital hospital = new Hospital();
 		hospital.setHospitalName(hospitalName);
 		hospital.setHospitalAddress(hospitalAddress);
+		
 		model.addAttribute("hospital", hospital);
-	
+		
 		return "joinMatchingEnroll";
 	}
 	
@@ -320,10 +344,57 @@ public class MatchingController {
 		//병원이 테이블에 없을 경우 등록 && 매칭 테이블 병원 셋
 		Hospital ho = mcService.getHospital(hospital);
 		if(ho == null) {
+			
+			//우편번호 삽입
+			String test2 = "";
+			String[] testArr =  hospital.getHospitalAddress().split(" ");	
+			for(int i= 0; i < testArr.length; i ++) {
+				if(testArr[i].contains("로") || testArr[i].contains("길")) {
+					test2 = testArr[i];
+					if(i+1 < testArr.length && testArr[i+1].matches("\\d+")) {
+						 test2 += " " + testArr[i + 1];
+					}					
+	 			}
+			}
+					
+			String zipCode = GetzipNo.ApiExplorer(test2);
+			NodeList zipNoList = null;
+			try {
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	            DocumentBuilder builder = factory.newDocumentBuilder();
+
+	            // XML 문자열을 Document로 변환
+	            ByteArrayInputStream input = new ByteArrayInputStream(zipCode.getBytes(StandardCharsets.UTF_8));
+	            Document document = builder.parse(input);
+	
+	            // <newAddressListAreaCd> 요소의 zipNo 추출
+	            zipNoList = document.getElementsByTagName("zipNo");
+            
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+            
+            // zipNo 값을 출력
+			String zipNo = null;
+            for (int i = 0; i < zipNoList.getLength(); i++) {
+                Element zipNoElement = (Element) zipNoList.item(i);
+                zipNo = zipNoElement.getTextContent();
+            }
+            
+            String addZipNo = "";
+            if(zipNo != null) {            	
+            	addZipNo = zipNo + "//" + hospital.getHospitalAddress();
+            }else {
+            	addZipNo =  "00000//" + hospital.getHospitalAddress();
+            }
+            hospital.setHospitalAddress(addZipNo);  
+            
 			int result = mcService.enrollHospital(hospital);
+			
 			if(result > 0) {
 				jm.setHospitalNo(hospital.getHospitalNo());
 			}
+			
 		}else {
 			jm.setHospitalNo(ho.getHospitalNo());
 		}
@@ -555,7 +626,69 @@ public class MatchingController {
 		AgeCalculator ageCalculator = new AgeCalculator();
 		int age = ageCalculator.calculateAge(caregiverIntro.getMemberAge());
 		
-		System.out.println(age);
+		//통계용
+		ArrayList<MatMatptInfo> serviceList = mcService.serviceList(memberNo);
+		if(serviceList != null) {
+			System.out.println("서비스1"+serviceList);
+			model.addAttribute("serviceList", serviceList);
+		}
+		System.out.println("서비스2"+serviceList);
+				
+		
+		
+		
+		// 여기서 로그 테스트
+		// 기존 로그의 데이터
+		Set<String> loggedMatNos = new HashSet<>();
+
+		// 기존 로그 파일의 모든 메시지를 읽어와 Set에 저장
+		try (BufferedReader br = new BufferedReader(new FileReader("C:\\logs\\matching\\matchingDisease.log"))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+	            String loggedList= line.substring(line.indexOf("_")+1).trim(); 
+		    	String loggedMatNo = loggedList.split("//")[0];
+		        loggedMatNos.add(loggedMatNo);  
+		        System.out.println("기존의 matNo " + loggedMatNo);
+		    }
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+		
+		// 매칭번호, 시작시간, 종료시간, 나이, 성별, 질환
+		ArrayList<Matching> matPatientInfoLists = mcService.matPatientList(memberNo);
+		for (Matching matPatientInfoList : matPatientInfoLists) {
+			System.out.println("매칭번호"+matPatientInfoList.getMatNo());
+			System.out.println("시작시간"+matPatientInfoList.getBeginDt());
+			System.out.println("종료시간"+matPatientInfoList.getEndDt());
+			System.out.println("나이"+matPatientInfoList.getPtAge());
+			System.out.println("성별"+matPatientInfoList.getMemberGender());
+			System.out.println("Scategory"+matPatientInfoList.getSCategory());
+			System.out.println("회원번호" + matPatientInfoList.getMemberNo());
+			
+			// 나이 계산
+			matPatientInfoList.setAge(AgeCalculator.calculateAge(matPatientInfoList.getPtAge()));
+			
+			
+			// 비교가 계속 안되니까 String 타입으로 바꿔서
+			String strMatNo = (matPatientInfoList.getMatNo()+"").trim();
+			
+			// 날짜도 비교
+			Date today = new Date(age);
+				// 이미 로그된 matNo인지 확인
+			    if (!loggedMatNos.contains(strMatNo)) {
+			       String logInfo = matPatientInfoList.getMatNo() + "//" + matPatientInfoList.getAge() + "//" + matPatientInfoList.getMemberGender() + "//" + matPatientInfoList.getSCategory() + "//" + matPatientInfoList.getMemberNo();
+			       System.out.println("로그에 저장할 정보"+logInfo);
+			        
+			     //   logger.info(logInfo);
+			        
+			    }
+        }
+		
+		
+		
+		
+		
+		
 		// 간병인 정보(국적, 경력, 자격증)
 		ArrayList<InfoCategory> caregiverInfo = mcService.getCaregiverInfo(memberNo);
 		HashMap<String, Object> caregiverInfoList = new HashMap<String, Object>();
@@ -579,6 +712,25 @@ public class MatchingController {
 		System.out.println("이전페이지"+beforePage);
 		System.out.println("매칭"+caregiverInfoList);
 		
+		
+		//공동매칭일 경우 loginUser가 방장인지 아닌지 알아보기
+		String leader = "N";
+		if(matNo != null){
+			leader = "Y";
+			int matNo2 = (int)matNo;
+			int ptCount = mcService.getPtCount(matNo2);			
+			if(ptCount > 1){
+				//loginUser가 그룹 리더인지 아닌지 확인
+				Member loginUser = (Member)session.getAttribute("loginUser");	
+				int loginPtNo = mcService.getPtNo(loginUser.getMemberNo());
+				String gl = mcService.getGroupLeader(matNo2, loginPtNo);
+				if(gl.equals("N")) {
+					leader = "N";
+				}
+			}
+		}
+				
+		model.addAttribute("leader", leader);
 		model.addAttribute("memberNo", memberNo);
 		model.addAttribute("matNo", matNo);
 		model.addAttribute("beforePage", beforePage);
@@ -613,7 +765,7 @@ public class MatchingController {
 	
 	//후기 작성
 	@PostMapping("writeReview.mc")
-	public String insertReview(@RequestParam("memberNo") int memberNo, @RequestParam(value="reviewScore", defaultValue = "10") int reviewScore, @RequestParam(value="matNo",required = false) int matNo , @RequestParam("reviewContent") String reviewContent, HttpSession session) {
+	public String insertReview(@RequestParam("memberNo") int memberNo, @RequestParam(value="reviewScore", defaultValue = "10") int reviewScore, @RequestParam(value="matNo",required = false) int matNo , @RequestParam("reviewContent") String reviewContent, HttpSession session, RedirectAttributes ra) {
 		int loginUserNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		int ptNo = mcService.getPtNo(loginUserNo);
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -633,7 +785,7 @@ public class MatchingController {
 		System.out.println("후기작성데이터"+map);
 		int result = mcService.insertReview(map);
 		if(result>0) {
-			return "myInfoMatchingReview.me";
+			return "redirect:myInfoMatchingReview.me";
 		}else {
 			throw new MatchingException("후기 작성 실패");
 		}
@@ -646,7 +798,7 @@ public class MatchingController {
 		// 보낼때, 매칭번호가 필수다
 		
 		Member m = (Member)session.getAttribute("loginUser");
-		MatMatptInfo matInfo = mcService.selecMatching(matNo);
+		MatMatptInfo matInfo = mcService.selectMatching(matNo);
 		MatMatptInfo matPtInfo = mcService.selecMatPtInfo(matNo,m.getMemberNo());
 		matInfo.setPtNo(matPtInfo.getPtNo());
 		matInfo.setAntePay(matPtInfo.getAntePay());
@@ -656,11 +808,14 @@ public class MatchingController {
 		matInfo.setDeposit(matPtInfo.getDeposit());
 		matInfo.setGroupLeader(matPtInfo.getGroupLeader());
 		
-		String hourly = mcService.selectMatDate(matNo);
-		int hourly2 = hourly.split(",").length;
-		matInfo.setHourly(hourly2);
-		
-		//며칠 몇시간 하는건지 계산해보자
+		String hourly = null;
+		hourly = mcService.selectMatDate(matNo);
+		if(hourly != null) {
+			int hourly2 = hourly.split(",").length;
+			matInfo.setHourly(hourly2);
+		}
+
+			//며칠 몇시간 하는건지 계산해보자
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         
         // LocalDateTime 객체로 변환
@@ -724,7 +879,10 @@ public class MatchingController {
 			String[] addressMin = addr[1].split(" ");
 			String addressMinStr = addressMin[0] + " " + addressMin[1];
 			m.setMatAddressMin(addressMinStr);
-			
+
+			//종규 맵에 넣을 주소 하나추가
+			m.setMatAddressMap(m.getMatAddressInfo().split("//")[1]);
+			System.out.println("확인하기종규" + m.getMatAddressMap());
 			//주소 full (//제외)
 			String address = m.getMatAddressInfo().replace("//", " "); 
 			m.setMatAddressInfo(address);
@@ -863,6 +1021,9 @@ public class MatchingController {
 	public void getMatPtToMatNo(@RequestParam("matNo") int matNo, HttpServletResponse response) {
 		
 		ArrayList<MatMatptInfoPt> matInfo = mcService.matPtInfoToCaregiver(matNo);
+		System.out.println(matInfo);
+		
+		
 		
 		ArrayList<String> diseaseArr = new ArrayList<String>();
 		ArrayList<String> diseaseLevel = new ArrayList<String>();
@@ -997,8 +1158,8 @@ public class MatchingController {
 	@GetMapping("goMyMatchingP.mc")
 	public String goMyMatchingP(HttpSession session, Model model) {
 		
-		Member loginUser = (Member)session.getAttribute("loginUser");
-		
+		Member loginUser = (Member)session.getAttribute("loginUser"); 
+			
 		int loginPt = mcService.getPtNo(loginUser.getMemberNo());
 		
 		//매칭 내역 (진행 + 결제대기 + 환자자 신청)
@@ -1015,6 +1176,12 @@ public class MatchingController {
 			//노출 나이 set
 			int realAge = AgeCalculator.calculateAge(i.getMemberAge());
 			i.setAge(realAge);
+
+			
+			if(i.getPtCount() == 1) {
+				i.setGroupLeader("Y");
+			}			
+			
 						
 			//매칭 진행 중
 			if(i.getMatConfirm().equals("Y")) {
@@ -1034,7 +1201,7 @@ public class MatchingController {
 		        }
 			}
 			
-			//매칭신청 받은 내역
+			//매칭신청한 내역
 			if(i.getMatConfirm().equals("N")) {
 		        Date beginDt = i.getBeginDt(); 
 		        LocalDate beginLocalDate = beginDt.toLocalDate();		        
@@ -1044,21 +1211,22 @@ public class MatchingController {
 			}	
 		}
 		
-		//매칭 내역 (간병인이 나(환자)를 신청)
+		
+		
+		//매칭 신청 받은 내역 (간병인이 나(환자)를 신청)
 		ArrayList<CareGiverMin> myMatchingMat = mcService. getMyMatchingPN(loginPt);
 		for(CareGiverMin i : myMatchingMat) {
 			
 			//노출 나이 set
 			int realAge = AgeCalculator.calculateAge(i.getMemberAge());
 			i.setAge(realAge);
+			
+			if(i.getPtCount() == 1) {
+				i.setGroupLeader("Y");
+			}	
+			
 		}
 		
-
-		System.out.println("myMatching : " +  myMatching);
-		System.out.println("myMatchingW : " +  myMatchingW);
-		System.out.println("myRequestMatC : " +  myRequestMatC);
-		System.out.println("myMatchingMat : " +  myMatchingMat);
-			
 		model.addAttribute("myMatching", myMatching);
 		model.addAttribute("myMatchingW", myMatchingW);
 		model.addAttribute("myRequestMatC", myRequestMatC);
@@ -1151,6 +1319,8 @@ public class MatchingController {
 		caregiverIntro.setAge(age);
 		
 		
+		
+		
 		// 간병인 정보(국적, 경력, 자격증)
 		ArrayList<InfoCategory> caregiverInfo = mcService.getCaregiverInfo(memberNo);
 		HashMap<String, Object> caregiverInfoList = new HashMap<String, Object>();
@@ -1237,6 +1407,30 @@ public class MatchingController {
 	}
 	
 	
+
+	//간병인 금액 받기
+	@GetMapping("insertPayTransfer.mc")
+	public String insertPayTransfer(HttpSession session) {
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		ArrayList<Pay> pArr = mcService.selectPayTransfer(loginUser.getMemberNo()); 	///matNo를 전부 가져와야한다.왜냐? 공동간병 거래한사람도 있을꺼잖아
+		System.out.println("페이정보" + pArr);
+		int result = 0;
+		int money = 0;
+		if(!pArr.isEmpty()) {
+			for(Pay p : pArr) {
+				result += mcService.insertPayTransfer(loginUser,p);
+				money += p.getPayMoney();
+			} 
+		}
+		
+		System.out.println(" 총 매칭건" + result);
+		System.out.println(" 총 금액" + money);
+		
+		
+		
+		return "redirect:careGiverMain.me";
+	}
 	
 	
 	

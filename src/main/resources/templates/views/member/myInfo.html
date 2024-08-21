@@ -26,6 +26,7 @@
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내 든든지수/후기</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
 	     		</div>
+	     		<span class="m-4" style="color:gray;"><button style="background:white; border:0" onclick="location.href='deleteMemberView.me'">탈퇴하기 ▶</button></span>
 	    	</div>
 	    	
 	    	<div class="col" >
@@ -33,21 +34,47 @@
 	      		<div class="row m-4" style="width:950px"> <!-- 여기로규격정햇다 -->
 		      		<div class="m-3 h1 menu-name" >내 정보</div>
 	      		</div>
-	      		<div align="center"class="row m-4" style="border:2px solid #8dd986;width:950px"> <!-- 여기로규격정햇다 -->
+	      		<div align="center"class="row m-4" style="width:950px"> <!-- 여기로규격정햇다 -->
 		      		<div class="col-2 m-4">
-			      		<img id="profile-image" src="image/icon_profile.png"/>
-			      		<span><br>프로필 사진</span>
+<!-- 			      		<img id="profile-image" src="image/icon_profile.png" onclick="profileImageUpdate()"/> -->
+			      		<img class="m-2" style="margin-left:-20px"id="profile-image" th:src="${cg.careImg} ? ${cg.careImg} : icon_profile.png" onclick="profileImageUpdate()"/>
+			      		<span><button class="myInfo-btn" onclick="profileImageUpdate()">사진변경</button></span>
+			      		<script> function profileImageUpdate(){
+			      			window.open('http://localhost:8096/profileImageUpdate.me','_blank','width=700,height=400');
+			      		}</script>
 		      		</div>
 		      		<div class="col-2 m-4">
 		      			<div><button class="myInfo-btn m-2" onclick="location.href='updateMemberView.me'"style="height:50px">내 계정 정보 수정하기</button></div>
 		      			<div><button class="myInfo-btn m-2" onclick="location.href='updatePwdView.me'"style="height:50px">비밀번호 변경하기</button></div>
 		      		</div>
-		      		<div class="col-3">
-		      			<div >든든 지수 : 88</div>
-		      			<img src="image/icon_score.png"/>
+		      		<div class="col"></div>
+		      		<div class="col-3 " >
+		      			<div  style="margin-left:26px;"align="center"  class="m-4 d-flex  justify-content-left" >
+			      			<div align="left"class="icon-star-review">
+								<div th:if="${cg.getAvgReviewScoreDouble > 1}" align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 1}" align="left"class="btn-icon-star-review-half"></div>
+			      			</div>
+			      			<div align="left"class="icon-star-review">
+								<div th:if="${cg.getAvgReviewScoreDouble > 3}" align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 3}" align="left"class="btn-icon-star-review-half"></div>
+			      			</div>
+			      			<div align="left"class="icon-star-review">
+								<div th:if="${cg.getAvgReviewScoreDouble > 5}" align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 5}" align="left"class="btn-icon-star-review-half"></div>
+			      			</div>
+			      			<div align="left"class="icon-star-review">
+								<div th:if="${cg.getAvgReviewScoreDouble > 7}" align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 7}" align="left"class="btn-icon-star-review-half"></div>
+			      			</div>
+			      			<div align="left"class="icon-star-review">
+								<div th:if="${cg.getAvgReviewScoreDouble > 9}" align="left"class="btn-icon-star-review"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 9}" align="left"class="btn-icon-star-review-half"></div>
+			      			</div>
+		    			</div>
+		    			<div class="h2">내 후기 점수 <br>[[${cg.getAvgReviewScoreDouble == null ? '0' : cg.getAvgReviewScoreDouble}]]</div>
 		      		</div>
-		      		<div  class="col-3 d-flex align-items-center m-2">
-		      			<div><button class="myInfo-btn" style="height:100px">공개 구인 신청하기</button></div>
+		      		<div  class="col-3 m-2 d-flex align-items-center m-2">
+		      			<div><button class="myInfo-btn" style="height:120px">일감 찾기</button></div>
 		      		</div>
 	      		</div>
 	      		
@@ -227,24 +254,56 @@
 							
 						</form>
 							
-						<div class="myInfo-Border-maincolor mt-2 mb-3">
 						
 							<div class="m-2 d-flex justify-content-between">
 								<div class="h3 myInfo-title">내 일정 확인하기</div>
-								<button class="myInfo-btn btn-sm" style="width:85px; height:40px;">수정하기</button>
 							</div>
 							
-							<div id="matchingNow"class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
-								<div>???님과 매칭중입니다 (yyyy-MM-dd)~(yyyy-MM-dd)</div>
-								<div>???님과 매칭중입니다 (yyyy-MM-dd)~(yyyy-MM-dd)</div>
-								<div>???님과 매칭중입니다 (yyyy-MM-dd)~(yyyy-MM-dd)</div>
-							</div>
-							<div id="matchingLimit"class="m-3 p-2">
-								<div>00님과의 매칭이 x일 남았습니다</div>
-								<div>00님과의 매칭이 x일 남았습니다</div>
-								<div>00님과의 매칭이 x일 남았습니다</div>
-							 </div>
-						</div>
+						<div id='calendar'></div>
+							<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+							<script>
+							
+								//종규 삽입
+						    	
+						    	function calenderEdit(){
+						    		const dateTitle = document.getElementById('fc-dom-1')
+						    		dateTitle.style.color = '#1E5F74';
+						    		dateTitle.style.fontWeight = 'bold';
+						    		
+						    		const bts = document.getElementsByClassName('fc-button');
+						    		const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
+						    		
+						    		const cala = cal.querySelectorAll('a');
+						    		for(i = 0; i< cala.length ; i++){
+						    			if(i % 7 == 0){
+						    				console.log(i);
+						    			cala[i].style.color = 'red';
+						    			}else if(i % 7 == 6){
+						    				cala[i].style.color = '#0a58ca';
+						    			}else{
+						    				if(i != 'entries' && i !='keys'){
+						    					console.log(i);
+						    				cala[i].style.color = '#1D2D50';
+						    				}
+						    			}
+						    		}
+						    	} 
+						    	
+						    	//종규 삽입 끝
+							
+							    document.addEventListener('DOMContentLoaded', function() {
+							        var calendarEl = document.getElementById('calendar'); // full-calendar를 삽입할 요소
+							        var calendar = new FullCalendar.Calendar(calendarEl, {
+							          initialView: 'dayGridMonth' //  // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
+							        });
+							    calendar.render(); // calendar 렌더링을 지시
+							    calenderEdit();
+							    });
+						    	console.log(document.getElementsByClassName('fc-toolbar-chunk'));
+						    	
+						    	
+							    
+							</script>
 						
 						<!-- <div class="myInfo-Border-maincolor mt-2 mb-3">
 							<div class="m-2 d-flex fustity- content-between">
@@ -256,7 +315,7 @@
 	      			</div>
 	      			<div class="col m-3">
 	      				<form id="wantInfo" action="updateWantInfo.me" method="post">
-		      				<div id="setMatchingList"class="myInfo-Border-maincolor mt-2">
+		      				<div id="setMatchingList"class="myInfo-Border-maincolor mt-2" style="min-height:795px;">
 			      				<div class="m-3"  ><span class="h3 myInfo-title">일감 매칭 조건 설정</span><span><br><br>원하는 간병인의 정보를 입력하세요!</span>
 			      				</div>
 			      				<div class="m-3">1. 국적
@@ -329,7 +388,7 @@
 				      			</div>
 			      				<div align="center"class="row align-items-center">
 			      					<div class="mb-4">
-			      						<button type="button" id="wantInfoButton" class="myInfo-btn">수정하기 </button>
+			      						<button type="button" id="wantInfoButton" class="m-4 myInfo-btn">수정하기 </button>
 			      					</div>
 			      				</div>
 		      				</div>
@@ -343,6 +402,8 @@
 	</div>
 	<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	
+	
 	
 	
 	<script th:inline="javascript">

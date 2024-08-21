@@ -42,32 +42,45 @@ body {
 }
 
 
-.sign-btn button {
-	height:70px;
-	font-size:24px;
-	font-weight: 600;
-	border-radius:25px;
-	border:none;
-	margin-top:70px;
-}
-
-.signIn-btn {
-	background:#8dd986;
-	color:white;
-	padding: 0 40px;
-	weight: 600px;
-	margin: 0 50px;
-}
-.signUp-btn{
-	padding: 0 40px;
-	weight: 600px;
-	margin: 0 50px;
-}
-
 
 
 .logo-image {
 	margin-left:0px;
 }
+
+
+
+.btn-dndn{	
+	color: white !important;
+	background-color: #1D2D50 !important;
+	border: none;
+	width: 200px;
+	height: 40px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
+
+
+.accordion-button:active, .accordion-button:focus, .accordion-button:click {
+	box-shadow : none !important;
+	background-color: white !important;
+}
+
+.accordion-button{
+	box-shadow : none !important;
+	background-color: white !important;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 

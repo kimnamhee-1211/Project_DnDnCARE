@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.Member;
 
 public interface AdminService {
@@ -38,6 +39,7 @@ public interface AdminService {
 
 	int updateCareInformation(Board b);
 
+	ArrayList<Pay> selectPayDeposit(String type);
 	int getMembersListCount();
 
 	ArrayList<Member> selectWeekMembers(Object object, PageInfo pi);

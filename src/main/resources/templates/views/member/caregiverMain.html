@@ -17,12 +17,15 @@
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	
-	<div id="wrap">
-	
+	<div style="height:100px;"></div>
 		<div id="upperContents">
 			<div><!-- 왼쪽 공백 --></div>
 			<div id="upperLeftContents">
-				<div><!-- AI 매칭 : 가로 700, 세로 200 -->
+				<div style="max-width:725px; height:480px;"><!-- AI 매칭 : 가로 700, 세로 200 -->
+				<div class="m-2 d-flex justify-content-between">
+					<div class="m-2">[[${loginUserName}]]님. 그동안 일한 금액 [[${money}]]원을 받으실 수 있어요!</div>
+					<div class="m-2"><button class="btn btn-success payButton" onclick="location.href='insertPayTransfer.mc'">[[${money}]]원 받기</button></div>
+				</div>
 				<table class="table mainTable table-hover">
                  <thead>
                      <tr>
@@ -56,17 +59,16 @@
                  </tbody>
             </table>
 			</div>
-				<div id="upperContentsBtn" class="align-middle text-center"><!-- 메뉴판 -->
-					<div></div>
+				<div align="center"id="upperContentsBtn" class="align-middle text-center"><!-- 메뉴판 -->
 					<table>
 	                    <tr>
-	                        <td><button class="custom-btn btn-14">내 정보</button></td>
+	                        <td><button class="custom-btn btn-14" onclick="location.href='myInfo.me'">내 정보</button></td>
 	                        <td><button class="custom-btn btn-14" id="careInformation" onclick="location.href='careInformation.bo'">간병 정보</button></td>
-	                        <td><button class="custom-btn btn-14">커뮤니티</button></td>
+	                        <td><button class="custom-btn btn-14" onclick="location.href='communityBoardList.bo'">커뮤니티</button></td>
 	                    </tr>
 	                </table>
 	                <div></div>
-				</div>
+				</div>	
 			</div>
 			<div><!-- 공백 --></div>
 			<div id="calendar"></div>
@@ -81,13 +83,13 @@
 	                
 	        <!-- 남희 좌측 하단 -->
 	        <div><!--매칭정보 : 가로 500, 세로 700-->
-	        	<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
+	        	<div class="d-flex justify-content-between" style="border-bottom:2px solid #1E5F74;">
 					<span style="margin-top:10px;">[[${loginUserName}]]님에게 들어온 매칭 신청</span>
            			<button type="button" class="btn-select">전체 보기</button>
             	</div>
             	<br/>
-	            <table class="table mainTable">
-	                <thead>
+	            <table class="table mainTable matCard">
+	                <thead >
 	                    <tr>
 	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님과의 매칭을 원하는 분들이 있습니다.</th>
 	                    </tr>
@@ -116,17 +118,16 @@
 	        
 	        <!-- 남희 우측 하단 -->
 	        <div id="findWorkList" class="text-center"><!--대상검색 : 가로 700, 세로 700-->
-				<div class="d-flex justify-content-between" style="border-bottom:2px solid #8dd986;">
+				<div class="d-flex justify-content-between" style="border-bottom:2px solid #1E5F74;">
 					<span style="margin-top:10px;">간병일감을 찾고 계신가요?</span>
            			<button type="button" class="btn-select" onclick="location.href='moreWorkInfo.me'">원하는 간병일감 찾기</button>
 
             	</div>
-            	<br/><br/>
 			    <div id="carouselExampleIndicators" class="carousel slide">
 			  		<div class="carousel-indicators" style="margin-bottom:-40px; ">
-			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;" data-bs-slide-to="0" class="active btn-test" aria-current="true" aria-label="Slide 1"></button>
-			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="1" aria-label="Slide 2"></button>
-			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#8dd986; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="2" aria-label="Slide 3"></button>
+			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#133B5C; width:25px;height:25px; border-radius: 50%;" data-bs-slide-to="0" class="active btn-test" aria-current="true" aria-label="Slide 1"></button>
+			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#133B5C; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="1" aria-label="Slide 2"></button>
+			    		<button type="button" data-bs-target="#carouselExampleIndicators" style="background-color:#133B5C; width:25px;height:25px; border-radius: 50%;"data-bs-slide-to="2" aria-label="Slide 3"></button>
 			  		</div>
 					<div class="carousel-inner">					
 						<div class="carousel-item active" th:if="${matMatptInfoPtList1 != null}">
@@ -177,6 +178,7 @@
 	                       						<img th:if="${mat.ptCount > 1}"  src="image/icon/users.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='병원돌봄'}" src="image/icon/hospital.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='가정돌봄'}"  src="image/icon/home.png"/>
+	                       						<span>[[${mat.service}]]</span>
 	                      					</h6>
 	                      					<p class="card-text">
 	                       						<span>[[${mat.beginDt}]]</span>
@@ -212,6 +214,7 @@
 	                       						<img th:if="${mat.ptCount > 1}"  src="image/icon/users.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='병원돌봄'}" src="image/icon/hospital.png"/>
 	                       						<img th:if="${mat.ptCount == 1 && mat.service =='가정돌봄'}"  src="image/icon/home.png"/>
+	                       						<span>[[${mat.service}]]</span>
 	                      					</h6>
 	                      					<p class="card-text">
 	                       						<span>[[${mat.beginDt}]]</span>
@@ -243,12 +246,12 @@
 	
 	    
 	    <!-- 사이드 버튼 -->
-	    <div id="myPresentMatching">
-	        <a class="navbar-brand align-middle" href="goMyMatchingC.mc">
-	            <img src="image/icon/deal.png">
-	            나의 매칭 현황
-	        </a>
-	    </div>
+	    <!-- <div align="center" id="myPresentMatching" onclick="location.href='goMyMatchingC.mc'">
+	            <img width="72" height="72" src="https://img.icons8.com/parakeet-line/96/000000/welfare.png" alt="welfare"/>
+	            <div>나의 매칭 현황</div>
+	    </div> -->
+	    
+	    <div th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
 	    
 	    
 	    <!-- 매칭 신청 성공/승낙/매칭 신청 취소 시 모달 -->
@@ -304,7 +307,7 @@
 		</div>     
    	 </div>
     
-    
+    <div class="m-5"></div>
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     
@@ -374,18 +377,6 @@
     		return year + '-' + month + '-' + day;
     	}
     	
-    	// 시간계산
-    	const remainCalc = (miseconds) => {
-    		let hours = Number.parseInt(miseconds/3600000);  // 시간 계산
-    		let temp1 = miseconds%3600000; // 시간을 뺀 나머지 계산
-    		let mins = Number.parseInt(temp1/60000); // 분 계산
-    		let temp2 = mins%60000; // 분을 뺀 나머지 계산
-    		let seconds = Number.parseInt(temp2/1000)
-    		
-    		return hours + "시간 " + mins + "분 " + seconds +"초";
-    	}
-    	
-    	
     	request.done(function(data) {
     		console.log(data);
     		var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -393,15 +384,12 @@
 		          events : data,
 		          eventColor: '#8dd986',
 		          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
-		        	  let mils = info.event.start - new Date();
+		        	  let d = info.event.start - new Date();
 		        	  let infomation = document.querySelector('.infomation').children;
-		        	  if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
-		        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남';
-		        	  } else { // 이벤트 날짜가 미래인 경우
+		        	  
 		        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '남음';
-		        	  }
-					infomation[2].innerHTML = '병원명이 들어올 자리';
-	          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
+						infomation[2].innerHTML = '병원명이 들어올 자리';
+		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
 	          		
 	          		let infoDetail = document.querySelector('.infoDetail').children;
 	          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;

@@ -45,12 +45,12 @@ body {
 	height:90px;
 	font-size:26px;
 	font-weight: 600;
-	border-radius:25px;
+	border-radius:15px;
 	border:none;
 }
 
 .signIn-btn {
-	background:#8dd986;
+	background:#1E5F74;
 	color:white;
 	margin-left:50px;
 	padding: 0 30px;

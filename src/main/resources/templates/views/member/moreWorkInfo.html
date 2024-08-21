@@ -11,21 +11,22 @@
     <link th:href="@{css/footer.css}" rel="stylesheet" type="text/css"/>
     
 </head>
-<body>
-	<div th:replace="~{common/navbar :: navbar}">></div>
+<body class="baseFont">
+	<div th:replace="~{common/navbar :: navbar}"></div>
 	
+	<div style="height:70px"></div>
 	<div id="contents">
 		<div><!-- 왼쪽 공백 --></div>
 		<div><!-- 컨텐츠 --> 
-			<div class="">
-				<span class="badge rounded-pill bg-primary" style="font-size: 25px;">나와 딱 맞는 간병일감을 찾아드려요.</span>
-				<img src="image/icon/refresh.gif" id="refreshChoice" width="40px;" height="40px"/>	
+			<div class="d-flex justify-content-between">
+				<span class="badge bg-color" style="font-size: 24px;">AI가 추천하는 일감이에요!</span>
+				<span class="btn-outline-maincolor" id="refreshChoice" style="font-size: 24px;">새 추천 받기</span>
 			</div>
 			
 			<br/>
 			
 			<div id="upperContents"><!-- 자동매칭 -->
-				<table class="table table-hover autoMatching" style="border-right: 1px solid gray;">
+				<table class="table table-hover autoMatching" style="border-right: 3px solid #1E5F74;">
                 	<thead>
                     	<tr class="text-center">
                         	<th>성함</th>
@@ -48,7 +49,7 @@
                  	</tbody>
              	</table>
 				
-				<table class="table table-hover autoMatching">
+				<table class="table table-hover autoMatching" >
                 	<thead>
                     	<tr class="text-center">
                         	<th>성함</th>
@@ -75,16 +76,16 @@
 			<br/>
 			
 			<div id="lowerContents"><!-- 검색목록 -->
-				<div style="position: sticky; top: 0px; z-index: 10; background:white; ">
+				<div style="position: sticky; top: 0px; z-index: 10; background:white; margin-bottom:24px;" >
 					<div id="lowerContentsTitle">
-						<div><span class="badge rounded-pill bg-primary" style="font-size: 25px;">간병일감 목록</span></div>
+						<div><span class="badge bg-color" style="font-size: 25px;">간병일감 목록</span></div>
 						<div class="text-end">
-							<button type="button" class="btn btn-light" id="goClear">검색조건 초기화하기</button>
-							<button type="button" class="btn btn-light goSearch">검색하기</button>
+							<button type="button" class="btn-outline-maincolor" id="goClear">검색조건 초기화하기</button>
+							<button type="button" class="btn-outline-maincolor goSearch">검색하기</button>
 						</div>
 					</div>
 					<br/>
-					<div id="tagBtnDiv"> <!-- 각 태그의 value값이 ON/OFF인지에 따라서 어떤 검색조건을 선택하였는지 확인가능함 -->
+					<div id="tagBtnDiv" class="d-flex justify-content-start"> <!-- 각 태그의 value값이 ON/OFF인지에 따라서 어떤 검색조건을 선택하였는지 확인가능함 -->
 						<div>
 							<button type="button" class="btn btn-light mainBtn" id="allTagBtn">태그 전체</button>
 						</div>
@@ -206,26 +207,26 @@
 			<div class="modal-content">
 		   		<div class="modal-header">
 		    		<div class="modal-title">
-		    			<div><span class="badge rounded-pill bg-primary" style="font-size: 20px;">태그 전체</span></div>
+		    			<div><span class="badge bg-color2" style="font-size: 20px;">태그 전체</span></div>
 		    		</div>
 		    		<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
 		   		</div>
 		    	<div class="modal-body" id="searchBtnDiv">
 		    		<form id="searchForm" action="searchPatientList.me" method="post">
-		    			<div><span class="badge rounded-pill bg-warning">서비스 유형</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<div><span class="badge bg-warning2">서비스 유형</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="병원돌봄/OFF">병원돌봄</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="가정돌봄/OFF">가정돌봄</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="동행서비스/OFF">동행서비스</button>
 		    			 
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning">공동간병 유형</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2">공동간병 유형</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchShareBtn" name="share" value="personal/OFF">개인간병</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchShareBtn" name="share" value="share/OFF">공동간병</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning">지역 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2">지역 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="전국/OFF">전국</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="서울/OFF">서울</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="부산/OFF">부산</button>&nbsp;&nbsp;
@@ -245,20 +246,20 @@
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="제주/OFF">제주</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="세종/OFF">세종</button>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning">성별 선택</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2">성별 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchGenderBtn" name="gender" value="남성/OFF">남성</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchGenderBtn" name="gender" value="여성/OFF">여성</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning">연령 선택</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2">연령 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchAgeBtn" name="age" value="청년/OFF">청년</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAgeBtn" name="age" value="중년/OFF">중년</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAgeBtn" name="age" value="장년/OFF">장년</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning">질환 선택</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2">질환 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchDisBtn" name="disease" value="치매/OFF">치매</button>
 						<button type="button" class="btn btn-light searchBtn searchDisBtn" name="disease" value="섬망/OFF">섬망</button>
 		    			<button type="button" class="btn btn-light searchBtn searchDisBtn" name="disease" value="욕창/OFF">욕창</button>
@@ -278,20 +279,20 @@
 					
 						<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning">중증도 선택</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2">중증도 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchLevelBtn" name="level" value="경증/OFF">경증</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchLevelBtn" name="level" value="중등중/OFF">중등중</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchLevelBtn" name="level" value="중증/OFF">중증</button>&nbsp;&nbsp;
 
 						<br/><br/>
 	
-						<div><span class="badge rounded-pill bg-warning">거동여부 선택</span><span class="badge rounded-pill bg-info">복수선택 가능</span></div><br/>
+						<div><span class="badge rounded-pill bg-warning2">거동여부 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchWalkBtn" name="walk" value="거동 가능/OFF">거동 가능</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchWalkBtn" name="walk" value="거동 불가능/OFF">거동 불가능</button>&nbsp;&nbsp;
 		
 						<br/><br/>
 	
-						<div><span class="badge rounded-pill bg-warning">돌봄비 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
+						<div><span class="badge rounded-pill bg-warning2">돌봄비 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchCostBtn" name="cost" value="3/OFF">~30,000원</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchCostBtn" name="cost" value="5/OFF">~50,000원</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchCostBtn" name="cost" value="8/OFF">~80,000원</button>&nbsp;&nbsp;
@@ -299,7 +300,7 @@
 						
 						<br/><br/>
 						
-						<div><span class="badge rounded-pill bg-warning">간병기간 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
+						<div><span class="badge rounded-pill bg-warning2">간병기간 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchTermBtn" name="term" value="1/OFF">1일 미만</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchTermBtn" name="term" value="7/OFF">7일 미만</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchTermBtn" name="term" value="15/OFF">15일 미만</button>&nbsp;&nbsp;
@@ -309,16 +310,18 @@
 		    	</div>
 		    	<div class="modal-footer">
 	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">Close</button>
-	    			<button type="button" class="btn btn-primary goSearch" style="width:200px;">검색하기</button>
+	    			<button type="button" class="btn-outline-maincolor goSearch" style="width:200px;">검색하기</button>
 		    	</div>
 		  	</div>
 		</div>
 	</div>
 	
-	<div id="footer-section">
+	<div id="footer-section" style="margin-top:32px;">
 	    <div class="inner">
-	        <div class="footer-logo">
-	            <a href="home.do"><img th:src="@{/image/logo-removebg.png}" alt="로고" id="footer-logo"></a>
+	        <div class="navbar-logo">
+		    
+		    	<a href="home.do" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a>
+	            <a href="home.do"><!-- <img th:src="@{/image/logo-removebg.png}" alt="로고" id="navbar-logo"> --></a>
 	        </div>
 	        <div class="column-wrap d-flex">
 		        <div class="footer-column">
@@ -1426,6 +1429,7 @@
 							let matList = data.matList;
 							let memList = data.memList;
 							let mpiList = data.mpiList;
+							//console.log(data.pList);
 							let matNo = '';
 							for(let mat of matList){
 								for(let mpi of mpiList) {
