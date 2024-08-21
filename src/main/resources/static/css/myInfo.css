@@ -321,3 +321,6 @@ table th{
 	border-bottom:6px solid white;
 }
 
+input{
+	border: 0px;
+}
