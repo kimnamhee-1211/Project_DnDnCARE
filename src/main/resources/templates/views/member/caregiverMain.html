@@ -354,13 +354,14 @@
     
     
     <script th:inline="javascript">
-    /*<![CDATA[*/
 	document.addEventListener('DOMContentLoaded', function() {
     	var calendarEl = document.getElementById('calendar');
     	var request = $.ajax({
     		url: 'caregiverCalendarEvent.me',
     		datatype: 'json',
+		    /*<![CDATA[*/
     		data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0},
+    		/*]]>*/
     	})
     	
     	const getTimeFormat = (date) => {
@@ -390,37 +391,35 @@
     	
     	
     	request.done(function(data) {
-    		console.log(data);
-    		var calendar = new FullCalendar.Calendar(calendarEl, {
-		          initialView: 'dayGridMonth',
-		          events : data,
-		          eventColor: '#8dd986',
-		          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
-		        	  let mils = info.event.start - new Date();
-		        	  let infomation = document.querySelector('.infomation').children;
-		        	  if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
-		        	  	/* infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남'; */
-		        		  infomation[0].innerHTML = '';
-		        	  } else { // 이벤트 날짜가 미래인 경우
-		        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>&nbsp;&nbsp;' + remainCalc(mils) + ' 남음';
+	    		console.log(data);
+	    		var calendar = new FullCalendar.Calendar(calendarEl, {
+			          initialView: 'dayGridMonth',
+			          events : data,
+			          eventColor: '#8dd986',
+			          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
+			        	  let mils = info.event.start - new Date();
+			        	  let infomation = document.querySelector('.infomation').children;
+			        	  if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
+			        	  	/* infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남'; */
+			        		  infomation[0].innerHTML = '';
+			        	  } else { // 이벤트 날짜가 미래인 경우
+			        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>&nbsp;&nbsp;' + remainCalc(mils) + ' 남음';
+			        	  }
+						infomation[2].innerHTML = '병원명이 들어올 자리';
+		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
+		          		
+		          		let infoDetail = document.querySelector('.infoDetail').children;
+		          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
+		          		infoDetail[3].innerHTML = info.event.extendedProps.endDate;
+		          		infoDetail[6].innerHTML = info.event.extendedProps.money + '원';
+		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
+		          		//console.log(document.querySelector('.modal-footer').children[0].value);
+		        	  	$('#calendarModal').modal('show');
 		        	  }
-					infomation[2].innerHTML = '병원명이 들어올 자리';
-	          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
-	          		
-	          		let infoDetail = document.querySelector('.infoDetail').children;
-	          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
-	          		infoDetail[3].innerHTML = info.event.extendedProps.endDate;
-	          		infoDetail[6].innerHTML = info.event.extendedProps.money + '원';
-	          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
-	          		//console.log(document.querySelector('.modal-footer').children[0].value);
-	        	  	$('#calendarModal').modal('show');
-	        	  }
-		        });
-		        calendar.render();
-    	}) 
-  	});
-	/*]]>*/
-	/*<![CDATA[*/
+			        });
+			        calendar.render();
+	    	}) 
+	  	});
    
 		
     	/*<![CDATA[*/
@@ -538,9 +537,7 @@
 	    	
 	    	// 간병정보(간병백과) 페이지로 이동 (시작)
 	    	document.querySelector('#careInformation').onclick = () => {
-	    		/*<![CDATA[*/
 	    		const isAdmin = /*[[${session.loginUser.memberCategory}]]*/'관리자여부';
-	    		/*]]>*/	
 	    		if(isAdmin == 'A'){ // 관리자의 입장에서 간병정보 페이지 출력
 	    			location.href='careInformation.adm';
 	    		} else{ // 일반 사용자의 입장에서 간병정보 페이지 출력
@@ -548,11 +545,8 @@
 	    		}	
 	    	}
 	    	// 간병정보(간병백과) 페이지로 이동 (끝)
-	    	
-	    	
-	    	
     	}
-    	
+    	/*]]>*/
     </script>    
 </body>
 
