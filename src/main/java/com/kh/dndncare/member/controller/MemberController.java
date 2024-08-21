@@ -684,14 +684,16 @@ public class MemberController {
 		
 			
 		
-			
-			if(i < 6) {
-				matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
-			}else if(i < 12) {
-				matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
-			}else if(i < 18) {
-				matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
-			}			
+			if(i < matMatptInfoPtListBefore.size()) {
+				if(i < 6) {
+					matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
+				}else if(i < 12) {
+					matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
+				}else if(i < 18) {
+					matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
+				}		
+			}
+	
 					
 		}
 		
