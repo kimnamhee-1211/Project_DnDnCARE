@@ -1,13 +1,17 @@
 package com.kh.dndncare.admin.model.dao;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.matching.model.vo.Pay;
+import com.kh.dndncare.member.model.vo.Member;
 
 @Mapper
 public interface AdminMapper {
@@ -45,6 +49,25 @@ public interface AdminMapper {
 	int getCaregiverListCount();
 
 	int getPatientListCount();
+	ArrayList<Pay> selectPayDeposit(String type);
+
+	int getMembersListCount();
+
+	ArrayList<Member> selectWeekMembers(Object object, RowBounds rowBounds);
+
+	int getAllMembersListCount();
+
+	ArrayList<Member> selectAllMembers(Object object, RowBounds rowBounds);
+
+	int getSearchMemberListCount(HashMap<String, String> map);
+
+	ArrayList<Member> searchMembers(HashMap<String, String> map, RowBounds rowBounds);
+
+	int updateMembers(HashMap<String, Object> map);
+
+	String getMemberAge(int memberNo);
+
+	ArrayList<HashMap<String, Object>> getEnrollCount(HashMap<String, Integer> map);
 
 
 }

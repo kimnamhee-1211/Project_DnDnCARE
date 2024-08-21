@@ -50,7 +50,7 @@ body {
 }
 
 .signIn-btn {
-	background:#8dd986;
+	background:#1E5F74;
 	color:white;
 	padding: 0 40px;
 	weight: 600px;
@@ -74,8 +74,8 @@ iframe {
             width: 2000px;
             height: 2000px;
             position: absolute;
-            top: -250%;
-            left: -245%;
+            top: -210%;
+            left: -185%;
             border: none;
         }
         

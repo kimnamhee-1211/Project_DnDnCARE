@@ -108,6 +108,71 @@
 		order by board_no desc
 	</select>
 	
+	<select id="selectPayDeposit" resultType="Pay">
+		select *
+		from pay
+		where pay_deposit = #{type}
+	</select>
+	<!-- 최근 일주일 가입자 수를 조회 -->
+	<select id="getMembersListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE MEMBER_CREATE_DATE BETWEEN SYSDATE-7 AND SYSDATE 	
+	</select>
+	
+	<select id="selectWeekMembers" resultType="Member">
+		SELECT *
+		FROM MEMBER
+		WHERE MEMBER_CREATE_DATE BETWEEN SYSDATE-7 AND SYSDATE
+		ORDER BY MEMBER_CREATE_DATE DESC
+	</select>
+	
+	<select id="getAllMembersListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM MEMBER
+	</select>
+	
+	<select id="selectAllMembers" resultType="Member">
+		SELECT *
+		FROM MEMBER
+		ORDER BY MEMBER_CREATE_DATE DESC
+	</select>
+	
+	<select id="getSearchMemberListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE ${column} LIKE '%${data}%'
+	</select>
+	
+	<select id="searchMembers" resultType="Member">
+		SELECT *
+		FROM MEMBER
+		WHERE ${column} LIKE '%${data}%'
+		ORDER BY MEMBER_CREATE_DATE DESC
+	</select>
+	
+	<update id="updateMembers">
+		UPDATE MEMBER
+		SET ${column} = #{data}
+		WHERE MEMBER_NO = ${memberNo}
+	</update>
+	
+	<select id="getMemberAge" resultType="string">
+		SELECT TO_CHAR(MEMBER_AGE, 'YYYY-MM-DD')
+		FROM MEMBER
+		WHERE MEMBER_NO = ${memberNo}
+	</select>
+	
+	<select id="getEnrollCount" resultType="map">
+		SELECT TO_DATE(MEMBER_CREATE_DATE, 'YYYY-MM-DD') AS DT, COUNT(*) AS CNT
+		FROM MEMBER
+		WHERE TO_DATE(MEMBER_CREATE_DATE, 'YYYY-MM-DD') BETWEEN TO_DATE(SYSDATE - ${begin}, 'YYYY-MM-DD') AND TO_DATE(SYSDATE - ${end}, 'YYYY-MM-DD')
+		GROUP BY TO_DATE(MEMBER_CREATE_DATE, 'YYYY-MM-DD')
+		ORDER BY 1
+	</select>
+	
+	
+	
 	<!-- 환자커뮤니티 조회 -->
 	<select id="selectPatientBoardList" resultType="Board">
 		select *

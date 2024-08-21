@@ -17,16 +17,19 @@
 	
     .hidden { display: none; }
     .text-primary:hover { color: #55aa55; }
-    .badge-primary { background-color: #FCDAB7; }
+    .badge-primary { 
+    	background-color: #FCDAB7; 
+		color: black;	
+	}
     
     .btn-outline-area {
-    color: black;
-    border: 1px solid #1E5F74;
-    border-radius:10px; 
-    width: 80px;
-    margin : 10px 0;
-    
-	}
+	    color: black;
+	    border: 1px solid #1E5F74;
+	    border-radius:10px; 
+	    width: 80px;
+	    margin : 10px 0;
+	    
+		}
 	
 	.btn-outline-area:hover, 
 	.btn-outline-area:active, 
@@ -306,12 +309,5 @@
 	        
 	        
     	}
-    	 function openChatPopup() {
-             var width = 500;
-             var height = 700;
-             var left = (screen.width - width) / 2;
-             var top = (screen.height - height) / 2;
-             window.open('chat.bo', 'chatTest', 'width=' + width + ', height=' + height + ', top=' + top + ', left=' + left);
-         }
     </script>
 </html>

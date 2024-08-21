@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>관리자_회원관리 페이지입니다.</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<style>
+		#graphDiv {
+			display: grid; grid-template-columns: 1fr 50px 1fr; grid-template-rows: 400px;
+		}
+		.selectState{background: lightyellow;}
+		.table td{cursor: pointer;}
+		.table td>div{border: 1px solid black; height: 80%; width: 33%; display: inline-block; padding-top: 3%; cursor: pointer;}
+	</style>
+</head>
+<body>
+	<div th:replace="~{common/adminNavbarTemp :: navbarTemp}"></div>
+	<div th:replace="~{common/adminSymbolTemp :: symbolTemp}"></div>
+	
+	<div class="container-fluid">
+		<div class="row">
+			<div th:replace="~{common/adminbarTemp :: sidebar}"></div>
+			
+			<br/>
+			
+			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+				<div id="graphDiv">
+					<div class="h-100 p-2 bg-light border rounded-3 text-center">
+						<canvas id="loginLineChart"></canvas>
+					</div>
+					
+					<div><!-- 사이공백 --></div>
+					
+					<div class="h-100 p-2 bg-light border rounded-3 text-center">
+						<canvas id="enrollLineChart"></canvas>
+					</div>
+				</div>	
+				
+				<br/>
+				
+				<div>	
+					<div id="tableDiv">
+						<form method="get" action="searchMembers.adm" id="searchForm" style="display:grid; grid-template-columns:150px 200px 1fr;">
+							<select class="form-select" name="searchOption">
+								<option value="none">검색조건 선택</option>
+								<option value="memberId">아이디</option>
+								<option value="memberNo">회원번호</option>
+							</select>
+							
+							<input type="text" class="form-control" name="searchContent"/>
+							
+							<div>
+								<button class="btn btn-warning" type="button" id="searchMembers">검색하기</button>
+								<button class="btn btn-primary" type="button" id="recentMembers">최근 가입회원</button>
+								<button class="btn btn-primary" type="button" id="allMembers">전체 회원</button>
+							</div>
+						</form>
+					
+						<br/>
+						
+						<div class="text-end fs-6">
+							<span class="badge rounded-pill bg-light text-dark">더블클릭하면 수정칸으로 바뀝니다.</span>
+							<span class="badge rounded-pill bg-light text-dark">수정 후 엔터를 입력하면 수정이 완료됩니다.</span>
+							<span class="badge rounded-pill bg-light text-dark">수정 중 ESC를 입력하면 수정이 취소됩니다.</span>
+						</div>
+						
+						<table class="table table-hover text-center" id="caregiverTable">
+							<thead>
+								<tr>
+								<!-- ID		NAME	NICKNAME	EMAIL	GENDER	AGE		PHONE		ADDRESS		ENROLL		ADMIN		STATUS -->
+									<th>회원번호</th>
+									<th>아이디</th>
+									<th>이름</th>
+									<th>성별</th>
+									<th>나이</th>
+									<th>이메일</th>
+									<th>주소지</th>
+									<th>가입일</th>
+									<th>가입상태</th>
+									<th>회원그룹</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="m : ${mList}">
+									<td>[[${m.memberNo}]]</td>
+									<td>[[${m.memberId}]]</td>
+									<td>[[${m.memberName}]]</td>
+									<td>[[${m.memberGender}]]</td>
+									<td>
+										[[${m.memberRealAge}]]
+									</td>
+									<td>
+										[[${m.memberEmail}]]
+									</td>
+									<td>
+										[[${#strings.listSplit(m.memberAddress, '//').get(1)}]]
+									</td>
+									<td>
+										[[${m.memberCreateDate}]]
+									</td>
+									<td>
+										<div th:class="${m.memberStatus == 'Y' ? 'selectState' : ''}">Y</div>
+										<div th:class="${m.memberStatus == 'N' ? 'selectState' : ''}">N</div>
+									</td>
+									<td>
+										<div th:class="${m.memberCategory == 'C' ? 'selectState' : ''}">C</div><div th:class="${m.memberCategory == 'P' ? 'selectState' : ''}">P</div><div th:class="${m.memberCategory == 'A' ? 'selectState' : ''}">A</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						
+						
+						<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+							<div class="btn-group me-2 text-end" role="group" aria-label="First group">
+								<!-- 이전 버튼 -->
+								<button type="button" class="btn btn-outline-secondary" th:if="${pi.currentPage <= 1}" disabled>Previous</button>
+								<button type="button" class="btn btn-outline-secondary" th:if="${pi.currentPage > 1}" th:onclick="|location.href='@{${loc}(page=${pi.currentPage - 1}, searchOption=${searchOption}, searchContent=${searchContent})}'|">Previous</button>
+								
+								<!-- 숫자 버튼 -->
+								<th:block th:each="p: ${#numbers.sequence(pi.startPage, pi.endPage)}">
+						    		<button type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{${loc}(page=${p}, searchOption=${searchOption}, searchContent=${searchContent})}'|">[[${p}]]</button>
+								</th:block> 
+							    
+							    <!-- 다음 버튼 -->
+							    <button type="button" class="btn btn-outline-secondary" th:if="${pi.currentPage >= pi.maxPage}" disabled>Next</button>
+							    <button type="button" class="btn btn-outline-secondary" th:if="${pi.currentPage < pi.maxPage}" th:onclick="|location.href='@{${loc}(page=${pi.currentPage+1}, searchOption=${searchOption}, searchContent=${searchContent})}'|">Next</button>
+							</div>
+						</div>
+					</div>
+					
+					<div><!-- 사이공백 --></div>
+				</div>
+			</main>
+		</div>
+	</div>
+	
+	
+	<!-- 회원정보 조회용 Scrollable modal (시작) -->
+	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		    <div class="modal-content">
+		    	<div class="modal-header">
+			        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		        </div>
+			    <div class="modal-body">
+			    	<div class="modal-dialog modal-dialog-scrollable" id="modalContent">
+			        	
+			        </div>
+			    </div>
+			    <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+			        <!-- <button type="button" class="btn btn-primary">확인</button> -->
+			    </div>
+		    </div>
+		</div>
+	</div>
+	<!-- 회원정보 조회용 Scrollable modal (끝) -->
+	
+	
+	<!-- 상세주소를 입력할 모달 (시작) -->
+	<div class="modal fade" id="addressDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addressDetailLabel" aria-hidden="true">
+		<div class="modal-dialog">
+	    	<div class="modal-content">
+	      		<div class="modal-header">
+		        	<h5 class="modal-title" id="addressDetailLabel">상세주소를 입력해주세요.</h5>
+		        	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      		</div>
+		        <div class="modal-body">
+		        	<input type="text" class="form-control" id="additionAddress"/>
+		      	</div>
+		      	<div class="modal-footer">
+		        	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+		        	<button type="button" class="btn btn-primary" id="addressConfirm">입력완료</button>
+		      	</div>
+	  		</div>
+		</div>
+	</div>
+	<!-- 상세주소를 입력할 모달 (시작) -->
+	
+	
+	
+	
+	
+	
+	<script th:inline="javascript">
+		window.onload = () => {
+			// 출력한 데이터를 저장해두기 위한 전역변수를 선언
+			let beforeData; 
+			let zipCode;
+			let roadAddress;
+			
+			// 주소검색 api (시작)
+			function sample4_execDaumPostcode(beforeData) {
+		    	new daum.Postcode({
+		    		oncomplete: function(data) {
+					    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+					
+					    // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+					    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+					    var roadAddr = data.roadAddress; // 도로명 주소 변수
+					    var extraRoadAddr = ''; // 참고 항목 변수
+					
+					    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+					    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+					    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+					        extraRoadAddr += data.bname;
+					    }
+					    // 건물명이 있고, 공동주택일 경우 추가한다.
+					    if(data.buildingName !== '' && data.apartment === 'Y'){
+					       extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+					    }
+						// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+				       if(extraRoadAddr !== ''){
+				           extraRoadAddr = ' (' + extraRoadAddr + ')';
+				       }
+					
+					    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+					    zipCode = data.zonecode;
+					    roadAddress = roadAddr;
+					},
+					onclose: function(state) {
+		    	        if(state === 'FORCE_CLOSE'){
+		    	            //사용자가 브라우저 닫기 버튼을 통해 팝업창을 닫았을 경우, 실행될 코드를 작성하는 부분입니다.
+		    	            alert('주소 수정을 취소하였습니다.');
+		    	        } else if(state === 'COMPLETE_CLOSE'){
+		    	            //사용자가 검색결과를 선택하여 팝업창이 닫혔을 경우, 실행될 코드를 작성하는 부분입니다.
+		    	            //oncomplete 콜백 함수가 실행 완료된 후에 실행됩니다.
+		    	            $('#addressDetail').modal('show');
+		    	            
+		    	        }
+		    	    }
+				}).open({
+					q: beforeData
+				});
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+	    	};
+	    	// 주소검색 api (끝)
+			
+	    	
+			document.querySelector('#recentMembers').addEventListener('click', () => {
+				location.href = 'members.adm';	
+			})
+			
+			document.querySelector('#allMembers').addEventListener('click', () => {
+				location.href = 'allMembers.adm';	
+			})
+			
+			
+			document.querySelector('#searchMembers').addEventListener('click', (event) => {
+				const searchForm = document.querySelector('#searchForm');
+				const searchOption = document.getElementsByName('searchOption')[0];
+				const searchContent = document.getElementsByName('searchContent')[0];
+				
+				if(searchOption.children[0].selected || searchContent.value.trim() == ''){
+					event.preventDefault();
+					alert('검색 조건을 선택해주세요');
+					if(searchOption.children[0].selected) searchOption.focus();
+					else searchContent.focus();
+				} else {
+					searchForm.submit();
+				}
+			})
+			
+			const tbody = document.querySelector('tbody');
+			
+			tbody.addEventListener('click', function(event) {
+				// 클릭에서 제외시키고 싶은 파트 => 타겟의 자식이 2명이상 존재하는 경우, 타겟의 태그명이 DIV인 경우
+				const target = event.target;
+				
+				if(target.children.length == 0 && event.target.tagName == 'TD'){
+					const myTr = target.parentElement;
+					const myTbody = myTr.parentElement;
+					const trList = myTbody.children;
+					
+					// 현재 클릭한 요소가 소속된 tr의 배경색만 변경 (시작)
+					for(const tr of trList){
+						if(tr != myTr){
+							tr.style.background = 'white';
+						} else{
+							tr.style.background = 'lightgrey';
+						}
+					}
+					// 현재 클릭한 요소가 소속된 tr의 배경색만 변경 (끝)
+					
+					// 회원 상세정보 모달창 출력 (시작)
+					const memberNo = target.parentElement.children[0].innerText;
+					
+					$.ajax({ // 회원에 대한 정보를 더 들고오자.
+						url: 'selectMemberInfo.adm',
+						type: 'post',
+						data: {memberNo: memberNo},
+						success: data => {
+							console.log(data);
+							
+							//$('#staticBackdrop').modal('show');
+							
+						},
+						error: data => console.log(data)
+					});
+					// 회원 상세정보 모달창 출력 (끝)
+					
+				} 
+				
+				
+				// 회원 상태와 카테고리 변경(시작)
+				if(target.tagName == 'DIV'){
+					const myTr = target.parentElement;
+					
+					if(!target.className.includes('selectState')){
+						console.log(myTr.parentElement.children[0].innerText); // 누구의
+						console.log(myTr.children.length)// 무엇을 => 2이면 가입상태, 3이면 회원그룹
+						console.log(target.innerText); // 어떻게
+						
+						$.ajax({
+							url: 'updateMembers.adm',
+							type: 'post',
+							data: { 
+								memberNo: myTr.parentElement.children[0].innerText,
+								column: myTr.children.length == 2 ? 'status' : 'category',
+								data: target.innerText
+								},
+							success: data => {
+								console.log(data);
+								
+								for(const div of myTr.children){
+									if(div == target){
+										div.classList.add('selectState');
+									} else {
+										div.classList.remove('selectState');
+									}
+								}
+							},
+							error: data => console.log(data)
+						});
+						
+					}
+				}
+				// 회원 상태와 카테고리 변경 (끝)
+				
+				
+			});
+			
+			
+			tbody.addEventListener('dblclick', (event) => {
+				const target = event.target; // 현재 더블클릭한 요소를 가르킨다.
+				let column; // 변경하려는 컬럼명을 저장하는 지역변수 선언
+				let updateData; // 변경하려는 데이터를 저장하는 지역변수 선언
+				
+				
+				// tr에서의 index를 뽑아보기
+				if(target.children.length == 0 && target.tagName == 'TD'){
+					const mySiblings = target.parentElement.children;
+					let index;
+					
+					for(let i = 0; i < mySiblings.length; i++){
+						if(target == mySiblings[i]){
+							index = i;
+							break;
+						}
+					}
+					
+					switch(index%10){
+					case 0 : alert('변경할 수 없습니다.'); break; 
+					case 1 : alert('변경할 수 없습니다.'); break;
+					case 2 : column = 'MEMBER_NAME'; break;
+					case 3 : column = 'MEMBER_GENDER'; break;
+					case 4 : column = 'MEMBER_AGE'; break;
+					case 5 : column = 'MEMBER_EMAIL'; break;
+					case 6 : column = 'MEMBER_ADDRESS'; break;
+					}
+					
+					// td 내부에 입력요소가 있을 때 초기화 시키는 역할
+					const tdList = target.parentElement.parentElement.querySelectorAll('td');
+					for(const td of tdList){ 
+						//console.log(td.querySelector('input')) // 입력요소가 있으면 null이 아님
+						if(td.querySelector('input') != null){
+							td.innerHTML = '';
+							td.textContent = beforeData;
+						}
+					}
+					
+					
+					beforeData = target.innerText; // 현재 입력할 요소에 대한 원본 데이터를 전역변수에 저장해둔다.
+					if(index == 2 || index == 4){//이름, 나이를 더블클릭한 경우
+						target.innerText = '';
+						target.insertAdjacentHTML('afterbegin', `<input type='text' value=${beforeData} size="5" class="updateData">`);	
+					} else if(index == 3){ // 성별을 더블클릭한 경우
+						target.innerText = '';
+						if(beforeData == 'M'){
+							target.insertAdjacentHTML('afterbegin', `<input type="radio" name="gender" class="updateData" value="M" checked>M <input type="radio" name="gender" class="updateData" value="F">F`);
+						} else{
+							target.insertAdjacentHTML('afterbegin', `<input type="radio" name="gender" class="updateData" value="M">M <input type="radio" name="gender" class="updateData" value="F" checked>F`);
+						}
+					} else if(index == 5){ // 이메일을 더블클릭한 경우
+						const emailId = target.innerText.split('@')[0];
+						const emailDomain = target.innerText.split('@')[1];
+						target.innerText = '';
+						
+						switch(emailDomain){
+						case 'naver.com': 
+							target.insertAdjacentHTML('afterbegin', `<input type="text" size="5" class="updateData" value=${emailId}>@<select class="updateData"><option value="naver.com">naver.com</option><option value="gmail.com">gmail.com</option><option value="nate.com">nate.com</option><option value="hanmail.com">hanmail.com</option></select>`);
+							break;
+						case 'gmail.com' :
+							target.insertAdjacentHTML('afterbegin', `<input type="text" size="5" class="updateData" value=${emailId}>@<select class="updateData"><option value="naver.com">naver.com</option><option value="gmail.com" selected>gmail.com</option><option value="nate.com">nate.com</option><option value="hanmail.com">hanmail.com</option></select>`);
+							break;
+						case 'nate.com' :
+							target.insertAdjacentHTML('afterbegin', `<input type="text" size="5" class="updateData" value=${emailId}>@<select class="updateData"><option value="naver.com">naver.com</option><option value="gmail.com">gmail.com</option><option value="nate.com" selected>nate.com</option><option value="hanmail.com">hanmail.com</option></select>`);
+							break;
+						case 'hanmail.net':
+							target.insertAdjacentHTML('afterbegin', `<input type="text" size="5" class="updateData" value=${emailId}>@<select class="updateData"><option value="naver.com">naver.com</option><option value="gmail.com">gmail.com</option><option value="nate.com">nate.com</option><option value="hanmail.com" selected>hanmail.com</option></select>`);
+							break;
+						}
+					} else if(index == 6){ // 주소에 대한 수정은 특별히 별도의 로직으로 다루어야 한다. ( 우편번호 , 도로명주소, 상세주소를 수정해야함)
+						sample4_execDaumPostcode(beforeData);
+						let memberNo;
+						console.log(target.parentElement.children[0].innerText);
+						//let zipCode;
+						//let roadAddress;
+						
+						
+						
+						document.querySelector('#addressConfirm').addEventListener('click', () => {
+							$('#addressDetail').modal('hide');
+						//				06035//서울 강남구 가로수길 5//1층
+							updateData = zipCode + '//' + roadAddress + '//' + document.querySelector('#additionAddress').value;
+							
+							$.ajax({
+								url: 'updateMembers.adm',
+								type: 'post',
+								data: {
+									memberNo: target.parentElement.children[0].innerText,
+									column: column,
+									data: updateData
+								},
+								success: data => {
+									target.innerText = roadAddress;
+								},
+								error: data => console.log(data)
+							});
+							
+							
+							
+						});
+						
+						
+						
+						
+						
+					}
+					
+					
+					// 더블클릭 이벤트 도중에 입력요소에 대하여 keydown 이벤트 지정
+					const updateDataList = document.querySelectorAll('.updateData');
+					
+					for(const upd of updateDataList){
+						upd.addEventListener('keydown', function(e) {
+							if(e.key == 'Enter'){ // Enter키를 입력하였을 때 DB에서 데이터를 변경한다.
+								//console.log(this.parentElement.parentElement.children[0].innerText); // 누구의
+								//console.log(column);// 무엇을
+								
+								updateData = ''; // 과거에 저장해둔 업데이트 데이터를 초기화한다.
+								
+								if(index == 2 || index == 4){
+									//console.log(this.value);// 어떻게
+									updateData = this.value;
+								} else if(index == 3){
+									for(const radio of this.parentElement.children){
+										if(radio.checked) {
+											updateData = radio.value;
+											break;
+										}
+									}
+								} else if(index == 5){
+									updateData = this.parentElement.children[0].value + '@' + this.parentElement.children[1].value;
+								}
+								
+								
+								$.ajax({
+									url: 'updateMembers.adm',
+									type: 'post',
+									data: {
+										memberNo: this.parentElement.parentElement.children[0].innerText,
+										column: column,
+										data: updateData
+									},
+									success: data => {
+										this.parentElement.innerHTML = updateData;
+									},
+									error: data => console.log(data)
+								});
+							}
+						})
+					}
+				}
+			});
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			// ESC 입력시 수정중이던 요소가 원래대로 돌아감 (시작)
+			document.querySelector('body').addEventListener('keydown', function(e) {
+				if(e.key == 'Escape'){
+					const upd = document.querySelector('.updateData'); // 입력요소의 갯수와 무관하게 하기 위하여 All을 사용하지 않음
+					upd.parentElement.innerHTML = beforeData;
+				}			
+			});
+			// ESC 입력시 수정중이던 요소가 원래대로 돌아감 (끝)
+			
+			
+			// 꺽은선 그래프 작성(시작)
+			// Date객체를 yy-mm-dd로 표현하기
+			const dateFormat = date => {
+				return date.toISOString().split('T')[0].substring(2);
+			}
+			
+			// n일전에 대한 Date객체 생성하기
+			const agoDate = ago => {
+				return new Date(new Date().setDate((new Date().getDate() - ago)));
+			}
+			
+			const nearOneWeek = [];
+			const nearTwoWeek = [];
+			for(let i = 6; i >= 0; i--){
+				nearOneWeek.push(dateFormat(agoDate(i)));
+			}
+			for(let i = 13; i >= 7; i--){
+				nearTwoWeek.push(dateFormat(agoDate(i)));
+			}
+			
+			// 전달받은 파라미터 접근하기
+			/*<![CDATA[*/
+			const oneWeekAgo = /*[[${oneWeekAgo}]]*/'1주일전';
+			const twoWeekAgo = /*[[${twoWeekAgo}]]*/'2주일전';
+			/*]]>*/
+						
+			const oneWeekLogin = []; // 최근 일주일에 대한 접속자의 수를 저장할 배열
+			const twoWeekLogin = []; // 14일전 ~ 7일전에 대한 접속자의 수를 저장할 배열
+			
+			for(const near of nearOneWeek){
+				oneWeekAgo[near] == undefined ? oneWeekLogin.push(0) : oneWeekLogin.push(oneWeekAgo[near]);
+			}
+			for(const near of nearTwoWeek){
+				twoWeekAgo[near] == undefined ? twoWeekLogin.push(0) : twoWeekLogin.push(twoWeekAgo[near]);
+			}
+			
+			
+			const loginLineChart = document.getElementById('loginLineChart');
+
+			new Chart(loginLineChart, {
+			    type: 'line',
+			    data: {
+			      labels: nearOneWeek, // x축
+			      datasets: [
+			    	    {
+			    	      label: '지난주 접속자',
+			    	      data: oneWeekLogin,
+			    	      borderColor: 'rgb(255, 99, 132)',
+			    	      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+			    	    },
+			    	    {
+			    	      label: '지지난주 접속자',
+			    	      data: twoWeekLogin,
+			    	      borderColor: 'rgb(75, 192, 192)',
+			    	      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+			    	      stepped: true,
+			    	      yAxisID: 'y',
+			    	    }
+			    	]
+			    },
+			    options: {
+			      scales: {
+			        y: {
+			        	beginAtZero: true
+			        }
+			      }
+			    }
+			}); 
+			// 꺾은선 그래프 작성(끝)
+			
+			
+			// 두번째 그래프~~~
+			/*<![CDATA[*/
+			const oneWeekAgoEnroll = /*[[${oneWeekEnroll}]]*/'최근 일주일 가입자의 수';
+			const twoWeekAgoEnroll = /*[[${twoWeekEnroll}]]*/'14일전 ~ 7일전 가입자의 수';
+			/*]]>*/
+			
+			const oneWeekEnroll = []; // 최근 일주일에 대한 가입자의 수를 저장할 배열
+			const twoWeekEnroll = []; // 14일전 ~ 7일전에 대한 가입자의 수를 저장할 배열
+			
+			let flag = false;
+			for(const near of nearOneWeek){
+				flag = false;
+				for(const enroll of oneWeekAgoEnroll){
+					if(near == enroll['DT']) {
+						flag = true;
+						oneWeekEnroll.push(enroll['CNT']);
+					} 
+				}
+				if(!flag){
+					oneWeekEnroll.push(0);
+				}
+			}
+			
+			for(const near of nearTwoWeek){
+				flag = false;
+				for(const enroll of twoWeekAgoEnroll){
+					if(near == enroll['DT']) {
+						flag = true;
+						twoWeekEnroll.push(enroll['CNT']);
+					} 
+				}
+				if(!flag){
+					twoWeekEnroll.push(0);
+				}
+			}
+			
+			const enrollLineChart = document.getElementById('enrollLineChart');
+
+			new Chart(enrollLineChart, {
+			    type: 'line',
+			    data: {
+			      labels: nearOneWeek, // x축
+			      datasets: [
+			    	    {
+			    	      label: '지난주 가입자',
+			    	      data: oneWeekEnroll,
+			    	      borderColor: 'rgb(255, 99, 132)',
+			    	      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+			    	    },
+			    	    {
+			    	      label: '지지난주 가입자',
+			    	      data: twoWeekEnroll,
+			    	      borderColor: 'rgb(75, 192, 192)',
+			    	      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+			    	      yAxisID: 'y',
+			    	    }
+			    	]
+			    },
+			    options: {
+			      scales: {
+			        y: {
+			        	beginAtZero: true
+			        }
+			      }
+			    }
+			}); 
+			
+			
+			
+		}
+	</script>
+</body>
+</html>

@@ -26,9 +26,9 @@
 		
 		<div id="upperLeftContents">
 			<div style="height:270px;"><!-- 결제 요청 카드 -->
-				<div class="p-2" th:unless="${payCount != 0}">[[${session.loginUser.memberName}]]님! 현재 결제 건은 없습니다! </div>
+				<div class="p-2" style="margin:0;"th:unless="${payCount != 0}">[[${session.loginUser.memberName}]]님! 현재 결제 건은 없습니다! </div>
 					<th:block th:if="${payCount != 0}">
-						<div class="p-2" id="viewPayList">[[${session.loginUser.memberName}]]님! 결제 요청 건이 [[${payCount}]]개 있어요</div>
+						<div class="p-2"style="margin:0;" id="viewPayList">[[${session.loginUser.memberName}]]님! 결제 요청 건이 [[${payCount}]]개 있어요<span class="newIcon"> new!</span></div>
 						<div class="pay-content">
 							<th:block th:each="m : ${mc}" th:if="${m.matConfirm == 'W'}">
 								<table class="ml-4 mr-4 table" >
@@ -36,7 +36,7 @@
 										<tr class="align-middle">
 											<th width="510">[[${m.memberName}]]님과의 매칭이 성사되었습니다.</th>
 											<td align="center">
-											<button class="btn btn-success payButton">결제하기</button>
+											<button class="btn btn-success payButton">정보 보기</button>
 											<input type="hidden" th:value="${m.matNo}"/> <!-- 이걸 쓸진 모르겠지만 만들어둠 -->
 											</td>
 										</tr>
@@ -58,7 +58,7 @@
 					</div>
 				</div>
 			</div>
-			<div style="margin-top:29px;"><!-- AI 매칭 : 가로 700, 세로 200 -->
+			<div ><!-- AI 매칭 : 가로 700, 세로 200 -->
 				<table class="table mainTable" style="height:200px;">
                 	<thead>
                     	<tr>
@@ -302,12 +302,12 @@
     </div> -->
     <div th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
     
-	<!-- Modal -->
+	<!-- Modal 결제모달-->
 	<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice2">
 		<div class="modal-dialog modal-dialog-centered" role="document" style="max-width:700px;">
     		<div class="modal-content rounded-3 shadow" style="min-width:700px;">
-    			<div class="m-5 text-center h2">결제 정보</div>
-    			<div class="m-4 h5" style="border-bottom:1px solid #8dd986;"><span class="h2" id="careName"></span>님과 매칭되었습니다!</div>
+    			<div class="m-5 text-center h2 ">결제 정보</div>
+    			<div class="m-4 h5" style="border-bottom:2px solid #133B5C;"><span class="h2" id="careName"></span>님과 매칭되었습니다!</div>
 				<div class="d-flex justify-content-start">    			
 	    			<div >
 	    				<div class="m-4 text-center">매칭 서비스</div>
@@ -736,7 +736,7 @@
 		    		  document.getElementsByName('merchantUid')[0].value = response.merchant_uid;
 		    		  document.getElementsByName('matNo')[0].value = payBt.nextElementSibling.value;
 		    		  //document.getElementsByName('payMoney')[0].value = response.merchant_uid; 위에서미리넘기자
-		    		  document.getElementsByName('payService')[0].value = response.merchant_uid;
+		    		  document.getElementsByName('payService')[0].value = document.getElementById('payService').innerText;
 		    		  form.action = 'successPay.mc';
 		  	    	  form.submit();
 		    		  

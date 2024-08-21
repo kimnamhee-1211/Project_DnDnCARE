@@ -13,7 +13,6 @@
 	<div class="wrap">
 	
 		<div class="title-content d-flex justify-content-center mx-auto">
-			<a href="home.do"><img class="logo-image mb-5 w-75" src="image/logo-removebg.png" width="130"></a>	
 			<h1 class="h1 mb-4 fw-bold text-center">나의 매칭 현황</h1><br>
 		</div>
 		
@@ -46,7 +45,7 @@
 			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">현재 결제 대기 중인 매칭 내역</h3>
 			<br>
 			<div class="form-floating mb-5 mx-auto">
-				<div class="accordion" id="accordionExample">
+				<div class="accordion" id="accordionExample2">
 				  <div class="accordion-item"  th:each="myMat : ${myMatchingW}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
 				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 				    <h2 class="accordion-header">
@@ -55,7 +54,7 @@
 				        <th:block th:if="${myMat.ptCount == 1}">[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])과의 매칭이 결제 대기 중입니다.</th:block>
 				      </button>
 				    </h2>
-				    <div th:id="'collapsetwo' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+				    <div th:id="'collapsetwo' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
 						<div class="accordion-body">
 							<table class="table mx-auto">
 								<thead></thead>
@@ -71,7 +70,7 @@
 			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">[[${loginUserName}]]님이 신청한 매칭 내역</h3>
 			<br>
 			<div class="form-floating mb-5 mx-auto">
-				<div class="accordion" id="accordionExample">
+				<div class="accordion" id="accordionExample3">
 					<div class="accordion-item"  th:each="myMat : ${myRequestMat}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
 						<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 				    	<h2 class="accordion-header">
@@ -80,14 +79,14 @@
 				        		<th:block th:if="${myMat.ptCount == 1}">[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])과의 매칭을 신청하셨습니다.</th:block>
 				      		</button>
 				    	</h2>
-				   		<div th:id="'collapsethree' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+				   		<div th:id="'collapsethree' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample3">
 							<div class="accordion-body" style="text-align: center;">
 								<div style="display:none" th:text="${myMat.ptCount}" class="ptCount"></div>
 								<table class="table mx-auto">
 									<thead></thead>
 									<tbody></tbody>
 								</table>
-								<button class="btn btn-success matCan">매칭 신청 취소</button>
+								<button type="button" class="btn-dndn matCan" style="margin:0 40%;">매칭 신청 취소</button>
 							</div>
 						</div>
 					</div>
@@ -98,7 +97,7 @@
 			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">[[${loginUserName}]]님이 받은 매칭 신청 내역</h3>
 			<br>
 			<div class="form-floating mb-5 mx-auto">
-				<div class="accordion" id="accordionExample">
+				<div class="accordion" id="accordionExample4">
 				  <div class="accordion-item"  th:each="myMat : ${myRequestMatPt}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
 				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 				    <h2 class="accordion-header">
@@ -111,14 +110,14 @@
 				        </th:block>
 				      </button>
 				    </h2>
-				    <div th:id="'collapsefour' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-						<div class="accordion-body" style="text-align: center;">
+				    <div th:id="'collapsefour' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample4">
+						<div class="accordion-body">
 							<div style="display:none" th:text="${myMat.ptCount}" class="ptCount"></div>
 							<table class="table mx-auto">
 								<thead></thead>
 								<tbody></tbody>
 							</table>
-							<button class="btn btn-success matOk">매칭 승낙</button>
+							<button type="button" style="width:120px;margin:0 45%;" class="btn btn-dndn matOk">매칭 승낙</button>
 						</div>
 				    </div>
 				  </div>
@@ -140,7 +139,7 @@
 	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청 승낙이 완료됩니다.<br>상대가 입금을 완료하면 매칭이 성사됩니다.</h5>	        
 	      </div>
 	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-primary" id="requestMatchingOk">매칭 승낙</button>
+	      	<button type="button" class="btn btn-dndn" id="requestMatchingOk">매칭 승낙</button>
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 	      </div>
 	    </div>
@@ -160,7 +159,7 @@
 	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청이 취소됩니다.<br>한 번 취소한 매칭 신청은 회복이 불가능합니다.</h5>	        
 	      </div>
 	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-primary" id="matCancel">매칭 신청 취소</button>
+	      	<button type="button" class="btn btn-dndn" id="matCancel">매칭 신청 취소</button>
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 	      </div>
 	    </div>

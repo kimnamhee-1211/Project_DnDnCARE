@@ -16,25 +16,28 @@
 </style>
 
 </head>
-<body class="d-flex h-100 text-center text-bg-dark">
-	<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+<body class="d-flex h-100 text-center" style="">
+	<div class="cover-container d-flex w-750 h-100 p-3 mx-auto flex-column">
 		<header class="mb-auto"></header>
 
-		<main class="px-3">
-			<img class="d-block mx-auto mb-4" src="image/500.png" alt="" width="850">
-			<h1>500 Error!</h1>
-			<br>
-			
-			<p th:text="${status}"></p>
-			<p th:text="${excption}"></p>
-			<p th:text="${message}"></p>
-<!-- 			<p th:text="${trace}"></p> -->
-<!--     		<p class="lead">${ requestScope['javax.servlet.error.message']}</p> -->
-		    <p class="lead">
-		    	<a href="home.do" class="btn btn-lg fw-bold border-white bg-white">HOME</a>
-		    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		    	<a href="javascript:history.back();" class="btn btn-lg fw-bold border-white bg-white">BACK</a>
-		    </p>
+		<main class="m-4 px-3">
+			<div  class="row d-flex align-items-center" style="width:1000px; margin-top:200px;">
+				<div align="center"class="col-7">
+					<div class="h1" style="color:#133B5C;font-weight:bold; font-size:48px">든든케어</div>
+					<h2 class="m-4">[[${message}]]</h2>
+					<p th:text="${status}"></p>
+					<p th:text="${excption}"></p>
+				</div>
+				<div align ="center" class="col">
+				    <a href="home.do" class="logo m-4"><img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a>
+				    <p class="lead m-4">
+					<p >아래 버튼을 눌러 화면을 이동해주세요!</p>
+				    	<a href="home.do" class="btn btn-lg fw-bold btn-success">HOME</a>
+				    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				    	<a href="javascript:history.back();" class="btn btn-lg fw-bold bg-secondary">BACK</a>
+				    </p>
+			    </div>
+		    </div>
 		</main>
 
 		<footer class="mt-auto text-white-50"></footer>

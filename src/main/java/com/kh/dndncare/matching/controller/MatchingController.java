@@ -72,7 +72,7 @@ public class MatchingController {
 	@Autowired
 	private MatchingService mcService;
 	
-	private static Logger logger = LoggerFactory.getLogger(MatchingController.class);
+	//private static Logger logger = LoggerFactory.getLogger(MatchingController.class);
 	
 	@GetMapping("publicMatching.mc")
 	public String publicMatchingView(HttpSession session,Model model,
@@ -679,7 +679,7 @@ public class MatchingController {
 			       String logInfo = matPatientInfoList.getMatNo() + "//" + matPatientInfoList.getAge() + "//" + matPatientInfoList.getMemberGender() + "//" + matPatientInfoList.getSCategory() + "//" + matPatientInfoList.getMemberNo();
 			       System.out.println("로그에 저장할 정보"+logInfo);
 			        
-			        logger.info(logInfo);
+			     //   logger.info(logInfo);
 			        
 			    }
         }
@@ -879,7 +879,10 @@ public class MatchingController {
 			String[] addressMin = addr[1].split(" ");
 			String addressMinStr = addressMin[0] + " " + addressMin[1];
 			m.setMatAddressMin(addressMinStr);
-			
+
+			//종규 맵에 넣을 주소 하나추가
+			m.setMatAddressMap(m.getMatAddressInfo().split("//")[1]);
+			System.out.println("확인하기종규" + m.getMatAddressMap());
 			//주소 full (//제외)
 			String address = m.getMatAddressInfo().replace("//", " "); 
 			m.setMatAddressInfo(address);
@@ -1018,6 +1021,9 @@ public class MatchingController {
 	public void getMatPtToMatNo(@RequestParam("matNo") int matNo, HttpServletResponse response) {
 		
 		ArrayList<MatMatptInfoPt> matInfo = mcService.matPtInfoToCaregiver(matNo);
+		System.out.println(matInfo);
+		
+		
 		
 		ArrayList<String> diseaseArr = new ArrayList<String>();
 		ArrayList<String> diseaseLevel = new ArrayList<String>();
@@ -1205,6 +1211,8 @@ public class MatchingController {
 			}	
 		}
 		
+		
+		
 		//매칭 신청 받은 내역 (간병인이 나(환자)를 신청)
 		ArrayList<CareGiverMin> myMatchingMat = mcService. getMyMatchingPN(loginPt);
 		for(CareGiverMin i : myMatchingMat) {
@@ -1218,12 +1226,6 @@ public class MatchingController {
 			}	
 			
 		}
-		
-		
-		System.out.println("myMatching : " +  myMatching);
-		System.out.println("myMatchingW : " +  myMatchingW);
-		System.out.println("myRequestMatC : " +  myRequestMatC);
-		System.out.println("myMatchingMat : " +  myMatchingMat);
 		
 		model.addAttribute("myMatching", myMatching);
 		model.addAttribute("myMatchingW", myMatchingW);

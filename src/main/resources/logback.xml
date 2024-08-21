@@ -66,6 +66,21 @@
 		</rollingPolicy>
 	</appender>
 	
+	<appender name="loginUserFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_PATH}/loginUser/loginUser.log</file> <!-- 기록할 파일의 경로를 지정 -->
+		
+		<!-- 출력 서식 지정 : 24-07-03 12:10:50 [INFO] LoginLogInterceptor.afterCompletion{25} - user02 -->
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yy-MM-dd HH:mm:SS} [%p] %C{1}.%M{%L} - %m%n</pattern>
+		</encoder>
+		
+		<!-- RollingFile의 정책 기준을 지정 : TimeBased는 매 정시를 기준으로 파일을 나누어준다. -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/loginUser/loginUser.log.%d{yyyyMMdd}</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+	
+	
 	
 	<appender name="myFileAppenderMatching" class="ch.qos.logback.core.FileAppender">
    		<file>${LOG_PATH_MATCHING}/matchingDisease.log</file>
@@ -80,14 +95,17 @@
 	
 
 	<!-- 로그 등록 -->
+	<!-- 간병백과 페이지 방문자를 기록하는 로그 -->
 	<logger name="com.kh.dndncare.board.controller.BoardController" level="info" additivity="false">
 		<appender-ref ref="careInformationFileAppender"/>
 	</logger>
 	
+	<!-- 간병백과 페이지에서 ai검색 요청을 기록하는 로그 -->
 	<logger name="com.kh.dndncare.common.interceptor.CheckCareInfomationAiSearch" level="info" additivity="false">
 		<appender-ref ref="careInformationAiFileAppender"/>
 	</logger>
 	
+	<!-- 간병백과 페이지 방문자를 기록하는 로그 -->
 	<logger name="com.kh.dndncare.common.interceptor.CheckCareInformationUsage" level="info" additivity="false">
 		<appender-ref ref="careInformationUsageFileAppender"/>
 	</logger>
@@ -97,6 +115,10 @@
    <logger name="com.kh.dndncare.matching.controller.MatchingController" lever="info" additivity="false">
    		<appender-ref ref="myFileAppenderMatching"/>
    </logger>
+	<!-- 로그인한 사용자를 기록하는 로그 -->
+	<logger name="com.kh.dndncare.common.interceptor.CheckLoginUser" level="info" additivity="false">
+		<appender-ref ref="loginUserFileAppender"/>
+	</logger>
 	
 	
 	<!-- 루트로그 등록 : 전역로그이기 때문에 name을 지정하지 않는다. -->
