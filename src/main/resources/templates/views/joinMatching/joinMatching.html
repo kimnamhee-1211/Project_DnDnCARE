@@ -12,7 +12,6 @@
 <div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
 	<div class="wrap">
 		<div class="title-content d-flex justify-content-center mx-auto">
-			<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="130"></a>	
 			<h1 class="h1 mb-1 fw-bold mb-1 text-center">공동간병</h1><br>
 		</div>
 		<div class="title2-content d-flex justify-content-center mx-auto">	
@@ -100,8 +99,8 @@
 		     		<div class="modal-body">
 		      			<h3 class="h3 fw-bold mb-4"  style="margin:30px;">공동간병 그룹 상세 정보</h3>
 						<table class="table" id="gmInfo" style="margin-bottom:40px;"></table>										
-						<h4 class="fw-bold mb-2" style="margin:10px 30px;">공동간병 그룹 참여자</h4>
-						<div id="ptDiv" class="align-items-center"></div>
+						<h4 class="fw-bold mb-2" style="margin:10px 20px;">공동간병 그룹 참여자</h4>
+						<div id="ptDiv" class="test-left"></div>
 			      		<div class="modal-footer" style="margin-top:50px;">
 			      			<button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" id="join" style="display:none">참여하기</button>
 			      			<button class="btn btn-secondary" data-bs-target="#exampleModalToggle3" data-bs-toggle="modal" id="out" style="display:none">참여 취소하기</button>
@@ -362,15 +361,19 @@
 								    }
 									
 									const tableDiv = document.createElement('div');
-									tableDiv.className = "tableDiv";
-									tableDiv.style.margin = "10px 25px"; 
-									tableDiv.style.width = "500px"; 
+									if(loginPt.ptNo == jmPt.ptNo){
+										tableDiv.className = "tableDivMe";
+									}else{
+										tableDiv.className = "tableDiv";
+									}
+									tableDiv.style.width = "800px";
+									tableDiv.style.marginLeft = "150px";
 									
 									const tableDivInnerHTML=`
 										<table class="table pt">
 											<thead>
 											    <tr>
-											      <th scope="col" >이름</th>
+											      <th scope="col" style="width:160px;" >이름</th>
 											      <th colspan="3" scope="col">${jmPt.ptName}</th>
 											    </tr>
 											  </thead>

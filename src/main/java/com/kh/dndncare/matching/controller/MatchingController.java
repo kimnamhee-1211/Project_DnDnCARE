@@ -230,8 +230,9 @@ public class MatchingController {
 	         
 	         //모달용
 	         String result = "insert";
+	         
 	         //공개 매칭 신청 시
-	         if(finalResult!=0) {
+	         if(finalResult != 0) {
 	        	 
 		         //환자 -> 간병인 정보보기 ->  매칭 신청했을 경우 macthing 테이블에 간병인 memberNo 넣기
 		        if(memberNoC > 0) {
@@ -513,7 +514,6 @@ public class MatchingController {
 				
 		HashMap<String, Object> jmMacPt = new HashMap<String, Object>();
 		jmMacPt.put("jmMatMatptInfo", jmMatMatptInfo);
-		jmMacPt.put("jmPts", jmPts);
 		jmMacPt.put("jmPts", jmPts);
 		jmMacPt.put("loginPt", loginPt);
 		
@@ -993,13 +993,14 @@ public class MatchingController {
 		}		
 		
 		//매칭 신청 내역
-		ArrayList<MatMatptInfoPt> myRequestMat= mcService. getMyRequestMat(loginUser.getMemberNo());
+		ArrayList<MatMatptInfoPt> myRequestMat= mcService.getMyRequestMat(loginUser.getMemberNo());
 		for(MatMatptInfoPt i : myRequestMat) {
 			
 			//노출 나이 set
 			int realAge = AgeCalculator.calculateAge(i.getPtAge());
 			i.setPtRealAge(realAge);
 		}
+		
 		
 		System.out.println("myMatching : " +  myMatching);
 		System.out.println("myMatchingW : " +  myMatchingW);
@@ -1022,8 +1023,6 @@ public class MatchingController {
 		
 		ArrayList<MatMatptInfoPt> matInfo = mcService.matPtInfoToCaregiver(matNo);
 		System.out.println(matInfo);
-		
-		
 		
 		ArrayList<String> diseaseArr = new ArrayList<String>();
 		ArrayList<String> diseaseLevel = new ArrayList<String>();
@@ -1368,7 +1367,7 @@ public class MatchingController {
 	public String matchingCancelP(@RequestParam("matNo") int matNo, @RequestParam("memberNo") int memberNo,
 									RedirectAttributes re) {
 		
-		int result = mcService.matchingCancelP(matNo, memberNo);
+		int result = mcService.matchingCancelP(matNo);
 				
 		//매칭 간병인 이름 얻어오기
 		String matCName = mcService.getNameC(memberNo);

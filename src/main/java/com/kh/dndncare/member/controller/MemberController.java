@@ -650,66 +650,64 @@ public class MemberController {
 		ArrayList<MatMatptInfoPt> matMatptInfoPtListBefore = mService.getMatMatptInfoPt(loginUser.getMemberNo());
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList1 = new ArrayList<MatMatptInfoPt>();
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList2 = new ArrayList<MatMatptInfoPt>();
-		ArrayList<MatMatptInfoPt> matMatptInfoPtList3 = new ArrayList<MatMatptInfoPt>();
+		ArrayList<MatMatptInfoPt> matMatptInfoPtList3 = new ArrayList<MatMatptInfoPt>();		
+		
+		ArrayList<MatMatptInfoPt> filteredList = new ArrayList<>();	
 
-		for(int i = 0; i < matMatptInfoPtListBefore.size(); i++) {
-			
-			//이미 신청한 환자 매칭방인지 확인
-			int iMatNo = matMatptInfoPtListBefore.get(i).getMatNo();			
-			int countResult =  mService.getCountPendingMe(iMatNo, loginUser.getMemberNo());
-			if(countResult > 0) {
-				matMatptInfoPtListBefore.remove(i);
-			}
-			
-			
+		for (MatMatptInfoPt item : matMatptInfoPtListBefore) {
+		    int iMatNo = item.getMatNo();
+		    int countResult = mService.getCountPendingMe(iMatNo, loginUser.getMemberNo());
+		    if (countResult > 0) {
+		        continue;
+		    }
+
+		    int ptCount = item.getPtCount();
+		    if (ptCount > 1) {
+		        int countPtInfo = mService.getCountPt(iMatNo);
+		        if (ptCount != countPtInfo) {
+		            continue;
+		        }
+		        if (item.getGroupLeader().equals("N")) {
+		            continue;
+		        }
+		    }
+		    // 필터링된 리스트에 추가
+		    filteredList.add(item);
+		}
+		
+				
+		for(int i = 0; i < filteredList.size(); i++) {
 			//나이 계산
-			int ptRealAge = AgeCalculator.calculateAge(matMatptInfoPtListBefore.get(i).getPtAge());
-			matMatptInfoPtListBefore.get(i).setPtRealAge(ptRealAge);
+			int ptRealAge = AgeCalculator.calculateAge(filteredList.get(i).getPtAge());
+			filteredList.get(i).setPtRealAge(ptRealAge);
 			
-			//노출 주소
-			String[] addr = matMatptInfoPtListBefore.get(i).getMatAddressInfo().split("//");			
+			//노출 주소			
+			String[] addr = filteredList.get(i).getMatAddressInfo().split("//");			
+			System.out.println(addr.toString());
 			String[] addressMin = addr[1].split(" ");
+			System.out.println(addressMin.toString());
 			String addressMinStr = addressMin[0] + " " + addressMin[1]; //00도 00시//
-			matMatptInfoPtListBefore.get(i).setMatAddressMin(addressMinStr);
+			filteredList.get(i).setMatAddressMin(addressMinStr);
 			
-
-			
-			
-			int ptCount = matMatptInfoPtListBefore.get(i).getPtCount();
-			if(ptCount > 1) {
-				int countPtInfo = mService.getCountPt(iMatNo);				
-				if(ptCount != countPtInfo) {
-					matMatptInfoPtListBefore.remove(i);
-				}			
-				if(matMatptInfoPtListBefore.get(i).getGroupLeader().equals("N")) {
-					matMatptInfoPtListBefore.remove(i);
-				}
-			}
-		
-			
-		
-
-			if(i < matMatptInfoPtListBefore.size()) {
+			if(i < filteredList.size()) {
 				if(i < 6) {
-					matMatptInfoPtList1.add(matMatptInfoPtListBefore.get(i));
+					matMatptInfoPtList1.add(filteredList.get(i));
 				}else if(i < 12) {
-					matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
+					matMatptInfoPtList2.add(filteredList.get(i));
 				}else if(i < 18) {
-					matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
+					matMatptInfoPtList3.add(filteredList.get(i));
 				}		
 			}
-	
-
 					
 		}
+		
 		
 		if(matPtCount > 0  && matPtName != null) {
 			model.addAttribute("matPtCount", matPtCount);
 			model.addAttribute("matPtName", matPtName);
 			model.addAttribute("result", result);			
 		}
-		
-		System.out.println(matMatptInfoPtList1);
+
 		model.addAttribute("matMatptInfoPtList1", matMatptInfoPtList1);
 		model.addAttribute("matMatptInfoPtList2", matMatptInfoPtList2);
 		model.addAttribute("matMatptInfoPtList3", matMatptInfoPtList3);
@@ -822,17 +820,18 @@ public class MemberController {
 		int loginPt = mService.getPtNo(loginUser.getMemberNo());
 		// 환자 입장에서 나를 선택한 간병인 정보 불러오기
 
+		ArrayList<CareGiverMin> requestCaregiverBefore = mService.getRequestCaregiver(loginPt);
 		ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
-		for(int i = 0; i < requestCaregiver.size(); i++){
-			int age = AgeCalculator.calculateAge(requestCaregiver.get(i).getMemberAge());
-			requestCaregiver.get(i).setAge(age);
+		for(int i = 0; i < requestCaregiverBefore.size(); i++){
+						
+			int age = AgeCalculator.calculateAge(requestCaregiverBefore.get(i).getMemberAge());
+			requestCaregiverBefore.get(i).setAge(age);
 			
-			if(i > 10) {
-				requestCaregiver.remove(i);
+			if(i <=  10) {
+				requestCaregiver.add(requestCaregiverBefore.get(i));
 			}
-
 		}
-		System.out.println("requestCaregiver : " + requestCaregiver);
+		
 		model.addAttribute("requestCaregiver", requestCaregiver);	
 		
 		//loginUser Name

@@ -41,6 +41,16 @@
 				      </div>
 				    </div>
 				  </div>
+				  
+				  <div class="accordion-item" th:if="${myMatching.empty}">
+				    <h2 class="accordion-header">
+				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+				    	 	현재 진행중인 매칭이 없습니다.
+				    	 </button>
+				    </h2>
+				  </div>
+				  
+				  
 				</div>
 			</div>
 			
@@ -66,6 +76,15 @@
 				      </div>
 				    </div>
 				  </div>
+				  
+				  <div class="accordion-item" th:if="${myMatchingW.empty}">
+				    <h2 class="accordion-header">
+				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+				    	 	현재 진행중인 매칭이 없습니다.
+				    	 </button>
+				    </h2>
+				  </div>
+				  
 				</div>
 			</div>
 			
@@ -94,6 +113,16 @@
 							</div>
 						</div>
 					</div>
+					
+				  <div class="accordion-item" th:if="${myRequestMatC.empty}">
+				    <h2 class="accordion-header">
+				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+				    	 	현재 진행중인 매칭이 없습니다.
+				    	 </button>
+				    </h2>
+				  </div>					
+					
+					
 				</div>
 			</div>
 			
@@ -121,6 +150,16 @@
 						</div>
 				    </div>
 				  </div>
+				  
+				  <div class="accordion-item" th:if="${myMatchingMat.empty}">
+				    <h2 class="accordion-header">
+				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+				    	 	현재 진행중인 매칭이 없습니다.
+				    	 </button>
+				    </h2>
+				  </div>
+				  
+				  
 				</div>
 			</div>
 		</main>
@@ -224,6 +263,15 @@
 										   </tr>`;
 							}			
 							
+							let request =''
+								if(matInfo[0].matRequest == undefined){
+									request = `-`;
+								}else{
+									request = `${matInfo[0].matRequest}`;
+								}
+							
+							
+							
 							let theadInner=`
 								<tr style="font-size:18px;">
 									${addMin}
@@ -252,7 +300,7 @@
 							    </tr>
 							    <tr>
 							      <th scope="col">&nbsp;요청사항</th>
-							      <td scope="col" colspan="3">${matInfo[0].matRequest}&nbsp;&nbsp;</td>
+							      <td scope="col" colspan="3">${request}</td>
 							    </tr>`;
 		
 							thead.innerHTML = theadInner;
@@ -302,7 +350,16 @@
 							}else if(caregiverIntro.memberGender == 'F'){
 								gender = `성별 : 여성`
 							}
-						
+							
+							
+							let intro =''
+								if(caregiverIntro.careIntro == undefined){
+									intro = `-`;
+								}else{
+									intro = `${caregiverIntro.careIntro}`;
+								}
+							
+							
 							
 							
 							let cInfoInner=`
@@ -342,7 +399,7 @@
 						      			<div class="h6">적정 1일 돌봄 비용 : ${caregiverIntro.minMoney}원 ~ ${caregiverIntro.maxMoney}원</div>
 						      			<hr>
 						      			<h6	 align="center">자기소개</h6> 
-						      			<h6>${caregiverIntro.careIntro}</h6>
+						      			<h6>${intro}</h6>
 						      		</div>
 					      		</div>
 				      		</div>`;

@@ -85,7 +85,7 @@
 	        <div><!--매칭정보 : 가로 500, 세로 700-->
 	        	<div class="d-flex justify-content-between" style="border-bottom:2px solid #1E5F74;">
 					<span style="margin-top:10px;">[[${loginUserName}]]님에게 들어온 매칭 신청</span>
-           			<button type="button" class="btn-select">전체 보기</button>
+           			<button type="button" class="btn-select" onclick='location.href="goCMoreRequest.me"'>전체 보기</button>
             	</div>
             	<br/>
 	            <table class="table mainTable matCard">
@@ -97,7 +97,7 @@
 	                <tbody>
 	                    <tr class="align-middle text-center" th:each="matPt : ${requestMatPt}">
 	                    	<td style="display:none" th:text="${matPt.matNo}"></td>
-	                        <td colspan="4" th:if="${matPt.ptCount == 1}" class="align-middle">
+	                        <td colspan="4" th:if="${matPt.ptCount == 1}">
 	                        	<img th:if="${matPt.ptCount == 1 && matPt.service =='병원돌봄'}" src="image/icon/hospital.png"/>
 	                       		<img th:if="${matPt.ptCount == 1 && matPt.service =='가정돌봄'}" src="image/icon/home.pn/">
 	                       		[[${matPt.ptName}]]님([[${matPt.ptRealAge}]]세 [[${matPt.ptGender =='M' ? '남':'여' }]])이 매칭을 원하고 있어요.
@@ -134,7 +134,7 @@
 							<div class="row row-cols-md-2 g-2 ptDiv">
 	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList1}">
 	               					<div style="display:none" th:text="${mat.matNo}"></div>
-	                   				<div class="card h-95 w-80">
+	                   				<div class="card h-95 w-80" style="min-hight:181.5px;">
 	                   					<div class="card-body">
 	                     					<h6 class="card-title" style="font-weight:700">
 	                       						<span th:if="${mat.ptCount == 1}">[[${mat.ptName}]]</span>
@@ -170,7 +170,7 @@
 							<div class="row row-cols-md-2 g-2 ptDiv">
 	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList2}">
 	               					<div style="display:none" th:text="${mat.matNo}"></div>
-	                   				<div class="card h-95 w-80">
+	                   				<div class="card h-95 w-80" style="min-hight:181.5px;">
 	                   					<div class="card-body">
 	                     					<h6 class="card-title">	                     						
 	                       						<span th:if="${mat.ptCount == 1}">[[${mat.ptName}]]</span>
@@ -206,7 +206,7 @@
 							<div class="row row-cols-md-2 g-2 ptDiv">
 	               				<div class="col-sm-6" th:each="mat : ${matMatptInfoPtList3}">
 	               					<div style="display:none" th:text="${mat.matNo}"></div>
-	                   				<div class="card h-95 w-80">
+	                   				<div class="card h-95 w-80" style="min-hight:181.5px;">
 	                   					<div class="card-body">
 	                     					<h6 class="card-title">
 	                       						<span th:if="${mat.ptCount == 1}">[[${mat.ptName}]]</span>

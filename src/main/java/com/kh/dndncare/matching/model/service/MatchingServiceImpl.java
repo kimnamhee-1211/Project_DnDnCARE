@@ -330,8 +330,8 @@ public class MatchingServiceImpl implements MatchingService {
 
 	//환자 매칭 신청 취소
 	@Override
-	public int matchingCancelP(int matNo, int memberNo) {
-		return mMapper.matchingCancelP(matNo, memberNo);
+	public int matchingCancelP(int matNo) {
+		return mMapper.matchingCancelP(matNo);
 	}
 
 	//간병인 매칭 신청 취소
