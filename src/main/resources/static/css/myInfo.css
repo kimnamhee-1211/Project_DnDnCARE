@@ -282,3 +282,25 @@ body {
 	margin-right:-1.5px;
 	background-repeat: no-repeat;
 }
+
+/*남희님 css 훔치기*/
+.btn-outline {	
+	background: white;
+	color: #1D2D50;
+	border: 2px solid #1D2D50;
+	width: 190px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
+
+.btn-outline:hover, .btn-outline:focus{
+	color: white;
+	background: #1D2D50;
+}
+
+/* .btn-check가 체크된 상태에서 .btn-outline 스타일 */
+.btn-check:checked + .btn-outline {
+	color: white;
+	background: #1D2D50;
+}
