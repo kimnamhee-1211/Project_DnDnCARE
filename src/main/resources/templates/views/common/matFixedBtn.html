@@ -17,9 +17,69 @@
 </style>
 <body>
 	<!-- 사이드 버튼 -->
-	    <div align="center" id="myPresentMatching" onclick="location.href='goMyMatchingC.mc'">
-	            <img width="72" height="72" src="https://img.icons8.com/parakeet-line/96/000000/welfare.png" alt="welfare"/>
-	            <div>나의 매칭 현황</div>
+	    <div align="center" id="myPresentMatching">
+	         <img width="72" height="72" src="https://img.icons8.com/parakeet-line/96/000000/welfare.png" alt="welfare"/>
+	         <div>나의 매칭 현황</div>
 	    </div>
+	    
+	    <script th:inline="javascript">
+	    
+			    $.ajax({
+			    	url: 'loginInfo.me',
+			    	type: 'get',
+			    	success : data=>{
+			    		console.log(data);
+			    		document.querySelector('#myPresentMatching').addEventListener('click', ()=>{
+			    			if(data == 'C'){
+			    				location.href='goMyMatchingC.mc'
+			    			}else if(data == 'P'){
+			    				location.href='goMyMatchingP.mc'
+			    			}
+			    		   				    			    				    			
+			    		});   		
+			    		
+			    	},
+			    	error: data=>console.log(data)
+			    });			    			        		    	
+
+   
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    </script>
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
 </body>
 </html>

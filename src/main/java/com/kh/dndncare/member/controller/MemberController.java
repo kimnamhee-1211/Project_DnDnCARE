@@ -2976,6 +2976,35 @@ public class MemberController {
 		return "deleteMember";
 	}
 	
+	@GetMapping(value="loginInfo.me", produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public void loginInfo(HttpSession session, HttpServletResponse response ) {
+		
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		
+		String memberCategory = loginUser.getMemberCategory();
+		
+		System.out.println(memberCategory);
+		Gson gson = new Gson();
+		response.setContentType("application/json; charset=UTF-8;");
+
+		try {
+			gson.toJson(memberCategory, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}						
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }//클래스 끝
 

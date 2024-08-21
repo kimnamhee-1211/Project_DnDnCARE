@@ -72,7 +72,7 @@ public class MatchingController {
 	@Autowired
 	private MatchingService mcService;
 	
-	private static Logger logger = LoggerFactory.getLogger(MatchingController.class);
+	//private static Logger logger = LoggerFactory.getLogger(MatchingController.class);
 	
 	@GetMapping("publicMatching.mc")
 	public String publicMatchingView(HttpSession session,Model model,
@@ -679,7 +679,7 @@ public class MatchingController {
 			       String logInfo = matPatientInfoList.getMatNo() + "//" + matPatientInfoList.getAge() + "//" + matPatientInfoList.getMemberGender() + "//" + matPatientInfoList.getSCategory() + "//" + matPatientInfoList.getMemberNo();
 			       System.out.println("로그에 저장할 정보"+logInfo);
 			        
-			        logger.info(logInfo);
+			     //   logger.info(logInfo);
 			        
 			    }
         }
@@ -1021,6 +1021,9 @@ public class MatchingController {
 	public void getMatPtToMatNo(@RequestParam("matNo") int matNo, HttpServletResponse response) {
 		
 		ArrayList<MatMatptInfoPt> matInfo = mcService.matPtInfoToCaregiver(matNo);
+		System.out.println(matInfo);
+		
+		
 		
 		ArrayList<String> diseaseArr = new ArrayList<String>();
 		ArrayList<String> diseaseLevel = new ArrayList<String>();
@@ -1223,12 +1226,6 @@ public class MatchingController {
 			}	
 			
 		}
-		
-		
-		System.out.println("myMatching : " +  myMatching);
-		System.out.println("myMatchingW : " +  myMatchingW);
-		System.out.println("myRequestMatC : " +  myRequestMatC);
-		System.out.println("myMatchingMat : " +  myMatchingMat);
 		
 		model.addAttribute("myMatching", myMatching);
 		model.addAttribute("myMatchingW", myMatchingW);
