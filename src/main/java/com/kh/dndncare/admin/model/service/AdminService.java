@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.matching.model.vo.Pay;
 
 public interface AdminService {
 
@@ -34,6 +35,9 @@ public interface AdminService {
 	int insertThumbnail(Attachment thumbnail);
 
 	int updateCareInformation(Board b);
+
+	ArrayList<Pay> selectPayDeposit(String type);
+
 
 
 }

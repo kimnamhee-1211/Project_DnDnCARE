@@ -71,5 +71,6 @@ public class MatMatptInfoPt {
 	private String month;
 	private int useCount;
 
-	
+	// 맵하나만 추가
+	private String matAddressMap;
 }

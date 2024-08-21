@@ -23,55 +23,118 @@
 			<div th:replace="~{common/adminbarTemp :: sidebar}"></div>
 			
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-				<div class="row m-4" style="border:1px solid black;">
-					<div class="col m-2">
-					<h4>이번 달 매칭 금액</h2>
-					<canvas id="barChart"></canvas>
+				<div class="row m-4" style="border:0px solid black;">
+					<div class="col m-2" style="max-height:506px;">
+						<div class="d-flex justify-content-between">
+						<h1>결제 정보</h1>
+						<h1>2020~ 잊루일)</h1>
+						</div>
+						<canvas id="barChart" style="min-width:900px;max-width:900px;"></canvas>
 					</div>
-					<div class="col m-2">
-					<h4>총 매칭 금액</h2>
-					<div>결제정보에 필요한게 뭐가잇을까</div>
-					<ul>
-						<ol>1.deposit이 Y인 금액</ol>
-						<ol>2.deposit이 N인 금액</ol>
-						<ol>3.왼쪽 차트는 한달 일주일</ol>
-						<ol>4.오른쪽 차트는 1년 12달</ol>
-						<ol>5.좌측하단 ??</ol>
-						<ol>6.우측하단 ??</ol>
-					</ui>
+					<div class="col m-2" style="min-width:600px;max-width:620px;">
+						<h4>이번 달 매칭 금액aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h4>
+						<table class="m-4">
+							<tr align="center">
+								<th width="300"><h1>총 매칭 금액</h1></th>
+								<td width="250"><h2>100,000원</h2></td>
+							</tr>
+							<tr align="center">
+								<th width="300"><h1>평균 매칭 금액</h1></th>
+								<td width="250"><h2>100,000원</h2></td>
+							</tr>
+							<tr align="center">
+								<th width="300"><h1>최고 매칭 금액</h1></th>
+								<td width="250"><h2>100,000원</h2></td>
+							</tr>
+							<tr align="center">
+								<th width="300"><h1>최저 매칭 금액</h1></th>
+								<td width="250"><h2>100,000원</h2></td>
+							</tr>
+						</table>
+						<div style="height:130px"class="d-flex justify-content-center align-items-end">
+							<select class="form-select" style="width:200px" aria-label="Default select example">
+							  <option selected>일주일</option>
+							  <option value="1">한달</option>
+							  <option value="2">1년</option>
+							</select>
+							<span style="width:40px"></span>
+							<input type="date" style="width:200px"class="form-control">
+						</div>
+						<div align="center"class="m-4"><button class="btn btn-success">검색하기</button></div>
+					
 					</div>
 				
 				</div>		
+				
 			</main>
 		</div>
 	</div>
 	
 	
-	<script>
-	
-	// 막대그래프 (시작)
-	const barCtx = document.getElementById('barChart');
+	<script th:inline="javascript">
+		
+			
+		/*<![CDATA[*/
+		const test = /*[[${psDp[0].memberNo}]]*/ 3;
+		console.log(test);
+		/*]]>*/
 
-	new Chart(barCtx, {
-	    type: 'bar',
-	    data: {
-	      labels: ['월', '화', '수', '목', '금', '토','일'],
-	      datasets: [{
-	        label: '무슨차트로할깡',
-	        data: [12, 19, 3, 5, 2, 3],
-	        borderWidth: 1
-	      }]
-	    },
-	    options: {
-	      scales: {
-	        y: {
-	          beginAtZero: true
-	        }
-	      }
-	    }
-	});
-	// 막대그래프 (끝)
+		const today = new Date();
+		console.log(today);
+		
+		const getDateFormat = date => {
+			const year = (date.getFullYear());
+			const month = ('0'+(date.getMonth()+1)).slice(-2);
+			const day = ('0'+date.getDate()).slice(-2);
+			
+			return year + '-' + month + '-' + day;
+		}
+		
+		console.log(getDateFormat(today));
+		
+		
+		// 막대그래프 (시작)
+		const barCtx = document.getElementById('barChart');
 	
+		let chart = new Chart(barCtx, {
+		    type: 'line',
+		    data: {
+		      labels: ['월', '화', '수', '목', '금', '토','일'],
+		      datasets: [{
+		        		label: '시간제매칭',
+		        		data: [12, 19, 3, 5, 2, 3],
+		        		borderWidth: 2,
+		        		borderColor: '#1D2D50',
+		        		fill: false,
+		        		backgroundColor: '#1D2D50',
+		        		fontSize:24
+		      			},
+		      			{
+	      				label: '기간제매칭',
+		        		data: [5, 4, 3, 5, 2, 3],
+		        		borderWidth: 1,
+		        		borderColor: '#1E5F74',
+		        		fill: false,
+		        		backgroundColor: '#1E5F74',
+		        		fontSize:24
+		      			}]
+		    },
+		    options: {
+		    	onClick : function(){
+		    		console.log(chart.legend.legendItems)
+		    		},
+	    		legend: {
+	                labels: {
+	                    fontColor: 'black',
+	                    fontSize : 24
+	                }
+	            }
+		    }
+		});
+		// 막대그래프 (끝)
+		
+			console.log(chart);
+		
 	</script>
 	
 	

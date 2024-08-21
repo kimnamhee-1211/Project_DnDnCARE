@@ -31,6 +31,7 @@ import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.common.ImageUtil;
 import com.kh.dndncare.common.Pagination2;
 import com.kh.dndncare.common.ThumbnailUtil;
+import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.Member;
 
@@ -472,7 +473,17 @@ public class AdminController {
 	
 	//결제정보 어드민
 	@GetMapping("payInfoView.adm")
-	public String payInfoView() {
+	public String payInfoView(Model model) {
+		ArrayList<Pay> psDp = aService.selectPayDeposit("Y");
+		for(Pay p : psDp) {
+			System.out.println(p);
+		}
+		
+		ArrayList<Pay> psDpN = aService.selectPayDeposit("N");
+		
+		model.addAttribute("psDp",psDp);
+		model.addAttribute("psDpN",psDpN);
+		System.out.println(psDp);
 		return "payInfo";
 	}
 	
