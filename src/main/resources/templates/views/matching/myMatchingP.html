@@ -55,7 +55,7 @@
 				  	<div style="display:none" th:text="wait" class="from"></div>
 				    <h2 class="accordion-header">
 				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsetwo' + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
-							[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭이 결제 대기 중입니다.
+							   [[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭이 결제 대기 중입니다.
 				      </button>
 				    </h2>
 				    <div th:id="'collapsetwo' + ${myMat.memberNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
@@ -79,6 +79,7 @@
 						<div style="display:none" th:text="${myMat.memberNo}" class="memberNo"></div>
 						<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 						<div style="display:none" th:text="want" class="from"></div>
+						<!-- <div style="display:none" th:text="${myMat.ptNo}" class="ptNo"></div> -->
 				    	<h2 class="accordion-header">
 				      		<button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsethree' + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
 				        		[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭을 신청하셨습니다.
@@ -186,6 +187,15 @@
 					
 					const thead = this.parentElement.parentElement.querySelector('thead')
 					const cInfo = this.parentElement.parentElement.querySelector('#cInfo')
+					
+					    document.addEventListener('click', function(e) {
+			        if (e.target && e.target.classList.contains('startChat')) {
+			            const accordionItem = e.target.closest('.accordion-item');
+			            const matNo = accordionItem.querySelector('.matNo').innerHTML;
+			            const caregiverMemberNo = accordionItem.querySelector('.memberNo').innerHTML;
+			            location.href = "/createAndGetChat.ch?matNo=" + matNo + '&caregiverMemberNo=' + caregiverMemberNo;
+			        }
+				 });
 					
 					$.ajax({
 						url : 'getMatCToMatNoMemNo.mc',
@@ -305,7 +315,14 @@
 						      			<div class="h3">${caregiverIntro.memberName}님</div>
 						      			<div align="center">
 											<button type="button" class="m-4 btn-outline-maincolor reviewButton">후기 보기</button>		
-										</div>		      		
+										</div>
+										<div align="center">
+											<button type="button" class="m-4 btn-outline-maincolor startChat">채팅하기</button>		
+										</div>
+										${matInfo[0].matNo}
+										${matInfo[0].ptCount}
+										${caregiverIntro.memberNo}
+										
 					      		</div>
 					      		<div class="col-7 m-3 p-3 testBorder justify-content-md-center">					      				      		
 						      		<div class="row m-2 p-4">
@@ -412,6 +429,8 @@
 			
 			//후기보기 버튼
 			reviewButton();
+			
+			startChat();
 	
 		
 		}
@@ -433,6 +452,26 @@
 				}
 			}
 		}
+		
+		
+		
+		//채팅하기 버튼
+ 		const startChat =()=>{
+			const startChatButtons = document.querySelectorAll('.startChat');
+			for(const startChatButton of startChatButtons){
+				if(startChatButton){
+					startChatButton.addEventListener('click', function(){
+						
+						const matNo = this.closest('.accordion-item').querySelector('.matNo').innerHTML;
+						const caregiverMemberNo = this.closest('.accordion-item').querySelector('.memberNo').innerHTML;
+						location.href = "/createAndGetChat.ch?matNo=" + matNo +'&caregiverMemberNo=' + caregiverMemberNo ;
+						
+						 
+						
+					})
+				}
+			}
+		} 
 		
 		
 		

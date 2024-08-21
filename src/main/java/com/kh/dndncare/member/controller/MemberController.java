@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
@@ -633,21 +634,21 @@ public class MemberController {
 		if(loginUser != null) {
 			System.out.println(memberNo);
 			System.out.println("전");
-			ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
+			//ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
 			System.out.println(memberNo);
 			System.out.println("후");
-			System.out.println(completeList);
-			model.addAttribute("completeList", completeList);
+			//System.out.println(completeList);
+			//model.addAttribute("completeList", completeList);
 		}
 				
 		
 		//남희 - 환자정보 불러오기
 		//MatMatptInfoPt 18개 뽑기 
-		ArrayList<MatMatptInfoPt> matMatptInfoPtListBefore = mService.getMatMatptInfoPt(loginUser.getMemberNo());		
+		ArrayList<MatMatptInfoPt> matMatptInfoPtListBefore = mService.getMatMatptInfoPt(loginUser.getMemberNo());
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList1 = new ArrayList<MatMatptInfoPt>();
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList2 = new ArrayList<MatMatptInfoPt>();
 		ArrayList<MatMatptInfoPt> matMatptInfoPtList3 = new ArrayList<MatMatptInfoPt>();
-		
+
 		for(int i = 0; i < matMatptInfoPtListBefore.size(); i++) {
 			
 			//이미 신청한 환자 매칭방인지 확인
@@ -776,8 +777,8 @@ public class MemberController {
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo(); 
-			ArrayList<CareGiver> completeList = openAiCaregiverChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
-			model.addAttribute("completeList", completeList);
+			//ArrayList<CareGiver> completeList = openAiCaregiverChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
+			//model.addAttribute("completeList", completeList);
 		}
 			
 		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--

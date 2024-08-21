@@ -1208,6 +1208,8 @@ public class MatchingController {
 			}	
 		}
 		
+		
+		
 		//매칭 신청 받은 내역 (간병인이 나(환자)를 신청)
 		ArrayList<CareGiverMin> myMatchingMat = mcService. getMyMatchingPN(loginPt);
 		for(CareGiverMin i : myMatchingMat) {
