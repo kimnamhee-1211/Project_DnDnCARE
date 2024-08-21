@@ -1,9 +1,9 @@
 package com.kh.dndncare.member.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -13,9 +13,10 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
@@ -694,7 +695,7 @@ public class MemberController {
 			}else if(i < 12) {
 				//matMatptInfoPtList2.add(matMatptInfoPtListBefore.get(i));
 			}else if(i < 18) {
-				matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
+				//matMatptInfoPtList3.add(matMatptInfoPtListBefore.get(i));
 			}			
 					
 		}
@@ -1593,7 +1594,10 @@ public class MemberController {
 			memberNo = loginUser.getMemberNo();
 			ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 10);
 			
-			if(!completeList.isEmpty()) {
+			if(completeList != null) {
+				System.out.println("==OPENAI 가공결과물 : 시작 ==");
+				System.out.println(completeList);
+				System.out.println("==OPENAI 가공결과물 : 끝 ==");
 				model.addAttribute("completeList", completeList);
 			} 
 		}
@@ -2538,6 +2542,14 @@ public class MemberController {
 		
 		if(!eList.isEmpty()) {
 			for(CalendarEvent c : eList) {
+				String[] endDtArr = String.valueOf(c.getEndDt()).split("-");
+				int year = Integer.parseInt(endDtArr[0]);
+				int month = Integer.parseInt(endDtArr[1]);
+				int date = Integer.parseInt(endDtArr[2]);
+				Calendar calendar = GregorianCalendar.getInstance();
+				calendar.set(year, month-1, date+1);
+				Date endDtPlusOne = new Date(calendar.getTimeInMillis());
+				
 				for(Member m : mList) {
 					int matNo = c.getMatNo();
 					int caregiverNo = c.getCareGiverNo();
@@ -2553,7 +2565,7 @@ public class MemberController {
 							JSONObject obj = new JSONObject();
 							obj.put("title", "개인 기간제 간병");
 							obj.put("start", c.getBeginDt());
-							obj.put("end", c.getEndDt());
+							obj.put("end", endDtPlusOne);
 							obj.put("matNo", matNo);
 							obj.put("money", money);
 							obj.put("matAddressInfo", matAddressInfo);
@@ -2569,7 +2581,7 @@ public class MemberController {
 							array.put(obj);
 						} else {
 							String[] strArr = c.getMatDate().split(",");
-							System.out.println(Arrays.toString(strArr));
+							//System.out.println(Arrays.toString(strArr));
 							for(int i = 0; i < strArr.length; i++) {
 								JSONObject obj = new JSONObject();
 								obj.put("title", "개인 시간제 간병");
@@ -2595,7 +2607,7 @@ public class MemberController {
 							JSONObject obj = new JSONObject();
 							obj.put("title", "공동 기간제 간병");
 							obj.put("start", c.getBeginDt());
-							obj.put("end", c.getEndDt());
+							obj.put("end", endDtPlusOne);
 							obj.put("matNo", matNo);
 							obj.put("money", money);
 							obj.put("matAddressInfo", matAddressInfo);

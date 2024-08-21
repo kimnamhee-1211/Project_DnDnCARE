@@ -14,7 +14,7 @@
 		}
 		.selectState{background: lightyellow;}
 		.table td{cursor: pointer;}
-		.table td>div{border: 1px solid black; height: 80%; width: 33%; display: inline-block; padding-top: 3%; cursor: pointer;}
+		.table td>div{border: 1px solid black; height: 80%; width: 45%; display: inline-block; padding-top: 3%; cursor: pointer;}
 	</style>
 </head>
 <body>
@@ -107,8 +107,20 @@
 										<div th:class="${m.memberStatus == 'N' ? 'selectState' : ''}">N</div>
 									</td>
 									<td>
-										<div th:class="${m.memberCategory == 'C' ? 'selectState' : ''}">C</div><div th:class="${m.memberCategory == 'P' ? 'selectState' : ''}">P</div><div th:class="${m.memberCategory == 'A' ? 'selectState' : ''}">A</div>
+										<th:block th:if="${m.memberCategory == 'C'}">
+											<div th:class="${m.memberCategory == 'C' ? 'selectState' : ''}">C</div>
+											<div th:class="${m.memberCategory == 'A' ? 'selectState' : ''}">A</div>
+										</th:block>
+										<th:block th:if="${m.memberCategory == 'P'}">
+											<div th:class="${m.memberCategory == 'P' ? 'selectState' : ''}">P</div>
+											<div th:class="${m.memberCategory == 'A' ? 'selectState' : ''}">A</div>
+										</th:block>
+										<th:block th:if="${m.memberCategory == 'A'}">
+											<div th:class="${m.memberCategory == 'C' ? 'selectState' : ''}">C</div>
+											<div th:class="${m.memberCategory == 'A' ? 'selectState' : ''}">A</div>
+										</th:block>
 									</td>
+									
 								</tr>
 							</tbody>
 						</table>
@@ -144,7 +156,7 @@
 		<div class="modal-dialog modal-lg">
 		    <div class="modal-content">
 		    	<div class="modal-header">
-			        <h1 class="modal-title fs-5" id="staticBackdropLabel">회원정보 상세보기</h1>
+			        <h1 class="modal-title fs-5 badge rounded-pill bg-primary" id="staticBackdropLabel">회원정보 상세보기</h1>
 			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		        </div>
 			    <div class="modal-body">
@@ -297,9 +309,6 @@
 						}
 					}
 					// 현재 클릭한 요소가 소속된 tr의 배경색만 변경 (끝)
-					
-					
-					
 				} 
 				
 				
@@ -309,7 +318,7 @@
 					
 					if(!target.className.includes('selectState')){
 						console.log(myTr.parentElement.children[0].innerText); // 누구의
-						console.log(myTr.children.length)// 무엇을 => 2이면 가입상태, 3이면 회원그룹
+						console.log(myTr.children[1].innerText)// 무엇을 => N이면 가입상태, A이면 회원그룹
 						console.log(target.innerText); // 어떻게
 						
 						$.ajax({
@@ -317,7 +326,7 @@
 							type: 'post',
 							data: { 
 								memberNo: myTr.parentElement.children[0].innerText,
-								column: myTr.children.length == 2 ? 'status' : 'category',
+								column: myTr.children[1].innerText == 'N' ? 'status' : 'category',
 								data: target.innerText
 								},
 							success: data => {
