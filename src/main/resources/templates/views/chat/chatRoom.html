@@ -166,16 +166,17 @@
 	        stompClient.subscribe('/room/chat/' + chatRoomId, function(message) {
 	            showMessage(JSON.parse(message.body));
 	            
-	            sendReadStatus();  // 새 메시지를 받을 때마다 읽음 상태 업데이트
+	            debouncedSendReadStatus();  // 새 메시지를 받을 때마다 읽음 상태 업데이트
 	        });
 
 	        stompClient.subscribe('/room/chat/' + chatRoomId + '/read', function(message) {
 	            console.log('Received read status update:', message.body);
 	            updateReadStatusRealtime(JSON.parse(message.body));
+	            console.log("hi = " + updateReadStatusRealtime(JSON.parse(message.body)));
 	        });
 
 	        loadChatHistory();
-	        sendReadStatus();  // 연결 직후 읽음 상태 전송
+	        debouncedSendReadStatus();  // 연결 직후 읽음 상태 전송
 	    });
 	}
 	
@@ -204,7 +205,7 @@
 	    if (message.memberNo == userId) {
 	        messageElement.classList.add('self');
 	    }
-	
+
 	    let formattedTime;
 	    if (message.writeDate) {
 	        const date = new Date(message.writeDate);
@@ -217,14 +218,15 @@
 	    } else {
 	        formattedTime = 'Invalid Date';
 	    }
-	
+
 	    messageElement.innerHTML = `
 	        <span class="sender">${message.memberName}</span>
 	        <span class="content">${message.chatContent}</span>
 	        <span class="write-date">${formattedTime}</span>
-	        <span class="read-status" data-message-id="${message.chatMessageNo || message.chatMassageNo}">${message.readCount > 0 ? '1' : ''}</span>
+	        <span class="read-status" data-message-id="${message.chatMessageNo || message.chatMassageNo}">${message.readCount > 0 ? message.readCount : ''}</span>
 	    `;
 	    document.getElementById('chat-messages').appendChild(messageElement);
+	    
 	    scrollToBottom();
 	}
 	
@@ -239,49 +241,66 @@
 	    console.log('Raw read status:', JSON.stringify(readStatus, null, 2));
 	    const allMessages = document.querySelectorAll('.message .read-status');
 	    const messageReadCounts = readStatus.messageReadCounts;
+	    const participantCount = readStatus.participantCount;
 
 	    allMessages.forEach(statusElement => {
 	        const messageId = statusElement.getAttribute('data-message-id');
 	        console.log('Checking message:', messageId);
 	        
-	        const matchingMessage = messageReadCounts.find(item => 
+	        const matchingMessage = messageReadCounts.find(item =>
 	            item.CHAT_MASSAGE_NO.toString() === messageId
 	        );
 	        
 	        if (matchingMessage) {
 	            console.log('Found matching message:', matchingMessage);
 	            const readCount = matchingMessage.READ_COUNT;
-	            statusElement.textContent = readCount > 0 ? '1' : '';
+	            console.log("DB read_count = " + readCount);
+	            statusElement.textContent = readCount > 0 ? readCount : '';
 	        } else {
 	            console.log('No matching message found for:', messageId);
 	        }
 	    });
 	}
 	
-	function sendReadStatus() {
+ 	function sendReadStatus() {
 	    if (stompClient && stompClient.connected) {
 	        const readStatusMessage = {
 	            memberNo: userId
 	        };
 	        console.log("Sending read status for user:", userId);
+	        console.log("끝");
 	        stompClient.send("/send/chat/read/" + chatRoomId, {}, JSON.stringify(readStatusMessage));
 	    } else {
 	        console.log("WebSocket is not connected. Cannot send read status.");
 	    }
+	} 
+	
+	function debounce(func, wait) {
+	    let timeout;
+	    return function executedFunction(...args) {
+	        const later = () => {
+	            clearTimeout(timeout);
+	            func(...args);
+	        };
+	        clearTimeout(timeout);
+	        timeout = setTimeout(later, wait);
+	    };
 	}
+
+	const debouncedSendReadStatus = debounce(sendReadStatus, 0);
 	
 	// 페이지 로드 시 읽음 상태 전송
-	window.addEventListener('load', sendReadStatus);
+	window.addEventListener('load', debouncedSendReadStatus);
 
 	// 페이지 포커스 시 읽음 상태 전송
 	window.addEventListener('focus', function() {
 	    console.log('Window focused, sending read status');
-	    sendReadStatus();
+	    debouncedSendReadStatus();
 	});
 
 	document.getElementById('chat-messages').addEventListener('scroll', function() {
 	    if (this.scrollTop + this.clientHeight >= this.scrollHeight) {
-	        sendReadStatus();  // 스크롤이 맨 아래에 도달하면 읽음 상태 업데이트
+	    	debouncedSendReadStatus();  // 스크롤이 맨 아래에 도달하면 읽음 상태 업데이트
 	    }
 	});
 
@@ -296,7 +315,7 @@
 	// 페이지 포커스 시 읽음 상태 전송
 	window.addEventListener('focus', function() {
 	    console.log('Window focused, sending read status');
-	    sendReadStatus();
+	    debouncedSendReadStatus();
 	    
 	});
 	
