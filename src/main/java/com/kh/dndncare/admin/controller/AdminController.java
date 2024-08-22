@@ -27,9 +27,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kh.dndncare.admin.model.exception.AdminException;
 import com.kh.dndncare.admin.model.service.AdminService;
 import com.kh.dndncare.admin.model.vo.Attachment;
+import com.kh.dndncare.board.model.exception.BoardException;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.common.ImageUtil;
+import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.common.Pagination2;
 import com.kh.dndncare.common.ThumbnailUtil;
 import com.kh.dndncare.matching.model.vo.Pay;
@@ -489,6 +491,33 @@ public class AdminController {
 		return "payInfo";
 	}
 	
+	// 관리자 게시판 관리
+	@GetMapping("adminBoard.adm")
+	public String adminBoardView(@RequestParam(value="caregiverPage", defaultValue = "1") int caregiverPage,
+		    					@RequestParam(value="patientPage", defaultValue = "1") int patientPage, Model model) {
+		// 간병인 커뮤니티 게시판 페이지네이션
+		int caregiverListCount = aService.getCaregiverListCount();
+		PageInfo cpi = Pagination2.getPageInfo(caregiverPage, caregiverListCount, 7, 5);
+		
+		// 환자 커뮤니티 게시판 페이지네이션
+		int patientListCount = aService.getPatientListCount();
+		PageInfo ppi = Pagination2.getPageInfo(patientPage, patientListCount, 7, 5);
+		
+		// 간병인 커뮤니티 게시판 type만들걸
+		ArrayList<Board> adminCaregiverBoardList = aService.selectCaregiverBoardList(cpi);
+		System.out.println(adminCaregiverBoardList);
+		// 환자 커뮤니티
+		ArrayList<Board> adminPatientBoardList = aService.selectPatientBoardList(ppi);
+		System.out.println(adminPatientBoardList);
+		
+		model.addAttribute("cpi",cpi);
+		model.addAttribute("ppi",ppi);
+		model.addAttribute("cbList", adminCaregiverBoardList);
+		model.addAttribute("pbList", adminPatientBoardList);
+		return "adminBoard";
+	}
+
+
 	// 회원관리 페이지로 이동을 요청
 	@GetMapping("members.adm")
 	public String members(@RequestParam(value="page", defaultValue="1") int currentPage, Model model,
@@ -746,7 +775,33 @@ public class AdminController {
 		
 	}
 	
+	// 게시글(공지) 작성
+	@PostMapping("insertAnnouncement.adm")
+	public String insertAnnouncement(@ModelAttribute Board b, HttpSession session) {
+		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		b.setMemberNo(memberNo);
+		b.setMemberNickName("관리자");
+		
+		System.out.println("------------");
+		System.out.println(b);
+		System.out.println("------------");
+		
+		int result = aService.insertAnnouncement(b);
+		if(result > 0) {
+			return "redirect:adminBoard.adm";
+		}else {
+			throw new BoardException("공지 작성에 실패하였습니다.");
+		}
+	}
 	
+	// 게시글 상태변경
+	@GetMapping("updateAdminBoardStatus.adm")
+	@ResponseBody
+	public String updateAdminBoardStatus(@RequestParam("boardNo") int boardNo, @RequestParam("boardStatus") String boardStatus ) {
+		int result = aService.updateAdminBoardStatus(boardNo, boardStatus);
+		
+		return result == 1 ? "success" : "fail";
+	}
 	
 	
 	

@@ -76,7 +76,6 @@
 				      				<span class="h6">자격증 : </span>
 				      			<th:block th:each="license : ${caregiverInfoList.license}">
 				      				<span class="h6">[[${license}]]</span>
-				      				<span class="h6">,</span>
 				      			</th:block>
 			      			</th:block>
 			      			<th:block th:if="${caregiverInfoList.license == null or caregiverInfoList.license.size() == 0}">

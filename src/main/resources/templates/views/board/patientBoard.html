@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>환자 커뮤니티</title>
 <style>
     @font-face {
     font-family: 'Pretendard-Regular';
@@ -17,16 +17,19 @@
 	
     .hidden { display: none; }
     .text-primary:hover { color: #55aa55; }
-    .badge-primary { background-color: #FCDAB7; }
+    .badge-primary {
+    	 background-color: #FCDAB7; 
+    	 color:black;
+    	 }
     
     .btn-outline-area {
-    color: black;
-    border: 1px solid #1E5F74;
-    border-radius:10px; 
-    width: 80px;
-    margin : 10px 0;
-    
-	}
+	    color: black;
+	    border: 1px solid #1E5F74;
+	    border-radius:10px; 
+	    width: 80px;
+	    margin : 10px 0;
+	    
+		}
 	
 	.btn-outline-area:hover, 
 	.btn-outline-area:active, 
@@ -133,9 +136,9 @@
 				    <input type="checkbox" class="btn-check" id="jeju" name="area" value="16" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 16)}">
 				    <label class="btn-outline-area btn-sm me-2" for="jeju">제주</label>
+				           				     <br> 
 				    <input type="checkbox" class="btn-check" id="gyeongi" name="area" value="8" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 8)}">
-				           				     <br> 
 				    <label class="btn-outline-area btn-sm me-2" for="gyeongi">경기도</label>
 				    <input type="checkbox" class="btn-check" id="gangwon" name="area" value="9" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 9)}">
@@ -182,7 +185,15 @@
                                     <span th:text="${b.boardTitle}">제목</span>
                                     <span th:if="${replyCounts != 0}" th:text="${replyCounts[b.boardNo]}" class="badge badge-primary rounded-pill">0</span>
                                 </td>
-                                <td th:text="${b.memberNickName}">작성자</td>
+                                <th:block th:if="${b.memberCategory == 'A'}">
+	                                <td>
+		                                <img width="25" height="25" src="https://img.icons8.com/color/48/crown.png" alt="crown"/>
+										관리자
+									</td>
+                                </th:block>
+                                <th:block th:if="${b.memberCategory == 'P'}">
+	                                <td>[[${b.memberNickName}]]</td>
+                                </th:block>
                                 <td th:text="${b.areaName}">지역</td>
                                 <td th:text="${b.boardCreateDate}">작성일</td>
                                 <td th:text="${b.boardCount}">조회수</td>
