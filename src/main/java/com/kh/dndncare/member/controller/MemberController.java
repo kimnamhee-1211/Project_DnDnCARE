@@ -1616,7 +1616,7 @@ public class MemberController {
 		ArrayList<Matching> matList = new ArrayList<Matching>();
 		ArrayList<Integer> matNoList = new ArrayList<Integer>();
 		ArrayList<MatPtInfo> mpiList = new ArrayList<MatPtInfo>();
-		ArrayList<Member> memList = new ArrayList<Member>();
+		ArrayList<Patient> memList = new ArrayList<Patient>();
 		if (memberNo != null) {
 			matList = mService.selectMatchingList(pi, null);
 			if (!matList.isEmpty()) {
@@ -1625,108 +1625,18 @@ public class MemberController {
 				}
 				mpiList = mService.selectMatchingPTInfoList(matNoList);
 				memList = mService.selectMatchingMemberList(matNoList); // [Member(memberNo=48, memberId=null,
-																		// memberPwd=null, memberName=comp1,
-																		// memberGender=M, memberNickName=null,
-																		// memberAge=null, memberPhone=null,
-																		// memberEmail=null, memberCreateDate=null,
-																		// memberAddress=null, memberCategory=null,
-																		// memberStatus=null, memberNational=null,
-																		// memberPay=null, memberUpdateDate=null,
-																		// memberRealAge=74, career=null, license=null,
-																		// matNo=1, groupLeader=N), Member(memberNo=55,
-																		// memberId=null, memberPwd=null,
-																		// memberName=나리환자1, memberGender=M,
-																		// memberNickName=null, memberAge=null,
-																		// memberPhone=null, memberEmail=null,
-																		// memberCreateDate=null, memberAddress=null,
-																		// memberCategory=null, memberStatus=null,
-																		// memberNational=null, memberPay=null,
-																		// memberUpdateDate=null, memberRealAge=44,
-																		// career=null, license=null, matNo=31,
-																		// groupLeader=Y), Member(memberNo=15,
-																		// memberId=null, memberPwd=null,
-																		// memberName=나환자, memberGender=F,
-																		// memberNickName=null, memberAge=null,
-																		// memberPhone=null, memberEmail=null,
-																		// memberCreateDate=null, memberAddress=null,
-																		// memberCategory=null, memberStatus=null,
-																		// memberNational=null, memberPay=null,
-																		// memberUpdateDate=null, memberRealAge=52,
-																		// career=null, license=null, matNo=50,
-																		// groupLeader=N), Member(memberNo=15,
-																		// memberId=null, memberPwd=null,
-																		// memberName=나환자, memberGender=F,
-																		// memberNickName=null, memberAge=null,
-																		// memberPhone=null, memberEmail=null,
-																		// memberCreateDate=null, memberAddress=null,
-																		// memberCategory=null, memberStatus=null,
-																		// memberNational=null, memberPay=null,
-																		// memberUpdateDate=null, memberRealAge=52,
-																		// career=null, license=null, matNo=55,
-																		// groupLeader=Y), Member(memberNo=10,
-																		// memberId=null, memberPwd=null,
-																		// memberName=test3, memberGender=F,
-																		// memberNickName=null, memberAge=null,
-																		// memberPhone=null, memberEmail=null,
-																		// memberCreateDate=null, memberAddress=null,
-																		// memberCategory=null, memberStatus=null,
-																		// memberNational=null, memberPay=null,
-																		// memberUpdateDate=null, memberRealAge=0,
-																		// career=null, license=null, matNo=1,
-																		// groupLeader=Y), Member(memberNo=10,
-																		// memberId=null, memberPwd=null,
-																		// memberName=test3, memberGender=F,
-																		// memberNickName=null, memberAge=null,
-																		// memberPhone=null, memberEmail=null,
-																		// memberCreateDate=null, memberAddress=null,
-																		// memberCategory=null, memberStatus=null,
-																		// memberNational=null, memberPay=null,
-																		// memberUpdateDate=null, memberRealAge=0,
-																		// career=null, license=null, matNo=30,
-																		// groupLeader=N), Member(memberNo=10,
-																		// memberId=null, memberPwd=null,
-																		// memberName=test3, memberGender=F,
-																		// memberNickName=null, memberAge=null,
-																		// memberPhone=null, memberEmail=null,
-																		// memberCreateDate=null, memberAddress=null,
-																		// memberCategory=null, memberStatus=null,
-																		// memberNational=null, memberPay=null,
-																		// memberUpdateDate=null, memberRealAge=0,
-																		// career=null, license=null, matNo=50,
-																		// groupLeader=Y), Member(memberNo=28,
-																		// memberId=null, memberPwd=null,
-																		// memberName=기기기, memberGender=M,
-																		// memberNickName=null, memberAge=null,
-																		// memberPhone=null, memberEmail=null,
-																		// memberCreateDate=null, memberAddress=null,
-																		// memberCategory=null, memberStatus=null,
-																		// memberNational=null, memberPay=null,
-																		// memberUpdateDate=null, memberRealAge=40,
-																		// career=null, license=null, matNo=30,
-																		// groupLeader=Y), Member(memberNo=28,
-																		// memberId=null, memberPwd=null,
-																		// memberName=기기기, memberGender=M,
-																		// memberNickName=null, memberAge=null,
-																		// memberPhone=null, memberEmail=null,
-																		// memberCreateDate=null, memberAddress=null,
-																		// memberCategory=null, memberStatus=null,
-																		// memberNational=null, memberPay=null,
-																		// memberUpdateDate=null, memberRealAge=40,
-																		// career=null, license=null, matNo=62,
-																		// groupLeader=Y), Member(memberNo=28,
-																		// memberId=null, memberPwd=null,
-																		// memberName=기기기, memberGender=M,
-																		// memberNickName=null, memberAge=null,
-																		// memberPhone=null, memberEmail=null,
-																		// memberCreateDate=null, memberAddress=null,
-																		// memberCategory=null, memberStatus=null,
-																		// memberNational=null, memberPay=null,
-																		// memberUpdateDate=null, memberRealAge=40,
-																		// career=null, license=null, matNo=63,
-																		// groupLeader=Y)]
+																		
 			}
 		}
 
+		System.out.println("============================");
+		System.out.println(matList);
+		System.out.println("============================");
+		//Matching(matNo=210, beginDt=2024-08-30, endDt=2024-08-31, money=0, matConfirm=null, hospitalNo=0, memberNo=0, ptCount=1, beginTime=12:00, endTime=12:00, matMode=2, matType=0, hospitalName=null, ptAge=null, memberGender=null, LCategory=null, SCategory=null, age=0)
+		
+		
+		
+		
 		GsonBuilder gb = new GsonBuilder().setDateFormat("YYYY-MM-dd");
 		Gson gson = gb.create();
 
@@ -1894,18 +1804,6 @@ public class MemberController {
 			ArrayList<HashMap<String, Integer>> searchDefaultMatNoList = mService.searchDefaultMatNoList(searchDefaultMap);
 			// 만약, 검색조건 중 위에서의 검색조건이 없었다면 MAT_CONFIRM = 'N'인 매칭번호들이 조회된다!
 			
-			
-			///////////////////////////////////////////////
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			// searchDefaultMatNoList 에서 시간제와 기간제를 구분한다.
 			ArrayList<Integer> termMatNoList = new ArrayList<Integer>();
 			ArrayList<Integer> timeMatNoList = new ArrayList<Integer>();
@@ -1917,20 +1815,6 @@ public class MemberController {
 					timeMatNoList.add(Integer.parseInt(String.valueOf(m.get("MAT_NO"))));
 				}
 			}
-			
-			
-			System.out.println("\n===========================\n");
-			
-			System.out.println(termMatNoList);
-			System.out.println(timeMatNoList);
-			
-			System.out.println("\n===========================\n");
-			
-			
-			
-			
-			
-			
 			
 			// 기간 검색조건을 가공한다.
 			HashMap<String, Object> termMap = new HashMap<String, Object>();
@@ -2076,7 +1960,7 @@ public class MemberController {
 			PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 8);
 			ArrayList<Matching> matList = new ArrayList<Matching>();
 			ArrayList<MatPtInfo> mpiList = new ArrayList<MatPtInfo>();
-			ArrayList<Member> memList = new ArrayList<Member>();
+			ArrayList<Patient> memList = new ArrayList<Patient>();
 
 			if (!resultMatNoList.isEmpty()) {
 				matList = mService.searchMatchingList(pi, resultMatNoList);

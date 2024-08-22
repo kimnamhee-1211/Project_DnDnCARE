@@ -1340,7 +1340,7 @@
 									if(mat.matNo == mpi.matNo){
 										for(let mem of memList){
 											if(mat.matNo == mem.matNo) {
-												let gender = mem.memberGender == 'M' ? '남성' : '여성';
+												let gender = mem.ptGender == 'M' ? '남성' : '여성';
 												let address = mpi.matAddressInfo.split(' ')[0] + ' ' + mpi.matAddressInfo.split(' ')[1];
 												if(mpi.service == '가정돌봄' && mat.ptCount == 1){ // 가정, 개인
 													//console.log(mat.matNo);
@@ -1348,14 +1348,14 @@
 												            				<div class="card h-95 w-80">\
 												    							<div class="card-body">\
 												        						<h6 class="card-title">\
-												            						<span>${mem.memberName}</span>&nbsp;&nbsp;\
+												            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 												            						<img src="image/icon/home.png"/>\
 												            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
 												       							</h6>\
 															                    <p class="card-text">\
 															                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 															                    	<span>${gender}</span>&nbsp;&nbsp;\
-															                    	<span>${mem.memberRealAge}세</span><br/>\
+															                    	<span>${mem.ptRealAge}세</span><br/>\
 															                    	<span>${address}</span>\
 															                   	</p>\
 															                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
@@ -1370,14 +1370,14 @@
 							            				<div class="card h-95 w-80">\
 							    							<div class="card-body">\
 							        						<h6 class="card-title">\
-							            						<span>${mem.memberName}</span>&nbsp;&nbsp;\
+							            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 							            						<img src="image/icon/hospital.png"/>\
 							            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
 							       							</h6>\
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.memberRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
@@ -1388,7 +1388,7 @@
 													break;
 												} else if(mat.ptCount == 2 && mem.groupLeader =='Y'){//공동간병
 													console.log(mat.matNo);
-													let leaderName = mem.memberName;
+													let leaderName = mem.ptName;
 													root.innerHTML += `<div class="col-sm-6">\
 							            				<div class="card h-95 w-80">\
 							    							<div class="card-body">\
@@ -1400,7 +1400,7 @@
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.memberRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
@@ -1454,7 +1454,7 @@
 									if(mat.matNo == mpi.matNo){
 										for(let mem of memList){
 											if(mat.matNo == mem.matNo) {
-												let gender = mem.memberGender == 'M' ? '남성' : '여성';
+												let gender = mem.ptGender == 'M' ? '남성' : '여성';
 												let address = mpi.matAddressInfo.split(' ')[0] + ' ' + mpi.matAddressInfo.split(' ')[1];
 												if(mpi.service == '가정돌봄' && mat.ptCount == 1){ // 가정, 개인
 													console.log(mat.matNo);
@@ -1462,14 +1462,14 @@
 												            				<div class="card h-95 w-80">\
 												    							<div class="card-body">\
 												        						<h6 class="card-title">\
-												            						<span>${mem.memberName}</span>&nbsp;&nbsp;\
+												            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 												            						<img src="image/icon/home.png"/>\
 												            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
 												       							</h6>\
 															                    <p class="card-text">\
 															                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 															                    	<span>${gender}</span>&nbsp;&nbsp;\
-															                    	<span>${mem.memberRealAge}세</span><br/>\
+															                    	<span>${mem.ptRealAge}세</span><br/>\
 															                    	<span>${address}</span>\
 															                   	</p>\
 															                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
@@ -1484,14 +1484,14 @@
 							            				<div class="card h-95 w-80">\
 							    							<div class="card-body">\
 							        						<h6 class="card-title">\
-							            						<span>${mem.memberName}</span>&nbsp;&nbsp;\
+							            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 							            						<img src="image/icon/hospital.png"/>\
 							            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
 							       							</h6>\
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.memberRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
@@ -1502,7 +1502,7 @@
 													break;
 												} else if(mat.ptCount == 2 && mem.groupLeader =='Y'){//공동간병
 													console.log(mat.matNo);
-													let leaderName = mem.memberName;
+													let leaderName = mem.ptName;
 													root.innerHTML += `<div class="col-sm-6">\
 							            				<div class="card h-95 w-80">\
 							    							<div class="card-body">\
@@ -1514,7 +1514,7 @@
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.memberRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
