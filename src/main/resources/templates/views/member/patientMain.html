@@ -59,7 +59,7 @@
 				</div>
 			</div>
 			<div ><!-- AI 매칭 : 가로 700, 세로 200 -->
-				<table class="table mainTable" style="height:200px;">
+				<table class="table mainTable table-hover" style="height:200px;">
                 	<thead>
                     	<tr>
                         	<th colspan="5">[[${loginUserName}]]님과 딱 맞는 간병인을 찾아드려요.</th>
@@ -68,9 +68,13 @@
                  	</thead>
                  	<tbody>
                     	<tr class="text-center" th:each="c : ${completeList}">
-                        	<td>[[${c.memberName}]]</td>
+                        	<td>
+                        		<input type="hidden" th:value="${c.memberNo}"/>
+                        		[[${c.memberName}]]
+                       		</td>
 	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
-	                        <td>[[${c.caregiverRealAge}]]</td>
+	                        <td th:if="${c.caregiverRealAge < 0}">[[${c.caregiverRealAge + 100}]]</td>
+	                        <td th:if="${c.caregiverRealAge >= 0}">[[${c.caregiverRealAge}]]</td>
 	                        <td>[[${c.caregiverAddress}]]</td>
 	                        <td>[[${c.haveLicense == undefined ? '-' : c.haveLicense}]]</td>
 	                        <td>[[${c.minMoney}]]원</td>
@@ -747,13 +751,13 @@
 	    }
 	    
 	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
+	    // ai추천 목록에 대한 이벤트 (시작)
+	    document.querySelector('.mainTable').children[1].addEventListener('click', function(e) {
+	    	// reviewDetail.mc?memberNo=83 로 이동하기
+	    	//console.log(e.target.parentElement.children[0].children[0].value);
+	    	location.href='reviewDetail.mc?memberNo=' + e.target.parentElement.children[0].children[0].value;
+	    });
+		// ai추천 목록에 대한 이벤트 (끝)
 	    
     </script> 
 </body>

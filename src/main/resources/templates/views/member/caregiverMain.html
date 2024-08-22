@@ -35,9 +35,13 @@
                         </th>
                      </tr>
                  </thead>
+                 
                  <tbody>
                      <tr class="text-center" th:if="${completeList}" th:each="l : ${completeList}">
-                         <td>[[${l.ptName}]]</td>
+                         <td>
+                         	<input type="hidden" th:value="${l.matNo}"/>
+                         	[[${l.ptName}]]
+                         </td>
                          <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
                          <td>[[${l.ptRealAge}]]</td>
                          <td>[[${l.ptAddress}]]</td>
@@ -547,6 +551,16 @@
 	    	// 간병정보(간병백과) 페이지로 이동 (끝)
     	}
     	/*]]>*/
+    	
+    	// ai추천 목록에 대한 이벤트 (시작)
+	    document.querySelector('.mainTable').children[1].addEventListener('click', function(e) {
+	    	// goCaregiverPtInfo.mc?matNo=55 로 이동하기
+	    	//console.log(e.target.parentElement.children[0].children[0].value);
+	    	location.href='goCaregiverPtInfo.mc?matNo=' + e.target.parentElement.children[0].children[0].value;
+	    });
+		// ai추천 목록에 대한 이벤트 (끝)
+    	
+    	
     </script>    
 </body>
 

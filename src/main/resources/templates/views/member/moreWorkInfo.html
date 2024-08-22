@@ -48,9 +48,12 @@
                  	</thead>
                  	<tbody>
                     	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index < 5}" >
-	                         <td>[[${l.ptName}]]*</td>
+	                         <td>
+	                         	<input type="hidden" th:value="${l.matNo}"/>
+	                         	[[${l.ptName}]]
+	                         </td>
 	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-	                         <td>[[${l.ptRealAge}]]</td>
+	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]</td>
 	                         <td>[[${l.ptAddress}]]</td>
 	                         <td>[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]</td>
 	                         <td>[[${l.money}]] 원</td>
@@ -71,9 +74,12 @@
                  	</thead>
                  	<tbody>
                     	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index >= 5}" >
-	                         <td>[[${l.ptName}]]</td>
+	                         <td>
+	                         	<input type="hidden" th:value="${l.matNo}"/>
+	                         	[[${l.ptName}]]
+	                         </td>
 	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-	                         <td>[[${l.ptRealAge}]]</td>
+	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]</td>
 	                         <td>[[${l.ptAddress}]]</td>
 	                         <td>[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]</td>
 	                         <td>[[${l.money}]] 원</td>
@@ -1352,7 +1358,7 @@
 															                    	<span>${address}</span>\
 															                   	</p>\
 															                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-															                    <button class="btn btn-success workInfo">정보 보기</button>\
+															                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 														                		</div>\
 												   							</div>\
 																		</div>`;
@@ -1374,7 +1380,7 @@
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
@@ -1397,7 +1403,7 @@
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
@@ -1465,7 +1471,7 @@
 															                    	<span>${address}</span>\
 															                   	</p>\
 															                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-															                    <button class="btn btn-success workInfo">정보 보기</button>\
+															                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 														                		</div>\
 												   							</div>\
 																		</div>`;
@@ -1487,7 +1493,7 @@
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
@@ -1510,7 +1516,7 @@
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
@@ -1666,6 +1672,15 @@
     		})
 			/*]]>*/
     		// 자동추천 새로고침 비동기 요청 (끝)
+			
+			// ai추천 목록에 대한 이벤트 (시작)
+			const tableList = document.querySelectorAll('.autoMatching');
+			for(const table of tableList){
+				table.children[1].addEventListener('click', function(e) {
+					location.href='goCaregiverPtInfo.mc?matNo=' + e.target.parentElement.children[0].children[0].value;
+				});
+			}
+			// ai추천 목록에 대한 이벤트 (끝)
 		}
 	</script>
 </body>

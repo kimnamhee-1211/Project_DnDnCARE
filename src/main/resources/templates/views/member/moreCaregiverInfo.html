@@ -47,7 +47,10 @@
                  	</thead>
                  	<tbody>
                     	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index < 5}">
-                        	<td>[[${c.memberName}]]</td>
+                        	<td>
+                        		<input type="hidden" th:value="${c.memberNo}"/>
+                        		[[${c.memberName}]]
+                       		</td>
 	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
 	                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
 	                        <td>[[${c.caregiverAddress}]]</td>
@@ -70,7 +73,10 @@
                  	</thead>
                  	<tbody>
                     	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index >= 5}">
-                        	<td>[[${c.memberName}]]</td>
+                        	<td>
+                        		<input type="hidden" th:value="${c.memberNo}"/>
+                        		[[${c.memberName}]]
+                       		</td>
 	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
 	                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
 	                        <td>[[${c.caregiverAddress}]]</td>
@@ -315,6 +321,7 @@
 	<!-- 테스트중 -->
 	<!-- <div th:replace="~{common/footer :: footer}" id=""></div> -->
 	<br/><br/><br/><br/>
+	
 	<div id="footer-section">
 	    <div class="inner">
 	        <div class="footer-logo">
@@ -1151,12 +1158,15 @@
 					// *** 검색 조건 저장하기 (끝) ***	
 					
 					// *** 비동기 방식으로 검색결과 요청하기 (시작)***
+	//				console.log(searchExist);
 					if(searchExist) { // 검색 조건이 하나라도 있을 때를 의미함
 						ajaxSearchPage = 1;
+						searchFlag = true;
 						root.innerHTML = ''; // 기존의 목록출력을 모두 지운다.
 						searchAjax(ajaxSearchPage); // 새로운 목록을 불러온다.
 					} else { // 검색 조건이 하나도 없을 때를 의미함
 						ajaxNoSearchPage = 1;
+						searchFlag = false;
 						root.innerHTML = ''; // 기존의 목록출력을 모두 지운다.
 						noSearchAjax(ajaxNoSearchPage);
 					}
@@ -1233,7 +1243,7 @@
 										img.setAttribute('src', 'image/icon/femaleProfile.png');
 									}
 									const h6Span = document.createElement('span');
-									h6Span.innerText = d.memberName + '님';
+									h6Span.innerHTML = ' ' + d.memberName + '님<br>' 
 									h6.append(img);
 									h6.append(h6Span);
 									for(let i = 0; i < 5; i++) {
@@ -1252,7 +1262,7 @@
 									inp.setAttribute('value', d.memberNo);
 									const button = document.createElement('button');
 									button.className = 'btn btn-success';
-									button.setAttribute('onclick', 'caregiverDetail()');
+									button.setAttribute('onclick', `location.href='reviewDetail.mc?memberNo='+${d.memberNo}`);
 									button.innerText = '정보보기';
 									
 									div2.append(h6);
@@ -1283,7 +1293,7 @@
 										img.setAttribute('src', 'image/icon/femaleProfile.png');
 									} // **이미지 경로 수정해야함**
 									const h6Span = document.createElement('span');
-									h6Span.innerText = d.memberName + '님';
+									h6Span.innerHTML = ' ' + d.memberName + '님<br>' 
 									h6.append(img);
 									h6.append(h6Span);
 									for(let i = 0; i < 5; i++) {
@@ -1302,7 +1312,7 @@
 									inp.setAttribute('value', d.memberNo);
 									const button = document.createElement('button');
 									button.className = 'btn btn-success';
-									button.setAttribute('onclick', 'caregiverDetail()');
+									button.setAttribute('onclick', `location.href='reviewDetail.mc?memberNo='+${d.memberNo}`);
 									button.innerText = '정보보기';
 									
 									div2.append(h6);
@@ -1315,14 +1325,9 @@
 									root.append(div0);
 								}
 							}
-						ajaxNoSearchPage++;
+						ajaxSearchPage++;
 						console.log('page : ' + ajaxSearchPage);
-						searchFlag = false;
-						
-						innerHeight = window.innerHeight;
-						scrollY = window.scrollY;
-						scrollHeight = document.body.scrollHeight;
-						
+						searchFlag = true;
 						} else {
 							console.log('검색결과 없음');
 						}
@@ -1399,7 +1404,7 @@
 										img.setAttribute('src', 'image/icon/femaleProfile.png');
 									}
 									const h6Span = document.createElement('span');
-									h6Span.innerHTML = ' ' + d.memberName + '님<br>' // 여기여기
+									h6Span.innerHTML = ' ' + d.memberName + '님<br>' 
 									h6.append(img);
 									h6.append(h6Span);
 									for(let i = 0; i < 5; i++) {
@@ -1418,7 +1423,7 @@
 									inp.setAttribute('value', d.memberNo);
 									const button = document.createElement('button');
 									button.className = 'btn btn-success';
-									button.setAttribute('onclick', 'caregiverDetail()');
+									button.setAttribute('onclick', `location.href='reviewDetail.mc?memberNo='+${d.memberNo}`);
 									button.innerText = '정보보기';
 									
 									div2.append(h6);
@@ -1449,7 +1454,7 @@
 										img.setAttribute('src', 'image/icon/femaleProfile.png');
 									} // **이미지 경로 수정해야함**
 									const h6Span = document.createElement('span');
-									h6Span.innerText = d.memberName + '님';
+									h6Span.innerHTML = ' ' + d.memberName + '님<br>'
 									h6.append(img);
 									h6.append(h6Span);
 									for(let i = 0; i < 5; i++) {
@@ -1468,7 +1473,7 @@
 									inp.setAttribute('value', d.memberNo);
 									const button = document.createElement('button');
 									button.className = 'btn btn-success';
-									button.setAttribute('onclick', 'caregiverDetail()');
+									button.setAttribute('onclick', `location.href='reviewDetail.mc?memberNo='+${d.memberNo}`);
 									button.innerText = '정보보기';
 									
 									div2.append(h6);
@@ -1531,6 +1536,7 @@
 			const callback = (entries, observer) => {
 				  entries.forEach((entry) => {
 					if (entry.isIntersecting) {
+						console.log('스크롤바 바닥 일 때 : ' + searchFlag); // 검색했는데도 불구하고 false네? 여기여기
 						if(searchFlag == false) {
 							noSearchAjax(ajaxNoSearchPage);
 						} else {
@@ -1634,6 +1640,18 @@
     		})
     		// 자동추천 새로고침 비동기 요청 (끝)
 	    	/*]]>*/
+	    	
+	    	
+	    	// ai추천 목록에 대한 이벤트 (시작)
+    		const tableList = document.querySelectorAll('.autoMatching');
+	    	for(const table of tableList){
+				table.children[1].addEventListener('click', function(e) {
+					location.href='reviewDetail.mc?memberNo=' + e.target.parentElement.children[0].children[0].value;
+				});
+			}
+			// ai추천 목록에 대한 이벤트 (끝)
+	    	
+	    	
 		}
 	</script>
 </body>

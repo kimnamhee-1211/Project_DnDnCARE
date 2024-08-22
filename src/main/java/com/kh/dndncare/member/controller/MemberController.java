@@ -335,6 +335,7 @@ public class MemberController {
 	
 	// ai추천 : 간병인의 입장 : 환자 추천 목록 조회
 		public ArrayList<Patient> openAiPatientChoice(int memberNo, int selectNum) {
+			System.out.println("간병인 AI요청!!!");
 			// 1. 간병인 본인 정보 조회 
 //			조회할 항목
 //				필수입력 : 원하는 서비스, 공동간병 참여여부, 경력, 적정비용, 성별, 나이, 주소
@@ -506,7 +507,7 @@ public class MemberController {
 		for(int i = 0; i < choice.length; i++) {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
-				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
+				choiceNoList.add(Integer.parseInt(choice[i].substring(0,2)));
 			} else if(choice[i].contains(" ")){
 				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
@@ -638,11 +639,11 @@ public class MemberController {
 		if(loginUser != null) {
 			System.out.println(memberNo);
 			System.out.println("전");
-			//ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
+			ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
 			System.out.println(memberNo);
 			System.out.println("후");
 			//System.out.println(completeList);
-			//model.addAttribute("completeList", completeList);
+			model.addAttribute("completeList", completeList);
 		}
 				
 		
@@ -781,8 +782,8 @@ public class MemberController {
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo(); 
-			//ArrayList<CareGiver> completeList = openAiCaregiverChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
-			//model.addAttribute("completeList", completeList);
+			ArrayList<CareGiver> completeList = openAiCaregiverChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
+			model.addAttribute("completeList", completeList);
 		}
 			
 		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--
@@ -2400,7 +2401,7 @@ public class MemberController {
 		for(int i = 0; i < choice.length; i++) {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
-				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
+				choiceNoList.add(Integer.parseInt(choice[i].substring(0,2)));
 			} else if(choice[i].contains(" ")){
 				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
