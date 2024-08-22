@@ -507,7 +507,7 @@ public class MemberController {
 		for(int i = 0; i < choice.length; i++) {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
-				choiceNoList.add(Integer.parseInt(choice[i].substring(0,2)));
+				choiceNoList.add(Integer.parseInt(choice[i].split("[.]")[0]));
 			} else if(choice[i].contains(" ")){
 				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
@@ -2401,7 +2401,7 @@ public class MemberController {
 		for(int i = 0; i < choice.length; i++) {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
-				choiceNoList.add(Integer.parseInt(choice[i].substring(0,2)));
+				choiceNoList.add(Integer.parseInt(choice[i].split("[.]")[0]));
 			} else if(choice[i].contains(" ")){
 				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
