@@ -59,7 +59,7 @@
 				</div>
 			</div>
 			<div ><!-- AI 매칭 : 가로 700, 세로 200 -->
-				<table class="table mainTable" style="height:200px;">
+				<table class="table mainTable table-hover" style="height:200px;">
                 	<thead>
                     	<tr>
                         	<th colspan="5">[[${loginUserName}]]님과 딱 맞는 간병인을 찾아드려요.</th>
@@ -68,9 +68,13 @@
                  	</thead>
                  	<tbody>
                     	<tr class="text-center" th:each="c : ${completeList}">
-                        	<td>[[${c.memberName}]]</td>
+                        	<td>
+                        		<input type="hidden" th:value="${c.memberNo}"/>
+                        		[[${c.memberName}]]
+                       		</td>
 	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
-	                        <td>[[${c.caregiverRealAge}]]</td>
+	                        <td th:if="${c.caregiverRealAge < 0}">[[${c.caregiverRealAge + 100}]]</td>
+	                        <td th:if="${c.caregiverRealAge >= 0}">[[${c.caregiverRealAge}]]</td>
 	                        <td>[[${c.caregiverAddress}]]</td>
 	                        <td>[[${c.haveLicense == undefined ? '-' : c.haveLicense}]]</td>
 	                        <td>[[${c.minMoney}]]원</td>
@@ -393,16 +397,13 @@
 	 </div>
 	</div> 
     
-    
 
-    
-    
-    
-    
+ 
     
     
     
     <br><br><br><br>
+
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     
@@ -411,11 +412,11 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 		   		<div class="modal-header">
-		    		<div class="modal-title eventInfo">
+		    		<div class="modal-title workInfo">
 		    			<div class="infomation">
-			    			<span class="badge bg-danger"><img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음</span><br/>
-			    			<span>병원명이 들어갈 자리</span><br/>
-			    			<span>주소가 들어갈 자리</span>
+			    			<span class="badge bg-danger"><!-- <img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음 --></span><br/>
+			    			<span>혜민병원</span><br/>
+			    			<span>서울특별시 광진구</span>
 		    			</div>
 		    			<div class="text-end align-middle imgDiv">
 		    				<br/>
@@ -424,22 +425,22 @@
 		    		</div>
 		    		<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
 		   		</div>
-		    	<div class="modal-body eventInfo">
+		    	<div class="modal-body workInfo">
 		    		<div>
-		    			<span>시작 시간</span><br/>
-		    			<span>종료 시간</span><br/>
-		    			<span>일 간병비</span><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">시작 시간</span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">종료 시간</span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">일 간병비</span><br/><br/>
 		    		</div>
 		    		<div class="text-end fw-bold infoDetail">
-		    			<span></span><br/>
-		    			<span></span><br/>
-		    			<span></span>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span>
 		    		</div>
 		    	</div>
 		    	<div class="modal-footer">
 		    		<input type="hidden" name="matNo"/>
-	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">Close</button>
-	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">자세히 보기</button>
+	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">닫기</button>
+	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">자세히 보기</button>	    			
 		    	</div>
 		  	</div>
 		</div>
@@ -455,7 +456,9 @@
         	var request = $.ajax({
         		url: 'caregiverPatientEvent.me',
         		datatype: 'json',
-        		data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0},
+        		/*<![CDATA[*/
+        		data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0}
+        		/*]]>*/
         	})
         	
         	const getTimeFormat = (date) => {
@@ -485,30 +488,30 @@
         	
         	
         	//종규 삽입
-        	
-        	function calenderEdit(){
-        		const dateTitle = document.getElementById('fc-dom-1')
-        		dateTitle.style.color = '#1E5F74';
-        		dateTitle.style.fontWeight = 'bold';
-        		
-        		const bts = document.getElementsByClassName('fc-button');
-        		const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
-        		
-        		const cala = cal.querySelectorAll('a');
-        		for(i in cala){
-        			if(i % 7 == 0){
-        				console.log(i);
-        			cala[i].style.color = 'red';
-        			}else if(i % 7 == 6){
-        				cala[i].style.color = '$0a58ca';
-        			}else{
-        				cala[i].style.color = '#1D2D50';
-        			}
-        		}
-        	} 
-        	
-        	//종규 삽입 끝
-        	
+            function calenderEdit(){
+               const dateTitle = document.getElementById('fc-dom-1')
+               dateTitle.style.color = '#1E5F74';
+               dateTitle.style.fontWeight = 'bold';
+               
+               const bts = document.getElementsByClassName('fc-button');
+               const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
+               
+               const cala = cal.querySelectorAll('a');
+               for(i = 0; i< cala.length ; i++){
+                  if(i % 7 == 0){
+                     console.log(i);
+                  cala[i].style.color = 'red';
+                  }else if(i % 7 == 6){
+                     cala[i].style.color = '#0a58ca';
+                  }else{
+                     if(i != 'entries' && i !='keys'){
+                        console.log(i);
+                     cala[i].style.color = '#1D2D50';
+                     }
+                  }
+               }
+            } 
+            //종규 삽입 끝
         	
         	
         	// 이벤트 등록
@@ -521,18 +524,19 @@
   		          eventClick: function(info) {
   		        		let mils = info.event.start - new Date()
 		        	   	let infomation = document.querySelector('.infomation').children;
-		        	   	if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
-			          		infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남';
-		        	   	} else { // 이벤트 날짜가 미래인 경우
-		        	   		infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '남음';
-		        	   	}
-						infomation[2].innerHTML = '병원명이 들어올 자리';
+  		        		if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
+  			        	  	/* infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남'; */
+  			        		  infomation[0].innerHTML = '';
+  			        	  } else { // 이벤트 날짜가 미래인 경우
+  			        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>&nbsp;&nbsp;' + remainCalc(mils) + ' 남음';
+  			        	}
+		        	   	infomation[2].innerHTML = '병원명이 들어올 자리';
 		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
 		          		
 		          		let infoDetail = document.querySelector('.infoDetail').children;
 		          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
-		          		infoDetail[2].innerHTML = info.event.extendedProps.endDate;
-		          		infoDetail[4].innerHTML = info.event.extendedProps.money + '원';
+		          		infoDetail[3].innerHTML = info.event.extendedProps.endDate;
+		          		infoDetail[6].innerHTML = info.event.extendedProps.money + '원';
 		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
 		        	  	$('#calendarModal').modal('show');
   		        	  }
@@ -552,6 +556,14 @@
     		
     		
     	window.onload = () => {
+    		// 캘린더 이벤트 모달 => 매칭 정보 자세히 보기(시작)
+    		document.querySelector('#detailInfo').addEventListener('click', function() {
+    			//goCaregiverPtInfo.mc?matNo=222 로 이동하기
+    			location.href='goCaregiverPtInfo.mc?matNo=' + document.querySelector('.modal-footer').children[0].value;
+    		});
+    		// 캘린더 이벤트 모달 => 매칭 정보 자세히 보기(끝)
+    		
+    		
     		// 자동추천 새로고침 비동기 요청 (시작)
     		const refreshChoice = document.querySelector('#refreshChoice');
     		refreshChoice.addEventListener('mouseenter', function() {
@@ -605,6 +617,33 @@
     			}
     		})
     		// 자동추천 새로고침 비동기 요청 (끝)
+    		
+    		//폼 태그없이 memberNo만 넘기자. 간병인 리뷰디테일 페이지로 memberNo
+    	    const infoBts = document.getElementsByClassName('workInfo');
+    	    
+    	    for(infoBt of infoBts){
+    	    	infoBt.addEventListener('click',function(){	    		
+    	    		let memberNo='';
+    	    		let matNo='';
+    	    		if(this.className.includes('two')){
+    	    			memberNo = this.parentElement.parentElement.querySelector('.memberNo').innerHTML;
+    	    			matNo = this.parentElement.parentElement.querySelector('.matNo').innerHTML;
+    	    			
+    	    			location.href = 'reviewDetail.mc?memberNo='+ memberNo +'&matNo=' + matNo + '&from=wanted';
+    	    		}else{
+    	    			memberNo = this.nextElementSibling.value;
+    	    			location.href = 'reviewDetail.mc?memberNo='+ memberNo;
+    	    		}
+    	
+    	    	})
+    	    }
+    	    
+    	    const result = /*[[${result}]]*/''
+    	    
+        	if(result != null){
+        		$('#matSuccesseModal').modal('show');
+        	}
+    		
     	}
     	/*]]>*/
     
@@ -617,42 +656,6 @@
 	    document.getElementById('viewPayList').addEventListener('click',function(){
 	    	this.nextElementSibling.classList.toggle('showPay');
 	    })
-    }
-    
-    //남희 가공
-    window.onload=()=>{
-    
-	    //폼 태그없이 memberNo만 넘기자. 간병인 리뷰디테일 페이지로 memberNo
-	    const infoBts = document.getElementsByClassName('workInfo');
-	    
-	    for(infoBt of infoBts){
-	    	infoBt.addEventListener('click',function(){	    		
-	    		let memberNo='';
-	    		let matNo='';
-	    		if(this.className.includes('two')){
-	    			memberNo = this.parentElement.parentElement.querySelector('.memberNo').innerHTML;
-	    			matNo = this.parentElement.parentElement.querySelector('.matNo').innerHTML;
-	    			
-	    			location.href = 'reviewDetail.mc?memberNo='+ memberNo +'&matNo=' + matNo + '&from=wanted';
-	    		}else{
-	    			memberNo = this.nextElementSibling.value;
-	    			location.href = 'reviewDetail.mc?memberNo='+ memberNo;
-	    		}
-	
-	    	})
-	    }
-	    
-	    	    
-	    /*<![CDATA[*/
-	    const result = /*[[${result}]]*/''
-	    /*]]>*/
-	    
-    	if(result != null){
-    		$('#matSuccesseModal').modal('show');
-    	}
-    	
-	    
-    	
     }
     
     
@@ -756,13 +759,13 @@
 	    }
 	    
 	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
+	    // ai추천 목록에 대한 이벤트 (시작)
+	    document.querySelector('.mainTable').children[1].addEventListener('click', function(e) {
+	    	// reviewDetail.mc?memberNo=83 로 이동하기
+	    	//console.log(e.target.parentElement.children[0].children[0].value);
+	    	location.href='reviewDetail.mc?memberNo=' + e.target.parentElement.children[0].children[0].value;
+	    });
+		// ai추천 목록에 대한 이벤트 (끝)
 	    
     </script> 
 </body>

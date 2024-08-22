@@ -1,16 +1,16 @@
 package com.kh.dndncare.common.config;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.kh.dndncare.common.interceptor.CheckLoginInterceptor;
-
 import com.kh.dndncare.common.interceptor.CheckCareInformationAiSearch;
 import com.kh.dndncare.common.interceptor.CheckCareInformationUsage;
+import com.kh.dndncare.common.interceptor.CheckLoginInterceptor;
 import com.kh.dndncare.common.interceptor.CheckLoginUser;
-
+@ComponentScan
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer{
 	
