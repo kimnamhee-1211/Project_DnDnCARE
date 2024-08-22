@@ -156,7 +156,7 @@ public interface MatchingService {
 	int CheckMatMemNo(int matNo);
 	
 	//환자 매칭 신청 취소
-	int matchingCancelP(int matNo, int memberNo);
+	int matchingCancelP(int matNo);
 	
 	//간병인 매칭 신청 취소
 	int matchingCancelC(int matNo,  int memberNo);

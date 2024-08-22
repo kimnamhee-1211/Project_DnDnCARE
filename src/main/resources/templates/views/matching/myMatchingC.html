@@ -39,6 +39,16 @@
 				      </div>
 				    </div>
 				  </div>
+				  
+				  <div class="accordion-item" th:if="${myMatching.empty}">
+				    <h2 class="accordion-header">
+				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+				    	 	현재 진행중인 매칭이 없습니다.
+				    	 </button>
+				    </h2>
+				  </div>
+				  			  
+				  
 				</div>
 			</div>
 			
@@ -63,6 +73,17 @@
 				      </div>
 				    </div>
 				  </div>
+				  
+				  <div class="accordion-item" th:if="${myMatchingW.empty}">
+				    <h2 class="accordion-header">
+				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+				    	 	현재 진행중인 매칭이 없습니다.
+				    	 </button>
+				    </h2>
+				  </div>
+				  
+				  
+				  
 				</div>
 			</div>
 			
@@ -80,7 +101,7 @@
 				      		</button>
 				    	</h2>
 				   		<div th:id="'collapsethree' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample3">
-							<div class="accordion-body" style="text-align: center;">
+							<div class="accordion-body">
 								<div style="display:none" th:text="${myMat.ptCount}" class="ptCount"></div>
 								<table class="table mx-auto">
 									<thead></thead>
@@ -90,6 +111,15 @@
 							</div>
 						</div>
 					</div>
+					
+				  <div class="accordion-item" th:if="${myRequestMat.empty}">
+				    <h2 class="accordion-header">
+				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+				    	 	현재 진행중인 매칭이 없습니다.
+				    	 </button>
+				    </h2>
+				  </div>					
+					
 				</div>
 			</div>
 			
@@ -121,8 +151,19 @@
 						</div>
 				    </div>
 				  </div>
+				  
+				  <div class="accordion-item" th:if="${myRequestMatPt.empty}">
+				    <h2 class="accordion-header">
+				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+				    	 	현재 진행중인 매칭이 없습니다.
+				    	 </button>
+				    </h2>
+				  </div>	
+				  
 				</div>
 			</div>
+			
+			
 		</main>
 	</div>
 	
@@ -194,10 +235,19 @@
 						
 							let addMin = '';
 							if(matInfo[0].ptCount == 1){
-								addMin = `<th scope="col"colspan="3">&nbsp;&nbsp;&nbsp;${matInfo[0].matAddressMin}</th>`;
+								addMin = `&nbsp;&nbsp;&nbsp;${matInfo[0].matAddressMin}`;
 							}else if(matInfo[0].ptCount > 1){
-								addMin = `<th scope="col"colspan="3">&nbsp;${matInfo[0].matAddressMin}&nbsp;&nbsp;&nbsp;&nbsp;${matInfo[0].hospitalName}</th>`;
+								addMin = `&nbsp;${matInfo[0].matAddressMin}&nbsp;&nbsp;&nbsp;&nbsp;${matInfo[0].hospitalName}`;
 							}
+							
+							let request =''
+							if(matInfo[0].matRequest == undefined){
+								request = `-`;
+							}else{
+								request = `${matInfo[0].matRequest}`;
+							}
+							
+							
 							
 							
 							let matDate = '';
@@ -210,7 +260,7 @@
 							
 							let theadInner=`
 								<tr style="font-size:18px;">
-									${addMin}
+									<th scope="col"colspan="3">${addMin}</th>
 							    	<th scope="col" colspan="1">${matInfo[0].service}</th>
 							    </tr>					    
 							    <tr>
@@ -236,7 +286,7 @@
 							    </tr>
 							    <tr>
 							      <th scope="col">&nbsp;요청사항</th>
-							      <td scope="col" colspan="3">${matInfo[0].matRequest}&nbsp;&nbsp;</td>
+							      <td scope="col" colspan="3">${request}</td>
 							    </tr>`;
 		
 							thead.innerHTML = theadInner;
@@ -249,6 +299,15 @@
 								}else if(onePt.ptGender == 'F'){
 									ptGender = '여성'
 								}
+								
+																
+								let request2 =''
+									if(onePt.ptRequest == undefined){
+										request2 = `-`;
+									}else{
+										request2 = `${matInfo[0].matRequest}`;
+									}								
+								
 								
 								let tbodyInner=`
 									<tr>
@@ -282,7 +341,7 @@
 								    </tr>
 								    <tr>
 								      <th>&nbsp;요청사항</th>
-								      <td colspan="3">${onePt.ptRequest}</td>
+								      <td colspan="3">${request2}</td>
 								    </tr>`;
 							
 								tbody.innerHTML = tbodyInner;							

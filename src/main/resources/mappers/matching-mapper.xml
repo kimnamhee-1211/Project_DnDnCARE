@@ -266,7 +266,7 @@
 		from matching
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
-			join hospital on(hospital.hospital_no = matching.hospital_no)
+			left join hospital on(hospital.hospital_no = matching.hospital_no)
 			left join matching_date on(matching.mat_no = matching_date.mat_no) 		
 		where matching.mat_no = #{matNo}
 		order by mat_pt_info.pt_no 
@@ -305,7 +305,7 @@
 		from matching
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
-			join hospital on(hospital.hospital_no = matching.hospital_no)
+			left join hospital on(hospital.hospital_no = matching.hospital_no)
 			left join matching_date on(matching.mat_no = matching_date.mat_no) 		
 		where matching.member_no = #{memberNo}	
 		order by matching.begin_dt	
@@ -319,9 +319,9 @@
 		from matching
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
-			join hospital on(hospital.hospital_no = matching.hospital_no)
-			join matching_date on(matching.mat_no = matching_date.mat_no) 	
-			join mat_care_pending on(matching.mat_no = mat_care_pending.mat_no)
+			left join hospital on(hospital.hospital_no = matching.hospital_no)
+			left join matching_date on(matching.mat_no = matching_date.mat_no) 	
+			left join mat_care_pending on(matching.mat_no = mat_care_pending.mat_no)
 		where matching.mat_confirm = 'N' and matching.begin_dt > sysdate
 				and mat_care_pending.member_no = #{memberNo}
 		order by matching.begin_dt		
@@ -483,11 +483,11 @@
 		set review_content = #{reviewContent}, review_score = #{reviewScore}, review_update_date = sysdate
 		where review_no = #{reviewNo}
 	</update>
+	
 	<update id="matchingCancelP">
 		update matching
 		set member_no = null
 		where mat_no = #{matNo}
-			and member_no = #{memberNo}
 	</update>
 
 	<!--간병인 매칭 신청 취소 -->

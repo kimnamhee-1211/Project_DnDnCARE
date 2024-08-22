@@ -31,9 +31,18 @@ body {
 
 .tableDiv{
 	display : inline-block; width:550px;
-	margin : 40px; 
+	margin : 20px; 
 	font-size:18px; 
 	border: 1px solid lightgray;
+	border-radius: 15px;
+	padding: 20px;
+}
+
+.tableDivMe{
+	display : inline-block; width:550px;
+	margin : 20px; 
+	font-size:18px; 
+	border: 2px solid #1D2D50;
 	border-radius: 15px;
 	padding: 20px;
 }
