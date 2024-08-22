@@ -901,6 +901,7 @@ public class AdminController {
 		@GetMapping("monthPayTotal.adm")
 		@ResponseBody
 		public void monthPayTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2,@RequestParam("flag") int flag, HttpServletResponse response) {
+			ArrayList<Pay> psDp = aService.selectPayDeposit("Y");		//페이 다가져와
 			if(flag == 1) {
 				int year1 = Integer.parseInt(data1.split(",")[0]);
 				int month1 = Integer.parseInt(data2.split(",")[0]);
@@ -916,14 +917,13 @@ public class AdminController {
 		        for(int i =1 ; i <=labels.length ; i++) {
 		        	labels[i-1] = i;
 		        }
-		        System.out.println("확인해보자" + labels.length);
 		        map.put("labels", labels);
 		        
 		        int[] datas1 = new int[days];
 		        int[] datas2 = new int[days];
 		        
 		        
-		        ArrayList<Pay> psDp = aService.selectPayDeposit("Y");		//페이 다가져와
+		        
 		        for(Pay p : psDp) {
 		        	if(p.getPayService().equals("가정돌봄")){
 						for(int i = 1; i <= labels.length ; i++) {
@@ -963,13 +963,158 @@ public class AdminController {
 				
 				
 				HashMap<String,Object> map = new HashMap<String,Object>();
+				int size = month2-month1+1;
+				if(year1 != year2 ) {
+					size += 12 * ( year2 - year1);
+				}
 				
-				int[] labels = new int[year2-year1];
+				String[] labels = new String[size];
+				int j = 0;
+				int k = 0;
+				for(int i = 1 ; i <= size ; i++) {
+					String labelMonth = "0"+((month1+i-1) % 12 == 0 ? "12" : (month1+i-1) % 12);
+		        	labels[j] = year1+ k + "-" +labelMonth.substring(labelMonth.length() - 2);
+		        	
+		        	j += 1;
+		        	if(i % 12 == 0) {
+		        		k +=1;
+		        	}
+				}
+				
+		        System.out.println("확인해보자" + labels.length);
+		        System.out.println("확인해보자" + labels[0]);
+		        map.put("labels", labels);
+		        
+		        int[] datas1 = new int[month2-month1+1];
+		        int[] datas2 = new int[month2-month1+1];
+		        
+		        for(Pay p : psDp) {
+		        	if(p.getPayService().equals("가정돌봄")){
+		        		for(int i = 0; i < labels.length ; i++) {
+		        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+		        				datas1[i] += p.getPayMoney();
+		        			}
+		        		}
+		        	}else {
+		        		for(int i = 0; i < labels.length ; i++) {
+		        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+		        				datas2[i] += p.getPayMoney();
+		        			}
+		        		}
+		        	}
+		        };
+		        
+		        map.put("datas1",datas1);
+		        map.put("datas2",datas2);
+		        
+		        Gson gson = new Gson();
+				response.setContentType("application/json; charset=UTF-8;");
+				try {
+					gson.toJson(map, response.getWriter());
+				} catch (JsonIOException | IOException e) {
+					e.printStackTrace();
+				}
 			}
 	        
 		}//페이토탈메소드끝 월
 	
-	
+		//어드민 페이 토탈 통계 달
+		
+			@GetMapping("yearPayTotal.adm")
+			@ResponseBody
+			public void yearPayTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2,@RequestParam("flag") int flag, HttpServletResponse response) {
+			
+				ArrayList<Pay> psDp = aService.selectPayDeposit("Y");		//페이 다가져와
+				if(flag ==1) {
+					int year = Integer.parseInt(data1.split(",")[0]);
+					
+					HashMap<String,Object> map = new HashMap<String,Object>();
+					
+					String[] labels = new String[12];
+					for(int i = 1 ; i <= 12 ; i++) {
+						String labelMonth = "0"+i;
+						labels[i-1] = year +"-"+ labelMonth.substring(labelMonth.length()-2);
+					}
+					map.put("labels", labels);
+					
+					int[] datas1 = new int[12];
+			        int[] datas2 = new int[12];
+			        
+			        for(Pay p : psDp) {
+			        	if(p.getPayService().equals("가정돌봄")){
+			        		for(int i = 0; i < 12 ; i++) {
+			        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+			        				datas1[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}else {
+			        		for(int i = 0; i < labels.length ; i++) {
+			        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+			        				datas2[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}
+			        };
+			        
+			        map.put("datas1",datas1);
+			        map.put("datas2",datas2);
+			        
+			        Gson gson = new Gson();
+					response.setContentType("application/json; charset=UTF-8;");
+					try {
+						gson.toJson(map, response.getWriter());
+					} catch (JsonIOException | IOException e) {
+						e.printStackTrace();
+					}
+					
+				}else {
+					int year1 = Integer.parseInt(data1.split(",")[0]);
+					int year2 = Integer.parseInt(data1.split(",")[1]);
+					
+					HashMap<String,Object> map = new HashMap<String,Object>();
+					
+					String[] labels = new String[year2 - year1 +1];
+					int j =0;
+					for(int i = year1 ; i <= year2 ; i++) {
+						labels[j] = year1+ j +"년" ;
+						j += 1;
+					}
+					
+					map.put("labels", labels);
+										
+					int[] datas1 = new int[year2 - year1 +1];
+			        int[] datas2 = new int[year2 - year1 +1];
+					
+			        for(Pay p : psDp) {
+			        	if(p.getPayService().equals("가정돌봄")){
+			        		for(int i = 0; i < labels.length ; i++) {
+			        			if(labels[i].equals(p.getPayDate().toLocalDate().getYear()+"년")){
+			        				datas1[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}else {
+			        		for(int i = 0; i < labels.length ; i++) {
+			        			if(labels[i].equals(p.getPayDate().toLocalDate().getYear()+"년")){
+			        				datas2[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}
+			        };
+			        
+			        map.put("datas1",datas1);
+			        map.put("datas2",datas2);
+			        
+			        Gson gson = new Gson();
+					response.setContentType("application/json; charset=UTF-8;");
+					try {
+						gson.toJson(map, response.getWriter());
+					} catch (JsonIOException | IOException e) {
+						e.printStackTrace();
+					}
+			        
+				}
+			
+			}// 년 메소드
 	
 	
 }//클래스 끝

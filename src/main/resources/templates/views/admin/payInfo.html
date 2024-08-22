@@ -35,19 +35,19 @@
 						<table class="m-4">
 							<tr align="center" class="d-flex justify-content-between">
 								<th width="300" style="border-right:2px solid lightgray"><h2>총 매칭 금액</h2></th>
-								<td width="250"><h3>100,000원</h3></td>
+								<td width="250"><h3 id="totalPay">100,000원</h3></td>
 							</tr>
 							<tr align="center" class="d-flex justify-content-between">
 								<th width="300" style="border-right:2px solid lightgray"><h2>평균 매칭 금액</h2></th>
-								<td width="250"><h3>100,000원</h3></td>
+								<td width="250"><h3 id="avgPay">100,000원</h3></td>
 							</tr>
 							<tr align="center" class="d-flex justify-content-between">
 								<th width="300" style="border-right:2px solid lightgray"><h2>최고 매칭 금액</h2></th>
-								<td width="250"><h3>100,000원</h3></td>
+								<td width="250"><h3 id="maxPay">100,000원</h3></td>
 							</tr>
 							<tr align="center" class="d-flex justify-content-between">
 								<th width="300" style="border-right:2px solid lightgray"><h2>최저 매칭 금액</h2></th>
-								<td width="250"><h3>100,000원</h3></td>
+								<td width="250"><h3 id="minPay">100,000원</h3></td>
 							</tr>
 						</table>
 						<div class="m-4 p-4"></div>
@@ -97,11 +97,10 @@
 					url : 'weekPayTotal.adm',
 					data : {data1:weeks[0].value, data2 : weeks[1].value},
 					success : data=>{
-						console.log(data);
-						console.log(data.labels);
-						console.log(data.datas1);
-						console.log(data.datas2);
 						chart(data.labels, data.datas1,data.datas2);
+						dayTitle.innerText = data.labels[0] + ' ~ ' +data.labels[6] + '(7일)';
+						calcul(data.datas1,data.datas2,1);
+						
 					},
 					error : data=>console.log('ㅜㅜ')
 				});
@@ -119,7 +118,7 @@
 				if(year1 > year2){
 					alert('시작날짜가 끝날짜보다 크게 설정되어있습니다');
 				}else{
-					if(month1 > month2){
+					if(month2 - month1 <0){
 						alert('시작날짜가 끝날짜보다 크게 설정되어있습니다');	
 					}else{
 						
@@ -130,6 +129,8 @@
 								data : {data1:year1 +','+year2, data2 : month1 + ','+month2, flag:'1'},
 								success:data=>{
 									chart(data.labels, data.datas1,data.datas2);
+									dayTitle.innerText = year1+'-'+month1 + '월 ~ ' +year2+'-'+month2 + '월 (총 1달)';
+									calcul(data.datas1,data.datas2,1);
 								},
 								error:data=>console.log('실패')
 								
@@ -143,6 +144,8 @@
 								data : {data1:year1 +','+year2, data2 : month1 + ','+month2, flag:'2'},
 								success:data=>{
 									chart(data.labels, data.datas1,data.datas2);
+									dayTitle.innerText = year1+'-'+month1 + '월 ~ ' +year2+'-'+month2 + '월 (총 '+data.labels.length+'달)';
+									calcul(data.datas1,data.datas2,1);
 								},
 								error:data=>console.log('실패')
 								
@@ -154,11 +157,40 @@
 						
 					}
 				}
-				
-				
-				console.log('2');
 				return;
 			case '2':
+				let year3 = document.getElementsByName('yearScope')[0].value;
+				let year4 = document.getElementsByName('yearScope')[1].value;
+				
+				if(year3 > year4){
+					alert('시작날짜가 끝날짜보다 크게 설정되어있습니다');
+				}else{
+					if(year3 == year4){
+						$.ajax({
+							url: 'yearPayTotal.adm',
+							data : {data1:year3 +','+year4, data2 : '', flag:'1'},
+							success:data=>{
+								chart(data.labels, data.datas1,data.datas2);
+								dayTitle.innerText = year3+ '년';
+								calcul(data.datas1,data.datas2,1);
+							},
+							error:data=>console.log('실패')
+							
+						});
+					}else{
+						$.ajax({
+							url: 'yearPayTotal.adm',
+							data : {data1:year3 +','+year4, data2 : '', flag:'2'},
+							success:data=>{
+								chart(data.labels, data.datas1,data.datas2);
+								dayTitle.innerText = year3+ '년' + ' ~ ' + year4 + '년 (총 ' +(year4 -year3 +1)+'년)';	
+								calcul(data.datas1,data.datas2,1);},
+							error:data=>console.log('실패')
+							
+						});
+					}
+				}
+				
 				
 				return;
 			}
@@ -224,7 +256,12 @@
 			    options: {
 			    	onClick : function(){
 			    		//console.log(chart2.legend.legendItems)
-			    		console.log(chart2)
+			    		//console.log(chart2);
+			    		//console.log(chart2.legend.legendItems[0].hidden);
+			    		//console.log(chart2.legend.legendItems[1].hidden);
+			    		//console.log(this);
+			    		
+			    		//calcul(data.datas1,data.datas2,1);
 			    		},
 		    		legend: {
 		                labels: {
@@ -239,8 +276,16 @@
 		chart(['1','2'],[1],[2]);
 		
 		// 막대그래프 (끝)
-		
-		
+		//클릭이벤트하나만넣기
+		lineChart.addEventListener('change',function(){
+			let houseService = chart2.legend.legendItems[0].hidden;
+			let hospitalService = chart2.legend.legendItems[1].hidden;
+			console.log(houseService);
+			console.log('하나');
+			if(houseService == 'false'){
+				console.log('가정돌봄');
+			}
+		});
 		//인풋에 변경효과주기
 		const selectCon = document.getElementsByName('selectCon')[0];
 		//console.log(selectScope);	//엥? 변수 지정안해도됨 
@@ -277,12 +322,12 @@
 					break;
 				case '2': 			//일년
 					selectScope.innerHTML =
-						'<select name="monthYScope"style="width:188px" class="form-control">'+
+						'<select name="yearScope"style="width:188px" class="form-control">'+
 						options +
 						'<select>'+
 						'<span class="mt-2">년</span>'+
 						'<span class="m-2">~</span>'+
-						'<select name="monthYScope"style="width:188px" class="form-control">'+
+						'<select name="yearScope"style="width:188px" class="form-control">'+
 						options +
 						'<select>'+
 						'<span class="mt-2">년</span>';	
@@ -346,9 +391,99 @@
 					data : {data1:weeks[0].value, data2 : weeks[1].value},
 					success : data=>{
 						chart(data.labels, data.datas1,data.datas2);
+						calcul(data.datas1,data.datas2,1);
 					},
 					error : data=>console.log('ㅜㅜ')
 				});
+
+
+		//함수로 토탈 평균 최고 최저 찾기
+		
+		function totalPayFn(data){
+			let totalMoney = 0;
+			for(d of data ){
+				totalMoney += d;
+			};
+			return totalMoney;
+		};
+		
+		function avgPayFn(data){
+			let avgMoney = 0;
+			for(d of data){
+				avgMoney += d;
+			}
+			avgMoney = avgMoney / data.length;
+			return avgMoney;
+		}
+		
+		function maxPayFn(data){
+			let maxMoney = 0;
+			for(d of data){
+				if(d > maxMoney){
+					
+					maxMoney = d; 
+				}
+				
+			}
+			
+			return maxMoney;
+		}
+		
+		function minPayFn(data){
+			let minMoney = 0;
+			for(d of data){
+				if(d < minMoney){
+					
+					minMoney = d; 
+				}
+				
+			}
+			
+			return minMoney;
+		}
+		
+		function calcul(data1,data2,flag){
+			
+			if(flag == 1){
+				total = totalPayFn(data1) + totalPayFn(data2);
+				totalPay.innerText = total.toLocaleString() + '원';
+				avg = avgPayFn(data1) + avgPayFn(data2);
+				avgPay.innerText = (Math.round(avg / 100) * 100).toLocaleString() + '원';
+				maxP = maxPayFn(data1) > maxPayFn(data2) ? maxPayFn(data1) : maxPayFn(data2);
+				maxPay.innerText = maxP.toLocaleString() + '원';
+				minP = minPayFn(data1) > minPayFn(data2) ? minPayFn(data1) : minPayFn(data2);
+				minPay.innerText = minP.toLocaleString() + '원';
+			}else if(flag ==2){
+				total = totalPayFn(data1);
+				totalPay.innerText = total.toLocaleString() + '원';
+				avg = avgPayFn(data1);
+				avgPay.innerText = (Math.round(avg / 100) * 100).toLocaleString() + '원';
+				maxP = maxPayFn(data1);
+				maxPay.innerText = maxP.toLocaleString() + '원';
+				minP = minPayFn(data1);
+				minPay.innerText = minP.toLocaleString() + '원';
+				
+				
+			}else if(flag ==3){
+				total = totalPayFn(data2);
+				totalPay.innerText = total.toLocaleString() + '원';
+				avg = avgPayFn(data2);
+				avgPay.innerText = (Math.round(avg / 100) * 100).toLocaleString() + '원';
+				maxP = maxPayFn(data2);
+				maxPay.innerText = maxP.toLocaleString() + '원';
+				minP = minPayFn(data2);
+				minPay.innerText = minP.toLocaleString() + '원';
+			}else{
+				total = 0;
+				totalPay.innerText = total.toLocaleString() + '원';
+				avg = 0;
+				avgPay.innerText = (Math.round(avg / 100) * 100).toLocaleString() + '원';
+				maxP = 0;
+				maxPay.innerText = maxP.toLocaleString() + '원';
+				minP = 0;
+				minPay.innerText = minP.toLocaleString() + '원';
+			}
+		}
 		
 		
 	</script>
