@@ -11241,3 +11241,11 @@ body {
   font-size: 0.75rem;
   border-radius: 0.375rem !important;
 }
+
+#dateName{
+	border:2px solid black;
+	margin-left:48px;
+	margin-top:-24px;
+	margin-right:48px;
+	margin-bottom:24px;
+}
