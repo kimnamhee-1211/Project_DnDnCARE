@@ -558,12 +558,21 @@ public class MemberController {
 				Date beginDate = c.getBeginDt();
 				Date endDate = c.getEndDt();
 				
+				
+				String[] endDtArr = String.valueOf(c.getEndDt()).split("-");
+				int year = Integer.parseInt(endDtArr[0]);
+				int month = Integer.parseInt(endDtArr[1]);
+				int date = Integer.parseInt(endDtArr[2]);
+				Calendar calendar = GregorianCalendar.getInstance();
+				calendar.set(year, month-1, date+1);
+				Date endDtPlusOne = new Date(calendar.getTimeInMillis());
+				
 				if(c.getPtCount() == 1) {
 					if(c.getMatMode() == 1) {
 						JSONObject obj = new JSONObject();
 						obj.put("title", "개인 기간제 간병");
 						obj.put("start", c.getBeginDt());
-						obj.put("end", c.getEndDt());
+						obj.put("end", endDtPlusOne);
 						obj.put("matNo", matNo);
 						obj.put("money", money);
 						obj.put("matAddressInfo", matAddressInfo);
@@ -591,7 +600,7 @@ public class MemberController {
 						JSONObject obj = new JSONObject();
 						obj.put("title", "공동 기간제 간병");
 						obj.put("start", c.getBeginDt());
-						obj.put("end", c.getEndDt());
+						obj.put("end", endDtPlusOne);
 						obj.put("matNo", matNo);
 						obj.put("money", money);
 						obj.put("matAddressInfo", matAddressInfo);
@@ -2011,7 +2020,7 @@ public class MemberController {
 				if(age.length() > 0) searchDefaultMap.put("age", age);
 				if(maxMoney.length() > 0) searchDefaultMap.put("maxMoney", maxMoney);
 				
-				System.out.println("검색조건 확인 중 : " + searchDefaultMap);
+				System.out.println("검색조건 확인 중 : " + searchDefaultMap); // 여기여기여기
 				
 				
 				

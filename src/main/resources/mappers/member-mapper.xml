@@ -59,10 +59,11 @@
 		        SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) AS MAT_ADDRESS_INFO, 
 		        PT_COUNT, MAT_DATE
 		FROM MATCHING M
-		        JOIN MAT_PT_INFO I ON(M.MAT_NO = I.MAT_NO)
-		        JOIN MATCHING_DATE D ON(I.MAT_NO = D.MAT_NO)
-		WHERE MEMBER_NO = ${memberNo}
+		        LEFT JOIN MAT_PT_INFO I ON(M.MAT_NO = I.MAT_NO)
+		        LEFT JOIN MATCHING_DATE D ON(I.MAT_NO = D.MAT_NO)
+		WHERE M.MEMBER_NO = ${memberNo} AND M.MAT_CONFIRM = 'Y'
 	</select>
+	
 	  <select id="selectAllMember" resultType="Member">		<!-- 멤버좀 확인할라구요 -->
 		select *
 		from member	  
