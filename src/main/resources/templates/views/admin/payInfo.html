@@ -59,16 +59,19 @@
 							</select>
 						</div>
 						<div id="selectScope"style="height:130px height:40px;"class="m-4 d-flex justify-content-center">
-							<input type="date" name="dateScope" style="width:200px"class="form-control">
+							<input type="date" name="weekScope" style="width:200px"class="form-control">
 							<span class="m-2">~</span>
-							<input type="date" name="dateScope" style="width:200px"class="form-control" readonly="readonly">
+							<input type="date" name="weekScope" style="width:200px; background:lightgray"class="form-control" readonly="readonly">
+							
+							
+						
 						</div>
 						<div id="dateName"style="height:130px height:40px;"class="d-flex justify-content-between">
-							<span>하나</span>
-							<span>하나</span>
+							<span>시작 날짜</span>
+							<span>끝 날짜</span>
 						</div>
 						
-						<div align="center"class="m-4"><button class="btn btn-success">검색하기</button></div>
+						<div align="center"class="m-4"><button class="btn btn-success" onclick="selectPayStatis()">검색하기</button></div>
 					
 					</div>
 				
@@ -80,7 +83,44 @@
 	
 	
 	<script th:inline="javascript">
+
+		function selectPayStatis(){
+
+
+			switch(selectCon.value){
+			case '0':
+				let weeks = document.getElementsByName('weekScope');
+				console.log(weeks[0].value);
+				console.log(weeks[1].value);
+				
+				$.ajax({
+					url:'weekPayTotal.adm',
+					data:{data:weeks},
+					success:data=>console.log('확인'),
+					error:data=>console.log('ㅜㅜ')
+				});
+				
+				
+				
+				
+				return;
+			case '1':
+				
+				return;
+			case '2':
+				
+				return;
+			}
+			
+			
+			let s = document.getElementsByName('monthYScope');
+			for(i of s){
+				console.log(i.value);
+			}
+		}
 		
+			
+	
 			
 		/*<![CDATA[*/
 		const test = /*[[${psDp[0].memberNo}]]*/ 3;
@@ -98,16 +138,15 @@
 			return year + '-' + month + '-' + day;
 		}
 		
-		console.log(getDateFormat(today));
+		//console.log('뭐야ㅕ이거' + getDateFormat(today));
 		
 		
 		// 막대그래프 (시작)
 		const barCtx = document.getElementById('barChart');
-	
-		let chart = new Chart(barCtx, {
+		let chart = () => new Chart(barCtx, {
 		    type: 'line',
 		    data: {
-		      labels: ['월', '화', '수', '목', '금', '토','일'],
+		      labels: ['1', '2', '3', '4', '5', '6','7','1', '2', '3', '4', '5', '6','1', '2', '3', '4', '5', '6','1', '2', '3', '4', '5', '6'],
 		      datasets: [{
 		        		label: '시간제매칭',
 		        		data: [12, 19, 3, 5, 2, 3],
@@ -139,26 +178,106 @@
 	            }
 		    }
 		});
+		chart();
 		// 막대그래프 (끝)
 		
 			console.log(chart);
 		
-		//인풋에 효과주기
+		//인풋에 변경효과주기
 		const selectCon = document.getElementsByName('selectCon')[0];
-		console.log(selectScope);	//엥? 변수 지정안해도됨 
+		//console.log(selectScope);	//엥? 변수 지정안해도됨 
 		selectCon.addEventListener('change',function(){
 			
 			switch(selectCon.value){
-				case '0': 
+				case '0':			//일주일
+					selectScope.innerHTML = '<input type="date" name="weekScope" style="width:200px"class="form-control" value="'+getDateFormat(today)+'">'+
+					'<span class="m-2">~</span>'+
+					'<input type="date" name="weekScope" style="width:200px; background:lightgray"class="form-control" readonly="readonly" value="'+addSevenDays(getDateFormat(today))+'">';
+					setSevenDays();
+					
+					
 					break;
-				case '1': 
-					console.log('2'); 
+				case '1': 			//한달
+					selectScope.innerHTML =
+						'<select name="monthYScope"style="width:90px" class="form-control">'+
+						options +
+						'<select>'+
+						'<span class="mt-2">년</span>'+
+						'<select name="monthMScope" style="width:80px" class="form-control">'+
+						months +
+						'</select>'+
+						'<span class="mt-2">월</span>'+
+						'<span class="m-2">~</span>'+
+						'<select name="monthYScope"style="width:90px" class="form-control">'+
+						options +
+						'<select>'+
+						'<span class="mt-2">년</span>'+
+						'<select name="monthMScope" style="width:80px" class="form-control">'+
+						months +
+						'</select>'+
+						'<span class="mt-2">월</span>';
 					break;
-				case '2': 
-					console.log('4');
+				case '2': 			//일년
+					selectScope.innerHTML =
+						'<select name="monthYScope"style="width:188px" class="form-control">'+
+						options +
+						'<select>'+
+						'<span class="mt-2">년</span>'+
+						'<span class="m-2">~</span>'+
+						'<select name="monthYScope"style="width:188px" class="form-control">'+
+						options +
+						'<select>'+
+						'<span class="mt-2">년</span>';	
 					break;
 			}
 		})
+		
+		//함수
+		
+				//함수 데이트
+		function addSevenDays(dateString) {
+		    // 입력된 날짜 문자열을 Date 객체로 변환
+		    const date = new Date(dateString);
+		    
+		    // Date 객체에 7일을 더함
+		    date.setDate(date.getDate() + 7);
+		    
+		    // 변환된 Date 객체를 'yyyy-mm-dd' 형식의 문자열로 변환
+		    const year = date.getFullYear();
+		    const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줌
+		    const day = String(date.getDate()).padStart(2, '0');
+		    
+		    return year + '-' + month +  '-' + day;
+		}
+		//일주일계산
+		function setSevenDays(){
+			document.getElementsByName('weekScope')[0].addEventListener('change',function(){
+				document.getElementsByName('weekScope')[1].value = addSevenDays(document.getElementsByName('weekScope')[0].value);
+			})
+		}
+		
+		//한달 선택시 도우기
+		const todayYear = new Date().getFullYear();
+		const todayMonth = new Date().getMonth()+1;
+		let options = '';
+		for(i = 2020 ; i <= todayYear ; i++){
+			if(i == todayYear){
+				options += '<option selected value="'+i+'">'+i+'</option>';
+			}else{
+				options += '<option value="'+i+'">'+i+'</option>';
+				
+			}
+		}
+		let months = '';
+		for(i = 1; i <= 12 ; i++){
+			if(i == todayMonth){
+				months += '<option selected value="'+i+'">'+i+'</option>';
+			}else{
+				months += '<option value="'+i+'">'+i+'</option>';
+				
+			}
+		}
+		
 		
 		
 		
