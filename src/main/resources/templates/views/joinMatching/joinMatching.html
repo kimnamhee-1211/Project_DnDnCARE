@@ -59,9 +59,9 @@
 						      <td colspan="2">[[${gm.antePay}]]</td>
 						     </tr>
 						    <tr>
-						      <th>간병 시작일</th>
+						      <th width="110px;">간병 시작일</th>
 						      <td>[[${gm.beginDt}]]</td>
-						      <th>간병 종료일</th>
+						      <th width="110px;">간병 종료일</th>
 						      <td>[[${gm.endDt}]]</td>
 						    </tr>
 						    <tr>
@@ -72,7 +72,7 @@
 						    </tr>
 						     <tr>
 						      <th>상세주소</th>
-						      <td colspan="3">[[${gm.matAddressInfo.split('//')[2]}]]</td>
+						      <td colspan="3">[[${gm.matAddressInfo}]]</td>
 						    </tr>					
 						    <tr>
 						      <th>요청사항</th>
@@ -274,9 +274,7 @@
 								const jmPts = data.jmPts;
 								const jmMatDate = data.jmMatDate;
 								const loginPt = data.loginPt;
-								
-								const matAddressInfo = jmMatMatptInfo.matAddressInfo.split(' // ')[1]
-							
+
 								//참여신청 & 참여취소 클릭하는 경우를 위해 데이터 전달
 								document.getElementById('joinMatNo').value = jmMatMatptInfo.matNo;
 								document.getElementById('outMatNo').value = jmMatMatptInfo.matNo;
@@ -324,7 +322,7 @@
 								        </tr>
 								        <tr>
 								            <th>상세주소</th>
-								            <td colspan="3">${matAddressInfo}</td>
+								            <td colspan="3">${jmMatMatptInfo.matAddressInfo}</td>
 								        </tr>					
 								        <tr>
 								            <th>요청사항</th>

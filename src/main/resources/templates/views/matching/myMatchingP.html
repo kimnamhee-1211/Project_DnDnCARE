@@ -160,6 +160,62 @@
 				  </div>
 				  
 				  
+				  
+			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel4">[[${loginUserName}]]님이 참여하고 있는 공동 간병 그륩</h3>
+			<br>
+			<div class="form-floating mb-5 mx-auto">
+				<div class="accordion" id="accordionExample4">
+				  <div class="accordion-item"  th:each="myMat : ${myMatchingMat}">
+				  	<div style="display:none" th:text="${myMat.memberNo}" class="memberNo"></div>
+				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
+				  	<div style="display:none" th:text="wanted" class="from"></div>
+				    <h2 class="accordion-header">
+				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsefour' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
+				      	[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])이 매칭을 신청하셨습니다.
+				      </button>
+				    </h2>
+				    <div th:id="'collapsefour' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+						<div class="accordion-body" >
+							<table class="table mx-auto" style="width:800px;">
+								<thead></thead>
+							</table>
+							<div id="cInfo"></div>
+							<button th:if="${myMat.groupLeader == 'Y'}"  style="width:120px;margin:0 45%;" class="btn btn-dndn matOk">매칭 승낙</button>
+						</div>
+				    </div>
+				  </div>
+				  
+				  <div class="accordion-item" th:if="${myMatchingMat.empty}">
+				    <h2 class="accordion-header">
+				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+				    	 	현재 진행중인 매칭이 없습니다.
+				    	 </button>
+				    </h2>
+				  </div>
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
+				  
 				</div>
 			</div>
 		</main>

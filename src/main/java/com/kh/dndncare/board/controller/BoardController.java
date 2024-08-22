@@ -222,7 +222,7 @@ public class BoardController {
 	public String deleteBoard(@RequestParam("boardId") int bId) {
 		int result = bService.deleteBoard(bId);
 		if(result>0) {
-			return "redirect:list.bo";			
+			return "redirect:communityBoardList.bo";			
 		}else {
 			throw new BoardException("게시글 삭제에 실패했습니다.");
 		}

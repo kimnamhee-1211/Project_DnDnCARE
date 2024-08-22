@@ -301,6 +301,12 @@ public class MatchingController {
 		//병원으로 list 뽑기 
 		ArrayList<MatMatptInfo> list = mcService.getJmList(hospitalName);
 		
+		for(MatMatptInfo i : list) {
+			i.setMatAddressInfo(i.getMatAddressInfo().replace("//", " "));		
+		}
+		
+		
+		
 		
 		//loginUser가 그룹에 참여중인지 아닌지 확인 => view 표시용
 		//loginUser-MatNo get
@@ -481,6 +487,8 @@ public class MatchingController {
 		//get matching & ptinfo
 		MatMatptInfo jmMatMatptInfo = mcService.getMatMatptInfo(matNo);
 		
+		jmMatMatptInfo.setMatAddressInfo(jmMatMatptInfo.getMatAddressInfo().replace("//", " "));
+				
 		//MatNo로 get 공동간병 Patient
 		ArrayList<Patient> jmPts = mcService.getPatientToMatNo(matNo);
 		
@@ -490,7 +498,7 @@ public class MatchingController {
 				
 		//공동간병 Patient에 member info set
 		for(Patient jmPt : jmPts) {
-			
+					
 			//get member info (대분류 : 소분류)
 			ArrayList<InfoCategory> jmPtInfos =  mcService.getInfo(jmPt.getPtNo());
 			
@@ -1334,7 +1342,30 @@ public class MatchingController {
 			}
 		}
 		
-	
+		
+		//공동간병방 찾기
+		//pt,metpt, mat 찾고
+		//간병인이 있는 경우 와 없는 경우??
+				
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 		
 		System.out.println(matInfo);

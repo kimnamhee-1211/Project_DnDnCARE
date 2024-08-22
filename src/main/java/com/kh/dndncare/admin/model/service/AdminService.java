@@ -39,6 +39,13 @@ public interface AdminService {
 
 	int updateCareInformation(Board b);
 
+	ArrayList<Board> selectCaregiverBoardList(PageInfo cpi);
+
+	ArrayList<Board> selectPatientBoardList(PageInfo ppi);
+
+	int getCaregiverListCount();
+
+	int getPatientListCount();
 	ArrayList<Pay> selectPayDeposit(String type);
 	int getMembersListCount();
 
@@ -57,6 +64,10 @@ public interface AdminService {
 	String getMemberAge(int memberNo);
 
 	ArrayList<HashMap<String, Object>> getEnrollCount(HashMap<String, Integer> map);
+
+	int insertAnnouncement(Board b);
+
+	int updateAdminBoardStatus(int boardNo, String boardStatus);
 
 
 

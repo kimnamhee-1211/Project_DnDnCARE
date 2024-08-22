@@ -67,7 +67,7 @@
 					<table>
 	                    <tr>
 	                        <td><button class="custom-btn btn-14" onclick="location.href='myInfo.me'">내 정보</button></td>
-	                        <td><button class="custom-btn btn-14" id="careInformation">간병 정보</button></td>
+	                        <td><button class="custom-btn btn-14" id="careInformation">간병 백과</button></td>
 	                        <td><button class="custom-btn btn-14" onclick="location.href='communityBoardList.bo'">커뮤니티</button></td>
 	                    </tr>
 	                </table>
@@ -79,8 +79,8 @@
 			<div><!-- 오른쪽 공백 --></div>
 		</div>
 		
-	    <br/><br/>
-	
+	    <br/><br/><br/><br/><br/>
+	    
 	    <!-- 아래쪽 컨텐츠-->
 	    <div id="underContents">
 	        <div><!--왼쪽 공백--></div>
@@ -98,7 +98,7 @@
 	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님과의 매칭을 원하는 분들이 있습니다.</th>
 	                    </tr>
 	                </thead>
-	                <tbody>
+	                <tbody th:if=${!requestMatPt.empty}>
 	                    <tr class="align-middle text-center" th:each="matPt : ${requestMatPt}">
 	                    	<td style="display:none" th:text="${matPt.matNo}"></td>
 	                        <td colspan="4" th:if="${matPt.ptCount == 1}">
@@ -112,6 +112,13 @@
 	                        </td>
 	                        <td><button class="btn btn-success workInfo two">정보보기</button></td>
 	                    </tr>
+	                </tbody>
+	                <tbody th:if=${requestMatPt.empty}>
+	                	<tr>
+	                		<th>	                	
+	                			<img class="m-3" th:src="@{/image/peopleicon.png}" width="450px" height="500px"/>
+	                		</th>
+	                	</tr>
 	                </tbody>
 	            </table>
 	        </div>
@@ -311,7 +318,7 @@
 		</div>     
    	 </div>
     
-    <div class="m-5"></div>
+     <br><br><br><br>
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     

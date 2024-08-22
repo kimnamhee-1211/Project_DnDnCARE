@@ -286,6 +286,14 @@ input {
 	width:26px; height:27px;
 }
 
+.btn-icon-star-one{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 167px 167px;
+	padding:0px;
+	margin-left:0px;
+	background-repeat: no-repeat;	
+}
+
 
 
 
