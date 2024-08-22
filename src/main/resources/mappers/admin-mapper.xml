@@ -179,6 +179,7 @@
 		where member_category = 'P' or (member_category='A' and category_no = 0)
 		order by board_no desc
 	</select>
+	
 	<!-- 간병인커뮤니티 페이지네이션 -->
 	<select id="getCaregiverListCount" resultType="_int">
 		select count(*)
@@ -210,5 +211,74 @@
 		update board
 		set board_status = #{boardStatus}
 		where board_no=#{boardNo}
+	</update>
+	
+	<!-- 게시물 검색 -->
+	<select id="adminSearchBoard" resultType="Board">
+		select *
+	    from board b
+	        join member m on(m.member_no=b.member_no)
+	    where 
+	        <if test="searchType != null and searchType=='boardTitle'">
+				b.board_Title like '%' || #{searchText} || '%'
+			</if>
+	         <if test="searchType != null and searchType=='boardContent'">
+	         	b.board_Content like '%' || #{searchText} || '%'
+	         </if>
+	         <if test= "searchType != null and searchType=='memberNickName'">
+	         	m.member_NickName like '%' || #{searchText} || '%'
+	   		</if>
+	    order by b.board_no desc
+	</select>
+	
+	<!-- 검색 게시물 갯수 -->
+	<select id="getSearchListCountAll" parameterType="map" resultType="int">
+        select count(*)
+        from board b
+            join member m on m.member_no = b.member_no
+       where 
+	        <if test="searchType != null and searchType=='boardTitle'">
+				b.board_Title like '%' || #{searchText} || '%'
+			</if>
+	         <if test="searchType != null and searchType=='boardContent'">
+	         	b.board_Content like '%' || #{searchText} || '%'
+	         </if>
+	         <if test= "searchType != null and searchType=='memberNickName'">
+	         	m.member_NickName like '%' || #{searchText} || '%'
+	   		</if>
+	    order by b.board_no desc
+    </select>
+    
+    <!-- 게시글 상세조회 -->
+    <select id="adminSelectBoard" resultType="Board">
+    	select *
+    	from board b
+    		join b_category c on(c.category_no=b.category_no)
+		     join member m on(m.member_no=b.member_no)
+			 join area a on(b.area_no=a.area_no)  
+    	where board_no = #{bNo}
+    </select>
+    
+    <!-- 댓글 조회 -->
+    <select id="adminSelectReply" resultType="Reply">
+    	select *
+    	from reply
+    		join member using(member_no)
+    	where ref_board_no = #{bNo}
+    	order by reply_no desc 
+    </select>
+    
+    <!-- 게시글 삭제 -->
+	<update id="adminDeleteBoard">
+		update board
+		set board_status = 'N'
+		where board_no = #{boardNo}
+	</update>
+	
+	<!-- 댓글 삭제 -->
+	<update id="adminDeleteReply">
+		update reply
+		set reply_status = 'N'
+		where reply_no = #{rNo}
 	</update>
 </mapper>

@@ -63,15 +63,17 @@
     }
     
     #boardLike:hover, #updateBoardForm:hover, #replySubmit:hover {
-      background-color: #1E5F74; 
-      color: white; 
-      border-color: black; 
+    	font-weight:bold;
+        background-color: #1E5F74; 
+        color: white; 
+        border-color: white; 
     }
     
     #deleteModal:hover{
+    	font-weight:bold;
     	background-color: #FCDAB7;
-    	color: black;
-    	border-color:black
+    	color: white;
+    	border-color:white
     }
 
 	
@@ -433,9 +435,11 @@
 			},
 			error: data => console.log(data)
 		});
-	}else if(targetSVG.className.baseVal.includes('brightness')){
-		alert('신고되었습니다.')
-	}else if(targetSVG.className.baseVal.includes('eraser')){
+	}
+	//else if(targetSVG.className.baseVal.includes('brightness')){
+	//	alert('신고되었습니다.')
+	//}
+	else if(targetSVG.className.baseVal.includes('eraser')){
 	if(confirm('정말 삭제하시겠습니까?')){
 		$.ajax({
 			url: 'deleteReply.bo',

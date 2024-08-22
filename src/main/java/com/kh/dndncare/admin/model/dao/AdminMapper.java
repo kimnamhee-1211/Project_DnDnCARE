@@ -11,6 +11,7 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.Member;
 
@@ -73,6 +74,18 @@ public interface AdminMapper {
 	int insertAnnouncement(Board b);
 
 	int updateAdminBoardStatus(@Param("boardNo") int boardNo, @Param("boardStatus") String boardStatus);
+
+	ArrayList<Board> adminSearchBoard(@Param("searchType") String searchType, @Param("searchText") String searchText);
+
+	int getSearchListCountAll(@Param("searchType") String searchType, @Param("searchText") String searchText);
+
+	Board adminSelectBoard(int bNo);
+
+	ArrayList<Reply> adminSelectReply(int bNo);
+
+	int adminDeleteBoard(int boardNo);
+
+	int adminDeleteReply(int rNo);
 
 
 }
