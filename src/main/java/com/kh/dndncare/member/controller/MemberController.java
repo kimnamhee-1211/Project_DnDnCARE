@@ -1874,7 +1874,7 @@ public class MemberController {
 					break;
 				}
 			}
-
+			
 			// 서비스, 공동간병, 지역, 성별, 연령, 비용에 대하여 검색한 매칭번호를 조회한다.
 			// 검색 조건이 없는 경우 mapper에게 List를 전달하지 않을 것
 			HashMap<String, Object> searchDefaultMap = new HashMap<String, Object>();
@@ -1891,10 +1891,21 @@ public class MemberController {
 			if (cost.length() > 0)
 				searchDefaultMap.put("cost", cost);
 
-			ArrayList<HashMap<String, Integer>> searchDefaultMatNoList = mService
-					.searchDefaultMatNoList(searchDefaultMap);
+			ArrayList<HashMap<String, Integer>> searchDefaultMatNoList = mService.searchDefaultMatNoList(searchDefaultMap);
 			// 만약, 검색조건 중 위에서의 검색조건이 없었다면 MAT_CONFIRM = 'N'인 매칭번호들이 조회된다!
-
+			
+			
+			///////////////////////////////////////////////
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			// searchDefaultMatNoList 에서 시간제와 기간제를 구분한다.
 			ArrayList<Integer> termMatNoList = new ArrayList<Integer>();
 			ArrayList<Integer> timeMatNoList = new ArrayList<Integer>();
@@ -1906,7 +1917,21 @@ public class MemberController {
 					timeMatNoList.add(Integer.parseInt(String.valueOf(m.get("MAT_NO"))));
 				}
 			}
-
+			
+			
+			System.out.println("\n===========================\n");
+			
+			System.out.println(termMatNoList);
+			System.out.println(timeMatNoList);
+			
+			System.out.println("\n===========================\n");
+			
+			
+			
+			
+			
+			
+			
 			// 기간 검색조건을 가공한다.
 			HashMap<String, Object> termMap = new HashMap<String, Object>();
 			ArrayList<Integer> searchTermMatNoList = new ArrayList<Integer>();
@@ -1967,72 +1992,7 @@ public class MemberController {
 			// {MAT_NO=1, CATEGORY_NO=63}, {MAT_NO=1, CATEGORY_NO=29},
 			// {MAT_NO=1, CATEGORY_NO=28}, {MAT_NO=1, CATEGORY_NO=24}, {MAT_NO=1,
 			// CATEGORY_NO=23}, {MAT_NO=1, CATEGORY_NO=63}, {MAT_NO=1, CATEGORY_NO=62},
-			// {MAT_NO=1, CATEGORY_NO=3}, {MAT_NO=1, CATEGORY_NO=21}, {MAT_NO=1,
-			// CATEGORY_NO=22}, {MAT_NO=1, CATEGORY_NO=23}, {MAT_NO=1, CATEGORY_NO=24},
-			// {MAT_NO=1, CATEGORY_NO=25}, {MAT_NO=1, CATEGORY_NO=26}, {MAT_NO=1,
-			// CATEGORY_NO=27}, {MAT_NO=1, CATEGORY_NO=28}, {MAT_NO=1, CATEGORY_NO=29},
-			// {MAT_NO=1, CATEGORY_NO=30}, {MAT_NO=1, CATEGORY_NO=61}, {MAT_NO=30,
-			// CATEGORY_NO=24}, {MAT_NO=30, CATEGORY_NO=28}, {MAT_NO=30, CATEGORY_NO=23},
-			// {MAT_NO=30, CATEGORY_NO=29}, {MAT_NO=30, CATEGORY_NO=22}, {MAT_NO=30,
-			// CATEGORY_NO=61}, {MAT_NO=30, CATEGORY_NO=23}, {MAT_NO=30, CATEGORY_NO=63},
-			// {MAT_NO=46, CATEGORY_NO=41}, {MAT_NO=46, CATEGORY_NO=21}, {MAT_NO=46,
-			// CATEGORY_NO=22}, {MAT_NO=46, CATEGORY_NO=23}, {MAT_NO=46, CATEGORY_NO=24},
-			// {MAT_NO=46, CATEGORY_NO=27}, {MAT_NO=46, CATEGORY_NO=28}, {MAT_NO=46,
-			// CATEGORY_NO=31}, {MAT_NO=46, CATEGORY_NO=32}, {MAT_NO=46, CATEGORY_NO=63},
-			// {MAT_NO=46, CATEGORY_NO=62}, {MAT_NO=46, CATEGORY_NO=61}, {MAT_NO=46,
-			// CATEGORY_NO=40}, {MAT_NO=46, CATEGORY_NO=1}, {MAT_NO=47, CATEGORY_NO=41},
-			// {MAT_NO=47, CATEGORY_NO=21}, {MAT_NO=47, CATEGORY_NO=22}, {MAT_NO=47,
-			// CATEGORY_NO=23}, {MAT_NO=47, CATEGORY_NO=24}, {MAT_NO=47, CATEGORY_NO=27},
-			// {MAT_NO=47, CATEGORY_NO=28}, {MAT_NO=47, CATEGORY_NO=31}, {MAT_NO=47,
-			// CATEGORY_NO=32}, {MAT_NO=47, CATEGORY_NO=63}, {MAT_NO=47, CATEGORY_NO=62},
-			// {MAT_NO=47, CATEGORY_NO=61}, {MAT_NO=47, CATEGORY_NO=40}, {MAT_NO=47,
-			// CATEGORY_NO=1}, {MAT_NO=49, CATEGORY_NO=41}, {MAT_NO=49, CATEGORY_NO=21},
-			// {MAT_NO=49, CATEGORY_NO=22}, {MAT_NO=49, CATEGORY_NO=23}, {MAT_NO=49,
-			// CATEGORY_NO=24}, {MAT_NO=49, CATEGORY_NO=27}, {MAT_NO=49, CATEGORY_NO=28},
-			// {MAT_NO=49, CATEGORY_NO=31}, {MAT_NO=49, CATEGORY_NO=32}, {MAT_NO=49,
-			// CATEGORY_NO=63}, {MAT_NO=49, CATEGORY_NO=62}, {MAT_NO=49, CATEGORY_NO=61},
-			// {MAT_NO=49, CATEGORY_NO=40}, {MAT_NO=49, CATEGORY_NO=1}, {MAT_NO=52,
-			// CATEGORY_NO=41}, {MAT_NO=52, CATEGORY_NO=21}, {MAT_NO=52, CATEGORY_NO=22},
-			// {MAT_NO=52, CATEGORY_NO=23}, {MAT_NO=52, CATEGORY_NO=24}, {MAT_NO=52,
-			// CATEGORY_NO=27}, {MAT_NO=52, CATEGORY_NO=28}, {MAT_NO=52, CATEGORY_NO=31},
-			// {MAT_NO=52, CATEGORY_NO=32}, {MAT_NO=52, CATEGORY_NO=63}, {MAT_NO=52,
-			// CATEGORY_NO=62}, {MAT_NO=52, CATEGORY_NO=61}, {MAT_NO=52, CATEGORY_NO=40},
-			// {MAT_NO=52, CATEGORY_NO=1}, {MAT_NO=54, CATEGORY_NO=27}, {MAT_NO=54,
-			// CATEGORY_NO=26}, {MAT_NO=54, CATEGORY_NO=24}, {MAT_NO=54, CATEGORY_NO=21},
-			// {MAT_NO=54, CATEGORY_NO=63}, {MAT_NO=54, CATEGORY_NO=2}, {MAT_NO=54,
-			// CATEGORY_NO=1}, {MAT_NO=55, CATEGORY_NO=27}, {MAT_NO=55, CATEGORY_NO=26},
-			// {MAT_NO=55, CATEGORY_NO=24}, {MAT_NO=55, CATEGORY_NO=21}, {MAT_NO=55,
-			// CATEGORY_NO=63}, {MAT_NO=55, CATEGORY_NO=2}, {MAT_NO=55, CATEGORY_NO=1},
-			// {MAT_NO=61, CATEGORY_NO=41}, {MAT_NO=61, CATEGORY_NO=21}, {MAT_NO=61,
-			// CATEGORY_NO=22}, {MAT_NO=61, CATEGORY_NO=23}, {MAT_NO=61, CATEGORY_NO=24},
-			// {MAT_NO=61, CATEGORY_NO=27}, {MAT_NO=61, CATEGORY_NO=28}, {MAT_NO=61,
-			// CATEGORY_NO=31}, {MAT_NO=61, CATEGORY_NO=32}, {MAT_NO=61, CATEGORY_NO=63},
-			// {MAT_NO=61, CATEGORY_NO=62}, {MAT_NO=61, CATEGORY_NO=61}, {MAT_NO=61,
-			// CATEGORY_NO=40}, {MAT_NO=61, CATEGORY_NO=1}, {MAT_NO=64, CATEGORY_NO=41},
-			// {MAT_NO=64, CATEGORY_NO=21}, {MAT_NO=64, CATEGORY_NO=22}, {MAT_NO=64,
-			// CATEGORY_NO=23}, {MAT_NO=64, CATEGORY_NO=24}, {MAT_NO=64, CATEGORY_NO=27},
-			// {MAT_NO=64, CATEGORY_NO=28}, {MAT_NO=64, CATEGORY_NO=31}, {MAT_NO=64,
-			// CATEGORY_NO=32}, {MAT_NO=64, CATEGORY_NO=63}, {MAT_NO=64, CATEGORY_NO=62},
-			// {MAT_NO=64, CATEGORY_NO=61}, {MAT_NO=64, CATEGORY_NO=40}, {MAT_NO=64,
-			// CATEGORY_NO=1}, {MAT_NO=70, CATEGORY_NO=41}, {MAT_NO=70, CATEGORY_NO=21},
-			// {MAT_NO=70, CATEGORY_NO=22}, {MAT_NO=70, CATEGORY_NO=23}, {MAT_NO=70,
-			// CATEGORY_NO=24}, {MAT_NO=70, CATEGORY_NO=27}, {MAT_NO=70, CATEGORY_NO=28},
-			// {MAT_NO=70, CATEGORY_NO=31}, {MAT_NO=70, CATEGORY_NO=32}, {MAT_NO=70,
-			// CATEGORY_NO=63}, {MAT_NO=70, CATEGORY_NO=62}, {MAT_NO=70, CATEGORY_NO=61},
-			// {MAT_NO=70, CATEGORY_NO=40}, {MAT_NO=70, CATEGORY_NO=1}, {MAT_NO=71,
-			// CATEGORY_NO=41}, {MAT_NO=71, CATEGORY_NO=21}, {MAT_NO=71, CATEGORY_NO=22},
-			// {MAT_NO=71, CATEGORY_NO=23}, {MAT_NO=71, CATEGORY_NO=24}, {MAT_NO=71,
-			// CATEGORY_NO=27}, {MAT_NO=71, CATEGORY_NO=28}, {MAT_NO=71, CATEGORY_NO=31},
-			// {MAT_NO=71, CATEGORY_NO=32}, {MAT_NO=71, CATEGORY_NO=63}, {MAT_NO=71,
-			// CATEGORY_NO=62}, {MAT_NO=71, CATEGORY_NO=61}, {MAT_NO=71, CATEGORY_NO=40},
-			// {MAT_NO=71, CATEGORY_NO=1}, {MAT_NO=72, CATEGORY_NO=23}, {MAT_NO=72,
-			// CATEGORY_NO=24}, {MAT_NO=72, CATEGORY_NO=28}, {MAT_NO=72, CATEGORY_NO=63},
-			// {MAT_NO=72, CATEGORY_NO=62}, {MAT_NO=72, CATEGORY_NO=40}, {MAT_NO=72,
-			// CATEGORY_NO=1}, {MAT_NO=72, CATEGORY_NO=2}, {MAT_NO=72, CATEGORY_NO=3},
-			// {MAT_NO=73, CATEGORY_NO=23}, {MAT_NO=73, CATEGORY_NO=24}, {MAT_NO=73,
-			// CATEGORY_NO=28}, {MAT_NO=73, CATEGORY_NO=63}, {MAT_NO=73, CATEGORY_NO=62},
-			// {MAT_NO=73, CATEGORY_NO=40}, {MAT_NO=73, CATEGORY_NO=1}, {MAT_NO=73,
-			// CATEGORY_NO=2}, {MAT_NO=73, CATEGORY_NO=3}]
+			
 
 			// 질병과 중증도, 거동 검색 조건을 가져온다
 			String disease = map.get("disease"); // 질병에 대한 검색조건
@@ -2146,7 +2106,7 @@ public class MemberController {
 			HttpSession session, Model model) {
 		// 자동추천 목록 받아오기
 		Member loginUser = (Member) session.getAttribute("loginUser");
-		System.out.println("소셜로그인 확인 " + loginUser);
+		//System.out.println("소셜로그인 확인 " + loginUser);
 		int memberNo = 0;
 		if (loginUser != null) {
 			memberNo = loginUser.getMemberNo();
@@ -2465,11 +2425,6 @@ public class MemberController {
 			} // 조건에 따른 간병인의 회원번호 추출 완료! resultCaregiverNoList
 
 			
-			System.out.println("======resultCaregiverNoList(시작)=====");
-			System.out.println(resultCaregiverNoList);
-			System.out.println("======resultCaregiverNoList(끝)=====");
-			
-			
 			int listCount = resultCaregiverNoList.size();
 			PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 8);
 			ArrayList<CareGiver> cList = mService.searchCaregiverList(pi, resultCaregiverNoList);
@@ -2509,11 +2464,11 @@ public class MemberController {
 
 		p.setMemberNo(loginUser.getMemberNo());
 
-		System.out.println(memInfo);
+		//System.out.println(memInfo);
 		int result = mService.updatePatient(p); // 환자정보바꾸기
 
 		int result2 = mService.deleteMemberInfo(loginUser.getMemberNo()); // 환자인포정보 한번 다 지우기
-		System.out.println(result2);
+		//System.out.println(result2);
 		if (!memInfo.equals("fail")) {
 
 			String[] mis = memInfo.split(",");
@@ -2523,7 +2478,7 @@ public class MemberController {
 				info.put("memberNo", loginUser.getMemberNo());
 				info.put("categoryNo", Integer.parseInt(mi));
 				int result3 = mService.insertMemberInfo(info);
-				System.out.println(result3);
+				//System.out.println(result3);
 			}
 
 		}
@@ -2560,7 +2515,7 @@ public class MemberController {
 
 		}
 		Member m2 = mService.login(loginUser);
-		System.out.println("q변경ㅎ두절ㅇ" + m2);
+		//System.out.println("q변경ㅎ두절ㅇ" + m2);
 		// session.setAttribute("loginUser", m2);
 		model.addAttribute("loginUser", mService.login(m2));
 		return "redirect:home.do";
@@ -3138,7 +3093,7 @@ public class MemberController {
 		m.setMemberId(loginUser.getMemberId());
 		m.setMemberNo(loginUser.getMemberNo());
 
-		System.out.println(m);
+		//System.out.println(m);
 
 		int result = mService.updateMember(m);
 
