@@ -50,12 +50,12 @@
 				    		<p class="info">성별</p>
 							<div class="form-floating mb-2">
 								<div class="form-check form-check-inline">
-								  <input class="form-check-input" type="radio" name="memberGender" id="menInput" th:value="M" th:checked="${session.loginUser.memberGender == 'M'}">
-								  <label class="form-check-label" for="menInput">남성</label>
+								  <input class="btn-check" type="radio" name="memberGender" id="menInput" th:value="M" th:checked="${session.loginUser.memberGender == 'M'}">
+								  <label class="btn-outline" for="menInput">남성</label>
 								</div>
 								<div class="form-check form-check-inline">
-								  <input class="form-check-input" type="radio" name="memberGender" id="womenInput" th:value="F" th:checked="${session.loginUser.memberGender == 'F'}">
-								  <label class="form-check-label" for="womenInput">여성</label>
+								  <input class="btn-check" type="radio" name="memberGender" id="womenInput" th:value="F" th:checked="${session.loginUser.memberGender == 'F'}">
+								  <label class="btn-outline" for="womenInput">여성</label>
 								</div>
 							</div>
 			    		</div>
@@ -63,12 +63,12 @@
 			    			<p class="info">국적</p>
 							<div class="form-floating mb-5">
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="memberNational" id="national1Input" th:value="내국인" th:checked="${session.loginUser.memberNational == '내국인'}">
-									<label class="form-check-label" for="menInput">내국인</label>
+									<input class="btn-check" type="radio" name="memberNational" id="national1Input" th:value="내국인" th:checked="${session.loginUser.memberNational == '내국인'}">
+									<label class="btn-outline" for="menInput">내국인</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="memberNational" th:value="외국인" th:checked="${session.loginUser.memberNational == '외국인'}">
-									<label class="form-check-label" for="menInput">외국인</label>
+									<input class="btn-check" type="radio" name="memberNational" th:value="외국인" th:checked="${session.loginUser.memberNational == '외국인'}">
+									<label class="btn-outline" for="menInput">외국인</label>
 								</div>
 							</div>
 			    		</div>
@@ -88,10 +88,10 @@
 							</div>
 			    		</div>
 			    		<div class="m-3" style="width:500px">
-			    			<p class="info">주소를 입력해주세요.</p>
+			    			<p class="info ">주소를 입력해주세요.</p>
 							<p style="font-size:16px" class="info">주소는 반드시 도로명 주소를 선택/입력해주세요.</p>
 							<div class="form-floating mb-1" >
-								<button type="button" onclick="sample4_execDaumPostcode()"  style="border:none; background:#8dd986;color:white;">주소 검색</button>
+								<button type="button"class="btn-outline" onclick="sample4_execDaumPostcode()"  >주소 검색</button>
 							</div> 
 							<div class="form-floating mb-1" >
 		   						<input type="text" class="form-control w-25" id="sample4_postcode" name="postcode" th:value="${session.loginUser.memberAddress.split('//')[0]}">
@@ -143,6 +143,39 @@
 		</div><!-- 컨테이너 끝 -->
 	</form>
 	<script>
+	
+	
+	//닉네임 검사
+	function nickNameCheck(){   		
+  		if(nickNameInput != null){
+  			const nickNameInputVal = nickNameInput.value;
+  			let isValid = false;
+  			if(nickNameInputVal.trim() != ''){
+          		$.ajax({
+          			url : ' nickNameCheck.me',
+          			type : 'post',
+          			data : {nickName : nickNameInputVal},
+          			success : (data) =>{
+          				console.log(data)
+          				if(data == 'usable'){
+          					nickNameInputLavel.innerText = "사용 가능한 별명(닉네임)";
+          					nickNameInputLavel.style.color="green"
+          				}else{
+          					nickNameInputLavel.innerText = "사용할 수 없는 별명(닉네임)입니다.";
+          					nickNameInputLavel.style.color="red"
+  						}
+          			},
+          			error: data => console.log(data)
+          		});
+  			}
+  		}	   		
+  	}
+	    
+  	if(nickNameInput != null){
+  		nickNameInput.addEventListener('focusout', nickNameCheck);	
+  	}		
+
+	
 	//주소검색 api
 	function sample4_execDaumPostcode() {
     	new daum.Postcode({

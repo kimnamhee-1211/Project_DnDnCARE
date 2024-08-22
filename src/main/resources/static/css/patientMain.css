@@ -352,3 +352,18 @@ a {
 	border-top:2px solid #1E5F74;
 	padding:24px;
 }
+
+/*남희님 css 훔치기*/
+.btn-outline {	
+	color: #1D2D50;
+	border: 2px solid #1D2D50;
+	width: 190px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
+
+.btn-outline:hover, .btn-outline:focus{
+	color: white;
+	background: #1D2D50;
+}

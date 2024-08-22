@@ -129,3 +129,19 @@ body {
 	font-weight:bold;
 	
 }
+
+/*남희님 css 훔치기*/
+.btn-outline {	
+	background: white;
+	color: #1D2D50;
+	border: 2px solid #1D2D50;
+	width: 190px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
+
+.btn-outline:hover, .btn-outline:focus{
+	color: white;
+	background: #1D2D50;
+}

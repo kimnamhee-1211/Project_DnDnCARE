@@ -2134,6 +2134,8 @@ public class MemberController {
 
 		System.out.println(memInfo);
 		int result = mService.updatePatient(p); // 환자정보바꾸기
+		
+		System.out.println("환자정보 확인하기!!!!!!!!!!!!" + p);
 
 		int result2 = mService.deleteMemberInfo(loginUser.getMemberNo()); // 환자인포정보 한번 다 지우기
 		System.out.println(result2);
@@ -2535,9 +2537,11 @@ public class MemberController {
 		}
 		
 		JSONArray array = new JSONArray();
-		
+		System.out.println("여기까지되나 확인하기 ============");
 		if(!eList.isEmpty()) {
+			System.out.println("eList가 비어있는지 확인하기. 나오면 안비어있음" + eList);
 			for(CalendarEvent c : eList) {
+				
 				for(Member m : mList) {
 					int matNo = c.getMatNo();
 					int caregiverNo = c.getCareGiverNo();
@@ -2547,6 +2551,7 @@ public class MemberController {
 					String matAddressInfo = c.getMatAddressInfo();
 					Date beginDate = c.getBeginDt();
 					Date endDate = c.getEndDt();
+					System.out.println("종규명훈 c.getMatMOde찍기" + c.getMatMode());
 					
 					if(c.getPtCount() == 1) {
 						if(c.getMatMode() == 1) {
@@ -2591,7 +2596,9 @@ public class MemberController {
 							}
 						}
 					} else {
+						System.out.println("종규아이디 실행되나 확인하기1");
 						if(c.getMatMode() == 1) {
+							System.out.println("종규아이디 실행되나 확인하기2");
 							JSONObject obj = new JSONObject();
 							obj.put("title", "공동 기간제 간병");
 							obj.put("start", c.getBeginDt());
@@ -2610,6 +2617,7 @@ public class MemberController {
 							}
 							array.put(obj);
 						} else {
+							
 							String[] strArr = c.getMatDate().split(",");
 							for(int i = 0; i < strArr.length; i++) {
 								JSONObject obj = new JSONObject();
@@ -2634,6 +2642,7 @@ public class MemberController {
 					}
 				}
 			}
+			System.out.println("명훈님꺼 확인하기 " + array.toString());
 			return array.toString();
 		} else {
 			return null;

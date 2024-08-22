@@ -136,9 +136,9 @@ body {
 	width:160px;
 	border:1px solid #1E5F74;
 	padding:5px;
-	margin:8px;
 	background:white;
 	cursor: pointer;
+	text-align: center;
 }
 
 
@@ -148,7 +148,7 @@ body {
 	border:1px solid #1E5F74;
 	padding:2px;
 	background:white;
-	
+	margin:8px;
 }
 
 .btn-outline-maincolor:hover{
@@ -161,7 +161,7 @@ body {
 }
 
 /*켈린더*/
-.fc{max-width:415px !important; min-height:330px !important; }
+.fc{max-width:550px !important; min-height:330px !important; }
 
 .btn-maincolor{
 	color:white;
@@ -171,10 +171,14 @@ body {
 	background:#1E5F74;
 	cursor: pointer;
 	width:160px;
+	text-align:center;
 }
 
 .myInfo-title{
-	border-bottom:2px solid #1E5F74;
+	background: #133B5C 25%;
+	width:400px;
+	color:white !important;
+	padding:6px;
 }
 
 .reviewDetail{
@@ -200,7 +204,7 @@ body {
 	background:white;
 	border:1px solid #1E5F74;
 	border-radius:5px;
-	z-index:1;
+	z-index1;
 }
 
 .select-hidden{
@@ -281,4 +285,42 @@ body {
 	margin-left:0px;
 	margin-right:-1.5px;
 	background-repeat: no-repeat;
+}
+
+/*남희님 css 훔치기*/
+.btn-outline {	
+	background: white;
+	color: #1D2D50;
+	border: 2px solid #1D2D50;
+	width: 190px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
+
+.btn-outline:hover, .btn-outline:focus{
+	color: white;
+	background: #1D2D50;
+}
+
+/* .btn-check가 체크된 상태에서 .btn-outline 스타일 */
+.btn-check:checked + .btn-outline {
+	color: white;
+	background: #1D2D50;
+}
+
+.title-info{
+	background:#FCDAB7;
+}
+
+table th{
+	font-size:20px;
+	padding:8px;
+	border-right:1px solid lightgray;
+	border-top:6px solid white;
+	border-bottom:6px solid white;
+}
+
+input{
+	border: 0px;
 }
