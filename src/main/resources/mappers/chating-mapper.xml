@@ -59,7 +59,7 @@
 			select seq_chat_message.nextval from dual
 		</selectKey>
         INSERT INTO chat_room_message (chat_massage_no, chat_room_no, member_no, chat_content, read_count, write_date)
-        VALUES (#{chatMassageNo}, #{chatRoomNo}, #{memberNo}, #{chatContent}, #{readCount}, sysdate)
+        VALUES (#{chatMassageNo}, #{chatRoomNo}, #{memberNo}, #{chatContent}, #{readCount} + 1, sysdate)
     </insert>
 
     <select id="getMessagesByChatRoomNo" parameterType="int" resultType="ChatingRoomMessage">
@@ -93,8 +93,9 @@
     
     <!-- 읽음표시 -->
    <select id="getParticipantCount" resultType="int">
-        SELECT COUNT(*) 
-        FROM chat_room_member 
+        SELECT pt_count 
+        FROM chat_room
+        	join matching using(mat_no) 
         WHERE chat_room_no = #{chatRoomNo}
     </select>
 
@@ -112,17 +113,35 @@
         WHERE chat_massage_no = #{messageId}
     </select>
     
-    <update id="markMessagesAsRead">
-        UPDATE chat_room_message
-        SET read_count = (
-            SELECT COUNT(*) 
-            FROM chat_room_member 
-            WHERE chat_room_no = #{chatRoomNo}
-        ) - 1
-        WHERE chat_room_no = #{chatRoomNo}
-        AND member_no != #{memberNo}
-        AND read_count > 0
-    </update>
+	<update id="markMessagesAsRead">
+	    UPDATE chat_room_message
+	    SET read_count = read_count - 1
+	    WHERE chat_room_no = #{chatRoomNo}
+	      AND member_no != #{memberNo}
+	      AND read_count > 0
+	      AND chat_massage_no NOT IN (
+	          SELECT chat_massage_no
+	          FROM chat_room_message
+	          WHERE chat_room_no = #{chatRoomNo}
+	            AND read_by_members LIKE '%,' || #{memberNo} || ',%'
+	      )
+	</update>
+	
+	<update id="updateReadByMembers">
+	    UPDATE chat_room_message
+	    SET read_by_members = read_by_members || #{memberNo} || ','
+	    WHERE chat_room_no = #{chatRoomNo}
+	      AND member_no != #{memberNo}
+	      AND read_count > 0
+	      AND read_by_members NOT LIKE '%,' || #{memberNo} || ',%'
+	</update>
+	
+	<select id="getRemainingReadCount" resultType="int">
+	    SELECT read_count
+	    FROM chat_room_message
+	    WHERE chat_room_no = #{chatRoomNo}
+	    AND chat_massage_no = #{chatMessageNo}
+	</select>
     
     <select id="getUnreadMessages" resultType="ChatingRoomMessage">
         SELECT * 
@@ -138,14 +157,14 @@
     </insert>
 
     
-      <update id="markAsReadAndGetUpdatedMessages">
-        UPDATE chat_room_message
-        SET read_count = read_count - 1
-        WHERE chat_room_no = #{chatRoomNo}
-          AND member_no != #{memberNo}
-          AND read_count > 0
-        RETURNING chat_massage_no
-    </update>
+	<!-- <update id="markAsReadAndGetUpdatedMessages">
+	    UPDATE chat_room_message
+	    SET read_count = GREATEST(read_count - 1, 0)
+	    WHERE chat_room_no = #{chatRoomNo}
+	      AND member_no != #{memberNo}
+	      AND read_count > 0
+	    RETURNING chat_massage_no
+	</update> -->
 
     <select id="getMessageReadCounts" resultType="map">
         SELECT chat_massage_no, read_count
@@ -182,6 +201,13 @@
     	select count(CHAT_MASSAGE_NO)
 		from chat_room_message
 		where chat_room_no = #{finalChatRoomNo}
+    </select>
+    
+    <select id="getAlreadyChatRoomNo" resultType="_int">
+    	select NVL(MAX(chat_room_no), -1) as chat_room_no
+		from chat_room
+		    join chat_room_member using(chat_room_no)
+		where mat_no = #{matNo} and member_no in(#{memberNo},#{relatedMemberNo})
     </select>
 	
 </mapper>
