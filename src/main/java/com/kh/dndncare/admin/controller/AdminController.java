@@ -985,9 +985,13 @@ public class AdminController {
 		        System.out.println("확인해보자" + labels[0]);
 		        map.put("labels", labels);
 		        
-		        int[] datas1 = new int[month2-month1+1];
-		        int[] datas2 = new int[month2-month1+1];
+		        int[] datas1 = new int[labels.length];
+		        int[] datas2 = new int[labels.length];
 		        
+		        
+		        System.out.println("확인해보자" + labels.length);
+		        System.out.println("확인해보자" + datas1.length);
+		        System.out.println("확인해보자" + datas2.length);
 		        for(Pay p : psDp) {
 		        	if(p.getPayService().equals("가정돌봄")){
 		        		for(int i = 0; i < labels.length ; i++) {
