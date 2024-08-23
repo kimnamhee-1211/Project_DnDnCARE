@@ -232,33 +232,41 @@
 							<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 							<script>
 							
-								//종규 삽입
-						    	
-						    	function calenderEdit(){
-						    		const dateTitle = document.getElementById('fc-dom-1')
-						    		dateTitle.style.color = '#1E5F74';
-						    		dateTitle.style.fontWeight = 'bold';
-						    		
-						    		const bts = document.getElementsByClassName('fc-button');
-						    		const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
-						    		
-						    		const cala = cal.querySelectorAll('a');
-						    		for(i = 0; i< cala.length ; i++){
-						    			if(i % 7 == 0){
-						    				console.log(i);
-						    			cala[i].style.color = 'red';
-						    			}else if(i % 7 == 6){
-						    				cala[i].style.color = '#0a58ca';
-						    			}else{
-						    				if(i != 'entries' && i !='keys'){
-						    					console.log(i);
-						    				cala[i].style.color = '#1D2D50';
-						    				}
-						    			}
-						    		}
-						    	} 
-						    	
-						    	//종규 삽입 끝
+							//종규 삽입
+				            function calenderEdit(){
+				               const dateTitle = document.getElementById('fc-dom-1')
+				               dateTitle.style.color = '#1E5F74';
+				               dateTitle.style.fontWeight = 'bold';
+				               
+				               const bts = document.getElementsByClassName('fc-button');
+				               const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
+				               console.log(cal.querySelectorAll('tbody')[0]);
+				               console.log(cal.querySelectorAll('tbody')[0].querySelectorAll('td'));
+				               const cala = cal.querySelectorAll('.fc-daygrid-day-number');
+				               const calaTitle = cal.querySelectorAll('.fc-col-header-cell-cushion');
+				            	   
+				               
+				               for(i = 0; i< cala.length ; i++){
+				                  if(i % 7 == 0){
+				                  cala[i].style.color = 'red';
+				                  }else if(i % 7 == 6){
+				                     cala[i].style.color = '#0a58ca';
+				                  }else{
+				                     cala[i].style.color = '#1D2D50';
+				                  }
+				               }
+				               for(i = 0; i< calaTitle.length ; i++){
+				                   if(i % 7 == 0){
+				                   calaTitle[i].style.color = 'red';
+				                   }else if(i % 7 == 6){
+				                      calaTitle[i].style.color = '#0a58ca';
+				                   }else{
+				                      calaTitle[i].style.color = '#1D2D50';
+				                   }
+				                }
+				               
+				            } 
+				            //종규 삽입 끝
 							
 							    document.addEventListener('DOMContentLoaded', function() {
 							        var calendarEl = document.getElementById('calendar'); // full-calendar를 삽입할 요소

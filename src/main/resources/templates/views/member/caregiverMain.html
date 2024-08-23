@@ -61,7 +61,7 @@
 	                         	</th:block>	
 	                         </td>
                          </th:block>
-                         <td>[[${l.money}]] 원</td>
+                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]] 원</td>
                      </tr>
                  </tbody>
             </table>
@@ -409,7 +409,7 @@
 	    		var calendar = new FullCalendar.Calendar(calendarEl, {
 			          initialView: 'dayGridMonth',
 			          events : data,
-			          eventColor: '#8dd986',
+			          eventColor: 'skyblue',
 			          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
 			        	  let mils = info.event.start - new Date();
 			        	  let infomation = document.querySelector('.infomation').children;
@@ -502,7 +502,7 @@
 	    						td4.innerText = disease;
 	    						
 	    						const td5 = document.createElement('td');
-	    						td5.innerText = d.money + '원';
+	    						td5.innerText = d.money.toLocaleString() + '원';
 	    						
 	    						tbody.appendChild(tr);
 	    						tr.appendChild(td0);
