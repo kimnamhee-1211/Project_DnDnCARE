@@ -5,18 +5,31 @@
 <title>Insert title here</title>
 <link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+
+	<style>
+		th{
+			border-bottom:2px solid #133B5C !important;
+			border-top:2px solid #133B5C !important;
+			border-right:0px !important;
+			color: #133B5C !important;
+			font-size : 16px !important;
+			padding:2px !important;
+		}
+	</style>
+	
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	
-	<div class="container">
+	<div class="container" style="min-height:872px">
 		 <div class="row">
 			<div class="col">
 	     		<div align="center" class="myInfo-Border m-4">
-	     			<div class="m-4" style="border-bottom:2px solid #8dd986;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
+	     			<div class="m-4" style="border-bottom:2px solid #133B5C;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingHistory.me">매칭 이력</a></div>
-	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내가 쓴 후기</a></div>
+	     			<div class="h4 m-2 p-2" th:if="${session.loginUser.memberCategory == 'C'}"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내 든든지수/후기</a></div>
+	     			<div class="h4 m-2 p-2" th:unless="${session.loginUser.memberCategory == 'C'}"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내가 쓴 후기</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
 	     		</div>
 	     		<span class="m-4" style="color:gray;"><button style="background:white; border:0" onclick="location.href='deleteMemberView.me'">탈퇴하기 ▶</button></span>
@@ -24,7 +37,7 @@
 	    	
 	    	<div class="col">
 	      		<div class="row m-4" style="width:950px">
-		      		<div class="m-3 h1 menu-name">내가 쓴 게시글</div>
+		      		<div class="m-3 h1 menu-name" >내가 쓴 게시글</div>
 	      		</div>
 	      		<div class="row m-4">
 	      			<div class="m-4 col">
@@ -38,26 +51,26 @@
 	      			<div class="col m-3">
 						<div class="myInfo-Border-maincolor mt-2 mb-3">
 							<div class="m-2 d-flex justify-content-between">
-								<div class="h3 myInfo-title">내가 쓴 글</div>
+								<div class="h2 m-2" >내가 쓴 글</div>
 							</div>
       						<table class="m-2" >
-      							<tr>
-		                            <th width="8%">번호</th>
-		                            <th width="15%">카테고리</th>
-		                            <th width="40%">제목</th>
-		                            <th width="8%">추천</th>
-		                            <th width="9%">지역</th>
-		                            <th width="15%">작성일</th>
-			                        <th width="10%">조회수</th>
+      							<tr align="center">
+		                            <th width="80">번호</th>
+		                            <th width="100">카테고리</th>
+		                            <th width="320">제목</th>
+		                            <th width="60">추천</th>
+		                            <th width="80">지역</th>
+		                            <th width="180">작성일</th>
+			                        <th width="100">조회수</th>
 		                        </tr>
-		                        <tr th:if="${!boardList.isEmpty()}" th:each="b:${boardList}">
-		                        	<td>[[${b.boardNo}]]</td>
-		                        	<td>[[${b.categoryName}]]</td>
-		                        	<td>[[${b.boardTitle}]]</td>
-		                        	<td>[[${boardLikeCounts[b.boardNo]}]]</td>
-		                        	<td>[[${b.areaName}]]</td>
-		                        	<td>[[${b.boardCreateDate}]]</td>
-		                        	<td>[[${b.boardCount}]]</td>
+		                        <tr th:if="${!boardList.isEmpty()}" th:each="b:${boardList}" style="border-bottom:1px solid lightgray;">
+		                        	<td align="center">[[${b.boardNo}]]</td>
+		                        	<td align="center">[[${b.categoryName}]]</td>
+		                        	<td class="p-2">[[${b.boardTitle}]]</td>
+		                        	<td align="center">[[${boardLikeCounts[b.boardNo]}]]</td>
+		                        	<td align="center">[[${b.areaName}]]</td>
+		                        	<td align="center">[[${b.boardCreateDate}]]</td>
+		                        	<td align="center">[[${b.boardCount}]]</td>
 		                        </tr>
 		                        <tr th:if="${boardList.isEmpty()}" align="center">
 		                        	<td colspan="7">작성한 게시글이 없습니다.</td>
@@ -89,24 +102,24 @@
 	      		
 				      		<div id="replys-section" class="row m-4" style="display: none;">
 				      			<div class="col m-3">
-									<div class="myInfo-Border-maincolor mt-2 mb-3">
+									<div style="overflow:hidden;"class="myInfo-Border-maincolor mt-2 mb-3" >
 										<div class="m-2 d-flex justify-content-between">
-											<div class="h3 myInfo-title">내가 쓴 댓글</div>
+											<div class="h3 m-2">내가 쓴 댓글</div>
 										</div>
 			      						<table class="m-2">
-			      							<tr>
-					                            <th width="8%">글 번호</th>
-					                            <th width="15%">글 제목</th>
-					                            <th width="40%">댓글 내용</th>
-					                            <th width="8%">추천</th>
-					                            <th width="15%">작성일</th>
+			      							<tr align="center">
+					                            <th width="80">글 번호</th>
+					                            <th width="200">글 제목</th>
+					                            <th width="400">댓글 내용</th>
+					                            <th width="80">추천</th>
+					                            <th width="120">작성일</th>
 					                        </tr>
-					                        <tr th:if="${!replyList.isEmpty()}" th:each="r:${replyList}" >
-					                        	<td>[[${r.refBoardNo}]]</td>
-					                        	<td>[[${r.boardTitle}]]</td>
-					                        	<td>[[${r.replyContent}]]</td>
-					                        	<td>[[${replyLikeCounts[r.replyNo]}]]</td>
-					                        	<td>[[${r.replyCreateDate}]]</td>
+					                        <tr th:if="${!replyList.isEmpty()}" th:each="r:${replyList}" style="border-bottom:1px solid lightgray" >
+					                        	<td align="center">[[${r.refBoardNo}]]</td>
+					                        	<td >[[${r.boardTitle}]]</td>
+					                        	<td class="p-2">[[${r.replyContent}]]</td>
+					                        	<td align="center">[[${replyLikeCounts[r.replyNo]}]]</td>
+					                        	<td align="center">[[${r.replyCreateDate}]]</td>
 					                        </tr>
 					                        <tr th:if="${replyList.isEmpty()}" align="center">
 					                        	<td colspan="5">작성한 댓글이없습니다.</td>
@@ -138,26 +151,26 @@
 				      			<div class="col m-3">
 									<div class="myInfo-Border-maincolor mt-2 mb-3">
 										<div class="m-2 d-flex justify-content-between">
-											<div class="h3 myInfo-title">내가 좋아요한 글</div>
+											<div class="h3 m-2">내가 좋아요한 글</div>
 										</div>
 			      						<table class="m-2">
-			      							<tr>
-					                            <th width="8%">번호</th>
-					                            <th width="15%">카테고리</th>
-					                            <th width="40%">제목</th>
-					                            <th width="8%">추천</th>
-					                            <th width="9%">지역</th>
-					                            <th width="15%">작성일</th>
-						                        <th width="10%">조회수</th>
+			      							<tr align="center">
+					                            <th width="80">번호</th>
+					                            <th width="100">카테고리</th>
+					                            <th width="320">제목</th>
+					                            <th width="60">추천</th>
+					                            <th width="80">지역</th>
+					                            <th width="180">작성일</th>
+						                        <th width="100">조회수</th>
 					                        </tr>
-					                        <tr th:if="${!likeList.isEmpty()}" th:each="l:${likeList}">
-					                        	<td>[[${l.boardNo}]]</td>
-					                        	<td>[[${l.categoryName}]]</td>
-					                        	<td>[[${l.boardTitle}]]</td>
-					                        	<td>[[${likeLikeCounts[l.boardNo]}]]</td>
-					                        	<td>[[${l.areaName}]]</td>
-					                        	<td>[[${l.boardCreateDate}]]</td>
-					                        	<td>[[${l.boardCount}]]</td>
+					                        <tr th:if="${!likeList.isEmpty()}" th:each="l:${likeList}" style="border-bottom:1px solid lightgray">
+					                        	<td align="center">[[${l.boardNo}]]</td>
+					                        	<td align="center">[[${l.categoryName}]]</td>
+					                        	<td class="p-2">[[${l.boardTitle}]]</td>
+					                        	<td align="center">[[${likeLikeCounts[l.boardNo]}]]</td>
+					                        	<td align="center">[[${l.areaName}]]</td>
+					                        	<td align="center">[[${l.boardCreateDate}]]</td>
+					                        	<td align="center">[[${l.boardCount}]]</td>
 					                        </tr>
 					                        <tr th:if="${likeList.isEmpty()}" align="center">
 					                        	<td colspan="7">좋아요한 글이 없습니다.</td>

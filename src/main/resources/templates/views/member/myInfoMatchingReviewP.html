@@ -149,7 +149,7 @@
 	
 	
 	
-	<div class="container" >
+	<div class="container" style="min-height:872px" >
 		 <div class="row">
 			<div class="col" >
 	     		<div align="center"class="myInfo-Border m-4">
@@ -175,7 +175,7 @@
 						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3" >
 							<div class="m-2 d-flex justify-content-between" >
 								<input type="hidden" name="reviewNo" th:value="${r.reviewNo}">
-								<div class="h5 m-2" onclick="toggleReviewContent(this)">
+								<div class="h5" onclick="toggleReviewContent(this)">
 									[[${r.memberName}]]님에 대한  후기
 									<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
 								</div>

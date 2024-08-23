@@ -69,69 +69,89 @@
 		      		<div class="m-3 h1 menu-name" >내 든든지수/후기</div>
 	      		</div>
 	      		
-	      		<div align="center"class="row m-4" style="border-bottom:5px solid #133B5C;width:950px"> <!-- 여기로규격정햇다 -->
-		      		<div class="col-5 m-4" >
-		      			<div >든든 지수 : [[${sumScore}]]</div>
-		      			<img src="image/icon_score.png"/>
+	      		<div align="center"class="row m-4" style="width:700px"> <!-- 여기로규격정햇다 -->
+		      		<div class="col-2 m-4">
+<!-- 			      		<img id="profile-image" src="image/icon_profile.png" onclick="profileImageUpdate()"/> -->
+			      		<img class="m-4" style="margin-left:-20px"id="profile-image" th:src="${cg.careImg} ? ${cg.careImg} : icon_profile.png" onclick="profileImageUpdate()"/>
+			      		
+		      		</div>	
+		      		<div class="col-6 m-4" style="" >
+		      			<div  style="margin-left:26px;"align="center"  class="m-4 d-flex  justify-content-left align-items-center" >
+			      			<div align="left"class="icon-star-review-bg">
+								<div th:if="${cg.getAvgReviewScoreDouble > 1}" align="left"class="btn-icon-star-review-bg"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 1}" align="left"class="btn-icon-star-review-half-bg"></div>
+			      			</div>
+			      			<div align="left"class="icon-star-review-bg">
+								<div th:if="${cg.getAvgReviewScoreDouble > 3}" align="left"class="btn-icon-star-review-bg"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 3}" align="left"class="btn-icon-star-review-half-bg"></div>
+			      			</div>
+			      			<div align="left"class="icon-star-review-bg">
+								<div th:if="${cg.getAvgReviewScoreDouble > 5}" align="left"class="btn-icon-star-review-bg"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 5}" align="left"class="btn-icon-star-review-half-bg"></div>
+			      			</div>
+			      			<div align="left"class="icon-star-review-bg">
+								<div th:if="${cg.getAvgReviewScoreDouble > 7}" align="left"class="btn-icon-star-review-bg"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 7}" align="left"class="btn-icon-star-review-half-bg"></div>
+			      			</div>
+			      			<div align="left"class="icon-star-review-bg">
+								<div th:if="${cg.getAvgReviewScoreDouble > 9}" align="left"class="btn-icon-star-review-bg"></div>
+								<div th:if="${cg.getAvgReviewScoreDouble == 9}" align="left"class="btn-icon-star-review-half-bg"></div>
+			      			</div>
+		    			</div>
+		    			<div align="left"class="h3 m-4">내 후기 점수 : [[${cg.getAvgReviewScoreDouble == null ? '0' : cg.getAvgReviewScoreDouble}]]</div>
 		      		</div>
-		      		<div  class="col d-flex align-items-center m-2">
-		      			<div align="left"class="m-4">
-		      				<div class="h2">후기 수 : [[${countScore}]]개</div>
-		      				<div class="h2">총 든든 지수 : [[${sumScore}]]점</div>
-		      				<div class="h2">평균 든든 지수 : [[${avgScore}]]점</div>
-		      			</div>
-		      		</div>
+		      		<!-- <div class="col m-4" style="max-width:90px">
+		      			<div><button class="myInfo-btn m-2" onclick="location.href='updateMemberView.me'"style="height:50px">내 계정 정보 수정하기</button></div>
+		      			<div><button class="myInfo-btn m-2" onclick="location.href='updatePwdView.me'"style="height:50px">비밀번호 변경하기</button></div>
+		      		</div> -->
 	      		</div>
 	      		
 	      		
 	      		
 	      		
-	      		<div class="row m-4">
+	      		<div class="row m-4" style="max-width:700px;">
+	      			<div align="right" class="m-2">내 후기 ([[${cList.size()}]])</div>
 	      			<div class="row m-2" th:if="${!cList.isEmpty()}" th:each="c:${cList}"><!-- 실제 데이터 넣고 for문 돌리기  -->
-						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3">
-							<div class="m-1 d-flex justify-content-between">
+						<div class="reviewDetail myInfo-Border-maincolor">
+							<div class="d-flex justify-content-between">
 								<div class="h5 m-1">[[${c.ptName}]]님의 후기</div>
 								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
 							</div>
-							<div class="review-content m-2"><div align="center"  class="d-flex justify-content-left" style="min-width:600px;">
-			      			<div align="left"class="icon-star-review">
-								<button th:if="${1 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
-								<button th:if="${1 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
-			      			</div>
-			      			<div align="left"class="icon-star-review">
-								<button th:if="${3 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
-								<button th:if="${3< c.reviewScore}" class="btn-star btn-icon-star-review"></button>
-			      			</div>
-			      			<div align="left"class="icon-star-review">
-								<button th:if="${5 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
-								<button th:if="${5 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
-			      			</div>
-			      			<div align="left"class="icon-star-review">
-								<button th:if="${7 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
-								<button th:if="${7 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
-			      			</div>
-			      			<div align="left"class="icon-star-review">
-								<button th:if="${9 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
-								<button th:if="${9 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
-			      			</div>
-			      			<div>평점 : [[${c.reviewScore}]]</div>
-		      		</div>
-			      			<hr/>
-			      			<div>[[${c.reviewContent}]]</div>
-						</div>
-						
-						
-	      			</div>
-	      		
-	    	</div>
-	    	<div th:if="${cList.isEmpty()}" align="center">
-	    		<h2>아직 작성된 후기가 없습니다.</h2>
-	    	</div>
-    	</div>
-	
-	
+							<div class="review-content m-1">
+								<div align="center"  class="p-2 d-flex justify-content-left" style="min-width:600px;">
+					      			<div align="left"class="icon-star-review">
+										<button th:if="${1 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+										<button th:if="${1 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
+					      			</div>
+					      			<div align="left"class="icon-star-review">
+										<button th:if="${3 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+										<button th:if="${3< c.reviewScore}" class="btn-star btn-icon-star-review"></button>
+					      			</div>
+					      			<div align="left"class="icon-star-review">
+										<button th:if="${5 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+										<button th:if="${5 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
+					      			</div>
+					      			<div align="left"class="icon-star-review">
+										<button th:if="${7 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+										<button th:if="${7 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
+					      			</div>
+					      			<div align="left"class="icon-star-review">
+										<button th:if="${9 == c.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
+										<button th:if="${9 < c.reviewScore}" class="btn-star btn-icon-star-review"></button>
+					      			</div>
+					      			<div>평점 : [[${c.reviewScore}]]</div>
+			      				</div>
+				      			<div style="border-top: 2px solid #133B5C">[[${c.reviewContent}]]</div>
+							</div>
+	      				</div>
+	    			</div>
+			    	<div th:if="${cList.isEmpty()}" align="center">
+			    		<h2>아직 작성된 후기가 없습니다.</h2>
+			    	</div>
+    			</div>
+			</div>
+		</div>
 	</div>
-	
 	<script th:inline="javascript">
 		
 		window.onload =() =>{
@@ -148,7 +168,7 @@
 			for(i of reviewDetails){
 				i.addEventListener('click',function(){
 					if(this.children[0].children[1].classList.contains('tri-btn')){
-						this.children[0].children[1].src = 'image/icon_tri.png';
+						this.children[0].children[1].src = 'image/icon_tri2.png';
 						this.children[0].children[1].classList.remove('tri-btn');
 						console.log(this.children[0].nextElementSibling);
 						this.children[0].nextElementSibling.classList.toggle('show');
