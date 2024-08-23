@@ -551,7 +551,7 @@
   		        	  }
   		        });
   		        calendar.render();
-  		      //calenderEdit();
+  		      	calenderEdit();
         	})
         	
         	
@@ -627,7 +627,8 @@
 	    						const tr = document.createElement('tr');
 	    						tr.classList.add('text-center');
 	    						const td0 = document.createElement('td');
-	    						td0.innerText = d.memberName;
+	    						td0.innerHTML = `<input type="hidden" value="${d.memberNo}">${d.memberName}`;
+	    						//td0.innerText = d.memberName;
 	    						const td1 = document.createElement('td');
 	    						td1.innerText = d.memberGender == 'M' ? '남' : '여';
 	    						const td2 = document.createElement('td');
@@ -718,9 +719,7 @@
 	
 	
 	
-	//포트원 api
-    	
-    		
+		//포트원 api
 	    IMP.init("imp25707021");		//내가생성한 가짜 스토어번호임
     	
     	const now = new Date();
@@ -781,6 +780,10 @@
 	    	// reviewDetail.mc?memberNo=83 로 이동하기
 	    	//console.log(e.target.parentElement.children[0].children[0].value);
 	    	location.href='reviewDetail.mc?memberNo=' + e.target.parentElement.children[0].children[0].value;
+	    });
+	    document.querySelector('.mainTable').children[1].addEventListener('mouseover', function() {
+	    	// reviewDetail.mc?memberNo=83 로 이동하기
+	    	this.style.cursor = 'pointer';
 	    });
 		// ai추천 목록에 대한 이벤트 (끝)
 	    

@@ -1350,11 +1350,11 @@
 													//console.log(mat.matNo);
 													root.innerHTML += `<div class="col-sm-6">\
 												            				<div class="card h-95 w-80">\
-												    							<div class="card-body">\
+												    							<div class="card-body text-center">\
 												        						<h6 class="card-title">\
 												            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 												            						<img src="image/icon/home.png"/>\
-												            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
+												            						<span class="badge rounded-pill bg-light text-dark fs-6">${mpi.service}</span>&nbsp;&nbsp;\
 												       							</h6>\
 															                    <p class="card-text">\
 															                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
@@ -1372,11 +1372,11 @@
 													console.log(mat.matNo);
 													root.innerHTML += `<div class="col-sm-6">\
 							            				<div class="card h-95 w-80">\
-							    							<div class="card-body">\
+							    							<div class="card-body text-center">\
 							        						<h6 class="card-title">\
 							            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 							            						<img src="image/icon/hospital.png"/>\
-							            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
+							            						<span class="badge rounded-pill bg-light text-dark fs-6">${mpi.service}</span>&nbsp;&nbsp;\
 							       							</h6>\
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
@@ -1395,11 +1395,11 @@
 													let leaderName = mem.ptName;
 													root.innerHTML += `<div class="col-sm-6">\
 							            				<div class="card h-95 w-80">\
-							    							<div class="card-body">\
+							    							<div class="card-body text-center">\
 							        						<h6 class="card-title">\
 							            						<span>${leaderName} 외</span>&nbsp;&nbsp;\
 							            						<img src="image/icon/users.png"/>\
-							            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
+							            						<span class="badge rounded-pill bg-light text-dark fs-6">${mpi.service}</span>&nbsp;&nbsp;\
 							       							</h6>\
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
@@ -1464,11 +1464,11 @@
 													console.log(mat.matNo);
 													root.innerHTML += `<div class="col-sm-6">\
 												            				<div class="card h-95 w-80">\
-												    							<div class="card-body">\
+												    							<div class="card-body text-center">\
 												        						<h6 class="card-title">\
 												            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 												            						<img src="image/icon/home.png"/>\
-												            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
+												            						<span class="badge rounded-pill bg-light text-dark fs-6">${mpi.service}</span>&nbsp;&nbsp;\
 												       							</h6>\
 															                    <p class="card-text">\
 															                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
@@ -1486,11 +1486,11 @@
 													console.log(mat.matNo);
 													root.innerHTML += `<div class="col-sm-6">\
 							            				<div class="card h-95 w-80">\
-							    							<div class="card-body">\
+							    							<div class="card-body text-center">\
 							        						<h6 class="card-title">\
 							            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 							            						<img src="image/icon/hospital.png"/>\
-							            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
+							            						<span class="badge rounded-pill bg-light text-dark fs-6">${mpi.service}</span>&nbsp;&nbsp;\
 							       							</h6>\
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
@@ -1509,11 +1509,11 @@
 													let leaderName = mem.ptName;
 													root.innerHTML += `<div class="col-sm-6">\
 							            				<div class="card h-95 w-80">\
-							    							<div class="card-body">\
+							    							<div class="card-body text-center">\
 							        						<h6 class="card-title">\
 							            						<span>${leaderName} 외</span>&nbsp;&nbsp;\
 							            						<img src="image/icon/users.png"/>\
-							            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
+							            						<span class="badge rounded-pill bg-light text-dark fs-6">${mpi.service}</span>&nbsp;&nbsp;\
 							       							</h6>\
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
@@ -1620,7 +1620,8 @@
 	    							const tr = document.createElement('tr');
 		    						tr.classList.add('text-center');
 		    						const td0 = document.createElement('td');
-		    						td0.innerText = d.ptName;
+		    						td0.innerHTML = `<input type="hidden" value=${d.matNo}>${d.ptName}`;
+		    						//td0.innerText = d.ptName;
 		    						const td1 = document.createElement('td');
 		    						td1.innerText = d.ptGender == 'M' ? '남' : '여';
 		    						const td2 = document.createElement('td');
@@ -1643,7 +1644,8 @@
 	    							const tr = document.createElement('tr');
 		    						tr.classList.add('text-center');
 		    						const td0 = document.createElement('td');
-		    						td0.innerText = d.ptName;
+		    						td0.innerHTML = `<input type="hidden" value=${d.matNo}>${d.ptName}`;
+		    						//td0.innerText = d.ptName;
 		    						const td1 = document.createElement('td');
 		    						td1.innerText = d.ptGender == 'M' ? '남' : '여';
 		    						const td2 = document.createElement('td');
@@ -1685,8 +1687,14 @@
 				table.children[1].addEventListener('click', function(e) {
 					location.href='goCaregiverPtInfo.mc?matNo=' + e.target.parentElement.children[0].children[0].value;
 				});
+				console.log(table.children[1]);
+				table.children[1].addEventListener('mouseover', function() {
+					//console.log('마우스오버');
+					this.style.cursor = 'pointer';
+				});
 			}
 			// ai추천 목록에 대한 이벤트 (끝)
+			
 		}
 	</script>
 </body>

@@ -2444,12 +2444,17 @@ public class MemberController {
 						cNoList.add(c.getMemberNo());
 					}
 					scoreList = mService.getCaregiverScoreList(cNoList);
-
+					
+					System.out.println("=====================");
+					System.out.println(cNoList);
+					System.out.println("=====================");
+					
 					for (HashMap<String, Integer> m : scoreList) {
 						for (CareGiver c : cList) {
 							if (Integer.parseInt(String.valueOf(m.get("MEMBER_NO"))) == c.getMemberNo()) {
 								c.setAvgReviewScore(Integer.parseInt(String.valueOf(m.get("AVGREVIEWSCORE"))));
-							}
+								c.setReviewCount(Integer.parseInt(String.valueOf(m.get("REVIEWCOUNT"))));
+							} 
 						}
 					}
 					gson.toJson(cList, response.getWriter());

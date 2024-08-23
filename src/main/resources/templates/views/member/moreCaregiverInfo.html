@@ -1253,8 +1253,15 @@
 									h6Span.innerHTML = ' ' + d.memberName + '님<br>' 
 									h6.append(img);
 									h6.append(h6Span);
-									for(let i = 0; i < 5; i++) {
-										h6.append(imgArr[i]);
+									if(d.reviewCount == 0){
+										const noReviewSpan = document.createElement('span');
+										noReviewSpan.className = 'badge rounded-pill bg-light text-dark';
+										noReviewSpan.innerText = '아직 리뷰가 없어요!';
+										h6.append(noReviewSpan);
+									} else {
+										for(let i = 0; i < 5; i++) {
+											h6.append(imgArr[i]);
+										}
 									}
 									
 									const p = document.createElement('p');
@@ -1303,8 +1310,15 @@
 									h6Span.innerHTML = ' ' + d.memberName + '님<br>' 
 									h6.append(img);
 									h6.append(h6Span);
-									for(let i = 0; i < 5; i++) {
-										h6.append(imgArr[i]);
+									if(d.reviewCount == 0){
+										const noReviewSpan = document.createElement('span');
+										noReviewSpan.className = 'badge rounded-pill bg-light text-dark';
+										noReviewSpan.innerText = '아직 리뷰가 없어요!';
+										h6.append(noReviewSpan);
+									} else {
+										for(let i = 0; i < 5; i++) {
+											h6.append(imgArr[i]);
+										}
 									}
 									
 									const p = document.createElement('p');
@@ -1411,17 +1425,24 @@
 										img.setAttribute('src', 'image/icon/femaleProfile.png');
 									}
 									const h6Span = document.createElement('span');
-									h6Span.innerHTML = ' ' + d.memberName + '님<br>' 
+									h6Span.innerHTML = ' ' + d.memberName + '님<br><br>'; 
 									h6.append(img);
 									h6.append(h6Span);
-									for(let i = 0; i < 5; i++) {
-										h6.append(imgArr[i]);
+									if(d.reviewCount == 0){
+										const noReviewSpan = document.createElement('span');
+										noReviewSpan.className = 'badge rounded-pill bg-light text-dark';
+										noReviewSpan.innerText = '아직 리뷰가 없어요!';
+										h6.append(noReviewSpan);
+									} else {
+										for(let i = 0; i < 5; i++) {
+											h6.append(imgArr[i]);
+										}
 									}
 									
 									const p = document.createElement('p');
 									p.className = 'card-text';
 									const pSpan = document.createElement('span');
-									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									pSpan.innerText = (d.memberGender == 'M' ? '남  ' : '여  ') + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세  ' + d.caregiverNational;
 									p.append(pSpan);
 									
 									const inp = document.createElement('input');
@@ -1461,17 +1482,24 @@
 										img.setAttribute('src', 'image/icon/femaleProfile.png');
 									} // **이미지 경로 수정해야함**
 									const h6Span = document.createElement('span');
-									h6Span.innerHTML = ' ' + d.memberName + '님<br>'
+									h6Span.innerHTML = ' ' + d.memberName + '님<br><br>'
 									h6.append(img);
 									h6.append(h6Span);
-									for(let i = 0; i < 5; i++) {
-										h6.append(imgArr[i]);
+									if(d.reviewCount == 0){
+										const noReviewSpan = document.createElement('span');
+										noReviewSpan.className = 'badge rounded-pill bg-light text-dark';
+										noReviewSpan.innerText = '아직 리뷰가 없어요!';
+										h6.append(noReviewSpan);
+									} else {
+										for(let i = 0; i < 5; i++) {
+											h6.append(imgArr[i]);
+										}
 									}
 									
 									const p = document.createElement('p');
 									p.className = 'card-text';
 									const pSpan = document.createElement('span');
-									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									pSpan.innerText = (d.memberGender == 'M' ? '남 ' : '여 ') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세  ' + d.caregiverNational;
 									p.append(pSpan);
 									
 									const inp = document.createElement('input');
@@ -1590,7 +1618,8 @@
 		    						const tr = document.createElement('tr');
 		    						tr.classList.add('text-center');
 		    						const td0 = document.createElement('td');
-		    						td0.innerText = d.memberName;
+		    						td0.innerHTML = `<input type="hidden" value=${d.memberNo}>${d.memberName}`;
+		    						//td0.innerText = d.memberName;
 		    						const td1 = document.createElement('td');
 		    						td1.innerText = d.memberGender == 'M' ? '남' : '여';
 		    						const td2 = document.createElement('td');
@@ -1613,7 +1642,8 @@
 	    							const tr = document.createElement('tr');
 		    						tr.classList.add('text-center');
 		    						const td0 = document.createElement('td');
-		    						td0.innerText = d.memberName;
+		    						td0.innerHTML = `<input type="hidden" value=${d.memberNo}>${d.memberName}`;
+		    						//td0.innerText = d.memberName;
 		    						const td1 = document.createElement('td');
 		    						td1.innerText = d.memberGender == 'M' ? '남' : '여';
 		    						const td2 = document.createElement('td');
@@ -1654,6 +1684,9 @@
 	    	for(const table of tableList){
 				table.children[1].addEventListener('click', function(e) {
 					location.href='reviewDetail.mc?memberNo=' + e.target.parentElement.children[0].children[0].value;
+				});
+				table.children[1].addEventListener('mouseover', function() {
+					this.style.cursor = 'pointer';
 				});
 			}
 			// ai추천 목록에 대한 이벤트 (끝)

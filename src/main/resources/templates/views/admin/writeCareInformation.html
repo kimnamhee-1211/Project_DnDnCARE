@@ -45,7 +45,7 @@
 								<input type="hidden" name="memberNo" th:value="${session.loginUser.memberNo}"/>
 								<br/>
 								<button class="btn btn-dark" type="button" id="goWrite">작성하기</button>
-								<button class="btn btn-dark" type="button" id="goWrite">취소하기</button>
+								<button class="btn btn-dark" type="button" id="goBack">취소하기</button>
 							</form>
 						</div>
 					</div>
@@ -70,18 +70,33 @@
         
         window.onload = () => {
       	  	const form = document.querySelector('#writeForm');
-        	
+      	  	
         	document.querySelector('#goWrite').addEventListener('click', () => {
 	    		console.log(editor);
 	    		console.log(editor.getHTML()); // 문자열 타입, 작성한 내용에 대한 태그
+	    		const getTitle = document.getElementsByName('boardTitle')[0].value;
 	    		const getHTML = editor.getHTML();
 	      		document.getElementsByName('boardContent')[0].value = getHTML;
       		  	
-	      		form.submit(); // 컨트롤러에게 데이터를 전달
-	      		
-      		  
-      	  })
+	      		if(getTitle.trim() == '' || getHTML.trim() == '') {
+	      			alert('제목과 내용을 입력해주세요.');
+	      		} else {
+		      		form.submit(); // 컨트롤러에게 데이터를 전달
+	      		}
+      	  	})
+      	  	
+      	  	// 취소하기 버튼에 대한 클릭 이벤트(시작)
+      	  	document.querySelector('#goBack').addEventListener('click', () => {
+      	  		history.back();
+      	  	});
+        	// 취소하기 버튼에 대한 클릭 이벤트(끝)
+      	  
+      	  
         }
+        
+        
+        
+        
         
     </script>
 	
