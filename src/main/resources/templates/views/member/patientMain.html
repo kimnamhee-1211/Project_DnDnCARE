@@ -201,7 +201,7 @@
 			              <div class="card-body">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
-			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
@@ -249,7 +249,7 @@
 			              <div class="card-body">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
-			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">

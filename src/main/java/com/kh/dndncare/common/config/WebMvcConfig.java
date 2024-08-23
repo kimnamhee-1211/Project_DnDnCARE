@@ -32,7 +32,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		
 		//기본적인 로그인 인터셉터 넣기
 		registry.addInterceptor(new CheckLoginInterceptor())
-		.addPathPatterns("/myInfo.me","/patientMain.me","/caregiverMain.me","/moreCaregiverInfo.me","/joinMatchingMainView.jm","/communityBoardList.bo")
+		//.addPathPatterns("/myInfo.me","/patientMain.me","/caregiverMain.me","/moreCaregiverInfo.me","/joinMatchingMainView.jm","/communityBoardList.bo")
 		.addPathPatterns("/**").excludePathPatterns("/**.do","/careGiver.me","/patient.me","/**.lo","/socialLogin.me");
 		
 		
