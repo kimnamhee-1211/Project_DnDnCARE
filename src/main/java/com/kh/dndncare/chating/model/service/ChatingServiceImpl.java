@@ -139,6 +139,19 @@ public class ChatingServiceImpl implements ChatingService {
 	public int getAlreadyChatRoomNo(Integer matNo, int memberNo, int relatedMemberNo) {
 		return chMapper.getAlreadyChatRoomNo(matNo,memberNo,relatedMemberNo);
 	}
+	@Override
+	public Integer getAlreadyChatRoomNo2(Integer matNo, int firstMemberNo, int secondMemberNo, int cMemberNo) {
+		return chMapper.getAlreadyChatRoomNo2(matNo,firstMemberNo,secondMemberNo,cMemberNo);
+	}
+	@Override
+	public Integer getAlreadyChatRoomNo3(Integer matNo, int firstMemberNo, int secondMemberNo, int thirdMemberNo,
+			int cMemberNo) {
+		return chMapper.getAlreadyChatRoomNo3(matNo, firstMemberNo, secondMemberNo, thirdMemberNo, cMemberNo);
+	}
+	@Override
+	public List<String> getParticipantMemberNames(Integer finalChatRoomNo) {
+		return chMapper.getParticipantMemberNames(finalChatRoomNo);
+	}
     
 
 }

@@ -71,5 +71,12 @@ public interface ChatingMapper {
 	void updateReadByMembers(@Param("chatRoomNo") int chatRoomNo, @Param("memberNo") int memberNo);
 
 	int getAlreadyChatRoomNo(@Param("matNo") Integer matNo, @Param("memberNo") int memberNo, @Param("relatedMemberNo") int relatedMemberNo);
+
+	Integer getAlreadyChatRoomNo2(@Param("matNo") Integer matNo, @Param("firstMemberNo") int firstMemberNo, @Param("secondMemberNo") int secondMemberNo, @Param("cMemberNo") int cMemberNo);
+
+	Integer getAlreadyChatRoomNo3(@Param("matNo") Integer matNo, @Param("firstMemberNo") int firstMemberNo, @Param("secondMemberNo") int secondMemberNo, @Param("thirdMemberNo")int thirdMemberNo,
+			@Param("cMemberNo") int cMemberNo);
+
+	List<String> getParticipantMemberNames(Integer finalChatRoomNo);
  
 }
