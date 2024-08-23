@@ -195,7 +195,7 @@
 	      			</div>
 	      			<div class="col m-2" th:unless="${list.isEmpty()}" th:each="r:${list}"  ><!-- 실제 데이터 넣고 for문 돌리기  -->
 						<div class="reviewDetail myInfo-Border-maincolor" >
-							<div class=" d-flex justify-content-between" >
+							<div class="d-flex justify-content-between" >
 								<input type="hidden" name="reviewNo" th:value="${r.reviewNo}">
 								<div class="p-2 h5" onclick="toggleReviewContent(this)">
 									[[${r.memberName}]]님에 대한  후기
@@ -206,7 +206,7 @@
     								 <button class="btn-outline-maincolor btn-sm m-2" th:onclick="deleteReview([[${r.reviewNo}]])">삭제하기</button>
 								</div>
 							</div>
-							 <div class="hidden-content ">
+							 <div class="m-2 hidden-content ">
 							 	 <div class="col" style="border-top:2px solid #1E5F74">
 									<div class="p-2 d-flex justify-content-left" style="min-width:600px; border:none;">평점 : 
 						      			<div align="left" class="icon-star-review">
