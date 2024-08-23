@@ -26,9 +26,9 @@
 		
 		<div id="upperLeftContents">
 			<div style="height:270px;"><!-- 결제 요청 카드 -->
-				<div class="p-2" style="margin:0;"th:unless="${payCount != 0}">[[${session.loginUser.memberName}]]님! 현재 결제 건은 없습니다! </div>
+				<div class="p-2" style="margin:0; font-size:20px"th:unless="${payCount != 0}">[[${session.loginUser.memberName}]]님! 현재 결제 건은 없습니다! </div>
 					<th:block th:if="${payCount != 0}">
-						<div class="p-2"style="margin:0;" id="viewPayList">[[${session.loginUser.memberName}]]님! 결제 요청 건이 [[${payCount}]]개 있어요<span class="newIcon"> new!</span></div>
+						<div class="p-2"style="margin:0;font-size:20px" id="viewPayList">[[${session.loginUser.memberName}]]님! 결제 요청 건이 [[${payCount}]]개 있어요<span class="newIcon"> new!</span></div>
 						<div class="pay-content">
 							<th:block th:each="m : ${mc}" th:if="${m.matConfirm == 'W'}">
 								<table class="ml-4 mr-4 table" >
