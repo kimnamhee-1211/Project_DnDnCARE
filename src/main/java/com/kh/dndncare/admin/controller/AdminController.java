@@ -37,6 +37,7 @@ import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.exception.BoardException;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.ImageUtil;
 import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.common.Pagination2;
@@ -807,12 +808,68 @@ public class AdminController {
 	@ResponseBody
 	public String updateAdminBoardStatus(@RequestParam("boardNo") int boardNo, @RequestParam("boardStatus") String boardStatus ) {
 		int result = aService.updateAdminBoardStatus(boardNo, boardStatus);
-		
-		return result == 1 ? "success" : "fail";
+		if(result > 0) {
+			return result == 1 ? "success" : "fail";
+		}else {
+			throw new AdminException("게시글 상태변경에 실패했습니다.");
+		}
 	}
 	
+	// 게시글 검색 수정중
+	@GetMapping("adminSearchBoard.adm")
+	public String adminSearchBoard(@RequestParam(value="caregiverPage", defaultValue = "1") int caregiverPage,
+									@RequestParam("searchType") String searchType, @RequestParam("searchText") String searchText,
+									Model model) {
+		int listCount = aService.getSearchListCountAll(searchType, searchText);
+		PageInfo pi = Pagination2.getPageInfo(caregiverPage, listCount, 7, 5);
+		    
+		ArrayList<Board> searchBoard = aService.adminSearchBoard(searchType, searchText, pi);
+		System.out.println("+++++++++++");
+		System.out.println(listCount);
+		System.out.println(searchBoard);
+		model.addAttribute("pi",pi);
+		model.addAttribute("pbList",searchBoard);
+		if(searchBoard != null) {
+			return "adminBoard";
+		}else {
+			throw new AdminException("검색에 실패했습니다.");
+		}
+	}
 	
+	// 게시물 상세조회?
+	@GetMapping("selectAdminBoard.adm")
+	public String selectAdminBoard(@RequestParam("bNo") int bNo, @RequestParam("page") int page,  Model model) {
+		// 게시글
+		Board boardList = aService.adminSelectBoard(bNo);
+
+		// 댓글
+		ArrayList<Reply> replyList = aService.adminSelectReply(bNo);
+		
+		System.out.println("===================");
+		System.out.println(boardList);
+		System.out.println("+++++++++++++++++++");
+		System.out.println(replyList);
+		System.out.println("===================");
+		
+		if(boardList != null) {
+			model.addAttribute("b", boardList);
+			model.addAttribute("replyList", replyList);
+			return "adminBoardDetail";
+		}else {
+			throw new AdminException("게시글 상세보기에 실패했습니다.");
+		}
+	}
 	
+	// 게시글 삭제
+	@PostMapping("amdimDeleteBoard.adm")
+	public String adminDeleteBoard(@RequestParam("boardNo") int boardNo) {
+		int result = aService.adminDeleteBoard(boardNo);
+		if(result > 0) {
+			return "redirect:adminBoard.adm";
+		}else {
+			throw new AdminException("게시글 삭제에 실패했습니다.");
+		}
+	}
 	
 	//어드민 페이 토탈 통계 에이작스
 	
@@ -1120,5 +1177,17 @@ public class AdminController {
 			
 			}// 년 메소드
 	
+	// 댓글 삭제
+	@GetMapping("adminDeleteReply.adm")
+	@ResponseBody
+	public String adminDeleteReply(@RequestParam("rNo") int rNo) {
+		int result = aService.adminDeleteReply(rNo);
+		if(result > 0) {
+			return result == 1 ? "success" : "fail";
+		}else {
+			throw new AdminException("댓글작성에 실패했습니다.");
+		}
+		
+	}
 	
 }//클래스 끝

@@ -13,6 +13,7 @@ import com.kh.dndncare.admin.model.dao.AdminMapper;
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.Member;
 
@@ -168,6 +169,37 @@ public class AdminServiceImpl implements AdminService{
 	@Override
 	public int updateAdminBoardStatus(int boardNo, String boardStatus) {
 		return aMapper.updateAdminBoardStatus(boardNo, boardStatus);
+	}
+
+	@Override
+	public ArrayList<Board> adminSearchBoard(String searchType, String searchText, PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return aMapper.adminSearchBoard(searchType, searchText);
+	}
+
+	@Override
+	public int getSearchListCountAll(String searchType, String searchText) {
+		return aMapper.getSearchListCountAll(searchType, searchText);
+	}
+
+	@Override
+	public Board adminSelectBoard(int bNo) {
+		return aMapper.adminSelectBoard(bNo);
+	}
+
+	@Override
+	public ArrayList<Reply> adminSelectReply(int bNo) {
+		return aMapper.adminSelectReply(bNo);
+	}
+
+	@Override
+	public int adminDeleteBoard(int boardNo) {
+		return aMapper.adminDeleteBoard(boardNo);
+	}
+
+	@Override
+	public int adminDeleteReply(int rNo) {
+		return aMapper.adminDeleteReply(rNo);
 	}
 
 }
