@@ -131,6 +131,17 @@ body {
 	
 }
 
+.myInfo-btn-2{
+	width:150px;
+	background-color: white;
+	border:2px solid  #FCDAB7;
+	color:#1E5F74;
+	border-radius: 5px;
+	padding:5px;
+	cursor: pointer;
+	
+}
+
 .btn-outline-maincolor-2{
 	color:#1E5F74;
 	border-radius: 5px;
@@ -355,4 +366,13 @@ table th{
 
 input{
 	border: 0px;
+}
+
+.btn-success{
+	background-color:#1D2D50 !important;
+	/* --bs-btn-bg:#E1e5F74 !important; */
+	box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+     7px 7px 20px 0px rgba(0,0,0,.1),
+     4px 4px 5px 0px rgba(0,0,0,.1) !important;
+     border:none !important;
 }
