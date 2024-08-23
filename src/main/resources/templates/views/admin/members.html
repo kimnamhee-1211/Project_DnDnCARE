@@ -161,14 +161,31 @@
 		        </div>
 			    <div class="modal-body">
 			    	<div class="modal-dialog modal-dialog-scrollable" id="modalContent">
-			        	<span class="badge rounded-pill bg-light text-dark">회원번호 | 아이디</span>
-			        	<input type="text" disabled> | <input type="text" disabled><br/><br/>
-			        	
-			        	<span class="badge rounded-pill bg-light text-dark">이름 | 닉네임</span>
-			        	<input type="text" disabled> | <input type="text" disabled><br/><br/>
-			        	
-			        	<span class="badge rounded-pill bg-light text-dark">국적</span>
-			        	<input type="radio" name="national"> | <input type="radio" disabled><br/><br/>
+			    		<table class="table align-middle" id="membersTable">
+			    			<tr style="height:80px;">
+			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">회원번호 | 아이디</span></td>
+			    				<td><input type="text" class="form-control" id="memberName" style="width:200px; display:inline;" disabled> | <input type="text" class="form-control" id="memberNo" style="width:200px; display:inline;" disabled></td>
+			    			</tr>
+			    			<tr style="height:80px;">
+			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">이름 | 닉네임</span></td>
+			    				<td><input type="text" class="form-control" id="memberName" style="width:200px; display:inline;" disabled> | <input type="text" id="memberNickName" class="form-control" style="width:200px; display:inline;"></td>
+			    			</tr>
+			    			<tr style="height:80px;">
+			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">국적</span></td>
+			    				<td>
+			    					<label><input type="radio" name="national" class="form-check" style="width:15px; display:inline;"> 내국인</label>&nbsp;&nbsp;
+			        				<label><input type="radio" name="national" class="form-check" style="width:15px; display:inline;"> 외국인</label>
+		        				</td>
+			    			</tr>
+			    			<tr style="height:80px;">
+			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">휴대폰</span></td>
+			    				<td><input type="text" class="form-control" style="width:100px; display:inline;"/> - <input type="text" class="form-control" style="width:150px; display:inline;"/> - <input type="text" class="form-control" style="width:150px; display:inline;"/></td>
+			    			</tr>
+			    			<tr style="height:80px; border-bottom: white;">
+			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">회원정보 수정일</span></td>
+			    				<td><input type="text" class="form-control" style="width:200px; display:inline;" readonly/></td>
+			    			</tr>
+			    		</table>
 			        </div>
 			    </div>
 			    <div class="modal-footer">
@@ -395,6 +412,11 @@
 							},
 							error: data => console.log(data)
 						}); */
+						
+						console.log(document.querySelector('#membersTable'));
+						
+						
+						
 						
 						
 						
