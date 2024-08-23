@@ -7,9 +7,18 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-    
     <link th:href="@{css/footer.css}" rel="stylesheet" type="text/css"/>
-    
+    <style>
+    	.searchAreaBtn {width: 82px;}
+    	.searchDisBtn {width:100px;}
+    	.searchWalkBtn {width:100px;}
+    	.searchTermBtn {width: 90px;}
+    	.subAreaBtn {width: 82px;}
+    	.subDisBtn {width:100px;}
+    	.subWalkBtn {width:100px;}
+    	.subCostBtn {width:110px;}
+    	.subTermBtn {width: 90px;}
+    </style>
 </head>
 <body class="baseFont">
 	<div th:replace="~{common/navbar :: navbar}"></div>
@@ -39,9 +48,12 @@
                  	</thead>
                  	<tbody>
                     	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index < 5}" >
-	                         <td>[[${l.ptName}]]*</td>
+	                         <td>
+	                         	<input type="hidden" th:value="${l.matNo}"/>
+	                         	[[${l.ptName}]]
+	                         </td>
 	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-	                         <td>[[${l.ptRealAge}]]</td>
+	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]</td>
 	                         <td>[[${l.ptAddress}]]</td>
 	                         <td>[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]</td>
 	                         <td>[[${l.money}]] 원</td>
@@ -62,9 +74,12 @@
                  	</thead>
                  	<tbody>
                     	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index >= 5}" >
-	                         <td>[[${l.ptName}]]</td>
+	                         <td>
+	                         	<input type="hidden" th:value="${l.matNo}"/>
+	                         	[[${l.ptName}]]
+	                         </td>
 	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-	                         <td>[[${l.ptRealAge}]]</td>
+	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]</td>
 	                         <td>[[${l.ptAddress}]]</td>
 	                         <td>[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]</td>
 	                         <td>[[${l.money}]] 원</td>
@@ -124,7 +139,7 @@
 						<!-- 서비스 유형에 대한 세부 버튼 -->
 						<button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">병원돌봄</button>
 						<button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">가정돌봄</button>
-						<button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">동행서비스</button>
+						<!-- <button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">동행서비스</button> -->
 						<!-- 성별 유형에 대한 세부 버튼 -->
 						<button type="button" class="btn btn-light subBtn subShareBtn" style="display:none;">개인</button>
 						<button type="button" class="btn btn-light subBtn subShareBtn" style="display:none;">공동</button>
@@ -216,7 +231,7 @@
 		    			<div><span class="badge bg-warning2">서비스 유형</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="병원돌봄/OFF">병원돌봄</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="가정돌봄/OFF">가정돌봄</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="동행서비스/OFF">동행서비스</button>
+		    			<!-- <button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="동행서비스/OFF">동행서비스</button> -->
 		    			 
 		    			<br/><br/>
 		    			
@@ -231,17 +246,17 @@
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="서울/OFF">서울</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="부산/OFF">부산</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="대구/OFF">대구</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="인천/OFF">인천</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="인천/OFF">인천</button>&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="광주/OFF">광주</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="대전/OFF">대전</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="울산/OFF">울산</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경기도/OFF">경기도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="강원도/OFF">강원도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="강원도/OFF">강원도</button>&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="충청북도/OFF">충청북도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="충청남도/OFF">충청남도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="전라북도/OFF">전라북도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="전라남도/OFF">전라남도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경상북도/OFF">경상북도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경상북도/OFF">경상북도</button>&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경상남도/OFF">경상남도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="제주/OFF">제주</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="세종/OFF">세종</button>
@@ -316,6 +331,7 @@
 		</div>
 	</div>
 	
+	<br/><br/><br/><br/>
 	<div id="footer-section" style="margin-top:32px;">
 	    <div class="inner">
 	        <div class="navbar-logo">
@@ -355,7 +371,7 @@
 	        <p class="text-center">&copy; 2024 HomeWork. All rights reserved.</p>
 	    </div>
 	</div>
-    <div id="obsTarget"></div> 
+    <div id="obsTarget" style="height:10px;"></div> 
 	
 	
 	
@@ -1342,7 +1358,7 @@
 															                    	<span>${address}</span>\
 															                   	</p>\
 															                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-															                    <button class="btn btn-success workInfo">정보 보기</button>\
+															                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 														                		</div>\
 												   							</div>\
 																		</div>`;
@@ -1364,7 +1380,7 @@
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
@@ -1387,7 +1403,7 @@
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
@@ -1455,7 +1471,7 @@
 															                    	<span>${address}</span>\
 															                   	</p>\
 															                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-															                    <button class="btn btn-success workInfo">정보 보기</button>\
+															                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 														                		</div>\
 												   							</div>\
 																		</div>`;
@@ -1477,7 +1493,7 @@
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
@@ -1500,7 +1516,7 @@
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
@@ -1656,6 +1672,15 @@
     		})
 			/*]]>*/
     		// 자동추천 새로고침 비동기 요청 (끝)
+			
+			// ai추천 목록에 대한 이벤트 (시작)
+			const tableList = document.querySelectorAll('.autoMatching');
+			for(const table of tableList){
+				table.children[1].addEventListener('click', function(e) {
+					location.href='goCaregiverPtInfo.mc?matNo=' + e.target.parentElement.children[0].children[0].value;
+				});
+			}
+			// ai추천 목록에 대한 이벤트 (끝)
 		}
 	</script>
 </body>

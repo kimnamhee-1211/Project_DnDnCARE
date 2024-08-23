@@ -101,7 +101,7 @@
 	</logger>
 	
 	<!-- 간병백과 페이지에서 ai검색 요청을 기록하는 로그 -->
-	<logger name="com.kh.dndncare.common.interceptor.CheckCareInfomationAiSearch" level="info" additivity="false">
+	<logger name="com.kh.dndncare.common.interceptor.CheckCareInformationAiSearch" level="info" additivity="false">
 		<appender-ref ref="careInformationAiFileAppender"/>
 	</logger>
 	

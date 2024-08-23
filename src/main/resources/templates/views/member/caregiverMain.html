@@ -35,9 +35,13 @@
                         </th>
                      </tr>
                  </thead>
+                 
                  <tbody>
                      <tr class="text-center" th:if="${completeList}" th:each="l : ${completeList}">
-                         <td>[[${l.ptName}]]</td>
+                         <td>
+                         	<input type="hidden" th:value="${l.matNo}"/>
+                         	[[${l.ptName}]]
+                         </td>
                          <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
                          <td>[[${l.ptRealAge}]]</td>
                          <td>[[${l.ptAddress}]]</td>
@@ -63,7 +67,7 @@
 					<table>
 	                    <tr>
 	                        <td><button class="custom-btn btn-14" onclick="location.href='myInfo.me'">내 정보</button></td>
-	                        <td><button class="custom-btn btn-14" id="careInformation" onclick="location.href='careInformation.bo'">간병 정보</button></td>
+	                        <td><button class="custom-btn btn-14" id="careInformation">간병 백과</button></td>
 	                        <td><button class="custom-btn btn-14" onclick="location.href='communityBoardList.bo'">커뮤니티</button></td>
 	                    </tr>
 	                </table>
@@ -75,8 +79,8 @@
 			<div><!-- 오른쪽 공백 --></div>
 		</div>
 		
-	    <br/><br/>
-	
+	    <br/><br/><br/><br/><br/>
+	    
 	    <!-- 아래쪽 컨텐츠-->
 	    <div id="underContents">
 	        <div><!--왼쪽 공백--></div>
@@ -94,7 +98,7 @@
 	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님과의 매칭을 원하는 분들이 있습니다.</th>
 	                    </tr>
 	                </thead>
-	                <tbody>
+	                <tbody th:if=${!requestMatPt.empty}>
 	                    <tr class="align-middle text-center" th:each="matPt : ${requestMatPt}">
 	                    	<td style="display:none" th:text="${matPt.matNo}"></td>
 	                        <td colspan="4" th:if="${matPt.ptCount == 1}">
@@ -108,6 +112,13 @@
 	                        </td>
 	                        <td><button class="btn btn-success workInfo two">정보보기</button></td>
 	                    </tr>
+	                </tbody>
+	                <tbody th:if=${requestMatPt.empty}>
+	                	<tr>
+	                		<th>	                	
+	                			<img class="m-3" th:src="@{/image/peopleicon.png}" width="450px" height="500px"/>
+	                		</th>
+	                	</tr>
 	                </tbody>
 	            </table>
 	        </div>
@@ -307,7 +318,7 @@
 		</div>     
    	 </div>
     
-    <div class="m-5"></div>
+     <br><br><br><br>
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     
@@ -318,7 +329,7 @@
 		   		<div class="modal-header">
 		    		<div class="modal-title workInfo">
 		    			<div class="infomation">
-			    			<span class="badge bg-danger"><img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음</span><br/>
+			    			<span class="badge bg-danger"><!-- <img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음 --></span><br/>
 			    			<span>혜민병원</span><br/>
 			    			<span>서울특별시 광진구</span>
 		    			</div>
@@ -331,19 +342,19 @@
 		   		</div>
 		    	<div class="modal-body workInfo">
 		    		<div>
-		    			<span>시작 시간</span><br/>
-		    			<span>종료 시간</span><br/>
-		    			<span>일 간병비</span><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">시작 시간</span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">종료 시간</span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">일 간병비</span><br/><br/>
 		    		</div>
 		    		<div class="text-end fw-bold infoDetail">
-		    			<span></span><br/>
-		    			<span></span><br/>
-		    			<span></span>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span>
 		    		</div>
 		    	</div>
 		    	<div class="modal-footer">
 		    		<input type="hidden" name="matNo"/>
-	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">Close</button>
+	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">닫기</button>
 	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">자세히 보기</button>	    			
 		    	</div>
 		  	</div>
@@ -354,13 +365,14 @@
     
     
     <script th:inline="javascript">
-    /*<![CDATA[*/
 	document.addEventListener('DOMContentLoaded', function() {
     	var calendarEl = document.getElementById('calendar');
     	var request = $.ajax({
     		url: 'caregiverCalendarEvent.me',
     		datatype: 'json',
+		    /*<![CDATA[*/
     		data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0},
+    		/*]]>*/
     	})
     	
     	const getTimeFormat = (date) => {
@@ -377,36 +389,61 @@
     		return year + '-' + month + '-' + day;
     	}
     	
+    	// 시간계산
+    	const remainCalc = (miseconds) => {
+    		let hours = Number.parseInt(miseconds/3600000);  // 시간 계산
+    		let temp1 = miseconds%3600000; // 시간을 뺀 나머지 계산
+    		let mins = Number.parseInt(temp1/60000); // 분 계산
+    		let temp2 = mins%60000; // 분을 뺀 나머지 계산
+    		let seconds = Number.parseInt(temp2/1000)
+    		
+    		return hours + "시간 " + mins + "분 " + seconds +"초";
+    	}
+    	
+    	
     	request.done(function(data) {
-    		console.log(data);
-    		var calendar = new FullCalendar.Calendar(calendarEl, {
-		          initialView: 'dayGridMonth',
-		          events : data,
-		          eventColor: '#8dd986',
-		          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
-		        	  let d = info.event.start - new Date();
-		        	  let infomation = document.querySelector('.infomation').children;
-		        	  
-		        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '남음';
+	    		console.log(data);
+	    		var calendar = new FullCalendar.Calendar(calendarEl, {
+			          initialView: 'dayGridMonth',
+			          events : data,
+			          eventColor: '#8dd986',
+			          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
+			        	  let mils = info.event.start - new Date();
+			        	  let infomation = document.querySelector('.infomation').children;
+			        	  if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
+			        	  	/* infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남'; */
+			        		  infomation[0].innerHTML = '';
+			        	  } else { // 이벤트 날짜가 미래인 경우
+			        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>&nbsp;&nbsp;' + remainCalc(mils) + ' 남음';
+			        	  }
 						infomation[2].innerHTML = '병원명이 들어올 자리';
 		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
-	          		
-	          		let infoDetail = document.querySelector('.infoDetail').children;
-	          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
-	          		infoDetail[2].innerHTML = info.event.extendedProps.endDate;
-	          		infoDetail[4].innerHTML = info.event.extendedProps.money + '원';
-	          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
-	        	  	$('#calendarModal').modal('show');
-	        	  }
-		        });
-		        calendar.render();
-    	}) 
-  	});
-	/*]]>*/
-	/*<![CDATA[*/
-    	
+		          		
+		          		let infoDetail = document.querySelector('.infoDetail').children;
+		          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
+		          		infoDetail[3].innerHTML = info.event.extendedProps.endDate;
+		          		infoDetail[6].innerHTML = info.event.extendedProps.money + '원';
+		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
+		          		//console.log(document.querySelector('.modal-footer').children[0].value);
+		        	  	$('#calendarModal').modal('show');
+		        	  }
+			        });
+			        calendar.render();
+	    	}) 
+	  	});
+   
+		
     	/*<![CDATA[*/
     	window.onload = () => {
+    		// 캘린더 이벤트 모달 => 매칭 정보 자세히 보기(시작)
+    		document.querySelector('#detailInfo').addEventListener('click', function() {
+    			//goCaregiverPtInfo.mc?matNo=222 로 이동하기
+    			//console.log(document.querySelector('.modal-footer').children[0].value)
+    			location.href='goCaregiverPtInfo.mc?matNo=' + document.querySelector('.modal-footer').children[0].value;
+    		});
+    		// 캘린더 이벤트 모달 => 매칭 정보 자세히 보기(끝)
+    		
+    		
     		// 자동추천 새로고침 비동기 요청 (시작)
     		const refreshChoice = document.querySelector('#refreshChoice');
     		refreshChoice.addEventListener('mouseenter', function() {
@@ -511,20 +548,25 @@
 	    	
 	    	// 간병정보(간병백과) 페이지로 이동 (시작)
 	    	document.querySelector('#careInformation').onclick = () => {
-	    		/*<![CDATA[*/
 	    		const isAdmin = /*[[${session.loginUser.memberCategory}]]*/'관리자여부';
 	    		if(isAdmin == 'A'){ // 관리자의 입장에서 간병정보 페이지 출력
 	    			location.href='careInformation.adm';
 	    		} else{ // 일반 사용자의 입장에서 간병정보 페이지 출력
-	    			//location.href='';
+	    			location.href='careInformation.bo';
 	    		}	
-	    		/*]]>*/	
 	    	}
 	    	// 간병정보(간병백과) 페이지로 이동 (끝)
-	    	
-	    	
-	    	
     	}
+    	/*]]>*/
+    	
+    	// ai추천 목록에 대한 이벤트 (시작)
+	    document.querySelector('.mainTable').children[1].addEventListener('click', function(e) {
+	    	// goCaregiverPtInfo.mc?matNo=55 로 이동하기
+	    	//console.log(e.target.parentElement.children[0].children[0].value);
+	    	location.href='goCaregiverPtInfo.mc?matNo=' + e.target.parentElement.children[0].children[0].value;
+	    });
+		// ai추천 목록에 대한 이벤트 (끝)
+    	
     	
     </script>    
 </body>

@@ -778,10 +778,6 @@ public class AdminController {
 //		보유질환 (0~10개, 선택)					: MEMBER_INFO 
 //		키	(필수)							: PATIENT
 //		몸무게  (필수)							: PATIENT
-		
-		
-		
-		
 	}
 	
 	// 게시글(공지) 작성

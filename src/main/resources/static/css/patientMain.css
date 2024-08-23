@@ -207,6 +207,12 @@ a {
 /* 	background-color:yellow; */
 /* } */
 
+/* 캘린더 이벤트의 정보를 보는 모달박스 */
+.workInfo {
+	display:grid; grid-template-columns: 1fr 1fr;
+}
+
+
 #profile-image {
    width: 60px; /* 원하는 크기로 설정 */
    height: 60px; /* 원하는 크기로 설정 */

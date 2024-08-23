@@ -1,9 +1,9 @@
 package com.kh.dndncare.member.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -13,9 +13,10 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
@@ -334,6 +335,7 @@ public class MemberController {
 	
 	// ai추천 : 간병인의 입장 : 환자 추천 목록 조회
 		public ArrayList<Patient> openAiPatientChoice(int memberNo, int selectNum) {
+			System.out.println("간병인 AI요청!!!");
 			// 1. 간병인 본인 정보 조회 
 //			조회할 항목
 //				필수입력 : 원하는 서비스, 공동간병 참여여부, 경력, 적정비용, 성별, 나이, 주소
@@ -505,7 +507,7 @@ public class MemberController {
 		for(int i = 0; i < choice.length; i++) {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
-				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
+				choiceNoList.add(Integer.parseInt(choice[i].split("[.]")[0]));
 			} else if(choice[i].contains(" ")){
 				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
@@ -556,12 +558,21 @@ public class MemberController {
 				Date beginDate = c.getBeginDt();
 				Date endDate = c.getEndDt();
 				
+				
+				String[] endDtArr = String.valueOf(c.getEndDt()).split("-");
+				int year = Integer.parseInt(endDtArr[0]);
+				int month = Integer.parseInt(endDtArr[1]);
+				int date = Integer.parseInt(endDtArr[2]);
+				Calendar calendar = GregorianCalendar.getInstance();
+				calendar.set(year, month-1, date+1);
+				Date endDtPlusOne = new Date(calendar.getTimeInMillis());
+				
 				if(c.getPtCount() == 1) {
 					if(c.getMatMode() == 1) {
 						JSONObject obj = new JSONObject();
 						obj.put("title", "개인 기간제 간병");
 						obj.put("start", c.getBeginDt());
-						obj.put("end", c.getEndDt());
+						obj.put("end", endDtPlusOne);
 						obj.put("matNo", matNo);
 						obj.put("money", money);
 						obj.put("matAddressInfo", matAddressInfo);
@@ -589,7 +600,7 @@ public class MemberController {
 						JSONObject obj = new JSONObject();
 						obj.put("title", "공동 기간제 간병");
 						obj.put("start", c.getBeginDt());
-						obj.put("end", c.getEndDt());
+						obj.put("end", endDtPlusOne);
 						obj.put("matNo", matNo);
 						obj.put("money", money);
 						obj.put("matAddressInfo", matAddressInfo);
@@ -637,11 +648,11 @@ public class MemberController {
 		if(loginUser != null) {
 			System.out.println(memberNo);
 			System.out.println("전");
-			//ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
+			ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
 			System.out.println(memberNo);
 			System.out.println("후");
 			//System.out.println(completeList);
-			//model.addAttribute("completeList", completeList);
+			model.addAttribute("completeList", completeList);
 		}
 				
 		
@@ -781,8 +792,8 @@ public class MemberController {
 		int memberNo = 0;
 		if(loginUser != null) {
 			memberNo = loginUser.getMemberNo(); 
-			//ArrayList<CareGiver> completeList = openAiCaregiverChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
-			//model.addAttribute("completeList", completeList);
+			ArrayList<CareGiver> completeList = openAiCaregiverChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
+			model.addAttribute("completeList", completeList);
 		}
 			
 		//종규 : 결제에 쓸 매칭 데이터 삽입하기.여러개있을수있으니 리스트로 진행하기 --down--
@@ -1595,7 +1606,10 @@ public class MemberController {
 			memberNo = loginUser.getMemberNo();
 			ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 10);
 			
-			if(!completeList.isEmpty()) {
+			if(completeList != null) {
+				System.out.println("==OPENAI 가공결과물 : 시작 ==");
+				System.out.println(completeList);
+				System.out.println("==OPENAI 가공결과물 : 끝 ==");
 				model.addAttribute("completeList", completeList);
 			} 
 		}
@@ -2005,6 +2019,10 @@ public class MemberController {
 				if(age.length() > 0) searchDefaultMap.put("age", age);
 				if(maxMoney.length() > 0) searchDefaultMap.put("maxMoney", maxMoney);
 				
+				System.out.println("검색조건 확인 중 : " + searchDefaultMap); // 여기여기여기
+				
+				
+				
 				ArrayList<CareGiver> searchDefaultCaregiverNoList = mService.searchDefaultCaregiverNoList(searchDefaultMap);
 				// 만약, 검색조건 중 위에서의 검색조건이 없었다면 MEMBER_STATUS = 'N' AND MEMBER_CATEGORY = 'C'인 간병인들이 조회된다!
 				//[CareGiver(memberNo=83, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=44, caregiverNational=내국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=컴2, avgReviewScore=0), CareGiver(memberNo=79, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=34, caregiverNational=내국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=나리간병3, avgReviewScore=0), CareGiver(memberNo=85, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=69, caregiverNational=내국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=나리간병5, avgReviewScore=0), CareGiver(memberNo=22, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=0, caregiverNational=내국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=test, avgReviewScore=0), CareGiver(memberNo=14, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=30, caregiverNational=외국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=김종기2, avgReviewScore=0), CareGiver(memberNo=82, careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null, careService=null, careUpdateDate=null, infoCategory=null, caregiverRealAge=-20, caregiverNational=외국인, haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null, haveService=null, career=null, memberName=나리간병4, avgReviewScore=0)]
@@ -2400,7 +2418,7 @@ public class MemberController {
 		for(int i = 0; i < choice.length; i++) {
 			if(choice[i].contains(".")) {
 				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
-				choiceNoList.add(Integer.parseInt(choice[i].split(".")[0]));
+				choiceNoList.add(Integer.parseInt(choice[i].split("[.]")[0]));
 			} else if(choice[i].contains(" ")){
 				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
 			} else {
@@ -2543,6 +2561,13 @@ public class MemberController {
 		if(!eList.isEmpty()) {
 			System.out.println("eList가 비어있는지 확인하기. 나오면 안비어있음" + eList);
 			for(CalendarEvent c : eList) {
+				String[] endDtArr = String.valueOf(c.getEndDt()).split("-");
+				int year = Integer.parseInt(endDtArr[0]);
+				int month = Integer.parseInt(endDtArr[1]);
+				int date = Integer.parseInt(endDtArr[2]);
+				Calendar calendar = GregorianCalendar.getInstance();
+				calendar.set(year, month-1, date+1);
+				Date endDtPlusOne = new Date(calendar.getTimeInMillis());
 				
 				for(Member m : mList) {
 					int matNo = c.getMatNo();
@@ -2560,7 +2585,7 @@ public class MemberController {
 							JSONObject obj = new JSONObject();
 							obj.put("title", "개인 기간제 간병");
 							obj.put("start", c.getBeginDt());
-							obj.put("end", c.getEndDt());
+							obj.put("end", endDtPlusOne);
 							obj.put("matNo", matNo);
 							obj.put("money", money);
 							obj.put("matAddressInfo", matAddressInfo);
@@ -2576,7 +2601,7 @@ public class MemberController {
 							array.put(obj);
 						} else {
 							String[] strArr = c.getMatDate().split(",");
-							System.out.println(Arrays.toString(strArr));
+							//System.out.println(Arrays.toString(strArr));
 							for(int i = 0; i < strArr.length; i++) {
 								JSONObject obj = new JSONObject();
 								obj.put("title", "개인 시간제 간병");
@@ -2604,7 +2629,7 @@ public class MemberController {
 							JSONObject obj = new JSONObject();
 							obj.put("title", "공동 기간제 간병");
 							obj.put("start", c.getBeginDt());
-							obj.put("end", c.getEndDt());
+							obj.put("end", endDtPlusOne);
 							obj.put("matNo", matNo);
 							obj.put("money", money);
 							obj.put("matAddressInfo", matAddressInfo);
