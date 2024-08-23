@@ -2155,38 +2155,7 @@ public class MemberController {
 			ArrayList<CareGiver> searchDefaultCaregiverNoList = mService.searchDefaultCaregiverNoList(searchDefaultMap);
 			// 만약, 검색조건 중 위에서의 검색조건이 없었다면 MEMBER_STATUS = 'N' AND MEMBER_CATEGORY = 'C'인
 			// 간병인들이 조회된다!
-			// [CareGiver(memberNo=83, careImg=null, careIntro=null, minMoney=0, maxMoney=0,
-			// careJoinStatus=null, careService=null, careUpdateDate=null,
-			// infoCategory=null, caregiverRealAge=44, caregiverNational=내국인,
-			// haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M,
-			// wantService=null, haveService=null, career=null, memberName=컴2,
-			// avgReviewScore=0), CareGiver(memberNo=79, careImg=null, careIntro=null,
-			// minMoney=0, maxMoney=0, careJoinStatus=null, careService=null,
-			// careUpdateDate=null, infoCategory=null, caregiverRealAge=34,
-			// caregiverNational=내국인, haveLicense=null, caregiverAddress=null,
-			// haveDisease=null, memberGender=M, wantService=null, haveService=null,
-			// career=null, memberName=나리간병3, avgReviewScore=0), CareGiver(memberNo=85,
-			// careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null,
-			// careService=null, careUpdateDate=null, infoCategory=null,
-			// caregiverRealAge=69, caregiverNational=내국인, haveLicense=null,
-			// caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null,
-			// haveService=null, career=null, memberName=나리간병5, avgReviewScore=0),
-			// CareGiver(memberNo=22, careImg=null, careIntro=null, minMoney=0, maxMoney=0,
-			// careJoinStatus=null, careService=null, careUpdateDate=null,
-			// infoCategory=null, caregiverRealAge=0, caregiverNational=내국인,
-			// haveLicense=null, caregiverAddress=null, haveDisease=null, memberGender=M,
-			// wantService=null, haveService=null, career=null, memberName=test,
-			// avgReviewScore=0), CareGiver(memberNo=14, careImg=null, careIntro=null,
-			// minMoney=0, maxMoney=0, careJoinStatus=null, careService=null,
-			// careUpdateDate=null, infoCategory=null, caregiverRealAge=30,
-			// caregiverNational=외국인, haveLicense=null, caregiverAddress=null,
-			// haveDisease=null, memberGender=M, wantService=null, haveService=null,
-			// career=null, memberName=김종기2, avgReviewScore=0), CareGiver(memberNo=82,
-			// careImg=null, careIntro=null, minMoney=0, maxMoney=0, careJoinStatus=null,
-			// careService=null, careUpdateDate=null, infoCategory=null,
-			// caregiverRealAge=-20, caregiverNational=외국인, haveLicense=null,
-			// caregiverAddress=null, haveDisease=null, memberGender=M, wantService=null,
-			// haveService=null, career=null, memberName=나리간병4, avgReviewScore=0)]
+			
 
 			// 위의 조건에 해당하는 간병인 번호를 추출한다.
 			ArrayList<Integer> cNoList = new ArrayList<Integer>();
@@ -2334,10 +2303,11 @@ public class MemberController {
 					for (CareGiver c : cList) {
 						if (Integer.parseInt(String.valueOf(m.get("MEMBER_NO"))) == c.getMemberNo()) {
 							c.setAvgReviewScore(Integer.parseInt(String.valueOf(m.get("AVGREVIEWSCORE"))));
+							c.setReviewCount(Integer.parseInt(String.valueOf(m.get("REVIEWCOUNT"))));
 						}
 					}
 				}
-
+				
 				gson.toJson(cList, response.getWriter());
 			} else { // 간병인 목록이 존재하지 않는 경우
 				gson.toJson("noExist", response.getWriter());
