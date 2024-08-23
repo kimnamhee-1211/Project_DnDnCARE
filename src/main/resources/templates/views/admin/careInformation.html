@@ -524,7 +524,11 @@
 		let labels = [];
 		let data = [];
 		for(const arr of ent){
-			labels.push(arr[0]);
+			if(arr[0] == 'undefined') {
+				labels.push('-');
+			} else {
+				labels.push(arr[0]);
+			}
 			data.push(arr[1]);
 		}
 		
