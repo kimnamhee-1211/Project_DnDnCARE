@@ -43,8 +43,8 @@
 				<h1 class="text-center">글 조회</h1>
             <hr>
             <div class="p-5">
-	            <form action="submitPost" method="post" id=adminDetailBoardForm>
-	            		<input type="hidden" th:value="${b.boardNo}" name="boardId"/>
+	            <form action="adminUpdateBoard.adm" method="post" id=adminDetailBoardForm>
+	            		<input type="hidden" th:value="${b.boardNo}" name="boardNo"/>
 	            		<input type="hidden" th:value="${page}" name="page"/>
 	            		 <div class="m-5 p-3 mt-1 row" style="border:1px solid lightgray;">
 			                <div class="col-md-7 p-2">
@@ -180,7 +180,6 @@
 			const replyTbody = replyTable.querySelector('tbody')
 			const replyTds = replyTbody.querySelectorAll('td')
 			console.log(replyTds)
-			
 				for(const replyTd of replyTds){
 					replyTd.addEventListener('click', function(){
 						const trTds = this.parentElement.querySelectorAll('td');
@@ -192,7 +191,7 @@
 							data: {rNo:replyNo},
 							success: data =>{
 								if(data == 'success'){
-									alert('지워짐')
+									alert('삭제함')
 									trTds[4].innerText="삭제된 댓글"
 								} else{
 									alert('댓글 삭제 중 오류가 발생했습니다.');
@@ -202,11 +201,60 @@
 						});
 					})
 				}
-		
-		
-		
+			
+			
+				document.getElementById('adminBoardUpdateModalBtn').addEventListener('click', function() {
+					 // 제목 부분 변경
+				    const titleSpan = document.querySelector('div.col-md-7 span'); 
+				    if (titleSpan) {
+				        const titleInput = document.createElement('input');
+				        titleInput.type = 'text';
+				        titleInput.name = 'boardTitle';
+				        titleInput.value = titleSpan.innerText;
+				        titleInput.classList.add('form-control');
+				        titleSpan.parentNode.replaceChild(titleInput, titleSpan);
+				    }
+	
+				    // 내용 부분 변경
+				    const contentDiv = document.getElementById('boardContent');
+				    if (contentDiv) {
+				        const textarea = document.createElement('textarea');
+				        textarea.name = 'boardContent';
+				        textarea.classList.add('form-control');
+				        textarea.style.minHeight = '100px';
+				        textarea.innerText = contentDiv.innerHTML.trim();
+				        contentDiv.parentNode.replaceChild(textarea, contentDiv);
+				
+				        $(textarea).summernote({
+				            placeholder: '내용을 입력해주세요',
+				            tabsize: 2,
+				            height: 400,
+				            toolbar: [
+				                ['font', ['bold', 'italic', 'underline', 'clear']],
+				                ['fontname', ['fontname']],
+				                ['fontsize', ['fontsize']],
+				                ['color', ['color']],
+				                ['para', ['ul', 'ol', 'paragraph']],
+				                ['insert', ['link', 'picture']],
+				            ]
+				        });
+				    }
+	
+				    this.style.display = 'none';
+	
+				    // 저장 버튼 생성
+				    const saveButton = document.createElement('button');
+				    saveButton.type = 'submit';
+				    saveButton.classList.add('btn', 'me-2', 'btn-sm');
+				    saveButton.style.outlineColor = '#1E5F74';
+				    saveButton.style.outlineStyle = 'solid';
+				    saveButton.style.outlineWidth = '3px';
+				    saveButton.innerText = '저장하기';
+	
+				    this.parentNode.appendChild(saveButton);
+				});
 
-		}
+		    }
 
 
 			

@@ -202,4 +202,9 @@ public class AdminServiceImpl implements AdminService{
 		return aMapper.adminDeleteReply(rNo);
 	}
 
+	@Override
+	public int adminUpdateBoard(Board b) {
+		return aMapper.adminUpdateBoard(b);
+	}
+
 }

@@ -82,6 +82,8 @@ public interface AdminService {
 
 	int adminDeleteReply(int rNo);
 
+	int adminUpdateBoard(Board b);
+
 
 
 }

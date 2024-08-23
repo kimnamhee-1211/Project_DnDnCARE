@@ -87,5 +87,7 @@ public interface AdminMapper {
 
 	int adminDeleteReply(int rNo);
 
+	int adminUpdateBoard(Board b);
+
 
 }
