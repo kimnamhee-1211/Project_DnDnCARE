@@ -249,9 +249,9 @@
 			        		label: '가정돌봄',
 			        		data: data1,
 			        		borderWidth: 2,
-			        		borderColor: 'red',
+			        		borderColor: 'orange',
 			        		fill: false,
-			        		backgroundColor: '#1D2D50',
+			        		backgroundColor: 'orange',
 			        		fontSize:24,
 			        		tension : 0
 			      			},
@@ -259,9 +259,9 @@
 		      				label: '병원돌봄',
 			        		data: data2,
 			        		borderWidth: 1,
-			        		borderColor: '#1E5F74',
+			        		borderColor: 'skyblue',
 			        		fill: false,
-			        		backgroundColor: '#1E5F74',
+			        		backgroundColor: 'skyblue',
 			        		fontSize:24,
 			        		tension : 0
 			      			}]
@@ -396,6 +396,7 @@
 		
 		
 		//처음에 한번 불러오기.
+		setSevenDays();
 		weeks[0].value = addSevenDays(today,-7);
 		weeks[1].value = addSevenDays(today,0);
 		dayTitle.innerText = addSevenDays(today,-7) + ' ~ ' +addSevenDays(today,0) + '(7일)'
