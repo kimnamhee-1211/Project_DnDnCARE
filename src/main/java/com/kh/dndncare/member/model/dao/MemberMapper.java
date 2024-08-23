@@ -85,7 +85,7 @@ public interface MemberMapper {
 
 	int getMatchingListCount(HashMap<String, Object> searchOption);
 
-	ArrayList<Member> selectMatchingMemberList(ArrayList<Integer> matNoList);
+	ArrayList<Patient> selectMatchingMemberList(ArrayList<Integer> matNoList);
 
 	ArrayList<MatPtInfo> selectMatchingPTInfoList(ArrayList<Integer> matNoList);
 

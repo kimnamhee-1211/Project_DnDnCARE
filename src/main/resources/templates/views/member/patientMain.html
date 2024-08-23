@@ -531,7 +531,6 @@
   		          events : data,
   		          eventColor: '#8dd986',
   		          eventClick: function(info) {
-  		        	  	//console.log(info.event.end);
   		        		let mils = info.event.start - new Date()
 		        	   	let infomation = document.querySelector('.infomation').children;
   		        		if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
