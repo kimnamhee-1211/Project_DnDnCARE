@@ -42,6 +42,7 @@ import com.kh.dndncare.common.ImageUtil;
 import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.common.Pagination2;
 import com.kh.dndncare.common.ThumbnailUtil;
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.Member;
@@ -1185,5 +1186,103 @@ public class AdminController {
 		}
 		
 	}
+	
+	
+	//결제정보 어드민
+	@GetMapping("matching.adm")
+	public String matchingView(Model model) {
+		
+		
+		
+		ArrayList<Matching> mat = aService.selectMatchings();
+		
+		
+		model.addAttribute("mat",mat);
+		return "matchingInfo";
+	}
+	
+	
+	//어드민 페이 토탈 통계 에이작스 (매칭 일주일)
+	
+		@GetMapping("weekMatTotal.adm")
+		@ResponseBody
+		public void weekMatTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2, HttpServletResponse response) {
+			
+			int year1 = Integer.parseInt(data1.split("-")[0]);
+			int month1 = Integer.parseInt(data1.split("-")[1]);
+			int day1 = Integer.parseInt(data1.split("-")[2]);
+			
+			LocalDate date1 = LocalDate.of(year1, month1, day1);
+	        
+	        
+	        //long daysBetween = ChronoUnit.DAYS.between(date1, date2);
+	        
+	        HashMap<String,Object> map = new HashMap<String,Object>();
+	        
+	        
+	        String[] labels = {date1.plusDays(0).toString(),date1.plusDays(1).toString(),date1.plusDays(2).toString()
+	        					,date1.plusDays(3).toString(),date1.plusDays(4).toString(),date1.plusDays(5).toString(),date1.plusDays(6).toString()};
+	        map.put("labels", labels);
+	        
+	        int[] datas1 = new int[7];
+	        int[] datas2 = new int[7];
+	        
+	        
+	        ArrayList<Matching> mat = aService.selectMatchings();
+			/*
+	        for(Matching mc : mat) {
+				
+				if(mc.getPtCount() == 1){	// 개인간병
+					
+					if(mc.getPayDate().toLocalDate().equals(date1)) {
+						datas1[0] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(1))) {
+						datas1[1] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(2))) {
+						datas1[2] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(3))) {
+						datas1[3] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(4))) {
+						datas1[4] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(5))) {
+						datas1[5] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(6))) {
+						datas1[6] += p.getPayMoney();
+					}
+				}else if(p.getPayService().equals("병원돌봄")) {
+					
+					if(p.getPayDate().toLocalDate().equals(date1)) {
+						datas2[0] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(1))) {
+						datas2[1] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(2))) {
+						datas2[2] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(3))) {
+						datas2[3] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(4))) {
+						datas2[4] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(5))) {
+						datas2[5] += p.getPayMoney();
+					}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(6))) {
+						datas2[6] += p.getPayMoney();
+					}
+					
+				}
+				
+			}
+	        map.put("datas1",datas1);
+	        map.put("datas2",datas2);
+	        
+	        Gson gson = new Gson();
+			response.setContentType("application/json; charset=UTF-8;");
+			try {
+				gson.toJson(map, response.getWriter());
+			} catch (JsonIOException | IOException e) {
+				e.printStackTrace();
+			}
+		        
+				*/
+		}//페이토탈메소드끝 ( 매칭 일주일)
+	
 	
 }//클래스 끝

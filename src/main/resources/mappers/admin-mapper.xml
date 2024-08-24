@@ -281,4 +281,12 @@
 		set reply_status = 'N'
 		where reply_no = #{rNo}
 	</update>
+	
+	<!-- 매칭정보 -->
+	<select id="selectMatchings" resultType="Matching">
+		select *
+		from matching
+		where mat_Confirm = 'Y'
+	
+	</select>
 </mapper>
