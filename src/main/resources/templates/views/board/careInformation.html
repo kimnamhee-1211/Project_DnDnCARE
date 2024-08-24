@@ -80,14 +80,14 @@
 	
 	<!-- 간병백과 조회용 Scrollable modal (시작) -->
 	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-fullscreen">
 		    <div class="modal-content">
 		    	<div class="modal-header">
 			        <h1 class="modal-title fs-5 badge rounded-pill bg-primary" id="staticBackdropLabel">Modal title</h1>
 			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		        </div>
-			    <div class="modal-body">
-			    	<div class="modal-dialog modal-dialog-scrollable" id="modalContent">
+			    <div class="modal-body text-center">
+			    	<div class="modal-dialog modal-dialog-scrollable ms-1" id="modalContent">
 			        
 			        </div>
 			    </div>
@@ -468,7 +468,7 @@
 				if(!isAlbum){
 					const bNo = event.target.parentElement.children[0].innerText;;
 					
-					let bCountTd = event.target.parentElement.children[3];
+					let bCountTd = event.target.parentElement.children[4];
 					let clickBoard; // 클릭한 글에 대한 데이터에 접근
 					const clickNoThumbNailList = []; // 클릭한 글에 대한 첨부파일에 접근
 					let clickThumbnail; // 클릭한 글에 대한 썸네일을 저장할 지역변수
