@@ -13,8 +13,12 @@
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	<main class="container ">
 		<div class="row m-4">
-			<div class="m-4 h1 text-center">간병사 정보</div>
-			<div class="col-8 m-3 layout-bd">
+			<div class="m-4 h1 d-flex justify-content-between" style="max-width:1150px; border-bottom:5px solid #133B5C;">
+				<a href="home.do" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a>
+				
+				<div>간병인 정보</div>
+			</div>
+			<div class="col-8 m-3">
 				<div class="row justify-content-md-center">
 					<div align="center" class="col-4 m-3 p-3 " >
 			      		<img id="profile-image" src="image/icon_profile.png"/>
@@ -28,7 +32,7 @@
 							<button th:if="${matNo != null && beforePage == 'myInfoMatchingHistoryP'}" type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton">후기 작성하기</button>		
 						</div>		      		
 		      		</div>
-		      		<div class="col-7 m-3 p-3  justify-content-md-center">
+		      		<div class="col-7 m-3 p-3  justify-content-md-center" style="border-left:4px solid #FCDAB7; border-right:4px solid #FCDAB7;">
 		      				      		
 			      		<div class="row m-2 p-4">
 			      			&nbsp;&nbsp;&nbsp;&nbsp;
@@ -61,7 +65,7 @@
 							<span th:if="${avgReviewScore == 0}">정보가 없습니다.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>		      		
 			      		</div>
 			      		
-			      		<div class="col-11 m-3 p-3 layout-bd">
+			      		<div class="col-11 m-3 p-3 " style="border-top:1px solid #FCDAB7; border-bottom:1px solid #FCDAB7;">
 			      			<h6>
 			      				<b>나이 :</b> [[${caregiverIntro.age}]]세&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				      			<th:block th:if="${caregiverIntro.memberGender} == 'M'">
@@ -91,8 +95,8 @@
 		      		</div>
 	      		</div>
 			</div>
-			<div class="col-3 m-3 p-2 text-center layout-bd" >
-				<div class="row m-3 text-center" align="center" style="color:#133B5C; border:2px solid #133B5C;border-radius:5px"><h2>매칭 기록</h2></div>
+			<div class="col-3 m-3 p-2 text-center" >
+				<div class="row m-3 text-center" align="center" style="color:#133B5C; border-bottom:2px solid #FCDAB7"><h2><b>매칭 기록</b></h2></div>
 				<h3 th:if="${serviceList.isEmpty()}">기록이 없습니다.</h3>
 				<div th:unless="${serviceList.isEmpty()}" class="m-3 p-2" style="border-bottom:1px solid #dee2e6" id="count-section">
 					<canvas class="my-4 w-100" id="matchingRecord" width="900" height="250"></canvas>
@@ -149,11 +153,16 @@
 			
 		</div>
 		<div align="center">
-		<div class="row m-5 testBorder" style="max-width:700px"th:each="rList:${reviewList}"><!-- each -->
-			<div class="col m-4 " style="border-right:2px solid #133B5C;">
-				<span class="h5" >[[${rList.ptName}]]님이 쓰신 후기</span>
+		<div align="right" style="max-width:700px; color:#133B5C;">
+			<h3><b>[[${reviewList.size()}]]개의 후기가 있습니다</b></h3>
+		</div>
+		<div class="row m-4 testBorder" style="max-width:700px"th:each="rList:${reviewList}"><!-- each -->
+			<div class="col m-2">
+				<div align="left" class="p-3">
+					<span class="h5" >[[${rList.ptName}]]님이 쓰신 후기</span><img src="/image/heart.gif" width="20" height="20">
+				</div>
 			</div>
-			<div class="col m-4">
+			<div class="col" style="margin-left:24px">
 				<div align="center"  class="d-flex justify-content-left" style="min-width:600px;">
 	      			<div align="left"class="icon-star-review">
 						<button th:if="${1 == rList.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
@@ -179,12 +188,12 @@
 	      			
     			</div>
 		    </div>
-			<div class="col m-4 ">
+			<div align="right"class="col m-4 " style="border-bottom:2px solid lightgray;">
 				<span>작성날짜 : [[${rList.reviewUpdateDate}]]</span>
 			</div>
-				<hr>
-				<div class="col m-4 " style="border-bottom:1px solid lightgray">
-					<div>[[${rList.reviewContent}]]</div>
+			<div>	</div>
+			<div align="left"class="col m-4 ">
+				<div class="p-2" style="background:rgba(252,218,183,0.6); border-radius:5px; ">[[${rList.reviewContent}]]</div>
 			</div>
 		</div>
 		<div class="sign-btn d-flex justify-content-center mx-auto" style="weight:300px; margin-bottom:100px;">
