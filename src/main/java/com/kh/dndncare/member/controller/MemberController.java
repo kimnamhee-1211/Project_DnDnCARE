@@ -2753,23 +2753,13 @@ public class MemberController {
 																	// memberNational=null, memberPay=null,
 																	// memberUpdateDate=null, memberRealAge=69)]
 				ArrayList<HashMap<String, Object>> infoList = mService.selectCaregiverInfo(memberNoList);
-				// [{S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=85}, {S_CATEGORY=가정돌봄,
-				// L_CATEGORY=service, MEMBER_NO=85}, {S_CATEGORY=동행서비스, L_CATEGORY=service,
-				// MEMBER_NO=85}, {S_CATEGORY=3, L_CATEGORY=career, MEMBER_NO=85},
-				// {S_CATEGORY=섬망, L_CATEGORY=disease, MEMBER_NO=85}, {S_CATEGORY=기저귀 케어,
-				// L_CATEGORY=disease, MEMBER_NO=85}, {S_CATEGORY=간병사, L_CATEGORY=license,
-				// MEMBER_NO=85}, {S_CATEGORY=요양보호사, L_CATEGORY=license, MEMBER_NO=85}]
 
 				// 해당 매칭에 대한 정보 조회 : 매칭정보 : 매칭번호, 시작날짜, 종료날짜, 시작시간, 종료시간, 금액, 시간제날짜, 간병인의 회원번호
 				// MATCHING : MAT_NO, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MONEY, MEMBER_NO
 				// MATCHING_DATE : MAT_DATE
 				eList = mService.patientCalendarEvent(matNoList);
-				// [CalendarEvent(matNo=69, title=null, start=null, end=null, money=150000,
-				// hospitalNo=0, hospitalAddress=null, hospitalName=null, beginTime=12:00,
-				// endTime=15:00, matMode=0, matchingType=null, ptCount=0, matAddressInfo=null,
-				// ptNo=0, matDate=2024-08-09,2024-08-16,2024-08-15,2024-08-22,2024-08-23,
-				// beginDt=2024-08-09, endDt=2024-08-23, careGiverNo=85)]
 
+				
 				for (Member m : mList) {
 					String career = "";
 					String license = "";
@@ -2797,7 +2787,8 @@ public class MemberController {
 		}
 
 		JSONArray array = new JSONArray();
-
+		
+		
 		if (!eList.isEmpty()) {
 			for (CalendarEvent c : eList) {
 				String[] endDtArr = String.valueOf(c.getEndDt()).split("-");
@@ -2905,7 +2896,6 @@ public class MemberController {
 					}
 				}
 			}
-			System.out.println("명훈님꺼 확인하기 " + array.toString());
 			return array.toString();
 		} else {
 			return null;

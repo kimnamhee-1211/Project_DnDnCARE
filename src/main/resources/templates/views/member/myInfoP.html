@@ -7,6 +7,13 @@
 <link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script><!-- 도로명주소api -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<style>
+	.fc-day-sun a { color: red; }
+	.fc-day-sat a { color: blue; }
+	.fc-day-mon a, .fc-day-thu a, .fc-day-fri a, .fc-day-tue a, .fc-day-wed a { color: black;}
+</style>
 </head>
 <body  >
 	<div th:replace="~{common/navbar :: navbar}"></div>
@@ -231,37 +238,112 @@
 							</div>
 							<div id='calendar' class="mb-2"></div>
 							<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-							<script>
-							
-								//종규 삽입
-						    	
-						    	function calenderEdit(){
-						    		const dateTitle = document.getElementById('fc-dom-1')
-						    		dateTitle.style.color = '#1E5F74';
-						    		dateTitle.style.fontWeight = 'bold';
+							<script th:inline="javascript">
+						    	//명훈 삽입(시작)
+						    	document.addEventListener('DOMContentLoaded', function() {
 						    		
-						    		const bts = document.getElementsByClassName('fc-button');
-						    		const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
+						    		//종규 삽입
+							    	/* function calenderEdit(){
+							    		const dateTitle = document.getElementById('fc-dom-1')
+							    		dateTitle.style.color = '#1E5F74';
+							    		dateTitle.style.fontWeight = 'bold';
+							    		
+							    		const bts = document.getElementsByClassName('fc-button');
+							    		const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
+							    		
+							    		const cala = cal.querySelectorAll('a');
+							    		for(i = 0; i< cala.length ; i++){
+							    			if(i % 7 == 0){
+							    				console.log(i);
+							    			cala[i].style.color = 'red';
+							    			}else if(i % 7 == 6){
+							    				cala[i].style.color = '#0a58ca';
+							    			}else{
+							    				if(i != 'entries' && i !='keys'){
+							    					console.log(i);
+							    				cala[i].style.color = '#1D2D50';
+							    				}
+							    			}
+							    		}
+							    	}  */
+							    	//종규 삽입 끝
 						    		
-						    		const cala = cal.querySelectorAll('a');
-						    		for(i = 0; i< cala.length ; i++){
-						    			if(i % 7 == 0){
-						    				console.log(i);
-						    			cala[i].style.color = 'red';
-						    			}else if(i % 7 == 6){
-						    				cala[i].style.color = '#0a58ca';
-						    			}else{
-						    				if(i != 'entries' && i !='keys'){
-						    					console.log(i);
-						    				cala[i].style.color = '#1D2D50';
-						    				}
-						    			}
-						    		}
-						    	} 
+						        	var calendarEl = document.getElementById('calendar');
+						        	var request = $.ajax({
+						        		url: 'caregiverPatientEvent.me',
+						        		datatype: 'json',
+							        	/*<![CDATA[*/
+						        		data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0},
+						        		/*]]>*/
+						        		success: data => {
+						        			console.log('=======');
+						        			console.log(data);
+						        			console.log('=======');
+						        		}
+						        	})
+						        	
+						        	const getTimeFormat = (date) => {
+						        		const hour = date.getHours();
+						        		const minutes = date.getMinutes();
+						        		const seconds = date.getSeconds();
+						        		return hour + "시간 " + minutes + "분 " + seconds +"초" ;
+						        	}
+						        	const getDateFormat = (date) => {
+						        		const year = (date.getFullYear()+"").slice(-2);
+						        		const month = ('0' + (date.getMonth()+1)).slice(-2);
+						        		const day = ('0' + date.getDate()).slice(-2);
+						        		
+						        		return year + '-' + month + '-' + day;
+						        	}
+						        	
+						        	// 시간계산
+						        	const remainCalc = (miseconds) => {
+						        		let hours = Number.parseInt(miseconds/3600000);  // 시간 계산
+						        		let temp1 = miseconds%3600000; // 시간을 뺀 나머지 계산
+						        		let mins = Number.parseInt(temp1/60000); // 분 계산
+						        		let temp2 = mins%60000; // 분을 뺀 나머지 계산
+						        		let seconds = Number.parseInt(temp2/1000)
+						        		
+						        		return hours + "시간 " + mins + "분 " + seconds +"초";
+						        	}
+						        	
+						        	// 이벤트 등록
+						        	request.done(function(data) {
+						        		console.log('----------');
+						        		console.log(data);
+						        		console.log('----------');
+						        		var calendar = new FullCalendar.Calendar(calendarEl, {
+						  		          initialView: 'dayGridMonth',
+						  		          events : data,
+						  		          eventColor: '#8dd986',
+						  		          eventClick: function(info) {
+						  		        		let mils = info.event.start - new Date()
+								        	   	let infomation = document.querySelector('.infomation').children;
+						  		        		if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
+						  			        	  	/* infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남'; */
+						  			        		  infomation[0].innerHTML = '';
+						  			        	  } else { // 이벤트 날짜가 미래인 경우
+						  			        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>&nbsp;&nbsp;' + remainCalc(mils) + ' 남음';
+						  			        	}
+								        	   	infomation[2].innerHTML = '병원명이 들어올 자리';
+								          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
+								          		
+								          		let infoDetail = document.querySelector('.infoDetail').children;
+								          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
+								          		infoDetail[3].innerHTML = info.event.extendedProps.endDate;
+								          		infoDetail[6].innerHTML = info.event.extendedProps.money + '원';
+								          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
+								        	  	$('#calendarModal').modal('show');
+						  		        	  },
+						  		        	locale: "ko"
+						  		        });
+						  		        calendar.render();
+						  		      	//calenderEdit();
+						        	})
+						      	});
+						    	//명훈 삽입(끝)
 						    	
-						    	//종규 삽입 끝
-							
-							    document.addEventListener('DOMContentLoaded', function() {
+							    /* document.addEventListener('DOMContentLoaded', function() {
 							        var calendarEl = document.getElementById('calendar'); // full-calendar를 삽입할 요소
 							        var calendar = new FullCalendar.Calendar(calendarEl, {
 							          initialView: 'dayGridMonth' //  // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
@@ -269,7 +351,7 @@
 							    calendar.render(); // calendar 렌더링을 지시
 							    calenderEdit();
 							    });
-						    	console.log(document.getElementsByClassName('fc-toolbar-chunk'));
+						    	console.log(document.getElementsByClassName('fc-toolbar-chunk')); */
 						    	
 						    	
 							    
@@ -393,7 +475,48 @@
 	
 	
 	</div>
-		<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
+	<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
+	
+	<!-- 캘린더 이벤트의 모달박스 (시작)-->
+    <div class="modal" id="calendarModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+		   		<div class="modal-header">
+		    		<div class="modal-title workInfo">
+		    			<div class="infomation">
+			    			<span class="badge bg-danger"><!-- <img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음 --></span><br/>
+			    			<span>혜민병원</span><br/>
+			    			<span>서울특별시 광진구</span>
+		    			</div>
+		    			<div class="text-end align-middle imgDiv">
+		    				<br/>
+				    		<img src="image/icon/hospital.png" aria-label="Close" style="width:60px; height:60px;">
+		    			</div>
+		    		</div>
+		    		<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+		   		</div>
+		    	<div class="modal-body workInfo">
+		    		<div>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">시작 시간</span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">종료 시간</span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">일 간병비</span><br/><br/>
+		    		</div>
+		    		<div class="text-end fw-bold infoDetail">
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span>
+		    		</div>
+		    	</div>
+		    	<div class="modal-footer">
+		    		<input type="hidden" name="matNo"/>
+	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">닫기</button>
+	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">자세히 보기</button>	    			
+		    	</div>
+		  	</div>
+		</div>
+	</div>
+    <!-- 캘린더 이벤트의 모달박스 (끝) -->
+	
 	
 	
 	<script th:inline="javascript">

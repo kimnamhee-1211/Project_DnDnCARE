@@ -324,3 +324,9 @@ table th{
 input{
 	border: 0px;
 }
+
+/* 캘린더 이벤트의 정보를 보는 모달박스 */
+.workInfo {
+	display:grid; grid-template-columns: 1fr 1fr;
+}
+

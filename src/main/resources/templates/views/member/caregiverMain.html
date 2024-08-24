@@ -12,6 +12,9 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <style>
     	.fc{width:500px !important; height:500px !important; } 
+    	.fc-day-sun a { color: red; }
+    	.fc-day-sat a { color: blue; }
+    	.fc-day-mon a, .fc-day-thu a, .fc-day-fri a, .fc-day-tue a, .fc-day-wed a { color: black;}
     </style>
 </head>
 <body>
@@ -426,15 +429,16 @@
 		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
 		          		//console.log(document.querySelector('.modal-footer').children[0].value);
 		        	  	$('#calendarModal').modal('show');
-		        	  }
+		        	  },
+		        	  locale: "ko"
 			        });
 			        calendar.render();
-			        calenderEdit();
+			        //calenderEdit();
 	    	}) 
 	  	});
    
 	  	//종규 삽입
-	    function calenderEdit(){
+	    /* function calenderEdit(){
 	       const dateTitle = document.getElementById('fc-dom-1');
 	       
 	       console.log(dateTitle);
@@ -458,7 +462,7 @@
 	             }
 	          }
 	       }
-	    } 
+	    }  */
 	    //종규 삽입 끝
     
 		
