@@ -86,10 +86,10 @@
 			        <h1 class="modal-title fs-5 badge rounded-pill bg-primary" id="staticBackdropLabel">Modal title</h1>
 			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		        </div>
-			    <div class="modal-body text-center">
-			    	<div class="modal-dialog modal-dialog-scrollable ms-1" id="modalContent">
-			        
-			        </div>
+			    <div class="modal-body" style="display:grid; grid-template-columns: 1fr 1280px 1fr; text-align:center;">
+			   		<div><!-- 공백 --></div>
+			    	<div class="modal-dialog modal-dialog-scrollable ms-1 modal-fullscreen" id="modalContent" style="width:1280px;"></div>
+			    	<div><!-- 공백 --></div>
 			    </div>
 			    <div class="modal-footer">
 			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -445,7 +445,6 @@
 			
 				if(isAlbum){
 					if(event.target.className == 'imgsDiv' || event.target.tagName == 'H3' || event.target.tagName == 'IMG'){
-						console.log('여기');
 						this.style.cursor = 'pointer';
 					} else {
 						this.style.cursor = 'auto';
