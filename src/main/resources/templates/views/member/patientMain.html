@@ -460,7 +460,7 @@
     // 이벤트 : 이벤트 정보를 담아서 객체를 생성해야 한다. 문법은 json을 따른다.
     	document.addEventListener('DOMContentLoaded', function() {
         	var calendarEl = document.getElementById('calendar');
-	    	console.log('키킥');
+	    	//console.log('키킥');
         	var request = $.ajax({
         		url: 'caregiverPatientEvent.me',
         		datatype: 'json',
@@ -469,7 +469,7 @@
         		/*]]>*/
         		success:(data)=>{console.log('dddddd')}
         	})
-        	console.log('리퀘스트확인' + request);
+        	//console.log('리퀘스트확인' + request);
         	const getTimeFormat = (date) => {
         		const hour = date.getHours();
         		const minutes = date.getMinutes();
@@ -504,8 +504,8 @@
                
                const bts = document.getElementsByClassName('fc-button');
                const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
-               console.log(cal.querySelectorAll('tbody')[0]);
-               console.log(cal.querySelectorAll('tbody')[0].querySelectorAll('td'));
+               //console.log(cal.querySelectorAll('tbody')[0]);
+               //console.log(cal.querySelectorAll('tbody')[0].querySelectorAll('td'));
                const cala = cal.querySelectorAll('.fc-daygrid-day-number');
                const calaTitle = cal.querySelectorAll('.fc-col-header-cell-cushion');
             	   
@@ -529,13 +529,27 @@
                    }
                 }
                
+               //전부 한글로 바꾸자
+               
             } 
+        	
+        	//메소드 하나더 추가 jk
+        	function calbtns(){
+        		const btns = document.getElementsByClassName('fc-toolbar-chunk');
+        		for(btn of btns){
+        			btn.addEventListener('click',function(){
+        				calenderEdit();
+        			})
+        		}
+        	}
+        	
+        	
             //종규 삽입 끝
         	
         	
         	// 이벤트 등록
         	request.done(function(data) {
-        		console.log(data);
+        		//console.log(data);
         		var calendar = new FullCalendar.Calendar(calendarEl, {
   		          initialView: 'dayGridMonth',
   		          events : data,
@@ -561,7 +575,9 @@
   		        	  }
   		        });
   		        calendar.render();
-  		      calenderEdit();
+  		    	//종규 메소드 명훈 캘린더 삽입
+  		        calenderEdit();
+  		    	calbtns();
         	})
         	
         	
@@ -631,7 +647,7 @@
 	    				data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0, selectNum: 5},
 	    				success: data => { // 배열로 넘어옴
 	    					// 새로 추천받은 목록으로 교체(시작)
-	    					console.log(data);
+	    					//console.log(data);
 	    					tbody.innerText = '';
 	    					for(let d of data) {
 	    						const tr = document.createElement('tr');
@@ -697,7 +713,7 @@
     for(payBt of payBts){
     	payBt.addEventListener('click',function(){
 			$('#modalChoice2').modal('show');
-			console.log(this.nextElementSibling);
+			//console.log(this.nextElementSibling);
 			$.ajax({
 				url:'payInfo.mc',
 				data: {matNo:this.nextElementSibling.value },
@@ -745,7 +761,7 @@
 
     	const formattedTime = year+month+day+hours+minutes+seconds;
     	const form = document.getElementById('payForm');
-    	console.log(document.getElementsByName('mercharntUid')[0]);
+    	//console.log(document.getElementsByName('mercharntUid')[0]);
     	
 	    function requestPay() {
 	    	//const money = document.getElementById('customAmountInput').value;
