@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link th:href="@{css/publicMatching.css}" rel="stylesheet" type="text/css"/>
+
 </head>
 <body>
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
@@ -12,11 +13,11 @@
 			<input type="hidden" th:if="${memberNoC != null}" name="memberNoC" th:value="${memberNoC}">	
 			<div class="publicMatching-wrap text-center">
 				<div class="w-100">
-					<a href="home.do"><img class="logo-image mb-4" src="image/logo-removebg.png" width="300"></a>
+					
 					<h1 class="h3 mb-2 fw-bold text-center">공개 매칭 신청</h1>
 					<div class="page-num mb-3">
-						<img src="image/icon/1page-color-deepGreen.png"></img>
-						<img src="image/icon/2page.png"></img>
+						<img src="image/icon/1page-color-blue.png"></img>
+						<img src="image/icon/1page-none.png"></img>
 					</div>
 					<div class="mb-5">
 						<p><em>*</em> 아래 정보는 기존에 입력한 공개 매칭 설정 정보들입니다.<br>
@@ -38,35 +39,61 @@
 				</div>
 				
 				<div id="homeInput" class="input-field hidden">
-				    <div class="address-row w-50 mb-2">
-				        <label for="addressCode">우편번호</label>
-				        <input type="text" id="addressCode" placeholder="우편번호"  th:value="${#strings.arraySplit(patient.ptAddress, '//')[0]}" class="adressCode">
+				    <div class="address-container">
+				        <div class="address-row">
+						    <label for="addressCode">우편번호</label>
+						    <div class="input-button-wrapper">
+						        <input type="text" id="addressCode" placeholder="우편번호" th:value="${#strings.arraySplit(patient.ptAddress, '//')[0]}">
+						        <button type="button" onclick="execDaumPostcode()" class="address-search-btn">주소 검색</button>
+						    </div>
+						</div>
+				        <div class="address-row">
+				            <label for="address">주소</label>
+				            <input type="text" id="address" placeholder="주소" th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]}">
+				        </div>
+				        <div class="address-row">
+				            <label for="detailAddress">상세주소</label>
+				            <input type="text" id="detailAddress" placeholder="상세주소" th:value="${#strings.arraySplit(patient.ptAddress, '//')[2]}">
+				        </div>
 				    </div>
-				    <div class="address-row w-75 mb-2">
-				        <label for="address">주소</label>
-				        <input type="text" id="address" placeholder="주소"  th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]}">
-				    </div>
-				    <div class="address-row w-75 mb-2">
-				        <label for="detailAddress">상세주소</label>
-				        <input type="text" id="detailAddress" placeholder="상세주소" th:value="${#strings.arraySplit(patient.ptAddress, '//')[2]}">
-				    </div>
-				    <input type="hidden" id=ptAddress>
+				    <input type="hidden" id="ptAddress">
 				</div>
 				
 				<div id="hospitalInput" class="input-field hidden">
-				   <div class="address-row w-50 mb-2">
-				        <label for="addressCode">우편번호</label>
-				        <input type="text" id="addressCode" placeholder="우편번호"  th:value="${#strings.arraySplit(patient.ptAddress, '//')[0]}" class="adressCode">
+				    <div class="address-container">
+				        <div class="address-row">
+				            <label for="hospitalName">병원명</label>
+				            <div class="input-button-wrapper">
+				            <input type="text" id="hospitalName" placeholder="병원명" readonly>
+				            <button type="button" id="openHospitalSearch" class="hospital-search-btn">병원 검색</button>
+				            </div>
+				        </div>
+				        <div class="address-row">
+				            <label for="hospitalAddress">주소</label>
+				            <input type="text" id="hospitalAddress" placeholder="주소" th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]}">
+				        </div>
+				        <div class="address-row">
+				            <label for="hospitalDetailAddress">상세주소</label>
+				            <input type="text" id="hospitalDetailAddress" placeholder="상세주소" th:value="${#strings.arraySplit(patient.ptAddress, '//')[2]}">
+				        </div>
+				        
+				        <div class="address-row">
+				            <label for="hospitalAddressCode">우편번호</label>
+				            <input type="text" id="hospitalAddressCode" placeholder="우편번호" class="addressCode" th:value="${#strings.arraySplit(patient.ptAddress, '//')[0]}" >
+				        </div>
 				    </div>
-				    <div class="address-row w-75 mb-2">
-				        <label for="address">주소</label>
-				        <input type="text" id="address" placeholder="주소"  th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]}">
+				    <input type="hidden" id="hospitalPtAddress">
+				</div>
+				
+				<!-- 모달 창 -->
+				<div id="hospitalSearchModal" class="modal">
+				    <div class="modal-content">
+				        <span class="close">&times;</span>
+				        <h2>병원 검색</h2>
+				        <input type="text" id="hospitalSearchInput" placeholder="병원명 검색">
+				        <div id="hospitalList"></div>
+				        <div id="pagination"></div>
 				    </div>
-				    <div class="address-row w-75 mb-2">
-				        <label for="detailAddress">상세주소</label>
-				        <input type="text" id="detailAddress" placeholder="상세주소"  th:value="${#strings.arraySplit(patient.ptAddress, '//')[2]}">
-				    </div>
-				    <input type="hidden" id=ptAddress>
 				</div>
 				<div class="basic-info-wrap d-flex justify-content-center">
 					<div class="basic-info">
@@ -105,6 +132,7 @@
 		</form>
 	</main>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script>
 		function combineAddress(inputId) {
 		    const container = document.getElementById(inputId);
@@ -179,6 +207,231 @@
 		        document.getElementById('hospitalInput').classList.remove('hidden');
 		    }
 		}
+		
+		//다음 주소 api
+		function execDaumPostcode() {
+		    new daum.Postcode({
+		        oncomplete: function(data) {
+		            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+		            // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+		            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+		            var addr = ''; // 주소 변수
+
+		            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+		            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+		                addr = data.roadAddress;
+		            } else { // 사용자가 지번 주소를 선택했을 경우(J)
+		                addr = data.jibunAddress;
+		            }
+
+		            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+		            document.getElementById('addressCode').value = data.zonecode;
+		            document.getElementById('address').value = addr;
+		            // 커서를 상세주소 필드로 이동한다.
+		            document.getElementById('detailAddress').focus();
+
+		            // hidden input에 전체 주소 정보를 저장한다.
+		            updateFullAddress();
+		        }
+		    }).open();
+		}
+
+		function updateFullAddress() {
+		    var addressCode = document.getElementById('addressCode').value;
+		    var address = document.getElementById('address').value;
+		    var detailAddress = document.getElementById('detailAddress').value;
+		    
+		    var fullAddress = addressCode + '//' + address + '//' + detailAddress;
+		    document.getElementById('ptAddress').value = fullAddress;
+		}
+
+		// 상세주소 입력 시 전체 주소 업데이트
+		document.getElementById('detailAddress').addEventListener('input', updateFullAddress);
+		
+		//공공 데이터
+		let allHospitals = [];
+		let filteredHospitals = [];
+		let currentPage = 1;
+		let currentPageGroup = 1;
+		const itemsPerPage = 5;
+		
+		document.getElementById('openHospitalSearch').onclick = function() {
+		    document.getElementById('hospitalSearchModal').style.display = 'block';
+		    fetchHospitals();
+		}
+		
+		document.getElementsByClassName('close')[0].onclick = function() {
+		    document.getElementById('hospitalSearchModal').style.display = 'none';
+		}
+		
+		function fetchHospitals() {
+		    let xhr = new XMLHttpRequest();
+		    let url = 'http://apis.data.go.kr/B490001/sjHptMcalPstateInfoService/getSjJijeongHptChakgiList';
+		    let queryParams = '?' + encodeURIComponent('serviceKey') + '='+'TqXL2WevbCLJDY0ZVbFrL22ehLsP2bdAdbD08YPjNXsiVHbasLfGANMr%2BJlO%2FlWvSd9acDudRtmxz4WZBVF0ag%3D%3D';
+		    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100');
+		    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1');
+		    
+		    xhr.open('GET', url + queryParams);
+		    xhr.onreadystatechange = function () {
+		        if (this.readyState == 4 && this.status == 200) {
+		            let parser = new DOMParser();
+		            let xmlDoc = parser.parseFromString(this.responseText, "text/xml");
+		            
+		            let items = xmlDoc.getElementsByTagName('item');
+		            allHospitals = [];
+		            
+		            for (let i = 0; i < items.length; i++) {
+		                let hospitalNm = items[i].getElementsByTagName('hospitalNm')[0].textContent;
+		                let addr = items[i].getElementsByTagName('addr')[0].textContent;
+		                allHospitals.push({ hospitalNm: hospitalNm, addr: addr });
+		            }
+		            
+		            displayHospitals(allHospitals);
+		        }
+		    };
+		    
+		    xhr.send('');
+		}
+		
+		// displayHospitals 함수 수정 (주소 정보를 표시하도록)
+		function displayHospitals(hospitals) {
+		    let hospitalList = document.getElementById('hospitalList');
+		    hospitalList.innerHTML = '';
+		    
+		    let startIndex = (currentPage - 1) * itemsPerPage;
+		    let endIndex = startIndex + itemsPerPage;
+		    let pageHospitals = hospitals.slice(startIndex, endIndex);
+		    
+		    pageHospitals.forEach(hospital => {
+		        let div = document.createElement('div');
+		        div.textContent = `${hospital.hospitalNm} - ${hospital.addr}`;
+		        div.onclick = function() {
+		            selectHospital(hospital);
+		        };
+		        hospitalList.appendChild(div);
+		    });
+		    
+		    displayPagination(hospitals.length);
+		}
+
+		
+		function selectHospital(hospital) {
+		    document.getElementById('hospitalName').value = hospital.hospitalNm;
+		    document.getElementById('hospitalAddress').value = hospital.addr;
+		    
+		    // 주소에서 우편번호 추출 (첫 5자리가 숫자인 경우 우편번호로 간주)
+		    //let addressParts = hospital.addr.split(' ');
+		   //let postcode = addressParts[0].match(/^\d{5}/) ? addressParts[0] : '';
+		    
+		    //document.getElementById('hospitalAddressCode').value = postcode;
+		    
+		    // hidden input에 전체 주소 정보 저장
+		    updateFullHospitalAddress();
+
+		    document.getElementById('hospitalSearchModal').style.display = 'none';
+		}
+		
+		function updateFullHospitalAddress() {
+		    let hospitalName = document.getElementById('hospitalName').value;
+		    let hospitalAddress = document.getElementById('hospitalAddress').value;
+		    let hospitalAddressCode = document.getElementById('hospitalAddressCode').value;
+		    
+		    let fullAddress = hospitalAddressCode + '//' + hospitalAddress + '//' + hospitalName;
+		    document.getElementById('hospitalPtAddress').value = fullAddress;
+		}
+
+		
+
+
+		// 페이지네이션 표시
+
+		function displayPagination(totalItems) {
+		    let totalPages = Math.ceil(totalItems / itemsPerPage);
+		    let paginationElement = document.getElementById('pagination');
+		    paginationElement.innerHTML = '';
+		
+		    let startPage = (currentPageGroup - 1) * 5 + 1;
+		    let endPage = Math.min(totalPages, currentPageGroup * 5);
+		
+		    // 이전 버튼
+		    if (currentPageGroup > 1) {
+		        let prevButton = createPaginationButton('이전', () => {
+		            currentPageGroup--;
+		            currentPage = (currentPageGroup - 1) * 5 + 1;
+		            displayHospitals(filteredHospitals.length > 0 ? filteredHospitals : allHospitals);
+		        });
+		        paginationElement.appendChild(prevButton);
+		    }
+		
+		    // 페이지 번호 버튼
+		    for (let i = startPage; i <= endPage; i++) {
+		        let button = createPaginationButton(i, () => {
+		            currentPage = i;
+		            displayHospitals(filteredHospitals.length > 0 ? filteredHospitals : allHospitals);
+		            updateActivePageButton();
+		        });
+		        if (i === currentPage) {
+		            button.classList.add('active');
+		        }
+		        paginationElement.appendChild(button);
+		    }
+		
+		    // 다음 버튼
+		    if (endPage < totalPages) {
+		        let nextButton = createPaginationButton('다음', () => {
+		            currentPageGroup++;
+		            currentPage = (currentPageGroup - 1) * 5 + 1;
+		            displayHospitals(filteredHospitals.length > 0 ? filteredHospitals : allHospitals);
+		        });
+		        paginationElement.appendChild(nextButton);
+		    }
+		}
+
+		function createPaginationButton(text, onClick) {
+		    let button = document.createElement('button');
+		    button.innerText = text;
+		    button.onclick = onClick;
+		    return button;
+		}
+
+		
+		function updateActivePageButton() {
+		    let buttons = document.querySelectorAll('#pagination button');
+		    buttons.forEach(button => {
+		        if (button.innerText === currentPage.toString()) {
+		            button.classList.add('active');
+		        } else {
+		            button.classList.remove('active');
+		        }
+		    });
+		}
+
+		// 병원 검색 버튼 이벤트 리스너
+		document.getElementById('openHospitalSearch').addEventListener('click', function() {
+		    document.getElementById('hospitalSearchModal').style.display = 'block';
+		    fetchHospitals();
+		});
+
+		// 모달 닫기 버튼 이벤트 리스너
+		document.querySelector('.close').addEventListener('click', function() {
+		    document.getElementById('hospitalSearchModal').style.display = 'none';
+		});
+
+		// 검색 입력 필드 이벤트 리스너
+		document.getElementById('hospitalSearchInput').addEventListener('input', function() {
+		    let searchTerm = this.value.toLowerCase();
+		    filteredHospitals = allHospitals.filter(hospital => 
+		        hospital.hospitalNm.toLowerCase().includes(searchTerm) ||
+		        hospital.addr.toLowerCase().includes(searchTerm)
+		    );
+		    currentPage = 1;
+		    currentPageGroup = 1;
+		    displayHospitals(filteredHospitals);
+		});
+		
+		//초기 로드
+		fetchHospitals();
 
 		// 폼에 이벤트 리스너 추가
 		document.querySelector('form').addEventListener('submit', handleFormSubmit);
