@@ -110,7 +110,7 @@
 				console.log(weeks[1].value);
 				
 				$.ajax({
-					url : 'weekPayTotal.adm',
+					url : 'weekMatTotal.adm',
 					data : {data1:weeks[0].value, data2 : weeks[1].value},
 					success : data=>{
 						chart(data.labels, data.datas1,data.datas2);

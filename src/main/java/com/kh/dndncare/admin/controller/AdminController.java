@@ -1229,6 +1229,73 @@ public class AdminController {
 	        
 	        
 	        ArrayList<Matching> mat = aService.selectMatchings();
+	        
+	        
+	     // 로그 파일 : 페이지 이용량을 조회 (시작)
+			File usageFolder = new File("C:/logs/matching/");
+			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+			
+			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
+			try { 
+				for(File f : usageFileList) {
+					BufferedReader br = new BufferedReader(new FileReader(f));
+					String data;
+					String dataMatNo;
+					String dataService;
+					String date;
+					System.out.println(br.readLine());
+					while((data=br.readLine())!=null) {
+						// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
+						
+						System.out.println(data);
+						date = data.substring(0,8);
+						dataMatNo = data.split("//")[1];
+						dataService = data.split("//")[2];
+						
+						if(dataMatNo != null && dataService != null) {
+							
+							for(int i = 0; i < labels.length ; i++) {
+								System.out.println("비교하기 라벨" + labels[i]);
+								System.out.println("비교하기 날짜" + date);
+								
+								
+								if(labels[i].trim().equals(date.trim())) {
+									if(dataService.trim().equals("개인간병")) {
+										System.out.println("djelemfdjrksl?");
+										datas1[i] += 1;
+									}else {
+										System.out.println("djelemfdjrksl?222");
+										datas2[i] += 1;
+									}
+								}
+							}
+						}
+						
+					}
+					
+					
+					br.close();
+				}
+				//model.addAttribute("usage", usageMap);
+			} catch(Exception e) {
+				e.printStackTrace();
+			} 
+	        
+			
+			map.put("datas1",datas1);
+	        map.put("datas2",datas2);
+	        
+	        Gson gson = new Gson();
+			response.setContentType("application/json; charset=UTF-8;");
+			try {
+				gson.toJson(map, response.getWriter());
+			} catch (JsonIOException | IOException e) {
+				e.printStackTrace();
+			}
+			
+	        
+	        
+	        
 			/*
 	        for(Matching mc : mat) {
 				

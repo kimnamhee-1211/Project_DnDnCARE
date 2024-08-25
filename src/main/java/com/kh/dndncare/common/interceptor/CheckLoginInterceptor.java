@@ -21,7 +21,7 @@ public class CheckLoginInterceptor implements HandlerInterceptor{
 		String url = request.getRequestURI();
 		
 		String msg = null;
-		System.out.println(url);
+		//System.out.println(url);
 		if(loginUser == null) {
 			if(url.contains("moreWorkInfo.me") || url.contains("")) {	//여긴 간병인 로그인페이지
 				msg = "로그인 후 이용하세요!";
