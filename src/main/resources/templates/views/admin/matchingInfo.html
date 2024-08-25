@@ -52,15 +52,15 @@
 							</tr>
 							<tr align="center" class="m-2 d-flex justify-content-between">
 								<th width="300" style="border-right:2px solid lightgray"><h2>개인간병 횟수</h2></th>
-								<td width="250"><h4 id="avgPay">100,000원</h4></td>
+								<td width="250"><h4 id="indivPay">100,000원</h4></td>
 							</tr>
 							<tr align="center" class="m-2 d-flex justify-content-between">
 								<th width="300" style="border-right:2px solid lightgray"><h2>공동간병 횟수</h2></th>
-								<td width="250"><h4 id="maxPay">100,000원</h4></td>
+								<td width="250"><h4 id="togetherPay">100,000원</h4></td>
 							</tr>
 							<tr align="center" class="m-2 d-flex justify-content-between">
 								<th width="300" style="border-right:2px solid lightgray"><h2>가장 많은 매칭 수</h2></th>
-								<td width="250"><h4 id="minPay">100,000원</h4></td>
+								<td width="250"><h4 id="maxPay">100,000원</h4></td>
 							</tr>
 							<tr align="center" class="m-2 d-flex justify-content-between">
 								<th width="300" style="border-right:2px solid lightgray"><h2>가장 적은 매칭 수</h2></th>
@@ -141,7 +141,7 @@
 						if(year1 == year2 && month1 == month2){
 							
 							$.ajax({
-								url: 'monthPayTotal.adm',
+								url: 'monthMatTotal.adm',
 								data : {data1:year1 +','+year2, data2 : month1 + ','+month2, flag:'1'},
 								success:data=>{
 									chart(data.labels, data.datas1,data.datas2);
@@ -156,7 +156,7 @@
 						}else{
 
 							$.ajax({
-								url: 'monthPayTotal.adm',
+								url: 'monthMatTotal.adm',
 								data : {data1:year1 +','+year2, data2 : month1 + ','+month2, flag:'2'},
 								success:data=>{
 									chart(data.labels, data.datas1,data.datas2);
@@ -183,7 +183,7 @@
 				}else{
 					if(year3 == year4){
 						$.ajax({
-							url: 'yearPayTotal.adm',
+							url: 'yearMatTotal.adm',
 							data : {data1:year3 +','+year4, data2 : '', flag:'1'},
 							success:data=>{
 								chart(data.labels, data.datas1,data.datas2);
@@ -195,7 +195,7 @@
 						});
 					}else{
 						$.ajax({
-							url: 'yearPayTotal.adm',
+							url: 'yearMatTotal.adm',
 							data : {data1:year3 +','+year4, data2 : '', flag:'2'},
 							success:data=>{
 								chart(data.labels, data.datas1,data.datas2);
@@ -252,9 +252,9 @@
 			        		label: '개인간병',
 			        		data: data1,
 			        		borderWidth: 2,
-			        		borderColor: 'orange',
+			        		borderColor: 'red',
 			        		fill: false,
-			        		backgroundColor: 'orange',
+			        		backgroundColor: 'red',
 			        		fontSize:24,
 			        		tension : 0.1
 			      			},
@@ -262,23 +262,15 @@
 		      				label: '공동간병',
 			        		data: data2,
 			        		borderWidth: 1,
-			        		borderColor: 'skyblue',
+			        		borderColor: 'blue',
 			        		fill: false,
-			        		backgroundColor: 'skyblue',
+			        		backgroundColor: 'blue',
 			        		fontSize:24,
 			        		tension : 0.1
 			      			}]
 			    },
 			    options: {
-			    	onClick : function(){
-			    		//console.log(chart2.legend.legendItems)
-			    		//console.log(chart2);
-			    		//console.log(chart2.legend.legendItems[0].hidden);
-			    		//console.log(chart2.legend.legendItems[1].hidden);
-			    		//console.log(this);
-			    		
-			    		//calcul(data.datas1,data.datas2,1);
-			    		},
+			    	events: ['click'],
 		    		legend: {
 		                labels: {
 		                    fontColor: 'black',
@@ -289,7 +281,7 @@
 			});
 		
 		};
-		chart(['1','2'],[1],[2]);
+		//chart(['1','2'],[1],[2]);
 		
 		// 막대그래프 (끝)
 		//클릭이벤트하나만넣기
@@ -404,7 +396,7 @@
 		weeks[1].value = addSevenDays(today,0);
 		dayTitle.innerText = addSevenDays(today,-7) + ' ~ ' +addSevenDays(today,0) + '(7일)'
 		$.ajax({
-					url : 'weekPayTotal.adm',
+					url : 'weekMatTotal.adm',
 					data : {data1:weeks[0].value, data2 : weeks[1].value},
 					success : data=>{
 						chart(data.labels, data.datas1,data.datas2);
@@ -463,42 +455,44 @@
 			
 			if(flag == 1){
 				total = totalPayFn(data1) + totalPayFn(data2);
-				totalPay.innerText = total.toLocaleString() + '원';
-				avg = avgPayFn(data1) + avgPayFn(data2);
-				avgPay.innerText = (Math.round(avg / 100) * 100).toLocaleString() + '원';
+				totalPay.innerText = total.toLocaleString() + '회';
+				indiv = totalPayFn(data1);
+				indivPay.innerText = indiv.toLocaleString() + '회';
+				togetherP = totalPayFn(data2);
+				togetherPay.innerText = togetherP.toLocaleString() + '회';
 				maxP = maxPayFn(data1) > maxPayFn(data2) ? maxPayFn(data1) : maxPayFn(data2);
-				maxPay.innerText = maxP.toLocaleString() + '원';
-				minP = minPayFn(data1) > minPayFn(data2) ? minPayFn(data1) : minPayFn(data2);
-				minPay.innerText = minP.toLocaleString() + '원';
+				maxPay.innerText = maxP.toLocaleString() + '회';
+				minP = maxPayFn(data1) > maxPayFn(data2) ? maxPayFn(data1) : maxPayFn(data2);
+				minPay.innerText = minP.toLocaleString() + '회';
 			}else if(flag ==2){
 				total = totalPayFn(data1);
-				totalPay.innerText = total.toLocaleString() + '원';
+				totalPay.innerText = total.toLocaleString() + '회';
 				avg = avgPayFn(data1);
-				avgPay.innerText = (Math.round(avg / 100) * 100).toLocaleString() + '원';
+				avgPay.innerText = (Math.round(avg / 100) * 100).toLocaleString() + '회';
 				maxP = maxPayFn(data1);
-				maxPay.innerText = maxP.toLocaleString() + '원';
+				maxPay.innerText = maxP.toLocaleString() + '회';
 				minP = minPayFn(data1);
-				minPay.innerText = minP.toLocaleString() + '원';
+				minPay.innerText = minP.toLocaleString() + '회';
 				
 				
 			}else if(flag ==3){
 				total = totalPayFn(data2);
-				totalPay.innerText = total.toLocaleString() + '원';
+				totalPay.innerText = total.toLocaleString() + '회';
 				avg = avgPayFn(data2);
-				avgPay.innerText = (Math.round(avg / 100) * 100).toLocaleString() + '원';
+				avgPay.innerText = (Math.round(avg / 100) * 100).toLocaleString() + '회';
 				maxP = maxPayFn(data2);
-				maxPay.innerText = maxP.toLocaleString() + '원';
+				maxPay.innerText = maxP.toLocaleString() + '회';
 				minP = minPayFn(data2);
-				minPay.innerText = minP.toLocaleString() + '원';
+				minPay.innerText = minP.toLocaleString() + '회';
 			}else{
 				total = 0;
-				totalPay.innerText = total.toLocaleString() + '원';
+				totalPay.innerText = total.toLocaleString() + '회';
 				avg = 0;
-				avgPay.innerText = (Math.round(avg / 100) * 100).toLocaleString() + '원';
+				avgPay.innerText = (Math.round(avg / 100) * 100).toLocaleString() + '회';
 				maxP = 0;
-				maxPay.innerText = maxP.toLocaleString() + '원';
+				maxPay.innerText = maxP.toLocaleString() + '회';
 				minP = 0;
-				minPay.innerText = minP.toLocaleString() + '원';
+				minPay.innerText = minP.toLocaleString() + '회';
 			}
 		}
 		

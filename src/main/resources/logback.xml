@@ -87,7 +87,7 @@
       	<!--property에서 변수화 시킨 경로를 사용 -->
    		<append>true</append> <!-- 기존 파일을 덮어씀 -->
       	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-         	<pattern>매칭정보%d{yy-MM-dd HH:mm:ss} _ %m%n</pattern>      
+         	<pattern>%d{yyyy-MM-dd HH:mm:ss} _ %m%n</pattern>      
       	</encoder>
    </appender>
    <appender name="myFileAppenderMatchingCreateDay" class="ch.qos.logback.core.FileAppender">

@@ -336,7 +336,7 @@ public class MatchingController {
 		model.addAttribute("hospital", hospital);
 		
 		//하나만 확인해보자
-		//logger.info(" 잘 들어가지니? ");
+		logger.info(" 잘 들어가지니? ");
 		
 		return "joinMatchingEnroll";
 	}
