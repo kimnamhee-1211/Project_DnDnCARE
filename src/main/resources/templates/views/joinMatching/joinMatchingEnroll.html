@@ -5,6 +5,7 @@
 <title>Insert title here</title>
 <link th:href="@{css/joinMatchingEnroll.css}" rel="stylesheet" type="text/css"/>
 <link th:href="@{css/publicMatching2.css}" rel="stylesheet" type="text/css"/>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -102,7 +103,7 @@
 					    <div id="underDayInput" class="input-field hidden mb-5" style="margin:0 auto;padding:30px;">
 					    	<div id="plus">
 						        <div class="d-flex" style="width:400px;">
-						            <label for="underDayPicker">간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
+						            <label>간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
 						            <input type="text" class="underDayPicker checkTime" name="day" readonly> 
 						            <button type="button" class="btn btn-secondary" id="plusunderDayPicker">
 							          	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
@@ -154,7 +155,7 @@
 	</main>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	
-	 <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 	<script th:inline="javascript">
@@ -183,6 +184,8 @@
 			const form = document.getElementById('enrollForm');
 			nextButton.addEventListener('click', ()=>{
 				let isValid = true;
+				
+				removeDuplicate()
 				
 				if(!check(checkInput)){
 					isValid = false
@@ -327,7 +330,6 @@
 	            }	            
 	        });
 			
-			
 	        
 	        //날짜 추가
 	        $('#plusunderDayPicker').on('click', function() {
@@ -335,42 +337,52 @@
 	        	const div = document.createElement('div'); 
 	        	div.className="d-flex";
 	        	div.style.margin="5px 0";
-	        	div.innerHTML=`<label for="underDayPicker">간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
-	        					<input type="text" class="underDayPicker" name="day" readonly>
-	        					<button type="button" class="btn btn-secondary delPlus">
-	        						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">
-	        					 	 <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1"/>
-	        						</svg>
-	        					</button>`			
+	        	div.innerHTML= `<label>간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
+		        				<input type="text" class="underDayPicker other" name="day" readonly>
+		        				<button type="button" class="btn btn-secondary delPlus">
+		        					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">
+		        					 	<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1"/>
+		        					</svg>
+		        				</button>`			
 	        	
 	            $('#plus').append(div);
 	        					
 	        	underDayInputSet()
-	        					
 	            
 	        });
 	        
-	        if($('.delPlus')){
-	        	  $(document).on('click', '.delPlus', function() {
-	        	        $(this).parent().remove();
-	        	    });	        	
-	        };
+	    	$('#matAddressInfo').on('focus', function(){
+	    		removeDuplicate()	    		
+	    	}
 	        
-	        
-			$('#underDayInput').on('focusout', function(){
-				const underDayPickers = document.getElementsByClassName("underDayPicker")
-				for(const underDayPicker1 of underDayPickers){
-					let value1 = underDayPicker1.value
-					for(const underDayPicker2 of underDayPickers){
-						if(value1 === underDayPicker2.value && underDayPicker1 !== underDayPicker2){
-							underDayPicker2.parentNode.remove();
-						}
+	        remove();  
+	        removeDuplicate();
+	    }
+		
+		
+		function remove(){
+			$('#plus').on('click', '.delPlus', function() {
+		         console.log(this);
+		         // 버튼의 부모 요소 제거
+		         $(this).parent().remove();
+		    });
+		}
+		
+		function removeDuplicate(){
+			const underDayPickers = document.querySelectorAll('.underDayPicker');
+			const underDayPickerOthers = document.querySelectorAll('.other')
+			for(const underDayPicker1 of underDayPickers){
+				let value1 = underDayPicker1.value
+				for(const underDayPicker2 of underDayPickerOthers){
+					let value2 = underDayPicker2.value
+					if(value1 == value2 && underDayPicker1 != underDayPicker2 || value2 == null || value2.trim() == '') {
+						underDayPicker2.parentElement.remove();
 					}
 				}
-			});
-	        
-
-	    }
+			}
+		}
+		
+		
 		
 		
 		  //날짜 선택

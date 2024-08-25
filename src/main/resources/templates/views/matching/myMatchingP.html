@@ -38,6 +38,12 @@
 								<thead></thead>  		
 				      		</table>
 				      		<div id="cInfo"></div>
+							<button class="btn btn-complaint" style="margin-left:85%;">
+			      				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-slash" viewBox="0 0 16 16">
+								  <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+								</svg>
+			      				신고하기
+			      			</button>
 				      </div>
 				    </div>
 				  </div>
@@ -63,6 +69,12 @@
 								<thead></thead>
 							</table>
 							<div id="cInfo"></div>
+							<button class="btn btn-complaint" style="margin-left:85%;">
+			      				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-slash" viewBox="0 0 16 16">
+								  <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+								</svg>
+			      				신고하기
+			      			</button>
 				      </div>
 				    </div>
 				  </div>
@@ -90,7 +102,13 @@
 									<thead></thead>
 								</table>
 								<div id="cInfo"></div>
-								<button th:if="${myMat.groupLeader == 'Y'}" class="btn btn-dndn matCan" style="margin:0 40%;">매칭 신청 취소</button>								
+								<button th:if="${myMat.groupLeader == 'Y'}" class="btn btn-dndn matCan" style="margin:0 40%;">매칭 신청 취소</button>
+								<button class="btn btn-complaint" style="margin-left:85%;">
+				      				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-slash" viewBox="0 0 16 16">
+									  <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+									</svg>
+				      				신고하기
+				      			</button>								
 							</div>
 						</div>
 					</div>
@@ -118,6 +136,12 @@
 							</table>
 							<div id="cInfo"></div>
 							<button th:if="${myMat.groupLeader == 'Y'}"  style="width:120px;margin:0 45%;" class="btn btn-dndn matOk">매칭 승낙</button>
+							<button class="btn btn-complaint" style="margin-left:85%;">
+			      				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-slash" viewBox="0 0 16 16">
+								  <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95ZM11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+								</svg>
+			      				신고하기
+			      			</button>							
 						</div>
 				    </div>
 				  </div>
@@ -166,6 +190,64 @@
 	    </div>
 	  </div>
 	</div>	
+	
+	
+	
+	
+		
+	<div class="modal" tabindex="-1">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title">Modal title</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        <p>Modal body text goes here.</p>
+	        <div class="form-floating mb-5">
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+  					<label class="form-check-label" for="inlineCheckbox1">1</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+  					<label class="form-check-label" for="inlineCheckbox1">1</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+  					<label class="form-check-label" for="inlineCheckbox1">1</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
+  					<label class="form-check-label" for="inlineCheckbox1">1</label>
+				</div>
+				
+				
+			</div>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+				        
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+		
 	
 	
 	
@@ -222,7 +304,19 @@
 										     <th scope="col">&nbsp;선택 일자</th>
 										     <td scope="col" colspan="3">${matInfo[0].matDate}</td>
 										   </tr>`;
-							}			
+							}	
+							
+							
+							let matRequest ='';
+							if(matInfo[0].matRequest == undefined){
+								matRequest = `&nbsp;&nbsp;&nbsp; - `;
+							}else{
+								matRequest = `${matInfo[0].matRequest}&nbsp;&nbsp;`;
+							}
+							
+							
+							
+							matInfo[0].matRequest
 							
 							let theadInner=`
 								<tr style="font-size:18px;">
@@ -252,7 +346,7 @@
 							    </tr>
 							    <tr>
 							      <th scope="col">&nbsp;요청사항</th>
-							      <td scope="col" colspan="3">${matInfo[0].matRequest}&nbsp;&nbsp;</td>
+							      <td scope="col" colspan="3">${matRequest}</td>
 							    </tr>`;
 		
 							thead.innerHTML = theadInner;
@@ -312,15 +406,9 @@
 						      			<hr>
 						      			<div class="h3">${caregiverIntro.memberName}님</div>
 						      			<div align="center">
-											<button type="button" class="m-4 btn-outline-maincolor reviewButton">후기 보기</button>		
+											<button type="button" style="height:32px;font-size:19px;" class="m-1 btn-outline-maincolor reviewButton">후기 보기</button>		
+											<button type="button" style="height:32px;font-size:19px;" class="m-1 btn-outline-maincolor startChat">채팅하기</button>		
 										</div>
-										<div align="center">
-											<button type="button" class="m-4 btn-outline-maincolor startChat">채팅하기</button>		
-										</div>
-										${matInfo[0].matNo}
-										${matInfo[0].ptCount}
-										${caregiverIntro.memberNo}
-										
 					      		</div>
 					      		<div class="col-7 m-3 p-3 testBorder justify-content-md-center">					      				      		
 						      		<div class="row m-2 p-4">
