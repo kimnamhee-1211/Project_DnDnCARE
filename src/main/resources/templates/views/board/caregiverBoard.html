@@ -180,7 +180,7 @@
                         </tr>
                     </thead>
                     <tbody align="center">
-                        <tr class="table" th:each="b:${list}" th:if="${list != null}">
+                        <tr class="table" th:each="b:${list}" th:if="${list != null && b.categoryNo !=99}">
                             <td th:text="${b.boardNo}">1</td>
                                 <td th:text="${b.categoryName}">카테고리</td>
                                 <td>

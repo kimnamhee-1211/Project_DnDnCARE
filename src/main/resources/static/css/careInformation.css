@@ -11243,9 +11243,36 @@ body {
 }
 
 #dateName{
-	border:2px solid black;
 	margin-left:48px;
 	margin-top:-24px;
 	margin-right:48px;
 	margin-bottom:24px;
+}
+
+#dayTitle{
+	color: #133B5C;
+	border: 2px solid orange;
+	padding:6px;
+	border-radius : 10px;
+}
+
+.btn-outline {	
+	background:white;
+	color: #1D2D50;
+	border: 2px solid #1D2D50;
+	width: 190px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
+/* .btn-check가 체크된 상태에서 .btn-outline 스타일 */
+.btn-check:checked + .btn-outline {
+	color: white;
+	background: #1D2D50;
+}
+
+/* .btn-outline이 활성화된 상태 (클릭된 상태) */
+.btn-outline:hover{
+	color: white;
+	background: #1D2D50;
 }

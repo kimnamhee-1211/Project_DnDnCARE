@@ -217,7 +217,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public ArrayList<Member> selectMatchingMemberList(ArrayList<Integer> matNoList) {
+	public ArrayList<Patient> selectMatchingMemberList(ArrayList<Integer> matNoList) {
 		return mMapper.selectMatchingMemberList(matNoList);
 	}
 

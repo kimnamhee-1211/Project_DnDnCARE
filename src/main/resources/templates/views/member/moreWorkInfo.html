@@ -7,9 +7,18 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-    
     <link th:href="@{css/footer.css}" rel="stylesheet" type="text/css"/>
-    
+    <style>
+    	.searchAreaBtn {width: 82px;}
+    	.searchDisBtn {width:100px;}
+    	.searchWalkBtn {width:100px;}
+    	.searchTermBtn {width: 90px;}
+    	.subAreaBtn {width: 82px;}
+    	.subDisBtn {width:100px;}
+    	.subWalkBtn {width:100px;}
+    	.subCostBtn {width:110px;}
+    	.subTermBtn {width: 90px;}
+    </style>
 </head>
 <body class="baseFont">
 	<div th:replace="~{common/navbar :: navbar}"></div>
@@ -39,9 +48,12 @@
                  	</thead>
                  	<tbody>
                     	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index < 5}" >
-	                         <td>[[${l.ptName}]]*</td>
+	                         <td>
+	                         	<input type="hidden" th:value="${l.matNo}"/>
+	                         	[[${l.ptName}]]
+	                         </td>
 	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-	                         <td>[[${l.ptRealAge}]]</td>
+	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]</td>
 	                         <td>[[${l.ptAddress}]]</td>
 	                         <td>[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]</td>
 	                         <td>[[${l.money}]] 원</td>
@@ -62,9 +74,12 @@
                  	</thead>
                  	<tbody>
                     	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index >= 5}" >
-	                         <td>[[${l.ptName}]]</td>
+	                         <td>
+	                         	<input type="hidden" th:value="${l.matNo}"/>
+	                         	[[${l.ptName}]]
+	                         </td>
 	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-	                         <td>[[${l.ptRealAge}]]</td>
+	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]</td>
 	                         <td>[[${l.ptAddress}]]</td>
 	                         <td>[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]</td>
 	                         <td>[[${l.money}]] 원</td>
@@ -124,7 +139,7 @@
 						<!-- 서비스 유형에 대한 세부 버튼 -->
 						<button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">병원돌봄</button>
 						<button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">가정돌봄</button>
-						<button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">동행서비스</button>
+						<!-- <button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">동행서비스</button> -->
 						<!-- 성별 유형에 대한 세부 버튼 -->
 						<button type="button" class="btn btn-light subBtn subShareBtn" style="display:none;">개인</button>
 						<button type="button" class="btn btn-light subBtn subShareBtn" style="display:none;">공동</button>
@@ -213,53 +228,53 @@
 		   		</div>
 		    	<div class="modal-body" id="searchBtnDiv">
 		    		<form id="searchForm" action="searchPatientList.me" method="post">
-		    			<div><span class="badge bg-warning2">서비스 유형</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge bg-warning2 fs-6">서비스 유형</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="병원돌봄/OFF">병원돌봄</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="가정돌봄/OFF">가정돌봄</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="동행서비스/OFF">동행서비스</button>
+		    			<!-- <button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="동행서비스/OFF">동행서비스</button> -->
 		    			 
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning2">공동간병 유형</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2 fs-6">공동간병 유형</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchShareBtn" name="share" value="personal/OFF">개인간병</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchShareBtn" name="share" value="share/OFF">공동간병</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning2">지역 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2 fs-6">지역 선택</span> <span class="badge rounded-pill bg-danger fs-6">단일선택</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="전국/OFF">전국</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="서울/OFF">서울</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="부산/OFF">부산</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="대구/OFF">대구</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="인천/OFF">인천</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="인천/OFF">인천</button>&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="광주/OFF">광주</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="대전/OFF">대전</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="울산/OFF">울산</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경기도/OFF">경기도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="강원도/OFF">강원도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="강원도/OFF">강원도</button>&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="충청북도/OFF">충청북도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="충청남도/OFF">충청남도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="전라북도/OFF">전라북도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="전라남도/OFF">전라남도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경상북도/OFF">경상북도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경상북도/OFF">경상북도</button>&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경상남도/OFF">경상남도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="제주/OFF">제주</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="세종/OFF">세종</button>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning2">성별 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2 fs-6">성별 선택</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchGenderBtn" name="gender" value="남성/OFF">남성</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchGenderBtn" name="gender" value="여성/OFF">여성</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning2">연령 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2 fs-6">연령 선택</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchAgeBtn" name="age" value="청년/OFF">청년</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAgeBtn" name="age" value="중년/OFF">중년</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAgeBtn" name="age" value="장년/OFF">장년</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning2">질환 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2 fs-6">질환 선택</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchDisBtn" name="disease" value="치매/OFF">치매</button>
 						<button type="button" class="btn btn-light searchBtn searchDisBtn" name="disease" value="섬망/OFF">섬망</button>
 		    			<button type="button" class="btn btn-light searchBtn searchDisBtn" name="disease" value="욕창/OFF">욕창</button>
@@ -279,20 +294,20 @@
 					
 						<br/><br/>
 		    			
-		    			<div><span class="badge rounded-pill bg-warning2">중증도 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge rounded-pill bg-warning2 fs-6">중증도 선택</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchLevelBtn" name="level" value="경증/OFF">경증</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchLevelBtn" name="level" value="중등중/OFF">중등중</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchLevelBtn" name="level" value="중증/OFF">중증</button>&nbsp;&nbsp;
 
 						<br/><br/>
 	
-						<div><span class="badge rounded-pill bg-warning2">거동여부 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+						<div><span class="badge rounded-pill bg-warning2 fs-6">거동여부 선택</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchWalkBtn" name="walk" value="거동 가능/OFF">거동 가능</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchWalkBtn" name="walk" value="거동 불가능/OFF">거동 불가능</button>&nbsp;&nbsp;
 		
 						<br/><br/>
 	
-						<div><span class="badge rounded-pill bg-warning2">돌봄비 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
+						<div><span class="badge rounded-pill bg-warning2 fs-6">돌봄비 선택</span> <span class="badge rounded-pill bg-danger fs-6">단일선택</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchCostBtn" name="cost" value="3/OFF">~30,000원</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchCostBtn" name="cost" value="5/OFF">~50,000원</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchCostBtn" name="cost" value="8/OFF">~80,000원</button>&nbsp;&nbsp;
@@ -300,7 +315,7 @@
 						
 						<br/><br/>
 						
-						<div><span class="badge rounded-pill bg-warning2">간병기간 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
+						<div><span class="badge rounded-pill bg-warning2 fs-6">간병기간 선택</span> <span class="badge rounded-pill bg-danger fs-6">단일선택</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchTermBtn" name="term" value="1/OFF">1일 미만</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchTermBtn" name="term" value="7/OFF">7일 미만</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchTermBtn" name="term" value="15/OFF">15일 미만</button>&nbsp;&nbsp;
@@ -309,13 +324,14 @@
 		    		</form>
 		    	</div>
 		    	<div class="modal-footer">
-	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">Close</button>
+	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">닫기</button>
 	    			<button type="button" class="btn-outline-maincolor goSearch" style="width:200px;">검색하기</button>
 		    	</div>
 		  	</div>
 		</div>
 	</div>
 	
+	<br/><br/><br/><br/>
 	<div id="footer-section" style="margin-top:32px;">
 	    <div class="inner">
 	        <div class="navbar-logo">
@@ -355,7 +371,7 @@
 	        <p class="text-center">&copy; 2024 HomeWork. All rights reserved.</p>
 	    </div>
 	</div>
-    <div id="obsTarget"></div> 
+    <div id="obsTarget" style="height:10px;"></div> 
 	
 	
 	
@@ -1287,6 +1303,7 @@
 					
 					// *** 비동기 방식으로 검색결과 요청하기 (시작)***
 					if(searchExist) { // 검색 조건이 하나라도 있을 때를 의미함
+						ajaxSearchPage = 1;
 						root.innerHTML = ''; // 기존의 목록출력을 모두 지운다.
 						searchAjax(ajaxSearchPage); // 새로운 목록을 불러온다.
 					} else { // 검색 조건이 하나도 없을 때를 의미함
@@ -1295,6 +1312,10 @@
 						noSearchAjax(ajaxNoSearchPage);
 					}
 					// *** 비동기 방식으로 검색결과 요청하기 (끝) ***
+					
+					// 전체 태그 출력하는 모달창 닫기 (시작)
+					$('#allTagModal').modal('hide');
+					// 전체 태그 출력하는 모달창 닫기 (끝)
 				})
 			}
 			// 태그 조건으로 검색하기 (끝)
@@ -1323,26 +1344,26 @@
 									if(mat.matNo == mpi.matNo){
 										for(let mem of memList){
 											if(mat.matNo == mem.matNo) {
-												let gender = mem.memberGender == 'M' ? '남성' : '여성';
+												let gender = mem.ptGender == 'M' ? '남성' : '여성';
 												let address = mpi.matAddressInfo.split(' ')[0] + ' ' + mpi.matAddressInfo.split(' ')[1];
 												if(mpi.service == '가정돌봄' && mat.ptCount == 1){ // 가정, 개인
-													console.log(mat.matNo);
+													//console.log(mat.matNo);
 													root.innerHTML += `<div class="col-sm-6">\
 												            				<div class="card h-95 w-80">\
 												    							<div class="card-body">\
 												        						<h6 class="card-title">\
-												            						<span>${mem.memberName}</span>&nbsp;&nbsp;\
+												            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 												            						<img src="image/icon/home.png"/>\
 												            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
 												       							</h6>\
 															                    <p class="card-text">\
 															                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 															                    	<span>${gender}</span>&nbsp;&nbsp;\
-															                    	<span>${mem.memberRealAge}세</span><br/>\
+															                    	<span>${mem.ptRealAge}세</span><br/>\
 															                    	<span>${address}</span>\
 															                   	</p>\
 															                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-															                    <button class="btn btn-success workInfo">정보 보기</button>\
+															                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 														                		</div>\
 												   							</div>\
 																		</div>`;
@@ -1353,25 +1374,25 @@
 							            				<div class="card h-95 w-80">\
 							    							<div class="card-body">\
 							        						<h6 class="card-title">\
-							            						<span>${mem.memberName}</span>&nbsp;&nbsp;\
+							            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 							            						<img src="image/icon/hospital.png"/>\
 							            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
 							       							</h6>\
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.memberRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
 													break;
 												} else if(mat.ptCount == 2 && mem.groupLeader =='Y'){//공동간병
 													console.log(mat.matNo);
-													let leaderName = mem.memberName;
+													let leaderName = mem.ptName;
 													root.innerHTML += `<div class="col-sm-6">\
 							            				<div class="card h-95 w-80">\
 							    							<div class="card-body">\
@@ -1383,11 +1404,11 @@
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.memberRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
@@ -1401,8 +1422,9 @@
 									
 								}
 							}
-							ajaxNoSearchPage++;
-							searchFlag = false;
+							//ajaxNoSearchPage++;
+							ajaxSearchPage++;
+							searchFlag = true;
 						} else {
 							console.log('목록 끝');
 						}
@@ -1436,7 +1458,7 @@
 									if(mat.matNo == mpi.matNo){
 										for(let mem of memList){
 											if(mat.matNo == mem.matNo) {
-												let gender = mem.memberGender == 'M' ? '남성' : '여성';
+												let gender = mem.ptGender == 'M' ? '남성' : '여성';
 												let address = mpi.matAddressInfo.split(' ')[0] + ' ' + mpi.matAddressInfo.split(' ')[1];
 												if(mpi.service == '가정돌봄' && mat.ptCount == 1){ // 가정, 개인
 													console.log(mat.matNo);
@@ -1444,18 +1466,18 @@
 												            				<div class="card h-95 w-80">\
 												    							<div class="card-body">\
 												        						<h6 class="card-title">\
-												            						<span>${mem.memberName}</span>&nbsp;&nbsp;\
+												            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 												            						<img src="image/icon/home.png"/>\
 												            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
 												       							</h6>\
 															                    <p class="card-text">\
 															                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 															                    	<span>${gender}</span>&nbsp;&nbsp;\
-															                    	<span>${mem.memberRealAge}세</span><br/>\
+															                    	<span>${mem.ptRealAge}세</span><br/>\
 															                    	<span>${address}</span>\
 															                   	</p>\
 															                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-															                    <button class="btn btn-success workInfo">정보 보기</button>\
+															                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 														                		</div>\
 												   							</div>\
 																		</div>`;
@@ -1466,25 +1488,25 @@
 							            				<div class="card h-95 w-80">\
 							    							<div class="card-body">\
 							        						<h6 class="card-title">\
-							            						<span>${mem.memberName}</span>&nbsp;&nbsp;\
+							            						<span>${mem.ptName}</span>&nbsp;&nbsp;\
 							            						<img src="image/icon/hospital.png"/>\
 							            						<span style="background:lightgrey;">${mpi.service}</span>&nbsp;&nbsp;\
 							       							</h6>\
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.memberRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
 													break;
 												} else if(mat.ptCount == 2 && mem.groupLeader =='Y'){//공동간병
 													console.log(mat.matNo);
-													let leaderName = mem.memberName;
+													let leaderName = mem.ptName;
 													root.innerHTML += `<div class="col-sm-6">\
 							            				<div class="card h-95 w-80">\
 							    							<div class="card-body">\
@@ -1496,11 +1518,11 @@
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.memberRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
-										                    <button class="btn btn-success workInfo">정보 보기</button>\
+										                   	<button class="btn btn-success workInfo" onclick="location.href='goCaregiverPtInfo.mc?matNo='+${mat.matNo}">정보 보기</button>\
 									                		</div>\
 							   							</div>\
 													</div>`;
@@ -1656,6 +1678,15 @@
     		})
 			/*]]>*/
     		// 자동추천 새로고침 비동기 요청 (끝)
+			
+			// ai추천 목록에 대한 이벤트 (시작)
+			const tableList = document.querySelectorAll('.autoMatching');
+			for(const table of tableList){
+				table.children[1].addEventListener('click', function(e) {
+					location.href='goCaregiverPtInfo.mc?matNo=' + e.target.parentElement.children[0].children[0].value;
+				});
+			}
+			// ai추천 목록에 대한 이벤트 (끝)
 		}
 	</script>
 </body>

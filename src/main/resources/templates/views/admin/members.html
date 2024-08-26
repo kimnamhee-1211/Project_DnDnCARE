@@ -14,7 +14,7 @@
 		}
 		.selectState{background: lightyellow;}
 		.table td{cursor: pointer;}
-		.table td>div{border: 1px solid black; height: 80%; width: 33%; display: inline-block; padding-top: 3%; cursor: pointer;}
+		.table td>div{border: 1px solid black; height: 80%; width: 45%; display: inline-block; padding-top: 3%; cursor: pointer;}
 	</style>
 </head>
 <body>
@@ -107,8 +107,20 @@
 										<div th:class="${m.memberStatus == 'N' ? 'selectState' : ''}">N</div>
 									</td>
 									<td>
-										<div th:class="${m.memberCategory == 'C' ? 'selectState' : ''}">C</div><div th:class="${m.memberCategory == 'P' ? 'selectState' : ''}">P</div><div th:class="${m.memberCategory == 'A' ? 'selectState' : ''}">A</div>
+										<th:block th:if="${m.memberCategory == 'C'}">
+											<div th:class="${m.memberCategory == 'C' ? 'selectState' : ''}">C</div>
+											<div th:class="${m.memberCategory == 'A' ? 'selectState' : ''}">A</div>
+										</th:block>
+										<th:block th:if="${m.memberCategory == 'P'}">
+											<div th:class="${m.memberCategory == 'P' ? 'selectState' : ''}">P</div>
+											<div th:class="${m.memberCategory == 'A' ? 'selectState' : ''}">A</div>
+										</th:block>
+										<th:block th:if="${m.memberCategory == 'A'}">
+											<div th:class="${m.memberCategory == 'C' ? 'selectState' : ''}">C</div>
+											<div th:class="${m.memberCategory == 'A' ? 'selectState' : ''}">A</div>
+										</th:block>
 									</td>
+									
 								</tr>
 							</tbody>
 						</table>
@@ -141,15 +153,39 @@
 	
 	<!-- 회원정보 조회용 Scrollable modal (시작) -->
 	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-lg">
 		    <div class="modal-content">
 		    	<div class="modal-header">
-			        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+			        <h1 class="modal-title fs-5 badge rounded-pill bg-primary" id="staticBackdropLabel">회원정보 상세보기</h1>
 			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		        </div>
 			    <div class="modal-body">
 			    	<div class="modal-dialog modal-dialog-scrollable" id="modalContent">
-			        	
+			    		<table class="table align-middle" id="membersTable">
+			    			<tr style="height:80px;">
+			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">회원번호 | 아이디</span></td>
+			    				<td><input type="text" class="form-control" id="memberName" style="width:200px; display:inline;" disabled> | <input type="text" class="form-control" id="memberNo" style="width:200px; display:inline;" disabled></td>
+			    			</tr>
+			    			<tr style="height:80px;">
+			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">이름 | 닉네임</span></td>
+			    				<td><input type="text" class="form-control" id="memberName" style="width:200px; display:inline;" disabled> | <input type="text" id="memberNickName" class="form-control" style="width:200px; display:inline;"></td>
+			    			</tr>
+			    			<tr style="height:80px;">
+			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">국적</span></td>
+			    				<td>
+			    					<label><input type="radio" name="national" class="form-check" style="width:15px; display:inline;"> 내국인</label>&nbsp;&nbsp;
+			        				<label><input type="radio" name="national" class="form-check" style="width:15px; display:inline;"> 외국인</label>
+		        				</td>
+			    			</tr>
+			    			<tr style="height:80px;">
+			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">휴대폰</span></td>
+			    				<td><input type="text" class="form-control" style="width:100px; display:inline;"/> - <input type="text" class="form-control" style="width:150px; display:inline;"/> - <input type="text" class="form-control" style="width:150px; display:inline;"/></td>
+			    			</tr>
+			    			<tr style="height:80px; border-bottom: white;">
+			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">회원정보 수정일</span></td>
+			    				<td><input type="text" class="form-control" style="width:200px; display:inline;" readonly/></td>
+			    			</tr>
+			    		</table>
 			        </div>
 			    </div>
 			    <div class="modal-footer">
@@ -189,6 +225,11 @@
 	
 	<script th:inline="javascript">
 		window.onload = () => {
+			/*<![CDATA[*/
+			const mList = /*[[${mList}]]*/'obj';
+			/*]]>*/
+			console.log(mList);
+			
 			// 출력한 데이터를 저장해두기 위한 전역변수를 선언
 			let beforeData; 
 			let zipCode;
@@ -237,12 +278,6 @@
 				}).open({
 					q: beforeData
 				});
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
 	    	};
 	    	// 주소검색 api (끝)
 			
@@ -291,24 +326,6 @@
 						}
 					}
 					// 현재 클릭한 요소가 소속된 tr의 배경색만 변경 (끝)
-					
-					// 회원 상세정보 모달창 출력 (시작)
-					const memberNo = target.parentElement.children[0].innerText;
-					
-					$.ajax({ // 회원에 대한 정보를 더 들고오자.
-						url: 'selectMemberInfo.adm',
-						type: 'post',
-						data: {memberNo: memberNo},
-						success: data => {
-							console.log(data);
-							
-							//$('#staticBackdrop').modal('show');
-							
-						},
-						error: data => console.log(data)
-					});
-					// 회원 상세정보 모달창 출력 (끝)
-					
 				} 
 				
 				
@@ -318,7 +335,7 @@
 					
 					if(!target.className.includes('selectState')){
 						console.log(myTr.parentElement.children[0].innerText); // 누구의
-						console.log(myTr.children.length)// 무엇을 => 2이면 가입상태, 3이면 회원그룹
+						console.log(myTr.children[1].innerText)// 무엇을 => N이면 가입상태, A이면 회원그룹
 						console.log(target.innerText); // 어떻게
 						
 						$.ajax({
@@ -326,7 +343,7 @@
 							type: 'post',
 							data: { 
 								memberNo: myTr.parentElement.children[0].innerText,
-								column: myTr.children.length == 2 ? 'status' : 'category',
+								column: myTr.children[1].innerText == 'N' ? 'status' : 'category',
 								data: target.innerText
 								},
 							success: data => {
@@ -370,8 +387,46 @@
 					}
 					
 					switch(index%10){
-					case 0 : alert('변경할 수 없습니다.'); break; 
-					case 1 : alert('변경할 수 없습니다.'); break;
+					case 0 : 
+					case 1 : 
+						// 회원 상세정보 모달창 출력 (시작) 여기여기
+						const memberNo = target.parentElement.children[0].innerText;
+						let thisMember;
+						
+						for(const m of mList){// 파라미터에 들어있는 회원객체를 받아온다.
+							if(m.memberNo == memberNo){
+								thisMember = m;
+								break;
+							}
+						}
+						
+						console.log(thisMember);
+						
+						
+						/* $.ajax({ // 회원에 대한 정보를 더 들고오자.
+							url: 'selectMemberInfo.adm',
+							type: 'post',
+							data: {memberNo: memberNo},
+							success: data => {
+								console.log(data);
+							},
+							error: data => console.log(data)
+						}); */
+						
+						console.log(document.querySelector('#membersTable'));
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						$('#staticBackdrop').modal('show');
+						// 회원 상세정보 모달창 출력 (끝)
+						
+						break;
 					case 2 : column = 'MEMBER_NAME'; break;
 					case 3 : column = 'MEMBER_GENDER'; break;
 					case 4 : column = 'MEMBER_AGE'; break;
@@ -428,7 +483,6 @@
 						//let roadAddress;
 						
 						
-						
 						document.querySelector('#addressConfirm').addEventListener('click', () => {
 							$('#addressDetail').modal('hide');
 						//				06035//서울 강남구 가로수길 5//1층
@@ -447,15 +501,7 @@
 								},
 								error: data => console.log(data)
 							});
-							
-							
-							
 						});
-						
-						
-						
-						
-						
 					}
 					
 					
@@ -503,13 +549,6 @@
 					}
 				}
 			});
-			
-			
-			
-			
-			
-			
-			
 			
 			
 			// ESC 입력시 수정중이던 요소가 원래대로 돌아감 (시작)
@@ -640,7 +679,7 @@
 			    	      label: '지난주 가입자',
 			    	      data: oneWeekEnroll,
 			    	      borderColor: 'rgb(255, 99, 132)',
-			    	      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+			    	      backgroundColor: 'rgba(255, 99, 132, 0.2)'
 			    	    },
 			    	    {
 			    	      label: '지지난주 가입자',

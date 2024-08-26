@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>이용가이드</title>
+<link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style>
+
+	.faqBoard {
+		cursor: pointer;
+		border: 1px solid #133B5C;
+		border-radius: 10px;
+		padding: 10px;
+		margin-bottom: 10px;
+		background-color: #f9f9f9;
+	}
+	
+
+	.guide-btn {
+		border-color: #1E5F74 !important;
+		color: black !important;
+		border: 1px solid #1E5F74 !important;
+	}
+
+	.guide-btn:hover, .guide-btn:focus,.guide-btn:active {
+		background-color: #1E5F74 !important;
+		border-color: #1E5F74 !important;
+		color:white !important;
+	}
+
+</style>
+</head>
+<body>
+	<div th:replace="~{common/navbar :: navbar}"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3">
+					<div align="center" class="myInfo-Border m-4">
+						<div class="m-4" style="border-bottom: 2px solid #133B5C;">
+							<h1 class="h3 m-4 fw-bold text-center">고객센터</h1>
+						</div>
+						<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="userGuide.bo">이용가이드</a></div>
+						<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="faqBoard.bo">FAQ</a></div>
+						<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="qnaBoardList.bo">문의게시판</a></div>
+					</div>
+				</div>
+				
+				<div class="col-md-9">
+					<div class="row m-4" style="width:950px">
+						<div class="m-3 h1 menu-name">이용가이드</div>
+					</div>
+
+					<!-- 메뉴 -->
+					<div class="row m-4 text-center">
+						<div class="col-sm-3 mb-2">
+							<button class="btn guide-btn" id="signUpBtn" style="width: 100%;">회원가입</button>
+						</div>
+						<div class="col-sm-3 mb-2">
+							<button class="btn guide-btn" id="findIdPwBtn" style="width: 100%;">아이디/비밀번호 찾기</button>
+						</div>
+						<div class="col-sm-3 mb-2">
+							<button class="btn guide-btn" id="myInfoBtn" style="width: 100%;">매칭시스템</button>
+						</div>
+						<div class="col-sm-3 mb-2">
+							<button class="btn guide-btn" id="communityUseBtn" style="width: 100%;">커뮤니티 이용 관련</button>
+						</div>
+					</div>
+
+					<!-- 가이드 내용 -->
+					<div class="row m-4">
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="signUpContent">
+							<div class="h5 m-1">회원가입 안내</div>
+							<div class="hidden-content">
+								회원가입은 상단 메뉴에서 '회원가입' 버튼을 클릭하여 진행합니다. 필수 정보를 입력하고, 약관에 동의한 후 '가입하기'를 클릭하면 회원가입이 완료됩니다.
+							</div>
+						</div>
+
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="findIdPwContent">
+							<div class="h5 m-1">아이디/비밀번호 찾기</div>
+							<div class="hidden-content">
+								아이디 또는 비밀번호를 잊으셨나요? 로그인 페이지에서 '아이디/비밀번호 찾기' 링크를 클릭한 후, 이메일을 입력하여 복구 절차를 진행하세요.
+							</div>
+						</div>
+
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="myInfoContent">
+							<div class="h5 m-1">내 정보 관리</div>
+							<div class="hidden-content">
+								내 정보 페이지에서 개인정보를 수정하거나, 비밀번호 변경을 할 수 있습니다. 설정 변경 후에는 '저장' 버튼을 꼭 클릭하세요.
+							</div>
+						</div>
+						
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="communityUseContent">
+							<div class="h5 m-1">커뮤니티 이용 관련</div>
+							<div class="hidden-content">
+								커뮤니티 게시판에서는 자유롭게 글을 작성하고, 댓글을 달 수 있습니다. 규칙을 준수하며, 다른 사용자와의 상호 존중을 바탕으로 활동해 주세요.
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	<script th:inline="javascript">
+		window.onload = () => {
+			const buttons = {
+				signUpBtn: document.getElementById('signUpBtn'),
+				findIdPwBtn: document.getElementById('findIdPwBtn'),
+				myInfoBtn: document.getElementById('myInfoBtn'),
+				communityUseBtn: document.getElementById('communityUseBtn')
+			};
+			
+			const contents = {
+				signUpContent: document.getElementById('signUpContent'),
+				findIdPwContent: document.getElementById('findIdPwContent'),
+				myInfoContent: document.getElementById('myInfoContent'),
+				communityUseContent: document.getElementById('communityUseContent')
+			};
+
+			// 다 숨기기
+			const hideAllContents = () => {
+				for (const key in contents) {
+					contents[key].style.display = 'none';
+				}
+			};
+
+			// 클릭한 컨텐츠만 표시
+			for (const btn in buttons) {
+				buttons[btn].addEventListener('click', function() {
+					hideAllContents();
+					const contentId = btn.replace('Btn', 'Content');
+					contents[contentId].style.display = 'block';
+				});
+			}
+
+			// 초기화
+			hideAllContents();
+		};
+	</script>
+	
+</body>
+</html>

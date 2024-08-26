@@ -1,6 +1,7 @@
 package com.kh.dndncare.chating.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -107,6 +108,7 @@ public class ChatingController {
                     relatedMemberNo = chService.getMatMemberNo(matPtNo);
                 } // 환자가 간병인 상세페이지에서 신청했을 때
                 else if("P".equals(loginUser.getMemberCategory())) {
+                	matPtNo = ptNos.get(0);
                     relatedMemberNo = caregiverMemberNo;
                 }
                 // 이미 같은 멤버 구성끼리 속한 채팅방번호가 있는지 있으면 거기로 바로 쏘기
@@ -133,6 +135,8 @@ public class ChatingController {
 	                if (chatRoomMemberResult <= 0) {
 	                   throw new MemberException("채팅방 멤버 추가에 실패했습니다.");
 	                }
+	                
+	                
                 }
                 	
                 
@@ -152,6 +156,7 @@ public class ChatingController {
                     cMemberNo = caregiverMemberNo;
                 }
                 
+                
                 firstPtNo = ptNos.get(0);
                 secondPtNo = ptNos.get(1);
                 
@@ -160,24 +165,31 @@ public class ChatingController {
                 firstMemberNo = memberNos.get(0);
                 secondMemberNo = memberNos.get(1);
                 
-                int chatRoomResult = chService.insertChatRoom(newChatingRoom);
+                Integer alreadyChatRoomNo = chService.getAlreadyChatRoomNo2(matNo,firstMemberNo,secondMemberNo,cMemberNo);
+                if(alreadyChatRoomNo != -1) {
+                	finalChatRoomNo = alreadyChatRoomNo;
+                } else {
+                	int chatRoomResult = chService.insertChatRoom(newChatingRoom);
                 
-                if (chatRoomResult <= 0) {
-                   throw new MemberException("채팅방 생성에 실패했습니다.");
-                }
-                relatedMatPtNo = firstPtNo;
-                finalChatRoomNo = chService.getChatRoomNo(relatedMatPtNo);
-                System.out.println("finalChatRoomNo" + finalChatRoomNo);
+	                if (chatRoomResult <= 0) {
+	                   throw new MemberException("채팅방 생성에 실패했습니다.");
+	                }
+	                relatedMatPtNo = firstPtNo;
+	                finalChatRoomNo = chService.getChatRoomNo(relatedMatPtNo);
+	                System.out.println("finalChatRoomNo" + finalChatRoomNo);
+	                
+	                if (finalChatRoomNo == null) {
+	                    throw new MemberException("채팅방 번호를 가져오는데 실패했습니다.");
+	                }
+	                
+	                int chatRoomMemberResult2 = chService.insertChatRoomMember2(finalChatRoomNo, cMemberNo,firstMemberNo,secondMemberNo);
+	                
+	                if(chatRoomMemberResult2 <=0) {
+	                    throw new MemberException("채팅멤버 추가에 실패하였습니다");
+	                }
+            }
                 
-                if (finalChatRoomNo == null) {
-                    throw new MemberException("채팅방 번호를 가져오는데 실패했습니다.");
-                }
-                
-                int chatRoomMemberResult2 = chService.insertChatRoomMember2(finalChatRoomNo, cMemberNo,firstMemberNo,secondMemberNo);
-                
-                if(chatRoomMemberResult2 <=0) {
-                    throw new MemberException("채팅멤버 추가에 실패하였습니다");
-                }
+               
             }
             //공동간병에서 참여환자수가 3일때
             else if(ptCount == 3) {
@@ -200,25 +212,32 @@ public class ChatingController {
                 secondMemberNo = memberNos.get(1);
                 thirdMemberNo = memberNos.get(2);
                 
-                int chatRoomResult = chService.insertChatRoom(newChatingRoom);
+                Integer alreadyChatRoomNo = chService.getAlreadyChatRoomNo3(matNo,firstMemberNo,secondMemberNo,thirdMemberNo,cMemberNo);
+                if(alreadyChatRoomNo != -1) {
+                	finalChatRoomNo = alreadyChatRoomNo;
+                } else {
+                	int chatRoomResult = chService.insertChatRoom(newChatingRoom);
                 
-                if (chatRoomResult <= 0) {
-                    throw new MemberException("채팅방 생성에 실패했습니다.");
+	                if (chatRoomResult <= 0) {
+	                    throw new MemberException("채팅방 생성에 실패했습니다.");
+	                }
+	                
+	                relatedMatPtNo = firstPtNo;
+	                finalChatRoomNo = chService.getChatRoomNo(relatedMatPtNo);
+	                System.out.println("finalChatRoomNo" + finalChatRoomNo);
+	                
+	                if (finalChatRoomNo == null) {
+	                    throw new MemberException("채팅방 번호를 가져오는데 실패했습니다.");
+	                }
+	                
+	                int chatRoomMemberResult3 = chService.insertChatRoomMember3(finalChatRoomNo, cMemberNo,firstMemberNo,secondMemberNo,thirdMemberNo);
+	                
+	                if(chatRoomMemberResult3 <=0) {
+	                    throw new MemberException("채팅멤버 추가에 실패하였습니다");
+	                }
                 }
                 
-                relatedMatPtNo = firstPtNo;
-                finalChatRoomNo = chService.getChatRoomNo(relatedMatPtNo);
-                System.out.println("finalChatRoomNo" + finalChatRoomNo);
                 
-                if (finalChatRoomNo == null) {
-                    throw new MemberException("채팅방 번호를 가져오는데 실패했습니다.");
-                }
-                
-                int chatRoomMemberResult3 = chService.insertChatRoomMember3(finalChatRoomNo, cMemberNo,firstMemberNo,secondMemberNo,thirdMemberNo);
-                
-                if(chatRoomMemberResult3 <=0) {
-                    throw new MemberException("채팅멤버 추가에 실패하였습니다");
-                }
             }
         }
 
@@ -234,10 +253,12 @@ public class ChatingController {
 	        chService.saveMessage(systemMessage);
         }
         
+        List<String> memberNames = chService.getParticipantMemberNames(finalChatRoomNo);
         
         model.addAttribute("chatRoomId", finalChatRoomNo);
         model.addAttribute("userId", memberNo);
         model.addAttribute("memberName", memberName);
+        model.addAttribute("memberNames",memberNames);
         
         return "chatRoom";
     }

@@ -4,8 +4,12 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -21,10 +25,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 import com.kh.dndncare.admin.model.exception.AdminException;
 import com.kh.dndncare.admin.model.service.AdminService;
 import com.kh.dndncare.admin.model.vo.Attachment;
@@ -41,6 +48,7 @@ import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -771,10 +779,6 @@ public class AdminController {
 //		보유질환 (0~10개, 선택)					: MEMBER_INFO 
 //		키	(필수)							: PATIENT
 //		몸무게  (필수)							: PATIENT
-		
-		
-		
-		
 	}
 	
 	// 게시글(공지) 작성
@@ -864,6 +868,312 @@ public class AdminController {
 		}
 	}
 	
+	//어드민 페이 토탈 통계 에이작스
+	
+	@GetMapping("weekPayTotal.adm")
+	@ResponseBody
+	public void weekPayTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2, HttpServletResponse response) {
+		
+		int year1 = Integer.parseInt(data1.split("-")[0]);
+		int month1 = Integer.parseInt(data1.split("-")[1]);
+		int day1 = Integer.parseInt(data1.split("-")[2]);
+		
+		LocalDate date1 = LocalDate.of(year1, month1, day1);
+        
+        
+        //long daysBetween = ChronoUnit.DAYS.between(date1, date2);
+        
+        HashMap<String,Object> map = new HashMap<String,Object>();
+        
+        
+        String[] labels = {date1.plusDays(0).toString(),date1.plusDays(1).toString(),date1.plusDays(2).toString()
+        					,date1.plusDays(3).toString(),date1.plusDays(4).toString(),date1.plusDays(5).toString(),date1.plusDays(6).toString()};
+        map.put("labels", labels);
+        
+        int[] datas1 = new int[7];
+        int[] datas2 = new int[7];
+        
+        
+        ArrayList<Pay> psDp = aService.selectPayDeposit("Y");		//페이 다가져와
+		for(Pay p : psDp) {
+			System.out.println("결제날짜 = " + p.getPayDate());
+			
+			if(p.getPayService().equals("가정돌봄")){
+				
+				if(p.getPayDate().toLocalDate().equals(date1)) {
+					datas1[0] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(1))) {
+					datas1[1] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(2))) {
+					datas1[2] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(3))) {
+					datas1[3] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(4))) {
+					datas1[4] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(5))) {
+					datas1[5] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(6))) {
+					datas1[6] += p.getPayMoney();
+				}
+			}else if(p.getPayService().equals("병원돌봄")) {
+				
+				if(p.getPayDate().toLocalDate().equals(date1)) {
+					datas2[0] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(1))) {
+					datas2[1] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(2))) {
+					datas2[2] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(3))) {
+					datas2[3] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(4))) {
+					datas2[4] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(5))) {
+					datas2[5] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(6))) {
+					datas2[6] += p.getPayMoney();
+				}
+				
+			}
+			
+		}
+        map.put("datas1",datas1);
+        map.put("datas2",datas2);
+        
+        Gson gson = new Gson();
+		response.setContentType("application/json; charset=UTF-8;");
+		try {
+			gson.toJson(map, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
+	        
+			
+	}//페이토탈메소드끝
+	
+	//어드민 페이 토탈 통계 달
+	
+		@GetMapping("monthPayTotal.adm")
+		@ResponseBody
+		public void monthPayTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2,@RequestParam("flag") int flag, HttpServletResponse response) {
+			ArrayList<Pay> psDp = aService.selectPayDeposit("Y");		//페이 다가져와
+			if(flag == 1) {
+				int year1 = Integer.parseInt(data1.split(",")[0]);
+				int month1 = Integer.parseInt(data2.split(",")[0]);
+				
+				//일수 계산하자
+				YearMonth yearMonth = YearMonth.of(year1, month1);
+				int days = yearMonth.lengthOfMonth();
+				System.out.println("내년월수 뭐야?" + yearMonth);
+		        HashMap<String,Object> map = new HashMap<String,Object>();
+		        
+		        
+		        int[] labels = new int[days];
+		        for(int i =1 ; i <=labels.length ; i++) {
+		        	labels[i-1] = i;
+		        }
+		        map.put("labels", labels);
+		        
+		        int[] datas1 = new int[days];
+		        int[] datas2 = new int[days];
+		        
+		        
+		        
+		        for(Pay p : psDp) {
+		        	if(p.getPayService().equals("가정돌봄")){
+						for(int i = 1; i <= labels.length ; i++) {
+							if(p.getPayDate().toLocalDate().equals(LocalDate.of(year1, month1, i))) {
+								datas1[i-1] += p.getPayMoney();
+							}
+							
+						}
+		        		
+					}else {
+						for(int i = 1; i <= labels.length ; i++) {
+							if(p.getPayDate().toLocalDate().equals(LocalDate.of(year1, month1, i))) {
+								datas2[i-1] += p.getPayMoney();
+							}
+							
+						}
+						
+					}
+		        	
+		        }
+		        
+		        map.put("datas1",datas1);
+		        map.put("datas2",datas2);
+		        
+		        Gson gson = new Gson();
+				response.setContentType("application/json; charset=UTF-8;");
+				try {
+					gson.toJson(map, response.getWriter());
+				} catch (JsonIOException | IOException e) {
+					e.printStackTrace();
+				}
+			}else {	//여러 달 검색하는것
+				int year1 = Integer.parseInt(data1.split(",")[0]);
+				int year2 = Integer.parseInt(data1.split(",")[1]);
+				int month1 = Integer.parseInt(data2.split(",")[0]);
+				int month2 = Integer.parseInt(data2.split(",")[1]);
+				
+				
+				HashMap<String,Object> map = new HashMap<String,Object>();
+				int size = month2-month1+1;
+				if(year1 != year2 ) {
+					size += 12 * ( year2 - year1);
+				}
+				
+				String[] labels = new String[size];
+				int j = 0;
+				int k = 0;
+				for(int i = 1 ; i <= size ; i++) {
+					String labelMonth = "0"+((month1+i-1) % 12 == 0 ? "12" : (month1+i-1) % 12);
+		        	labels[j] = year1+ k + "-" +labelMonth.substring(labelMonth.length() - 2);
+		        	
+		        	j += 1;
+		        	if(i % 12 == 0) {
+		        		k +=1;
+		        	}
+				}
+				
+		        System.out.println("확인해보자" + labels.length);
+		        System.out.println("확인해보자" + labels[0]);
+		        map.put("labels", labels);
+		        
+		        int[] datas1 = new int[labels.length];
+		        int[] datas2 = new int[labels.length];
+		        
+		        
+		        System.out.println("확인해보자" + labels.length);
+		        System.out.println("확인해보자" + datas1.length);
+		        System.out.println("확인해보자" + datas2.length);
+		        for(Pay p : psDp) {
+		        	if(p.getPayService().equals("가정돌봄")){
+		        		for(int i = 0; i < labels.length ; i++) {
+		        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+		        				datas1[i] += p.getPayMoney();
+		        			}
+		        		}
+		        	}else {
+		        		for(int i = 0; i < labels.length ; i++) {
+		        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+		        				datas2[i] += p.getPayMoney();
+		        			}
+		        		}
+		        	}
+		        };
+		        
+		        map.put("datas1",datas1);
+		        map.put("datas2",datas2);
+		        
+		        Gson gson = new Gson();
+				response.setContentType("application/json; charset=UTF-8;");
+				try {
+					gson.toJson(map, response.getWriter());
+				} catch (JsonIOException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+	        
+		}//페이토탈메소드끝 월
+	
+		//어드민 페이 토탈 통계 달
+		
+			@GetMapping("yearPayTotal.adm")
+			@ResponseBody
+			public void yearPayTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2,@RequestParam("flag") int flag, HttpServletResponse response) {
+			
+				ArrayList<Pay> psDp = aService.selectPayDeposit("Y");		//페이 다가져와
+				if(flag ==1) {
+					int year = Integer.parseInt(data1.split(",")[0]);
+					
+					HashMap<String,Object> map = new HashMap<String,Object>();
+					
+					String[] labels = new String[12];
+					for(int i = 1 ; i <= 12 ; i++) {
+						String labelMonth = "0"+i;
+						labels[i-1] = year +"-"+ labelMonth.substring(labelMonth.length()-2);
+					}
+					map.put("labels", labels);
+					
+					int[] datas1 = new int[12];
+			        int[] datas2 = new int[12];
+			        
+			        for(Pay p : psDp) {
+			        	if(p.getPayService().equals("가정돌봄")){
+			        		for(int i = 0; i < 12 ; i++) {
+			        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+			        				datas1[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}else {
+			        		for(int i = 0; i < labels.length ; i++) {
+			        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+			        				datas2[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}
+			        };
+			        
+			        map.put("datas1",datas1);
+			        map.put("datas2",datas2);
+			        
+			        Gson gson = new Gson();
+					response.setContentType("application/json; charset=UTF-8;");
+					try {
+						gson.toJson(map, response.getWriter());
+					} catch (JsonIOException | IOException e) {
+						e.printStackTrace();
+					}
+					
+				}else {
+					int year1 = Integer.parseInt(data1.split(",")[0]);
+					int year2 = Integer.parseInt(data1.split(",")[1]);
+					
+					HashMap<String,Object> map = new HashMap<String,Object>();
+					
+					String[] labels = new String[year2 - year1 +1];
+					int j =0;
+					for(int i = year1 ; i <= year2 ; i++) {
+						labels[j] = year1+ j +"년" ;
+						j += 1;
+					}
+					
+					map.put("labels", labels);
+										
+					int[] datas1 = new int[year2 - year1 +1];
+			        int[] datas2 = new int[year2 - year1 +1];
+					
+			        for(Pay p : psDp) {
+			        	if(p.getPayService().equals("가정돌봄")){
+			        		for(int i = 0; i < labels.length ; i++) {
+			        			if(labels[i].equals(p.getPayDate().toLocalDate().getYear()+"년")){
+			        				datas1[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}else {
+			        		for(int i = 0; i < labels.length ; i++) {
+			        			if(labels[i].equals(p.getPayDate().toLocalDate().getYear()+"년")){
+			        				datas2[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}
+			        };
+			        
+			        map.put("datas1",datas1);
+			        map.put("datas2",datas2);
+			        
+			        Gson gson = new Gson();
+					response.setContentType("application/json; charset=UTF-8;");
+					try {
+						gson.toJson(map, response.getWriter());
+					} catch (JsonIOException | IOException e) {
+						e.printStackTrace();
+					}
+			        
+				}
+			
+			}// 년 메소드
+	
 	// 댓글 삭제
 	@GetMapping("adminDeleteReply.adm")
 	@ResponseBody
@@ -896,4 +1206,4 @@ public class AdminController {
 	
 	
 	
-}
+}//클래스 끝

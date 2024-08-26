@@ -202,6 +202,20 @@
 		ORDER BY BOARD_UPDATE_DATE DESC
 	</select>
 	
+	<!-- 문의게시판 페이지네이션 -->
+	<select id="getListCountQnA" resultType="_int">
+		select count(*)
+		from board
+		where category_no = 99 and board_status = 'Y'
+	</select>
+	
+	<!-- 문의게시판 -->
+	<select id="qnaBoardList" resultType="Board">
+		select *
+		from board
+			join member using(member_no)
+		where category_no = 99 and board_status = 'Y'
+	</select>
 	
 	
 	

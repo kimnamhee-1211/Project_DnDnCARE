@@ -52,6 +52,13 @@ public interface ChatingService {
 	int getChatCount(Integer finalChatRoomNo);
 
 	int getAlreadyChatRoomNo(Integer matNo, int memberNo, int relatedMemberNo);
+
+	Integer getAlreadyChatRoomNo2(Integer matNo, int firstMemberNo, int secondMemberNo, int cMemberNo);
+
+	Integer getAlreadyChatRoomNo3(Integer matNo, int firstMemberNo, int secondMemberNo, int thirdMemberNo,
+			int cMemberNo);
+
+	List<String> getParticipantMemberNames(Integer finalChatRoomNo);
     
 
 }

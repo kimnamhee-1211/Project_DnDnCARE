@@ -144,7 +144,7 @@
 	
 	<update id="updateMembers">
 		UPDATE MEMBER
-		SET ${column} = #{data}
+		SET ${column} = #{data}, MEMBER_UPDATE_DATE = SYSDATE
 		WHERE MEMBER_NO = ${memberNo}
 	</update>
 	

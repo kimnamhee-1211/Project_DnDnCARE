@@ -209,5 +209,26 @@
 		    join chat_room_member using(chat_room_no)
 		where mat_no = #{matNo} and member_no in(#{memberNo},#{relatedMemberNo})
     </select>
+    
+    <select id="getAlreadyChatRoomNo2" resultType="_int">
+    	select NVL(MAX(chat_room_no), -1) as chat_room_no
+		from chat_room
+		    join chat_room_member using(chat_room_no)
+		where mat_no = #{matNo} and member_no in(#{cMemberNo},#{firstMemberNo},#{secondMemberNo})
+    </select>
+    
+    <select id="getAlreadyChatRoomNo3" resultType="_int">
+    	select NVL(MAX(chat_room_no), -1) as chat_room_no
+		from chat_room
+		    join chat_room_member using(chat_room_no)
+		where mat_no = #{matNo} and member_no in(#{cMemberNo},#{firstMemberNo},#{secondMemberNo}, #{thirdMemberNo})
+    </select>
+    
+    <select id="getParticipantMemberNames" resultType="map">
+    	select member_name
+		from chat_room_member
+		    join member using(member_no)
+		where chat_room_no = #{finalChatRoomNo}
+    </select>
 	
 </mapper>
