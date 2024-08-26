@@ -376,3 +376,8 @@ input{
      4px 4px 5px 0px rgba(0,0,0,.1) !important;
      border:none !important;
 }
+/* 캘린더 이벤트의 정보를 보는 모달박스 */
+.workInfo {
+	display:grid; grid-template-columns: 1fr 1fr;
+}
+

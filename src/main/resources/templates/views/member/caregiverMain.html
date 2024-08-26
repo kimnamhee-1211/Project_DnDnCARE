@@ -9,9 +9,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+	<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.14/index.global.min.js'></script>
     <style>
     	.fc{width:500px !important; height:500px !important; } 
+    	.fc-day-sun a { color: red; }
+    	.fc-day-sat a { color: blue; }
+    	.fc-day-mon a, .fc-day-thu a, .fc-day-fri a, .fc-day-tue a, .fc-day-wed a { color: black;}
     </style>
 </head>
 <body>
@@ -407,6 +411,7 @@
     	request.done(function(data) {
 	    		console.log(data);
 	    		var calendar = new FullCalendar.Calendar(calendarEl, {
+	    			  googleCalendarApiKey: 'AIzaSyBPJsvBD5PxwzfwINUv87WW7bSrLnCKv_A',
 			          initialView: 'dayGridMonth',
 			          events : data,
 			          eventColor: 'skyblue',
@@ -429,15 +434,23 @@
 		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
 		          		//console.log(document.querySelector('.modal-footer').children[0].value);
 		        	  	$('#calendarModal').modal('show');
-		        	  }
+		        	  },
+		        	  eventSources: [
+		        		  {
+		        			  googleCalendarId:'ko.south_korea#holiday@group.v.calendar.google.com',
+		        			  color: 'white',
+		        			  textColor: 'gray'
+		        			}
+		        	  ],
+		        	  locale: "ko"
 			        });
 			        calendar.render();
-			        calenderEdit();
+			        //calenderEdit();
 	    	}) 
 	  	});
    
 	  	//종규 삽입
-	    function calenderEdit(){
+	    /* function calenderEdit(){
 	       const dateTitle = document.getElementById('fc-dom-1');
 	       
 	       console.log(dateTitle);
@@ -461,7 +474,7 @@
 	             }
 	          }
 	       }
-	    } 
+	    }  */
 	    //종규 삽입 끝
     
 		

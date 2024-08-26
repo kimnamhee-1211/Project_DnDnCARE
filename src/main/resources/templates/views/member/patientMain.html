@@ -11,9 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>	<!-- 결제 -->
-    
     <style>
     	.fc{width:500px !important; height:500px !important; } 
+    	.fc-day-sun a { color: red; }
+    	.fc-day-sat a { color: blue; }
+    	.fc-day-mon a, .fc-day-thu a, .fc-day-fri a, .fc-day-tue a, .fc-day-wed a { color: black;}
     </style>
 </head>
 <body>
@@ -572,22 +574,16 @@
 		          		infoDetail[6].innerHTML = info.event.extendedProps.money + '원';
 		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
 		        	  	$('#calendarModal').modal('show');
-  		        	  }
+  		        	  },
+  		        	locale: "ko"
   		        });
   		        calendar.render();
   		    	//종규 메소드 명훈 캘린더 삽입
   		        calenderEdit();
   		    	calbtns();
+  		      	//calenderEdit();
         	})
-        	
-        	
       	});
-    	/*<![CDATA[*/
-    		
-    	/* var calendar = new FullCalendar.Calendar(calendarEl, {
-         		initialView: 'dayGridMonth'
-       	});
-       	calendar.render();	 */
     		
     		
     	window.onload = () => {
