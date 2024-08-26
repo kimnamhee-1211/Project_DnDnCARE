@@ -290,24 +290,28 @@ public class MemberController {
 	@PostMapping("login.me")
 	public String login(@ModelAttribute Member m, Model model, RedirectAttributes ra) {
 		Member loginUser = mService.login(m);
-
-		if (bCrypt.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
-
-			model.addAttribute("loginUser", loginUser);
-
-			if (loginUser.getMemberCategory().equalsIgnoreCase("C")) {
-				ra.addAttribute("memberNo", loginUser.getMemberNo());
-
-				return "redirect:caregiverMain.me";
-			} else if (loginUser.getMemberCategory().equalsIgnoreCase("P")) {
-
-				return "redirect:patientMain.me";
+		
+		if(loginUser != null) {
+			if (bCrypt.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
+	
+				model.addAttribute("loginUser", loginUser);
+	
+				if (loginUser.getMemberCategory().equalsIgnoreCase("C")) {
+					ra.addAttribute("memberNo", loginUser.getMemberNo());
+	
+					return "redirect:caregiverMain.me";
+				} else if (loginUser.getMemberCategory().equalsIgnoreCase("P")) {
+	
+					return "redirect:patientMain.me";
+				} else {
+					return "redirect:adminMain.adm";
+				}
+	
 			} else {
-				return "redirect:adminMain.adm";
+				throw new MemberException("로그인을 실패하였습니다.");
 			}
-
-		} else {
-			throw new MemberException("로그인을 실패하였습니다.");
+		}else {
+			throw new MemberException("아이디 또는 비밀번호를 잘못 입력하셨습니다");
 		}
 
 //		if(loginUser !=null) { // 회원가입 기능 구현 전 암호화안한 테스트용
@@ -2981,11 +2985,15 @@ public class MemberController {
 		// System.out.println(code);
 		Member m = mService.selectSocialLogin(code); // loginUser
 		if (m == null) { // 검사해서 없으면 회원가입창으로
-			session.setAttribute("code", code);
+			session.setAttribute("code", code);	
 
 			return "redirect:enroll1View.me";
 		} else { // 검사해서 있으면 바로 로그인하기
-			model.addAttribute("loginUser", m);
+			
+			Member loginUser = mService.login(m); 
+			
+			//model.addAttribute("loginUser", m);
+			model.addAttribute("loginUser", loginUser);
 			logger.info("소셜 로그인 아이디 : " + m.getMemberId());
 			if (m.getMemberCategory().equalsIgnoreCase("C")) {
 				ra.addAttribute("memberNo", m.getMemberNo());
@@ -3185,7 +3193,7 @@ public class MemberController {
 	public void loginInfo(HttpSession session, HttpServletResponse response) {
 
 		Member loginUser = (Member) session.getAttribute("loginUser");
-
+		
 		String memberCategory = loginUser.getMemberCategory();
 
 		System.out.println(memberCategory);

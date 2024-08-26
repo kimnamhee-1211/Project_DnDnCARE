@@ -107,7 +107,10 @@
             	<br/>
 	            <table class="table mainTable matCard">
 	                <thead>
-	                    <tr>
+	                    <tr th:if="${requestCaregiver.empty}">
+	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님 반가워요! 아직 매칭을 원하는 분이 없어요!</th>
+	                    </tr>
+	                    <tr th:if="${!requestCaregiver.empty}">
 	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님과의 매칭을 원하는 분들이 있습니다.</th>
 	                    </tr>
 	                </thead>
