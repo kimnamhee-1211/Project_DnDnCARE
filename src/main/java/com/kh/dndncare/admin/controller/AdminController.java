@@ -42,6 +42,7 @@ import com.kh.dndncare.common.ImageUtil;
 import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.common.Pagination2;
 import com.kh.dndncare.common.ThumbnailUtil;
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.Member;
@@ -1075,7 +1076,7 @@ public class AdminController {
 	        
 		}//페이토탈메소드끝 월
 	
-		//어드민 페이 토탈 통계 달
+		//어드민 페이 토탈 통계 년
 		
 			@GetMapping("yearPayTotal.adm")
 			@ResponseBody
@@ -1185,5 +1186,457 @@ public class AdminController {
 		}
 		
 	}
+	
+	
+	//결제정보 어드민
+	@GetMapping("matching.adm")
+	public String matchingView(Model model) {
+		
+		
+		
+		ArrayList<Matching> mat = aService.selectMatchings();
+		
+		
+		model.addAttribute("mat",mat);
+		return "matchingInfo";
+	}
+	
+	
+	//어드민 페이 토탈 통계 에이작스 (매칭 일주일)
+	
+	@GetMapping("weekMatTotal.adm")
+	@ResponseBody
+	public void weekMatTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2, HttpServletResponse response) {
+		
+		int year1 = Integer.parseInt(data1.split("-")[0]);
+		int month1 = Integer.parseInt(data1.split("-")[1]);
+		int day1 = Integer.parseInt(data1.split("-")[2]);
+		
+		LocalDate date1 = LocalDate.of(year1, month1, day1);
+        
+        
+        //long daysBetween = ChronoUnit.DAYS.between(date1, date2);
+        
+        HashMap<String,Object> map = new HashMap<String,Object>();
+        
+        
+        String[] labels = {date1.plusDays(0).toString(),date1.plusDays(1).toString(),date1.plusDays(2).toString()
+        					,date1.plusDays(3).toString(),date1.plusDays(4).toString(),date1.plusDays(5).toString(),date1.plusDays(6).toString()};
+        map.put("labels", labels);
+        
+        int[] datas1 = new int[7];
+        int[] datas2 = new int[7];
+        
+        
+        ArrayList<Matching> mat = aService.selectMatchings();
+        
+        
+     // 로그 파일 : 페이지 이용량을 조회 (시작)
+		File usageFolder = new File("C:/logs/matching/");
+		File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+		
+		//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
+		try { 
+			for(File f : usageFileList) {
+				BufferedReader br = new BufferedReader(new FileReader(f));
+				String data;
+				String dataMatNo;
+				String dataService;
+				String date;
+				System.out.println(br.readLine());
+				while((data=br.readLine())!=null) {
+					// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
+					
+					System.out.println(data);
+					date = data.substring(0,10);
+					dataMatNo = data.split("//")[1];
+					dataService = data.split("//")[2];
+					
+					if(dataMatNo != null && dataService != null) {
+						
+						for(int i = 0; i < labels.length ; i++) {
+							
+							
+							if(labels[i].trim().equals(date.trim())) {
+								if(dataService.trim().equals("개인간병")) {
+									System.out.println("djelemfdjrksl?");
+									datas1[i] += 1;
+								}else {
+									System.out.println("djelemfdjrksl?222");
+									datas2[i] += 1;
+								}
+							}
+						}
+					}
+					
+				}
+				
+				
+				br.close();
+			}
+			//model.addAttribute("usage", usageMap);
+		} catch(Exception e) {
+			e.printStackTrace();
+		} 
+        
+		
+		map.put("datas1",datas1);
+        map.put("datas2",datas2);
+        
+        Gson gson = new Gson();
+		response.setContentType("application/json; charset=UTF-8;");
+		try {
+			gson.toJson(map, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
+		
+        
+        
+	        
+	}//페이토탈메소드끝 ( 매칭 일주일)
+		
+		
+	//어드민 페이 토탈 통계 에이작스 (매칭 달)
+	
+	@GetMapping("monthMatTotal.adm")
+	@ResponseBody
+	public void monthMatTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2,@RequestParam("flag") int flag, HttpServletResponse response) {
+		
+
+		if(flag == 1) {
+			int year1 = Integer.parseInt(data1.split(",")[0]);
+			int month1 = Integer.parseInt(data2.split(",")[0]);
+			
+			//일수 계산하자
+			YearMonth yearMonth = YearMonth.of(year1, month1);
+			int days = yearMonth.lengthOfMonth();
+			System.out.println("내년월수 뭐야?" + yearMonth);
+	        HashMap<String,Object> map = new HashMap<String,Object>();
+	        
+	        
+	        String[] labels = new String[days];
+	        for(int i =1 ; i <=labels.length ; i++) {
+	        	labels[i-1] = i+"";
+	        }
+	        map.put("labels", labels);
+	        
+	        int[] datas1 = new int[days];
+	        int[] datas2 = new int[days];
+	        
+	        
+	        
+	     // 로그 파일 : 페이지 이용량을 조회 (시작)
+			File usageFolder = new File("C:/logs/matching/");
+			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+			
+			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
+			try { 
+				for(File f : usageFileList) {
+					BufferedReader br = new BufferedReader(new FileReader(f));
+					String data;
+					String dataMatNo;
+					String dataService;
+					String date;
+					System.out.println(br.readLine());
+					while((data=br.readLine())!=null) {
+						// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
+						
+						System.out.println(data);
+						date = data.substring(0,10);
+						dataMatNo = data.split("//")[1];
+						dataService = data.split("//")[2];
+						
+						if(dataMatNo != null && dataService != null) {
+							
+							for(int i = 0; i < labels.length ; i++) {
+								System.out.println(date.substring(7,10));
+								System.out.println("체킇ㄱ");
+								if(labels[i].trim().equals(date.substring(8,10))) {
+									if(dataService.trim().equals("개인간병")) {
+										datas1[i] += 1;
+									}else {
+										datas2[i] += 1;
+									}
+								}
+							}
+						}
+						
+					}
+					
+					
+					br.close();
+				}
+				//model.addAttribute("usage", usageMap);
+			} catch(Exception e) {
+				e.printStackTrace();
+			} 
+	        
+			
+			map.put("datas1",datas1);
+	        map.put("datas2",datas2);
+	        
+	        Gson gson = new Gson();
+			response.setContentType("application/json; charset=UTF-8;");
+			try {
+				gson.toJson(map, response.getWriter());
+			} catch (JsonIOException | IOException e) {
+				e.printStackTrace();
+			}
+		}else {	//여러 달 검색하는것
+			int year1 = Integer.parseInt(data1.split(",")[0]);
+			int year2 = Integer.parseInt(data1.split(",")[1]);
+			int month1 = Integer.parseInt(data2.split(",")[0]);
+			int month2 = Integer.parseInt(data2.split(",")[1]);
+			
+			
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			int size = month2-month1+1;
+			if(year1 != year2 ) {
+				size += 12 * ( year2 - year1);
+			}
+			
+			String[] labels = new String[size];
+			int j = 0;
+			int k = 0;
+			for(int i = 1 ; i <= size ; i++) {
+				String labelMonth = "0"+((month1+i-1) % 12 == 0 ? "12" : (month1+i-1) % 12);
+	        	labels[j] = year1+ k + "-" +labelMonth.substring(labelMonth.length() - 2);
+	        	
+	        	j += 1;
+	        	if(i % 12 == 0) {
+	        		k +=1;
+	        	}
+			}
+			
+	        System.out.println("확인해보자" + labels.length);
+	        System.out.println("확인해보자" + labels[0]);
+	        map.put("labels", labels);
+	        
+	        int[] datas1 = new int[labels.length];
+	        int[] datas2 = new int[labels.length];
+	        
+	        
+	     // 로그 파일 : 페이지 이용량을 조회 (시작)
+			File usageFolder = new File("C:/logs/matching/");
+			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+			
+			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
+			try { 
+				for(File f : usageFileList) {
+					BufferedReader br = new BufferedReader(new FileReader(f));
+					String data;
+					String dataMatNo;
+					String dataService;
+					String date;
+					while((data=br.readLine())!=null) {
+						// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
+						
+						System.out.println(data);
+						date = data.substring(0,10);
+						dataMatNo = data.split("//")[1];
+						dataService = data.split("//")[2];
+						
+						if(dataMatNo != null && dataService != null) {
+							
+							for(int i = 0; i < labels.length ; i++) {
+								System.out.println(date.substring(0,7));
+								System.out.println("체킇ㄱ");
+								if(labels[i].trim().equals(date.substring(0,7))) {
+									if(dataService.trim().equals("개인간병")) {
+										datas1[i] += 1;
+									}else {
+										datas2[i] += 1;
+									}
+								}
+							}
+						}
+						
+					}
+					
+					
+					br.close();
+				}
+				//model.addAttribute("usage", usageMap);
+			} catch(Exception e) {
+				e.printStackTrace();
+			} 
+	        
+			
+			map.put("datas1",datas1);
+	        map.put("datas2",datas2);
+	        
+	        Gson gson = new Gson();
+			response.setContentType("application/json; charset=UTF-8;");
+			try {
+				gson.toJson(map, response.getWriter());
+			} catch (JsonIOException | IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+	        
+	}//페이토탈메소드끝 ( 매칭 달)
+	
+	
+	//어드민 페이 토탈 통계 년
+	
+	@GetMapping("yearMatTotal.adm")
+	@ResponseBody
+	public void yearMatTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2,@RequestParam("flag") int flag, HttpServletResponse response) {
+	
+		if(flag ==1) {
+			int year = Integer.parseInt(data1.split(",")[0]);
+			
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			
+			String[] labels = new String[12];
+			for(int i = 1 ; i <= 12 ; i++) {
+				String labelMonth = "0"+i;
+				labels[i-1] = year +"-"+ labelMonth.substring(labelMonth.length()-2);
+			}
+			map.put("labels", labels);
+			
+			int[] datas1 = new int[12];
+	        int[] datas2 = new int[12];
+	        
+	     // 로그 파일 : 페이지 이용량을 조회 (시작)
+	     			File usageFolder = new File("C:/logs/matching/");
+	     			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+	     			
+	     			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
+	     			try { 
+	     				for(File f : usageFileList) {
+	     					BufferedReader br = new BufferedReader(new FileReader(f));
+	     					String data;
+	     					String dataMatNo;
+	     					String dataService;
+	     					String date;
+	     					while((data=br.readLine())!=null) {
+	     						// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
+	     						
+	     						System.out.println(data);
+	     						date = data.substring(0,10);
+	     						dataMatNo = data.split("//")[1];
+	     						dataService = data.split("//")[2];
+	     						
+	     						if(dataMatNo != null && dataService != null) {
+	     							
+	     							for(int i = 0; i < labels.length ; i++) {
+	     								System.out.println(date.substring(0,7));
+	     								System.out.println("체킇ㄱ");
+	     								if(labels[i].trim().equals(date.substring(0,7))) {
+	     									if(dataService.trim().equals("개인간병")) {
+	     										datas1[i] += 1;
+	     									}else {
+	     										datas2[i] += 1;
+	     									}
+	     								}
+	     							}
+	     						}
+	     						
+	     					}
+	     					
+	     					
+	     					br.close();
+	     				}
+	     				//model.addAttribute("usage", usageMap);
+	     			} catch(Exception e) {
+	     				e.printStackTrace();
+	     			} 
+	     	        
+	     			
+	     			map.put("datas1",datas1);
+	     	        map.put("datas2",datas2);
+	     	        
+	     	        Gson gson = new Gson();
+	     			response.setContentType("application/json; charset=UTF-8;");
+	     			try {
+	     				gson.toJson(map, response.getWriter());
+	     			} catch (JsonIOException | IOException e) {
+	     				e.printStackTrace();
+	     			}
+			
+		}else {
+			int year1 = Integer.parseInt(data1.split(",")[0]);
+			int year2 = Integer.parseInt(data1.split(",")[1]);
+			
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			
+			String[] labels = new String[year2 - year1 +1];
+			int j =0;
+			for(int i = year1 ; i <= year2 ; i++) {
+				labels[j] = year1+ j +"년" ;
+				j += 1;
+			}
+			
+			map.put("labels", labels);
+								
+			int[] datas1 = new int[year2 - year1 +1];
+	        int[] datas2 = new int[year2 - year1 +1];
+			
+	     // 로그 파일 : 페이지 이용량을 조회 (시작)
+ 			File usageFolder = new File("C:/logs/matching/");
+ 			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+ 			
+ 			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
+ 			try { 
+ 				for(File f : usageFileList) {
+ 					BufferedReader br = new BufferedReader(new FileReader(f));
+ 					String data;
+ 					String dataMatNo;
+ 					String dataService;
+ 					String date;
+ 					while((data=br.readLine())!=null) {
+ 						// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
+ 						
+ 						System.out.println(data);
+ 						date = data.substring(0,10);
+ 						dataMatNo = data.split("//")[1];
+ 						dataService = data.split("//")[2];
+ 						
+ 						if(dataMatNo != null && dataService != null) {
+ 							
+ 							for(int i = 0; i < labels.length ; i++) {
+ 								System.out.println(date.substring(0,4));
+ 								if(labels[i].trim().substring(0,4).equals(date.substring(0,4))) {
+ 									if(dataService.trim().equals("개인간병")) {
+ 										datas1[i] += 1;
+ 									}else {
+ 										datas2[i] += 1;
+ 									}
+ 								}
+ 							}
+ 						}
+ 						
+ 					}
+ 					
+ 					
+ 					br.close();
+ 				}
+ 				//model.addAttribute("usage", usageMap);
+ 			} catch(Exception e) {
+ 				e.printStackTrace();
+ 			} 
+ 	        
+ 			
+ 			map.put("datas1",datas1);
+ 	        map.put("datas2",datas2);
+ 	        
+ 	        Gson gson = new Gson();
+ 			response.setContentType("application/json; charset=UTF-8;");
+ 			try {
+ 				gson.toJson(map, response.getWriter());
+ 			} catch (JsonIOException | IOException e) {
+ 				e.printStackTrace();
+ 			}
+	        
+		}
+	
+	}// 년 메소드
+			
+			
+			
 	
 }//클래스 끝

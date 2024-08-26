@@ -5,6 +5,27 @@
 <title>Insert title here</title>
 <link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+
+	<style>
+		th{
+			border-bottom:2px solid #133B5C !important;
+			border-top:2px solid #133B5C !important;
+			border-right:0px !important;
+			color: #133B5C !important;
+			font-size : 16px !important;
+			padding:2px !important;
+		}
+		
+		.btn-success{
+			background-color:#1D2D50 !important;
+			/* --bs-btn-bg:#E1e5F74 !important; */
+			box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+		     7px 7px 20px 0px rgba(0,0,0,.1),
+		     4px 4px 5px 0px rgba(0,0,0,.1) !important;
+		     border:none !important;
+		}
+	</style>
+	
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
@@ -18,7 +39,6 @@
 	     		<div align="center"class="myInfo-Border m-4">
 	     			<div class="m-4" style="border-bottom:2px solid #133B5C;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
-	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatching.me">현재 매칭 정보</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingHistory.me">매칭 이력</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내가 쓴 후기</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
@@ -47,7 +67,7 @@
 						<div class="myInfo-Border-maincolor mt-2 mb-3">
 						
 							<div class="m-2 d-flex justify-content-between">
-								<div class="h3 myInfo-title">[[${session.loginUser.MemberName}]]님 이용일수/지출</div>
+								<div class="h3 m-2">[[${session.loginUser.MemberName}]]님 이용일수/지출</div>
 								<div>
 									<button id="countDayBtn" class="myInfo-btn btn-sm" style="width:85px;" onclick="showGraph('count')" >이용일</button>
 									<button id="countPayBtn" class="btn-outline-maincolor btn-sm" style="width:85px;" onclick="showGraph('pay')">지출</button>
@@ -88,7 +108,7 @@
 						<div class="myInfo-Border-maincolor mt-2 mb-3">
 						
 							<div class="m-2 d-flex justify-content-between">
-								<div class="h3 myInfo-title">[[${session.loginUser.MemberName}]]님 매칭 이력</div>
+								<div class="h3 m-2">[[${session.loginUser.MemberName}]]님 매칭 이력</div>
 								<div>
 									<button id='matchingWaitBtn' class="myInfo-btn btn-sm" style="width:85px; height:40px;" onclick="showStatus('wait')">매칭중</button>
 									<button id='matchingEndBtn' class="btn-outline-maincolor btn-sm" style="width:85px; height:40px;" onclick="showStatus('end')">종료</button>
@@ -98,21 +118,23 @@
 
 							<div id="matching" class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
 							    <table class="m-2" id="matchingTable">
-							        <tr>
-							            <th width="320px">간호 시작일</th>
+							        <tr align="center">
+							            <th width="340px">간호 시작일</th>
 							            <th width="30"></th>
 							            <th width="320px">간호 종료일</th>
-							            <th width="520px">간병인 정보</th>
-							            <th width="120px">현재상태</th>
+							            <th width="320px">간병인 정보</th>
+							            <th width="320px">일당금액</th>
+							            <th width="160px">현재상태</th>
 							        </tr>
 							        <tr th:each="i : ${mciList}" th:if="${!i.isAfterDate}" class="matching-row" data-mat-confirm="${i.matConfirm}" data-is-after-date="${i.isAfterDate}">
-								            <td>[[${i.beginDt}]]일  [[${i.beginTime}]]시</td>
+								            <td align="center">[[${i.beginDt}]]일  [[${i.beginTime}]]시</td>
 								            <td> ~ </td>
-								            <td>[[${i.endDt}]]일 [[${i.endTime}]]시</td>
-								            <td> 이름 : [[${i.memberName}]] 비용 : [[${i.money}]]원</td>
+								            <td align="center">[[${i.endDt}]]일 [[${i.endTime}]]시</td>
+								            <td align="center">[[${i.memberName}]]</td>
+								            <td align="center">[[${#numbers.formatInteger(i.money, 0, 'COMMA')}]]원</td>
+								            <td align="center"><span th:if="${i.isBeforeDate}">시작 전</span><span th:if="${!i.isBeforeDate}">진행중</span></td>
 								            <input type="hidden" th:id="'hiddenMemberNo' + ${i.memberNo}" name="memberNo" th:value="${i.memberNo}"/>
 								            <input type="hidden" th:id="'hiddenMatNo' + ${i.matNo}" name="matNo" th:value="${i.matNo}"/>
-								            <td><span th:if="${i.isBeforeDate}">시작 전</span><span th:if="${!i.isBeforeDate}">진행중</span></td>
 							        </tr>
 							        
 							    </table>
@@ -120,11 +142,12 @@
 							
 							<div id="endMatching" class="m-3 p-2" style="border-bottom:1px solid #dee2e6; display:none">
 							    <table class="m-2" id="matchingTable" >
-							        <tr>
+							        <tr align="center">
 							            <th width="320px">간호 시작일</th>
 							            <th width="30"></th>
 							            <th width="320px">간호 종료일</th>
-							            <th width="520px">간병인 정보</th>
+							            <th width="200px">간병인 정보</th>
+							            <th width="200"> 금액</th>
 							            <th></th>
 							            <th width="120px">후기 작성</th>
 							        </tr>
@@ -132,7 +155,8 @@
 								            <td>[[${i.beginDt}]]일 [[${i.beginTime}]]시</td>
 								            <td> ~ </td>
 								            <td>[[${i.endDt}]]일 [[${i.endTime}]]시</td>
-								            <td> 이름 : [[${i.memberName}]] 비용 : [[${i.money}]]원</td>
+								            <td align="center">[[${i.memberName}]]</td>
+								            <td align="center">[[${#numbers.formatInteger(i.money, 0, 'COMMA')}]]원</td>
 								            <td>
 								            <input type="hidden" th:id="'hiddenMemberNo' + ${i.memberNo}" name="memberNo" th:value="${i.memberNo}"/>
 								            <input type="hidden" th:id="'hiddenMatNo' + ${i.matNo}" name="matNo" th:value="${i.matNo}"/>
@@ -141,7 +165,7 @@
 								                <button class="myInfo-btn btn-sm" th:onclick="reviewDetail('myInfoMatchingHistoryP', [[${i.memberNo}]], [[${i.matNo}]])">작성 가능</button>
 								            </td>
 								            <td th:if="${i.matConfirm == 'Y' && i.isAfterDate && i.reviewYn != 0}">
-								                <button class="myInfo-btn btn btn-warning btn-sm">작성 완료</button>
+								                <button class="myInfo-btn-2">작성 완료</button>
 								            </td>
 								           
 								            <td th:unless="${i.isAfterDate && i.matConfirm == 'Y'}">

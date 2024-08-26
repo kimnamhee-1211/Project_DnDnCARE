@@ -1285,6 +1285,13 @@ public class MemberController {
 				model.addAttribute("avgScore", avgScore);
 				model.addAttribute("sumScore", sumScore);
 				model.addAttribute("countScore", countScore);
+				
+				CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+				Double avgReviewScore = mService.avgReviewScore2(cg.getMemberNo());
+				cg.setAvgReviewScoreDouble(avgReviewScore);
+				model.addAttribute("cg",cg);
+				
+				
 				return "myInfoMatchingReview";
 
 			case 'P':
