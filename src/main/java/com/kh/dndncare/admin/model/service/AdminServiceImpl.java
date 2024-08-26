@@ -207,5 +207,8 @@ public class AdminServiceImpl implements AdminService{
 	public ArrayList<Matching> selectMatchings() {
 		return aMapper.selectMatchings();
 	}
+	public int adminUpdateBoard(Board b) {
+		return aMapper.adminUpdateBoard(b);
+	}
 
 }

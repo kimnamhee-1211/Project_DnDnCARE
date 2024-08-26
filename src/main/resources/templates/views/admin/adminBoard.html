@@ -328,33 +328,34 @@
 		// 간병인 커뮤니티 테이블 처리
 		for (const td of tds) {
 		    const statusDivs = td.querySelectorAll('div');
-		    if (statusDivs.length > 0) {
-		        for (const div of statusDivs) {
-		            div.addEventListener('click', function(event){
-		                event.stopPropagation(); // 이벤트 버블링 막기
-		                const trTds = this.parentElement.parentElement.querySelectorAll('td');
-		                boardNo = trTds[0].innerText;
-		                const statusTd = trTds[5].querySelectorAll('div');
-		                if (statusTd[0].className == 'selectState') {
-		                    status = 'N';
-		                } else {
-		                    status = 'Y';
-		                }
-		                $.ajax({
-		                    url: 'updateAdminBoardStatus.adm',
-		                    data: {boardNo: boardNo, boardStatus: status},
-		                    success: data => {
-		                        if (data == 'success') {
-		                            statusTd[0].classList.toggle('selectState');
-		                            statusTd[1].classList.toggle('selectState');
-		                        }
-		                    },
-		                    error: data => console.log(data)
-		                });
+		    statusDivs.forEach(div => {
+		        div.addEventListener('click', function(event) {
+		            const tr = this.closest('tr');
+		            const boardNo = tr.querySelector('td').innerText.trim();
+		            const currentStatusDiv = tr.querySelector('div.selectState');
+		            const currentStatus = currentStatusDiv.textContent.trim();
+
+		            if (this.textContent.trim() === currentStatus) {
+		                return; 
+		            }
+
+		            const newStatus = this.textContent.trim() === '게시' ? 'Y' : 'N';
+
+		            $.ajax({
+		                url: 'updateAdminBoardStatus.adm',
+		                data: { boardNo: boardNo, boardStatus: newStatus },
+		                success: data => {
+		                    if (data.trim() === 'success') {
+		                        currentStatusDiv.classList.remove('selectState');
+		                        this.classList.add('selectState');
+		                    }
+		                },
+		                error: data => console.log('에러 발생:', data)
 		            });
-		        }
-		    } else {
-		        // 상태변경 div가 아닌 나머지 td 클릭 시 location.href로 이동
+		        });
+		    });
+
+		    if (statusDivs.length === 0) {
 		        td.addEventListener('click', function() {
 		            const trTds = this.parentElement.querySelectorAll('td');
 		            boardNo = trTds[0].innerText;
@@ -366,43 +367,43 @@
 		// 환자 커뮤니티 테이블 처리
 		for (const pTd of pTds) {
 		    const statusDivs = pTd.querySelectorAll('div');
-		    if (statusDivs.length > 0) {
-		        for (const div of statusDivs) {
-		            div.addEventListener('click', function(event){
-		                const ptrTds = this.parentElement.parentElement.querySelectorAll('td');
-		                boardNo = ptrTds[0].innerText;
-		                const statusTd = ptrTds[5].querySelectorAll('div');
-		                if (statusTd[0].className == 'selectState') {
-		                    status = 'N';
-		                } else {
-		                    status = 'Y';
-		                }
-		                $.ajax({
-		                    url: 'updateAdminBoardStatus.adm',
-		                    data: {boardNo: boardNo, boardStatus: status},
-		                    success: data => {
-		                        if (data == 'success') {
-		                            statusTd[0].classList.toggle('selectState');
-		                            statusTd[1].classList.toggle('selectState');
-		                        }
-		                    },
-		                    error: data => console.log(data)
-		                });
+		    statusDivs.forEach(div => {
+		        div.addEventListener('click', function(event) {
+		            const tr = this.closest('tr');
+		            const boardNo = tr.querySelector('td').innerText.trim();
+		            const currentStatusDiv = tr.querySelector('div.selectState');
+		            const currentStatus = currentStatusDiv.textContent.trim();
+
+		            if (this.textContent.trim() === currentStatus) {
+		                return; 
+		            }
+
+		            const newStatus = this.textContent.trim() === '게시' ? 'Y' : 'N';
+
+		            $.ajax({
+		                url: 'updateAdminBoardStatus.adm',
+		                data: { boardNo: boardNo, boardStatus: newStatus },
+		                success: data => {
+		                    if (data.trim() === 'success') {
+		                        currentStatusDiv.classList.remove('selectState');
+		                        this.classList.add('selectState');
+		                    }
+		                },
+		                error: data => console.log('에러 발생:', data)
 		            });
-		        }
-		    } else {
+		        });
+		    });
+
+		    if (statusDivs.length === 0) {
 		        pTd.addEventListener('click', function() {
-		            const ptrTds = this.parentElement.querySelectorAll('td');
-		            boardNo = ptrTds[0].innerText;
+		            const trTds = this.parentElement.querySelectorAll('td');
+		            boardNo = trTds[0].innerText;
 		            location.href = "selectAdminBoard.adm?bNo=" + boardNo + "&page=" + /*[[${ppi.currentPage}]]*/1;
 		        });
 		    }
 		}
+		}
 
-		
-		
-
-	}
 
 
 			

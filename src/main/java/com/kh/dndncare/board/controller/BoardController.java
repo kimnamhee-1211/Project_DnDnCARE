@@ -107,13 +107,20 @@ public class BoardController {
 	public String inserBoard(@ModelAttribute Board b, HttpSession session) {
 		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		
+		System.out.println("####################");
+		System.out.println(b);
+		
 		b.setMemberNo(memberNo);
 		b.setAreaNo(b.getAreaNo());
 		b.setCategoryNo(b.getCategoryNo());
 		// 작성시 필요한 회원번호, 지역번호, 카테고리번호 b에 담기
 		int result = bService.insertBoard(b);
 		if(result > 0) {
-			return "redirect:communityBoardList.bo";			
+			if(b.getCategoryNo()!=99) {
+				return "redirect:communityBoardList.bo";			
+			}else {
+				return "rediect:qnaBoardList.bo";
+			}
 		}else {
 			throw new BoardException("게시글 작성을 실패하였습니다.");
 		}
@@ -190,7 +197,7 @@ public class BoardController {
 	
 	// 게시글 수정하기 클릭
 	@PostMapping("editBoard.bo")
-	public String editBoard(@RequestParam("boardId") int bId, @RequestParam("page") int page, Model model, HttpSession session) {
+	public String editBoard(@RequestParam("boardNo") int bId, @RequestParam("page") int page, Model model, HttpSession session) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
 		int memberNo = loginUser.getMemberNo();
@@ -207,7 +214,7 @@ public class BoardController {
 	public String updateBoard(@ModelAttribute Board b, @RequestParam("page") int page, RedirectAttributes ra) {
 		int result = bService.updateBoard(b);
 		// 가져온 Board로 update
-		
+		System.out.println(b);
 		if(result>0) {
 			ra.addAttribute("bId", b.getBoardNo());
 			ra.addAttribute("page", page);
@@ -219,10 +226,15 @@ public class BoardController {
 	
 	// boardDetail에서 삭제하기 클릭
 	@PostMapping("deleteBoard.bo")
-	public String deleteBoard(@RequestParam("boardId") int bId) {
+	public String deleteBoard(@RequestParam("boardNo") int bId, @RequestParam("categoryNo") int categoryNo) {
 		int result = bService.deleteBoard(bId);
+		System.out.println(categoryNo);
 		if(result>0) {
-			return "redirect:communityBoardList.bo";			
+			if(categoryNo != 99) {
+				return "redirect:communityBoardList.bo";			
+			}else {
+				return "redirect:qnaBoardList.bo";
+			}
 		}else {
 			throw new BoardException("게시글 삭제에 실패했습니다.");
 		}
@@ -573,6 +585,40 @@ public class BoardController {
 		}
 	}
 	
+	// 문의게시판
+	@GetMapping("qnaBoardList.bo")
+	public String qnaBoardList(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model,
+					            @RequestParam(value="categoryNo", defaultValue="-1") int categoryNo,
+					            @RequestParam(value="area", required = false) List<Integer> areas, 
+					            HttpServletRequest request, HttpSession session) {
+	    int listCount = bService.getListCountQnA();   
+	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 20);
+		ArrayList<Board> qnaList = bService.qnaBoardList(pi);
+		if(qnaList != null) {
+			model.addAttribute("qnaList", qnaList);
+			model.addAttribute("pi",pi);
+		}
+		return "qnaBoard";
+		
+	}
+	
+	// 문의글 작성페이지
+	@GetMapping("writeQnA.bo")
+	public String writeQnABoard() {
+		return "writeQnABoard";
+	}
+	
+	// faq게시판
+	@GetMapping("faqBoard.bo")
+	public String faqBoard() {
+		return "faqBoard";
+	}
+	
+	// 이용가이드
+	@GetMapping("userGuide.bo")
+	public String userGuide() {
+		return "userGuide";
+	}
 	
 	
 	

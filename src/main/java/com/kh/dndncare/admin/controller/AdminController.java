@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -837,7 +838,7 @@ public class AdminController {
 		}
 	}
 	
-	// 게시물 상세조회?
+	// 게시물 상세조회
 	@GetMapping("selectAdminBoard.adm")
 	public String selectAdminBoard(@RequestParam("bNo") int bNo, @RequestParam("page") int page,  Model model) {
 		// 게시글
@@ -1642,5 +1643,23 @@ public class AdminController {
 			
 			
 			
+	// 공지글 수정
+	@PostMapping("adminUpdateBoard.adm")
+	public String adminUpdateBoard(@ModelAttribute Board b, @RequestParam(value="page", defaultValue = "1") int page, RedirectAttributes ra) {
+		System.out.println("**************");
+		System.out.println(b);
+		int result = aService.adminUpdateBoard(b);
+		
+		if(result > 0) {
+			ra.addAttribute("bNo", b.getBoardNo());
+			ra.addAttribute("page", page);
+			return "redirect:selectAdminBoard.adm";
+		}else {
+			throw new AdminException("게시글 수정에 실패했습니다.");
+		}
+	}
+	
+	
+	
 	
 }//클래스 끝

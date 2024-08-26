@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+<style>
+
+	.faqBoard{
+		cursor: pointer;
+	}
+	
+	 .hidden-content {
+            display: none;
+        }
+
+</style>
+</head>
+<body>
+	<div th:replace="~{common/navbar :: navbar}"></div>
+		<div class="container" >
+			 <div class="row">
+				<div class="col" >
+		     		<div align="center"class="myInfo-Border m-4">
+		     			<div class="m-4" style="border-bottom:2px solid #133B5C;"><h1 class="h3 m-4 fw-bold text-center">고객센터</h1></div>
+		     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="userGuide.bo">이용가이드</a></div>
+		     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="faqBoard.bo">FAQ</a></div>
+		     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="qnaBoardList.bo">문의게시판</a></div>
+		     		</div>
+	    		</div>
+	    	
+	    	<div class="col" >
+	      		
+	      		<div class="row m-4" style="width:950px"> 
+		      		<div class="m-3 h1 menu-name" >FAQ</div>
+	      		</div>
+
+	      		<div class="row m-4">
+	      			<div class="row m-2">
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-1 d-flex justify-content-between question">
+								<div class="h5 m-1">Q.간병인이 되는 조건이 무엇인가요?</div>
+								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
+							</div>
+		      			</div>
+			      			<hr/>
+			      			<div class="hidden-content m-2 answer">
+			      				A. 환자를 내 가족같이 생각하고 성실하게 돌봐주실 수 있고 전문적인 간병이 가능하신 분이라면 누구든지 지원하실 수 있습니다.
+			      			</div>
+						</div>
+						
+						<div class="row m-2">
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3 question">
+							<div class="m-1 d-flex justify-content-between">
+								<div class="h5 m-1 ">Q.든든지수는 무엇인가요?</div>
+								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
+							</div>
+		      			</div>
+			      			<hr/>
+			      			<div class="hidden-content m-2 answer">
+			      				A.든든지수랑 든든케어만의 평점로 든든케어의 매칭시스템을 이용하여 매칭을 마친후 환자분들의 후기를 통해 주어지는 점수입니다. 
+			      			</div>
+						</div>
+						
+						<div class="row m-2">
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-1 d-flex justify-content-between question">
+								<div class="h5 m-1 " >Q.매칭상황은 어디서 확인하나요?</div>
+								<img class="tri-btn" width="35" src="image/icon_turnTri.png"/>
+							</div>
+		      			</div>
+			      			<hr/>
+			      			<div class="hidden-content m-2 answer">
+			      				A. 회원 메인페이지에서 우측하단의 '나의 매칭 현황' 버튼을 누르시면 회원님의 매칭상태를 확인하실수있습니다. 
+			      			</div>
+						</div>
+						
+							<div class="row m-2">
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-1 d-flex justify-content-between question">
+								<div class="h5 m-1 ">Q.서비스지역은 어디까지인가요?</div>
+								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
+							</div>
+		      			</div>
+			      			<hr/>
+			      			<div class="hidden-content m-2 answer">
+			      				A.주요 도시지역에서 모두 서비스가 가능하고, 이외의 지역도 서비스가 가능합니다.
+			      			</div>
+						</div>
+						
+							<div class="row m-2">
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-1 d-flex justify-content-between question">
+								<div class="h5 m-1 ">Q.공동간병은 무엇인가요?</div>
+								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
+							</div>
+		      			</div>
+			      			<hr/>
+			      			<div class="hidden-content m-2 answer">
+			      				A.공동간병이란 경증의 2~3명의 환자를 한명의 간병인이 간병서비스를 제공하는 간병입니다.<br>
+			      				&nbsp;&nbsp; 현재 간병을 필요하시는 회원님께서 공동간병을 신청하시면 해당 병원에 등록되고, <br>
+			      				&nbsp;&nbsp; 해당 병원에서 간병을 원하시는 회원님과 매칭을 진행하고 간병인분이 승인하면 진행됩니다.
+			      			</div>
+						</div>
+						
+							<div class="row m-2">
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3">
+							<div class="m-1 d-flex justify-content-between question">
+								<div class="h5 m-1 ">Q.결제비용은 어떻게 결정되나요?</div>
+								<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
+							</div>
+		      			</div>
+			      			<hr/>
+			      			<div class="hidden-content m-2 answer">
+			      				A.간병비용은 환자가 설정한 금액을 간병인이 승인하면 비용이 결정됩니다.<br>
+			      				&nbsp;&nbsp; 만약, 상호간의 합의하에 결정하신 금액이 있으시다면 환자분께서 다시 매칭신청하시면 됩니다.
+			      			</div>
+						</div>
+						<br><br><hr><br><br>
+						<div><h3>이외의 문의 사항은 문의게시판에 문의바랍니다.</h3></div>						
+	      			</div>
+	      		
+	    	</div>
+    	</div>
+		</div>
+	
+	<script th:inline="javascript">
+		
+		window.onload =() =>{
+			//좌측메뉴 폰트 굵게,밑줄표시하기
+			const menuAtag = document.getElementsByClassName('my-menu');
+			const menuName = document.getElementsByClassName('menu-name')[0];
+			for(i of menuAtag){
+				if(i.innerText == menuName.innerText){
+					i.innerHTML= '<span style="border-bottom:2px solid #133B5C; font-weight:bold;">'+i.innerText+'</span>';
+				}
+			};
+			
+			const questions = document.getElementsByClassName('question');
+			const answers = document.getElementsByClassName('answer');
+
+			// 모든 요소에 대해 클릭 이벤트 리스너를 추가
+			for (let i = 0; i < questions.length; i++) {
+			    questions[i].addEventListener('click', function() {
+			        console.log('질문');
+			        const displayStyle = window.getComputedStyle(answers[i]).display;
+			        if (displayStyle === 'none') {
+			            answers[i].style.display = 'block';
+			        } else {
+			            answers[i].style.display = 'none';
+			        }
+			    });
+			}
+			
+		}
+	
+			
+	</script>
+	
+</body>
+</html>

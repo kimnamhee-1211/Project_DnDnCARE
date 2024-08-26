@@ -84,6 +84,7 @@ public interface AdminService {
 	int adminDeleteReply(int rNo);
 
 	ArrayList<Matching> selectMatchings();
+	int adminUpdateBoard(Board b);
 
 
 
