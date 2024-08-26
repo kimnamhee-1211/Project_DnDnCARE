@@ -54,6 +54,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
+import com.kh.dndncare.matching.model.vo.joinMatInfoMin;
 import com.kh.dndncare.member.controller.MemberController;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.CareGiver;
@@ -584,7 +585,7 @@ public class MatchingController {
 	@PostMapping("outJoinMatching.jm")
 	public String outJoinMatching(@RequestParam("matNo") int matNo, @RequestParam("matMode") int matMode, HttpSession session, 
 								@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,
-								RedirectAttributes re) {
+								RedirectAttributes re, @RequestParam(value="beforePage", required=false) String beforePage) {
 		
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		int ptNo = mcService.getPtNo(loginUser.getMemberNo());
@@ -880,8 +881,7 @@ public class MatchingController {
 		if(MatMemberNo != null && MatMemberNo == loginUser.getMemberNo()) {
 			model.addAttribute("MatMemberNo", MatMemberNo);
 		}
-		System.out.println("MatMemberNo = " + MatMemberNo);
-		
+
 		
 		for(MatMatptInfoPt m: mPI) {
 			//나이 계산
@@ -1227,7 +1227,7 @@ public class MatchingController {
 		
 		
 		//매칭 신청 받은 내역 (간병인이 나(환자)를 신청)
-		ArrayList<CareGiverMin> myMatchingMat = mcService. getMyMatchingPN(loginPt);
+		ArrayList<CareGiverMin> myMatchingMat = mcService.getMyMatchingPN(loginPt);
 		for(CareGiverMin i : myMatchingMat) {
 			
 			//노출 나이 set
@@ -1240,12 +1240,23 @@ public class MatchingController {
 			
 		}
 		
+		//공동간병 참여중인 내역
+		ArrayList<joinMatInfoMin> myJoinMat = mcService.getMyJoinMat(loginPt);
+			
+		
+		
+		
+		
+		
+		
 		model.addAttribute("myMatching", myMatching);
 		model.addAttribute("myMatchingW", myMatchingW);
 		model.addAttribute("myRequestMatC", myRequestMatC);
 		model.addAttribute("myMatchingMat", myMatchingMat);
+		model.addAttribute("myJoinMat", myJoinMat);
 		
 		model.addAttribute("loginUserName", loginUser.getMemberName());
+		model.addAttribute("loginPt", loginPt);
 		
 		return "myMatchingP";	
 	
