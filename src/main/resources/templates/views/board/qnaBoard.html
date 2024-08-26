@@ -99,6 +99,18 @@
     .text-dark {
         text-decoration: none;
     }
+    
+    .guide-btn {
+		border-color: #1E5F74 !important;
+		color: black !important;
+		border: 1px solid #1E5F74 !important;
+	}
+
+	.guide-btn:hover, .guide-btn:focus,.guide-btn:active {
+		background-color: #1E5F74 !important;
+		border-color: #1E5F74 !important;
+		color:white !important;
+	}
 </style>
 </head>
 <body>
@@ -121,7 +133,13 @@
                 <div class="text-center m-4">
                     <h1 class="text-center m-4" style="font-weight: bold;" id="target">문의게시판</h1>
                 </div>
-
+			<div class="row m-4 text-center">
+				<div class="col-sm-3 mb-2">
+					<button class="btn guide-btn" id="signUpBtn" style="width: 100%;">문의게시판</button>
+				</div>
+				<div class="col-sm-3 mb-2">
+					<button class="btn guide-btn" id="findIdPwBtn" style="width: 100%;">나의 문의내역</button>
+			</div>
                 <div class="d-flex justify-content-end mb-4">
                     <th:block th:if="${session.loginUser != null}">
                         <button type="button" class="btn-write" style="width:100px;" th:onclick="location.href='writeBoard.bo'">글쓰기</button>
@@ -136,7 +154,7 @@
                                 <th width="30%">제목</th>
                                 <th width="10%">작성자</th>
                                 <th width="20%">작성일</th>
-                                <th width="4%">답변</th>
+                                <th width="5%">답변</th>
                             </tr>
                         </thead>
                         <tbody align="center">
@@ -170,6 +188,30 @@
                         </ul>
                     </nav>
                 </div>
+                
+                <div class="p-1 hidden">
+                    <table class="table table-bordered bg-white table-hover">
+                        <thead align="center">
+                            <tr>
+                                <th width="4%">번호</th>
+                                <th width="30%">제목</th>
+                                <th width="10%">작성자</th>
+                                <th width="20%">작성일</th>
+                                <th width="5%">답변</th>
+                            </tr>
+                        </thead>
+                        <tbody align="center">
+                            <tr th:each="q:${qnaList}">
+                                <td>[[${q.boardNo}]]</td>
+                                <td>[[${q.boardTitle}]]</td>
+                                <td>[[${q.memberNickName}]]</td>
+                                <td>[[${q.boardCreateDate}]]</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
             </div>
         </div>
     </main>
