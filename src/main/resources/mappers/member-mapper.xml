@@ -381,8 +381,10 @@
 	<select id="selectCareGiverList" resultType="CareGiver">	<!-- 간병인정보를 모두 불러온다.(재가공할거지만) -->
 		select *
 		from careGiver
-			join member using(member_no)
-		where member_status = 'N'
+			left join member on(careGiver.member_no = member.member_no)
+            
+			where member_status = 'N'
+		ORDER BY 2 asc, 1 desc
 	</select>
 
 	

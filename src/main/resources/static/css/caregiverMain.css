@@ -236,3 +236,19 @@ a {
 	font-weight:bold;
 	box-shadow: 0 1px 1px yellow;
 }
+
+.btn-outline {	
+	color: #1D2D50;
+	background:white;
+	border: 2px solid #1D2D50;
+	width: 190px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
+
+/* .btn-outline이 활성화된 상태 (클릭된 상태) */
+.btn-outline:active , .btn-outline:hover, .btn-outline:focus{
+	color: white;
+	background: #1D2D50;
+}
