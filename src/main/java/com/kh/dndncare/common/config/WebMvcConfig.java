@@ -33,7 +33,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		//기본적인 로그인 인터셉터 넣기
 		registry.addInterceptor(new CheckLoginInterceptor())
 		.addPathPatterns("/myInfo.me","/patientMain.me","/caregiverMain.me","/moreCaregiverInfo.me","/joinMatchingMainView.jm","/communityBoardList.bo")
-		.addPathPatterns("/**.me").excludePathPatterns("/login.me","/**.do","/careGiver.me","/patient.me","/**.lo","/socialLogin.me");
+		.excludePathPatterns("/login.me","/**.do","/careGiver.me","/patient.me","/**.lo","/socialLogin.me");
 		
 		
 		// 간병백과 페이지에서 ai검색 요청을 가로챌 인터셉터를 등록한다.
