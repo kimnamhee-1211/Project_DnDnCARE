@@ -381,6 +381,16 @@ public class MatchingServiceImpl implements MatchingService {
 	public ArrayList<joinMatInfoMin> getMyJoinMat(int loginPt) {
 		return mMapper.getMyJoinMat(loginPt);
 	}
+	@Override
+	public int getHospitalNo(String hospitalName) {
+	    Integer result = mMapper.getHospitalNo(hospitalName);
+	    return result != null ? result : 0;
+	}
+
+	@Override
+	public int insertHospital(String hospitalName, String hospitalAddress) {
+		return mMapper.insertHospital(hospitalName,hospitalAddress);
+	}
 
 
 

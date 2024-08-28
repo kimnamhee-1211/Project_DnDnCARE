@@ -9,7 +9,6 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -20,12 +19,12 @@ import java.util.TreeMap;
 import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -40,7 +39,6 @@ import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.ImageUtil;
-import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.common.Pagination2;
 import com.kh.dndncare.common.ThumbnailUtil;
 import com.kh.dndncare.matching.model.vo.Matching;
@@ -61,7 +59,8 @@ public class AdminController {
 	@Autowired
 	private ThumbnailUtil thumbnailUtil;
 	
-	
+	@Autowired
+	private BCryptPasswordEncoder bCrypt;
 	
 	
 	// 관리자 로그인 => 관리자 메인 페이지로 이동하는 메소드
@@ -1659,7 +1658,34 @@ public class AdminController {
 		}
 	}
 	
+	// 관리자 아이디 중복확인
+	@PostMapping("checkAdminId.adm")
+	@ResponseBody
+	public String checkAdminId(@RequestParam("memberId") String memberId) {
+		int result = aService.checkAdminId(memberId);
+		return result == 0 ? "yes" : "no";
+	}
 	
+	// 관리자 추가하기
+	@PostMapping("insertMember.adm")
+	@ResponseBody
+	public String insertMember(@RequestParam("memberId") String memberId, @RequestParam("memberPwd") String pwd,
+								@RequestParam("memberPhone") String memberPhone) {
+		Member m = new Member();
+		m.setMemberId(memberId);
+		m.setMemberPwd(bCrypt.encode(pwd));
+		m.setMemberCategory("A");
+		m.setMemberPhone(memberPhone);
+		m.setMemberEmail("idmyungja@naver.com");
+		m.setMemberAddress("04540//서울 중구 남대문로 120//3층 D강의실");
+		m.setMemberNational("내국인");
+		m.setMemberName("관리자");
+		m.setMemberGender("M");
+		m.setMemberNickName(memberId);
+		int result = aService.insertMember(m);
+		
+		return result == 1 ? "success" : "fail";
+	}
 	
 	
 }//클래스 끝

@@ -211,4 +211,14 @@ public class AdminServiceImpl implements AdminService{
 		return aMapper.adminUpdateBoard(b);
 	}
 
+	@Override
+	public int checkAdminId(String memberId) {
+		return aMapper.checkAdminId(memberId);
+	}
+
+	@Override
+	public int insertMember(Member m) {
+		return aMapper.insertMember(m);
+	}
+
 }

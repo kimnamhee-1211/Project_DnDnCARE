@@ -98,10 +98,11 @@ public class MatchingController {
 	@PostMapping("publicMatching2.mc")
 	public String publicMatching2(@ModelAttribute Patient patient, Model model, HttpSession session,
 			@RequestParam("service") String service,
-			@RequestParam(value="memberNoC", defaultValue = "0") int memberNoC) {
+			@RequestParam(value="memberNoC", defaultValue = "0") int memberNoC,@RequestParam("hospitalName") String hospitalName) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		int memberNo = loginUser.getMemberNo();
 		List<Integer> categoryList= mcService.getCategoryNo(memberNo);
+		
 		if(loginUser !=null && patient !=null) {
 			if(categoryList !=null) {
 				model.addAttribute("categoryList",categoryList);
@@ -112,6 +113,7 @@ public class MatchingController {
 			patient.setMemberNo(loginUser.getMemberNo());
 			session.setAttribute("tempPatient", patient);
 			session.setAttribute("service", service);
+			session.setAttribute("hospitalName",hospitalName);
 			return "publicMatching2";
 		} else {
 			throw new MatchingException("다음 페이지로 이동하는중 오류가 발생하였습니다.");
@@ -127,9 +129,75 @@ public class MatchingController {
 	                              @RequestParam("selectedDiseaseLevels") String selectedDiseaseLevels) {
 
 	      Patient patient = (Patient)session.getAttribute("tempPatient");
+	      String hospitalName = (String)session.getAttribute("hospitalName");
 	      int memberNo = patient.getMemberNo();
 	      String formattedDates = null;
 	      int dateResult = 0;
+	      
+	   // 병원돌봄 선택했을 때 우편번호 넣기
+	      String hospitalAddress = patient.getPtAddress();
+	      String[] addressParts = hospitalAddress.split("//");
+	      String zipCodefirm = addressParts[0];
+	      String test1 = "";
+
+	      if (zipCodefirm.equals("00000")) {
+	          String[] testArr = addressParts[1].split(" ");
+	          for (int i = 0; i < testArr.length; i++) {
+	              if (testArr[i].contains("로") || testArr[i].contains("길")) {
+	                  test1 = testArr[i];
+	                  if (i + 1 < testArr.length && testArr[i + 1].matches("\\d+")) {
+	                      test1 += " " + testArr[i + 1];
+	                  }
+	                  break;
+	              }
+	          }
+	          
+	          String zipCode = GetzipNo.ApiExplorer(test1);
+	          NodeList zipNoList = null;
+	          try {
+	              DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	              DocumentBuilder builder = factory.newDocumentBuilder();
+
+	              // XML 문자열을 Document로 변환
+	              ByteArrayInputStream input = new ByteArrayInputStream(zipCode.getBytes(StandardCharsets.UTF_8));
+	              Document document = builder.parse(input);
+
+	              // <newAddressListAreaCd> 요소의 zipNo 추출
+	              zipNoList = document.getElementsByTagName("zipNo");
+
+	          } catch (Exception e) {
+	              e.printStackTrace();
+	          }
+	          
+	          // zipNo 값을 추출
+	          String zipNo = null;
+	          if (zipNoList != null && zipNoList.getLength() > 0) {
+	              Element zipNoElement = (Element) zipNoList.item(0);
+	              zipNo = zipNoElement.getTextContent();
+	          }
+	          
+	          // zipNo가 null이 아니면 fullAddress의 우편번호 부분을 대체
+	          if (zipNo != null && !zipNo.isEmpty()) {
+	              addressParts[0] = zipNo;
+	              hospitalAddress = String.join("//", addressParts);
+	              patient.setPtAddress(hospitalAddress);
+	          }
+	          int hospitalNo = mcService.getHospitalNo(hospitalName);
+	          if (hospitalNo != 0) {
+	              matching.setHospitalNo(hospitalNo);
+	          } else {
+	              int insertResult = mcService.insertHospital(hospitalName, hospitalAddress);
+	              if (insertResult > 0) {
+	                  hospitalNo = mcService.getHospitalNo(hospitalName);
+	                  matching.setHospitalNo(hospitalNo);
+	              } else {
+	            	  throw new MemberException("다시해라");
+	              }
+	          }
+	      } 
+
+	      System.out.println("최종 주소: " + patient.getPtAddress());
+		  
 	        // member_Info에 들어갈 값 맵에 넣기
 	      	Map<String,Object> memberInfoParams= new HashMap<>();
 	      
@@ -179,7 +247,6 @@ public class MatchingController {
 
 
 	         matching.setPtCount(1);
-	         matching.setHospitalNo(99);
 	         if(selectDays == null) {
 	            matching.setMatMode(1);
 	         } else {
@@ -188,6 +255,12 @@ public class MatchingController {
 	         
 	         //Matching 정보 삽입
 	         System.out.println("종규 매칭 정보 확인하기 : "+matching);
+	         if (session.getAttribute("service").equals("hospital")) {
+	        	 	matching.setHospitalNo(99);
+		         } else {
+		        	 matching.setHospitalNo(99);
+		    	    
+		         }
 	         int matchingResult = mcService.enrollMatching(matching);
 	         
 	         int matNo = matching.getMatNo();
@@ -215,6 +288,7 @@ public class MatchingController {
         	    matPtInfo.setService("병원돌봄");
 	         } else {
 	    	    matPtInfo.setService("가정돌봄");
+	    	    
 	         }
 	         
 	         matPtInfo.setMatAddressInfo(patient.getPtAddress());
@@ -240,7 +314,7 @@ public class MatchingController {
 		        	int updateMatCResult = mcService.updateMatC(matNo, memberNoC);
 		        	//모달용
 		        	if(updateMatCResult > 0) {		        	
-			        	String matCName = mcService.getNameC(memberNo);
+			        	String matCName = mcService.getNameC(memberNoC);
 			    		re.addAttribute("matCName", matCName);
 			    		result = "request";
 		        	}

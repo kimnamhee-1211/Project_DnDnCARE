@@ -182,6 +182,8 @@ public interface MatchingService {
 	
 	//참여중인 공동간병 정보 
 	ArrayList<joinMatInfoMin> getMyJoinMat(int loginPt);
+	int getHospitalNo(String hospitalName);
+	int insertHospital(String hospitalName, String hospitalAddress);
 
 
 }

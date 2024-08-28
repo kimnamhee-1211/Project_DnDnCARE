@@ -558,6 +558,19 @@
 		from mat_pt_info
 		where mat_no = #{matNo} and pt_no = #{ptNo}	
 	</select>
+	
+	<select id="getHospitalNo" resultType="java.lang.Integer">
+	    SELECT NVL(hospital_no, 0) as hospital_no
+	    FROM hospital
+	    WHERE hospital_name = #{hospitalName}
+	</select>
+	
+	<insert id="insertHospital" useGeneratedKeys="true">
+		<selectKey resultType="_int" keyProperty="hospitalNo" order="BEFORE">
+			select seq_hid.nextval from dual
+		</selectKey>
+		insert into hospital values(#{hospitalNo},#{hospitalAddress},#{hospitalName})	
+	</insert>
 
 
 	<select id="getMyJoinMat" resultType="joinMatInfoMin">
