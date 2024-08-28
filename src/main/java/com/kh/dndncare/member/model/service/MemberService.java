@@ -210,7 +210,7 @@ public interface MemberService {
 
 	int getCountPt(int matNo);
 
-	int getDelMemberNo();
+	Integer getDelMemberNo();
 
 
 

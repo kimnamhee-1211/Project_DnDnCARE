@@ -553,7 +553,7 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
-	public int getDelMemberNo() {
+	public Integer getDelMemberNo() {
 		return mMapper.getDelMemberNo();
 	}
 

@@ -207,6 +207,6 @@ public interface MemberMapper {
 
 	int getCountPt(int matNo);
 
-	int getDelMemberNo();
+	Integer getDelMemberNo();
 
 }

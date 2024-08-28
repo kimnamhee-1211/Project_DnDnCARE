@@ -887,9 +887,9 @@ public class MemberController {
 	public String enroll1View(HttpSession session) {
 
 		// 멤버 테이블만 있고 환자/ 간병인 테이블에 insert됮 않은 경우 멤버 테이블 삭제 -> 회원가입 도충 탈출 등
-		int memberNoDel = mService.getDelMemberNo();
+		Integer memberNoDel = mService.getDelMemberNo();
 		System.out.println(memberNoDel);
-		if(memberNoDel > 0) {
+		if(memberNoDel != null) {
 			int resultNoInfo = mService.noInfomemberdle(memberNoDel);
 		}
 
