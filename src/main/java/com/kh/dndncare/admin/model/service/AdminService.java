@@ -9,6 +9,7 @@ import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.Member;
 
@@ -81,6 +82,9 @@ public interface AdminService {
 	int adminDeleteBoard(int boardNo);
 
 	int adminDeleteReply(int rNo);
+
+	ArrayList<Matching> selectMatchings();
+	int adminUpdateBoard(Board b);
 
 
 

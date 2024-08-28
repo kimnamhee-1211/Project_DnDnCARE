@@ -281,4 +281,18 @@
 		set reply_status = 'N'
 		where reply_no = #{rNo}
 	</update>
+	
+	<!-- 매칭정보 -->
+	<select id="selectMatchings" resultType="Matching">
+		select *
+		from matching
+		where mat_Confirm = 'Y'
+	
+	</select>
+	<!-- 게시글 수정 -->
+	<update id="adminUpdateBoard">
+		update board
+		set board_title = #{boardTitle}, board_content = #{boardContent}, board_update_date = sysdate
+		where board_no = #{boardNo}
+	</update>
 </mapper>

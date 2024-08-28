@@ -527,7 +527,7 @@
 		select service, count(service) serviceCount
 		from mat_pt_info
 			join matching using(mat_no)
-		where member_no = #{memberNo}
+		where member_no = #{memberNo} and service != '개인간병'
 		group by service
 	</select>
 	

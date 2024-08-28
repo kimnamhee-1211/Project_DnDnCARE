@@ -101,8 +101,8 @@
     <main class="bg-board-main container p-5">
         <div class="row h-50 p-3">
 
-      	  <div class="text-center m-4">
-            <h1 class="text-center m-4" style="font-weight: bold;" id="target">로고로고 커뮤니티</h1>
+      	  <div class="text-center m-4">    	  	
+            <h1 class="text-center m-4" style="font-weight: bold;" id="target"><img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}">간병인 커뮤니티</h1>
            </div>
             <br><br>
 
@@ -180,7 +180,7 @@
                         </tr>
                     </thead>
                     <tbody align="center">
-                        <tr class="table" th:each="b:${list}" th:if="${list != null}">
+                        <tr class="table" th:each="b:${list}" th:if="${list != null && b.categoryNo !=99}">
                             <td th:text="${b.boardNo}">1</td>
                                 <td th:text="${b.categoryName}">카테고리</td>
                                 <td>

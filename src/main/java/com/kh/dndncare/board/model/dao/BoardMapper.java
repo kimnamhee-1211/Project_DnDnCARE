@@ -59,6 +59,10 @@ public interface BoardMapper {
 
 	ArrayList<Board> searchCareInformation(HashMap<String, String> map, RowBounds rowBounds);
 
+	int getListCountQnA();
+
+	ArrayList<Board> qnaBoardList(RowBounds rowBounds);
+
 
 
 }

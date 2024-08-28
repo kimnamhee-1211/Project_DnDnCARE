@@ -5,6 +5,7 @@
 	<property name="LOG_PATH2" value="C:\logs\dndnCare"/> <!-- 로깅할 파일의 디렉토리를 상수로 지정해두면 편리함 -->
     <property name="LOG_PATH" value="C:\logs"/>
     <property name="LOG_PATH_MATCHING" value="C:\logs\matching"/>
+    <property name="LOG_PATH_MATCHING_CREATE" value="C:\logs\matchingCreate"/>
 	
 	<!-- log 파일경로 설정 -->
    <!-- 
@@ -81,15 +82,30 @@
 	</appender>
 	
 	
-	
+	<!-- 매칭쪽 -->
 	<appender name="myFileAppenderMatching" class="ch.qos.logback.core.FileAppender">
    		<file>${LOG_PATH_MATCHING}/matchingDisease.log</file>
       	<!--property에서 변수화 시킨 경로를 사용 -->
    		<append>true</append> <!-- 기존 파일을 덮어씀 -->
       	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-         	<pattern>매칭정보%d{yy-MM-dd HH:mm:ss} _ %m%n</pattern>      
+         	<pattern>%d{yy-MM-dd HH:mm:ss} _ %m%n</pattern>      
       	</encoder>
    </appender>
+   <appender name="myFileAppenderMatchingCreateDay" class="ch.qos.logback.core.FileAppender">
+   		<file>${LOG_PATH_MATCHING_CREATE}/matchingCreateDay.log</file>
+      	<!--property에서 변수화 시킨 경로를 사용 -->
+   		<append>true</append> <!-- 기존 파일을 덮어씀 -->
+      	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+         	<pattern>%d{yyyy-MM-dd HH:mm:ss} _ %m%n</pattern>      
+      	</encoder>
+   </appender>
+   
+   
+   
+   
+   
+   
+   
 	
 	
 	
@@ -114,6 +130,9 @@
 	<!-- 매칭컨트롤러 -->
    <logger name="com.kh.dndncare.matching.controller.MatchingController" lever="info" additivity="false">
    		<appender-ref ref="myFileAppenderMatching"/>
+   </logger>
+   <logger name="com.kh.dndncare.common.interceptor.CheckMatCreate" lever="info" additivity="false">
+   		<appender-ref ref="myFileAppenderMatchingCreateDay"/>
    </logger>
 	<!-- 로그인한 사용자를 기록하는 로그 -->
 	<logger name="com.kh.dndncare.common.interceptor.CheckLoginUser" level="info" additivity="false">

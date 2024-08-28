@@ -15,7 +15,7 @@
 	<div class="wrap">
 	
 		<div class="title-content d-flex justify-content-center mx-auto">
-			<h1 class="h1 mb-4 fw-bold text-center">나의 매칭 현황</h1><br>
+			<h1 class="h1 mb-4 fw-bold text-center"><img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}">나의 매칭 현황</h1><br>
 		</div>
 		
 		<main class="container-lg align-items-center mx-auto" style="width:900px;">
@@ -186,7 +186,13 @@
 			       			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 						</div>
 				    </div>
+<<<<<<< HEAD
 				  </div>				  
+=======
+				  
+				  </div>
+				  
+>>>>>>> refs/remotes/origin/backup
 				  <div class="accordion-item" th:if="${myJoinMat.empty}">
 				    <h2 class="accordion-header">
 				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
@@ -242,6 +248,7 @@
 	</div>	
 		
 		
+<<<<<<< HEAD
 				  
 	  <!-- 모달!!!!!!!!!!! -->
 		<!-- 참여 취소 시 -->
@@ -350,6 +357,66 @@
 		
 		
 		
+=======
+		
+		
+		
+		
+		
+  
+  <!-- 모달!!!!!!!!!!! -->
+	<!-- 참여 취소 시 -->
+	<div class="modal fade modal-lg" id="exampleModalToggle3" aria-hidden="true" aria-labelledby="exampleModalToggleLabel3" tabindex="-1">
+	  <div class="modal-dialog modal-dialog-centered modal-lg" >
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel3">공동간병 그룹 참여 취소</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body mx-auto">
+	      	<form action="outJoinMatching.jm" method="post" id="outJoinMatching">
+		      	<h3 class="h3 fw-bold mb-4" style="margin:20px 30px;">공동간병 그룹 참여를 취소하시겠습니까?</h3>
+		        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">아래 버튼을 누르면 공동간병 그룹 참여가 취소됩니다.</h5>
+		        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">공동간병 그룹 참여 취소가 완료되면 회복이 불가능합니다.</h5>
+		        <h5 class="h5 fw-bold mb-4" style="margin:0 30px;">취소 후 재참여를 원하실 경우 새롭게 다시 참여 신청을 해주시기 바랍니다.</h5>
+		        <h5 id="joinLeaderMsg" class="h5 fw-bold mb-4" style="margin:0 40px;display:none;color:red;">그룹 개설 회원은 현재 그룹에 참여 중인 회원이 있는 경우 그룹 참여를 취소할 수 없습니다.</h5>   	
+	      	</form>
+	      </div>
+	      <div class="modal-footer">
+	      	<button class="btn btn-secondary" type="button" id="outJmButton">참여 취소하기</button>
+	        <button class="btn btn-secondary" data-bs-target="#gmContentModal" data-bs-toggle="modal">뒤로가기</button>
+	      	<button class="btn btn-secondary" data-bs-target="#exampleModalToggle3" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- 참여자 퇴장 시 -->
+	<div class="modal fade modal-lg" id="exampleModalToggle4" aria-hidden="true" aria-labelledby="exampleModalToggleLabel4" tabindex="-1">
+	  <div class="modal-dialog modal-dialog-centered modal-lg" >
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel4">공동간병 그룹 참여자 퇴장</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body mx-auto">
+	      	<form action="walkoutJoinMatching.jm" method="post" id="walkoutJoinMatching">
+		      	<h3 class="h3 fw-bold mb-4" style="margin:20px 30px;">공동간병 그룹 참여자를 퇴장시키시겠습니까?</h3>
+		        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">퇴장시킬 회원을 선택하고,<br>아래 버튼을 누르면 공동간병 그룹 참여자를 퇴장시킬 수 있습니다.</h5>					
+		        <h5 class="h5 fw-bold mb-4" style="margin:0 30px;">공동간병 그룹 참여자 퇴장이 완료되면 회복이 불가능합니다.</h5>
+		        <h4 class="h4 fw-bold mb-4" style="margin:0 30px;">퇴장 참여자 선택</h4>
+		        <div id="walkoutPtDiv" class="row mb-4" style="margin-left:40px;"></div>	
+		        <h5 id="walkoutrMsg" class="h5 fw-bold mb-4" style="margin:0 40px;display:none;color:red;"></h5>
+	      	</form>
+	      </div>
+	      <div class="modal-footer">
+	      	<button class="btn btn-secondary" type="button" id="walkoutJmButton">참여자 퇴장</button>
+	        <button class="btn btn-secondary" data-bs-target="#gmContentModal" data-bs-toggle="modal">뒤로가기</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+>>>>>>> refs/remotes/origin/backup
 
 	
 	
@@ -652,6 +719,38 @@
 								    let age = today.getFullYear() - birthDate.getFullYear();
 								    const monthDifference = today.getMonth() - birthDate.getMonth();
 							
+							
+							
+							let theadInner=`
+								<tr style="font-size:18px;">
+									${addMin}
+							    	<th scope="col" colspan="1">${matInfo[0].service}</th>
+							    </tr>					    
+							    <tr>
+							      <th scope="col">&nbsp;1일 돌봄비용</th>
+							      <td scope="col" colspan="3">${matInfo[0].money.toLocaleString()}원</td>
+							    </tr>
+							    <tr>
+							      <th scope="col">&nbsp;간병 시작일</th>
+							      <td scope="col">${matInfo[0].beginDt}</td>
+							  	  <th scope="col">간병 종료일</th>
+							      <td scope="col">${matInfo[0].endDt}</td>
+							    </tr>
+								${matDate}
+					    		<tr>
+							      <th scope="col">&nbsp;시작시간</th>
+							      <td scope="col">${matInfo[0].beginTime}</td>
+							  	  <th scope="col">종료시간</th>
+							      <td scope="col">${matInfo[0].endTime}</td>
+							    </tr>
+							    <tr>
+							      <th scope="col">&nbsp;상세 주소</th>
+							      <td scope="col" colspan="3">${matInfo[0].matAddressInfo}&nbsp;&nbsp;</td>
+							    </tr>
+							    <tr>
+							      <th scope="col">&nbsp;요청사항</th>
+							      <td scope="col" colspan="3">${request}</td>
+							    </tr>`;
 								    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
 								        age--;
 								    }
@@ -714,14 +813,7 @@
 									if(loginPt == jmMatMatptInfo.ptNo){
 										walkout.style.display = "block";
 									}
-									
-									
-									
-									
-									
-									
-									
-									
+																
 									
 									//참여자 퇴장 사용하는 시 선택 참여자 버튼 만들기 
 									const walkoutPtDiv = document.getElementById('walkoutPtDiv');
@@ -737,6 +829,20 @@
 										inputDiv.innerHTML = walkoutPtDivInner;
 										walkoutPtDiv.append(inputDiv);
 									}
+									
+									//참여 취소하기 -> 개설자는 인원에 따라 참여 멤이 있으면 취소 불가능
+									document.getElementById('outJmButton').addEventListener('click', ()=>{
+										const outJoinMatching = document.getElementById('outJoinMatching');
+										if(jmMatMatptInfo.ptNo == loginPt.ptNo && jmPts.length > 0){
+											document.getElementById('joinLeaderMsg').style.display = "block";
+										}else{
+											document.getElementById('joinLeaderMsg').style.display = "none";
+											outJoinMatching.submit();
+										}										
+									});	
+									
+									
+									
 										
 
 									

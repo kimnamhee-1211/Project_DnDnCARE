@@ -150,9 +150,54 @@
 		</div>
 	</div>
 	
+	<!-- 테스트용 모달(시작) -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5 badge rounded-pill bg-primary" id="exampleModalLabel">회원정보 상세보기</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+		        <table class="table align-middle" id="membersTable">
+	    			<tr style="height:80px;">
+	    				<td><span class="badge rounded-pill bg-light text-dark fs-6">회원번호 | 아이디</span></td>
+	    				<td><input type="text" class="form-control" id="memberNo" style="width:70px; display:inline;" disabled>  <input type="text" class="form-control" id="memberId" style="width:200px; display:inline;" disabled></td>
+	    			</tr>
+	    			<tr style="height:80px;">
+	    				<td><span class="badge rounded-pill bg-light text-dark fs-6">이름 | 닉네임</span></td>
+	    				<td><input type="text" class="form-control" id="memberName" style="width:200px; display:inline;" disabled> | <input type="text" id="memberNickName" class="form-control" style="width:200px; display:inline;" disabled></td>
+	    			</tr>
+	    			<tr style="height:80px;">
+	    				<td><span class="badge rounded-pill bg-light text-dark fs-6">국적</span></td>
+	    				<td>
+	    					<label><input type="radio" name="national" class="form-check" style="width:15px; display:inline;" disabled> 내국인</label>&nbsp;&nbsp;
+	        				<label><input type="radio" name="national" class="form-check" style="width:15px; display:inline;" disabled> 외국인</label>
+        				</td>
+	    			</tr>
+	    			<tr style="height:80px;">
+	    				<td><span class="badge rounded-pill bg-light text-dark fs-6">휴대폰</span></td>
+	    				<td><input type="text" class="form-control" id="phone0" style="width:100px; display:inline;" disabled/> - <input type="text" class="form-control" id="phone1" style="width:150px; display:inline;" disabled/> - <input type="text" class="form-control" id="phone2" style="width:150px; display:inline;" disabled/></td>
+	    			</tr>
+	    			<tr style="height:80px; border-bottom: white;">
+	    				<td><span class="badge rounded-pill bg-light text-dark fs-6">회원정보 수정일</span></td>
+	    				<td><input type="text" class="form-control" id="updateDate" style="width:200px; display:inline;" disabled/></td>
+	    			</tr>
+	    		</table>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<!-- 테스트용 모달(끝) -->
+	
+	
 	
 	<!-- 회원정보 조회용 Scrollable modal (시작) -->
-	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 		    <div class="modal-content">
 		    	<div class="modal-header">
@@ -164,7 +209,7 @@
 			    		<table class="table align-middle" id="membersTable">
 			    			<tr style="height:80px;">
 			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">회원번호 | 아이디</span></td>
-			    				<td><input type="text" class="form-control" id="memberName" style="width:200px; display:inline;" disabled> | <input type="text" class="form-control" id="memberNo" style="width:200px; display:inline;" disabled></td>
+			    				<td><input type="text" class="form-control" id="memberNo" style="width:70px; display:inline;">  <input type="text" class="form-control" id="memberId" style="width:200px; display:inline;" disabled></td>
 			    			</tr>
 			    			<tr style="height:80px;">
 			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">이름 | 닉네임</span></td>
@@ -179,22 +224,22 @@
 			    			</tr>
 			    			<tr style="height:80px;">
 			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">휴대폰</span></td>
-			    				<td><input type="text" class="form-control" style="width:100px; display:inline;"/> - <input type="text" class="form-control" style="width:150px; display:inline;"/> - <input type="text" class="form-control" style="width:150px; display:inline;"/></td>
+			    				<td><input type="text" class="form-control" id="phone0" style="width:100px; display:inline;"/> - <input type="text" class="form-control" id="phone1" style="width:150px; display:inline;"/> - <input type="text" class="form-control" id="phone2" style="width:150px; display:inline;"/></td>
 			    			</tr>
 			    			<tr style="height:80px; border-bottom: white;">
 			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">회원정보 수정일</span></td>
-			    				<td><input type="text" class="form-control" style="width:200px; display:inline;" readonly/></td>
+			    				<td><input type="text" class="form-control" id="updateDate" style="width:200px; display:inline;" readonly/></td>
 			    			</tr>
 			    		</table>
 			        </div>
 			    </div>
 			    <div class="modal-footer">
 			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-			        <!-- <button type="button" class="btn btn-primary">확인</button> -->
+			        <button type="button" class="btn btn-primary">확인</button>
 			    </div>
 		    </div>
 		</div>
-	</div>
+	</div> -->
 	<!-- 회원정보 조회용 Scrollable modal (끝) -->
 	
 	
@@ -399,31 +444,32 @@
 								break;
 							}
 						}
+						const mNo = document.querySelector('#memberNo');
+						const memberId = document.querySelector('#memberId');
+						const memberName = document.querySelector('#memberName');
+						const memberNickName = document.querySelector('#memberNickName');
+						const nationalList = document.getElementsByName('national');
+						const phone0 = document.querySelector('#phone0');
+						const phone1 = document.querySelector('#phone1');
+						const phone2 = document.querySelector('#phone2');
+						const updateDate = document.querySelector('#updateDate');
 						
-						console.log(thisMember);
+						mNo.value = thisMember.memberNo;
+						memberId.value = thisMember.memberId;
+						memberName.value = thisMember.memberName;
+						memberNickName.value = thisMember.memberNickName;
+						if(thisMember.memberNational == '내국인') {
+							nationalList[0].checked = true;
+						} else {
+							nationalList[1].checked = true;
+						}
+						phone0.value = thisMember.memberPhone.substring(0,3);
+						phone1.value = thisMember.memberPhone.substring(3,7);
+						phone2.value = thisMember.memberPhone.substring(7);
+						updateDate.value = thisMember.memberUpdateDate;
 						
 						
-						/* $.ajax({ // 회원에 대한 정보를 더 들고오자.
-							url: 'selectMemberInfo.adm',
-							type: 'post',
-							data: {memberNo: memberNo},
-							success: data => {
-								console.log(data);
-							},
-							error: data => console.log(data)
-						}); */
-						
-						console.log(document.querySelector('#membersTable'));
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						$('#staticBackdrop').modal('show');
+						$('#exampleModal').modal('show');
 						// 회원 상세정보 모달창 출력 (끝)
 						
 						break;
@@ -700,7 +746,31 @@
 			}); 
 			
 			
+			// 회원정보 상세조회 모달창에서 수정기능 (시작)
+			const modal = document.querySelector('#exampleModal');
+			let originData;
 			
+			modal.addEventListener('click', () => {
+				
+				
+				
+				
+			});
+			
+			document.querySelector('#memberNickName').addEventListener('dblclick', function() {
+				console.log(this);
+				this.disabled = false;
+				originData = this.value;
+			});
+			
+			document.querySelector('#memberNickName').addEventListener('keydown', function(e) {
+				if(e.key == 'Enter'){
+					
+					console.log('엔터')
+					
+				} 
+			}); 
+			// 회원정보 상세조회 모달창에서 수정기능 (끝)
 		}
 	</script>
 </body>

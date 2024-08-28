@@ -179,7 +179,7 @@
 	
 	<!-- 간병백과 컨텐츠 조회 : 일반 정보 -->
 	<select id="selectCareInformation" resultType="Board">
-		SELECT * FROM BOARD WHERE CATEGORY_NO = 7 AND BOARD_STATUS = 'Y' ORDER BY BOARD_UPDATE_DATE DESC
+		SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_NO) WHERE CATEGORY_NO = 7 AND BOARD_STATUS = 'Y' ORDER BY BOARD_UPDATE_DATE DESC
 	</select>
 	
 	<!-- 간병백과 컨텐츠 조회 : 첨부 정보 -->
@@ -198,10 +198,25 @@
 	<select id="searchCareInformation" resultType="Board">
 		SELECT * 
 		FROM BOARD
+				JOIN MEMBER USING(MEMBER_NO)
 		WHERE BOARD_STATUS = 'Y' AND CATEGORY_NO = 7 AND ${column} LIKE '%${searchContent}%'
 		ORDER BY BOARD_UPDATE_DATE DESC
 	</select>
 	
+	<!-- 문의게시판 페이지네이션 -->
+	<select id="getListCountQnA" resultType="_int">
+		select count(*)
+		from board
+		where category_no = 99 and board_status = 'Y'
+	</select>
+	
+	<!-- 문의게시판 -->
+	<select id="qnaBoardList" resultType="Board">
+		select *
+		from board
+			join member using(member_no)
+		where category_no = 99 and board_status = 'Y'
+	</select>
 	
 	
 	
