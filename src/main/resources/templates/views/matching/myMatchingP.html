@@ -48,6 +48,7 @@
 				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
 				    	 	현재 진행중인 매칭이 없습니다.
 				    	 </button>
+				    	 
 				    </h2>
 				  </div>
 				  
@@ -110,7 +111,7 @@
 									<thead></thead>
 								</table>
 								<div id="cInfo"></div>
-								<button th:if="${myMat.groupLeader == 'Y'}" class="btn btn-dndn matCan" style="margin:0 40%;">매칭 신청 취소</button>								
+								<button th:if="${myMat.groupLeader == 'Y'}" class="btn btn-dndn matCan" style="margin:0 40%;">매칭 신청 취소</button>																
 							</div>
 						</div>
 					</div>
@@ -185,13 +186,7 @@
 			       			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 						</div>
 				    </div>
-				  
-				  
-				  
-				  
-				  
-				  </div>
-				  
+				  </div>				  
 				  <div class="accordion-item" th:if="${myJoinMat.empty}">
 				    <h2 class="accordion-header">
 				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
@@ -247,64 +242,114 @@
 	</div>	
 		
 		
-		
-		
-		
-		
-		
 				  
-				  <!-- 모달!!!!!!!!!!! -->
-					<!-- 참여 취소 시 -->
-					<div class="modal fade modal-lg" id="exampleModalToggle3" aria-hidden="true" aria-labelledby="exampleModalToggleLabel3" tabindex="-1">
-					  <div class="modal-dialog modal-dialog-centered modal-lg" >
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel3">공동간병 그룹 참여 취소</h1>
-					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					      </div>
-					      <div class="modal-body mx-auto">
-					      	<form action="outJoinMatching.jm" method="post" id="outJoinMatching">
-						      	<h3 class="h3 fw-bold mb-4" style="margin:20px 30px;">공동간병 그룹 참여를 취소하시겠습니까?</h3>
-						        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">아래 버튼을 누르면 공동간병 그룹 참여가 취소됩니다.</h5>
-						        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">공동간병 그룹 참여 취소가 완료되면 회복이 불가능합니다.</h5>
-						        <h5 class="h5 fw-bold mb-4" style="margin:0 30px;">취소 후 재참여를 원하실 경우 새롭게 다시 참여 신청을 해주시기 바랍니다.</h5>
-						        <h5 id="joinLeaderMsg" class="h5 fw-bold mb-4" style="margin:0 40px;display:none;color:red;">그룹 개설 회원은 현재 그룹에 참여 중인 회원이 있는 경우 그룹 참여를 취소할 수 없습니다.</h5>   	
-					      	</form>
-					      </div>
-					      <div class="modal-footer">
-					      	<button class="btn btn-secondary" type="button" id="outJmButton">참여 취소하기</button>
-					        <button class="btn btn-secondary" data-bs-target="#gmContentModal" data-bs-toggle="modal">뒤로가기</button>
-					      	<button class="btn btn-secondary" data-bs-target="#exampleModalToggle3" data-bs-dismiss="modal">Close</button>
-					      </div>
-					    </div>
-					  </div>
+	  <!-- 모달!!!!!!!!!!! -->
+		<!-- 참여 취소 시 -->
+		<div class="modal fade modal-lg" id="exampleModalToggle3" aria-hidden="true" aria-labelledby="exampleModalToggleLabel3" tabindex="-1">
+		  <div class="modal-dialog modal-dialog-centered modal-lg" >
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel3">공동간병 그룹 참여 취소</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body mx-auto">
+		      	<form action="outJoinMatching.jm" method="post" id="outJoinMatching">
+			      	<h3 class="h3 fw-bold mb-4" style="margin:20px 30px;">공동간병 그룹 참여를 취소하시겠습니까?</h3>
+			        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">아래 버튼을 누르면 공동간병 그룹 참여가 취소됩니다.</h5>
+			        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">공동간병 그룹 참여 취소가 완료되면 회복이 불가능합니다.</h5>
+			        <h5 class="h5 fw-bold mb-4" style="margin:0 30px;">취소 후 재참여를 원하실 경우 새롭게 다시 참여 신청을 해주시기 바랍니다.</h5>
+			        <h5 id="joinLeaderMsg" class="h5 fw-bold mb-4" style="margin:0 40px;display:none;color:red;">그룹 개설 회원은 현재 그룹에 참여 중인 회원이 있는 경우 그룹 참여를 취소할 수 없습니다.</h5>   	
+		      	</form>
+		      </div>
+		      <div class="modal-footer">
+		      	<button class="btn btn-secondary" type="button" id="outJmButton">참여 취소하기</button>
+		        <button class="btn btn-secondary" data-bs-target="#gmContentModal" data-bs-toggle="modal">뒤로가기</button>
+		      	<button class="btn btn-secondary" data-bs-target="#exampleModalToggle3" data-bs-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- 참여자 퇴장 시 -->
+		<div class="modal fade modal-lg" id="exampleModalToggle4" aria-hidden="true" aria-labelledby="exampleModalToggleLabel4" tabindex="-1">
+		  <div class="modal-dialog modal-dialog-centered modal-lg" >
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel4">공동간병 그룹 참여자 퇴장</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body mx-auto">
+		      	<form action="walkoutJoinMatching.jm" method="post" id="walkoutJoinMatching">
+			      	<h3 class="h3 fw-bold mb-4" style="margin:20px 30px;">공동간병 그룹 참여자를 퇴장시키시겠습니까?</h3>
+			        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">퇴장시킬 회원을 선택하고,<br>아래 버튼을 누르면 공동간병 그룹 참여자를 퇴장시킬 수 있습니다.</h5>					
+			        <h5 class="h5 fw-bold mb-4" style="margin:0 30px;">공동간병 그룹 참여자 퇴장이 완료되면 회복이 불가능합니다.</h5>
+			        <h4 class="h4 fw-bold mb-4" style="margin:0 30px;">퇴장 참여자 선택</h4>
+			        <div id="walkoutPtDiv" class="row mb-4" style="margin-left:40px;"></div>	
+			        <h5 id="walkoutrMsg" class="h5 fw-bold mb-4" style="margin:0 40px;display:none;color:red;"></h5>
+		      	</form>
+		      </div>
+		      <div class="modal-footer">
+		      	<button class="btn btn-secondary" type="button" id="walkoutJmButton">참여자 퇴장</button>
+		        <button class="btn btn-secondary" data-bs-target="#gmContentModal" data-bs-toggle="modal">뒤로가기</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		
+		<!-- 참여자 퇴장 시 -->
+		<div class="modal fade modal-lg" id="exampleModalToggle8" aria-hidden="true" aria-labelledby="exampleModalToggleLabel8" tabindex="-1">
+		  <div class="modal-dialog modal-dialog-centered modal-lg" >
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel8">공동간병 그룹 참여자 퇴장</h1>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body mx-auto">
+		      	<form action="complainP.mc" method="post" id="complainP">
+			      	<h3 class="h3 fw-bold m-4" style="margin:20px 30px;">해당 회원을 신고하시겠습니까?</h3>
+			        <h4 class="h5 fw-bold m-3" style="margin:0 30px;">완료된 신고의 취소는 불가능합니다.</h4>
+			        <input type="hidden" name="matNo">
+			        <input type="hidden" name="reciverMemberNo">
+			        <input type="hidden" name="type" value="matching">
+			        <h5 class="h5 fw-bold mb-1">내용</h5>
+			        <div class="form-check form-check-inline">
+					  <input class="form-check-input" type="radio" id="detail1" value="허위정보 기재" name="detail">
+					  <label class="form-check-label" for="detail1">허위정보 기재</label>
 					</div>
-					
-					<!-- 참여자 퇴장 시 -->
-					<div class="modal fade modal-lg" id="exampleModalToggle4" aria-hidden="true" aria-labelledby="exampleModalToggleLabel4" tabindex="-1">
-					  <div class="modal-dialog modal-dialog-centered modal-lg" >
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <h1 class="modal-title fs-5 fw-bold" id="exampleModalToggleLabel4">공동간병 그룹 참여자 퇴장</h1>
-					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					      </div>
-					      <div class="modal-body mx-auto">
-					      	<form action="walkoutJoinMatching.jm" method="post" id="walkoutJoinMatching">
-						      	<h3 class="h3 fw-bold mb-4" style="margin:20px 30px;">공동간병 그룹 참여자를 퇴장시키시겠습니까?</h3>
-						        <h5 class="h5 fw-bold mb-1" style="margin:0 30px;">퇴장시킬 회원을 선택하고,<br>아래 버튼을 누르면 공동간병 그룹 참여자를 퇴장시킬 수 있습니다.</h5>					
-						        <h5 class="h5 fw-bold mb-4" style="margin:0 30px;">공동간병 그룹 참여자 퇴장이 완료되면 회복이 불가능합니다.</h5>
-						        <h4 class="h4 fw-bold mb-4" style="margin:0 30px;">퇴장 참여자 선택</h4>
-						        <div id="walkoutPtDiv" class="row mb-4" style="margin-left:40px;"></div>	
-						        <h5 id="walkoutrMsg" class="h5 fw-bold mb-4" style="margin:0 40px;display:none;color:red;"></h5>
-					      	</form>
-					      </div>
-					      <div class="modal-footer">
-					      	<button class="btn btn-secondary" type="button" id="walkoutJmButton">참여자 퇴장</button>
-					        <button class="btn btn-secondary" data-bs-target="#gmContentModal" data-bs-toggle="modal">뒤로가기</button>
-					      </div>
-					    </div>
-					  </div>
+					<div class="form-check form-check-inline">
+					  <input class="form-check-input" type="radio" id="detail2" value="불성실한 태도" name="detail">
+					  <label class="form-check-label" for="detail2">불성실한 태도</label>
 					</div>
+					<div class="form-check form-check-inline">
+					  <input class="form-check-input" type="radio" id="detail3" value="채팅 미응답" name="detail">
+					  <label class="form-check-label" for="detail3">채팅 미응답</label>
+					</div>
+			        <div class="form-check form-check-inline">
+					  <input class="form-check-input" type="radio" id="detail4" value="서비스 미이행" name="detail">
+					  <label class="form-check-label" for="detail4">서비스 미이행</label>
+					</div>
+					<div class="form-check form-check-inline">
+					  <input class="form-check-input" type="radio" id="detail5" value="결제 지연" name="detail">
+					  <label class="form-check-label" for="detail5">결제 지연</label>
+					</div>
+					<div class="form-check form-check-inline">
+					  <input class="form-check-input" type="radio" id="detail6" value="결제 미이행" name="detail">
+					  <label class="form-check-label" for="detail6">결제 미이행</label>
+					</div>
+		      	</form>
+		      </div>
+		      <div class="modal-footer">
+		      	<button class="btn btn-secondary" type="button" id="walkoutJmButton">신고하기</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		
+		
+		
+		
 
 	
 	
@@ -465,7 +510,6 @@
 								
 								
 								
-								
 								let cInfoInner=`
 									<div class="row justify-content-center" >
 										<div align="center" class="col-4 m-3 p-3 testBorder" >
@@ -509,6 +553,9 @@
 								 
 								 //후기보기 버튼
 								 reviewButton();
+								 
+								 
+								 
 								 
 							},
 							error : data=>console.log(data)			
