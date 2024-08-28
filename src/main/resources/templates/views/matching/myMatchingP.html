@@ -29,7 +29,7 @@
 				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 				  	<div style="display:none" th:text="ing" class="from"></div>
 				    <h2 class="accordion-header">
-				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseOne' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
+				      <button class="accordion-button collapsed" style="font-size:18px; color:black;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseOne' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
 				      		[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])과의 매칭이 진행 중입니다.
 				      </button>
 				    </h2>
