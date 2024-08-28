@@ -325,7 +325,7 @@
 						  			        	  } else { // 이벤트 날짜가 미래인 경우
 						  			        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>&nbsp;&nbsp;' + remainCalc(mils) + ' 남음';
 						  			        	}
-								        	   	infomation[2].innerHTML = '병원명이 들어올 자리';
+								        	   	infomation[2].innerHTML = info.event.extendedProps.hospitalName;
 								          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
 								          		
 								          		let infoDetail = document.querySelector('.infoDetail').children;
