@@ -3104,7 +3104,7 @@ public class MemberController {
 	// 프로필 파일 추가하기
 	public String saveProfileImage(MultipartFile file) {
 
-		String renamePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		String renamePath = "C:\\\\image\\\\profileImage\\";
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		int ranNum = (int) (Math.random() * 100000);
@@ -3127,7 +3127,7 @@ public class MemberController {
 
 	// 프로필 파일 삭제하기
 	public void deleteFile(String fileName) {
-		String savePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		String savePath = "C:\\\\image\\\\profileImage\\";
 		File f = new File(savePath + fileName);
 		if (f.exists()) {
 			f.delete();
