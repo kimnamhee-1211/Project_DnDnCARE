@@ -90,6 +90,9 @@ public interface AdminService {
 	
 	ArrayList<Board> adminQnABoardList(PageInfo pi);
 
+	int checkAdminId(String memberId);
+
+	int insertMember(Member m);
 
 
 

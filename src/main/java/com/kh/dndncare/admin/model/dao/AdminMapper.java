@@ -96,6 +96,9 @@ public interface AdminMapper {
 	
 	ArrayList<Board> adminQnABoardList(RowBounds rowBounds);
 
+	int checkAdminId(String memberId);
+
+	int insertMember(Member m);
 
 
 }

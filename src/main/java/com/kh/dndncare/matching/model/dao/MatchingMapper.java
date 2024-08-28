@@ -152,6 +152,12 @@ public interface MatchingMapper {
 	String getGroupLeader(@Param("matNo") int matNo, @Param("ptNo") int ptNo);
 
 	ArrayList<joinMatInfoMin> getMyJoinMat(int loginPt);
+	
+	Integer getHospitalNo(String hospitalName);
+
+	int insertHospital(@Param("hospitalName")String hospitalName, @Param("hospitalAddress") String hospitalAddress);
+
+	int updatePayTransfer(Pay p);
 
 	
 

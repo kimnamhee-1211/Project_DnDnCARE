@@ -88,7 +88,8 @@
 	<select id="getHospital" resultType="Hospital">
 		select *
 		from hospital
-		where hospital_name = #{hospitalName} and hospital_address = #{hospitalAddress}	
+		where hospital_name = #{hospitalName} 
+				<!-- and hospital_address like '%${hospitalAddress}%'	-->
 	</select>
 	
 	<!-- loginUser-MatNo get -->
@@ -503,7 +504,7 @@
 		from pay
 		where mat_no in(select mat_no
 						from matching 
-						where member_no = #{memberNo}) and pay_deposit = 'N'
+						where member_no = #{memberNo}) and pay_deposit = 'Y'
 	</select>	
 
 	<!-- 간병인 결제 대금 받기 -->
@@ -517,7 +518,7 @@
 			#{loginUser.memberName},
 			#{loginUser.memberPhone},
 			#{loginUser.memberEmail},
-			#{p.merchantUid},
+			#{p.mercharntUid},
 			#{p.payService},
 			'N'
 		)
@@ -558,6 +559,19 @@
 		from mat_pt_info
 		where mat_no = #{matNo} and pt_no = #{ptNo}	
 	</select>
+	
+	<select id="getHospitalNo" resultType="java.lang.Integer">
+	    SELECT NVL(hospital_no, 0) as hospital_no
+	    FROM hospital
+	    WHERE hospital_name = #{hospitalName}
+	</select>
+	
+	<insert id="insertHospital" useGeneratedKeys="true">
+		<selectKey resultType="_int" keyProperty="hospitalNo" order="BEFORE">
+			select seq_hid.nextval from dual
+		</selectKey>
+		insert into hospital values(#{hospitalNo},#{hospitalAddress},#{hospitalName})	
+	</insert>
 
 
 	<select id="getMyJoinMat" resultType="joinMatInfoMin">
@@ -567,7 +581,7 @@
 		from (select mat_no, pt_count, hospital_no, end_dt, mat_mode
 				from matching
 					join mat_pt_info mpi_me using(mat_no)
-				where mpi_me.pt_no = 29
+				where mpi_me.pt_no = #{loginPt}
 						and matching.pt_count > 1) subquery
 			join hospital on(subquery.hospital_no = hospital.hospital_no)
 			join mat_pt_info mpi on(subquery.mat_no = mpi.mat_no)
@@ -578,8 +592,13 @@
 
 
 
-
-
+	<!-- 결제 승인된 결제대금 상태변경 -->
+	<update id="updatePayTransfer">
+		update Pay
+		set pay_deposit = 'T'
+		where pay_no =#{payNo}
+	</update>
+	
 
 
 

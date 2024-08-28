@@ -225,7 +225,7 @@
 	            locale: "ko",
 	            onChange: updateOverDaySummary
 	        });
-
+			
 	        function updateOverDaySummary() {
 	            let startDate = overDayStartPicker.selectedDates[0];
 	            let endDate = overDayEndPicker.selectedDates[0];
@@ -334,7 +334,7 @@
 	        $('#plusunderDayPicker').on('click', function() {
 	        	
 	        	const div = document.createElement('div'); 
-	        	div.className="d-flex";
+	        	div.className="d-flex plus";
 	        	div.style.margin="5px 0";
 	        	div.innerHTML=`<label>간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
 	        					<input type="text" class="underDayPicker plus" name="day" readonly>
@@ -363,20 +363,26 @@
 		
 		function delBLank() {
 			const underDayPickers = document.getElementsByClassName("underDayPicker")
+			const valSet = new Set();
 			const delSet = new Set();
-			for(const underDayPicker1 of underDayPickers){
-				let value1 = underDayPicker1.value.trim()				
-				for(const underDayPicker2 of underDayPickers){
-					let value2 = underDayPicker2.value.trim()
-					if(value1 == value2 || value2 == ''){
-						if(underDayPicker2.className.includes('plus')){
-							delSet.add(underDayPicker2.parentNode)
-						}
-					}
-				}
-			}
+						
+		   for(const underDayPicker1 of underDayPickers) {
+		        const value1 = underDayPicker1.value.trim();
+		        if (value1 == '') {
+		            delSet.add(underDayPicker1.parentNode);
+		        } else if (valSet.has(value1)) {
+		            delSet.add(underDayPicker1.parentNode);
+		        } else {
+		            valSet.add(value1);
+		        }
+		    }
+			console.log(delSet)	
+
 			delSet.forEach(element => {
-		        element.remove();
+				if(element.classList.contains('plus')){
+					console.log(element)	
+			        element.remove();
+				}
 		    });
 	    }
 			

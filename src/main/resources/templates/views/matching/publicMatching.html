@@ -60,27 +60,24 @@
 				</div>
 				
 				<div id="hospitalInput" class="input-field hidden">
+					<em>* 현재 입원중인 병원의 정보를 입력해주세요</em>
 				    <div class="address-container">
 				        <div class="address-row">
 				            <label for="hospitalName">병원명</label>
 				            <div class="input-button-wrapper">
-				            <input type="text" id="hospitalName" placeholder="병원명" readonly>
+				            <input type="text" id="hospitalName" placeholder="병원명" name="hospitalName"readonly>
 				            <button type="button" id="openHospitalSearch" class="hospital-search-btn">병원 검색</button>
 				            </div>
 				        </div>
 				        <div class="address-row">
 				            <label for="hospitalAddress">주소</label>
-				            <input type="text" id="hospitalAddress" placeholder="주소" th:value="${#strings.arraySplit(patient.ptAddress, '//')[1]}">
+				            <input type="text" id="hospitalAddress" placeholder="주소" >
 				        </div>
 				        <div class="address-row">
 				            <label for="hospitalDetailAddress">상세주소</label>
-				            <input type="text" id="hospitalDetailAddress" placeholder="상세주소" th:value="${#strings.arraySplit(patient.ptAddress, '//')[2]}">
+				            <input type="text" id="hospitalDetailAddress" placeholder="상세주소">
 				        </div>
-				        
-				        <div class="address-row">
-				            <label for="hospitalAddressCode">우편번호</label>
-				            <input type="text" id="hospitalAddressCode" placeholder="우편번호" class="addressCode" th:value="${#strings.arraySplit(patient.ptAddress, '//')[0]}" >
-				        </div>
+				        <input type="hidden" id="ptAddress">
 				    </div>
 				    <input type="hidden" id="hospitalPtAddress">
 				</div>
@@ -134,307 +131,310 @@
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script>
-		function combineAddress(inputId) {
-		    const container = document.getElementById(inputId);
-		    const addressCode = container.querySelector('#addressCode').value;
-		    const address = container.querySelector('#address').value;
-		    const detailAddress = container.querySelector('#detailAddress').value;
-	
-		    // 주소 조합
-		    const combinedAddress = `${addressCode}//${address}//${detailAddress}`;
-	
-		    // hidden input에 값 설정
-		    container.querySelector('#ptAddress').value = combinedAddress;
-		}
-		
-		function handleFormSubmit(event) {
-			const selectedLocation = document.getElementById('selectedLocation').value;
-		    if (!selectedLocation) {
-		        event.preventDefault(); // 폼 제출 중단
-		        alert('위치를 선택해주세요.');
-		        return;
-		    }
+	function combineAddress(inputId) {
+	    const container = document.getElementById(inputId);
+	    const addressCode = container.querySelector('#addressCode').value;
+	    const address = container.querySelector('#address').value;
+	    const detailAddress = container.querySelector('#detailAddress').value;
 
-		    // 선택된 아이콘 확인
-		    const selectedIcon = document.querySelector('.icon-container.selected');
-		    if (!selectedIcon) {
-		        alert('주소 유형(집 또는 병원)을 선택해주세요.');
-		        return;
-		    }
+	    // 주소 조합
+	    const combinedAddress = `${addressCode}//${address}//${detailAddress}`;
 
-		    const selectedType = selectedIcon.getAttribute('data-value');
-		    const inputId = selectedType === 'home' ? 'homeInput' : 'hospitalInput';
-			
-		    // 선택된 입력 필드의 주소 조합
-		    combineAddress(inputId);
-		    const selectedPtAddress = document.getElementById(inputId).querySelector('#ptAddress').value;
-		    let hiddenInput = document.querySelector('input[name="ptAddress"]');
-		    if (!hiddenInput) {
-		        hiddenInput = document.createElement('input');
-		        hiddenInput.type = 'hidden';
-		        hiddenInput.name = 'ptAddress';
-		        event.target.appendChild(hiddenInput);
-		    }
-		    hiddenInput.value = selectedPtAddress;
+	    // hidden input에 값 설정
+	    container.querySelector('#ptAddress').value = combinedAddress;
+	}
 
-		    // 폼 제출
-		    event.target.submit();
-		}
+	function handleFormSubmit(event) {
+	    const selectedLocation = document.getElementById('selectedLocation').value;
+	    if (!selectedLocation) {
+	        event.preventDefault(); // 폼 제출 중단
+	        alert('위치를 선택해주세요.');
+	        return;
+	    }
 
-		function selectIcon(element) {
-		    // 모든 아이콘에서 'selected' 클래스 제거
-		    document.querySelectorAll('.icon-container').forEach(icon => {
-		        icon.classList.remove('selected');
-		    });
-		    
-		    // 클릭된 아이콘에 'selected' 클래스 추가
-		    element.classList.add('selected');
-		    
-		    // 선택된 값 (예: 'home' 또는 'hospital')
-		    const selectedValue = element.getAttribute('data-value');	
-		    
-		    // hidden input에 선택된 값 저장
-		    document.getElementById('selectedLocation').value = selectedValue;
+	    // 선택된 아이콘 확인
+	    const selectedIcon = document.querySelector('.icon-container.selected');
+	    if (!selectedIcon) {
+	        alert('주소 유형(집 또는 병원)을 선택해주세요.');
+	        return;
+	    }
 
-		    // 두 입력 필드 모두 숨김
-		    document.getElementById('homeInput').classList.add('hidden');
-		    document.getElementById('hospitalInput').classList.add('hidden');
+	    const selectedType = selectedIcon.getAttribute('data-value');
+	    const inputId = selectedType === 'home' ? 'homeInput' : 'hospitalInput';
+	    
+	    // 선택된 입력 필드의 주소 조합
+	    if (selectedType === 'home') {
+	        combineAddress(inputId);
+	    } else {
+	        updateFullHospitalAddress();
+	    }
 
-		    // 선택된 입력 필드만 표시
-		    if (selectedValue === 'home') {
-		        document.getElementById('homeInput').classList.remove('hidden');
-		    } else if (selectedValue === 'hospital') {
-		        document.getElementById('hospitalInput').classList.remove('hidden');
-		    }
-		}
-		
-		//다음 주소 api
-		function execDaumPostcode() {
-		    new daum.Postcode({
-		        oncomplete: function(data) {
-		            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+	    // 'home'과 'hospital' 모두 동일한 hidden input을 사용
+	    const selectedPtAddress = document.getElementById('ptAddress').value;
+	    let hiddenInput = document.querySelector('input[name="ptAddress"]');
+	    if (!hiddenInput) {
+	        hiddenInput = document.createElement('input');
+	        hiddenInput.type = 'hidden';
+	        hiddenInput.name = 'ptAddress';
+	        event.target.appendChild(hiddenInput);
+	    }
+	    hiddenInput.value = selectedPtAddress;
 
-		            // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-		            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-		            var addr = ''; // 주소 변수
+	    // 폼 제출
+	    event.target.submit();
+	}
 
-		            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-		            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-		                addr = data.roadAddress;
-		            } else { // 사용자가 지번 주소를 선택했을 경우(J)
-		                addr = data.jibunAddress;
-		            }
+	function selectIcon(element) {
+	    // 모든 아이콘에서 'selected' 클래스 제거
+	    document.querySelectorAll('.icon-container').forEach(icon => {
+	        icon.classList.remove('selected');
+	    });
+	    
+	    // 클릭된 아이콘에 'selected' 클래스 추가
+	    element.classList.add('selected');
+	    
+	    // 선택된 값 (예: 'home' 또는 'hospital')
+	    const selectedValue = element.getAttribute('data-value');	
+	    
+	    // hidden input에 선택된 값 저장
+	    document.getElementById('selectedLocation').value = selectedValue;
 
-		            // 우편번호와 주소 정보를 해당 필드에 넣는다.
-		            document.getElementById('addressCode').value = data.zonecode;
-		            document.getElementById('address').value = addr;
-		            // 커서를 상세주소 필드로 이동한다.
-		            document.getElementById('detailAddress').focus();
+	    // 두 입력 필드 모두 숨김
+	    document.getElementById('homeInput').classList.add('hidden');
+	    document.getElementById('hospitalInput').classList.add('hidden');
 
-		            // hidden input에 전체 주소 정보를 저장한다.
-		            updateFullAddress();
-		        }
-		    }).open();
-		}
+	    // 선택된 입력 필드만 표시
+	    if (selectedValue === 'home') {
+	        document.getElementById('homeInput').classList.remove('hidden');
+	    } else if (selectedValue === 'hospital') {
+	        document.getElementById('hospitalInput').classList.remove('hidden');
+	    }
+	}
 
-		function updateFullAddress() {
-		    var addressCode = document.getElementById('addressCode').value;
-		    var address = document.getElementById('address').value;
-		    var detailAddress = document.getElementById('detailAddress').value;
-		    
-		    var fullAddress = addressCode + '//' + address + '//' + detailAddress;
-		    document.getElementById('ptAddress').value = fullAddress;
-		}
+	//다음 주소 api
+	function execDaumPostcode() {
+	    new daum.Postcode({
+	        oncomplete: function(data) {
+	            let addr = '';
+	            if (data.userSelectedType === 'R') {
+	                addr = data.roadAddress;
+	            } else {
+	                addr = data.jibunAddress;
+	            }
 
-		// 상세주소 입력 시 전체 주소 업데이트
-		document.getElementById('detailAddress').addEventListener('input', updateFullAddress);
-		
-		//공공 데이터
-		let allHospitals = [];
-		let filteredHospitals = [];
-		let currentPage = 1;
-		let currentPageGroup = 1;
-		const itemsPerPage = 5;
-		
-		document.getElementById('openHospitalSearch').onclick = function() {
-		    document.getElementById('hospitalSearchModal').style.display = 'block';
-		    fetchHospitals();
-		}
-		
-		document.getElementsByClassName('close')[0].onclick = function() {
-		    document.getElementById('hospitalSearchModal').style.display = 'none';
-		}
-		
-		function fetchHospitals() {
-		    let xhr = new XMLHttpRequest();
-		    let url = 'http://apis.data.go.kr/B490001/sjHptMcalPstateInfoService/getSjJijeongHptChakgiList';
-		    let queryParams = '?' + encodeURIComponent('serviceKey') + '='+'TqXL2WevbCLJDY0ZVbFrL22ehLsP2bdAdbD08YPjNXsiVHbasLfGANMr%2BJlO%2FlWvSd9acDudRtmxz4WZBVF0ag%3D%3D';
-		    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100');
-		    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1');
-		    
-		    xhr.open('GET', url + queryParams);
-		    xhr.onreadystatechange = function () {
-		        if (this.readyState == 4 && this.status == 200) {
-		            let parser = new DOMParser();
-		            let xmlDoc = parser.parseFromString(this.responseText, "text/xml");
-		            
-		            let items = xmlDoc.getElementsByTagName('item');
-		            allHospitals = [];
-		            
-		            for (let i = 0; i < items.length; i++) {
-		                let hospitalNm = items[i].getElementsByTagName('hospitalNm')[0].textContent;
-		                let addr = items[i].getElementsByTagName('addr')[0].textContent;
-		                allHospitals.push({ hospitalNm: hospitalNm, addr: addr });
-		            }
-		            
-		            displayHospitals(allHospitals);
-		        }
-		    };
-		    
-		    xhr.send('');
-		}
-		
-		// displayHospitals 함수 수정 (주소 정보를 표시하도록)
-		function displayHospitals(hospitals) {
-		    let hospitalList = document.getElementById('hospitalList');
-		    hospitalList.innerHTML = '';
-		    
-		    let startIndex = (currentPage - 1) * itemsPerPage;
-		    let endIndex = startIndex + itemsPerPage;
-		    let pageHospitals = hospitals.slice(startIndex, endIndex);
-		    
-		    pageHospitals.forEach(hospital => {
-		        let div = document.createElement('div');
-		        div.textContent = `${hospital.hospitalNm} - ${hospital.addr}`;
-		        div.onclick = function() {
-		            selectHospital(hospital);
-		        };
-		        hospitalList.appendChild(div);
-		    });
-		    
-		    displayPagination(hospitals.length);
-		}
+	            document.getElementById('addressCode').value = data.zonecode;
+	            document.getElementById('address').value = addr;
+	            document.getElementById('detailAddress').focus();
 
-		
-		function selectHospital(hospital) {
-		    document.getElementById('hospitalName').value = hospital.hospitalNm;
-		    document.getElementById('hospitalAddress').value = hospital.addr;
-		    
-		    // 주소에서 우편번호 추출 (첫 5자리가 숫자인 경우 우편번호로 간주)
-		    //let addressParts = hospital.addr.split(' ');
-		   //let postcode = addressParts[0].match(/^\d{5}/) ? addressParts[0] : '';
-		    
-		    //document.getElementById('hospitalAddressCode').value = postcode;
-		    
-		    // hidden input에 전체 주소 정보 저장
-		    updateFullHospitalAddress();
+	            updateFullAddress();
+	        }
+	    }).open();
+	}
 
-		    document.getElementById('hospitalSearchModal').style.display = 'none';
-		}
-		
-		function updateFullHospitalAddress() {
-		    let hospitalName = document.getElementById('hospitalName').value;
-		    let hospitalAddress = document.getElementById('hospitalAddress').value;
-		    let hospitalAddressCode = document.getElementById('hospitalAddressCode').value;
-		    
-		    let fullAddress = hospitalAddressCode + '//' + hospitalAddress + '//' + hospitalName;
-		    document.getElementById('hospitalPtAddress').value = fullAddress;
-		}
+	function updateFullAddress() {
+	    let addressCode = document.getElementById('addressCode').value;
+	    let address = document.getElementById('address').value;
+	    let detailAddress = document.getElementById('detailAddress').value;
+	    
+	    let fullAddress = addressCode + '//' + address + '//' + detailAddress;
+	    document.getElementById('ptAddress').value = fullAddress;
+	}
 
-		
+	// 상세주소 입력 시 전체 주소 업데이트
+	document.getElementById('detailAddress').addEventListener('input', updateFullAddress);
 
+	// 공공 데이터 관련 변수 및 함수
+	let allHospitals = [];
+	let filteredHospitals = [];
+	let currentPage = 1;
+	let currentPageGroup = 1;
+	const itemsPerPage = 5;
+	let totalPages;
 
-		// 페이지네이션 표시
+	document.getElementById('openHospitalSearch').onclick = function() {
+	    document.getElementById('hospitalSearchModal').style.display = 'block';
+	    fetchAllHospitals();
+	}
 
-		function displayPagination(totalItems) {
-		    let totalPages = Math.ceil(totalItems / itemsPerPage);
-		    let paginationElement = document.getElementById('pagination');
-		    paginationElement.innerHTML = '';
-		
-		    let startPage = (currentPageGroup - 1) * 5 + 1;
-		    let endPage = Math.min(totalPages, currentPageGroup * 5);
-		
-		    // 이전 버튼
-		    if (currentPageGroup > 1) {
-		        let prevButton = createPaginationButton('이전', () => {
-		            currentPageGroup--;
-		            currentPage = (currentPageGroup - 1) * 5 + 1;
-		            displayHospitals(filteredHospitals.length > 0 ? filteredHospitals : allHospitals);
-		        });
-		        paginationElement.appendChild(prevButton);
-		    }
-		
-		    // 페이지 번호 버튼
-		    for (let i = startPage; i <= endPage; i++) {
-		        let button = createPaginationButton(i, () => {
-		            currentPage = i;
-		            displayHospitals(filteredHospitals.length > 0 ? filteredHospitals : allHospitals);
-		            updateActivePageButton();
-		        });
-		        if (i === currentPage) {
-		            button.classList.add('active');
-		        }
-		        paginationElement.appendChild(button);
-		    }
-		
-		    // 다음 버튼
-		    if (endPage < totalPages) {
-		        let nextButton = createPaginationButton('다음', () => {
-		            currentPageGroup++;
-		            currentPage = (currentPageGroup - 1) * 5 + 1;
-		            displayHospitals(filteredHospitals.length > 0 ? filteredHospitals : allHospitals);
-		        });
-		        paginationElement.appendChild(nextButton);
-		    }
-		}
+	document.getElementsByClassName('close')[0].onclick = function() {
+	    document.getElementById('hospitalSearchModal').style.display = 'none';
+	}
 
-		function createPaginationButton(text, onClick) {
-		    let button = document.createElement('button');
-		    button.innerText = text;
-		    button.onclick = onClick;
-		    return button;
-		}
+	function fetchAllHospitals() {
+	    allHospitals = [];
+	    let pageNo = 1;
+	    
+	    function fetchHospitalsPage() {
+	        let xhr = new XMLHttpRequest();
+	        let url = 'http://apis.data.go.kr/B490001/sjHptMcalPstateInfoService/getSjJijeongHptChakgiList';
+	        let queryParams = '?' + encodeURIComponent('serviceKey') + '='+'TqXL2WevbCLJDY0ZVbFrL22ehLsP2bdAdbD08YPjNXsiVHbasLfGANMr%2BJlO%2FlWvSd9acDudRtmxz4WZBVF0ag%3D%3D';
+	        queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100');
+	        queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(pageNo);
+	        
+	        xhr.open('GET', url + queryParams);
+	        xhr.onreadystatechange = function () {
+	            if (this.readyState == 4 && this.status == 200) {
+	                let parser = new DOMParser();
+	                let xmlDoc = parser.parseFromString(this.responseText, "text/xml");
+	                
+	                if (pageNo === 1) {
+	                    let totalCount = parseInt(xmlDoc.getElementsByTagName('totalCount')[0].textContent);
+	                    totalPages = Math.ceil(totalCount / 100);
+	                }
+	                
+	                let items = xmlDoc.getElementsByTagName('item');
+	                
+	                for (let i = 0; i < items.length; i++) {
+	                    let hospitalNm = items[i].getElementsByTagName('hospitalNm')[0].textContent;
+	                    let addr = items[i].getElementsByTagName('addr')[0].textContent;
+	                    allHospitals.push({ hospitalNm: hospitalNm, addr: addr });
+	                }
+	                
+	                if (pageNo < totalPages) {
+	                    pageNo++;
+	                    fetchHospitalsPage();
+	                } else {
+	                    displayHospitals(allHospitals);
+	                }
+	            }
+	        };
+	        
+	        xhr.send('');
+	    }
+	    
+	    fetchHospitalsPage();
+	}
 
-		
-		function updateActivePageButton() {
-		    let buttons = document.querySelectorAll('#pagination button');
-		    buttons.forEach(button => {
-		        if (button.innerText === currentPage.toString()) {
-		            button.classList.add('active');
-		        } else {
-		            button.classList.remove('active');
-		        }
-		    });
-		}
+	function displayHospitals(hospitals) {
+	    let hospitalList = document.getElementById('hospitalList');
+	    hospitalList.innerHTML = '';
+	    
+	    let startIndex = (currentPage - 1) * itemsPerPage;
+	    let endIndex = startIndex + itemsPerPage;
+	    let pageHospitals = hospitals.slice(startIndex, endIndex);
+	    
+	    pageHospitals.forEach(hospital => {
+	        let div = document.createElement('div');
+	        div.textContent = `${hospital.hospitalNm} - ${hospital.addr}`;
+	        div.onclick = function() {
+	            selectHospital(hospital);
+	        };
+	        hospitalList.appendChild(div);
+	    });
+	    
+	    displayPagination(hospitals.length);
+	}
 
-		// 병원 검색 버튼 이벤트 리스너
-		document.getElementById('openHospitalSearch').addEventListener('click', function() {
-		    document.getElementById('hospitalSearchModal').style.display = 'block';
-		    fetchHospitals();
-		});
+	function selectHospital(hospital) {
+	    document.getElementById('hospitalName').value = hospital.hospitalNm;
+	    document.getElementById('hospitalAddress').value = hospital.addr;
+	    document.getElementById('hospitalDetailAddress').value = ''; // 상세주소 초기화
+	    
+	    updateFullHospitalAddress();
 
-		// 모달 닫기 버튼 이벤트 리스너
-		document.querySelector('.close').addEventListener('click', function() {
-		    document.getElementById('hospitalSearchModal').style.display = 'none';
-		});
+	    document.getElementById('hospitalSearchModal').style.display = 'none';
+	}
 
-		// 검색 입력 필드 이벤트 리스너
-		document.getElementById('hospitalSearchInput').addEventListener('input', function() {
-		    let searchTerm = this.value.toLowerCase();
-		    filteredHospitals = allHospitals.filter(hospital => 
-		        hospital.hospitalNm.toLowerCase().includes(searchTerm) ||
-		        hospital.addr.toLowerCase().includes(searchTerm)
-		    );
-		    currentPage = 1;
-		    currentPageGroup = 1;
-		    displayHospitals(filteredHospitals);
-		});
-		
-		//초기 로드
-		fetchHospitals();
+	function updateFullHospitalAddress() {
+	    let hospitalAddressCode = '00000'; // 항상 '00000'을 사용
+	    let hospitalAddress = document.getElementById('hospitalAddress').value;
+	    let hospitalDetailAddress = document.getElementById('hospitalDetailAddress').value;
+	    
+	    let fullAddress = hospitalAddressCode + '//' + hospitalAddress + '//' + hospitalDetailAddress;
+	    document.getElementById('ptAddress').value = fullAddress;
+	}
 
-		// 폼에 이벤트 리스너 추가
-		document.querySelector('form').addEventListener('submit', handleFormSubmit);
+	function displayPagination(totalItems) {
+	    let totalPages = Math.ceil(totalItems / itemsPerPage);
+	    let paginationElement = document.getElementById('pagination');
+	    paginationElement.innerHTML = '';
+
+	    let startPage = (currentPageGroup - 1) * 5 + 1;
+	    let endPage = Math.min(totalPages, currentPageGroup * 5);
+
+	    // 이전 버튼
+	    if (currentPageGroup > 1) {
+	        let prevButton = createPaginationButton('이전', () => {
+	            currentPageGroup--;
+	            currentPage = (currentPageGroup - 1) * 5 + 1;
+	            displayHospitals(filteredHospitals.length > 0 ? filteredHospitals : allHospitals);
+	        });
+	        paginationElement.appendChild(prevButton);
+	    }
+
+	    // 페이지 번호 버튼
+	    for (let i = startPage; i <= endPage; i++) {
+	        let button = createPaginationButton(i, () => {
+	            currentPage = i;
+	            displayHospitals(filteredHospitals.length > 0 ? filteredHospitals : allHospitals);
+	            updateActivePageButton();
+	        });
+	        if (i === currentPage) {
+	            button.classList.add('active');
+	        }
+	        paginationElement.appendChild(button);
+	    }
+
+	    // 다음 버튼
+	    if (endPage < totalPages) {
+	        let nextButton = createPaginationButton('다음', () => {
+	            currentPageGroup++;
+	            currentPage = (currentPageGroup - 1) * 5 + 1;
+	            displayHospitals(filteredHospitals.length > 0 ? filteredHospitals : allHospitals);
+	        });
+	        paginationElement.appendChild(nextButton);
+	    }
+	}
+
+	function createPaginationButton(text, onClick) {
+	    let button = document.createElement('button');
+	    button.innerText = text;
+	    button.onclick = onClick;
+	    return button;
+	}
+
+	function updateActivePageButton() {
+	    let buttons = document.querySelectorAll('#pagination button');
+	    buttons.forEach(button => {
+	        if (button.innerText === currentPage.toString()) {
+	            button.classList.add('active');
+	        } else {
+	            button.classList.remove('active');
+	        }
+	    });
+	}
+
+	// 병원 검색 버튼 이벤트 리스너
+	document.getElementById('openHospitalSearch').addEventListener('click', function() {
+	    document.getElementById('hospitalSearchModal').style.display = 'block';
+	    fetchAllHospitals();
+	});
+
+	// 모달 닫기 버튼 이벤트 리스너
+	document.querySelector('.close').addEventListener('click', function() {
+	    document.getElementById('hospitalSearchModal').style.display = 'none';
+	});
+
+	// 검색 입력 필드 이벤트 리스너
+	document.getElementById('hospitalSearchInput').addEventListener('input', function() {
+	    let searchTerm = this.value.toLowerCase();
+	    filteredHospitals = allHospitals.filter(hospital => 
+	        hospital.hospitalNm.toLowerCase().includes(searchTerm) ||
+	        hospital.addr.toLowerCase().includes(searchTerm)
+	    );
+	    currentPage = 1;
+	    currentPageGroup = 1;
+	    displayHospitals(filteredHospitals);
+	});
+
+	// 병원 상세주소 입력 시 전체 주소 업데이트
+	document.getElementById('hospitalDetailAddress').addEventListener('input', updateFullHospitalAddress);
+
+	// 폼에 이벤트 리스너 추가
+	document.querySelector('form').addEventListener('submit', handleFormSubmit);
+
+	// 초기 로드 (페이지 로드 시 병원 데이터를 미리 가져오지 않음)
+	// fetchAllHospitals();
 	</script>
 </body>
 </html>
