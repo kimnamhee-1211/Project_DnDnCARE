@@ -3104,7 +3104,7 @@ public class MemberController {
 	// 프로필 파일 추가하기
 	public String saveProfileImage(MultipartFile file) {
 
-		String renamePath = "C:\\\\image\\\\profileImage\\";
+		String renamePath = "C:\\\\uploadFiles\\\\profileImage\\";
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		int ranNum = (int) (Math.random() * 100000);
@@ -3127,22 +3127,13 @@ public class MemberController {
 
 	// 프로필 파일 삭제하기
 	public void deleteFile(String fileName) {
-		String savePath = "C:\\\\image\\\\profileImage\\";
+		String savePath = "C:\\\\uploadFiles\\\\profileImage\\";
 		File f = new File(savePath + fileName);
 		if (f.exists()) {
 			f.delete();
 		}
 	}
 
-	@GetMapping("nn.me")
-	public String nn() {
-
-		System.out.println("잠깐 디비 접근 용");
-		int mId = 115;
-		mService.nn(mId);
-
-		return "login";
-	}
 
 	@PostMapping("deleteMember.me")
 	public String deleteMember(@RequestParam("password") String password, HttpSession session,
