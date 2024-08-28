@@ -415,7 +415,6 @@
     	request.done(function(data) {
 	    		console.log(data);
 	    		var calendar = new FullCalendar.Calendar(calendarEl, {
-	    			  googleCalendarApiKey: 'AIzaSyBPJsvBD5PxwzfwINUv87WW7bSrLnCKv_A',
 			          initialView: 'dayGridMonth',
 			          events : data,
 			          eventColor: 'skyblue',
@@ -439,13 +438,6 @@
 		          		//console.log(document.querySelector('.modal-footer').children[0].value);
 		        	  	$('#calendarModal').modal('show');
 		        	  },
-		        	  eventSources: [
-		        		  {
-		        			  googleCalendarId:'ko.south_korea#holiday@group.v.calendar.google.com',
-		        			  color: 'white',
-		        			  textColor: 'gray'
-		        			}
-		        	  ],
 		        	  locale: "ko"
 			        });
 			        calendar.render();
