@@ -46,6 +46,10 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		// 로그인에 성공시 요청을 가로챌 인터셉터를 등록한다.
 		registry.addInterceptor(new CheckLoginUser())
 				.addPathPatterns("/login.me");
+
+		// 매칭 방 생성시 로그파일을 생성한다 공동,개인
+		registry.addInterceptor(new CheckLoginUser())
+		.addPathPatterns("/enrollJoinMatching.jm");
 		
 		
 		
