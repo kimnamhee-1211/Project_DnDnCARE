@@ -1533,22 +1533,21 @@ public class MatchingController {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
 		ArrayList<Pay> pArr = mcService.selectPayTransfer(loginUser.getMemberNo()); 	///matNo를 전부 가져와야한다.왜냐? 공동간병 거래한사람도 있을꺼잖아
-		System.out.println("페이정보" + pArr);
+		System.out.println("페이정보이건맞냐?" + pArr);
 		int result = 0;
 		int money = 0;
 		if(!pArr.isEmpty()) {
 			for(Pay p : pArr) {
 				result += mcService.insertPayTransfer(loginUser,p);
 				money += p.getPayMoney();
+				int result2 = mcService.updatePayTransfer(p);
 			} 
 		}
 		
-		System.out.println(" 총 매칭건" + result);
-		System.out.println(" 총 금액" + money);
 		
 		
 		
-		return "redirect:careGiverMain.me";
+		return "redirect:caregiverMain.me";
 	}
 	
 	
