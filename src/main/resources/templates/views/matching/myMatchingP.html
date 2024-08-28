@@ -186,10 +186,6 @@
 						</div>
 				    </div>
 				  
-				  
-				  
-				  
-				  
 				  </div>
 				  
 				  <div class="accordion-item" th:if="${myJoinMat.empty}">
@@ -699,14 +695,7 @@
 									if(loginPt == jmMatMatptInfo.ptNo){
 										walkout.style.display = "block";
 									}
-									
-									
-									
-									
-									
-									
-									
-									
+																
 									
 									//참여자 퇴장 사용하는 시 선택 참여자 버튼 만들기 
 									const walkoutPtDiv = document.getElementById('walkoutPtDiv');
@@ -722,6 +711,20 @@
 										inputDiv.innerHTML = walkoutPtDivInner;
 										walkoutPtDiv.append(inputDiv);
 									}
+									
+									//참여 취소하기 -> 개설자는 인원에 따라 참여 멤이 있으면 취소 불가능
+									document.getElementById('outJmButton').addEventListener('click', ()=>{
+										const outJoinMatching = document.getElementById('outJoinMatching');
+										if(jmMatMatptInfo.ptNo == loginPt.ptNo && jmPts.length > 0){
+											document.getElementById('joinLeaderMsg').style.display = "block";
+										}else{
+											document.getElementById('joinLeaderMsg').style.display = "none";
+											outJoinMatching.submit();
+										}										
+									});	
+									
+									
+									
 										
 
 									

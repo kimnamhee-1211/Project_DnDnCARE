@@ -1241,13 +1241,7 @@ public class MatchingController {
 		}
 		
 		//공동간병 참여중인 내역
-		ArrayList<joinMatInfoMin> myJoinMat = mcService.getMyJoinMat(loginPt);
-			
-		
-		
-		
-		
-		
+		ArrayList<joinMatInfoMin> myJoinMat = mcService.getMyJoinMat(loginPt);						
 		
 		model.addAttribute("myMatching", myMatching);
 		model.addAttribute("myMatchingW", myMatchingW);
