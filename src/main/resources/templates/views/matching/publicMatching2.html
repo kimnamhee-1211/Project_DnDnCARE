@@ -266,7 +266,13 @@
 		        	</div>
 				    <input type="hidden" id="selectedAge" name="selectedAge">
 				</div>
-				
+			
+				<div class="form-floating mb-5 mt-5">
+					<div class="instruction-text request mb-2">
+				        <p class="fw-bold fs-5"><img width="50" height="50" src="https://img.icons8.com/ios/50/no-comments.png" alt="no-comments"/>&nbsp;&nbsp;&nbsp;그밖의 정보 또는 간병 관련 요청사항을 100자 이내로 입력해주세요.</p>
+				    </div>
+					<textarea class="form-control" id="ptRequest" name="ptRequest" rows="3" maxlength="100" th:text="${session.tempPatient.ptRequest}"></textarea>
+				</div>
 				
                	<div class="sign-btn mt-5 d-flex justify-content-center">
                		<button type="button" class="previous-btn me-3" th:onclick="history.back();"><span>이전</span></button>

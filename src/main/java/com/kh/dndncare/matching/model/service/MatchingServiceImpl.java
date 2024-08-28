@@ -392,6 +392,11 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.insertHospital(hospitalName,hospitalAddress);
 	}
 
+	@Override
+	public String getRequest(int memberNo) {
+		return mMapper.getRequest(memberNo);
+	}
+
 
 
 

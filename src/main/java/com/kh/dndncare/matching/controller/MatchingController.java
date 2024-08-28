@@ -110,7 +110,9 @@ public class MatchingController {
 			if(memberNoC > 0) {
 				model.addAttribute("memberNoC",memberNoC);
 			}				
-			patient.setMemberNo(loginUser.getMemberNo());
+			patient.setMemberNo(memberNo);
+			String request = mcService.getRequest(memberNo);
+			patient.setPtRequest(request);
 			session.setAttribute("tempPatient", patient);
 			session.setAttribute("service", service);
 			session.setAttribute("hospitalName",hospitalName);
@@ -292,7 +294,7 @@ public class MatchingController {
 	         }
 	         
 	         matPtInfo.setMatAddressInfo(patient.getPtAddress());
-	         matPtInfo.setMatRequest("일단없음");
+	         matPtInfo.setMatRequest(patient.getPtRequest());
 	         matPtInfo.setGroupLeader("N");
 
 	         int ptInfoResult = mcService.enrollMatPtInfo(matPtInfo);

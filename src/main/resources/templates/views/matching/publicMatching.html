@@ -143,17 +143,75 @@
 	    // hidden input에 값 설정
 	    container.querySelector('#ptAddress').value = combinedAddress;
 	}
+	function validateForm() {
+	    const requiredFields = [
+	        { id: 'floatingInput', name: '이름' },
+	        { name: 'ptGender', type: 'radio', label: '성별' },
+	        { id: 'floatingPassword', name: '생년월일' },
+	        { name: 'ptHeight', label: '키' },
+	        { name: 'ptWeight', label: '몸무게' }
+	    ];
 
-	function handleFormSubmit(event) {
 	    const selectedLocation = document.getElementById('selectedLocation').value;
-	    if (!selectedLocation) {
-	        event.preventDefault(); // 폼 제출 중단
-	        alert('위치를 선택해주세요.');
-	        return;
+	    let isValid = true;
+	    let errorMessage = '';
+
+	    // 기본 필드 검사
+	    requiredFields.forEach(field => {
+	        if (field.type === 'radio') {
+	            if (!document.querySelector(`input[name="${field.name}"]:checked`)) {
+	                isValid = false;
+	                errorMessage += `${field.label}을(를) 선택해주세요.\n`;
+	            }
+	        } else {
+	            const element = document.getElementById(field.id) || document.getElementsByName(field.name)[0];
+	            if (!element.value.trim()) {
+	                isValid = false;
+	                errorMessage += `${field.label || field.name}를 입력해주세요.\n`;
+	            }
+	        }
+	    });
+
+	    // 선택된 위치에 따른 추가 필드 검사
+	    if (selectedLocation === 'home') {
+	        const homeFields = ['addressCode', 'address', 'detailAddress'];
+	        homeFields.forEach(fieldId => {
+	            if (!document.getElementById(fieldId).value.trim()) {
+	                isValid = false;
+	                errorMessage += `집 주소 정보를 모두 입력해주세요.\n`;
+	            }
+	        });
+	    } else if (selectedLocation === 'hospital') {
+	        const hospitalFields = ['hospitalName', 'hospitalAddress', 'hospitalDetailAddress'];
+	        hospitalFields.forEach(fieldId => {
+	            if (!document.getElementById(fieldId).value.trim()) {
+	                isValid = false;
+	                errorMessage += `병원 정보를 모두 입력해주세요.\n`;
+	            }
+	        });
+	    } else {
+	        isValid = false;
+	        errorMessage += '위치(집 또는 병원)를 선택해주세요.\n';
 	    }
 
-	    // 선택된 아이콘 확인
+	    if (!isValid) {
+	        alert(errorMessage);
+	    }
+
+	    return isValid;
+	}
+
+
+	function handleFormSubmit(event) {
+	    event.preventDefault(); // 기본 제출 동작 방지
+
+	    if (!validateForm()) {
+	        return; // 유효성 검사 실패 시 함수 종료
+	    }
+
+	    const selectedLocation = document.getElementById('selectedLocation').value;
 	    const selectedIcon = document.querySelector('.icon-container.selected');
+	    
 	    if (!selectedIcon) {
 	        alert('주소 유형(집 또는 병원)을 선택해주세요.');
 	        return;
@@ -162,14 +220,12 @@
 	    const selectedType = selectedIcon.getAttribute('data-value');
 	    const inputId = selectedType === 'home' ? 'homeInput' : 'hospitalInput';
 	    
-	    // 선택된 입력 필드의 주소 조합
 	    if (selectedType === 'home') {
 	        combineAddress(inputId);
 	    } else {
 	        updateFullHospitalAddress();
 	    }
 
-	    // 'home'과 'hospital' 모두 동일한 hidden input을 사용
 	    const selectedPtAddress = document.getElementById('ptAddress').value;
 	    let hiddenInput = document.querySelector('input[name="ptAddress"]');
 	    if (!hiddenInput) {
@@ -180,9 +236,10 @@
 	    }
 	    hiddenInput.value = selectedPtAddress;
 
-	    // 폼 제출
+	    // 모든 검사를 통과했으면 폼 제출
 	    event.target.submit();
 	}
+
 
 	function selectIcon(element) {
 	    // 모든 아이콘에서 'selected' 클래스 제거
