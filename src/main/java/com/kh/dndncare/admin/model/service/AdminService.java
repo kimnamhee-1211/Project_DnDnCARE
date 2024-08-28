@@ -86,6 +86,10 @@ public interface AdminService {
 	ArrayList<Matching> selectMatchings();
 	int adminUpdateBoard(Board b);
 
+	int checkAdminId(String memberId);
+
+	int insertMember(Member m);
+
 
 
 }

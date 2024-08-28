@@ -92,5 +92,9 @@ public interface AdminMapper {
 	
 	int adminUpdateBoard(Board b);
 
+	int checkAdminId(String memberId);
+
+	int insertMember(Member m);
+
 
 }
