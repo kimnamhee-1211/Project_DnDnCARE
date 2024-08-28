@@ -28,7 +28,7 @@ public interface MemberMapper {
 
 	Member login(Member m);
 
-	int noInfomemberdle();
+	int noInfomemberdle(int memberNo);
 	
 	int idCheck(String id);
 	
@@ -206,5 +206,7 @@ public interface MemberMapper {
 	int getCountPendingMe(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
 
 	int getCountPt(int matNo);
+
+	int getDelMemberNo();
 
 }

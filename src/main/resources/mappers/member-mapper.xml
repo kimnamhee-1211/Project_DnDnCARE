@@ -14,13 +14,19 @@
 	  	from member
 	  	where member_status = 'N' and member_id=#{memberId}
 	  </select>
-	  
-	  
-	  <!-- 회원가입 중도탈출 멤버 데이터 지우기 -->
-	  <delete id="noInfomemberdle">
-	  	delete member
+	  	  
+	  <select id="getDelMemberNo" resultType="_int">
+	  	select member_no
+	  	from member
 	  	where member_no NOT IN (select member_no from caregiver union select member_no from patient)	 
 	  			and member_category != 'A'
+	  </select>
+	  	  
+	  
+	  <!-- 회원가입 중도탈출 멤버 데이터 지우기 -->
+	  <delete id="noInfomemberdle" >
+	  	delete member
+	  	where member_no = #{memberNo}
 	  </delete>
 	  	  
 	  
