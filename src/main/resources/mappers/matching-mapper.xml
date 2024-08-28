@@ -567,7 +567,7 @@
 		from (select mat_no, pt_count, hospital_no, end_dt, mat_mode
 				from matching
 					join mat_pt_info mpi_me using(mat_no)
-				where mpi_me.pt_no = 29
+				where mpi_me.pt_no = #{loginPt}
 						and matching.pt_count > 1) subquery
 			join hospital on(subquery.hospital_no = hospital.hospital_no)
 			join mat_pt_info mpi on(subquery.mat_no = mpi.mat_no)
