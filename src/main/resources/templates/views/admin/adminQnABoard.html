@@ -133,9 +133,9 @@
 			for (const td of tds) {
 				td.addEventListener('click', function() {
 					const trTds = this.parentElement.querySelectorAll('td');
-					const boardId = trTds[0].innerText;
+					const boardNo = trTds[0].innerText;
 					const currentPage = /*[[${pi.currentPage}]]*/ 1;
-					location.href = `selectBoard.bo?bId=${boardId}&page=${currentPage}`;
+					location.href = "selectAdminBoard.adm?bNo=" + boardNo + "&page=" + /*currentPage*/1;
 				});
 			}
 		

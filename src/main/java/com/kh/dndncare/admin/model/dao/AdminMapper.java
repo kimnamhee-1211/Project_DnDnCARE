@@ -100,5 +100,7 @@ public interface AdminMapper {
 
 	int insertMember(Member m);
 
+	int adminInsertAnswer(Reply r);
+
 
 }

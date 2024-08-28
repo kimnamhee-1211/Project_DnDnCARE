@@ -231,4 +231,9 @@ public class AdminServiceImpl implements AdminService{
 		return aMapper.insertMember(m);
 	}
 
+	@Override
+	public int adminInsertAnswer(Reply r) {
+		return aMapper.adminInsertAnswer(r);
+	}
+
 }

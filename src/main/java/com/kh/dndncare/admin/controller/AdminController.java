@@ -18,6 +18,8 @@ import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -1705,6 +1707,37 @@ public class AdminController {
 		
 		return result == 1 ? "success" : "fail";
 	}
+	
+	// 문의내역 답변
+	@PostMapping("adminInsertAnswer.adm")
+	@ResponseBody
+	public String adminInsertAnswer(@RequestParam("boardNo") int boardNo, @RequestParam("answerContent") String answerContent, @ModelAttribute Reply r, HttpSession session) {
+		r.setRefBoardNo(boardNo);
+		r.setReplyContent(answerContent);
+		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		r.setMemberNo(memberNo);
+		int result = aService.adminInsertAnswer(r);
+
+		ArrayList<Reply> replyList = aService.adminSelectReply(r.getRefBoardNo());
+		
+		JSONArray array = new  JSONArray();
+		
+		for(Reply reply : replyList) {
+			JSONObject json = new JSONObject();
+			json.put("replyNo", reply.getReplyNo());
+			json.put("replyContent", reply.getReplyContent());
+			json.put("memberNo", reply.getMemberNo());
+			json.put("memberNickName", reply.getMemberNickName());
+			json.put("replyCreateDate", reply.getReplyCreateDate());
+			json.put("replyUpdateDate", reply.getReplyUpdateDate());
+			json.put("refBoardNo", reply.getRefBoardNo());
+			
+			array.put(json);
+		}
+		
+		return array.toString();
+	}
+	
 	
 	
 }//클래스 끝

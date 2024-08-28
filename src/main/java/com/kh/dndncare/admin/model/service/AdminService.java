@@ -94,6 +94,8 @@ public interface AdminService {
 
 	int insertMember(Member m);
 
+	int adminInsertAnswer(Reply r);
+
 
 
 }

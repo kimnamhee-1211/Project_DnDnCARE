@@ -326,4 +326,10 @@
 				DEFAULT, #{memberAddress}, #{memberCategory}, DEFAULT, #{memberNational}, DEFAULT, DEFAULT)
 	</insert> 
 	
+	<!-- 문의 답변 추가 -->
+	<insert id="adminInsertAnswer">
+		insert into reply
+		values (seq_rid.nextval, #{replyContent}, #{memberNo}, sysdate, sysdate, default, #{refBoardNo})
+	</insert>
+	
 </mapper>
