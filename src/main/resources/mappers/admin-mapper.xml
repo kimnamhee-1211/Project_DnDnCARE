@@ -295,4 +295,21 @@
 		set board_title = #{boardTitle}, board_content = #{boardContent}, board_update_date = sysdate
 		where board_no = #{boardNo}
 	</update>
+	
+	<!-- 문의내역 페이지네이션 -->
+	<select id="getAdminQnAListCount">
+		select count(*)
+		from board
+		where category_no = 99
+	</select>
+	
+	<!-- 문의내역 조회 -->
+	<select id="adminQnABoardList" resultType="Board">
+		select board_no, board_title, member_name, board_create_date,count(*) answerYN
+		from board
+		    join member using(member_no)
+		    join reply on(ref_board_no = board_no)
+		where category_no = 99
+		group by board_no, board_title, member_name, board_create_date
+	</select>
 </mapper>

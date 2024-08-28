@@ -135,10 +135,10 @@
                 </div>
 			<div class="row m-4 text-center">
 				<div class="col-sm-3 mb-2">
-					<button class="btn guide-btn" id="signUpBtn" style="width: 100%;">문의게시판</button>
+					<button class="btn guide-btn" id="qnaBoardBtn" style="width: 100%;" onclick="showQnA('qnaBoardList')">문의게시판</button>
 				</div>
 				<div class="col-sm-3 mb-2">
-					<button class="btn guide-btn" id="findIdPwBtn" style="width: 100%;">나의 문의내역</button>
+					<button class="btn guide-btn" id="myQnAListBtn" style="width: 100%;" onclick="showQnA('myQnABoardList')">나의 문의내역</button>
 			</div>
                 <div class="d-flex justify-content-end mb-4">
                     <th:block th:if="${session.loginUser != null}">
@@ -146,15 +146,15 @@
                     </th:block>
                 </div>
 
-                <div class="p-1">
+                <div class="p-1" id="qnaBoardList-section">
                     <table class="table table-bordered bg-white table-hover">
                         <thead align="center">
                             <tr>
-                                <th width="4%">번호</th>
+                                <th width="8%">번호</th>
                                 <th width="30%">제목</th>
                                 <th width="10%">작성자</th>
                                 <th width="20%">작성일</th>
-                                <th width="5%">답변</th>
+                                <th width="8%">답변</th>
                             </tr>
                         </thead>
                         <tbody align="center">
@@ -163,11 +163,15 @@
                                 <td>[[${q.boardTitle}]]</td>
                                 <td>[[${q.memberNickName}]]</td>
                                 <td>[[${q.boardCreateDate}]]</td>
-                                <td></td>
+                                <th:block th:if="${q.answerYN}==0}">
+                               		 <td>답변 대기중</td>
+                                </th:block>
+                                <th:block th:if="${q.answerYN}==1}">
+                               		 <td>답변 완료</td>
+                                </th:block>
                             </tr>
                         </tbody>
                     </table>
-                </div>
                 
                 <div class="d-flex justify-content-center align-items-center m-5">
                     <nav aria-label="Standard pagination example">
@@ -188,28 +192,53 @@
                         </ul>
                     </nav>
                 </div>
+                </div>
                 
-                <div class="p-1 hidden">
+                <div class="p-1 hidden" id="myQnABoardList-section">
                     <table class="table table-bordered bg-white table-hover">
                         <thead align="center">
                             <tr>
-                                <th width="4%">번호</th>
+                                <th width="8%">번호</th>
                                 <th width="30%">제목</th>
                                 <th width="10%">작성자</th>
                                 <th width="20%">작성일</th>
-                                <th width="5%">답변</th>
+                                <th width="8%">답변</th>
                             </tr>
                         </thead>
                         <tbody align="center">
-                            <tr th:each="q:${qnaList}">
-                                <td>[[${q.boardNo}]]</td>
-                                <td>[[${q.boardTitle}]]</td>
-                                <td>[[${q.memberNickName}]]</td>
-                                <td>[[${q.boardCreateDate}]]</td>
-                                <td></td>
+                            <tr th:each="mql:${myQnAList}"><!-- 반복문 -->
+                                <td>[[${mql.boardNo}]]</td>
+                                <td>[[${mql.boardTitle}]]</td>
+                                <td>[[${mql.memberName}]]</td>
+                                <td>[[${mql.boardCreateDate}]]</td>
+                                 <th:block th:if="${q.answerYN}==0}">
+                               		 <td>답변 대기중</td>
+                                </th:block>
+                                <th:block th:if="${q.answerYN}==1}">
+                               		 <td>답변 완료</td>
+                                </th:block>
                             </tr>
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-center align-items-center m-5">
+                    <nav aria-label="Standard pagination example">
+                        <ul class="pagination" th:with="loc=${loc}" style="margin: auto 0; color: black;">
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{${loc}(myPage=${mpi.currentPage-1})}" aria-label="Previous">
+                                    <span aria-hidden="true" style="color: black;">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:each="mp : ${#numbers.sequence(mpi.startPage, mpi.endPage)}">
+                                <a class="page-link" th:href="@{${loc}(myPage=${mp})}" style="color: black;">[[${mp}]]</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{${loc}(myPage=${mpi.currentPage+1})}" aria-label="Next">
+                                    <span aria-hidden="true" style="color: black;">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
                 </div>
                  
             </div>
@@ -230,6 +259,17 @@
                 });
             }
         };
+        
+        function showQnA(type) {
+			if (type === 'qnaBoardList') {
+				document.getElementById('qnaBoardList-section').style.display = 'block';
+				document.getElementById('myQnABoardList-section').style.display = 'none';
+				
+			} else if (type === 'myQnABoardList') {
+				document.getElementById('qnaBoardList-section').style.display = 'none';
+				document.getElementById('myQnABoardList-section').style.display = 'block';
+			}
+        }
     </script>
 </body>
 </html>

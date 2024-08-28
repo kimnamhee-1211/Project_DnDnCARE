@@ -211,4 +211,16 @@ public class AdminServiceImpl implements AdminService{
 		return aMapper.adminUpdateBoard(b);
 	}
 
+	@Override
+	public int getAdminQnABoardListCount() {
+		return aMapper.getAdminQnABoardCount();
+	}
+	
+	@Override
+	public ArrayList<Board> adminQnABoardList(PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return aMapper.adminQnABoardList(rowBounds);
+	}
+
+
 }

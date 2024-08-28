@@ -92,5 +92,10 @@ public interface AdminMapper {
 	
 	int adminUpdateBoard(Board b);
 
+	int getAdminQnABoardCount();
+	
+	ArrayList<Board> adminQnABoardList(RowBounds rowBounds);
+
+
 
 }

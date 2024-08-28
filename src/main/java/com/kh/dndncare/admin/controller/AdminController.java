@@ -1659,7 +1659,21 @@ public class AdminController {
 		}
 	}
 	
-	
+	// 문의내역 조회
+	@GetMapping("adminQnABoard.adm")
+	public String adminQnABoard(@RequestParam(value="qnaPage", defaultValue = "1") int qnaPage, Model model) {
+		int listCount = aService.getAdminQnABoardListCount();
+		
+		PageInfo pi = Pagination2.getPageInfo(qnaPage, listCount, 7, 5);
+		ArrayList<Board> adminQnABoardList = aService.adminQnABoardList(pi);
+		
+		if(adminQnABoardList != null) {
+			model.addAttribute(pi);
+			model.addAttribute(adminQnABoardList);
+		}
+		
+		return "adminQnABoard";
+	}
 	
 	
 }//클래스 끝
