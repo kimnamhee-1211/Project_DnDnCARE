@@ -107,13 +107,20 @@ public class BoardController {
 	public String inserBoard(@ModelAttribute Board b, HttpSession session) {
 		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		
+		System.out.println("####################");
+		System.out.println(b);
+		
 		b.setMemberNo(memberNo);
 		b.setAreaNo(b.getAreaNo());
 		b.setCategoryNo(b.getCategoryNo());
 		// 작성시 필요한 회원번호, 지역번호, 카테고리번호 b에 담기
 		int result = bService.insertBoard(b);
 		if(result > 0) {
-			return "redirect:communityBoardList.bo";			
+			if(b.getCategoryNo()!=99) {
+				return "redirect:communityBoardList.bo";			
+			}else {
+				return "rediect:qnaBoardList.bo";
+			}
 		}else {
 			throw new BoardException("게시글 작성을 실패하였습니다.");
 		}
@@ -190,7 +197,7 @@ public class BoardController {
 	
 	// 게시글 수정하기 클릭
 	@PostMapping("editBoard.bo")
-	public String editBoard(@RequestParam("boardId") int bId, @RequestParam("page") int page, Model model, HttpSession session) {
+	public String editBoard(@RequestParam("boardNo") int bId, @RequestParam("page") int page, Model model, HttpSession session) {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
 		int memberNo = loginUser.getMemberNo();
@@ -207,7 +214,7 @@ public class BoardController {
 	public String updateBoard(@ModelAttribute Board b, @RequestParam("page") int page, RedirectAttributes ra) {
 		int result = bService.updateBoard(b);
 		// 가져온 Board로 update
-		
+		System.out.println(b);
 		if(result>0) {
 			ra.addAttribute("bId", b.getBoardNo());
 			ra.addAttribute("page", page);
@@ -219,10 +226,15 @@ public class BoardController {
 	
 	// boardDetail에서 삭제하기 클릭
 	@PostMapping("deleteBoard.bo")
-	public String deleteBoard(@RequestParam("boardId") int bId) {
+	public String deleteBoard(@RequestParam("boardNo") int bId, @RequestParam("categoryNo") int categoryNo) {
 		int result = bService.deleteBoard(bId);
+		System.out.println(categoryNo);
 		if(result>0) {
-			return "redirect:list.bo";			
+			if(categoryNo != 99) {
+				return "redirect:communityBoardList.bo";			
+			}else {
+				return "redirect:qnaBoardList.bo";
+			}
 		}else {
 			throw new BoardException("게시글 삭제에 실패했습니다.");
 		}
@@ -477,15 +489,138 @@ public class BoardController {
 		return bot.chat(condition + "에 대한 간병정보를 300자로 요약해줘.");
 	}
 	
-	
-	// 간병백과 앨범형 페이지로 이동 요청
+	// 삭제하지 말아주세요 ㅠ_ㅠ
+	// 간병백과 앨범형 페이지로 이동 요청 (**임시 징검다리**)
 	@GetMapping("albumCareInformation.bo")
 	public String albumCareInformation(@RequestParam(value="page", defaultValue="1") int currentPage) {
-		
-		
-		
 		return "albumCareInformation";
+	}// 삭제하지 말아주세요 ㅠ_ㅠ
+	
+	
+	// 간병백과 앨범형 컨텐츠 목록을 조회
+	@PostMapping("selectCareInformationAlbumList.bo")
+	@ResponseBody
+	public void selectCareInformationAlbumList(@RequestParam(value="page", defaultValue="1") int currentPage,
+												HttpServletResponse response) {
+		// 페이징 처리된 컨텐츠 목록 조회
+		int listCount = bService.getCareInfomationListCount(null);
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 9, 5);
+		
+		response.setContentType("application/json; charset=UTF-8"); // MIME타입, 인코딩타입 지정
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
+		Gson gson = gb.create(); 
+		
+		try {
+			if(currentPage > pi.getMaxPage()) {
+				gson.toJson(null, response.getWriter());
+			} else {
+				HashMap<String, ArrayList<?>> result = new HashMap<String, ArrayList<?>>();
+				ArrayList<Board> bList = bService.selectCareInformation(null, pi);
+				ArrayList<Attachment> aList = bService.selectAttachment(bList);
+				
+				ArrayList<Integer> pList = new ArrayList<Integer>();
+				pList.add(pi.getMaxPage());
+				
+				result.put("bList", bList);
+				result.put("aList", aList);
+				result.put("pList", pList);
+				gson.toJson(result, response.getWriter());
+			}
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
 	}
+	
+	
+	// 간병백과 앨범형 글 검색 요청
+	@GetMapping("searchCareInformationAlbum.bo")
+	@ResponseBody
+	public void searchCareInformationAlbum(@RequestParam(value="page", defaultValue="1") int currentPage,
+										@RequestParam("searchOption") String searchOption,
+										@RequestParam("searchContent") String searchContent,
+										HttpServletResponse response) {
+		response.setContentType("application/json; charset=UTF-8");
+		GsonBuilder gb = new GsonBuilder().setDateFormat("yyyy-MM-dd");
+		Gson gson = gb.create();
+		
+		try {
+			if(searchOption.equals("none")) { // 검색조건이 올바르지 않을 때 : 백에서도 안전하게 fail로 반환
+				gson.toJson(null, response.getWriter());
+			} else { // 올바른 검색조건을 선택했을 때
+				HashMap<String, String> map = new HashMap<String, String>();
+				if(searchOption.equals("title")) {
+					map.put("column", "BOARD_TITLE");
+				} else if(searchOption.equals("content")) {
+					map.put("column", "BOARD_CONTENT");
+				}
+				map.put("searchContent", searchContent);
+				
+				int listCount = bService.getCareInfomationListCount(map);
+				if(listCount == 0) {
+					log.info("{} : {}", searchOption, searchContent); // 검색결과가 없을 때 로그를 발생시킨다.
+					gson.toJson("empty", response.getWriter());
+				} else {
+					PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 9, 5);
+					
+					if(currentPage > pi.getMaxPage()) {
+						gson.toJson(null, response.getWriter());
+					} else {
+						HashMap<String, ArrayList<?>> result = new HashMap<String, ArrayList<?>>();
+						ArrayList<Board> bList = bService.searchCareInformation(map, pi);
+						
+						ArrayList<Attachment> aList = bService.selectAttachment(bList);
+						ArrayList<Integer> pList = new ArrayList<Integer>();
+						pList.add(pi.getMaxPage());
+						
+						result.put("bList", bList);
+						result.put("aList", aList);
+						result.put("pList", pList);
+						
+						gson.toJson(result, response.getWriter());
+					}
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// 문의게시판
+	@GetMapping("qnaBoardList.bo")
+	public String qnaBoardList(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model,
+					            @RequestParam(value="categoryNo", defaultValue="-1") int categoryNo,
+					            @RequestParam(value="area", required = false) List<Integer> areas, 
+					            HttpServletRequest request, HttpSession session) {
+	    int listCount = bService.getListCountQnA();   
+	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 20);
+		ArrayList<Board> qnaList = bService.qnaBoardList(pi);
+		if(qnaList != null) {
+			model.addAttribute("qnaList", qnaList);
+			model.addAttribute("pi",pi);
+		}
+		return "qnaBoard";
+		
+	}
+	
+	// 문의글 작성페이지
+	@GetMapping("writeQnA.bo")
+	public String writeQnABoard() {
+		return "writeQnABoard";
+	}
+	
+	// faq게시판
+	@GetMapping("faqBoard.bo")
+	public String faqBoard() {
+		return "faqBoard";
+	}
+	
+	// 이용가이드
+	@GetMapping("userGuide.bo")
+	public String userGuide() {
+		return "userGuide";
+	}
+	
+	
 	
 	
 }

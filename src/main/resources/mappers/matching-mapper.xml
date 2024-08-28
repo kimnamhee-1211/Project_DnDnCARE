@@ -266,7 +266,7 @@
 		from matching
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
-			join hospital on(hospital.hospital_no = matching.hospital_no)
+			left join hospital on(hospital.hospital_no = matching.hospital_no)
 			left join matching_date on(matching.mat_no = matching_date.mat_no) 		
 		where matching.mat_no = #{matNo}
 		order by mat_pt_info.pt_no 
@@ -305,7 +305,7 @@
 		from matching
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
-			join hospital on(hospital.hospital_no = matching.hospital_no)
+			left join hospital on(hospital.hospital_no = matching.hospital_no)
 			left join matching_date on(matching.mat_no = matching_date.mat_no) 		
 		where matching.member_no = #{memberNo}	
 		order by matching.begin_dt	
@@ -319,9 +319,9 @@
 		from matching
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
-			join hospital on(hospital.hospital_no = matching.hospital_no)
-			join matching_date on(matching.mat_no = matching_date.mat_no) 	
-			join mat_care_pending on(matching.mat_no = mat_care_pending.mat_no)
+			left join hospital on(hospital.hospital_no = matching.hospital_no)
+			left join matching_date on(matching.mat_no = matching_date.mat_no) 	
+			left join mat_care_pending on(matching.mat_no = mat_care_pending.mat_no)
 		where matching.mat_confirm = 'N' and matching.begin_dt > sysdate
 				and mat_care_pending.member_no = #{memberNo}
 		order by matching.begin_dt		
@@ -383,7 +383,7 @@
 			#{loginUser.memberName},
 			#{loginUser.memberPhone},
 			#{loginUser.memberEmail},
-			#{p.merchantUid},
+			#{p.mercharntUid},
 			#{p.payService},
 			'Y'
 		)
@@ -483,11 +483,11 @@
 		set review_content = #{reviewContent}, review_score = #{reviewScore}, review_update_date = sysdate
 		where review_no = #{reviewNo}
 	</update>
+	
 	<update id="matchingCancelP">
 		update matching
 		set member_no = null
 		where mat_no = #{matNo}
-			and member_no = #{memberNo}
 	</update>
 
 	<!--간병인 매칭 신청 취소 -->
@@ -527,7 +527,7 @@
 		select service, count(service) serviceCount
 		from mat_pt_info
 			join matching using(mat_no)
-		where member_no = #{memberNo}
+		where member_no = #{memberNo} and service != '개인간병'
 		group by service
 	</select>
 	
@@ -558,6 +558,33 @@
 		from mat_pt_info
 		where mat_no = #{matNo} and pt_no = #{ptNo}	
 	</select>
+
+
+	<select id="getMyJoinMat" resultType="joinMatInfoMin">
+		select subquery.mat_no, subquery.pt_count, subquery.mat_mode,
+				hospital.hospital_name, hospital.hospital_address, 
+				patient.pt_no, patient.pt_name
+		from (select mat_no, pt_count, hospital_no, end_dt, mat_mode
+				from matching
+					join mat_pt_info mpi_me using(mat_no)
+				where mpi_me.pt_no = 29
+						and matching.pt_count > 1) subquery
+			join hospital on(subquery.hospital_no = hospital.hospital_no)
+			join mat_pt_info mpi on(subquery.mat_no = mpi.mat_no)
+			join patient on(mpi.pt_no = patient.pt_no)
+		where mpi.group_leader = 'Y' and subquery.end_dt > sysdate
+	</select>
+
+
+
+
+
+
+
+
+
+
+
 
 
 

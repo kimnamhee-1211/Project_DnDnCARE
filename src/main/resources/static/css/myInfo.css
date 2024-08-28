@@ -82,6 +82,7 @@ body {
 		margin-top: 0px;
 		font-family: 'Pretendard-Regular';
 		box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+		
 }
 .testBorder{
 	border:1px solid #1E5F74;
@@ -130,15 +131,26 @@ body {
 	
 }
 
+.myInfo-btn-2{
+	width:150px;
+	background-color: white;
+	border:2px solid  #FCDAB7;
+	color:#1E5F74;
+	border-radius: 5px;
+	padding:5px;
+	cursor: pointer;
+	
+}
+
 .btn-outline-maincolor-2{
 	color:#1E5F74;
 	border-radius: 5px;
 	width:160px;
 	border:1px solid #1E5F74;
 	padding:5px;
-	margin:8px;
 	background:white;
 	cursor: pointer;
+	text-align: center;
 }
 
 
@@ -148,7 +160,7 @@ body {
 	border:1px solid #1E5F74;
 	padding:2px;
 	background:white;
-	
+	margin:8px;
 }
 
 .btn-outline-maincolor:hover{
@@ -161,7 +173,7 @@ body {
 }
 
 /*켈린더*/
-.fc{max-width:415px !important; min-height:330px !important; }
+.fc{max-width:550px !important; min-height:330px !important; }
 
 .btn-maincolor{
 	color:white;
@@ -171,10 +183,14 @@ body {
 	background:#1E5F74;
 	cursor: pointer;
 	width:160px;
+	text-align:center;
 }
 
 .myInfo-title{
-	border-bottom:2px solid #1E5F74;
+	background: #133B5C 25%;
+	width:400px;
+	color:white !important;
+	padding:6px;
 }
 
 .reviewDetail{
@@ -200,7 +216,7 @@ body {
 	background:white;
 	border:1px solid #1E5F74;
 	border-radius:5px;
-	z-index:1;
+	z-index1;
 }
 
 .select-hidden{
@@ -235,7 +251,7 @@ body {
 
 .show{
 	height:200px;
-	border-top: 1px solid #8dd986;
+	border-top: 2px solid #133B5C;
 	z-index : 10;
 }
 
@@ -254,6 +270,19 @@ body {
 	min-height:32px;	
 }
 
+.btn-icon-star-review-bg{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 240px 240px;
+	padding:0px;
+	margin-left:0px;
+	margin-top:-1px;
+	color:red;
+	background-repeat: no-repeat;
+	z-index:1;
+	min-width:32px;	
+	min-height:64px;	
+}
+
 .btn-icon-star-review-half{
 	background-image:url(../image/icon_star2.svg);
 	background-size: 140px 140px;
@@ -265,11 +294,29 @@ body {
 	min-height:32px;
 }
 
+.btn-icon-star-review-half-bg{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 240px 240px;
+	padding:0px;
+	margin-left:0px;
+	margin-top:-1px;
+	background-repeat: no-repeat;
+	max-width:34px;
+	min-height:64px;
+}
+
 .icon-star-review{
 	background-image:url(../image/icon_star.svg);
 	background-size: 140px 140px;
 	padding:0px;
 	width:32px; height:32px;
+}
+
+.icon-star-review-bg{
+	background-image:url(../image/icon_star.svg);
+	background-size: 240px 240px;
+	padding:0px;
+	width:58px; height:58px;
 }
 
 .btn-star{
@@ -282,3 +329,55 @@ body {
 	margin-right:-1.5px;
 	background-repeat: no-repeat;
 }
+
+/*남희님 css 훔치기*/
+.btn-outline {	
+	background: white;
+	color: #1D2D50;
+	border: 2px solid #1D2D50;
+	width: 190px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
+
+.btn-outline:hover, .btn-outline:focus{
+	color: white;
+	background: #1D2D50;
+}
+
+/* .btn-check가 체크된 상태에서 .btn-outline 스타일 */
+.btn-check:checked + .btn-outline {
+	color: white;
+	background: #1D2D50;
+}
+
+.title-info{
+	background:#FCDAB7;
+}
+
+table th{
+	font-size:20px;
+	padding:8px;
+	border-right:1px solid lightgray;
+	border-top:6px solid white;
+	border-bottom:6px solid white;
+}
+
+input{
+	border: 0px;
+}
+
+.btn-success{
+	background-color:#1D2D50 !important;
+	/* --bs-btn-bg:#E1e5F74 !important; */
+	box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+     7px 7px 20px 0px rgba(0,0,0,.1),
+     4px 4px 5px 0px rgba(0,0,0,.1) !important;
+     border:none !important;
+}
+/* 캘린더 이벤트의 정보를 보는 모달박스 */
+.workInfo {
+	display:grid; grid-template-columns: 1fr 1fr;
+}
+

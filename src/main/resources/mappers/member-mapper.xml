@@ -59,10 +59,11 @@
 		        SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) AS MAT_ADDRESS_INFO, 
 		        PT_COUNT, MAT_DATE
 		FROM MATCHING M
-		        JOIN MAT_PT_INFO I ON(M.MAT_NO = I.MAT_NO)
-		        JOIN MATCHING_DATE D ON(I.MAT_NO = D.MAT_NO)
-		WHERE MEMBER_NO = ${memberNo}
+		        LEFT JOIN MAT_PT_INFO I ON(M.MAT_NO = I.MAT_NO)
+		        LEFT JOIN MATCHING_DATE D ON(I.MAT_NO = D.MAT_NO)
+		WHERE M.MEMBER_NO = ${memberNo} AND M.MAT_CONFIRM = 'Y'
 	</select>
+	
 	  <select id="selectAllMember" resultType="Member">		<!-- 멤버좀 확인할라구요 -->
 		select *
 		from member	  
@@ -222,7 +223,7 @@
 	
 	<update id="updatePatient">
 		update patient
-		set pt_name = #{ptName}, pt_age = #{ptAge}, pt_weight = #{ptWeight}, pt_height = #{ptHeight}, pt_address = #{ptAddress}, pt_gender = #{ptGender}
+		set pt_name = #{ptName}, pt_age = #{ptAge}, pt_weight = #{ptWeight}, pt_height = #{ptHeight}, pt_address = #{ptAddress}, pt_gender = #{ptGender}, pt_update_date = sysdate, pt_request = #{ptRequest}
 		where member_no = #{memberNo}
 	</update>
 	
@@ -355,7 +356,7 @@
 		from matching
 			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
 			join patient on(mat_pt_info.pt_no = patient.pt_no)	
-			join hospital on(hospital.hospital_no = matching.hospital_no)
+			left join hospital on(hospital.hospital_no = matching.hospital_no)
 		where matching.mat_confirm = 'N' and matching.begin_dt > sysdate 
 			and matching.member_no is null
 		order by matching.begin_dt
@@ -380,8 +381,10 @@
 	<select id="selectCareGiverList" resultType="CareGiver">	<!-- 간병인정보를 모두 불러온다.(재가공할거지만) -->
 		select *
 		from careGiver
-			join member using(member_no)
-		where member_status = 'N'
+			left join member on(careGiver.member_no = member.member_no)
+            
+			where member_status = 'N'
+		ORDER BY 2 asc, 1 desc
 	</select>
 
 	
@@ -485,10 +488,10 @@
 	</select>
 	
 	<select id="patientCalendarEvent" resultType="CalendarEvent">
-		SELECT MATCHING.MAT_NO, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MONEY, MATCHING.MEMBER_NO AS CAREGIVER_NO, MAT_DATE,
+		SELECT MATCHING.MAT_NO, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MONEY, MATCHING.MEMBER_NO AS CAREGIVER_NO, MAT_DATE, MAT_MODE, PT_COUNT,
 				SUBSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' ') , INSTR(REPLACE(MAT_ADDRESS_INFO, '//', ' '), ' ')+1) AS MAT_ADDRESS_INFO
 		FROM MATCHING 
-		        JOIN MATCHING_DATE ON(MATCHING.MAT_NO = MATCHING_DATE.MAT_NO)
+		        LEFT JOIN MATCHING_DATE ON(MATCHING.MAT_NO = MATCHING_DATE.MAT_NO)
                 JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
 		WHERE MATCHING.MAT_NO IN 
 		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
@@ -504,16 +507,26 @@
 	</select>
 	
 	<select id="getMatchingListCount" resultType="_int">
-		SELECT COUNT(*)
+		<!-- SELECT COUNT(*)
 		FROM MATCHING
-		WHERE MAT_CONFIRM = 'N'
+		WHERE MAT_CONFIRM = 'N' -->
+		SELECT COUNT(DISTINCT MATCHING.MAT_NO)
+		FROM MATCHING JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
+		WHERE MAT_CONFIRM = 'N' 
+		        AND (MATCHING.MAT_NO ,MATCHING.PT_COUNT) IN (SELECT MAT_PT_INFO.MAT_NO, COUNT(*) FROM MAT_PT_INFO GROUP BY MAT_PT_INFO.MAT_NO)
+		        AND MATCHING.BEGIN_DT <![CDATA[>]]> SYSDATE
 	</select>
 	
 	<!-- 간병인의 일감찾기(검색조건X) : 매칭정보 조회 -->
 	<select id="selectMatchingList" resultType="Matching">
-		SELECT MATCHING.MAT_NO,PT_COUNT, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MAT_MODE
+		<!-- SELECT MATCHING.MAT_NO,PT_COUNT, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MAT_MODE
 		FROM MATCHING
-		WHERE MAT_CONFIRM = 'N'
+		WHERE MAT_CONFIRM = 'N' -->
+		SELECT DISTINCT MATCHING.MAT_NO, PT_COUNT, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MAT_MODE
+		FROM MATCHING JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
+		WHERE MAT_CONFIRM = 'N' 
+		        AND (MATCHING.MAT_NO ,MATCHING.PT_COUNT) IN (SELECT MAT_PT_INFO.MAT_NO, COUNT(*) FROM MAT_PT_INFO GROUP BY MAT_PT_INFO.MAT_NO)
+		        AND MATCHING.BEGIN_DT <![CDATA[>]]> SYSDATE
 		<if test="resultMatNoList != null">
 			AND MAT_NO IN
 			<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
@@ -546,14 +559,13 @@
 	
 	
 	<!-- 간병인의 일감찾기(검색조건X) : 환자정보 조회 -->
-	<select id="selectMatchingMemberList" resultType="Member">
-		SELECT MATCHING.MAT_NO, MEMBER.MEMBER_NO, MEMBER.MEMBER_NAME, MEMBER.MEMBER_GENDER,
-		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(MEMBER_AGE, 'RRRR-MM-DD')) AS MEMBER_REAL_AGE,
+	<select id="selectMatchingMemberList" resultType="Patient">
+		SELECT MATCHING.MAT_NO, PATIENT.MEMBER_NO, PATIENT.PT_NAME, PATIENT.PT_GENDER,
+		        EXTRACT(YEAR FROM TO_DATE(SYSDATE, 'RRRR-MM-DD')) - EXTRACT(YEAR FROM TO_DATE(PATIENT.PT_AGE, 'RRRR-MM-DD')) AS PtRealAge,
 		        GROUP_LEADER
 		FROM MATCHING
 		        JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
 		        JOIN PATIENT ON(MAT_PT_INFO.PT_NO = PATIENT.PT_NO)
-		        JOIN MEMBER ON(PATIENT.MEMBER_NO = MEMBER.MEMBER_NO)
 		WHERE MATCHING.MAT_NO IN 
 		<foreach collection="list" item="item" open="(" close=")" separator=",">${item}</foreach>
 	</select>
@@ -564,7 +576,7 @@
 		FROM MATCHING
 		        JOIN MAT_PT_INFO ON(MATCHING.MAT_NO = MAT_PT_INFO.MAT_NO)
 		        JOIN PATIENT ON(MAT_PT_INFO.PT_NO = PATIENT.PT_NO)
-		WHERE MAT_CONFIRM = 'N' 
+		WHERE MAT_CONFIRM = 'N' AND BEGIN_DT > SYSDATE
 		<if test="service != null">
 			AND MAT_PT_INFO.SERVICE IN 
 			<foreach collection="service" item="item" open="(" close=")" separator=",">
@@ -675,7 +687,7 @@
 	
 	<!-- 위의 간병인에 대한 평점 조회 -->
 	<select id="getCaregiverScoreList" resultType="map">
-		SELECT CAREGIVER.MEMBER_NO, NVL(TRUNC(AVG(REVIEW_SCORE)), 0) as avgReviewScore
+		SELECT CAREGIVER.MEMBER_NO, NVL(TRUNC(AVG(REVIEW_SCORE)), 0) as avgReviewScore, COUNT(REVIEW_SCORE) AS REVIEWCOUNT
 		FROM CAREGIVER 
 		       LEFT JOIN CARE_REVIEW ON(CAREGIVER.MEMBER_NO = CARE_REVIEW.MEMBER_NO)
 		WHERE CAREGIVER.MEMBER_NO IN

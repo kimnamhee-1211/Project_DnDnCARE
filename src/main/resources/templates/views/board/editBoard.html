@@ -69,7 +69,7 @@
             <form action="updateBoard.bo" method="post">
                 <input type="hidden" th:value="${b.boardNo}" name="boardNo"/>
                 <input type="hidden" th:value="${page}" name="page"/>
-	                <div class="p-4 m-5 mb-1 row">
+	                <div class="p-4 m-5 mb-1 row" th:if="${b.categoryNo!=99}">
 	                    <div class="col-md-3">
 	                        <label for="category" class="form-label">카테고리 : </label>
 	                        <select class="form-select" id="categoryNo" name="categoryNo" required>
@@ -129,13 +129,38 @@
 	                        <span>[[${b.boardCount}]]</span>
 	                    </div>
                 </div>
-                <div class="p-4 m-5 mt-1 row"  style="min-height:100%;">
-					 <textarea class="form-control" id="boardContent" name="boardContent" style="min-height:100%"  th:text="${b.boardContent}" required></textarea>
+                <div class="p-4 m-1 mb-8 row" th:if="${b.categoryNo==99}">
+                	<div>
+                		<input type="hidden" th:value="${b.boardNo}" name="boardNo"/>
+                		<input type="hidden" th:value="${b.categoryNo}" name="categoryNo"/>
+                		<input type="hidden" th:value="${b.areaNo}" name="areaNo"/>
+	            		<input type="hidden" th:value="${page}" name="page"/>
+                	</div>
+                    <div class="col-md-6">
+                    	<div class="col-md-6 mb-4" >
+	                   		<label for="title" class="form-label">제목 : </label>
+	                   	 	<input type="text" class="form-control" id="boardTitle" name="boardTitle" th:value="${b.boardTitle}">
+	                	</div>
+	                    <div class="col-md-3 mb-4">
+	                        <label for="createDate" class="form-label">작성일자 : </label>
+	                        <span>[[${b.boardCreateDate}]]</span>
+	                    </div>
+	                    <div class="col-md-3 mb-4">
+	                        <label for="updateDate" class="form-label">작성자 : </label>
+	                        <span>[[${b.memberNickName}]]</span>
+	                    </div>
+                    </div>
+               </div>
+                <div class="p-4 m-5 mt-1 row"  style="min-height:100%;" th:if="${b.categoryNo!=99}">
+					 <textarea class="form-control" id="boardContent" name="boardContent" style="min-height:100%; "th:text="${b.boardContent}" required></textarea>
+                </div>
+                <div class="p-4 m-5 mt-1 row"  style="min-height:100%;" th:if="${b.categoryNo==99}">
+					 <textarea class="form-control" name="boardContent" style="min-height:100%; height:500px;"  th:text="${b.boardContent}" required></textarea>
                 </div>
 
                 <div class="d-flex justify-content-center">
                     <button type="submit"  class="me-2 btn-write" style="color: white;background-color: #1E5F74;">수정하기</button>
-                    <button type="button" class=" btn-write" onclick="location.href='communityBoardList.bo'">취소하기</button>
+                    <button type="button" class=" btn-write" onclick="location.href='qnaBoardList.bo'">취소하기</button>
                 </div>
                 <br>
             </form>

@@ -57,3 +57,7 @@
 	text-decoration:none;
 	text-decoration: none;
 }
+
+body {
+    font-family: 'Pretendard-Regular' !important;
+}

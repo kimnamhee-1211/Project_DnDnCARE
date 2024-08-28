@@ -17,6 +17,7 @@ import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.matching.model.vo.Pay;
+import com.kh.dndncare.matching.model.vo.joinMatInfoMin;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
@@ -156,7 +157,7 @@ public interface MatchingService {
 	int CheckMatMemNo(int matNo);
 	
 	//환자 매칭 신청 취소
-	int matchingCancelP(int matNo, int memberNo);
+	int matchingCancelP(int matNo);
 	
 	//간병인 매칭 신청 취소
 	int matchingCancelC(int matNo,  int memberNo);
@@ -178,6 +179,9 @@ public interface MatchingService {
 	
 	//loginUser가 그룹 리더인지 아닌지 확인
 	String getGroupLeader(int matNo, int ptNo);
+	
+	//참여중인 공동간병 정보 
+	ArrayList<joinMatInfoMin> getMyJoinMat(int loginPt);
 
 
 }

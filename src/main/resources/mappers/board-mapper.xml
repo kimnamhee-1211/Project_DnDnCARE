@@ -24,13 +24,13 @@
 	<!-- 게시판 전체 조회 -->
 	<select id="selectBoardAllList">
 	    select b.board_No, c.category_Name, b.board_Title, m.member_NickName, a.area_Name, 
-	           b.board_create_date, b.board_count 
+	           b.board_create_date, b.board_count, m.member_category , b.category_no
 	    from board b
 	        join b_category c on(c.category_no=b.category_no)
 	        join member m on(m.member_no=b.member_no)
 	        join area a on(b.area_no=a.area_no)
 	    where b.board_status='Y' 
-	        and m.member_category=#{category}
+	        and (m.member_category='A' and b.category_no = 0) or m.member_category=#{category} 
 	    <if test="categoryNo != -1">
 	        and b.category_no = #{categoryNo}
 	    </if>
@@ -56,7 +56,7 @@
 	<!-- 게시판 상세조회 -->
 	<select id="selectBoard" resultType="Board">
 		select b.board_No, c.category_Name, b.board_Title, m.member_NickName, a.area_Name, b.board_create_date,
-			   b.board_update_date, b.board_count, b.board_content, b.category_No, b.area_no, m.member_no
+			   b.board_update_date, b.board_count, b.board_content, b.category_No, b.area_no, m.member_no, m.member_category
 		from board b
 			join b_category c on(c.category_no=b.category_no)
 			join member m on(m.member_no=b.member_no)
@@ -179,7 +179,7 @@
 	
 	<!-- 간병백과 컨텐츠 조회 : 일반 정보 -->
 	<select id="selectCareInformation" resultType="Board">
-		SELECT * FROM BOARD WHERE CATEGORY_NO = 7 AND BOARD_STATUS = 'Y' ORDER BY BOARD_UPDATE_DATE DESC
+		SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_NO) WHERE CATEGORY_NO = 7 AND BOARD_STATUS = 'Y' ORDER BY BOARD_UPDATE_DATE DESC
 	</select>
 	
 	<!-- 간병백과 컨텐츠 조회 : 첨부 정보 -->
@@ -198,10 +198,25 @@
 	<select id="searchCareInformation" resultType="Board">
 		SELECT * 
 		FROM BOARD
+				JOIN MEMBER USING(MEMBER_NO)
 		WHERE BOARD_STATUS = 'Y' AND CATEGORY_NO = 7 AND ${column} LIKE '%${searchContent}%'
 		ORDER BY BOARD_UPDATE_DATE DESC
 	</select>
 	
+	<!-- 문의게시판 페이지네이션 -->
+	<select id="getListCountQnA" resultType="_int">
+		select count(*)
+		from board
+		where category_no = 99 and board_status = 'Y'
+	</select>
+	
+	<!-- 문의게시판 -->
+	<select id="qnaBoardList" resultType="Board">
+		select *
+		from board
+			join member using(member_no)
+		where category_no = 99 and board_status = 'Y'
+	</select>
 	
 	
 	

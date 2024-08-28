@@ -15,11 +15,11 @@
 	</select>
 	
 	<select id="getChatRoomNo" resultType="_int">
-		select chat_room_no
+		select MAX(chat_room_no) as chat_room_no
 		from chat_room
 		where mat_no in (select mat_no
 					    from mat_pt_info
-					    where pt_no = #{matPtNo}) 
+					    where pt_no = #{relatedMatPtNo}) 
 	</select>
 	
 	<insert id="insertChatRoom" useGeneratedKeys="true" keyProperty="chatRoomNo">
@@ -32,8 +32,25 @@
 	
 	<insert id="insertChatRoomMember">
 	   INSERT ALL
-		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{memberNo}, #{chatRoomNo})
-		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{matMemberNo}, #{chatRoomNo})
+		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{memberNo}, #{finalChatRoomNo})
+		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{relatedMemberNo}, #{finalChatRoomNo})
+	   SELECT * FROM dual
+	</insert>
+	
+	<insert id="insertChatRoomMember2">
+	   INSERT ALL
+		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{cMemberNo}, #{finalChatRoomNo})
+		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{firstMemberNo}, #{finalChatRoomNo})
+		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{secondMemberNo}, #{finalChatRoomNo})
+	   SELECT * FROM dual
+	</insert>
+	
+	<insert id="insertChatRoomMember3">
+	   INSERT ALL
+		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{cMemberNo}, #{finalChatRoomNo})
+		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{firstMemberNo}, #{finalChatRoomNo})
+		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{secondMemberNo}, #{finalChatRoomNo})
+		  INTO chat_room_member (member_no, chat_room_no) VALUES (#{thirdMemberNo}, #{finalChatRoomNo})
 	   SELECT * FROM dual
 	</insert>
 	
@@ -42,7 +59,7 @@
 			select seq_chat_message.nextval from dual
 		</selectKey>
         INSERT INTO chat_room_message (chat_massage_no, chat_room_no, member_no, chat_content, read_count, write_date)
-        VALUES (#{chatMassageNo}, #{chatRoomNo}, #{memberNo}, #{chatContent}, #{readCount}, #{writeDate})
+        VALUES (#{chatMassageNo}, #{chatRoomNo}, #{memberNo}, #{chatContent}, #{readCount} + 1, sysdate)
     </insert>
 
     <select id="getMessagesByChatRoomNo" parameterType="int" resultType="ChatingRoomMessage">
@@ -75,8 +92,11 @@
     </select>
     
     <!-- 읽음표시 -->
-    <select id="getParticipantCount" resultType="int">
-        SELECT COUNT(*) FROM chat_room_member WHERE chat_room_no = #{chatRoomNo}
+   <select id="getParticipantCount" resultType="int">
+        SELECT pt_count 
+        FROM chat_room
+        	join matching using(mat_no) 
+        WHERE chat_room_no = #{chatRoomNo}
     </select>
 
     <update id="updateMessageReadCount">
@@ -85,18 +105,130 @@
         WHERE chat_massage_no = #{chatMessageNo}
     </update>
 
+
+
+    <select id="getMessageReadCount" resultType="int">
+        SELECT read_count
+        FROM chat_room_message
+        WHERE chat_massage_no = #{messageId}
+    </select>
+    
+	<update id="markMessagesAsRead">
+	    UPDATE chat_room_message
+	    SET read_count = read_count - 1
+	    WHERE chat_room_no = #{chatRoomNo}
+	      AND member_no != #{memberNo}
+	      AND read_count > 0
+	      AND chat_massage_no NOT IN (
+	          SELECT chat_massage_no
+	          FROM chat_room_message
+	          WHERE chat_room_no = #{chatRoomNo}
+	            AND read_by_members LIKE '%,' || #{memberNo} || ',%'
+	      )
+	</update>
+	
+	<update id="updateReadByMembers">
+	    UPDATE chat_room_message
+	    SET read_by_members = read_by_members || #{memberNo} || ','
+	    WHERE chat_room_no = #{chatRoomNo}
+	      AND member_no != #{memberNo}
+	      AND read_count > 0
+	      AND read_by_members NOT LIKE '%,' || #{memberNo} || ',%'
+	</update>
+	
+	<select id="getRemainingReadCount" resultType="int">
+	    SELECT read_count
+	    FROM chat_room_message
+	    WHERE chat_room_no = #{chatRoomNo}
+	    AND chat_massage_no = #{chatMessageNo}
+	</select>
+    
     <select id="getUnreadMessages" resultType="ChatingRoomMessage">
-        SELECT * FROM chat_room_message 
-        WHERE chat_room_no = #{chatRoomNo} 
-        AND member_no != #{memberNo} 
+        SELECT * 
+        FROM chat_room_message
+        WHERE chat_room_no = #{chatRoomNo}
+        AND member_no != #{memberNo}
         AND read_count > 0
     </select>
+    
+    <insert id="insertMessageRead">
+        INSERT INTO chat_room_message_read (chat_massage_no, member_no)
+        VALUES (#{chatMessageNo}, #{memberNo})
+    </insert>
 
-    <select id="getUnreadMessageCount" resultType="int">
-        SELECT COUNT(*) FROM chat_room_message 
-        WHERE chat_room_no = #{chatRoomNo} 
-        AND member_no != #{memberNo} 
-        AND read_count > 0
+    
+	<!-- <update id="markAsReadAndGetUpdatedMessages">
+	    UPDATE chat_room_message
+	    SET read_count = GREATEST(read_count - 1, 0)
+	    WHERE chat_room_no = #{chatRoomNo}
+	      AND member_no != #{memberNo}
+	      AND read_count > 0
+	    RETURNING chat_massage_no
+	</update> -->
+
+    <select id="getMessageReadCounts" resultType="map">
+        SELECT chat_massage_no, read_count
+        FROM chat_room_message
+        WHERE chat_room_no = #{chatRoomNo}
+        ORDER BY chat_massage_no ASC
+    </select>
+    
+    <select id="getPtCount">
+    	select pt_count
+    	from matching
+    	where mat_no = #{matNo}
+    </select>
+    
+    <select id="getMatPtNos" resultType="int">
+    	select pt_no
+		from mat_pt_info
+		where mat_no = #{matNo} 
+    </select>
+    
+    <select id="getMatMemberNos2" resultType="int">
+    	select member_no
+		from patient
+		where pt_no in(#{firstPtNo},#{secondPtNo})
+    </select>
+    
+    <select id="getMatMemberNos3" resultType="int">
+    	select member_no
+		from patient
+		where pt_no in(#{firstPtNo},#{secondPtNo},#{thirdPtNo})
+    </select>
+    
+    <select id="getChatCount" resultType="int">
+    	select count(CHAT_MASSAGE_NO)
+		from chat_room_message
+		where chat_room_no = #{finalChatRoomNo}
+    </select>
+    
+    <select id="getAlreadyChatRoomNo" resultType="_int">
+    	select NVL(MAX(chat_room_no), -1) as chat_room_no
+		from chat_room
+		    join chat_room_member using(chat_room_no)
+		where mat_no = #{matNo} and member_no in(#{memberNo},#{relatedMemberNo})
+    </select>
+    
+    <select id="getAlreadyChatRoomNo2" resultType="_int">
+    	select NVL(MAX(chat_room_no), -1) as chat_room_no
+		from chat_room
+		    join chat_room_member using(chat_room_no)
+		where mat_no = #{matNo} and member_no in(#{cMemberNo},#{firstMemberNo},#{secondMemberNo})
+    </select>
+    
+    <select id="getAlreadyChatRoomNo3" resultType="_int">
+    	select NVL(MAX(chat_room_no), -1) as chat_room_no
+		from chat_room
+		    join chat_room_member using(chat_room_no)
+		where mat_no = #{matNo} and member_no in(#{cMemberNo},#{firstMemberNo},#{secondMemberNo}, #{thirdMemberNo})
+    </select>
+    
+    <select id="getParticipantMemberNames" resultType="map">
+    	select member_name
+		from chat_room_member
+		    join member using(member_no)
+		where chat_room_no = #{finalChatRoomNo}
     </select>
 	
 </mapper>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>간병인 커뮤니티</title>
+<link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
+<style>
+    @font-face {
+        font-family: 'Pretendard-Regular';
+        src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+        font-weight: 400;
+        font-style: normal;
+    }
+    
+    body {
+        font-family: 'Pretendard-Regular';
+    }
+    
+    .hidden { display: none; }
+    .text-primary:hover { color: #55aa55; }
+    .badge-primary { 
+        background-color: #FCDAB7; 
+        color: black;    
+    }
+    
+    .btn-outline-area {
+        color: black;
+        border: 1px solid #1E5F74;
+        border-radius:10px; 
+        width: 80px;
+        margin: 10px 0;
+    }
+    
+    .btn-outline-area:hover, 
+    .btn-outline-area:active, 
+    .btn-outline-area:focus, 
+    .btn-outline-area.active {
+        color: black;
+        background-color: white;
+        border: 3px solid #1E5F74;
+        border-radius:10px; 
+    }
+    
+    .btn-check:checked + .btn-outline-area {
+        color: black;
+        background-color: white;
+        border: 3px solid #1E5F74;
+        font-weight: bold;
+        box-shadow: inset 2px 2px 2px 0px rgba(255,255,255,.5),
+                        7px 7px 20px 0px rgba(0,0,0,.1),
+                        4px 4px 5px 0px rgba(0,0,0,.1);
+    }
+
+    .btn-write {
+        height:40px;
+        font-size:16px;
+        font-weight: bold;
+        border-radius:5px; 
+        border:none;
+        background-color: #1E5F74;
+        color: white;
+        margin: 10px 0;
+        box-shadow: inset 2px 2px 2px 0px rgba(255,255,255,.5),
+                        7px 7px 20px 0px rgba(0,0,0,.1),
+                        4px 4px 5px 0px rgba(0,0,0,.1);
+    }
+    
+    .bg-board-main {
+        background: white;
+    }
+    
+    .bg-category-list {
+        background-color: white;
+        border: 0;
+        border-style: solid;
+        border-color: #cdf2c9;
+        border-radius: 15px; 
+    }
+    
+    .bh-area-list {
+        background-color: white;
+        border-color: #FFDAB9;
+        border-style: solid;
+        border-radius: 25px; 
+    }
+    
+    .bg-area-btn {
+        background-color: #FFDAB9;
+        border-radius: 25px; 
+    }
+    
+    .btn-search {
+        border: none;
+        background-color: #8DD986;
+        color: black;
+        width: 60px;
+    }
+    
+    .text-dark {
+        text-decoration: none;
+    }
+    
+    .guide-btn {
+		border-color: #1E5F74 !important;
+		color: black !important;
+		border: 1px solid #1E5F74 !important;
+	}
+
+	.guide-btn:hover, .guide-btn:focus,.guide-btn:active {
+		background-color: #1E5F74 !important;
+		border-color: #1E5F74 !important;
+		color:white !important;
+	}
+</style>
+</head>
+<body>
+    <div th:replace="~{common/navbar :: navbar}"></div>
+    
+    <main class="bg-board-main container p-5">
+        <div class="row">
+            <div class="col-md-3">
+                <div align="center" class="myInfo-Border m-4">
+                    <div class="m-4" style="border-bottom: 2px solid #133B5C;">
+                        <h1 class="h3 m-4 fw-bold text-center">고객센터</h1>
+                    </div>
+                    <div class="h4 m-2 p-2"><a class="nav-link my-menu" href="userGuide.bo">이용가이드</a></div>
+                    <div class="h4 m-2 p-2"><a class="nav-link my-menu" href="faqBoard.bo">FAQ</a></div>
+                    <div class="h4 m-2 p-2"><a class="nav-link my-menu" href="qnaBoardList.bo">문의게시판</a></div>
+                </div>
+            </div>
+            
+            <div class="col-md-9">
+                <div class="text-center m-4">
+                    <h1 class="text-center m-4" style="font-weight: bold;" id="target">문의게시판</h1>
+                </div>
+			<div class="row m-4 text-center">
+				<div class="col-sm-3 mb-2">
+					<button class="btn guide-btn" id="signUpBtn" style="width: 100%;">문의게시판</button>
+				</div>
+				<div class="col-sm-3 mb-2">
+					<button class="btn guide-btn" id="findIdPwBtn" style="width: 100%;">나의 문의내역</button>
+			</div>
+                <div class="d-flex justify-content-end mb-4">
+                    <th:block th:if="${session.loginUser != null}">
+                        <button type="button" class="btn-write" style="width:100px;" th:onclick="location.href='writeBoard.bo'">글쓰기</button>
+                    </th:block>
+                </div>
+
+                <div class="p-1">
+                    <table class="table table-bordered bg-white table-hover">
+                        <thead align="center">
+                            <tr>
+                                <th width="4%">번호</th>
+                                <th width="30%">제목</th>
+                                <th width="10%">작성자</th>
+                                <th width="20%">작성일</th>
+                                <th width="5%">답변</th>
+                            </tr>
+                        </thead>
+                        <tbody align="center">
+                            <tr th:each="q:${qnaList}">
+                                <td>[[${q.boardNo}]]</td>
+                                <td>[[${q.boardTitle}]]</td>
+                                <td>[[${q.memberNickName}]]</td>
+                                <td>[[${q.boardCreateDate}]]</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="d-flex justify-content-center align-items-center m-5">
+                    <nav aria-label="Standard pagination example">
+                        <ul class="pagination" th:with="loc=${loc}" style="margin: auto 0; color: black;">
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage-1})}" aria-label="Previous">
+                                    <span aria-hidden="true" style="color: black;">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}">
+                                <a class="page-link" th:href="@{${loc}(page=${p})}" style="color: black;">[[${p}]]</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage+1})}" aria-label="Next">
+                                    <span aria-hidden="true" style="color: black;">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                
+                <div class="p-1 hidden">
+                    <table class="table table-bordered bg-white table-hover">
+                        <thead align="center">
+                            <tr>
+                                <th width="4%">번호</th>
+                                <th width="30%">제목</th>
+                                <th width="10%">작성자</th>
+                                <th width="20%">작성일</th>
+                                <th width="5%">답변</th>
+                            </tr>
+                        </thead>
+                        <tbody align="center">
+                            <tr th:each="q:${qnaList}">
+                                <td>[[${q.boardNo}]]</td>
+                                <td>[[${q.boardTitle}]]</td>
+                                <td>[[${q.memberNickName}]]</td>
+                                <td>[[${q.boardCreateDate}]]</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                 
+            </div>
+        </div>
+    </main>
+    
+    <div th:replace="~{common/footer :: footer}"></div>
+
+    <script th:inline="javascript">
+        window.onload = () => {
+            const tbody = document.querySelector('tbody');
+            const tds = tbody.querySelectorAll('td');
+            for (const td of tds) {
+                td.addEventListener('click', function(){
+                    const trTds = this.parentElement.querySelectorAll('td');
+                    const boardId = trTds[0].innerText;
+                    location.href="selectBoard.bo?bId=" + boardId + "&page=" + /*[[${pi.currentPage}]]*/1;
+                });
+            }
+        };
+    </script>
+</body>
+</html>

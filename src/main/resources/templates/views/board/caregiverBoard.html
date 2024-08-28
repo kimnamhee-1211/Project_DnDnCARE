@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>간병인 커뮤니티</title>
 <style>
    @font-face {
     font-family: 'Pretendard-Regular';
@@ -17,16 +17,19 @@
 	
     .hidden { display: none; }
     .text-primary:hover { color: #55aa55; }
-    .badge-primary { background-color: #FCDAB7; }
+    .badge-primary { 
+    	background-color: #FCDAB7; 
+		color: black;	
+	}
     
     .btn-outline-area {
-    color: black;
-    border: 1px solid #1E5F74;
-    border-radius:10px; 
-    width: 80px;
-    margin : 10px 0;
-    
-	}
+	    color: black;
+	    border: 1px solid #1E5F74;
+	    border-radius:10px; 
+	    width: 80px;
+	    margin : 10px 0;
+	    
+		}
 	
 	.btn-outline-area:hover, 
 	.btn-outline-area:active, 
@@ -99,7 +102,7 @@
         <div class="row h-50 p-3">
 
       	  <div class="text-center m-4">
-            <h1 class="text-center m-4" style="font-weight: bold;" id="target">로고로고 커뮤니티</h1>
+            <h1 class="text-center m-4" style="font-weight: bold;" id="target">간병인 커뮤니티</h1>
            </div>
             <br><br>
 
@@ -177,14 +180,29 @@
                         </tr>
                     </thead>
                     <tbody align="center">
-                        <tr class="table" th:each="b:${list}" th:if="${list != null}">
+                        <tr class="table" th:each="b:${list}" th:if="${list != null && b.categoryNo !=99}">
                             <td th:text="${b.boardNo}">1</td>
                                 <td th:text="${b.categoryName}">카테고리</td>
                                 <td>
-                                    <span th:text="${b.boardTitle}">제목</span>
+                                <th:block th:if="${b.categoryNo == 0}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-megaphone-fill" viewBox="0 0 16 16">
+									  <path d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25 25 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009l.496.008a64 64 0 0 1 1.51.048m1.39 1.081q.428.032.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a66 66 0 0 1 1.692.064q.491.026.966.06"/>
+									</svg>
+									<span>[[${b.boardTitle}]]</span>
+                                </th:block>
+                                <th:block th:unless="${b.categoryNo == 0}">
+									<span th:text="${b.boardTitle}"></span>
+                                </th:block>
                                     <span th:if="${replyCounts != 0}" th:text="${replyCounts[b.boardNo]}" class="badge badge-primary rounded-pill">0</span>
                                 </td>
-                                <td th:text="${b.memberNickName}">작성자</td>
+                                <th:block th:if="${b.memberCategory == 'A'}">
+	                                <td>
+		                                <img width="25" height="25" src="https://img.icons8.com/color/48/crown.png" alt="crown"/>관리자
+									</td>
+                                </th:block>
+                                <th:block th:if="${b.memberCategory == 'C'}">
+	                                <td>[[${b.memberNickName}]]</td>
+                                </th:block>
                                 <td th:text="${b.areaName}">지역</td>
                                 <td th:text="${b.boardCreateDate}">작성일</td>
                                 <td th:text="${b.boardCount}">조회수</td>
@@ -306,12 +324,5 @@
 	        
 	        
     	}
-    	 function openChatPopup() {
-             var width = 500;
-             var height = 700;
-             var left = (screen.width - width) / 2;
-             var top = (screen.height - height) / 2;
-             window.open('chat.bo', 'chatTest', 'width=' + width + ', height=' + height + ', top=' + top + ', left=' + left);
-         }
     </script>
 </html>

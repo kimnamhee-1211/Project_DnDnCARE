@@ -2,6 +2,7 @@ package com.kh.dndncare.chating.model.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,9 +19,9 @@ public interface ChatingMapper {
 
 	int insertChatRoom(ChatingRoom chatingRoom);
 
-	int insertChatRoomMember(@Param("chatRoomNo") int chatRoomNo,@Param("memberNo") int memberNo, @Param("matMemberNo") int matMemberNo);
+	int insertChatRoomMember(@Param("finalChatRoomNo") Integer finalChatRoomNo,@Param("memberNo") int memberNo, @Param("relatedMemberNo") int relatedMemberNo);
 
-	int getChatRoomNo(int matPtNo);
+	int getChatRoomNo(Integer relatedMatPtNo);
 	
 	void insertMessage(ChatingRoomMessage message);
 	
@@ -42,6 +43,40 @@ public interface ChatingMapper {
     // 읽지 않은 메시지 수 조회
     int getUnreadMessageCount(@Param("chatRoomNo") int chatRoomNo, @Param("memberNo") int memberNo);
     
+    int getMessageReadCount(int messageId);
 
+	void markMessagesAsRead(@Param("chatRoomNo") int chatRoomNo, @Param("memberNo") int memberNo);
 
+	List<Integer> markAsReadAndGetUpdatedMessages(@Param("chatRoomNo") int chatRoomNo, @Param("memberNo") int memberNo);
+	
+	int getRemainingReadCount(@Param("chatRoomNo") int chatRoomNo, @Param("chatMessageNo") int chatMessageNo);
+
+	List<Map<String, Object>> getMessageReadCounts(int chatRoomNo);
+
+	int getPtCount(Integer matNo);
+
+	List<Integer> getMatPtNos(Integer matNo);
+
+	int insertChatRoomMember2(@Param("finalChatRoomNo") int finalChatRoomNo, @Param("cMemberNo") int cMemberNo, @Param("firstMemberNo") Integer firstMemberNo , @Param("secondMemberNo") Integer secondMemberNo);
+
+	int insertChatRoomMember3(@Param("finalChatRoomNo") int finalChatRoomNo, @Param("cMemberNo") int cMemberNo, @Param("firstMemberNo") Integer firstMemberNo , @Param("secondMemberNo") Integer secondMemberNo,
+							  @Param("thirdMemberNo") Integer thirdMemberNo);
+
+	List<Integer> getMatMemberNos2(@Param("firstPtNo") Integer firstPtNo, @Param("secondPtNo") Integer secondPtNo);
+
+	List<Integer> getMatMemberNos3(@Param("firstPtNo") Integer firstPtNo, @Param("secondPtNo") Integer secondPtNo, @Param("thirdPtNo") Integer thirdPtNo);
+
+	int getChatCount(Integer finalChatRoomNo);
+
+	void updateReadByMembers(@Param("chatRoomNo") int chatRoomNo, @Param("memberNo") int memberNo);
+
+	int getAlreadyChatRoomNo(@Param("matNo") Integer matNo, @Param("memberNo") int memberNo, @Param("relatedMemberNo") int relatedMemberNo);
+
+	Integer getAlreadyChatRoomNo2(@Param("matNo") Integer matNo, @Param("firstMemberNo") int firstMemberNo, @Param("secondMemberNo") int secondMemberNo, @Param("cMemberNo") int cMemberNo);
+
+	Integer getAlreadyChatRoomNo3(@Param("matNo") Integer matNo, @Param("firstMemberNo") int firstMemberNo, @Param("secondMemberNo") int secondMemberNo, @Param("thirdMemberNo")int thirdMemberNo,
+			@Param("cMemberNo") int cMemberNo);
+
+	List<String> getParticipantMemberNames(Integer finalChatRoomNo);
+ 
 }

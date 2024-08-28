@@ -13,21 +13,23 @@
 		    <div class="navbar-logo">
 		    
 		    	<a href="home.do" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a>
-	            <a href="home.do"><!-- <img th:src="@{/image/logo-removebg.png}" alt="로고" id="navbar-logo"> --></a>
 	        </div>
 		    <th:block th:if="${session.loginUser !=null && session.loginUser.memberCategory !='A'}">
 			    <div class="navbar1 d-flex justify-content-evenly" id="navbarNav1">
 			    		<th:block th:if="${ session.loginUser.memberCategory =='C'}">
 					    	<ul class="navbar-nav ms-auto fs-4">
 						    	<li class="nav-item">
-						          	<a class="nav-link" href="#">일감 찾기</a>
+						          	<a class="nav-link" href="moreWorkInfo.me">일감 찾기</a>
 						        </li>
 						    	<li class="nav-item">
 						          	<a class="nav-link" href="communityBoardList.bo">간병인 게시판</a>
 						        </li>
 						        <li class="nav-item">
-						          <a class="nav-link" href="#">간병 백과</a>
+						          <a class="nav-link" href="careInformation.bo">간병 백과</a>
 						        </li>					
+						        <li class="nav-item">
+						          <a class="nav-link" href="userGuide.bo">고객 센터</a>
+						        </li>
 					       </ul>
 				       </th:block>
 				       <th:block th:if="${ session.loginUser.memberCategory =='P'}">
@@ -44,6 +46,9 @@
 						        <li class="nav-item">
 						          <a class="nav-link" href="careInformation.bo">간병 백과</a>
 						        </li>
+						        <li class="nav-item">
+						          <a class="nav-link" href="userGuide.bo">고객 센터</a>
+						        </li>
 					       </ul>
 				       </th:block>
 			    </div>
@@ -56,7 +61,7 @@
 				        </li>
 				        <th:block th:if="${session.loginUser.memberCategory == 'A'}">
 					        <li class="nav-item">
-					          <a class="nav-link" href="#">관리자 페이지</a>
+					          <a class="nav-link" href="adminMain.adm">관리자 페이지</a>
 					        </li>
 				        </th:block>
    				        <th:block th:unless="${session.loginUser.memberCategory == 'A'}">

@@ -52,5 +52,6 @@ public class Patient {
 	private int money; // MONEY
 	private String ptDisease;
 	private int ptCount;
+	private String groupLeader;
 	// 자동추천 후보에 대한 정보 조회를 위한 필드값 추가(끝)
 }

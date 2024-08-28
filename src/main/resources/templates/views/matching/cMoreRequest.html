@@ -18,10 +18,9 @@
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	
 	<div id="wrap"  class="align-items-center">
-	                
-	        <!-- 남희 좌측 하단 -->
+
 	        <div class="mx-auto" style="width:800px;"><!--매칭정보 : 가로 500, 세로 700-->
-	        	<div class="d-flex" style="border-bottom:2px solid #8dd986;">
+	        	<div class="d-flex" style="border-bottom:2px solid #1D2D50;">
 					<span style="margin-top:10px;font-size:20px;">[[${loginUserName}]]님에게 들어온 매칭 신청</span>
             	</div>
             	<br/>
@@ -53,13 +52,7 @@
 	        <div><!--공백 --></div>
 	
 	    
-	    <!-- 사이드 버튼 -->
-	    <div id="myPresentMatching">
-	        <a class="navbar-brand align-middle" href="goMyMatchingC.mc">
-	            <img src="image/icon/deal.png">
-	            나의 매칭 현황
-	        </a>
-	    </div>
+ 	<div th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
 	    
 	    
 
