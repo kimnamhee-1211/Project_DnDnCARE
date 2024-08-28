@@ -887,7 +887,7 @@ public class MemberController {
 	public String enroll1View(HttpSession session) {
 
 		// 멤버 테이블만 있고 환자/ 간병인 테이블에 insert됮 않은 경우 멤버 테이블 삭제 -> 회원가입 도충 탈출 등
-		String memberCategory = (String) session.getAttribute("tempMemberCategory");
+		String memberCategory = (String)session.getAttribute("tempMemberCategory");
 
 		String table = "";
 		if (memberCategory.equals("C")) {
