@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
@@ -49,9 +50,10 @@ public class MemberServiceImpl implements MemberService {
 	
 	
 	//// 멤버 테이블만 있고 환자/ 간병인 테이블에 insert됮 않은 경우 멤버 테이블 삭제
+	@Transactional
 	@Override
-	public int noInfomemberdle() {
-		return mMapper.noInfomemberdle();
+	public int noInfomemberdle(int memberNo) {
+		return mMapper.noInfomemberdle(memberNo);
 	}
 
 	//아이디 중복체크
@@ -547,6 +549,12 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int getCountPt(int matNo) {
 		return mMapper.getCountPt(matNo);
+	}
+
+
+	@Override
+	public Integer getDelMemberNo() {
+		return mMapper.getDelMemberNo();
 	}
 
 }

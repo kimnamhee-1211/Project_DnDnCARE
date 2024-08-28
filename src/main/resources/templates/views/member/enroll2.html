@@ -234,7 +234,7 @@
 					isValid = false;				
 				}
 				
-				if(minMoneyInput.value > maxMoneyInput.value){
+				if(Number(minMoneyInput.value) > Number(maxMoneyInput.value)){
 					money.innerText = "최소 금액은 최대 금액보다 작아야 합니다.";
 					isValid = false;
 				}else{

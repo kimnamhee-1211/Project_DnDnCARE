@@ -337,7 +337,7 @@ public class MatchingController {
 		model.addAttribute("hospital", hospital);
 		
 		//하나만 확인해보자
-		logger.info(" 잘 들어가지니? ");
+		//logger.info(" 잘 들어가지니? ");
 		
 		return "joinMatchingEnroll";
 	}
@@ -478,6 +478,9 @@ public class MatchingController {
 			re.addAttribute("msg", "공동간병 등록이 완료되었습니다.");
 			
 			logger.info("matNo : " + jm.getMatNo() + ",공동간병");
+			session.setAttribute("logMatNo",jm.getMatNo() );
+			session.setAttribute("logMatService","공동간병");
+			
 			return "redirect:joinMatching.jm";
 		}
 		throw new MemberException("공동간병 그룹 등록 실패");
@@ -694,8 +697,7 @@ public class MatchingController {
 			       System.out.println("로그에 저장할 정보"+logInfo);
 			        
 			     logger.info(logInfo);
-			     logger.info("매칭번호 :" + matPatientInfoList.getMatNo() + ":개인간병");
-			        
+			   
 			    }
         }
 		
@@ -1241,13 +1243,7 @@ public class MatchingController {
 		}
 		
 		//공동간병 참여중인 내역
-		ArrayList<joinMatInfoMin> myJoinMat = mcService.getMyJoinMat(loginPt);
-			
-		
-		
-		
-		
-		
+		ArrayList<joinMatInfoMin> myJoinMat = mcService.getMyJoinMat(loginPt);						
 		
 		model.addAttribute("myMatching", myMatching);
 		model.addAttribute("myMatchingW", myMatchingW);
