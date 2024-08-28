@@ -84,54 +84,53 @@
     
     <div class="content-wrapper  p-4 m-4">
         <main class="container" >
-            <h1 class="text-center">글 조회</h1>
+        	<div class="h1 p-2"><a href="home.do" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a></div>
             <hr>
             <div class="p-5">
 	            <form action="submitPost" method="post" id=detailBoardForm>
 	            		<input type="hidden" th:value="${b.boardNo}" name="boardNo"/>
 	            		<input type="hidden" th:value="${b.categoryNo}" name="categoryNo"/>
 	            		<input type="hidden" th:value="${page}" name="page"/>
-	            		 <div class="m-5 p-3 mt-1 row" style="border:1px solid lightgray;">
-			                <div class="col-md-13 p-2">
-					            <label for="title" class="form-label">제목 : </label>
-					            <span>[[${b.boardTitle}]]</span>
-					        </div>
-					        <div class="col-md-4 p-2">
-					            <label for="writer" class="form-label">작성자 : </label>
-					            <th:block th:unless="${b.memberCategory == 'A'}">
-					            	<span>[[${b.memberNickName}]]</span>
-					            </th:block>
-					            <th:block th:if="${b.memberCategory == 'A'}">
-					            	<span><img width="25" height="25" src="https://img.icons8.com/color/48/crown.png" alt="crown"/>관리자</span>
-					            </th:block>
-					        </div>
-		                    <div class="col-md-4 p-2" th:if="${b.categoryNo != 99}">
-		                        <label for="category" class="form-label" >카테고리 : </label>
-		                        <span>[[${b.CategoryName}]]</span>
-		                    </div>
-		                    <div class="col-md-4 p-2" th:if="${b.categoryNo != 99}">
-		                        <label for="location" class="form-label">지역 : </label>
-		                        <span>[[${b.AreaName}]]</span>
-		                    </div>
-		                    <div class="col-md-4 p-2" th:if="${b.categoryNo != 99}">
-					            <label for="recommendCount" class="form-label">추천수 : </label>
-					            <span>[[${boardLikeCount}]]</span>
-					        </div>
-		                    <div class="col-md-4 p-2" >
-		                    	<label for="createDate" class="form-label">작성일자 : </label>
-		                    	<span>[[${b.boardCreateDate}]]</span>
-		                    </div>
-		                    <div class="col-md-4 p-2" th:if="${b.categoryNo != 99}">
-		                    	<label for="updateDate" class="form-label">수정일자 : </label>
-		                    	<span>[[${b.boardUpdateDate}]]</span>
-		                    </div>
-		                    <div class="col-md-4 p-2" th:if="${b.categoryNo != 99}">
+	            		
+	            		 <div class="m-5 p-3 mt-1 row">
+	            		 	<div class="p-2 d-flex justify-content-between" th:if="${b.categoryNo != 99}">
+		                        <div>
+			                        <label for="category" class="form-label" >카테고리 > </label>
+			                        <span>[[${b.CategoryName}]]</span>
+			                        <label for="location" class="form-label p-2">지역 > </label>
+			                        <span class="">[[${b.AreaName}]]</span>
+		                        </div>
+		                        <div class="p-2" th:if="${b.categoryNo != 99}">
 		                    	<label for="count" class="form-label">조회수 : </label>
 		                    	<span>[[${b.boardCount}]]</span>
 		                    </div>
+		                    </div>
+			                <div class="col-md-13 p-2 d-flex justify-content-between" style="border-top:1px solid lightgray;border-bottom:1px solid lightgray;">
+					            <span class="p-2"style="font-size: 32px"><b>[[${b.boardTitle}]]</b></span>
+					            <div class="p-2">
+						            <label for="writer" class="form-label">작성자 : </label>
+						            <th:block th:unless="${b.memberCategory == 'A'}">
+						            	<span>[[${b.memberNickName}]]</span>
+						            </th:block>
+						            <th:block th:if="${b.memberCategory == 'A'}">
+						            	<span><img width="25" height="25" src="https://img.icons8.com/color/48/crown.png" alt="crown"/>관리자</span>
+						            </th:block>
+					        	</div>
+					        	
+					        </div>
+					        <div align="right">
+		                    <div class="col-md-4" >
+		                    	<label for="createDate" class="form-label">작성일자 : </label>
+		                    	<span>[[${b.boardCreateDate}]]</span>
+		                    </div>
+		                    <div class="col-md-4" th:if="${b.categoryNo != 99}">
+		                    	<label for="updateDate" class="form-label">수정일자 : </label>
+		                    	<span>[[${b.boardUpdateDate}]]</span>
+		                    </div>
+		                    </div>
 		                </div>
-		                <div class="m-5 row">
-		                    <div class="form-control" id="boardContent"  style="min-height:100px;" th:utext="${b.boardContent}">
+		                <div class="m-5 row" style="border-top:3px solid #133B5C">
+		                    <div class="	" id="boardContent"  style="min-height:100px;" th:utext="${b.boardContent}">
 		                    </div>
 		                </div>
 		                
