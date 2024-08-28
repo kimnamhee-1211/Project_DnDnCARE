@@ -264,8 +264,8 @@
 	<select id="matPtInfoToCaregiver" resultType="MatMatptInfoPt">
 		select *
 		from matching
-			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
-			join patient on(mat_pt_info.pt_no = patient.pt_no)	
+			left join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
+			left join patient on(mat_pt_info.pt_no = patient.pt_no)	
 			left join hospital on(hospital.hospital_no = matching.hospital_no)
 			left join matching_date on(matching.mat_no = matching_date.mat_no) 		
 		where matching.mat_no = #{matNo}

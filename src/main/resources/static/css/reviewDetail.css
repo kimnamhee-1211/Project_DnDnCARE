@@ -316,7 +316,16 @@ input {
 }
 
 
-
+.btn-dndn{	
+	color: white !important;
+	background-color: #1D2D50 !important;
+	border: none;
+	width: 200px;
+	height: 40px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
 
 
 
