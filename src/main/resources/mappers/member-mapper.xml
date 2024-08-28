@@ -14,15 +14,20 @@
 	  	from member
 	  	where member_status = 'N' and member_id=#{memberId}
 	  </select>
-	  
-	  
-	  <!-- 회원가입 중도탈출 멤버 데이터 삭제 -->
-	  <update id="noInfomemberdle">
-	  	update member
-	  	set member_status = 'Y'
+	  	  
+	  <select id="getDelMemberNo" resultType="int">
+	  	select member_no
+	  	from member
 	  	where member_no NOT IN (select member_no from caregiver union select member_no from patient)	 
 	  			and member_category != 'A'
-	  </update>
+	  </select>
+	  	  
+	  
+	  <!-- 회원가입 중도탈출 멤버 데이터 지우기 -->
+	  <delete id="noInfomemberdle" >
+	  	delete member
+	  	where member_no = #{memberNo}
+	  </delete>
 	  	  
 	  
 	  <!-- 아이디 중복 확인 -->
@@ -381,8 +386,10 @@
 	<select id="selectCareGiverList" resultType="CareGiver">	<!-- 간병인정보를 모두 불러온다.(재가공할거지만) -->
 		select *
 		from careGiver
-			join member using(member_no)
-		where member_status = 'N'
+			left join member on(careGiver.member_no = member.member_no)
+            
+			where member_status = 'N'
+		ORDER BY 2 asc, 1 desc
 	</select>
 
 	

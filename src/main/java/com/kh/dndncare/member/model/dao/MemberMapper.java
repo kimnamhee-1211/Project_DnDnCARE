@@ -28,7 +28,7 @@ public interface MemberMapper {
 
 	Member login(Member m);
 
-	int noInfomemberdle();
+	int noInfomemberdle(int memberNo);
 	
 	int idCheck(String id);
 	
@@ -109,11 +109,7 @@ public interface MemberMapper {
 
 	ArrayList<HashMap<String, Integer>> searchCaregiverCategoryMNoList(ArrayList<Integer> cNoList);
 
-	ArrayList<CareGiver> searchCaregiverList(RowBounds rowBounds, ArrayList<Integer> resultCaregiverNoList);
-
-
-
-	
+	ArrayList<CareGiver> searchCaregiverList(RowBounds rowBounds, ArrayList<Integer> resultCaregiverNoList);	
 
 	Patient selectPatient(int memberNo);
 
@@ -206,5 +202,7 @@ public interface MemberMapper {
 	int getCountPendingMe(@Param("matNo") int matNo, @Param("memberNo") int memberNo);
 
 	int getCountPt(int matNo);
+
+	Integer getDelMemberNo();
 
 }

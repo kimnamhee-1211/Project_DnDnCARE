@@ -290,24 +290,28 @@ public class MemberController {
 	@PostMapping("login.me")
 	public String login(@ModelAttribute Member m, Model model, RedirectAttributes ra) {
 		Member loginUser = mService.login(m);
-
-		if (bCrypt.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
-
-			model.addAttribute("loginUser", loginUser);
-
-			if (loginUser.getMemberCategory().equalsIgnoreCase("C")) {
-				ra.addAttribute("memberNo", loginUser.getMemberNo());
-
-				return "redirect:caregiverMain.me";
-			} else if (loginUser.getMemberCategory().equalsIgnoreCase("P")) {
-
-				return "redirect:patientMain.me";
+		
+		if(loginUser != null) {
+			if (bCrypt.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
+	
+				model.addAttribute("loginUser", loginUser);
+	
+				if (loginUser.getMemberCategory().equalsIgnoreCase("C")) {
+					ra.addAttribute("memberNo", loginUser.getMemberNo());
+	
+					return "redirect:caregiverMain.me";
+				} else if (loginUser.getMemberCategory().equalsIgnoreCase("P")) {
+	
+					return "redirect:patientMain.me";
+				} else {
+					return "redirect:adminMain.adm";
+				}
+	
 			} else {
-				return "redirect:adminMain.adm";
+				throw new MemberException("로그인을 실패하였습니다.");
 			}
-
-		} else {
-			throw new MemberException("로그인을 실패하였습니다.");
+		}else {
+			throw new MemberException("아이디 또는 비밀번호를 잘못 입력하셨습니다");
 		}
 
 //		if(loginUser !=null) { // 회원가입 기능 구현 전 암호화안한 테스트용
@@ -883,17 +887,11 @@ public class MemberController {
 	public String enroll1View(HttpSession session) {
 
 		// 멤버 테이블만 있고 환자/ 간병인 테이블에 insert됮 않은 경우 멤버 테이블 삭제 -> 회원가입 도충 탈출 등
-		String memberCategory = (String) session.getAttribute("tempMemberCategory");
-
-		String table = "";
-		if (memberCategory.equals("C")) {
-			table = "caregiver";
-		} else {
-			table = "patient";
+		Integer memberNoDel = mService.getDelMemberNo();
+		System.out.println(memberNoDel);
+		if(memberNoDel != null) {
+			int resultNoInfo = mService.noInfomemberdle(memberNoDel);
 		}
-
-		int resultNoInfo = mService.noInfomemberdle();
-		System.out.println(resultNoInfo);
 
 		return "enroll1";
 	}
@@ -1285,6 +1283,13 @@ public class MemberController {
 				model.addAttribute("avgScore", avgScore);
 				model.addAttribute("sumScore", sumScore);
 				model.addAttribute("countScore", countScore);
+				
+				CareGiver cg = mService.selectCareGiver(loginUser.getMemberNo());
+				Double avgReviewScore = mService.avgReviewScore2(cg.getMemberNo());
+				cg.setAvgReviewScoreDouble(avgReviewScore);
+				model.addAttribute("cg",cg);
+				
+				
 				return "myInfoMatchingReview";
 
 			case 'P':
@@ -2753,23 +2758,13 @@ public class MemberController {
 																	// memberNational=null, memberPay=null,
 																	// memberUpdateDate=null, memberRealAge=69)]
 				ArrayList<HashMap<String, Object>> infoList = mService.selectCaregiverInfo(memberNoList);
-				// [{S_CATEGORY=병원돌봄, L_CATEGORY=service, MEMBER_NO=85}, {S_CATEGORY=가정돌봄,
-				// L_CATEGORY=service, MEMBER_NO=85}, {S_CATEGORY=동행서비스, L_CATEGORY=service,
-				// MEMBER_NO=85}, {S_CATEGORY=3, L_CATEGORY=career, MEMBER_NO=85},
-				// {S_CATEGORY=섬망, L_CATEGORY=disease, MEMBER_NO=85}, {S_CATEGORY=기저귀 케어,
-				// L_CATEGORY=disease, MEMBER_NO=85}, {S_CATEGORY=간병사, L_CATEGORY=license,
-				// MEMBER_NO=85}, {S_CATEGORY=요양보호사, L_CATEGORY=license, MEMBER_NO=85}]
 
 				// 해당 매칭에 대한 정보 조회 : 매칭정보 : 매칭번호, 시작날짜, 종료날짜, 시작시간, 종료시간, 금액, 시간제날짜, 간병인의 회원번호
 				// MATCHING : MAT_NO, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MONEY, MEMBER_NO
 				// MATCHING_DATE : MAT_DATE
 				eList = mService.patientCalendarEvent(matNoList);
-				// [CalendarEvent(matNo=69, title=null, start=null, end=null, money=150000,
-				// hospitalNo=0, hospitalAddress=null, hospitalName=null, beginTime=12:00,
-				// endTime=15:00, matMode=0, matchingType=null, ptCount=0, matAddressInfo=null,
-				// ptNo=0, matDate=2024-08-09,2024-08-16,2024-08-15,2024-08-22,2024-08-23,
-				// beginDt=2024-08-09, endDt=2024-08-23, careGiverNo=85)]
 
+				
 				for (Member m : mList) {
 					String career = "";
 					String license = "";
@@ -2797,7 +2792,8 @@ public class MemberController {
 		}
 
 		JSONArray array = new JSONArray();
-
+		
+		
 		if (!eList.isEmpty()) {
 			for (CalendarEvent c : eList) {
 				String[] endDtArr = String.valueOf(c.getEndDt()).split("-");
@@ -2905,7 +2901,6 @@ public class MemberController {
 					}
 				}
 			}
-			System.out.println("명훈님꺼 확인하기 " + array.toString());
 			return array.toString();
 		} else {
 			return null;
@@ -2984,11 +2979,15 @@ public class MemberController {
 		// System.out.println(code);
 		Member m = mService.selectSocialLogin(code); // loginUser
 		if (m == null) { // 검사해서 없으면 회원가입창으로
-			session.setAttribute("code", code);
+			session.setAttribute("code", code);	
 
 			return "redirect:enroll1View.me";
 		} else { // 검사해서 있으면 바로 로그인하기
-			model.addAttribute("loginUser", m);
+			
+			Member loginUser = mService.login(m); 
+			
+			//model.addAttribute("loginUser", m);
+			model.addAttribute("loginUser", loginUser);
 			logger.info("소셜 로그인 아이디 : " + m.getMemberId());
 			if (m.getMemberCategory().equalsIgnoreCase("C")) {
 				ra.addAttribute("memberNo", m.getMemberNo());
@@ -3105,7 +3104,7 @@ public class MemberController {
 	// 프로필 파일 추가하기
 	public String saveProfileImage(MultipartFile file) {
 
-		String renamePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		String renamePath = "C:\\\\uploadFiles\\\\profileImage\\";
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		int ranNum = (int) (Math.random() * 100000);
@@ -3128,22 +3127,13 @@ public class MemberController {
 
 	// 프로필 파일 삭제하기
 	public void deleteFile(String fileName) {
-		String savePath = "\\\\192.168.40.37\\sharedFolder\\dndnCare\\profile\\";
+		String savePath = "C:\\\\uploadFiles\\\\profileImage\\";
 		File f = new File(savePath + fileName);
 		if (f.exists()) {
 			f.delete();
 		}
 	}
 
-	@GetMapping("nn.me")
-	public String nn() {
-
-		System.out.println("잠깐 디비 접근 용");
-		int mId = 115;
-		mService.nn(mId);
-
-		return "login";
-	}
 
 	@PostMapping("deleteMember.me")
 	public String deleteMember(@RequestParam("password") String password, HttpSession session,
@@ -3188,7 +3178,7 @@ public class MemberController {
 	public void loginInfo(HttpSession session, HttpServletResponse response) {
 
 		Member loginUser = (Member) session.getAttribute("loginUser");
-
+		
 		String memberCategory = loginUser.getMemberCategory();
 
 		System.out.println(memberCategory);

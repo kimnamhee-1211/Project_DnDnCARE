@@ -18,6 +18,7 @@ import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.matching.model.vo.Pay;
+import com.kh.dndncare.matching.model.vo.joinMatInfoMin;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
@@ -150,6 +151,8 @@ public interface MatchingMapper {
 
 	String getGroupLeader(@Param("matNo") int matNo, @Param("ptNo") int ptNo);
 
+	ArrayList<joinMatInfoMin> getMyJoinMat(int loginPt);
+	
 	Integer getHospitalNo(String hospitalName);
 
 	int insertHospital(@Param("hospitalName")String hospitalName, @Param("hospitalAddress") String hospitalAddress);

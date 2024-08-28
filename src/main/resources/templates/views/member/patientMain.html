@@ -11,9 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>	<!-- 결제 -->
-    
     <style>
     	.fc{width:500px !important; height:500px !important; } 
+    	.fc-day-sun a { color: red; }
+    	.fc-day-sat a { color: blue; }
+    	.fc-day-mon a, .fc-day-thu a, .fc-day-fri a, .fc-day-tue a, .fc-day-wed a { color: black;}
     </style>
 </head>
 <body>
@@ -26,9 +28,9 @@
 		
 		<div id="upperLeftContents">
 			<div style="height:270px;"><!-- 결제 요청 카드 -->
-				<div class="p-2" style="margin:0;"th:unless="${payCount != 0}">[[${session.loginUser.memberName}]]님! 현재 결제 건은 없습니다! </div>
+				<div class="p-2" style="margin:0; font-size:20px"th:unless="${payCount != 0}">[[${session.loginUser.memberName}]]님! 현재 결제 건은 없습니다! </div>
 					<th:block th:if="${payCount != 0}">
-						<div class="p-2"style="margin:0;" id="viewPayList">[[${session.loginUser.memberName}]]님! 결제 요청 건이 [[${payCount}]]개 있어요<span class="newIcon"> new!</span></div>
+						<div class="p-2"style="margin:0;font-size:20px" id="viewPayList">[[${session.loginUser.memberName}]]님! 결제 요청 건이 [[${payCount}]]개 있어요<span class="newIcon"> new!</span></div>
 						<div class="pay-content">
 							<th:block th:each="m : ${mc}" th:if="${m.matConfirm == 'W'}">
 								<table class="ml-4 mr-4 table" >
@@ -77,7 +79,7 @@
 	                        <td th:if="${c.caregiverRealAge >= 0}">[[${c.caregiverRealAge}]]</td>
 	                        <td>[[${c.caregiverAddress}]]</td>
 	                        <td>[[${c.haveLicense == undefined ? '-' : c.haveLicense}]]</td>
-	                        <td>[[${c.minMoney}]]원</td>
+	                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
                      	</tr>
                      	
                  	</tbody>
@@ -105,7 +107,10 @@
             	<br/>
 	            <table class="table mainTable matCard">
 	                <thead>
-	                    <tr>
+	                    <tr th:if="${requestCaregiver.empty}">
+	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님 반가워요! 아직 매칭을 원하는 분이 없어요!</th>
+	                    </tr>
+	                    <tr th:if="${!requestCaregiver.empty}">
 	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님과의 매칭을 원하는 분들이 있습니다.</th>
 	                    </tr>
 	                </thead>
@@ -147,12 +152,12 @@
 			  <div class="carousel-inner">
 			    <div class="carousel-item active">
 			      <div class="row row-cols-md-2 g-2	">
-			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(0, 5)}">
+			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(0, 5)}" th:if="${cg.size() >5}">
 			            <div class="card h-95 w-80">
 			              <div class="card-body" style="max-height:150px;">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
-			              			<!--<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">  -->
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
 			              		</div>
 			              		<div class="col text-center" >
 			              			<div class="d-flex justify-content-center">
@@ -195,12 +200,12 @@
 			    </div>
 			    <div class="carousel-item">
 			      <div class="row row-cols-md-2 g-2	">
-			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(6, 11)}">
+			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(6, 11)}" th:if="${cg.size() >11}">
 			            <div class="card h-95 w-80">
 			              <div class="card-body">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
-			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
@@ -243,12 +248,12 @@
 			    </div>
 			    <div class="carousel-item">
 			      <div class="row row-cols-md-2 g-2	">
-			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(12, 17)}">
+			          <div class="col-sm-6" th:each="num : ${#numbers.sequence(12, 17)}" th:if="${cg.size() >17}">
 			            <div class="card h-95 w-80">
 			              <div class="card-body">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
-			              			<img id="profile-image"src="image/icon_profile.png" style="width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
@@ -459,7 +464,7 @@
     // 이벤트 : 이벤트 정보를 담아서 객체를 생성해야 한다. 문법은 json을 따른다.
     	document.addEventListener('DOMContentLoaded', function() {
         	var calendarEl = document.getElementById('calendar');
-	    	console.log('키킥');
+	    	//console.log('키킥');
         	var request = $.ajax({
         		url: 'caregiverPatientEvent.me',
         		datatype: 'json',
@@ -468,7 +473,7 @@
         		/*]]>*/
         		success:(data)=>{console.log('dddddd')}
         	})
-        	console.log('리퀘스트확인' + request);
+        	//console.log('리퀘스트확인' + request);
         	const getTimeFormat = (date) => {
         		const hour = date.getHours();
         		const minutes = date.getMinutes();
@@ -503,32 +508,56 @@
                
                const bts = document.getElementsByClassName('fc-button');
                const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
+               //console.log(cal.querySelectorAll('tbody')[0]);
+               //console.log(cal.querySelectorAll('tbody')[0].querySelectorAll('td'));
+               const cala = cal.querySelectorAll('.fc-daygrid-day-number');
+               const calaTitle = cal.querySelectorAll('.fc-col-header-cell-cushion');
+            	   
                
-               const cala = cal.querySelectorAll('a');
                for(i = 0; i< cala.length ; i++){
                   if(i % 7 == 0){
-                     console.log(i);
                   cala[i].style.color = 'red';
                   }else if(i % 7 == 6){
                      cala[i].style.color = '#0a58ca';
                   }else{
-                     if(i != 'entries' && i !='keys'){
-                        console.log(i);
                      cala[i].style.color = '#1D2D50';
-                     }
                   }
                }
+               for(i = 0; i< calaTitle.length ; i++){
+                   if(i % 7 == 0){
+                   calaTitle[i].style.color = 'red';
+                   }else if(i % 7 == 6){
+                      calaTitle[i].style.color = '#0a58ca';
+                   }else{
+                      calaTitle[i].style.color = '#1D2D50';
+                   }
+                }
+               
+               //전부 한글로 바꾸자
+               
             } 
+        	
+        	//메소드 하나더 추가 jk
+        	function calbtns(){
+        		const btns = document.getElementsByClassName('fc-toolbar-chunk');
+        		for(btn of btns){
+        			btn.addEventListener('click',function(){
+        				calenderEdit();
+        			})
+        		}
+        	}
+        	
+        	
             //종규 삽입 끝
         	
         	
         	// 이벤트 등록
         	request.done(function(data) {
-        		console.log(data);
+        		//console.log(data);
         		var calendar = new FullCalendar.Calendar(calendarEl, {
   		          initialView: 'dayGridMonth',
   		          events : data,
-  		          eventColor: '#8dd986',
+  		          eventColor: 'skyblue',
   		          eventClick: function(info) {
   		        		let mils = info.event.start - new Date()
 		        	   	let infomation = document.querySelector('.infomation').children;
@@ -547,20 +576,16 @@
 		          		infoDetail[6].innerHTML = info.event.extendedProps.money + '원';
 		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
 		        	  	$('#calendarModal').modal('show');
-  		        	  }
+  		        	  },
+  		        	locale: "ko"
   		        });
   		        calendar.render();
-  		      	calenderEdit();
+  		    	//종규 메소드 명훈 캘린더 삽입
+  		        calenderEdit();
+  		    	calbtns();
+  		      	//calenderEdit();
         	})
-        	
-        	
       	});
-    	/*<![CDATA[*/
-    		
-    	/* var calendar = new FullCalendar.Calendar(calendarEl, {
-         		initialView: 'dayGridMonth'
-       	});
-       	calendar.render();	 */
     		
     		
     	window.onload = () => {
@@ -620,7 +645,7 @@
 	    				data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0, selectNum: 5},
 	    				success: data => { // 배열로 넘어옴
 	    					// 새로 추천받은 목록으로 교체(시작)
-	    					console.log(data);
+	    					//console.log(data);
 	    					tbody.innerText = '';
 	    					for(let d of data) {
 	    						const tr = document.createElement('tr');
@@ -637,7 +662,7 @@
 	    						const td4 = document.createElement('td');
 	    						td4.innerText = d.haveLicense == undefined ? '-' : d.haveLicense;
 	    						const td5 = document.createElement('td');
-	    						td5.innerText = d.minMoney + '원';
+	    						td5.innerText = d.minMoney.toLocaleString() + '원';
 	    						
 	    						tbody.appendChild(tr);
 	    						tr.appendChild(td0);
@@ -687,7 +712,7 @@
     for(payBt of payBts){
     	payBt.addEventListener('click',function(){
 			$('#modalChoice2').modal('show');
-			console.log(this.nextElementSibling);
+			//console.log(this.nextElementSibling);
 			$.ajax({
 				url:'payInfo.mc',
 				data: {matNo:this.nextElementSibling.value },
@@ -733,7 +758,7 @@
 
     	const formattedTime = year+month+day+hours+minutes+seconds;
     	const form = document.getElementById('payForm');
-    	console.log(document.getElementsByName('mercharntUid')[0]);
+    	//console.log(document.getElementsByName('mercharntUid')[0]);
     	
 	    function requestPay() {
 	    	//const money = document.getElementById('customAmountInput').value;

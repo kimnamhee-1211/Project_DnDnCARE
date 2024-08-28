@@ -7,12 +7,38 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 <style>
+	<style>
 	@font-face {
 	    font-family: 'Pretendard-Regular';
 	    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
 	    font-weight: 400;
 	    font-style: normal;
 	}
+	
+	body {
+    font-family: 'Pretendard-Regular' !important;
+	}
+
+	.btn-outline {	
+		background: white;
+		color: #1D2D50;
+		border: 2px solid #1D2D50;
+		width: 190px;
+		border-radius: 10px; 
+		text-align: center;
+		padding: 8px;
+	}
+	
+	.btn-outline:hover, .btn-outline:focus{
+		color: white;
+		background: #1D2D50;
+	}
+	
+	 a{
+	 	 text-decoration: none;
+	 }
+
+</style>
 </style>
 
 </head>
@@ -20,8 +46,8 @@
 	<div class="cover-container d-flex w-750 h-100 p-3 mx-auto flex-column">
 		<header class="mb-auto"></header>
 
-		<main class="m-4 px-3">
-			<div  class="row d-flex align-items-center" style="width:1000px; margin-top:200px;">
+		<!-- <main class="m-4 px-3">
+			<div  class="d-flex align-items-center" style="width:1000px; margin-top:200px;">
 				<div align="center"class="col-7">
 					<div class="h1" style="color:#133B5C;font-weight:bold; font-size:48px">든든케어</div>
 					<h2 class="m-4">[[${message}]]</h2>
@@ -38,6 +64,24 @@
 				    </p>
 			    </div>
 		    </div>
+		</main> -->
+		
+		<main class="px-3">
+			<br><br><br><br><br><br>
+			<img class="d-block mx-auto mb-4" src="image/error.png" alt="" width="100">
+			<h2 class="m-4">[[${message}]]</h2>
+			<p th:text="${status}"></p>
+			<br>
+			<span>페이지 주소가 잘못 입력되었거나 변경되어 페이지를 찾을 수 없습니다.</span>
+			<br>
+			<span>주소를 다시 확인해주시기 바랍니다</span>
+			<br><br><br><br>
+			
+			
+    		<!-- <p class="lead">${ requestScope['javax.servlet.error.message']}</p> -->
+		    <p class="lead">
+		    	<a href="home.do" class="btn-outline" >돌아가기</a>
+		    </p>
 		</main>
 
 		<footer class="mt-auto text-white-50"></footer>

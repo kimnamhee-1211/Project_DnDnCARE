@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -138,7 +138,29 @@
 			background:white;
 			
 		}
+		.btn-success{
+			background-color:#1D2D50 !important;
+			/* --bs-btn-bg:#E1e5F74 !important; */
+			box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+		     7px 7px 20px 0px rgba(0,0,0,.1),
+		     4px 4px 5px 0px rgba(0,0,0,.1) !important;
+		     border:none !important;
+		}
+		
+		.btn-outline {	
+	background: white;
+	color: #1D2D50;
+	border: 2px solid #1D2D50;
+	width: 190px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
+		
 </style>
+
+
+
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -149,13 +171,12 @@
 	
 	
 	
-	<div class="container" >
+	<div class="container" style="min-height:872px" >
 		 <div class="row">
 			<div class="col" >
 	     		<div align="center"class="myInfo-Border m-4">
 	     			<div class="m-4" style="border-bottom:2px solid #133B5C;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
-	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatching.me">현재 매칭 정보</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingHistory.me">매칭 이력</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내가 쓴 후기</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
@@ -173,10 +194,10 @@
 		      				<h2 align="center">작성한 후기가 없습니다.</h2>
 	      			</div>
 	      			<div class="col m-2" th:unless="${list.isEmpty()}" th:each="r:${list}"  ><!-- 실제 데이터 넣고 for문 돌리기  -->
-						<div class="reviewDetail myInfo-Border-maincolor mt-2 mb-3" >
-							<div class="m-2 d-flex justify-content-between" >
+						<div class="reviewDetail myInfo-Border-maincolor" >
+							<div class="d-flex justify-content-between" >
 								<input type="hidden" name="reviewNo" th:value="${r.reviewNo}">
-								<div class="h5 m-2" onclick="toggleReviewContent(this)">
+								<div class="p-2 h5" onclick="toggleReviewContent(this)">
 									[[${r.memberName}]]님에 대한  후기
 									<img class="tri-btn"width="35" src="image/icon_turnTri.png"/>
 								</div>
@@ -185,9 +206,9 @@
     								 <button class="btn-outline-maincolor btn-sm m-2" th:onclick="deleteReview([[${r.reviewNo}]])">삭제하기</button>
 								</div>
 							</div>
-							 <div class="hidden-content m-2">
-							 	 <div class="col testBorder">
-									<div class="d-flex justify-content-left" style="min-width:600px; border:none;">평점 : 
+							 <div class="m-2 hidden-content ">
+							 	 <div class="col" style="border-top:2px solid #1E5F74">
+									<div class="p-2 d-flex justify-content-left" style="min-width:600px; border:none;">평점 : 
 						      			<div align="left" class="icon-star-review">
 											<button th:if="${1 == r.reviewScore}" class="btn-star btn-icon-star-review-half"></button>
 											<button th:if="${1 < r.reviewScore}" class="btn-star btn-icon-star-review"></button>
@@ -210,7 +231,7 @@
 						      			</div>
 						      			<span>([[${r.reviewScore}]])</span>
 					    			</div>
-						      			<br>[[${r.reviewContent}]]
+						      			<div class="p-2">[[${r.reviewContent}]]</div>
 							    </div>
 				            </div>
 							

@@ -15,6 +15,26 @@
 		.selectState{background: lightyellow;}
 		.table td{cursor: pointer;}
 		.table td>div{border: 1px solid black; height: 80%; width: 45%; display: inline-block; padding-top: 3%; cursor: pointer;}
+		.vibration{animation: vibration 0.1s infinite;} 
+		@keyframes vibration{
+			from{
+				transform: rotate(1deg);
+			}
+			to{
+				transform: rotate(-1deg);
+			}
+		}
+		/* Chrome, Safari, Edge, Opera */
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+		  -webkit-appearance: none;
+		  margin: 0;
+		}
+		
+		/* Firefox  */
+		input[type='number'] {
+		  -moz-appearance: textfield;
+		}
 	</style>
 </head>
 <body>
@@ -57,6 +77,7 @@
 								<button class="btn btn-warning" type="button" id="searchMembers">검색하기</button>
 								<button class="btn btn-primary" type="button" id="recentMembers">최근 가입회원</button>
 								<button class="btn btn-primary" type="button" id="allMembers">전체 회원</button>
+								<button class="btn btn-info" type="button" id="insertAdmin" th:if="${session.loginUser.memberNo == 1}">관리자 추가</button>
 							</div>
 						</form>
 					
@@ -97,7 +118,10 @@
 										[[${m.memberEmail}]]
 									</td>
 									<td>
-										[[${#strings.listSplit(m.memberAddress, '//').get(1)}]]
+										<th:block th:if="${m.memberAddress != null}">
+											[[${#strings.listSplit(m.memberAddress, '//').get(1)}]]
+										</th:block>
+										<th:block th:if="${m.memberAddress == null}">-</th:block>
 									</td>
 									<td>
 										[[${m.memberCreateDate}]]
@@ -150,9 +174,54 @@
 		</div>
 	</div>
 	
+	<!-- 관리자 추가 모달(시작) -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5 badge rounded-pill bg-dark" id="exampleModalLabel">관리자 추가</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+		        <table class="table align-middle" id="membersTable">
+	    			<tr style="height:80px;">
+	    				<td><span class="badge rounded-pill bg-light text-dark fs-6">아이디</span></td>
+	    				<td>
+	    					<input type="text" class="form-control" id="adminId" style="width:200px; display:inline;">
+	    					<span class="badge bg-success"></span>	
+    					</td>
+	    			</tr>
+	    			<tr style="height:80px;">
+	    				<td><span class="badge rounded-pill bg-light text-dark fs-6">비밀번호</span></td>
+	    				<td><input type="password" class="form-control" id="adminPwd" style="width:200px; display:inline;"></td>
+	    			</tr>
+	    			<tr style="height:80px;">
+	    				<td><span class="badge rounded-pill bg-light text-dark fs-6">비밀번호 확인</span></td>
+	    				<td><input type="password" class="form-control" id="adminPwdConfirm" style="width:200px; display:inline;"></td>
+	    			</tr>
+	    			<tr style="height:80px;">
+	    				<td><span class="badge rounded-pill bg-light text-dark fs-6">연락처</span></td>
+	    				<td>
+	    					<input type="number" class="form-control phone" style="width:100px; display:inline;"> - 
+	    					<input type="number" class="form-control phone" style="width:200px; display:inline;"> - 
+	    					<input type="number" class="form-control phone" style="width:200px; display:inline;">
+    					</td>
+	    			</tr>
+	    		</table>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+	        <button type="button" class="btn btn-primary" id="insertMember">추가하기</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<!-- 관리자 추가 모달(끝) -->
+	
+	
 	
 	<!-- 회원정보 조회용 Scrollable modal (시작) -->
-	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 		    <div class="modal-content">
 		    	<div class="modal-header">
@@ -164,7 +233,7 @@
 			    		<table class="table align-middle" id="membersTable">
 			    			<tr style="height:80px;">
 			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">회원번호 | 아이디</span></td>
-			    				<td><input type="text" class="form-control" id="memberName" style="width:200px; display:inline;" disabled> | <input type="text" class="form-control" id="memberNo" style="width:200px; display:inline;" disabled></td>
+			    				<td><input type="text" class="form-control" id="memberNo" style="width:70px; display:inline;">  <input type="text" class="form-control" id="memberId" style="width:200px; display:inline;" disabled></td>
 			    			</tr>
 			    			<tr style="height:80px;">
 			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">이름 | 닉네임</span></td>
@@ -179,22 +248,22 @@
 			    			</tr>
 			    			<tr style="height:80px;">
 			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">휴대폰</span></td>
-			    				<td><input type="text" class="form-control" style="width:100px; display:inline;"/> - <input type="text" class="form-control" style="width:150px; display:inline;"/> - <input type="text" class="form-control" style="width:150px; display:inline;"/></td>
+			    				<td><input type="text" class="form-control" id="phone0" style="width:100px; display:inline;"/> - <input type="text" class="form-control" id="phone1" style="width:150px; display:inline;"/> - <input type="text" class="form-control" id="phone2" style="width:150px; display:inline;"/></td>
 			    			</tr>
 			    			<tr style="height:80px; border-bottom: white;">
 			    				<td><span class="badge rounded-pill bg-light text-dark fs-6">회원정보 수정일</span></td>
-			    				<td><input type="text" class="form-control" style="width:200px; display:inline;" readonly/></td>
+			    				<td><input type="text" class="form-control" id="updateDate" style="width:200px; display:inline;" readonly/></td>
 			    			</tr>
 			    		</table>
 			        </div>
 			    </div>
 			    <div class="modal-footer">
 			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-			        <!-- <button type="button" class="btn btn-primary">확인</button> -->
+			        <button type="button" class="btn btn-primary">확인</button>
 			    </div>
 		    </div>
 		</div>
-	</div>
+	</div> -->
 	<!-- 회원정보 조회용 Scrollable modal (끝) -->
 	
 	
@@ -390,7 +459,7 @@
 					case 0 : 
 					case 1 : 
 						// 회원 상세정보 모달창 출력 (시작) 여기여기
-						const memberNo = target.parentElement.children[0].innerText;
+						/* const memberNo = target.parentElement.children[0].innerText;
 						let thisMember;
 						
 						for(const m of mList){// 파라미터에 들어있는 회원객체를 받아온다.
@@ -399,33 +468,34 @@
 								break;
 							}
 						}
+						const mNo = document.querySelector('#memberNo');
+						const memberId = document.querySelector('#memberId');
+						const memberName = document.querySelector('#memberName');
+						const memberNickName = document.querySelector('#memberNickName');
+						const nationalList = document.getElementsByName('national');
+						const phone0 = document.querySelector('#phone0');
+						const phone1 = document.querySelector('#phone1');
+						const phone2 = document.querySelector('#phone2');
+						const updateDate = document.querySelector('#updateDate');
 						
-						console.log(thisMember);
+						mNo.value = thisMember.memberNo;
+						memberId.value = thisMember.memberId;
+						memberName.value = thisMember.memberName;
+						memberNickName.value = thisMember.memberNickName;
+						if(thisMember.memberNational == '내국인') {
+							nationalList[0].checked = true;
+						} else {
+							nationalList[1].checked = true;
+						}
+						phone0.value = thisMember.memberPhone.substring(0,3);
+						phone1.value = thisMember.memberPhone.substring(3,7);
+						phone2.value = thisMember.memberPhone.substring(7);
+						updateDate.value = thisMember.memberUpdateDate;
 						
 						
-						/* $.ajax({ // 회원에 대한 정보를 더 들고오자.
-							url: 'selectMemberInfo.adm',
-							type: 'post',
-							data: {memberNo: memberNo},
-							success: data => {
-								console.log(data);
-							},
-							error: data => console.log(data)
-						}); */
-						
-						console.log(document.querySelector('#membersTable'));
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						$('#staticBackdrop').modal('show');
+						$('#exampleModal').modal('show'); */
 						// 회원 상세정보 모달창 출력 (끝)
-						
+						alert("아이디와 회원번호는 수정할 수 없습니다.");
 						break;
 					case 2 : column = 'MEMBER_NAME'; break;
 					case 3 : column = 'MEMBER_GENDER'; break;
@@ -700,7 +770,123 @@
 			}); 
 			
 			
+			// 회원정보 상세조회 모달창에서 수정기능 (시작)
+			/* const modal = document.querySelector('#exampleModal');
+			let originData;
 			
+			modal.addEventListener('click', () => {
+				
+				
+				
+				
+			});
+			
+			document.querySelector('#memberNickName').addEventListener('dblclick', function() {
+				console.log(this);
+				this.disabled = false;
+				originData = this.value;
+			});
+			
+			document.querySelector('#memberNickName').addEventListener('keydown', function(e) {
+				if(e.key == 'Enter'){
+					
+					console.log('엔터')
+					
+				} 
+			});  */
+			// 회원정보 상세조회 모달창에서 수정기능 (끝)
+			
+			
+			// 관리자 추가하기 (시작)
+			const inputId = document.querySelector('#adminId');
+			let checkIdFlag = false;
+			const pwd = document.querySelector('#adminPwd');
+			const pwdConfirm = document.querySelector('#adminPwdConfirm');
+			let checkPwdFlag = false;
+			const phoneList = document.querySelectorAll('.phone');
+			let checkPhoneFlag = false;
+			
+			
+			document.querySelector('#insertAdmin').addEventListener('click', () => {
+				$('#exampleModal').modal('show');
+			});
+			
+			
+			pwdConfirm.addEventListener('focusout', () => {
+				if(pwd.value != pwdConfirm.value) {
+					pwd.classList.add('vibration');
+					pwdConfirm.classList.add('vibration');
+					
+					setTimeout(() => {
+						pwd.classList.remove('vibration');
+						pwdConfirm.classList.remove('vibration');
+						pwd.value = '';
+						pwdConfirm.value = '';
+					}, 400)
+					checkPwdFlag = false;
+				} else{
+					checkPwdFlag = true;
+				}
+			});
+			
+			inputId.addEventListener('focusout', function() {
+				if(this.value.trim() != ''){
+					$.ajax({
+						url: 'checkAdminId.adm',
+						type: 'post',
+						data: {memberId: this.value},
+						success: data => {
+							console.log(data);
+							if(data == 'yes'){
+								this.nextElementSibling.innerText = '사용가능한 아이디입니다.';
+								setTimeout(() => {
+									this.nextElementSibling.innerText = '';;
+								}, 2000);
+								checkIdFlag = true;
+							} else if(data == 'no'){
+								this.classList.add('vibration');
+								setTimeout(() => {
+									this.classList.remove('vibration');
+									this.value = '';
+								}, 400)
+								checkIdFlag = false;
+							}
+						},
+						error: data => console.log(data)
+					});
+				}
+			});
+			
+			document.querySelector('#insertMember').addEventListener('click', () => {
+				let phone = '';
+				if(phoneList[0].value.trim() != '' && phoneList[1].value.trim() != '' && phoneList[2].value.trim() != '') {
+					checkPhoneFlag = true;
+					phone = phoneList[0].value.trim() + '' + phoneList[1].value.trim() + phoneList[2].value.trim();
+				} else{
+					checkPhoneFlag = false;
+				}
+				
+				if(checkIdFlag && checkPwdFlag && checkPhoneFlag){
+					$.ajax({
+						url: 'insertMember.adm',
+						type: 'post',
+						data: {
+							memberId: inputId.value,
+							memberPwd: pwd.value,
+							memberPhone : phone
+						},
+						success: data => {
+							console.log(data);
+							$('#exampleModal').modal('hide');
+							location.reload();
+						},
+						error: data => console.log(data)
+					});
+				} else{
+					alert('입력값을 확인해주세요!');
+				}
+			});
+			// 관리자 추가하기 (끝)
 		}
 	</script>
 </body>

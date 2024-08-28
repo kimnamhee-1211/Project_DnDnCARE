@@ -281,4 +281,31 @@
 		set reply_status = 'N'
 		where reply_no = #{rNo}
 	</update>
+	
+	<!-- 매칭정보 -->
+	<select id="selectMatchings" resultType="Matching">
+		select *
+		from matching
+		where mat_Confirm = 'Y'
+	
+	</select>
+	<!-- 게시글 수정 -->
+	<update id="adminUpdateBoard">
+		update board
+		set board_title = #{boardTitle}, board_content = #{boardContent}, board_update_date = sysdate
+		where board_no = #{boardNo}
+	</update>
+	
+	<!-- 관리자 아이디 중복확인 -->
+	<select id="checkAdminId" resultType="_int">
+		SELECT COUNT(*) FROM MEMBER WHERE MEMBER_ID = #{memberId}
+	</select>
+	
+	<!-- 관리자 추가 -->
+	<insert id="insertMember">
+		INSERT INTO MEMBER
+		VALUES(SEQ_MID.NEXTVAL, #{memberId}, #{memberPwd}, #{memberName}, #{memberGender}, #{memberNickName}, SYSDATE, #{memberPhone}, #{memberEmail},
+				DEFAULT, #{memberAddress}, #{memberCategory}, DEFAULT, #{memberNational}, DEFAULT, DEFAULT)
+	</insert> 
+	
 </mapper>

@@ -22,7 +22,7 @@
 	<br/><br/>
 	
 	<div class="d-flex justify-content-center">
-		<img class="m-3" th:src="@{/image/icon/iconBook.png}" width="400px" height="250px">
+		<img class="m-3" th:src="@{/image/icon/iconBook.png}" width="200px" height="180px">
 		<h1 class="m-3 fw-bold" style="line-height:180px; font-size:55px;">간병 백과</h1>	
 	</div>
 	<div class="text-center mx-auto p-3" style="background:lightgray;border-radius:15px;width:1200px;">
@@ -63,6 +63,7 @@
 					<tr>
 						<th>글번호</th>
 						<th>글제목</th>
+						<th>작성자</th>
 						<th>작성일</th>
 						<th>조회수</th>
 					</tr>
@@ -79,16 +80,16 @@
 	
 	<!-- 간병백과 조회용 Scrollable modal (시작) -->
 	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-fullscreen">
 		    <div class="modal-content">
 		    	<div class="modal-header">
 			        <h1 class="modal-title fs-5 badge rounded-pill bg-primary" id="staticBackdropLabel">Modal title</h1>
 			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		        </div>
-			    <div class="modal-body">
-			    	<div class="modal-dialog modal-dialog-scrollable" id="modalContent">
-			        
-			        </div>
+			    <div class="modal-body" style="display:grid; grid-template-columns: 1fr 1280px 1fr; text-align:center;">
+			   		<div><!-- 공백 --></div>
+			    	<div class="modal-dialog modal-dialog-scrollable ms-1 modal-fullscreen" id="modalContent" style="width:1280px;"></div>
+			    	<div><!-- 공백 --></div>
 			    </div>
 			    <div class="modal-footer">
 			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -228,7 +229,7 @@
 							
 							// 요소.insertAdjacentHTML() : 보안강화를 위한 연습하기
 							for(const board of bList){ // 글번호, 글제목, 작성자, 조회수 를 출력해야한다.
-								tbody.insertAdjacentHTML('beforeend', `<tr><td>${board.boardNo}</td><td>${board.boardTitle}</td><td>${board.boardUpdateDate}</td><td>${board.boardCount}</td></tr>`);
+								tbody.insertAdjacentHTML('beforeend', `<tr><td>${board.boardNo}</td><td>${board.boardTitle}</td><td>${board.memberNickName}</td><td>${board.boardUpdateDate}</td><td>${board.boardCount}</td></tr>`);
 							}
 							defaultPage++; // 다음 페이지의 숫자를 가르키도록 증가시키기
 						}
@@ -283,7 +284,7 @@
 																<p>
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
 																		<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-																	</svg> <span class="writer">${bList[i].memberNo}<!-- 글쓴이 --></span>
+																	</svg> <span class="writer">${bList[i].memberNickName}<!-- 글쓴이 --></span>
 																	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
 																		<path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
@@ -317,7 +318,7 @@
 																<p>
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
 																		<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-																	</svg> <span class="writer">${bList[i].memberNo}<!-- 글쓴이 --></span>
+																	</svg> <span class="writer">${bList[i].memberNickName}<!-- 글쓴이 --></span>
 																	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
 																		<path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
@@ -351,7 +352,7 @@
 																<p>
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
 																		<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-																	</svg> <span class="writer">${bList[i].memberNo}<!-- 글쓴이 --></span>
+																	</svg> <span class="writer">${bList[i].memberNickName}<!-- 글쓴이 --></span>
 																	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
 																		<path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
@@ -444,7 +445,6 @@
 			
 				if(isAlbum){
 					if(event.target.className == 'imgsDiv' || event.target.tagName == 'H3' || event.target.tagName == 'IMG'){
-						console.log('여기');
 						this.style.cursor = 'pointer';
 					} else {
 						this.style.cursor = 'auto';
@@ -467,7 +467,7 @@
 				if(!isAlbum){
 					const bNo = event.target.parentElement.children[0].innerText;;
 					
-					let bCountTd = event.target.parentElement.children[3];
+					let bCountTd = event.target.parentElement.children[4];
 					let clickBoard; // 클릭한 글에 대한 데이터에 접근
 					const clickNoThumbNailList = []; // 클릭한 글에 대한 첨부파일에 접근
 					let clickThumbnail; // 클릭한 글에 대한 썸네일을 저장할 지역변수
@@ -648,9 +648,11 @@
 							searchMaxPage = data.pList[0];
 							
 							// 요소.insertAdjacentHTML() : 보안강화를 위한 연습하기
-							tbody.innerHTML = '';
+							if(page == 1) {
+								tbody.innerHTML = '';
+							}
 							for(const board of bList){ // 글번호, 글제목, 작성자, 조회수 를 출력해야한다.
-								tbody.insertAdjacentHTML('beforeend', `<tr><td>${board.boardNo}</td><td>${board.boardTitle}</td><td>${board.boardUpdateDate}</td><td>${board.boardCount}</td></tr>`);
+								tbody.insertAdjacentHTML('beforeend', `<tr><td>${board.boardNo}</td><td>${board.boardTitle}</td><td>${board.memberNickName}</td><td>${board.boardUpdateDate}</td><td>${board.boardCount}</td></tr>`);
 							}
 							
 							searchPage++;
@@ -697,7 +699,9 @@
 							searchMaxPage = data.pList[0];
 							
 							// 요소.insertAdjacentHTML() : 보안강화를 위한 연습하기
-							tbody.innerHTML = '';
+							if(page == 1){
+								tbody.innerHTML = '';
+							}
 							
 							// 요소.insertAdjacentHTML() : 보안강화를 위한 연습하기
 							const firstTr = document.createElement('tr');
@@ -724,7 +728,7 @@
 																<p>
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
 																		<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-																	</svg> <span class="writer">${bList[i].memberNo}<!-- 글쓴이 --></span>
+																	</svg> <span class="writer">${bList[i].memberNickName}<!-- 글쓴이 --></span>
 																	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
 																		<path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
@@ -758,7 +762,7 @@
 																<p>
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
 																		<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-																	</svg> <span class="writer">${bList[i].memberNo}<!-- 글쓴이 --></span>
+																	</svg> <span class="writer">${bList[i].memberNickName}<!-- 글쓴이 --></span>
 																	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
 																		<path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
@@ -792,7 +796,7 @@
 																<p>
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
 																		<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
-																	</svg> <span class="writer">${bList[i].memberNo}<!-- 글쓴이 --></span>
+																	</svg> <span class="writer">${bList[i].memberNickName}<!-- 글쓴이 --></span>
 																	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event" viewBox="0 0 16 16">
 																		<path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"/>
@@ -942,7 +946,7 @@
 				searchPage = 1;
 				tbody.innerHTML = '';
 				
-				//defaultAlbumList(defaultPage);
+				defaultAlbumList(defaultPage);
 			});
 			// 앨범 아이콘 클릭 이벤트 (끝)
 			

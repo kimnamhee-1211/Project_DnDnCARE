@@ -111,6 +111,10 @@ input {
 	border:1px solid #dee2e6;
 	border-radius: 5px;
 }
+.layout-bd{
+	border:2px solid  #FCDAB7;
+	border-radius: 5px;
+}
 
 #profile-image {
    width: 200px; /* 원하는 크기로 설정 */
@@ -312,7 +316,16 @@ input {
 }
 
 
-
+.btn-dndn{	
+	color: white !important;
+	background-color: #1D2D50 !important;
+	border: none;
+	width: 200px;
+	height: 40px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
 
 
 

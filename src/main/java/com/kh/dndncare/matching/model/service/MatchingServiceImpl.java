@@ -19,6 +19,7 @@ import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.matching.model.vo.Pay;
+import com.kh.dndncare.matching.model.vo.joinMatInfoMin;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
@@ -374,6 +375,12 @@ public class MatchingServiceImpl implements MatchingService {
 		return mMapper.matPatientList(memberNo);
 	}
 
+	
+	//참여중인 공동간병그룹 만들기
+	@Override
+	public ArrayList<joinMatInfoMin> getMyJoinMat(int loginPt) {
+		return mMapper.getMyJoinMat(loginPt);
+	}
 	@Override
 	public int getHospitalNo(String hospitalName) {
 	    Integer result = mMapper.getHospitalNo(hospitalName);

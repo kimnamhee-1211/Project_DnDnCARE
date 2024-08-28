@@ -54,6 +54,7 @@ import com.kh.dndncare.matching.model.vo.MatMatptInfoPt;
 import com.kh.dndncare.matching.model.vo.MatPtInfo;
 import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
+import com.kh.dndncare.matching.model.vo.joinMatInfoMin;
 import com.kh.dndncare.member.controller.MemberController;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.CareGiver;
@@ -72,7 +73,7 @@ public class MatchingController {
 	@Autowired
 	private MatchingService mcService;
 	
-	//private static Logger logger = LoggerFactory.getLogger(MatchingController.class);
+	private static Logger logger = LoggerFactory.getLogger(MatchingController.class);
 	
 	@GetMapping("publicMatching.mc")
 	public String publicMatchingView(HttpSession session,Model model,
@@ -313,7 +314,7 @@ public class MatchingController {
 		        	int updateMatCResult = mcService.updateMatC(matNo, memberNoC);
 		        	//모달용
 		        	if(updateMatCResult > 0) {		        	
-			        	String matCName = mcService.getNameC(memberNo);
+			        	String matCName = mcService.getNameC(memberNoC);
 			    		re.addAttribute("matCName", matCName);
 			    		result = "request";
 		        	}
@@ -408,6 +409,9 @@ public class MatchingController {
 		hospital.setHospitalAddress(hospitalAddress);
 		
 		model.addAttribute("hospital", hospital);
+		
+		//하나만 확인해보자
+		//logger.info(" 잘 들어가지니? ");
 		
 		return "joinMatchingEnroll";
 	}
@@ -546,6 +550,11 @@ public class MatchingController {
 			re.addAttribute("hospitalName", hospital.getHospitalName());
 			re.addAttribute("hospitalAddress", hospital.getHospitalAddress());
 			re.addAttribute("msg", "공동간병 등록이 완료되었습니다.");
+			
+			logger.info("matNo : " + jm.getMatNo() + ",공동간병");
+			session.setAttribute("logMatNo",jm.getMatNo() );
+			session.setAttribute("logMatService","공동간병");
+			
 			return "redirect:joinMatching.jm";
 		}
 		throw new MemberException("공동간병 그룹 등록 실패");
@@ -653,7 +662,7 @@ public class MatchingController {
 	@PostMapping("outJoinMatching.jm")
 	public String outJoinMatching(@RequestParam("matNo") int matNo, @RequestParam("matMode") int matMode, HttpSession session, 
 								@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,
-								RedirectAttributes re) {
+								RedirectAttributes re, @RequestParam(value="beforePage", required=false) String beforePage) {
 		
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		int ptNo = mcService.getPtNo(loginUser.getMemberNo());
@@ -761,8 +770,8 @@ public class MatchingController {
 			       String logInfo = matPatientInfoList.getMatNo() + "//" + matPatientInfoList.getAge() + "//" + matPatientInfoList.getMemberGender() + "//" + matPatientInfoList.getSCategory() + "//" + matPatientInfoList.getMemberNo();
 			       System.out.println("로그에 저장할 정보"+logInfo);
 			        
-			     //   logger.info(logInfo);
-			        
+			     logger.info(logInfo);
+			   
 			    }
         }
 		
@@ -948,8 +957,7 @@ public class MatchingController {
 		if(MatMemberNo != null && MatMemberNo == loginUser.getMemberNo()) {
 			model.addAttribute("MatMemberNo", MatMemberNo);
 		}
-		System.out.println("MatMemberNo = " + MatMemberNo);
-		
+
 		
 		for(MatMatptInfoPt m: mPI) {
 			//나이 계산
@@ -1295,7 +1303,7 @@ public class MatchingController {
 		
 		
 		//매칭 신청 받은 내역 (간병인이 나(환자)를 신청)
-		ArrayList<CareGiverMin> myMatchingMat = mcService. getMyMatchingPN(loginPt);
+		ArrayList<CareGiverMin> myMatchingMat = mcService.getMyMatchingPN(loginPt);
 		for(CareGiverMin i : myMatchingMat) {
 			
 			//노출 나이 set
@@ -1308,12 +1316,17 @@ public class MatchingController {
 			
 		}
 		
+		//공동간병 참여중인 내역
+		ArrayList<joinMatInfoMin> myJoinMat = mcService.getMyJoinMat(loginPt);	
+		
 		model.addAttribute("myMatching", myMatching);
 		model.addAttribute("myMatchingW", myMatchingW);
 		model.addAttribute("myRequestMatC", myRequestMatC);
 		model.addAttribute("myMatchingMat", myMatchingMat);
+		model.addAttribute("myJoinMat", myJoinMat);
 		
 		model.addAttribute("loginUserName", loginUser.getMemberName());
+		model.addAttribute("loginPt", loginPt);
 		
 		return "myMatchingP";	
 	

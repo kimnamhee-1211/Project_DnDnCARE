@@ -28,7 +28,7 @@ public interface MemberService {
 
 	Member login(Member m);
 	
-	int noInfomemberdle();
+	int noInfomemberdle(int memberNo);
 
 	int idCheck(String id);
 	
@@ -209,6 +209,8 @@ public interface MemberService {
 	int getCountPendingMe(int matNo, int memberNo);
 
 	int getCountPt(int matNo);
+
+	Integer getDelMemberNo();
 
 
 
