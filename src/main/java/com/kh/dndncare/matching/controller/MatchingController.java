@@ -182,7 +182,9 @@ public class MatchingController {
 	              hospitalAddress = String.join("//", addressParts);
 	              patient.setPtAddress(hospitalAddress);
 	          }
+	          
 	          int hospitalNo = mcService.getHospitalNo(hospitalName);
+	          
 	          if (hospitalNo != 0) {
 	              matching.setHospitalNo(hospitalNo);
 	          } else {
