@@ -18,7 +18,7 @@
     .hidden { display: none; }
     .text-primary:hover { color: #55aa55; }
     .badge-primary { 
-    	background-color: #FCDAB7; 
+    	background-color: #133B5C; 
 		color: black;	
 	}
     
@@ -37,15 +37,19 @@
 	.btn-outline-area.active {
 	    color: black; /* 텍스트 색상 */
 	    background-color: white; /* 배경색 */
-	    border: 3px solid #1E5F74;
+	    border: 1px solid #1E5F74;
     	border-radius:10px; 
+    	background: #1E5F74;
+    	color:white;
 	}
 	
 	.btn-check:checked + .btn-outline-area {
     color: black;
 	background-color: white; /* 배경색 */
-	border: 3px solid #1E5F74;
+	border: 1px solid #1E5F74;
     font-weight: bold;
+    color:white;
+    background: #1E5F74;
     box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
   						7px 7px 20px 0px rgba(0,0,0,.1),
   						4px 4px 5px 0px rgba(0,0,0,.1);
@@ -101,9 +105,10 @@
     <main class="bg-board-main container p-5">
         <div class="row h-50 p-3">
 
-      	  <div class="text-center m-4">    	  	
-            <h1 class="text-center m-4" style="font-weight: bold;" id="target"><img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}">간병인 커뮤니티</h1>
-           </div>
+      	  <div class="text-center m-4 d-flex justify-content-between">
+	      	  <div class="h1 p-2"><a href="home.do" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a></div>
+	          <h1 class="text-center p-2 m-3" style="font-weight: bold; color:#1D2D50;" id="target">간병인 커뮤니티</h1>
+          </div>
             <br><br>
 
             <div class="col-md-9 p-4" align="center">
