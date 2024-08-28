@@ -142,7 +142,7 @@
 			</div>
                 <div class="d-flex justify-content-end mb-4">
                     <th:block th:if="${session.loginUser != null}">
-                        <button type="button" class="btn-write" style="width:100px;" th:onclick="location.href='writeBoard.bo'">글쓰기</button>
+                        <button type="button" class="btn-write" style="width:100px;" th:onclick="location.href='writeQnA.bo'">글쓰기</button>
                     </th:block>
                 </div>
 
@@ -163,10 +163,10 @@
                                 <td>[[${q.boardTitle}]]</td>
                                 <td>[[${q.memberNickName}]]</td>
                                 <td>[[${q.boardCreateDate}]]</td>
-                                <th:block th:if="${q.answerYN}==0}">
+                                <th:block th:if="${q.answerYN==0}">
                                		 <td>답변 대기중</td>
                                 </th:block>
-                                <th:block th:if="${q.answerYN}==1}">
+                                <th:block th:if="${q.answerYN==1}">
                                		 <td>답변 완료</td>
                                 </th:block>
                             </tr>
@@ -211,10 +211,10 @@
                                 <td>[[${mql.boardTitle}]]</td>
                                 <td>[[${mql.memberName}]]</td>
                                 <td>[[${mql.boardCreateDate}]]</td>
-                                 <th:block th:if="${q.answerYN}==0}">
+                                 <th:block th:if="${mql.answerYN==0}">
                                		 <td>답변 대기중</td>
                                 </th:block>
-                                <th:block th:if="${q.answerYN}==1}">
+                                <th:block th:if="${mql.answerYN==1}">
                                		 <td>답변 완료</td>
                                 </th:block>
                             </tr>

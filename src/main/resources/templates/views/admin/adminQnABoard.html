@@ -74,7 +74,6 @@
 								
 				<br/>
 				
-				<div>	
 					<div id="adminQnABoard-section">
 						<table class="table table-hover text-center" id="adminQnABoardListTable">
 							<thead>
@@ -90,34 +89,38 @@
 								<tr th:each="qb:${adminQnABoardList}"><!-- 반복문 -->
 									<td>[[${qb.boardNo}]]</td>
 									<td>[[${qb.boardTitle}]]</td>
-									<td>[[${qb.memberName}]]</td>
-									<td>[[${qb.createBoardDate}]]</td>
-									<td></td>
+									<td>[[${qb.memberNickName}]]</td>
+									<td>[[${qb.boardCreateDate}]]</td>
+									<th:block th:if="${qb.answerYN==0}">
+                               		 <td>답변 대기중</td>
+	                                </th:block>
+	                                <th:block th:if="${qb.answerYN==1}">
+	                               		 <td>답변 완료</td>
+	                                </th:block>
 								</tr>
 							</tbody>
 						</table>
-						</div>
-						</div>
 			        <br>
-			        <div class="d-flex justify-content-end align-items-center mb-5">
-	                    <nav aria-label="Standard pagination example">
-	                        <ul class="pagination mb-3" th:with="loc=${loc}">
-	                            <li class="page-item">
-	                                <a class="page-link" th:href="@{${loc}(page=${likePi.currentPage-1})}" aria-label="Previous">
-	                                    <span aria-hidden="true">&laquo;</span>
-	                                </a>
-	                            </li>
-	                            <li class="page-item" th:each="p : ${#numbers.sequence(likePi.startPage, likePi.endPage)}">
-	                                <a class="page-link" th:href="@{${loc}(page=${p})}">[[${ p }]]</a>
-	                            </li>
-	                            <li class="page-item">
-	                                <a class="page-link" th:href="@{${loc}(page=${likePi.currentPage+1})}" aria-label="Next">
-	                                    <span aria-hidden="true">&raquo;</span>
-	                                </a>
-	                            </li>
-	                        </ul>
-	                    </nav>
-					</div>
+			        <div class="d-flex justify-content-center align-items-center m-5">
+                    <nav aria-label="Standard pagination example">
+                        <ul class="pagination" th:with="loc=${loc}" style="margin: auto 0; color: black;">
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage-1})}" aria-label="Previous">
+                                    <span aria-hidden="true" style="color: black;">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}">
+                                <a class="page-link" th:href="@{${loc}(page=${p})}" style="color: black;">[[${p}]]</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage+1})}" aria-label="Next">
+                                    <span aria-hidden="true" style="color: black;">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+				</div>
 			</main>
 		</div>
 	</div>
@@ -131,7 +134,7 @@
 				td.addEventListener('click', function() {
 					const trTds = this.parentElement.querySelectorAll('td');
 					const boardId = trTds[0].innerText;
-					const currentPage = /*[[${boardPi.currentPage}]]*/ 1;
+					const currentPage = /*[[${pi.currentPage}]]*/ 1;
 					location.href = `selectBoard.bo?bId=${boardId}&page=${currentPage}`;
 				});
 			}

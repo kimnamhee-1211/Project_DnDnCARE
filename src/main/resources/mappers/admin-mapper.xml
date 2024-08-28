@@ -297,7 +297,7 @@
 	</update>
 	
 	<!-- 문의내역 페이지네이션 -->
-	<select id="getAdminQnAListCount">
+	<select id="getAdminQnABoardCount" resultType="_int">
 		select count(*)
 		from board
 		where category_no = 99
@@ -305,11 +305,12 @@
 	
 	<!-- 문의내역 조회 -->
 	<select id="adminQnABoardList" resultType="Board">
-		select board_no, board_title, member_name, board_create_date,count(*) answerYN
+		select board_no, board_title, member_nickname, board_create_date, count(reply.ref_board_no) answerYN
 		from board
-		    join member using(member_no)
-		    join reply on(ref_board_no = board_no)
-		where category_no = 99
-		group by board_no, board_title, member_name, board_create_date
+			join member using(member_no)
+			left join reply on(reply.ref_board_no = board.board_no)
+		where board.category_no = 99 and board_status = 'Y'
+		group by board_no, board_title, member_nickname, board_create_date
+		order by board_no desc
 	</select>
 </mapper>

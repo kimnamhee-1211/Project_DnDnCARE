@@ -212,11 +212,12 @@
 	
 	<!-- 문의게시판 -->
 	<select id="qnaBoardList" resultType="Board">
-		select board_no, board_title, member_name, board_create_date, count(*) answerYN
+		select board_no, board_title, member_nickname, board_create_date, count(reply.ref_board_no) answerYN
 		from board
 			join member using(member_no)
-		where category_no = 99 and board_status = 'Y'
-		group by board_no, board_title, member_name, board_create_date
+			left join reply on(reply.ref_board_no = board.board_no)
+		where board.category_no = 99 and board_status = 'Y'
+		group by board_no, board_title, member_nickname, board_create_date
 		order by board_no desc
 	</select>
 	
@@ -229,12 +230,13 @@
 	
 	<!-- 나의 문의내역 -->
 	<select id="myQnAList" resultType="Board">
-		select board_no, board_title, member_name, board_create_date, count(*) answerYN
-		from board
-			join member using(member_no)
-		where category_no = 99 and board_status = 'Y' and member_no = #{memberNo}
-		group by board_no, board_title, member_name, board_create_date
-		order by board_no desc
+		select b.board_no, b.board_title, m.member_nickname, b.board_create_date, count(r.ref_board_no) answerYN
+		from board b
+			join member m on(m.member_no = b.member_no)
+			left join reply r on(r.ref_board_no = b.board_no)
+		where b.category_no = 99 and b.board_status = 'Y' and b.member_no = #{memberNo}
+		group by b.board_no, b.board_title, m.member_nickname, b.board_create_date
+		order by b.board_no desc
 	</select>
 	
 	

@@ -608,14 +608,15 @@ public class BoardController {
 		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		int myListCount = bService.getMyListCountQnA(memberNo);
 		PageInfo mpi = Pagination.getPageInfo(myCurrentPage, myListCount, 20);
-		System.out.println(mpi);
 		// 나의 문의 내역
 		ArrayList<Board> myQnAList = bService.myQnAList(memberNo,mpi);
 		if(myQnAList != null) {
 			model.addAttribute("myQnAList", myQnAList);
 			model.addAttribute("mpi",mpi);
 		}
-		
+		System.out.println(qnaList);
+		System.out.println("=======================");
+		System.out.println(myQnAList);
 		return "qnaBoard";
 		
 	}
