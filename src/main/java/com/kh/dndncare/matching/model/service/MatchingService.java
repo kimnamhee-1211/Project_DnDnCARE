@@ -178,6 +178,9 @@ public interface MatchingService {
 	
 	//loginUser가 그룹 리더인지 아닌지 확인
 	String getGroupLeader(int matNo, int ptNo);
+	
+	int getHospitalNo(String hospitalName);
+	int insertHospital(String hospitalName, String hospitalAddress);
 
 
 }
