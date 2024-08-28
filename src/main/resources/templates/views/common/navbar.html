@@ -15,7 +15,7 @@
 		    	<a href="home.do" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a>
 	        </div>
 		    <th:block th:if="${session.loginUser !=null && session.loginUser.memberCategory !='A'}">
-			    <div class="navbar1 d-flex justify-content" id="navbarNav1"  style="min-width:800px;">
+			    <div class="navbar1 d-flex justify-content-evenly" id="navbarNav1"  style="min-width:800px;">
 			    		<th:block th:if="${ session.loginUser.memberCategory =='C'}">
 					    	<ul class="navbar-nav ms-auto fs-4">
 						    	<li class="nav-item">
