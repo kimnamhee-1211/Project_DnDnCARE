@@ -731,9 +731,9 @@
 						document.getElementsByName('payMoney')[0].value = (data.money * data.hourly / data.ptCount) / data.ptCount;
 						document.getElementById('payMatDate').innerText = data.beginDt +' '+ data.beginTime + ' ~ ' + data.endDt + ' '+ data.endTime + ' 기간 중 총' + data.hourly +'회 ' + data.times +'시간';
 					}else{
-						document.getElementsByClassName('resultPay')[0].innerText = (data.money / data.ptCount).toLocaleString() + '원';
-						document.getElementsByClassName('resultPay')[1].innerText = (data.money / data.ptCount).toLocaleString() + '원 결제하기';
-						document.getElementsByName('payMoney')[0].value = data.money * data.days / data.ptCount;
+						document.getElementsByClassName('resultPay')[0].innerText = data.days +'일 ' + data.times +'시간 합계 ' + ((data.money * data.days / data.ptCount) +((data.money / data.ptCount / 24)*data.times)).toLocaleString() + '원';
+						document.getElementsByClassName('resultPay')[1].innerText =((data.money * data.days / data.ptCount) +((data.money / data.ptCount / 24)*data.times)).toLocaleString() + '원 결제하기';
+						document.getElementsByName('payMoney')[0].value = (data.money * data.days / data.ptCount) +((data.money / data.ptCount/24)*data.times);
 					}
 				},
 				error:data=>console.log(data)
