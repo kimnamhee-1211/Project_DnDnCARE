@@ -75,7 +75,7 @@ public class AdminController {
 	public String careInformation(@RequestParam(value="page", defaultValue="1") int currentPage, Model model,
 									HttpServletRequest request) {
 		// 로그 파일 : 페이지 이용량을 조회 (시작)
-		File usageFolder = new File("C:/logs/dndnCare/careInformationUsage/");
+		File usageFolder = new File("C:/logs/careInformationUsage/");
 		File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
 		
 		TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
@@ -101,7 +101,7 @@ public class AdminController {
 		// 로그 파일 : 페이지 이용량을 조회 (끝)
 			
 		// 로그 파일 : 최근 일주일 검색어 조회 (시작)	
-		File searchFolder = new File("C:/logs/dndnCare/careInformation/");
+		File searchFolder = new File("C:/logs/careInformation/");
 		File[] searchFileList = searchFolder.listFiles();
 		//System.out.println(Arrays.toString(searchFileList));
 		//[C:\logs\dndnCare\careInformation\careInformation.log, C:\logs\dndnCare\careInformation\careInformation.log.20240816]
@@ -161,23 +161,20 @@ public class AdminController {
 		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 7, 5);
 		ArrayList<Board> bList = aService.selectAllCareInformation(pi); // 이래도 되나?
 		ArrayList<Integer> bNoList = new ArrayList<Integer>();
+		ArrayList<Attachment> aList = new ArrayList<Attachment>();
 		for(Board b : bList) {
 			bNoList.add(b.getBoardNo());
 		}
-		ArrayList<Attachment> aList = aService.selectAttachment(bNoList);
-		
-		
-		
-		if(!bList.isEmpty()) {
-			model.addAttribute("bList", bList);
-			model.addAttribute("aList", aList);
-			model.addAttribute("pi", pi);
-			System.out.println(pi);
-			model.addAttribute("loc", request.getRequestURI());
-			return "admin/careInformation";
-		} else {
-			throw new AdminException("서비스 요청에 실패하였습니다.");
+		if(!bNoList.isEmpty()) {
+			aList = aService.selectAttachment(bNoList);
 		}
+		
+		model.addAttribute("bList", bList);
+		model.addAttribute("aList", aList);
+		model.addAttribute("pi", pi);
+		model.addAttribute("loc", request.getRequestURI());
+		return "admin/careInformation";
+		
 	}
 
 	// 간병백과 작성 페이지로 이동
@@ -262,11 +259,11 @@ public class AdminController {
 			
 			// 2. 썸네일 생성하기
 			//BufferedImage image = ImageIO.read(new File("\\\\192.168.40.37\\sharedFolder/dndnCare/thumbnail.png")); // 바탕이 될 썸네일 기본 이미지를 불러온다.
-			BufferedImage image = ImageIO.read(new File("C:\\\\uploadFinalFiles/thumbnail.png"));
+			BufferedImage image = ImageIO.read(new File("C:\\\\uploadFiles/careInformation/thumbnail.png"));
 			image = thumbnailUtil.createThumbnail(image, b.getBoardTitle(), 25, 150); // 썸네일 기본 이미지 위에 텍스트 입력하기
 			String thumbnailName = copyNameCreate() + ".png"; // 텍스트 입력한 썸네일 파일을 저장할 때 사용할 파일명
 			//thumbnailUtil.saveImage(image, "\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
-			thumbnailUtil.saveImage(image, "C:\\\\uploadFinalFiles/" + thumbnailName);
+			thumbnailUtil.saveImage(image, "C:\\\\uploadFiles/careInformation/" + thumbnailName);
 			
 			// 3. DB에 전달할 데이터로서 가공한다. : "data:image/~~~~~"인 부분을 잘라내면됨
 			int bResult = aService.insertCareInfomation(b); // 게시글 삽입 후 생성된 글 번호를 받아온다.
@@ -276,7 +273,7 @@ public class AdminController {
 					attm.setRefBoardNo(b.getBoardNo()); // 첨부파일에 대한 참조글번호를 지정한다.
 					attm.setOriginalName(b.getBoardTitle());
 					//attm.setAttmPath("\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + renameName);
-					attm.setAttmPath("C:\\\\uploadFinalFiles/" + renameName);
+					attm.setAttmPath("C:\\\\uploadFiles/careInformation" + renameName);
 					attm.setAttmLevel(1);
 				}
 				
@@ -284,7 +281,7 @@ public class AdminController {
 				thumbnail.setRefBoardNo(b.getBoardNo());
 				thumbnail.setOriginalName("auto_Thumbnail");
 				thumbnail.setRenameName(thumbnailName);
-				thumbnail.setAttmPath("C:\\\\uploadFinalFiles/" + thumbnailName);
+				thumbnail.setAttmPath("C:\\\\uploadFiles/careInformation" + thumbnailName);
 				//thumbnail.setAttmPath("\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
 				thumbnail.setAttmLevel(0);
 				aList.add(thumbnail); // aList의 마지막 index에 썸네일을 add한다.
@@ -451,11 +448,11 @@ public class AdminController {
 				
 				// 썸네일을 새롭게 생성한다.
 				//BufferedImage image = ImageIO.read(new File("\\\\192.168.40.37\\sharedFolder/dndnCare/thumbnail.png")); // 바탕이 될 썸네일 기본 이미지를 불러온다.
-				BufferedImage image = ImageIO.read(new File("C:\\\\uploadFinalFiles/thumbnail.png"));
+				BufferedImage image = ImageIO.read(new File("C:\\\\uploadFiles/careInformation/thumbnail.png"));
 				image = thumbnailUtil.createThumbnail(image, b.getBoardTitle(), 25, 150); // 썸네일 기본 이미지 위에 텍스트 입력하기
 				String thumbnailName = copyNameCreate() + ".png"; // 텍스트 입력한 썸네일 파일을 저장할 때 사용할 파일명
 				//thumbnailUtil.saveImage(image, "\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
-				thumbnailUtil.saveImage(image, "C:\\\\uploadFinalFiles/" + thumbnailName);
+				thumbnailUtil.saveImage(image, "C:\\\\uploadFiles/careInformation/" + thumbnailName);
 				
 				
 				// 새로운 썸네일을 DB에 저장한다.
@@ -463,7 +460,7 @@ public class AdminController {
 				thumbnail.setRefBoardNo(b.getBoardNo());
 				thumbnail.setOriginalName("auto_Thumbnail");
 				thumbnail.setRenameName(thumbnailName);
-				thumbnail.setAttmPath("C:\\\\uploadFinalFiles/" + thumbnailName);
+				thumbnail.setAttmPath("C:\\\\uploadFiles/careInformation/" + thumbnailName);
 				//thumbnail.setAttmPath("\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
 				thumbnail.setAttmLevel(0);
 				int insertThumbnailResult = aService.insertThumbnail(thumbnail);
@@ -484,7 +481,7 @@ public class AdminController {
 	}
 	
 	public void deleteFile(String fileName) {
-		File saveFile = new File("C:\\uploadFinalFiles\\" + fileName);
+		File saveFile = new File("C:\\uploadFiles\\careInformation\\" + fileName);
 		if(saveFile.exists()) saveFile.delete(); // 저장소 내에 파일이 존재할 때만 삭제한다.
 	}
 	
@@ -565,7 +562,7 @@ public class AdminController {
 	// 그래프 작업용 메소드를 따로 만들기
 	public void membersGraph(Model model) {
 		// 로그 읽어오기 : C:\logs\dndnCare\loginUser
-		File folder = new File("C:/logs/dndnCare/loginUser");
+		File folder = new File("C:/logs/loginUser");
 		File[] fileList = folder.listFiles();
 		
 		// 2주치의 로그파일을 1주일씩 각각 읽어오기
