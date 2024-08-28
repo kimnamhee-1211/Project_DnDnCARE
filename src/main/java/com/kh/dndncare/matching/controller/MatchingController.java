@@ -314,7 +314,7 @@ public class MatchingController {
 		        	int updateMatCResult = mcService.updateMatC(matNo, memberNoC);
 		        	//모달용
 		        	if(updateMatCResult > 0) {		        	
-			        	String matCName = mcService.getNameC(memberNo);
+			        	String matCName = mcService.getNameC(memberNoC);
 			    		re.addAttribute("matCName", matCName);
 			    		result = "request";
 		        	}
