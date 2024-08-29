@@ -89,7 +89,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="c : ${cbList}">
+								<tr th:each="c : ${cbList}" th:if="${c.categoryNo != 99}">
 									<td>[[${c.boardNo}]]</td>
 									<th:block th:if="${c.categoryNo != 0}">
 										<td>
@@ -147,7 +147,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="p : ${pbList}">
+								<tr th:each="p : ${pbList}" th:if="${p.categoryNo != 99}">
 									<td>[[${p.boardNo}]]</td>
 									<th:block th:if="${p.categoryNo != 0}">
 										<td>
@@ -276,8 +276,6 @@
 		const tds = tbody.querySelectorAll('td');
 		const pTds = patientTbody.querySelectorAll('td');
 		const combinedTds = [tds+pTds]
-		console.log("------------")
-		console.log(combinedTds)
 		
 		/*<![CDATA[*/
 		const cbList = /*[[${cbList}]]*/1;

@@ -81,6 +81,7 @@
 		                    </div>
 		                </div>
 		                <div class="m-5 row">
+		                	<h4>문의내용</h4>
 		                    <div class="form-control" id="boardContent"  style="min-height:100px;" th:utext="${b.boardContent}">
 		                    </div>
 		                </div>
@@ -90,13 +91,20 @@
 	
 	                <div class="d-flex justify-content-end">
 	                	<th:block th:if="${b.categoryNo == 0}">
-	                		<button type="button" class="btn me-2 btn-sm" id="adminBoardUpdateModalBtn" style="outline-color: #1E5F74; outline-style: solid; outline-width: 3px" >수정하기</button>
+	                		<button type="button" class="btn me-4 btn-sm" id="adminBoardUpdateModalBtn" style="outline-color: #1E5F74; outline-style: solid; outline-width: 3px" >수정하기</button>
 	                	</th:block>
 	                	<th:block th:if="${b.boardStatus == 'Y'}">
-							<button type="button" class="btn me-2 btn-sm" id="adminBoardDeleteModalBtn" style="outline-color: #FCDAB7; outline-style: solid; outline-width: 3px" >삭제하기</button>
+							<button type="button" class="btn me-4 btn-sm" id="adminBoardDeleteModalBtn" style="outline-color: #FCDAB7; outline-style: solid; outline-width: 3px" >삭제하기</button>
 						</th:block>
 					</div>
 	            </form>
+	            	
+	            <div class="input-group m-5" style="width:1004px" th:if="${b.categoryNo == 99}">
+				    <span class="input-group-text" style="width:8%;font-weght:bold" >&nbsp;&nbsp;답변</span>
+				    <textarea class="form-control" rows="3" id="answerContent" style="resize: none; height: 100px;" placeholder="문의담당 관리자만 작성해주세요." required></textarea>
+				    <button class="btn" id="answerSubmit" type="button" style="width:10%;border:1px solid #1E5F74;outline-color:#1E5F74;font-weght:bold;">작성</button>
+				</div>
+
 	            <hr>
 	            
 	            <div class="input-group m-5" style="width:1104px">
@@ -104,7 +112,7 @@
 						<thead>
 							<tr>
 								<th width="7%">댓글번호</th>
-								<th width="20%">&nbsp;&nbsp;작성자</th>
+								<th width="10%">&nbsp;&nbsp;작성자</th>
 								<th width="40%">내용</th>
 								<th width="15%">작성일자</th>
 								<th width="10%">관리</th>
@@ -168,22 +176,61 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
 	<script th:inline="javascript">
-		window.onload =() =>{
+		document.addEventListener('DOMContentLoaded', function() {
+			document.getElementById('answerSubmit').addEventListener('click', function() {
+				console.log('abc')
+		        const answerContent = document.getElementById('answerContent').value.trim();
+		        if (answerContent === '') {
+		            alert('답변 내용을 입력해주세요.');
+		            return;
+		        }else{
+		        	console.log(answerContent)
+		        	$.ajax({
+		                url: 'adminInsertAnswer.adm',  
+		                method: 'POST',
+		                data: {
+		                    boardNo: document.querySelector('input[name="boardNo"]').value,  
+		                    answerContent: answerContent  
+		                },
+		                dataType: 'JSON',
+		                success: data=> {
+		                        alert('답변이 성공적으로 작성되었습니다.');
+		                        const newTr = document.createElement('tr');
+		                        data.forEach(r =>{
+		                        	
+		                        newTr.innerHTML = `
+		                        	<td>${r.replyNo}</td>
+		                            <td>&nbsp;&nbsp;${r.memberNickName}</td>
+		                            <td>${answerContent}</td>
+		                            <td>${r.replyCreateDate}</td>
+		                        `;
+		                        })
+		                        document.getElementById('adminPagereplyTable').querySelector('tbody').appendChild(newTr);
+
+		                        // 댓글 작성 초기화
+		                        document.getElementById('answerContent').value = '';
+		                
+		                },
+		                error: data => console.log(data)
+		        	});
+		           }
+		    });
+		    
 			if (document.getElementById('adminBoardDeleteModalBtn') != null) {
 				document.getElementById('adminBoardDeleteModalBtn').addEventListener('click', function() {
 				    const deleteModal = new bootstrap.Modal(document.getElementById('adminDeleteBoardModal'));
 				    deleteModal.show();
 				});
 		    }
-		   
+			 
 			
 			const replyTable = document.getElementById('adminPagereplyTable');
 		    const replyDeleteBtns = replyTable.querySelectorAll('button');
 
 		    for (const btn of replyDeleteBtns) {
 		        btn.addEventListener('click', function(event) {
-		            event.stopPropagation(); // 클릭 이벤트가 <td>로 전파되지 않도록 방지
-		            const tr = this.closest('tr'); // 현재 버튼이 속한 <tr>을 찾습니다
+		            event.stopPropagation(); 
+		            const tr = this.closest('tr'); 
 		            const replyNo = tr.querySelector('td').innerText;
 
 		            $.ajax({
@@ -199,12 +246,16 @@
 		                },
 		                error: data => console.log('에러 발생:', data)
 		            });
-				})
-			}
+				});
+		    
 			
+		    
+		   
+		    
 			
+		    
 				document.getElementById('adminBoardUpdateModalBtn').addEventListener('click', function() {
-					 // 제목 부분 변경
+					 // 제목 변경
 				    const titleSpan = document.querySelector('div.col-md-7 span'); 
 				    if (titleSpan) {
 				        const titleInput = document.createElement('input');
@@ -215,7 +266,7 @@
 				        titleSpan.parentNode.replaceChild(titleInput, titleSpan);
 				    }
 	
-				    // 내용 부분 변경
+				    // 내용 변경
 				    const contentDiv = document.getElementById('boardContent');
 				    if (contentDiv) {
 				        const textarea = document.createElement('textarea');
@@ -253,10 +304,8 @@
 	
 				    this.parentNode.appendChild(saveButton);
 				});
-
 		    }
-
-
+		});
 			
 		
 		

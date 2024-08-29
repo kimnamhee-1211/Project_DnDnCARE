@@ -76,10 +76,6 @@ public interface AdminMapper {
 
 	int updateAdminBoardStatus(@Param("boardNo") int boardNo, @Param("boardStatus") String boardStatus);
 
-	ArrayList<Board> adminSearchBoard(@Param("searchType") String searchType, @Param("searchText") String searchText);
-
-	int getSearchListCountAll(@Param("searchType") String searchType, @Param("searchText") String searchText);
-
 	Board adminSelectBoard(int bNo);
 
 	ArrayList<Reply> adminSelectReply(int bNo);
@@ -92,9 +88,15 @@ public interface AdminMapper {
 	
 	int adminUpdateBoard(Board b);
 
+	int getAdminQnABoardCount();
+	
+	ArrayList<Board> adminQnABoardList(RowBounds rowBounds);
+
 	int checkAdminId(String memberId);
 
 	int insertMember(Member m);
+
+	int adminInsertAnswer(Reply r);
 
 
 }

@@ -32,7 +32,7 @@ public class Member {
 	private String memberCategory;
 	private String memberStatus;
 	private String memberNational;
-	private String memberPay;
+	private String memberSocailToken;
 	private Date memberUpdateDate;
 	
 	//카테고리 추가하기

@@ -27,6 +27,7 @@
 	     		<div align="center"class="myInfo-Border m-4">
 	     			<div class="m-4" style="border-bottom:2px solid #133B5C;"><h1 class="h3 m-4 fw-bold text-center">MY PAGE</h1></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfo.me">내 정보</a></div>
+	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="goMyMatchingC.mc?before=myPage">내 매칭 현황</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingHistory.me">매칭 이력</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoMatchingReview.me">내 든든지수/후기</a></div>
 	     			<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="myInfoBoardList.me">내가 쓴 게시글</a></div>
@@ -42,7 +43,7 @@
 	      		<div align="center"class="row m-4" style="width:700px"> <!-- 여기로규격정햇다 -->
 		      		<div class="col-2 m-4">
 <!-- 			      		<img id="profile-image" src="image/icon_profile.png" onclick="profileImageUpdate()"/> -->
-			      		<img class="m-4" style="margin-left:-20px"id="profile-image" th:src="${cg.careImg} ? ${cg.careImg} : icon_profile.png" onclick="profileImageUpdate()"/>
+			      		<img class="m-4" style="margin-left:-20px"id="profile-image" th:src="${cg.careImg} ? ${cg.careImg} : (${session.loginUser.memberGender == 'F' ? 'image/icon/femaleProfile.png' : 'image/icon/maleProfile.png'})" onclick="profileImageUpdate()"/>
 			      		<span><button class="myInfo-btn" onclick="profileImageUpdate()">사진변경</button></span>
 			      		<script> 
 			      			function profileImageUpdate(){
@@ -370,7 +371,7 @@
 									        	  } else { // 이벤트 날짜가 미래인 경우
 									        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>&nbsp;&nbsp;' + remainCalc(mils) + ' 남음';
 									        	  }
-												infomation[2].innerHTML = '병원명이 들어올 자리';
+												infomation[2].innerHTML = info.event.extendedProps.hospitalName;
 								          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
 								          		
 								          		let infoDetail = document.querySelector('.infoDetail').children;
@@ -507,6 +508,7 @@
 	    	</div>
     	</div>
 	</div>
+	<br/><br/><br/><br/>
 	<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
 	<div th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
@@ -519,8 +521,8 @@
 		    		<div class="modal-title workInfo">
 		    			<div class="infomation">
 			    			<span class="badge bg-danger"><!-- <img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음 --></span><br/>
-			    			<span>혜민병원</span><br/>
-			    			<span>서울특별시 광진구</span>
+			    			<span class="badge rounded-pill bg-light text-dark fs-5">혜민병원</span><br/>
+			    			<span class="badge rounded-pill bg-light text-dark fs-6">서울특별시 광진구</span>
 		    			</div>
 		    			<div class="text-end align-middle imgDiv">
 		    				<br/>
@@ -1077,7 +1079,7 @@
 			}).open();
     	};
 	
-	</script>
+	</script>   	
 	
 </body>
 </html>

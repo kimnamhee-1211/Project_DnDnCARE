@@ -213,6 +213,7 @@ public interface MemberService {
 	Integer getDelMemberNo();
 
 	Member findPwdResult(Member member);
+	Matching selectEndDateMat(int matNo);
 
 
 

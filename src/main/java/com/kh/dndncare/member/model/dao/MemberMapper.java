@@ -206,5 +206,6 @@ public interface MemberMapper {
 	Integer getDelMemberNo();
 
 	Member findPwdResult(Member member);
+	Matching selectEndDateMat(int matNo);
 
 }

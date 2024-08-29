@@ -142,9 +142,9 @@
 				    <input type="checkbox" class="btn-check" id="jeju" name="area" value="16" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 16)}">
 				    <label class="btn-outline-area btn-sm me-2" for="jeju">제주</label>
+				           				           				     <br> 
 				    <input type="checkbox" class="btn-check" id="gyeongi" name="area" value="8" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 8)}">
-				           				           				     <br> 
 				    <label class="btn-outline-area btn-sm me-2" for="gyeongi">경기도</label>
 				    <input type="checkbox" class="btn-check" id="gangwon" name="area" value="9" autocomplete="off" onchange="submitForm()"
 				           th:checked="${areas != null and #lists.contains(areas, 9)}">
@@ -177,11 +177,11 @@
                         <tr>
                             <th width="4%">번호</th>
                             <th width="10%">카테고리</th>
-                            <th width="20%">제목</th>
+                            <th width="30%">제목</th>
                             <th width="10%">작성자</th>
                             <th width="6%">지역</th>
-                            <th width="10%">작성일</th>
-                            <th width="6%">조회수</th>
+                            <th width="15%">작성일</th>
+                            <th width="5%">조회수</th>
                         </tr>
                     </thead>
                     <tbody align="center">

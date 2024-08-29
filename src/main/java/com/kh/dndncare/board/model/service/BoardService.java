@@ -56,6 +56,10 @@ public interface BoardService {
 
 	ArrayList<Board> qnaBoardList(PageInfo pi);
 
+	ArrayList<Board> myQnAList(int memberNo, PageInfo mpi);
+
+	int getMyListCountQnA(int memberNo);
+
 
 
 
