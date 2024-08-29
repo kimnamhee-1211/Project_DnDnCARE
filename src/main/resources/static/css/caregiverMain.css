@@ -196,7 +196,7 @@ a {
 
 /* 캘린더 이벤트의 정보를 보는 모달박스 */
 .workInfo {
-	display:grid; grid-template-columns: 1fr 1fr;
+	display:grid; grid-template-columns: 300px 160px;
 }
 
 /*하단 더보기 버튼*/
