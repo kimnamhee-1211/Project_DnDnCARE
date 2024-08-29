@@ -954,7 +954,7 @@ public class MemberController {
 		System.out.println("회원가입 검증=" + m);
 		// 소셜회원가입하나추가
 		String code = (String) session.getAttribute("code");
-		m.setMemberPay(code);
+		m.setMemberSocailToken(code);
 		session.removeAttribute("code");
 		int result = mService.enroll(m);
 
