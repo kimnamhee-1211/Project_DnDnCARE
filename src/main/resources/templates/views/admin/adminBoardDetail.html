@@ -98,9 +98,10 @@
 						</th:block>
 					</div>
 	            </form>
+	            	
 	            <div class="input-group m-5" style="width:1004px" th:if="${b.categoryNo == 99}">
 				    <span class="input-group-text" style="width:8%;font-weght:bold" >&nbsp;&nbsp;답변</span>
-				    <textarea class="form-control" rows="3" id="answerContent" style="resize: none; height: 100px;" required></textarea>
+				    <textarea class="form-control" rows="3" id="answerContent" style="resize: none; height: 100px;" placeholder="문의담당 관리자만 작성해주세요." required></textarea>
 				    <button class="btn" id="answerSubmit" type="button" style="width:10%;border:1px solid #1E5F74;outline-color:#1E5F74;font-weght:bold;">작성</button>
 				</div>
 
@@ -111,7 +112,7 @@
 						<thead>
 							<tr>
 								<th width="7%">댓글번호</th>
-								<th width="20%">&nbsp;&nbsp;작성자</th>
+								<th width="10%">&nbsp;&nbsp;작성자</th>
 								<th width="40%">내용</th>
 								<th width="15%">작성일자</th>
 								<th width="10%">관리</th>
