@@ -83,20 +83,20 @@
 		      		</div> -->
 	      		</div>
 	      		<div align="center"class="row m-4" style="width:900px"> <!-- 여기로규격정햇다 -->
-		      		<div align="left"class="col-5 m-2">
+		      		<div align="left"class="col-5 m-2" style="min-width:375px">
 		      			<!-- <div><button class="myInfo-btn m-2" onclick="location.href='updateMemberView.me'"style="height:50px">내 계정 정보 수정하기</button></div>
 		      			<div><button class="myInfo-btn m-2" onclick="location.href='updatePwdView.me'"style="height:50px">비밀번호 변경하기</button></div> -->
 		      			<table>
 		      				<tr>
-			      				<th>가입자 회원 이름</th>
+			      				<th style="font-size:18px">가입자 회원 이름</th>
 			      				<td class="p-3">[[${session.loginUser.memberName}]]</td>
 		      				</tr>
 		      				<tr>
-			      				<th>가입자 이메일 정보</th>
+			      				<th style="font-size:18px">가입자 이메일 정보</th>
 			      				<td class="p-3">[[${session.loginUser.memberEmail}]]</td>
 		      				</tr>
 		      				<tr>
-			      				<th>가입자 휴대폰 번호</th>
+			      				<th style="font-size:18px">가입자 휴대폰 번호</th>
 			      				<td class="p-3">[[${session.loginUser.memberPhone}]]</td>
 		      				</tr>
 		      			</table>
@@ -1015,7 +1015,7 @@
 				case '석션':
 					memberInfoValue += '29,'; break;
 				case '피딩':
-					memberInfoValuee += '30,'; break;
+					memberInfoValue += '30,'; break;
 				case '소변줄':
 					memberInfoValue += '31,'; break;
 				case '장루':

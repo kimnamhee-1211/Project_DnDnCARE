@@ -726,6 +726,8 @@ public class MatchingController {
 		CareGiver caregiverIntro = mcService.selectIntro(memberNo);
 		AgeCalculator ageCalculator = new AgeCalculator();
 		int age = ageCalculator.calculateAge(caregiverIntro.getMemberAge());
+		caregiverIntro.setAge(age);
+		System.out.println("남희님이 셋팅해준 나이 " + caregiverIntro.getAge());
 		
 		//통계용
 		ArrayList<MatMatptInfo> serviceList = mcService.serviceList(memberNo);
@@ -1422,6 +1424,7 @@ public class MatchingController {
 		//남희 : 나이세팅
 		int age = AgeCalculator.calculateAge(caregiverIntro.getMemberAge());
 		caregiverIntro.setAge(age);
+		System.out.println("남희님이 셋팅해준 나이 " + caregiverIntro.getAge());
 		
 		
 		
