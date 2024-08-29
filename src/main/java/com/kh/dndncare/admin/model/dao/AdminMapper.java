@@ -76,10 +76,6 @@ public interface AdminMapper {
 
 	int updateAdminBoardStatus(@Param("boardNo") int boardNo, @Param("boardStatus") String boardStatus);
 
-	ArrayList<Board> adminSearchBoard(@Param("searchType") String searchType, @Param("searchText") String searchText);
-
-	int getSearchListCountAll(@Param("searchType") String searchType, @Param("searchText") String searchText);
-
 	Board adminSelectBoard(int bNo);
 
 	ArrayList<Reply> adminSelectReply(int bNo);

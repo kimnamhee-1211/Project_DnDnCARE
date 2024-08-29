@@ -815,26 +815,6 @@ public class AdminController {
 		}
 	}
 	
-	// 게시글 검색 수정중
-	@GetMapping("adminSearchBoard.adm")
-	public String adminSearchBoard(@RequestParam(value="caregiverPage", defaultValue = "1") int caregiverPage,
-									@RequestParam("searchType") String searchType, @RequestParam("searchText") String searchText,
-									Model model) {
-		int listCount = aService.getSearchListCountAll(searchType, searchText);
-		PageInfo pi = Pagination2.getPageInfo(caregiverPage, listCount, 7, 5);
-		    
-		ArrayList<Board> searchBoard = aService.adminSearchBoard(searchType, searchText, pi);
-		System.out.println("+++++++++++");
-		System.out.println(listCount);
-		System.out.println(searchBoard);
-		model.addAttribute("pi",pi);
-		model.addAttribute("pbList",searchBoard);
-		if(searchBoard != null) {
-			return "adminBoard";
-		}else {
-			throw new AdminException("검색에 실패했습니다.");
-		}
-	}
 	
 	// 게시물 상세조회
 	@GetMapping("selectAdminBoard.adm")

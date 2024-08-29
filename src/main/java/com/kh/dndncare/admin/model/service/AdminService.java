@@ -71,9 +71,6 @@ public interface AdminService {
 
 	int updateAdminBoardStatus(int boardNo, String boardStatus);
 
-	ArrayList<Board> adminSearchBoard(String searchType, String searchText, PageInfo pi);
-
-	int getSearchListCountAll(String searchType, String searchText);
 
 	Board adminSelectBoard(int bNo);
 

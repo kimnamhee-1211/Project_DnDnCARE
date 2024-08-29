@@ -151,7 +151,7 @@
                         <thead align="center">
                             <tr>
                                 <th width="8%">번호</th>
-                                <th width="30%">제목</th>
+                                <th width="40%">제목</th>
                                 <th width="10%">작성자</th>
                                 <th width="20%">작성일</th>
                                 <th width="8%">답변</th>
@@ -164,10 +164,10 @@
                                 <td>[[${q.memberNickName}]]</td>
                                 <td>[[${q.boardCreateDate}]]</td>
                                 <th:block th:if="${q.answerYN==0}">
-                               		 <td>답변 대기중</td>
+                               		 <td>대기중</td>
                                 </th:block>
-                                <th:block th:if="${q.answerYN!=1}">
-                               		 <td>답변 완료</td>
+                                <th:block th:if="${q.answerYN>=1}">
+                               		 <td style="color: blue;">답변 완료</td>
                                 </th:block>
                             </tr>
                         </tbody>
@@ -215,7 +215,7 @@
                                		 <td>답변 대기중</td>
                                 </th:block>
                                 <th:block th:if="${mql.answerYN != 0}">
-                               		 <td>답변 완료</td>
+                               		 <td style="color: blue;">답변 완료</td>
                                 </th:block>
                             </tr>
                         </tbody>
@@ -249,6 +249,7 @@
 
     <script th:inline="javascript">
         window.onload = () => {
+        	// 전체
             const tbody = document.querySelector('tbody');
             const tds = tbody.querySelectorAll('td');
             for (const td of tds) {
@@ -258,6 +259,17 @@
                     location.href="selectBoard.bo?bId=" + boardId + "&page=" + /*[[${pi.currentPage}]]*/1;
                 });
             }
+            // 본인
+            const section = document.getElementById('myQnABoardList-section').querySelector('tbody')
+            const pTds = section.querySelectorAll('td');
+            for(const ptd of pTds){
+            	ptd.addEventListener('click', function(){
+            		const ptrTds = this.parentElement.querySelectorAll('td');
+            		const pboardId = ptrTds[0].innerText;
+            		location.href="selectBoard.bo?bId=" + pboardId + "&page=" + /*[[${mpi.currentPage}]]*/1;
+            	})
+            }
+            console.log(section)
         };
         
         function showQnA(type) {

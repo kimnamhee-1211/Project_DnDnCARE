@@ -167,7 +167,7 @@
 		select *
 		from board
 			join member using(member_no)
-		where member_category = 'C' or (member_category='A' and category_no = 0)
+		where member_category = 'C' or (member_category='A' and category_no = 0 and category_no = 99)
 		order by board_no desc 
 	</select>
 	
@@ -176,7 +176,7 @@
 		select *
 		from board
 			join member using(member_no)
-		where member_category = 'P' or (member_category='A' and category_no = 0)
+		where member_category = 'P' or (member_category='A' and category_no = 0 and category_no = 99)
 		order by board_no desc
 	</select>
 	
@@ -185,7 +185,7 @@
 		select count(*)
 		from board
 			join member using(member_no)
-		where member_category = 'C'  or (member_category='A' and category_no = 0)
+		where member_category = 'C'  or (member_category='A' and category_no = 0 and category_no = 99)
 	</select>
 	
 	<!-- 환자커뮤니티 페이지네이션 -->
@@ -193,7 +193,7 @@
 		select count(*)
 		from board
 			join member using(member_no)
-		where member_category = 'P' or (member_category='A' and category_no = 0)
+		where member_category = 'P' or (member_category='A' and category_no = 0  and category_no = 99)
 	</select>
 	
 	<!-- 공지 작성 -->
@@ -213,41 +213,7 @@
 		where board_no=#{boardNo}
 	</update>
 	
-	<!-- 게시물 검색 -->
-	<select id="adminSearchBoard" resultType="Board">
-		select *
-	    from board b
-	        join member m on(m.member_no=b.member_no)
-	    where 
-	        <if test="searchType != null and searchType=='boardTitle'">
-				b.board_Title like '%' || #{searchText} || '%'
-			</if>
-	         <if test="searchType != null and searchType=='boardContent'">
-	         	b.board_Content like '%' || #{searchText} || '%'
-	         </if>
-	         <if test= "searchType != null and searchType=='memberNickName'">
-	         	m.member_NickName like '%' || #{searchText} || '%'
-	   		</if>
-	    order by b.board_no desc
-	</select>
 	
-	<!-- 검색 게시물 갯수 -->
-	<select id="getSearchListCountAll" parameterType="map" resultType="int">
-        select count(*)
-        from board b
-            join member m on m.member_no = b.member_no
-       where 
-	        <if test="searchType != null and searchType=='boardTitle'">
-				b.board_Title like '%' || #{searchText} || '%'
-			</if>
-	         <if test="searchType != null and searchType=='boardContent'">
-	         	b.board_Content like '%' || #{searchText} || '%'
-	         </if>
-	         <if test= "searchType != null and searchType=='memberNickName'">
-	         	m.member_NickName like '%' || #{searchText} || '%'
-	   		</if>
-	    order by b.board_no desc
-    </select>
     
     <!-- 게시글 상세조회 -->
     <select id="adminSelectBoard" resultType="Board">

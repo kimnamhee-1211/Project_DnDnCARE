@@ -119,7 +119,7 @@ public class BoardController {
 			if(b.getCategoryNo()!=99) {
 				return "redirect:communityBoardList.bo";			
 			}else {
-				return "rediect:qnaBoardList.bo";
+				return "redirect:qnaBoardList.bo";
 			}
 		}else {
 			throw new BoardException("게시글 작성을 실패하였습니다.");

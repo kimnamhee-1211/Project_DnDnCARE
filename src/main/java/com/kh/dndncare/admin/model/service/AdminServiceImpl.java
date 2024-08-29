@@ -172,16 +172,7 @@ public class AdminServiceImpl implements AdminService{
 		return aMapper.updateAdminBoardStatus(boardNo, boardStatus);
 	}
 
-	@Override
-	public ArrayList<Board> adminSearchBoard(String searchType, String searchText, PageInfo pi) {
-		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
-		return aMapper.adminSearchBoard(searchType, searchText);
-	}
 
-	@Override
-	public int getSearchListCountAll(String searchType, String searchText) {
-		return aMapper.getSearchListCountAll(searchType, searchText);
-	}
 
 	@Override
 	public Board adminSelectBoard(int bNo) {
