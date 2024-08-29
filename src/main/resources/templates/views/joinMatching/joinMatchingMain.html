@@ -104,6 +104,7 @@
 				
 	</main>
 	<br/><br/>
+	<div th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	
 	
@@ -256,7 +257,7 @@
 	        console.log(selectedValue);  
 			var url = 'http://apis.data.go.kr/B490001/sjHptMcalPstateInfoService/getSjJijeongHptChakgiList'; /*URL*/
 			var queryParams = '?' + encodeURIComponent('serviceKey') + '='+'AcjBypl1iy8gVIWLl%2B%2FmdUCYl0DqiUIxQrZbFaQzHNOUyRlcWEM88%2BNaOzYz2r6B9TBYowERnVXRq19kr%2Fwzyw%3D%3D'; /*Service Key*/
-			queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /**/
+			queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('15'); /**/
 			queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(page); /**/
 			if(selectedValue !== '선택'){
 				queryParams += '&' + encodeURIComponent('addr') + '=' + encodeURIComponent(selectedValue); /**/

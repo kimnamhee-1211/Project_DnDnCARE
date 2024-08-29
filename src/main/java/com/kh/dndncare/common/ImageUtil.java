@@ -20,10 +20,10 @@ public class ImageUtil {
 
         byte[] bytes = Base64.getDecoder().decode(base64WithoutHeader);
         copyName = copyName + extension;
-        File folder = new File("C:\\uploadFinalFiles/");
+        File folder = new File("C:\\uploadFiles/careInformation/");
 //        File folder = new File("\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board");
         folder.mkdirs();
-        File file = new File("C:\\uploadFinalFiles/" + copyName);
+        File file = new File("C:\\uploadFiles/careInformation/" + copyName);
 //        File file = new File("\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + copyName); // 공유 폴더 내 파일명(확장자X)으로 지정한다.
         try (OutputStream outputStream = new BufferedOutputStream((new FileOutputStream(file)))) {
             outputStream.write(bytes);

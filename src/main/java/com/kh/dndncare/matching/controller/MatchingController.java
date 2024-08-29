@@ -182,7 +182,9 @@ public class MatchingController {
 	              hospitalAddress = String.join("//", addressParts);
 	              patient.setPtAddress(hospitalAddress);
 	          }
+	          
 	          int hospitalNo = mcService.getHospitalNo(hospitalName);
+	          
 	          if (hospitalNo != 0) {
 	              matching.setHospitalNo(hospitalNo);
 	          } else {
@@ -661,8 +663,10 @@ public class MatchingController {
 	//공동간병 참여 취소
 	@PostMapping("outJoinMatching.jm")
 	public String outJoinMatching(@RequestParam("matNo") int matNo, @RequestParam("matMode") int matMode, HttpSession session, 
-								@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,
+								@RequestParam(value="hospitalName", required=false) String hospitalName, @RequestParam(value="hospitalAddress", required=false) String hospitalAddress,
 								RedirectAttributes re, @RequestParam(value="beforePage", required=false) String beforePage) {
+		
+		System.out.println("공동간병 현황" + matNo);
 		
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		int ptNo = mcService.getPtNo(loginUser.getMemberNo());
@@ -685,11 +689,15 @@ public class MatchingController {
 				@SuppressWarnings("unused")
 				int result2 = mcService.delMatching(matNo);
 			}
+			if(beforePage != null && beforePage.equals("my")) {
+				return "redirect:goMyMatchingP.mc";
+			}else {
+				re.addAttribute("hospitalName", hospitalName);
+				re.addAttribute("hospitalAddress", hospitalAddress);
+				re.addAttribute("msg", "공동간병 참여 취소가 완료되었습니다.");
+				return "redirect:joinMatching.jm";
+			}
 			
-			re.addAttribute("hospitalName", hospitalName);
-			re.addAttribute("hospitalAddress", hospitalAddress);
-			re.addAttribute("msg", "공동간병 참여 취소가 완료되었습니다.");
-			return "redirect:joinMatching.jm";			
 		}else {
 			throw new MemberException("공동간병 그룹 참여 취소 실패");
 		}
@@ -776,10 +784,6 @@ public class MatchingController {
         }
 		
 		
-		
-		
-		
-		
 		// 간병인 정보(국적, 경력, 자격증)
 		ArrayList<InfoCategory> caregiverInfo = mcService.getCaregiverInfo(memberNo);
 		HashMap<String, Object> caregiverInfoList = new HashMap<String, Object>();
@@ -839,14 +843,21 @@ public class MatchingController {
 	//공동간병 참여자 퇴장
 	@PostMapping("walkoutJoinMatching.jm")
 	public String walkoutJoinMatching(@RequestParam("matNo") int matNo, @RequestParam("ptNo") int ptNo,
-									@RequestParam("hospitalName") String hospitalName, @RequestParam("hospitalAddress") String hospitalAddress,
-									RedirectAttributes re) {
+									@RequestParam(value="hospitalName", required=false) String hospitalName, @RequestParam(value="hospitalAddress", required=false) String hospitalAddress,
+									@RequestParam(value="before", required=false) String before, RedirectAttributes re) {
 		int result = mcService.delMatPtInfo(matNo, ptNo);
+		
 		if(result > 0) {
-			re.addAttribute("hospitalName", hospitalName);
-			re.addAttribute("hospitalAddress", hospitalAddress);
-			re.addAttribute("msg", "공동간병 참여자 퇴장이 완료되었습니다.");
-			return "redirect:joinMatching.jm";
+			
+			if(before != null && before.equals("my")) {
+				return "redirect:goMyMatchingP.mc";
+			}else {
+				re.addAttribute("hospitalName", hospitalName);
+				re.addAttribute("hospitalAddress", hospitalAddress);
+				re.addAttribute("msg", "공동간병 참여자 퇴장이 완료되었습니다.");
+				return "redirect:joinMatching.jm";
+			}
+			
 		}else {
 			throw new MemberException("공동간병 참여자 퇴장 실패");
 		}
@@ -1035,7 +1046,8 @@ public class MatchingController {
 	
 	//나의 매칭현황(간병인)
 	@GetMapping("goMyMatchingC.mc")
-	public String goMyMatchingC(HttpSession session, Model model) {
+	public String goMyMatchingC(HttpSession session, Model model, 
+			@RequestParam(value="before", required=false) String before) {
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		ArrayList<MatMatptInfoPt> myMatchingAll = mcService. getMyMatching(loginUser.getMemberNo());
@@ -1090,20 +1102,17 @@ public class MatchingController {
 			int realAge = AgeCalculator.calculateAge(i.getPtAge());
 			i.setPtRealAge(realAge);
 		}
-		
-		
-		System.out.println("myMatching : " +  myMatching);
-		System.out.println("myMatchingW : " +  myMatchingW);
-		System.out.println("myRequestMatPt : " +  myRequestMatPt);
-		System.out.println("myRequestMat : " +  myRequestMat);
 			
 		model.addAttribute("myMatching", myMatching);
 		model.addAttribute("myMatchingW", myMatchingW);
 		model.addAttribute("myRequestMat", myRequestMat);
 		model.addAttribute("myRequestMatPt", myRequestMatPt);
 		model.addAttribute("loginUserName", loginUser.getMemberName());
-		
-		return "myMatchingC";
+		if(before != null && before.equals("myPage")) {
+			return "myMatC";
+		}else {
+			return "myMatchingC";
+		}
 	}
 	
 		//이거 어느꺼찌? 종규 수정 남흰ㅁ한테물어보기
@@ -1195,9 +1204,6 @@ public class MatchingController {
 
 	}
 	
-	
-	
-	
 	@PostMapping("successPay.mc")
 	public String insertPay(@ModelAttribute Pay p,
 							HttpSession session) {
@@ -1245,7 +1251,8 @@ public class MatchingController {
 	
 	//나의 매칭현황(환자)
 	@GetMapping("goMyMatchingP.mc")
-	public String goMyMatchingP(HttpSession session, Model model) {
+	public String goMyMatchingP(HttpSession session, Model model, 
+			@RequestParam(value="before", required=false) String before) {
 		
 		Member loginUser = (Member)session.getAttribute("loginUser"); 
 			
@@ -1298,9 +1305,7 @@ public class MatchingController {
 		        	myRequestMatC.add(i);
 		        }
 			}	
-		}
-		
-		
+		}				
 		
 		//매칭 신청 받은 내역 (간병인이 나(환자)를 신청)
 		ArrayList<CareGiverMin> myMatchingMat = mcService.getMyMatchingPN(loginPt);
@@ -1328,7 +1333,11 @@ public class MatchingController {
 		model.addAttribute("loginUserName", loginUser.getMemberName());
 		model.addAttribute("loginPt", loginPt);
 		
-		return "myMatchingP";	
+		if(before != null && before.equals("myPage")) {
+			return "myMatP";
+		}else {
+			return "myMatchingP";	
+		}
 	
 	}
 	
@@ -1531,22 +1540,21 @@ public class MatchingController {
 		Member loginUser = (Member)session.getAttribute("loginUser");
 		
 		ArrayList<Pay> pArr = mcService.selectPayTransfer(loginUser.getMemberNo()); 	///matNo를 전부 가져와야한다.왜냐? 공동간병 거래한사람도 있을꺼잖아
-		System.out.println("페이정보" + pArr);
+		System.out.println("페이정보이건맞냐?" + pArr);
 		int result = 0;
 		int money = 0;
 		if(!pArr.isEmpty()) {
 			for(Pay p : pArr) {
 				result += mcService.insertPayTransfer(loginUser,p);
 				money += p.getPayMoney();
+				int result2 = mcService.updatePayTransfer(p);
 			} 
 		}
 		
-		System.out.println(" 총 매칭건" + result);
-		System.out.println(" 총 금액" + money);
 		
 		
 		
-		return "redirect:careGiverMain.me";
+		return "redirect:caregiverMain.me";
 	}
 	
 	
