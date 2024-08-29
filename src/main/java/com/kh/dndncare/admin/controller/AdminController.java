@@ -393,6 +393,11 @@ public class AdminController {
 							}
 						}
 						
+						if(type.equals("jpeg")) {
+							type="jpg";
+						}
+						
+						
 						String copyName = copyNameCreate(); // 첨부파일명(확장자가 없음)을 생성한다.
 						renameName = copyName + "." + type; // 첨부파일명 + ".확장자"를 DB에 저장할 리네임으로 지정한다.
 						ImageUtil.base64ToFile(copyName, b64);  // 첨부파일명과 암호화된 이미지src를 전달한다.
@@ -603,7 +608,7 @@ public class AdminController {
 		try {
 			for(File f : fileList) {
 				String fileName = f.getName();
-				String[] nameArr = fileName.split(".log");
+				String[] nameArr = fileName.split(".log.");
 				
 				BufferedReader br = new BufferedReader(new FileReader(f));
 				
@@ -635,6 +640,9 @@ public class AdminController {
 				
 				br.close();
 			}
+			System.out.println("=====여기여기=====");
+			System.out.println(oneWeekAgo);
+			System.out.println("=====여기여기=====");
 			
 			model.addAttribute("oneWeekAgo", oneWeekAgo);
 			model.addAttribute("twoWeekAgo", twoWeekAgo);
