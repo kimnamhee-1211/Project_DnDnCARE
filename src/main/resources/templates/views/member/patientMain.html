@@ -76,7 +76,7 @@
                        		</td>
 	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
 	                        <td th:if="${c.caregiverRealAge < 0}">[[${c.caregiverRealAge + 100}]]</td>
-	                        <td th:if="${c.caregiverRealAge >= 0}">[[${c.caregiverRealAge}]]</td>
+	                        <td th:if="${c.caregiverRealAge >= 0}">[[${c.caregiverRealAge}]]세</td>
 	                        <td>[[${c.caregiverAddress}]]</td>
 	                        <td>[[${c.haveLicense == undefined ? '-' : c.haveLicense}]]</td>
 	                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>

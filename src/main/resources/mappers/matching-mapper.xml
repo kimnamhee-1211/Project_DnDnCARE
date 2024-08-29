@@ -89,7 +89,6 @@
 		select *
 		from hospital
 		where hospital_name = #{hospitalName} 
-				<!-- and hospital_address like '%${hospitalAddress}%'	-->
 	</select>
 	
 	<!-- loginUser-MatNo get -->
