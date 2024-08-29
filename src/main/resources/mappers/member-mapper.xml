@@ -397,7 +397,7 @@
 	<select id="selectSocialLogin" resultType="Member">
 		select *
 		from member
-		where member_Pay = #{code}
+		where member_social_token = #{code}
 	</select>
 	
 	<!-- 내가 작성한 리뷰조회 -->
