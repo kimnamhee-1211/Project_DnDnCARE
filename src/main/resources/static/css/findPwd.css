@@ -93,9 +93,10 @@ body {
 	font-size:15px;
 	border-radius:25px;
 	border:none;
-	background:#8dd986;
+	background:#133b5c;
 	color:white;
 	padding:10px;
+	opacity:0.5;
 }
 
 .signIn-btn {
@@ -103,8 +104,9 @@ body {
 	font-size:18px;
 	border-radius:25px;
 	border:none;
-	background:#8dd986;
+	background:#133b5c;
 	color:white;
+	opacity:0.8;
 }
 
 .find-section a {

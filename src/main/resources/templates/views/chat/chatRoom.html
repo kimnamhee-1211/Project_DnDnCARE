@@ -47,13 +47,39 @@
 		}
 		
 		#chat-header {
+		    display: flex;
+   			justify-content: space-between;
+   			align-items: center;
 		    background-color: #133b5c;
 		    color: white;
 		    padding: 20px;
 		    border-radius: 8px 8px 0 0;
 		    font-size: 20px;
-		    opacity:0.5;
+		    opacity:0.7;
 		}
+		.back-button {
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    width: 40px;
+		    height: 40px;
+		    border-radius: 50%;
+		    transition: background-color 0.3s;
+		    margin-right:10px;
+		    
+		}
+		
+		.back-button:hover {
+		    background-color: rgba(255, 255, 255, 0.3); /* 호버 시 약간 더 불투명한 배경 */
+		}
+		
+		.back-button img {
+		    filter: invert(1); /* 이미지를 흰색으로 변경 */
+		    width: 48px; /* 이미지 크기 조정 */
+		    height: 48px;
+		}
+		
+		
 		
 		#chat-messages {
 		    flex-grow: 1;
@@ -168,7 +194,7 @@
 		}
 		
 		#send-button {
-		    background-color: black;
+		    background-color:#133b5c;;
 		    color: white;
 		    border: none;
 		    padding: 10px 20px;
@@ -176,10 +202,11 @@
 		    cursor: pointer;
 		    font-size: 1em;
 		    transition: background-color 0.3s;
+		    opacity:0.6;
 		}
 		
 		#send-button:hover {
-		    background-color: gray;
+		    background-color: black;
 		}
 		
 		.date-separator {
@@ -208,7 +235,12 @@
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	<div id="chat-container">
 		<div id="chat-page">
-	        <div id="chat-header"></div>
+	        <div id="chat-header">
+			    <div class="header-title"></div>
+			    <a href="javascript:history.back()" class="back-button">
+				    <img src="https://img.icons8.com/ios/50/left--v1.png" alt="back">
+				</a>
+			</div>
 	        <div id="chat-messages"></div>
 	        <form id="message-form">
 	            <input type="text" id="message" placeholder="메시지를 입력하세요..." autocomplete="off">
@@ -248,8 +280,7 @@
 	}
 
 	// 채팅방 헤더 텍스트 설정
-	document.getElementById('chat-header').textContent = createHeaderText(otherMemberNames);
-	
+	document.querySelector('#chat-header .header-title').textContent = createHeaderText(otherMemberNames);	
 	let stompClient = null;
 	
 	function loadChatHistory() {

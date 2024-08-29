@@ -104,8 +104,9 @@
 				
 	</main>
 	<br/><br/>
-	<div th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
-	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
+    <div class="matFixedBtn" th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
+    <th:block th:replace="~{common/footer :: footer}"></th:block>
 	
 	
 	<script th:inline="javascript">	

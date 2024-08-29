@@ -559,6 +559,9 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
+	public Member findPwdResult(Member member) {
+		return mMapper.findPwdResult(member);
+	}
 	public Matching selectEndDateMat(int matNo) {
 		return mMapper.selectEndDateMat(matNo);
 	}

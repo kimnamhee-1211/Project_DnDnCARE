@@ -151,258 +151,301 @@
 			
 		</form>
 	</main>
-	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
+    <div class="matFixedBtn" th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
+    <th:block th:replace="~{common/footer :: footer}"></th:block>
 	
 	 <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 	<script th:inline="javascript">
 		
-		//입력값 검사 
-		const check=(data)=>{
-			for(const i of data){
-				if(i.value.trim() == ''){
-					i.focus();
-					return false;
-				}
-			}
-			return true;
-		};
-		
-				
-	
-		window.onload=()=>{
-			const checkInput = document.querySelectorAll('.checkInput');
-			const checkTime = document.querySelectorAll('.checkTime');
-			const checkDay = document.querySelectorAll('.checkDay');
-			const checkedRadio = document.querySelector('input[name="ptCount"]:checked');
-			const ifCheck = document.querySelector('.ifCheck');
-			
-			const nextButton = document.getElementById('nextButton');
-			const form = document.getElementById('enrollForm');
-			nextButton.addEventListener('click', ()=>{
-				let isValid = true;
-				
-				delBLank();
-				
-				if(!check(checkInput)){
-					isValid = false
-				}
-				if(!check(checkTime) && !check(checkDay)){
-					isValid = false
-				}
-				if(!checkedRadio){
-					isValid = false
-				}
-			
-				if(isValid){
-					ifCheck.innerText = ''
-					form.submit();
-				}else if(!isValid){
-					ifCheck.innerText = "필수 입력 사항을 빠짐없이 작성해주세요."
-				}
-									
-			});	
-
-			
-			
-			//flatpickr
-	        flatpickr.localize(flatpickr.l10ns.ko);
-
-	        // overDayInput 설정
-	        let overDayStartPicker = flatpickr("#overDayStart", {
-	        	mode: "single",
-	            dateFormat: "Y-m-d",
-	            minDate: "today",
-	            locale: "ko",
-	            onChange: updateOverDaySummary
-	        });
-
-	        let overDayEndPicker = flatpickr("#overDayEnd", {
-	        	mode: "single",
-	            dateFormat: "Y-m-d",
-	            minDate: "today",
-	            locale: "ko",
-	            onChange: updateOverDaySummary
-	        });
-			
-	        function updateOverDaySummary() {
-	            let startDate = overDayStartPicker.selectedDates[0];
-	            let endDate = overDayEndPicker.selectedDates[0];
-	            let startTimeStr = $('.underDayStartTime').eq(0).val();
-	            let endTimeStr = $('.underDayEndTime').eq(0).val();
-
-	            if (startDate && endDate) {
-	                if (endDate <= startDate) {
-	                    $('#overDaySummary').html('<span class="error-message">종료 날짜와 시간은 시작 날짜와 시간 이후여야 합니다.</span>');
-	                    return;
-	                }
-
-	                // 날짜와 시간을 결합하여 Date 객체 생성
-	                let startDateTime = new Date(startDate);
-	                let endDateTime = new Date(endDate);
-
-	                // 시작 및 종료 시간 설정
-	                if (startTimeStr) {
-	                    let [startHours, startMinutes] = startTimeStr.split(':').map(Number);
-	                    startDateTime.setHours(startHours, startMinutes);
-	                }
-	                if (endTimeStr) {
-	                    let [endHours, endMinutes] = endTimeStr.split(':').map(Number);
-	                    endDateTime.setHours(endHours, endMinutes);
-	                }
-
-	                // 기간 계산
-	                let diffTime = Math.abs(endDateTime - startDateTime);
-	                let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-	                let diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-	                let diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
-
-	                // 결과 문자열 생성
-	                let result = '선택한 기간: ';
-	                if (diffDays > 0) result += diffDays + '일 ';
-	                if (diffHours > 0) result += diffHours + '시간 ';
-
-	                $('#overDaySummary').text(result.trim());
-	            } else {
-	                $('#overDaySummary').text('날짜와 시간을 선택해주세요.');
-	            }
+	//입력값 검사 
+	const check=(data)=>{
+	    for(const i of data){
+	        if(i.value.trim() == ''){
+	            i.focus();
+	            return false;
 	        }
+	    }
+	    return true;
+	};
 
+	window.onload=()=>{
+	    const checkInput = document.querySelectorAll('.checkInput');
+	    const checkTime = document.querySelectorAll('.checkTime');
+	    const checkDay = document.querySelectorAll('.checkDay');
+	    const checkedRadio = document.querySelector('input[name="ptCount"]:checked');
+	    const ifCheck = document.querySelector('.ifCheck');
+	    
+	    const nextButton = document.getElementById('nextButton');
+	    const form = document.getElementById('enrollForm');
+	    nextButton.addEventListener('click', ()=>{
+	        let isValid = true;
 	        
-	        // underDayInput 설정
-	        function underDayInputSet() {
-		        flatpickr(".underDayPicker", {
-		            mode: "single",
-		            dateFormat: "Y-m-d",
-		            minDate: "today",
-		            locale: "ko",
-		            onChange: updateUnderDaySummary
-		        });
+	        delBLank();
+	        
+	        if(!check(checkInput)){
+	            isValid = false
 	        }
-	        underDayInputSet()
+	        if(!check(checkTime) && !check(checkDay)){
+	            isValid = false
+	        }
+	        if(!checkedRadio){
+	            isValid = false
+	        }
+	    
+	        if(isValid){
+	            ifCheck.innerText = ''
+	            form.submit();
+	        }else if(!isValid){
+	            ifCheck.innerText = "필수 입력 사항을 빠짐없이 작성해주세요."
+	        }
+	                            
+	    });	
+
+	    //flatpickr
+	    flatpickr.localize(flatpickr.l10ns.ko);
+
+	    // overDayInput 설정
+	    let overDayStartPicker = flatpickr("#overDayStart", {
+		    mode: "single",
+		    dateFormat: "Y-m-d",
+		    minDate: new Date().fp_incr(1), // 내일부터 선택 가능
+		    locale: "ko",
+		    onChange: function(selectedDates, dateStr, instance) {
+		        overDayEndPicker.set('minDate', selectedDates[0]); // 종료일의 최소값을 시작일로 설정
+		        updateOverDayInputs();
+		        updateOverDaySummary();
+		    }
+		});
+
+	    let overDayEndPicker = flatpickr("#overDayEnd", {
+	        mode: "single",
+	        dateFormat: "Y-m-d",
+	        minDate: new Date().fp_incr(1), // 내일부터 선택 가능
+	        locale: "ko",
+	        onChange: function(selectedDates, dateStr, instance) {
+	            updateOverDayInputs();
+	            updateOverDaySummary();
+	        }
+	    });
+
+
+	    function updateOverDayInputs() {
+	        let startDate = overDayStartPicker.selectedDates[0];
+	        let endDate = overDayEndPicker.selectedDates[0];
 	        
+	        if (startDate) {
+	            $('.underDayStartTime').eq(0).prop('disabled', false);
+	        } else {
+	            $('.underDayStartTime').eq(0).prop('disabled', true).val('');
+	        }
+	        
+	        if (endDate) {
+	            $('.underDayEndTime').eq(0).prop('disabled', false);
+	        } else {
+	            $('.underDayEndTime').eq(0).prop('disabled', true).val('');
+	        }
+	    }
 
-	        $('.underDayStartTime, .underDayEndTime').flatpickr({
-	            enableTime: true,
-	            noCalendar: true,
-	            dateFormat: "H:i",
-	            minuteIncrement: 00,
-	            time_24hr: true,
-	            onChange: updateUnderDaySummary
-	        });
+	    $('.underDayStartTime, .underDayEndTime').flatpickr({
+	        enableTime: true,
+	        noCalendar: true,
+	        dateFormat: "H:i",
+	        minuteIncrement: 30,
+	        time_24hr: true,
+	        onChange: updateOverDaySummary
+	    });
+	    
+	    function updateOverDaySummary() {
+	        let startDate = overDayStartPicker.selectedDates[0];
+	        let endDate = overDayEndPicker.selectedDates[0];
+	        let startTimeStr = $('.underDayStartTime').eq(0).val();
+	        let endTimeStr = $('.underDayEndTime').eq(0).val();
 
-	        function updateUnderDaySummary() {
-	            let startTime = $('.underDayStartTime').eq(1).val();
-	            let endTime = $('.underDayEndTime').eq(1).val();
-	            let selectedDates = $(".underDayPicker")
+	        if (startDate && endDate && startTimeStr && endTimeStr) {
+	            // 날짜와 시간을 결합하여 Date 객체 생성
+	            let startDateTime = new Date(startDate);
+	            let endDateTime = new Date(endDate);
+
+	            let [startHours, startMinutes] = startTimeStr.split(':').map(Number);
+	            let [endHours, endMinutes] = endTimeStr.split(':').map(Number);
 	            
-	            let timeDiff = 0;
-	            if (startTime && endTime) {
-	                let start = new Date(`2000-01-01T${startTime}`);
-	                let end = new Date(`2000-01-01T${endTime}`);
-	                
+	            startDateTime.setHours(startHours, startMinutes);
+	            endDateTime.setHours(endHours, endMinutes);
+
+	            if (endDateTime <= startDateTime) {
+	                $('#overDaySummary').html('<span class="error-message">종료 날짜와 시간은 시작 날짜와 시간 이후여야 합니다.</span>');
+	                return;
+	            }
+
+	            // 기간 계산
+	            let diffTime = Math.abs(endDateTime - startDateTime);
+	            let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+	            let diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+	            // 결과 문자열 생성
+	            let result = '선택한 기간: ';
+	            if (diffDays > 0) result += diffDays + '일 ';
+	            if (diffHours > 0) result += diffHours + '시간';
+
+	            $('#overDaySummary').text(result.trim());
+	        } else {
+	            $('#overDaySummary').text('날짜와 시간을 모두 선택해주세요.');
+	        }
+	    }
+
+	    // underDayInput 설정
+	    function underDayInputSet() {
+		    flatpickr(".underDayPicker", {
+		        mode: "single",
+		        dateFormat: "Y-m-d",
+		        minDate: new Date().fp_incr(1), // 내일부터 선택 가능
+		        locale: "ko",
+		        onChange: function(selectedDates, dateStr, instance) {
+		            // 선택된 날짜를 비활성화
+		            instance.config.disable.push(dateStr);
+		            instance.redraw();
+		            updateUnderDaySummary();
+		        }
+		    });
+		}
+	    underDayInputSet();
+	    
+
+	    $('.underDayStartTime, .underDayEndTime').flatpickr({
+	        enableTime: true,
+	        noCalendar: true,
+	        dateFormat: "H:i",
+	        minuteIncrement: 30,
+	        time_24hr: true,
+	        onChange: function(selectedDates, dateStr, instance) {
+	            updateUnderDaySummary();
+	        }
+	    });
+
+	    function updateUnderDaySummary() {
+	        let selectedDates = $(".underDayPicker").filter(function() {
+	            return this.value !== "";
+	        });
+	        let totalHours = 0;
+	        let validDates = 0;
+
+	        selectedDates.each(function(index) {
+	            let date = $(this).val();
+	            let startTime = $('.underDayStartTime').eq(index + 1).val(); // index + 1 because the first one is for overDay
+	            let endTime = $('.underDayEndTime').eq(index + 1).val();
+
+	            if (date && startTime && endTime) {
+	                let start = new Date(`${date}T${startTime}`);
+	                let end = new Date(`${date}T${endTime}`);
+
 	                if (end <= start) {
 	                    end.setDate(end.getDate() + 1);  // 다음 날로 설정
 	                }
-	                
-	                timeDiff = (end - start) / (1000 * 60 * 60);
+
+	                let timeDiff = (end - start) / (1000 * 60 * 60);
+	                totalHours += timeDiff;
+	                validDates++;
 	            }
-
-	            let summaryText = `선택한 기간: 총 ${selectedDates.length}일`;
-	            if (timeDiff > 0) {
-	                summaryText += `, 하루 ${timeDiff}시간`;
-	            }
-
-	            $('#underDaySummary').text(summaryText);
-	        }
-
-	        // 아이콘 클릭 이벤트 설정
-	        $('.icon-container').on('click', function() {
-	            selectIcon(this);
-	            if($(this).attr('id') == '1'){
-	            	$('#matMode').val(1);
-	            	
-	            }else{
-	            	$('#matMode').val(2);
-	            }	            
 	        });
-			
-			
-	        
-	        //날짜 추가
-	        $('#plusunderDayPicker').on('click', function() {
-	        	
-	        	const div = document.createElement('div'); 
-	        	div.className="d-flex plus";
-	        	div.style.margin="5px 0";
-	        	div.innerHTML=`<label>간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
-	        					<input type="text" class="underDayPicker plus" name="day" readonly>
-	        					<button type="button" class="btn btn-secondary delPlus">
-	        						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">
-	        					 	 <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1"/>
-	        						</svg>
-	        					</button>`			
-	        	
-	            $('#plus').append(div);
-	        					
-	        	underDayInputSet()
-	        					
+
+	        let summaryText = `선택한 기간: 총 ${selectedDates.length}일`;
+	        if (validDates > 0) {
+	            let averageHours = Math.round(totalHours / validDates); // 반올림하여 정수로 만듦
+	            summaryText += `, 하루에 ${averageHours}시간씩`;
+	        }
+	        $('#underDaySummary').text(summaryText);
+	    }
+
+	    // 아이콘 클릭 이벤트 설정
+	    $('.icon-container').on('click', function() {
+	        selectIcon(this);
+	        if($(this).attr('id') == '1'){
+	            $('#matMode').val(1);
 	            
+	        }else{
+	            $('#matMode').val(2);
+	        }            
+	    });
+	    
+	    //날짜 추가
+	    $('#plusunderDayPicker').on('click', function() {
+		    const div = document.createElement('div'); 
+		    div.className = "d-flex plus";
+		    div.style.margin = "5px 0";
+		    div.innerHTML = `
+		        <label>간병 날짜 선택:&nbsp;&nbsp;&nbsp;</label>
+		        <input type="text" class="underDayPicker plus" name="day" readonly>
+		        <button type="button" class="btn btn-secondary delPlus">
+		            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">
+		                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1"/>
+		            </svg>
+		        </button>`;
+		    
+		    $('#plus').append(div);
+		    underDayInputSet();
+		    updateUnderDaySummary();
+		});
+	    
+	    
+	    $(document).on('click', '.delPlus', function() {
+	        let dateToEnable = $(this).siblings('.underDayPicker').val();
+	        $('.underDayPicker').each(function() {
+	            let fp = this._flatpickr;
+	            if (fp) {
+	                fp.config.disable = fp.config.disable.filter(d => d !== dateToEnable);
+	                fp.redraw();
+	            }
 	        });
-	        
-	        
-	        if($('.delPlus')){
-	        	  $(document).on('click', '.delPlus', function() {
-	        	        $(this).parent().remove();
-	        	    });	        	
-	        };
-	        
+	        $(this).parent().remove();
+	        updateUnderDaySummary();
+	    });
 
-	    }
-		
-		function delBLank() {
-			const underDayPickers = document.getElementsByClassName("underDayPicker")
-			const valSet = new Set();
-			const delSet = new Set();
-						
-		   for(const underDayPicker1 of underDayPickers) {
-		        const value1 = underDayPicker1.value.trim();
-		        if (value1 == '') {
-		            delSet.add(underDayPicker1.parentNode);
-		        } else if (valSet.has(value1)) {
-		            delSet.add(underDayPicker1.parentNode);
-		        } else {
-		            valSet.add(value1);
-		        }
-		    }
-			console.log(delSet)	
+	    // 초기 상태 설정
+	    updateOverDayInputs();
+	}
 
-			delSet.forEach(element => {
-				if(element.classList.contains('plus')){
-					console.log(element)	
-			        element.remove();
-				}
-		    });
-	    }
-			
-		
-		
-		
-		  //날짜 선택
-	    function selectIcon(element) {
-	        $('.icon-container').removeClass('selected');
-	        $(element).addClass('selected');
-	        const selectedletue = $(element).data('letue');
-	        
-	        $('#overDayInput, #underDayInput').addClass('hidden');
-	        
-	        if (selectedletue === 'overDay') {
-	            $('#overDayInput').removeClass('hidden');
-	        } else if (selectedletue === 'underDay') {
-	            $('#underDayInput').removeClass('hidden');
+	function delBLank() {
+	    const underDayPickers = document.getElementsByClassName("underDayPicker")
+	    const valSet = new Set();
+	    const delSet = new Set();
+	                
+	   for(const underDayPicker1 of underDayPickers) {
+	        const value1 = underDayPicker1.value.trim();
+	        if (value1 == '') {
+	            delSet.add(underDayPicker1.parentNode);
+	        } else if (valSet.has(value1)) {
+	            delSet.add(underDayPicker1.parentNode);
+	        } else {
+	            valSet.add(value1);
 	        }
 	    }
+	    console.log(delSet)	
+
+	    delSet.forEach(element => {
+	        if(element.classList.contains('plus')){
+	            console.log(element)	
+	            element.remove();
+	        }
+	    });
+	}
+
+	//날짜 선택
+	function selectIcon(element) {
+	    $('.icon-container').removeClass('selected');
+	    $(element).addClass('selected');
+	    const selectedletue = $(element).data('letue');
+	    
+	    $('#overDayInput, #underDayInput').addClass('hidden');
+	    
+	    if (selectedletue === 'overDay') {
+	        $('#overDayInput').removeClass('hidden');
+	    } else if (selectedletue === 'underDay') {
+	        $('#underDayInput').removeClass('hidden');
+	    }
+	}
 		
 		  
 	

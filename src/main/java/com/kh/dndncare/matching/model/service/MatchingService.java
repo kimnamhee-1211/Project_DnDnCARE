@@ -184,6 +184,7 @@ public interface MatchingService {
 	ArrayList<joinMatInfoMin> getMyJoinMat(int loginPt);
 	int getHospitalNo(String hospitalName);
 	int insertHospital(String hospitalName, String hospitalAddress);
+	String getRequest(int memberNo);
 	int updatePayTransfer(Pay p);
 
 
