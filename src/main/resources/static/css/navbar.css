@@ -61,3 +61,6 @@
 body {
     font-family: 'Pretendard-Regular' !important;
 }
+
+a { text-decoration:none !important }
+a:hover { text-decoration:none !important }
