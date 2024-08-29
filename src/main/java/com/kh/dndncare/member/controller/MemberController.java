@@ -2652,7 +2652,7 @@ public class MemberController {
 		}
 		
 		
-		String[] choice = result.split(" ");
+		String[] choice = result.split(", ");
 		System.out.println("GPT가 추천한 매칭번호의 스플릿 : " + Arrays.toString(choice));
 		ArrayList<Integer> choiceNoList = new ArrayList<Integer>();
 		for (int i = 0; i < choice.length; i++) {

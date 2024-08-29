@@ -21,7 +21,7 @@
 			<div class="col-8 m-3">
 				<div class="row justify-content-md-center">
 					<div align="center" class="col-4 m-3 p-3 " >
-			      		<img id="profile-image" src="image/icon_profile.png"/>
+			      		<img id="profile-image" th:src="${caregiverIntro.careImg} ? ${caregiverIntro.careImg} : (${caregiverIntro.memberGender} =='F' ? 'image/icon/femaleProfile.png' : 'image/icon/maleProfile.png')"/>
 			      		<hr>
 			      		<div class="h2" style="color:#133B5C"><b>[[${caregiverIntro.memberName}]]님</b></div>
 			      			<div style="display:none" th:text="${memberNo}" class="memberNo"></div>	
@@ -85,7 +85,7 @@
 			      			<th:block th:if="${caregiverInfoList.license == null or caregiverInfoList.license.size() == 0}">
 						        <span> <b>자격증:</b> 없음</span>
 						    </th:block>
-			      			<div class="h6"><b>적정 1일 돌봄 비용 :</b> [[${caregiverIntro.minMoney}]]원 ~ [[${caregiverIntro.maxMoney}]]원</div>
+			      			<div class="h6"><b>적정 1일 돌봄 비용 :</b> [[${#numbers.formatInteger(caregiverIntro.minMoney, 0, 'COMMA')}]]원 ~ [[${#numbers.formatInteger(caregiverIntro.maxMoney, 0, 'COMMA')}]]원</div>
 			      			<h6><b>공동간병 참여 여부 :</b> [[${caregiverIntro.careJoinStatus =='Y' ? '참여':'미참여'}]]</h6>
 			      			<hr>
 			      			<h6	 align="center"><b>자기소개</b></h6> 
@@ -154,7 +154,7 @@
 		</div>
 		<div align="center">
 		<div align="right" style="max-width:700px; color:#133B5C;">
-			<h3><b>[[${reviewList.size()}]]개의 후기가 있습니다</b></h3>
+			<h3 th:unless="${reviewList.size() == 0}"><b>[[${reviewList.size()}]]개의 후기가 있습니다</b></h3>
 		</div>
 		<div class="row m-4 testBorder" style="max-width:700px"th:each="rList:${reviewList}"><!-- each -->
 			<div class="col m-2">
