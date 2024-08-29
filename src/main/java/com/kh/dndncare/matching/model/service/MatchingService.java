@@ -49,7 +49,7 @@ public interface MatchingService {
 	int insertMatDate(int matNo, String matDate);
 	
 	//병원  데이터 Count  get
-	Hospital getHospital(Hospital hospital);
+	int getHospital(Hospital hospital);
 	
 	//loginUser-MatNo get
 	Set<Integer> getloginMatNo(int memberNo);

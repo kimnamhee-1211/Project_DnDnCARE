@@ -46,7 +46,7 @@ public interface MatchingMapper {
 	
 	ArrayList<CareReview> selectReviewList(int memberNo);
 
-	Hospital getHospital(Hospital hospital);
+	int getHospital(Hospital hospital);
 
 	Set<Integer> getloginMatNo(int memberNo);
 
