@@ -85,8 +85,8 @@
 	</select>
 	
 	<!-- 병원 get : 병원 존재 유무 확인-->
-	<select id="getHospital" resultType="Hospital">
-		select *
+	<select id="getHospital" resultType="_int">
+		select count(*)
 		from hospital
 		where hospital_name = #{hospitalName} 
 				<!-- and hospital_address like '%${hospitalAddress}%'	-->

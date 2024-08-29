@@ -89,7 +89,7 @@ public class MatchingServiceImpl implements MatchingService {
 	
 	//병원  데이터 get
 	@Override
-	public Hospital getHospital(Hospital hospital) {
+	public int getHospital(Hospital hospital) {
 		return mMapper.getHospital(hospital);
 	}
 

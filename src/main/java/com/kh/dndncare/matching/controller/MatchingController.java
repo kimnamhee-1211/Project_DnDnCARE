@@ -431,8 +431,8 @@ public class MatchingController {
 									@RequestParam("beginTime") String beginTime, @RequestParam("endTime") String endTime) {
 		
 		//병원이 테이블에 없을 경우 등록 && 매칭 테이블 병원 셋
-		Hospital ho = mcService.getHospital(hospital);
-		if(ho == null) {
+		int ho = mcService.getHospitalNo(hospital.getHospitalName());
+		if(ho < 1) {
 			
 			//우편번호 삽입
 			String test2 = "";
@@ -485,7 +485,7 @@ public class MatchingController {
 			}
 			
 		}else {
-			jm.setHospitalNo(ho.getHospitalNo());
+			jm.setHospitalNo(ho);
 		}
 		
 		//매칭 등록
@@ -726,6 +726,8 @@ public class MatchingController {
 		CareGiver caregiverIntro = mcService.selectIntro(memberNo);
 		AgeCalculator ageCalculator = new AgeCalculator();
 		int age = ageCalculator.calculateAge(caregiverIntro.getMemberAge());
+		caregiverIntro.setAge(age);
+		System.out.println("남희님이 셋팅해준 나이 " + caregiverIntro.getAge());
 		
 		//통계용
 		ArrayList<MatMatptInfo> serviceList = mcService.serviceList(memberNo);
@@ -1422,6 +1424,7 @@ public class MatchingController {
 		//남희 : 나이세팅
 		int age = AgeCalculator.calculateAge(caregiverIntro.getMemberAge());
 		caregiverIntro.setAge(age);
+		System.out.println("남희님이 셋팅해준 나이 " + caregiverIntro.getAge());
 		
 		
 		
