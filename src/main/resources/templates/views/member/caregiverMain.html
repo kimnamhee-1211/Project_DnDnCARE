@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
 	<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.14/index.global.min.js'></script>
+	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
     <style>
     	.fc{width:500px !important; height:500px !important; } 
     	.fc-day-sun a { color: red; }
@@ -27,8 +28,8 @@
 			<div id="upperLeftContents">
 				<div style="max-width:725px; height:480px;"><!-- AI 매칭 : 가로 700, 세로 200 -->
 				<div class="m-2 d-flex justify-content-between" style="border-bottom:2px solid #133B5C;" th:if="${money} != 0">
-					<div class="m-2" style="margin:0; font-size:20px">[[${loginUserName}]]님. 그동안 일한 금액 [[${money}]]원을 받으실 수 있어요! <span class="newIcon"> new!</span></div>
-					<div class="m-2"><button class="btn btn-success payButton" onclick="location.href='insertPayTransfer.mc'">[[${money}]]원 받기</button></div>
+					<div class="m-2" style="margin:0; font-size:20px">[[${loginUserName}]]님. 그동안 일한 금액 [[${#numbers.formatInteger(money, 0, 'COMMA')}]]원을 받으실 수 있어요! <span class="newIcon"> new!</span></div>
+					<div class="m-2"><button class="btn btn-success payButton" onclick="requestCert()">[[${#numbers.formatInteger(money, 0, 'COMMA')}]]원 받기</button></div>
 				</div>
 				<div class="m-2 d-flex justify-content-between" style="border-bottom:2px solid #133B5C;" th:unless="${money} != 0">
 					<div class="m-2" style="margin:0; font-size:20px">[[${loginUserName}]]님 안녕하세요! 정산할 매칭 금액은 없습니다!</div>
@@ -341,8 +342,8 @@
 		    		<div class="modal-title workInfo">
 		    			<div class="infomation">
 			    			<span class="badge bg-danger"><!-- <img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음 --></span><br/>
-			    			<span>혜민병원</span><br/>
-			    			<span>서울특별시 광진구</span>
+			    			<span class="badge rounded-pill bg-light text-dark fs-5">혜민병원</span><br/>
+			    			<span class="badge rounded-pill bg-light text-dark fs-6">서울특별시 광진구</span>
 		    			</div>
 		    			<div class="text-end align-middle imgDiv">
 		    				<br/>
@@ -427,7 +428,7 @@
 			        	  } else { // 이벤트 날짜가 미래인 경우
 			        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>&nbsp;&nbsp;' + remainCalc(mils) + ' 남음';
 			        	  }
-						infomation[2].innerHTML = '병원명이 들어올 자리';
+						infomation[2].innerHTML = info.event.extendedProps.hospitalName;
 		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
 		          		
 		          		let infoDetail = document.querySelector('.infoDetail').children;
@@ -615,8 +616,27 @@
     	});
 		// ai추천 목록에 대한 이벤트 (끝)
     	
+    	//본인인증 api 추가하기
     	
-    </script>    
+    	
+
+
+		IMP.init("imp25707021");
+
+		function requestCert() {
+		 let test10 = IMP.certification({
+		    pg: "inicis_unified.INIpayTest",
+		    merchant_uid: "test_m0douc10",
+		  },function(response){
+			  console.log(response.success);
+			  console.log(response.success == true)
+			  
+			  if(response.success == true){
+				  location.href= 'insertPayTransfer.mc';
+			  }
+			});
+		}
+</script>
 </body>
 
 </html>

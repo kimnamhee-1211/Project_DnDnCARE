@@ -57,7 +57,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="b : ${bList}">
+								<tr th:each="b : ${bList}" th:if="${bList != null}">
 									<td>[[${b.boardNo}]]</td>
 									<td>[[${b.boardTitle}]]</td>
 									<td>[[${b.memberNickName}]]</td>

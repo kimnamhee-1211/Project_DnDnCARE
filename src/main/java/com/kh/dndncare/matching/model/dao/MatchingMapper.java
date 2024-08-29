@@ -158,6 +158,7 @@ public interface MatchingMapper {
 	int insertHospital(@Param("hospitalName")String hospitalName, @Param("hospitalAddress") String hospitalAddress);
 
 	String getRequest(int memberNo);
+	int updatePayTransfer(Pay p);
 
 	
 

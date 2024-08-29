@@ -71,9 +71,6 @@ public interface AdminService {
 
 	int updateAdminBoardStatus(int boardNo, String boardStatus);
 
-	ArrayList<Board> adminSearchBoard(String searchType, String searchText, PageInfo pi);
-
-	int getSearchListCountAll(String searchType, String searchText);
 
 	Board adminSelectBoard(int bNo);
 
@@ -86,9 +83,15 @@ public interface AdminService {
 	ArrayList<Matching> selectMatchings();
 	int adminUpdateBoard(Board b);
 
+	int getAdminQnABoardListCount();
+	
+	ArrayList<Board> adminQnABoardList(PageInfo pi);
+
 	int checkAdminId(String memberId);
 
 	int insertMember(Member m);
+
+	int adminInsertAnswer(Reply r);
 
 
 

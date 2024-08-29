@@ -157,7 +157,7 @@
 			              <div class="card-body" style="max-height:150px;">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
-			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : (${cg[num].memberGender} =='F' ? 'image/icon/femaleProfile.png' : 'image/icon/maleProfile.png')" style="max-width:60px;">
 			              		</div>
 			              		<div class="col text-center" >
 			              			<div class="d-flex justify-content-center">
@@ -205,7 +205,7 @@
 			              <div class="card-body">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
-			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : (${cg[num].memberGender} =='F' ? 'image/icon/femaleProfile.png' : 'image/icon/maleProfile.png')" style="max-width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
@@ -253,7 +253,7 @@
 			              <div class="card-body">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
-			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : (${cg[num].memberGender} =='F' ? 'image/icon/femaleProfile.png' : 'image/icon/maleProfile.png')" style="max-width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
@@ -409,10 +409,7 @@
 	</div> 
     
 
- 
-    
-    
-    
+
     <br><br><br><br>
     
     <!-- 캘린더 이벤트의 모달박스 (시작)-->
@@ -423,8 +420,8 @@
 		    		<div class="modal-title workInfo">
 		    			<div class="infomation">
 			    			<span class="badge bg-danger"><!-- <img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음 --></span><br/>
-			    			<span>혜민병원</span><br/>
-			    			<span>서울특별시 광진구</span>
+			    			<span class="badge rounded-pill bg-light text-dark fs-5">혜민병원</span><br/>
+			    			<span class="badge rounded-pill bg-light text-dark fs-6">서울특별시 광진구</span>
 		    			</div>
 		    			<div class="text-end align-middle imgDiv">
 		    				<br/>
@@ -566,7 +563,7 @@
   			        	  } else { // 이벤트 날짜가 미래인 경우
   			        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>&nbsp;&nbsp;' + remainCalc(mils) + ' 남음';
   			        	}
-		        	   	infomation[2].innerHTML = '병원명이 들어올 자리';
+		        	   	infomation[2].innerHTML = info.event.extendedProps.hospitalName;
 		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
 		          		
 		          		let infoDetail = document.querySelector('.infoDetail').children;
@@ -730,9 +727,9 @@
 						document.getElementsByName('payMoney')[0].value = (data.money * data.hourly / data.ptCount) / data.ptCount;
 						document.getElementById('payMatDate').innerText = data.beginDt +' '+ data.beginTime + ' ~ ' + data.endDt + ' '+ data.endTime + ' 기간 중 총' + data.hourly +'회 ' + data.times +'시간';
 					}else{
-						document.getElementsByClassName('resultPay')[0].innerText = (data.money / data.ptCount).toLocaleString() + '원';
-						document.getElementsByClassName('resultPay')[1].innerText = (data.money / data.ptCount).toLocaleString() + '원 결제하기';
-						document.getElementsByName('payMoney')[0].value = data.money * data.days / data.ptCount;
+						document.getElementsByClassName('resultPay')[0].innerText = data.days +'일 ' + data.times +'시간 합계 ' + ((data.money * data.days / data.ptCount) +((data.money / data.ptCount / 24)*data.times)).toLocaleString() + '원';
+						document.getElementsByClassName('resultPay')[1].innerText =((data.money * data.days / data.ptCount) +((data.money / data.ptCount / 24)*data.times)).toLocaleString() + '원 결제하기';
+						document.getElementsByName('payMoney')[0].value = (data.money * data.days / data.ptCount) +((data.money / data.ptCount/24)*data.times);
 					}
 				},
 				error:data=>console.log(data)

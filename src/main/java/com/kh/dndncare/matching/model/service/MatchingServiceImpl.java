@@ -396,6 +396,11 @@ public class MatchingServiceImpl implements MatchingService {
 	public String getRequest(int memberNo) {
 		return mMapper.getRequest(memberNo);
 	}
+	//결제완료된 페이 상태수정
+	@Override
+	public int updatePayTransfer(Pay p) {
+		return mMapper.updatePayTransfer(p);
+	}
 
 
 

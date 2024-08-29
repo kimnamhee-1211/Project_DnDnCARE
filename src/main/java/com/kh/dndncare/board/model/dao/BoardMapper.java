@@ -63,6 +63,10 @@ public interface BoardMapper {
 
 	ArrayList<Board> qnaBoardList(RowBounds rowBounds);
 
+	int getMyListCountQnA(int memberNo);
+
+	ArrayList<Board> myQnAList(int memberNo, RowBounds rowBounds);
+
 
 
 }

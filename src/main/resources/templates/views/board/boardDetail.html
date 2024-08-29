@@ -145,17 +145,11 @@
 						    <b><span id="boardLikeCount" class="ms-2" th:text="${boardLikeCount}"></span></b>
 						</button>
 		            </div>
-		            <!-- 
-						<br>
-						<div class="d-flex justify-content-end mb-5" >
-		            	<button type="button" class="btn btn-danger me-2 btn-sm">
-		            	신고하기
-		            	</button>
-	                </div> --> 
+		            
 	
 	                <div class="d-flex justify-content-end" th:if="${session.loginUser.memberNickName} == ${b.memberNickName}">
 	               	 	<button type="button" class="btn me-2 btn-sm" id="updateBoardForm" style="outline-color: #1E5F74; outline-style: solid; outline-width: 1px ">수정하기</button>
-						<button type="button" class="btn me-2 btn-sm" id="deleteModal" style="outline-color: #133B5C; outline-style: solid; outline-width: 3px" >삭제하기</button>
+						<button type="button" class="btn me-2 btn-sm" id="deleteModal" style="outline-color: #133B5C; outline-style: solid ; outline-width: 3px" >삭제하기</button>
 					</div>
 	            </form>
 	            <hr>
@@ -221,9 +215,9 @@
 					<table class="table mt-4">
 						<thead>
 							<tr>
+								<th width="10%">작성자</th>
 								<th width="50%">답변내용</th>
 								<th width="15%">작성일자</th>
-								<th width="10%">작성자</th>
 							</tr>
 						</thead>
 						<tbody>
