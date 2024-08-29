@@ -70,15 +70,14 @@
 
 					<!-- 가이드 내용 -->
 					<div class="row m-4">
-						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="signUpContent">
-							<div class="h5 m-1">간병백과</div>
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="careInfoContent">
+							<div class="h5 m-1">간병백과</div><hr/>
 							<div class="hidden-content">
-								① 간병이 필요한지 / 간병일이 필요한지 선택해주세요<br/>
-								<button class="btn guide-btn" th:onclick="location.href='careInformation.bo'">간병백과이용하러가기</button>
+								<button class="btn guide-btn"; th:onclick="location.href='careInformation.bo'">간병백과학인하러가기</button>
 							</div>
 						</div>
 
-						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="findIdPwContent">
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="careContent">
 							<div class="h5 m-1">공동간병</div><hr/>
 							<div class="hidden-content">
 							공동간병은 여러명의 환자들이 모여 한명의 간병인이 간병을 하는 든든케어의 시스템입니다.<br/>
@@ -87,20 +86,24 @@
 							</div>
 						</div>
 
-						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="myInfoContent">
-							<div class="h5 m-1">내 정보 관리</div>
+						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="matchingSystemContent">
+							<div class="h5 m-1">매칭시스템</div><hr/>
 							<div class="hidden-content">
-								<button class="btn guide-btn" th:onclick="location.href='myInfo.me'">내정보보러가기</button>
+								
+								<button class="btn guide-btn"; th:onclick="location.href='home.do'">매칭하러가기</button>
+								<button class="btn guide-btn"; th:onclick="location.href='goMyMatchingP.mc'">매칭현황보러가기</button>
 							</div>
 						</div>
 						
 						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="communityUseContent">
-							<div class="h5 m-1">커뮤니티 이용 관련</div>
+							<div class="h5 m-1">커뮤니티 이용 관련</div><hr/>
 							<div class="hidden-content">
 								든든케어 커뮤니티게시판은 자유롭게 게시글작성이 가능하며, <br/>간병인들간의 간병자격증이나 환자들간의 간병정보 등 다양한 정보를 교류할수있습니다.<br/>
 							 
 								단,<button class="btn guide-btn" th:onclick="location.href='selectBoard.bo?bId=4&page=2'">커뮤니티 이용가이드</button>를 꼭 숙지하시고 게시판을 이용
+								해주셔야하며 가이드 미숙지로 인해 불이익을 받으실수있으니 꼭 한번 확인부탁드립니다.<br/><br/>
 								<button class="btn guide-btn" th:onclick="location.href='communityBoardList.bo'">커뮤니티로 가기</button>
+								
 							</div>
 						</div>
 					</div>
