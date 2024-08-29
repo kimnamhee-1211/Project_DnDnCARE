@@ -137,20 +137,20 @@
 							            <th width="160px">후기 작성</th>
 							        </tr>
 							        <tr th:if="${i.isAfterDate}" th:each="i : ${mciList}"  class="matching-row">
-								            <td>[[${i.beginDt}]]일 [[${i.beginTime}]]시</td>
+								            <td>[[${i.beginDt}]] [[${i.beginTime}]]</td>
 								            <td> ~ </td>
-								            <td>[[${i.endDt}]]일 [[${i.endTime}]]시</td>
+								            <td>[[${i.endDt}]] [[${i.endTime}]]</td>
 								            <td align="center">[[${i.memberName}]]</td>
 								            <td align="center">[[${#numbers.formatInteger(i.money, 0, 'COMMA')}]]원</td>
-								            <td>
-								            <input type="hidden" th:id="'hiddenMemberNo' + ${i.memberNo}" name="memberNo" th:value="${i.memberNo}"/>
-								            <input type="hidden" th:id="'hiddenMatNo' + ${i.matNo}" name="matNo" th:value="${i.matNo}"/>
-								            </td>
 								            <td th:if="${i.matConfirm == 'Y' && i.isAfterDate && i.reviewYn == 0}">
 								                <button class="myInfo-btn btn-sm" th:onclick="reviewDetail('myInfoMatchingHistoryP', [[${i.memberNo}]], [[${i.matNo}]])">작성 가능</button>
 								            </td>
 								            <td th:if="${i.matConfirm == 'Y' && i.isAfterDate && i.reviewYn != 0}">
 								                <button class="myInfo-btn-2">작성 완료</button>
+								            </td>
+								            <td>
+								            <input type="hidden" th:id="'hiddenMemberNo' + ${i.memberNo}" name="memberNo" th:value="${i.memberNo}"/>
+								            <input type="hidden" th:id="'hiddenMatNo' + ${i.matNo}" name="matNo" th:value="${i.matNo}"/>
 								            </td>
 							        </tr>
 							        

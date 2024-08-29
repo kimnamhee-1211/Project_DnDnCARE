@@ -55,10 +55,10 @@
 					<!-- 메뉴 -->
 					<div class="row m-4 text-center">
 						<div class="col-sm-3 mb-2">
-							<button class="btn guide-btn" id="signUpBtn" style="width: 100%;">회원가입</button>
+							<button class="btn guide-btn" id="signUpBtn" style="width: 100%;">간병백과</button>
 						</div>
 						<div class="col-sm-3 mb-2">
-							<button class="btn guide-btn" id="findIdPwBtn" style="width: 100%;">아이디/비밀번호 찾기</button>
+							<button class="btn guide-btn" id="findIdPwBtn" style="width: 100%;">공동간병</button>
 						</div>
 						<div class="col-sm-3 mb-2">
 							<button class="btn guide-btn" id="myInfoBtn" style="width: 100%;">매칭시스템</button>
@@ -71,33 +71,36 @@
 					<!-- 가이드 내용 -->
 					<div class="row m-4">
 						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="signUpContent">
-							<div class="h5 m-1">회원가입 안내</div>
+							<div class="h5 m-1">간병백과</div>
 							<div class="hidden-content">
 								① 간병이 필요한지 / 간병일이 필요한지 선택해주세요<br/>
-								
+								<button class="btn guide-btn" th:onclick="location.href='careInformation.bo'">간병백과이용하러가기</button>
 							</div>
 						</div>
 
 						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="findIdPwContent">
-							<div class="h5 m-1">아이디/비밀번호 찾기</div><hr/>
+							<div class="h5 m-1">공동간병</div><hr/>
 							<div class="hidden-content">
-					
-								<button class="btn btn-info"><a href="findId.me">아이디 찾으러가기</a></button>
-								<button class="btn btn-info"><a href="findPwd.me">비밀번호 찾으러가기</a></button>
+							공동간병은 여러명의 환자들이 모여 한명의 간병인이 간병을 하는 든든케어의 시스템입니다.<br/>
+							
+								<button class="btn guide-btn" th:onclick="location.href='joinMatchingMainView.jm'">공동간병하러가기</button>
 							</div>
 						</div>
 
 						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="myInfoContent">
 							<div class="h5 m-1">내 정보 관리</div>
 							<div class="hidden-content">
-								내 정보 페이지에서 개인정보를 수정하거나, 비밀번호 변경을 할 수 있습니다. 설정 변경 후에는 '저장' 버튼을 꼭 클릭하세요.
+								<button class="btn guide-btn" th:onclick="location.href='myInfo.me'">내정보보러가기</button>
 							</div>
 						</div>
 						
 						<div class="faqBoard myInfo-Border-maincolor mt-2 mb-3" id="communityUseContent">
 							<div class="h5 m-1">커뮤니티 이용 관련</div>
 							<div class="hidden-content">
-								커뮤니티 게시판에서는 자유롭게 글을 작성하고, 댓글을 달 수 있습니다. 규칙을 준수하며, 다른 사용자와의 상호 존중을 바탕으로 활동해 주세요.
+								든든케어 커뮤니티게시판은 자유롭게 게시글작성이 가능하며, <br/>간병인들간의 간병자격증이나 환자들간의 간병정보 등 다양한 정보를 교류할수있습니다.<br/>
+							 
+								단,<button class="btn guide-btn" th:onclick="location.href='selectBoard.bo?bId=4&page=2'">커뮤니티 이용가이드</button>를 꼭 숙지하시고 게시판을 이용
+								<button class="btn guide-btn" th:onclick="location.href='communityBoardList.bo'">커뮤니티로 가기</button>
 							</div>
 						</div>
 					</div>
