@@ -1721,6 +1721,7 @@ public class MemberController {
 					shareList.add("1");
 				if (map.get("share").contains("공동"))
 					shareList.add("2");
+					shareList.add("3");
 			}
 			// 지역 검색조건을 가공
 			String area = "";
