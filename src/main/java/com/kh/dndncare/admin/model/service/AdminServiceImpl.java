@@ -172,16 +172,7 @@ public class AdminServiceImpl implements AdminService{
 		return aMapper.updateAdminBoardStatus(boardNo, boardStatus);
 	}
 
-	@Override
-	public ArrayList<Board> adminSearchBoard(String searchType, String searchText, PageInfo pi) {
-		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
-		return aMapper.adminSearchBoard(searchType, searchText);
-	}
 
-	@Override
-	public int getSearchListCountAll(String searchType, String searchText) {
-		return aMapper.getSearchListCountAll(searchType, searchText);
-	}
 
 	@Override
 	public Board adminSelectBoard(int bNo) {
@@ -212,6 +203,16 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
+	public int getAdminQnABoardListCount() {
+		return aMapper.getAdminQnABoardCount();
+	}
+	
+	@Override
+	public ArrayList<Board> adminQnABoardList(PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return aMapper.adminQnABoardList(rowBounds);
+	}
+
 	public int checkAdminId(String memberId) {
 		return aMapper.checkAdminId(memberId);
 	}
@@ -219,6 +220,11 @@ public class AdminServiceImpl implements AdminService{
 	@Override
 	public int insertMember(Member m) {
 		return aMapper.insertMember(m);
+	}
+
+	@Override
+	public int adminInsertAnswer(Reply r) {
+		return aMapper.adminInsertAnswer(r);
 	}
 
 }

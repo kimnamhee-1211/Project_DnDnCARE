@@ -18,6 +18,8 @@ import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -813,26 +815,6 @@ public class AdminController {
 		}
 	}
 	
-	// 게시글 검색 수정중
-	@GetMapping("adminSearchBoard.adm")
-	public String adminSearchBoard(@RequestParam(value="caregiverPage", defaultValue = "1") int caregiverPage,
-									@RequestParam("searchType") String searchType, @RequestParam("searchText") String searchText,
-									Model model) {
-		int listCount = aService.getSearchListCountAll(searchType, searchText);
-		PageInfo pi = Pagination2.getPageInfo(caregiverPage, listCount, 7, 5);
-		    
-		ArrayList<Board> searchBoard = aService.adminSearchBoard(searchType, searchText, pi);
-		System.out.println("+++++++++++");
-		System.out.println(listCount);
-		System.out.println(searchBoard);
-		model.addAttribute("pi",pi);
-		model.addAttribute("pbList",searchBoard);
-		if(searchBoard != null) {
-			return "adminBoard";
-		}else {
-			throw new AdminException("검색에 실패했습니다.");
-		}
-	}
 	
 	// 게시물 상세조회
 	@GetMapping("selectAdminBoard.adm")
@@ -1655,6 +1637,25 @@ public class AdminController {
 		}
 	}
 	
+	// 문의내역 조회
+	@GetMapping("adminQnABoard.adm")
+	public String adminQnABoard(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model) {
+		int listCount = aService.getAdminQnABoardListCount();
+		
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 7, 5);
+		ArrayList<Board> adminQnABoardList = aService.adminQnABoardList(pi);
+		
+		System.out.println(pi);
+		System.out.println("%%%%%%%%%%%%%%");
+		System.out.println(adminQnABoardList);
+		System.out.println("%%%%%%%%%%%%%%");
+		if(adminQnABoardList != null) {
+			model.addAttribute("pi",pi);
+			model.addAttribute("adminQnABoardList", adminQnABoardList);
+		}
+		
+		return "adminQnABoard";
+	}
 	// 관리자 아이디 중복확인
 	@PostMapping("checkAdminId.adm")
 	@ResponseBody
@@ -1683,6 +1684,39 @@ public class AdminController {
 		
 		return result == 1 ? "success" : "fail";
 	}
+	
+	// 문의내역 답변
+	@PostMapping("adminInsertAnswer.adm")
+	@ResponseBody
+	public String adminInsertAnswer(@RequestParam("boardNo") int boardNo, @RequestParam("answerContent") String answerContent, @ModelAttribute Reply r, HttpSession session) {
+		r.setRefBoardNo(boardNo);
+		r.setReplyContent(answerContent);
+		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		r.setMemberNo(memberNo);
+		int result = aService.adminInsertAnswer(r);
+
+		ArrayList<Reply> replyList = aService.adminSelectReply(r.getRefBoardNo());
+		
+		System.out.println(replyList);
+		
+		JSONArray array = new  JSONArray();
+		
+		for(Reply reply : replyList) {
+			JSONObject json = new JSONObject();
+			json.put("replyNo", reply.getReplyNo());
+			json.put("replyContent", reply.getReplyContent());
+			json.put("memberNo", reply.getMemberNo());
+			json.put("memberNickName", reply.getMemberNickName());
+			json.put("replyCreateDate", reply.getReplyCreateDate());
+			json.put("replyUpdateDate", reply.getReplyUpdateDate());
+			json.put("refBoardNo", reply.getRefBoardNo());
+			
+			array.put(json);
+		}
+		
+		return array.toString();
+	}
+	
 	
 	
 }//클래스 끝

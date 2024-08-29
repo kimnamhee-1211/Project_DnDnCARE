@@ -784,7 +784,15 @@ public class MemberController {
 			int money = 0;
 			if(!pArr.isEmpty()) {
 				for(Pay p : pArr) {
-					money += p.getPayMoney();
+					//mService.selectEndDateMat(p.getMatNo());
+					LocalDate today = LocalDate.now();
+					Matching mat = mService.selectEndDateMat(p.getMatNo());
+					System.out.println("결제넣기전에 투데이확인" + today);
+					System.out.println("결제넣기전에 투데이확인" + mat.getEndDt().toLocalDate());
+					System.out.println("결제넣기전에 투데이확인" + today.isAfter(mat.getEndDt().toLocalDate()));
+					if(today.isAfter(mat.getEndDt().toLocalDate())) {
+						money += p.getPayMoney();
+					}
 				}
 			}
 			//종규 결제대금 받기       ↑
@@ -954,7 +962,7 @@ public class MemberController {
 		System.out.println("회원가입 검증=" + m);
 		// 소셜회원가입하나추가
 		String code = (String) session.getAttribute("code");
-		m.setMemberPay(code);
+		m.setMemberSocailToken(code);
 		session.removeAttribute("code");
 		int result = mService.enroll(m);
 

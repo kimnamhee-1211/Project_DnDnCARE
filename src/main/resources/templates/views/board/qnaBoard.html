@@ -2,7 +2,7 @@
 <html xmlns="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>간병인 커뮤니티</title>
+<title>문의게시판</title>
 <link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
 <style>
     @font-face {
@@ -99,6 +99,18 @@
     .text-dark {
         text-decoration: none;
     }
+    
+    .guide-btn {
+		border-color: #1E5F74 !important;
+		color: black !important;
+		border: 1px solid #1E5F74 !important;
+	}
+
+	.guide-btn:hover, .guide-btn:focus,.guide-btn:active {
+		background-color: #1E5F74 !important;
+		border-color: #1E5F74 !important;
+		color:white !important;
+	}
 </style>
 </head>
 <body>
@@ -107,36 +119,42 @@
     <main class="bg-board-main container p-5">
         <div class="row">
             <div class="col-md-3">
-                <div align="center" class="myInfo-Border m-4">
-                    <div class="m-4" style="border-bottom: 2px solid #133B5C;">
-                        <h1 class="h3 m-4 fw-bold text-center">고객센터</h1>
-                    </div>
-                    <div class="h4 m-2 p-2"><a class="nav-link my-menu" href="userGuide.bo">이용가이드</a></div>
-                    <div class="h4 m-2 p-2"><a class="nav-link my-menu" href="faqBoard.bo">FAQ</a></div>
-                    <div class="h4 m-2 p-2"><a class="nav-link my-menu" href="qnaBoardList.bo">문의게시판</a></div>
-                </div>
-            </div>
-            
+					<div align="center" class="myInfo-Border m-4">
+				<div class="m-4" style="border-bottom: 2px solid #133B5C;">
+					<h1 class="h3 m-4 fw-bold text-center">고객센터</h1>
+				</div>
+				<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="userGuide.bo">이용가이드</a></div>
+				<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="faqBoard.bo">FAQ</a></div>
+				<div class="h4 m-2 p-2"><a class="nav-link my-menu" href="qnaBoardList.bo">문의게시판</a></div>
+			</div>
+		</div>
+             
             <div class="col-md-9">
                 <div class="text-center m-4">
                     <h1 class="text-center m-4" style="font-weight: bold;" id="target">문의게시판</h1>
                 </div>
-
+			<div class="row m-4 text-center">
+				<div class="col-sm-3 mb-2">
+					<button class="btn guide-btn" id="qnaBoardBtn" style="width: 100%;" onclick="showQnA('qnaBoardList')">문의게시판</button>
+				</div>
+				<div class="col-sm-3 mb-2">
+					<button class="btn guide-btn" id="myQnAListBtn" style="width: 100%;" onclick="showQnA('myQnABoardList')">나의 문의내역</button>
+			</div>
                 <div class="d-flex justify-content-end mb-4">
                     <th:block th:if="${session.loginUser != null}">
-                        <button type="button" class="btn-write" style="width:100px;" th:onclick="location.href='writeBoard.bo'">글쓰기</button>
+                        <button type="button" class="btn-write" style="width:100px;" th:onclick="location.href='writeQnA.bo'">글쓰기</button>
                     </th:block>
                 </div>
 
-                <div class="p-1">
+                <div class="p-1" id="qnaBoardList-section">
                     <table class="table table-bordered bg-white table-hover">
                         <thead align="center">
                             <tr>
-                                <th width="4%">번호</th>
-                                <th width="30%">제목</th>
+                                <th width="8%">번호</th>
+                                <th width="40%">제목</th>
                                 <th width="10%">작성자</th>
                                 <th width="20%">작성일</th>
-                                <th width="4%">답변</th>
+                                <th width="8%">답변</th>
                             </tr>
                         </thead>
                         <tbody align="center">
@@ -145,11 +163,15 @@
                                 <td>[[${q.boardTitle}]]</td>
                                 <td>[[${q.memberNickName}]]</td>
                                 <td>[[${q.boardCreateDate}]]</td>
-                                <td></td>
+                                <th:block th:if="${q.answerYN==0}">
+                               		 <td>대기중</td>
+                                </th:block>
+                                <th:block th:if="${q.answerYN>=1}">
+                               		 <td style="color: blue;">답변 완료</td>
+                                </th:block>
                             </tr>
                         </tbody>
                     </table>
-                </div>
                 
                 <div class="d-flex justify-content-center align-items-center m-5">
                     <nav aria-label="Standard pagination example">
@@ -170,7 +192,57 @@
                         </ul>
                     </nav>
                 </div>
+                </div>
+                
+                <div class="p-1 hidden" id="myQnABoardList-section">
+                    <table class="table table-bordered bg-white table-hover">
+                        <thead align="center">
+                            <tr>
+                                <th width="8%">번호</th>
+                                <th width="30%">제목</th>
+                                <th width="10%">작성자</th>
+                                <th width="20%">작성일</th>
+                                <th width="8%">답변</th>
+                            </tr>
+                        </thead>
+                        <tbody align="center">
+                            <tr th:each="mql:${myQnAList}"><!-- 반복문 -->
+                                <td>[[${mql.boardNo}]]</td>
+                                <td>[[${mql.boardTitle}]]</td>
+                                <td>[[${mql.memberNickName}]]</td>
+                                <td>[[${mql.boardCreateDate}]]</td>
+                                 <th:block th:if="${mql.answerYN == 0}">
+                               		 <td>답변 대기중</td>
+                                </th:block>
+                                <th:block th:if="${mql.answerYN != 0}">
+                               		 <td style="color: blue;">답변 완료</td>
+                                </th:block>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-center align-items-center m-5">
+                    <nav aria-label="Standard pagination example">
+                        <ul class="pagination" th:with="loc=${loc}" style="margin: auto 0; color: black;">
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{${loc}(myPage=${mpi.currentPage-1})}" aria-label="Previous">
+                                    <span aria-hidden="true" style="color: black;">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:each="mp : ${#numbers.sequence(mpi.startPage, mpi.endPage)}">
+                                <a class="page-link" th:href="@{${loc}(myPage=${mp})}" style="color: black;">[[${mp}]]</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{${loc}(myPage=${mpi.currentPage+1})}" aria-label="Next">
+                                    <span aria-hidden="true" style="color: black;">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                </div>
+                 
             </div>
+        </div>
         </div>
     </main>
     
@@ -178,6 +250,7 @@
 
     <script th:inline="javascript">
         window.onload = () => {
+        	// 전체
             const tbody = document.querySelector('tbody');
             const tds = tbody.querySelectorAll('td');
             for (const td of tds) {
@@ -187,7 +260,29 @@
                     location.href="selectBoard.bo?bId=" + boardId + "&page=" + /*[[${pi.currentPage}]]*/1;
                 });
             }
+            // 본인
+            const section = document.getElementById('myQnABoardList-section').querySelector('tbody')
+            const pTds = section.querySelectorAll('td');
+            for(const ptd of pTds){
+            	ptd.addEventListener('click', function(){
+            		const ptrTds = this.parentElement.querySelectorAll('td');
+            		const pboardId = ptrTds[0].innerText;
+            		location.href="selectBoard.bo?bId=" + pboardId + "&page=" + /*[[${mpi.currentPage}]]*/1;
+            	})
+            }
+            console.log(section)
         };
+        
+        function showQnA(type) {
+			if (type === 'qnaBoardList') {
+				document.getElementById('qnaBoardList-section').style.display = 'block';
+				document.getElementById('myQnABoardList-section').style.display = 'none';
+				
+			} else if (type === 'myQnABoardList') {
+				document.getElementById('qnaBoardList-section').style.display = 'none';
+				document.getElementById('myQnABoardList-section').style.display = 'block';
+			}
+        }
     </script>
 </body>
 </html>
