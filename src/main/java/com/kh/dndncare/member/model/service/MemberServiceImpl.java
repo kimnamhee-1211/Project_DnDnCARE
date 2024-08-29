@@ -557,4 +557,10 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.getDelMemberNo();
 	}
 
+
+	@Override
+	public Matching selectEndDateMat(int matNo) {
+		return mMapper.selectEndDateMat(matNo);
+	}
+
 }
