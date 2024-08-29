@@ -557,4 +557,10 @@ public class MemberServiceImpl implements MemberService {
 		return mMapper.getDelMemberNo();
 	}
 
+
+	@Override
+	public Member findPwdResult(Member member) {
+		return mMapper.findPwdResult(member);
+	}
+
 }

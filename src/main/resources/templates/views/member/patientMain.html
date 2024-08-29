@@ -316,7 +316,7 @@
             나의 매칭 현황
         </a>
     </div> -->
-    <div th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
+   	
     
 	<!-- Modal 결제모달-->
 	<div class="modal fade" tabindex="-1" role="dialog" id="modalChoice2">
@@ -414,9 +414,6 @@
     
     
     <br><br><br><br>
-
-    <th:block th:replace="~{common/footer :: footer}"></th:block>
-    
     
     <!-- 캘린더 이벤트의 모달박스 (시작)-->
     <div class="modal" id="calendarModal" tabindex="-1">
@@ -458,7 +455,9 @@
 	</div>
     <!-- 캘린더 이벤트의 모달박스 (끝) -->
     
-    
+    <div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
+    <div class="matFixedBtn" th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
+    <th:block th:replace="~{common/footer :: footer}"></th:block>
     <script th:inline="javascript">
     // 캘린더 객체 생성
     // 이벤트 : 이벤트 정보를 담아서 객체를 생성해야 한다. 문법은 json을 따른다.

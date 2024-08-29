@@ -212,6 +212,8 @@ public interface MemberService {
 
 	Integer getDelMemberNo();
 
+	Member findPwdResult(Member member);
+
 
 
 }

@@ -1443,18 +1443,18 @@ public class MemberController {
 	}
 
 	@GetMapping("findPwd.me")
-	public String findPwd() {
+	public String findPwd(@RequestParam("memberId") String memberId, Model model) {
+		model.addAttribute("existMemberId",memberId);
 		return "findPwdPage";
 	}
 
 	@PostMapping("findIdResult.me")
-	public String findIdResult(@RequestParam("memberId") String memberId,
+	public String findIdResult(@RequestParam("memberName") String memberName,
 			@RequestParam("memberPhone") String memberPhone, Model model) {
 
 		Member member = new Member();
-		member.setMemberId(memberId);
+		member.setMemberName(memberName);
 		member.setMemberPhone(memberPhone);
-		System.out.println(member);
 
 		Member findMember = mService.findIdResult(member);
 		System.out.println(findMember);
@@ -1472,7 +1472,7 @@ public class MemberController {
 	public Map<String, Object> verifyMember(@RequestBody Member member) {
 		Map<String, Object> response = new HashMap<>();
 
-		Member findMember = mService.findIdResult(member);
+		Member findMember = mService.findPwdResult(member);
 		response.put("success", findMember != null);
 
 		return response;

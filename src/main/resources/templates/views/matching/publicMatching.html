@@ -128,6 +128,8 @@
 			</div>	
 		</form>
 	</main>
+	<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
+    <div class="matFixedBtn" th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	<script>
@@ -154,20 +156,20 @@
 
 	    const selectedLocation = document.getElementById('selectedLocation').value;
 	    let isValid = true;
-	    let errorMessage = '';
+	    let errorItems = [];
 
 	    // 기본 필드 검사
 	    requiredFields.forEach(field => {
 	        if (field.type === 'radio') {
 	            if (!document.querySelector(`input[name="${field.name}"]:checked`)) {
 	                isValid = false;
-	                errorMessage += `${field.label}을(를) 선택해주세요.\n`;
+	                errorItems.push(field.label);
 	            }
 	        } else {
 	            const element = document.getElementById(field.id) || document.getElementsByName(field.name)[0];
 	            if (!element.value.trim()) {
 	                isValid = false;
-	                errorMessage += `${field.label || field.name}를 입력해주세요.\n`;
+	                errorItems.push(field.label || field.name);
 	            }
 	        }
 	    });
@@ -175,26 +177,24 @@
 	    // 선택된 위치에 따른 추가 필드 검사
 	    if (selectedLocation === 'home') {
 	        const homeFields = ['addressCode', 'address', 'detailAddress'];
-	        homeFields.forEach(fieldId => {
-	            if (!document.getElementById(fieldId).value.trim()) {
-	                isValid = false;
-	                errorMessage += `집 주소 정보를 모두 입력해주세요.\n`;
-	            }
-	        });
+	        if (homeFields.some(fieldId => !document.getElementById(fieldId).value.trim())) {
+	            isValid = false;
+	            errorItems.push('집 주소 정보');
+	        }
 	    } else if (selectedLocation === 'hospital') {
 	        const hospitalFields = ['hospitalName', 'hospitalAddress', 'hospitalDetailAddress'];
-	        hospitalFields.forEach(fieldId => {
-	            if (!document.getElementById(fieldId).value.trim()) {
-	                isValid = false;
-	                errorMessage += `병원 정보를 모두 입력해주세요.\n`;
-	            }
-	        });
+	        if (hospitalFields.some(fieldId => !document.getElementById(fieldId).value.trim())) {
+	            isValid = false;
+	            errorItems.push('병원 정보');
+	        }
 	    } else {
 	        isValid = false;
-	        errorMessage += '위치(집 또는 병원)를 선택해주세요.\n';
+	        errorItems.push('위치(집 또는 병원)');
 	    }
 
 	    if (!isValid) {
+	        let errorMessage = '다음 항목을 확인해주세요:\n';
+	        errorMessage += errorItems.join(', ');
 	        alert(errorMessage);
 	    }
 
