@@ -43,7 +43,7 @@
 	      		<div align="center"class="row m-4" style="width:700px"> <!-- 여기로규격정햇다 -->
 		      		<div class="col-2 m-4">
 <!-- 			      		<img id="profile-image" src="image/icon_profile.png" onclick="profileImageUpdate()"/> -->
-			      		<img class="m-4" style="margin-left:-20px"id="profile-image" th:src="${cg.careImg} ? ${cg.careImg} : icon_profile.png" onclick="profileImageUpdate()"/>
+			      		<img class="m-4" style="margin-left:-20px"id="profile-image" th:src="${cg.careImg} ? ${cg.careImg} : (${session.loginUser.memberGender == 'F' ? 'image/icon/femaleProfile.png' : 'image/icon/maleProfile.png'})" onclick="profileImageUpdate()"/>
 			      		<span><button class="myInfo-btn" onclick="profileImageUpdate()">사진변경</button></span>
 			      		<script> 
 			      			function profileImageUpdate(){
