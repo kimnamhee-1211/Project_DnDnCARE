@@ -262,7 +262,7 @@ public class AdminController {
 			// 2. 썸네일 생성하기
 			//BufferedImage image = ImageIO.read(new File("\\\\192.168.40.37\\sharedFolder/dndnCare/thumbnail.png")); // 바탕이 될 썸네일 기본 이미지를 불러온다.
 			BufferedImage image = ImageIO.read(new File("C:\\\\uploadFiles/careInformation/thumbnail.png"));
-			image = thumbnailUtil.createThumbnail(image, b.getBoardTitle(), 25, 150); // 썸네일 기본 이미지 위에 텍스트 입력하기
+			image = thumbnailUtil.createThumbnail(image, b.getBoardTitle(), 50, 130); // 썸네일 기본 이미지 위에 텍스트 입력하기
 			String thumbnailName = copyNameCreate() + ".png"; // 텍스트 입력한 썸네일 파일을 저장할 때 사용할 파일명
 			//thumbnailUtil.saveImage(image, "\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
 			thumbnailUtil.saveImage(image, "C:\\\\uploadFiles/careInformation/" + thumbnailName);

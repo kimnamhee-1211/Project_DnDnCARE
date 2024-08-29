@@ -912,7 +912,13 @@
 		where mat_no = #{matNo}	
 	</select>
 	
+	<select id="selectEndDateMat" resultType="Matching">
+		select end_dt
+		from matching
+		where mat_no = #{matNo}
 	
+	
+	</select>
 	
 	
 	
