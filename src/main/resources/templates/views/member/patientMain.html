@@ -157,11 +157,11 @@
 			              <div class="card-body" style="max-height:150px;">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
-			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : (${cg[num].memberGender} =='F' ? 'image/icon/femaleProfile.png' : 'image/icon/maleProfile.png')" style="max-width:60px;">
 			              		</div>
 			              		<div class="col text-center" >
 			              			<div class="d-flex justify-content-center">
-				                		<h5 class="card-title">[[${cg[num].memberName}]]님</h5>
+				                		<h5 class="card-title">[[${cg[num].memberName}]]님[[${cg[0].memberGender}]]</h5>
 				                		<div th:unless="${cg[num].getAvgReviewScoreDouble !=null}" style="font-size:10px">아직 리뷰가 없어요!</div>
 				                		<div th:if="${cg[num].getAvgReviewScoreDouble !=null}" align="center"  class="d-flex justify-content-left" >
 							      			<div align="left"class="icon-star-review">
@@ -205,7 +205,7 @@
 			              <div class="card-body">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
-			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : (${cg[num].memberGender} =='F' ? 'image/icon/femaleProfile.png' : 'image/icon/maleProfile.png')" style="max-width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
@@ -253,7 +253,7 @@
 			              <div class="card-body">
 			              	<div class="row m-2">
 			              		<div align="left" class="col-3 test-left" style="max-width:60px;">
-			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : icon_profile.png" style="max-width:60px;">
+			              			<img class="profile-image" th:src="${cg[num].careImg} ? ${cg[num].careImg} : (${cg[num].memberGender} =='F' ? 'image/icon/femaleProfile.png' : 'image/icon/maleProfile.png')" style="max-width:60px;">
 			              		</div>
 			              		<div align="left"class="col text-left" >
 			              			<div class="d-flex justify-content-between">
