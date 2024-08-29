@@ -191,19 +191,22 @@
 		                    boardNo: document.querySelector('input[name="boardNo"]').value,  
 		                    answerContent: answerContent  
 		                },
+		                dataType: 'JSON',
 		                success: data=> {
-		                        alert('댓글이 성공적으로 작성되었습니다.');
-		                        
+		                        alert('답변이 성공적으로 작성되었습니다.');
 		                        const newTr = document.createElement('tr');
+		                        data.forEach(r =>{
+		                        	
 		                        newTr.innerHTML = `
-		                        	<td>${data.replyNo}</td>
-		                            <td>&nbsp;&nbsp;${data.writer}</td>
+		                        	<td>${r.replyNo}</td>
+		                            <td>&nbsp;&nbsp;${r.memberNickName}</td>
 		                            <td>${answerContent}</td>
-		                            <td>${data.createDate}</td>
+		                            <td>${r.replyCreateDate}</td>
 		                        `;
+		                        })
 		                        document.getElementById('adminPagereplyTable').querySelector('tbody').appendChild(newTr);
 
-		                        // 댓글 작성란 초기화
+		                        // 댓글 작성 초기화
 		                        document.getElementById('answerContent').value = '';
 		                
 		                },
@@ -225,8 +228,8 @@
 
 		    for (const btn of replyDeleteBtns) {
 		        btn.addEventListener('click', function(event) {
-		            event.stopPropagation(); // 클릭 이벤트가 <td>로 전파되지 않도록 방지
-		            const tr = this.closest('tr'); // 현재 버튼이 속한 <tr>을 찾습니다
+		            event.stopPropagation(); 
+		            const tr = this.closest('tr'); 
 		            const replyNo = tr.querySelector('td').innerText;
 
 		            $.ajax({
@@ -251,7 +254,7 @@
 			
 		    
 				document.getElementById('adminBoardUpdateModalBtn').addEventListener('click', function() {
-					 // 제목 부분 변경
+					 // 제목 변경
 				    const titleSpan = document.querySelector('div.col-md-7 span'); 
 				    if (titleSpan) {
 				        const titleInput = document.createElement('input');
@@ -262,7 +265,7 @@
 				        titleSpan.parentNode.replaceChild(titleInput, titleSpan);
 				    }
 	
-				    // 내용 부분 변경
+				    // 내용 변경
 				    const contentDiv = document.getElementById('boardContent');
 				    if (contentDiv) {
 				        const textarea = document.createElement('textarea');

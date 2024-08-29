@@ -1717,6 +1717,8 @@ public class AdminController {
 
 		ArrayList<Reply> replyList = aService.adminSelectReply(r.getRefBoardNo());
 		
+		System.out.println(replyList);
+		
 		JSONArray array = new  JSONArray();
 		
 		for(Reply reply : replyList) {

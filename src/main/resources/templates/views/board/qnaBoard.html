@@ -2,7 +2,7 @@
 <html xmlns="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>간병인 커뮤니티</title>
+<title>문의게시판</title>
 <link th:href="@{css/myInfo.css}" rel="stylesheet" type="text/css"/>
 <style>
     @font-face {
@@ -166,7 +166,7 @@
                                 <th:block th:if="${q.answerYN==0}">
                                		 <td>답변 대기중</td>
                                 </th:block>
-                                <th:block th:if="${q.answerYN==1}">
+                                <th:block th:if="${q.answerYN!=1}">
                                		 <td>답변 완료</td>
                                 </th:block>
                             </tr>
@@ -209,12 +209,12 @@
                             <tr th:each="mql:${myQnAList}"><!-- 반복문 -->
                                 <td>[[${mql.boardNo}]]</td>
                                 <td>[[${mql.boardTitle}]]</td>
-                                <td>[[${mql.memberName}]]</td>
+                                <td>[[${mql.memberNickName}]]</td>
                                 <td>[[${mql.boardCreateDate}]]</td>
-                                 <th:block th:if="${mql.answerYN==0}">
+                                 <th:block th:if="${mql.answerYN == 0}">
                                		 <td>답변 대기중</td>
                                 </th:block>
-                                <th:block th:if="${mql.answerYN==1}">
+                                <th:block th:if="${mql.answerYN != 0}">
                                		 <td>답변 완료</td>
                                 </th:block>
                             </tr>
