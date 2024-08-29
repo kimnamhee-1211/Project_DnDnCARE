@@ -41,6 +41,7 @@ import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
 import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.ImageUtil;
+import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.common.Pagination2;
 import com.kh.dndncare.common.ThumbnailUtil;
 import com.kh.dndncare.matching.model.vo.Matching;
@@ -510,11 +511,11 @@ public class AdminController {
 		    					@RequestParam(value="patientPage", defaultValue = "1") int patientPage, Model model) {
 		// 간병인 커뮤니티 게시판 페이지네이션
 		int caregiverListCount = aService.getCaregiverListCount();
-		PageInfo cpi = Pagination2.getPageInfo(caregiverPage, caregiverListCount, 7, 5);
+		PageInfo cpi = Pagination.getPageInfo(caregiverPage, caregiverListCount, 10);
 		
 		// 환자 커뮤니티 게시판 페이지네이션
 		int patientListCount = aService.getPatientListCount();
-		PageInfo ppi = Pagination2.getPageInfo(patientPage, patientListCount, 7, 5);
+		PageInfo ppi = Pagination.getPageInfo(patientPage, patientListCount, 10);
 		
 		// 간병인 커뮤니티 게시판 type만들걸
 		ArrayList<Board> adminCaregiverBoardList = aService.selectCaregiverBoardList(cpi);

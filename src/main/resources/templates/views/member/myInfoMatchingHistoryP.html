@@ -65,7 +65,7 @@
 	      		
 	      		<div class="row m-4">
 	      			<div class="col m-3">
-						<div class="myInfo-Border-maincolor mt-2 mb-3">
+						<div class="myInfo-Border-maincolor mt-2 mb-3" style="width:900px;">
 						
 							<div class="m-2 d-flex justify-content-between">
 								<div class="h3 m-2">[[${session.loginUser.MemberName}]]님 이용일수/지출</div>
@@ -78,35 +78,20 @@
 								<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6" id="count-section">
 									<canvas class="my-4 w-100" id="useMonthCount" width="900" height="250"></canvas>
 									<div>
-										<table align="center" class="table table-bordered boarder-dark">
-											
-											<tr>
-												<th id="lastSixMonthsTable"></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-											</tr>
-											
-										</table>
 									</div>
 								</div>
 								
 								<div class="m-3 p-2" style="border-bottom:1px solid #dee2e6; display:none" id="pay-section">
 									<canvas class="my-4 w-100" id="sumMonthPay" width="900" height="250"></canvas>
 									<div>
-									???????
 									</div>
 								</div>
 								
 							</div>
-						</div>
 						
 						
-						<div class="myInfo-Border-maincolor mt-2 mb-3">
+						
+						<div class="myInfo-Border-maincolor mt-2 mb-3" style="width:900px;">
 						
 							<div class="m-2 d-flex justify-content-between">
 								<div class="h3 m-2">[[${session.loginUser.MemberName}]]님 매칭 이력</div>
@@ -120,7 +105,7 @@
 							<div id="matching" class="m-3 p-2" style="border-bottom:1px solid #dee2e6">
 							    <table class="m-2" id="matchingTable">
 							        <tr align="center">
-							            <th width="340px">간호 시작일</th>
+							            <th width="320px">간호 시작일</th>
 							            <th width="30"></th>
 							            <th width="320px">간호 종료일</th>
 							            <th width="320px">간병인 정보</th>
@@ -142,15 +127,14 @@
 							</div>
 							
 							<div id="endMatching" class="m-3 p-2" style="border-bottom:1px solid #dee2e6; display:none">
-							    <table class="m-2" id="matchingTable" >
+							    <table class="m-2" id="matchingTable2" >
 							        <tr align="center">
 							            <th width="320px">간호 시작일</th>
 							            <th width="30"></th>
 							            <th width="320px">간호 종료일</th>
-							            <th width="200px">간병인 정보</th>
-							            <th width="200"> 금액</th>
-							            <th></th>
-							            <th width="120px">후기 작성</th>
+							            <th width="320px">간병인 정보</th>
+							            <th width="320"> 금액</th>
+							            <th width="160px">후기 작성</th>
 							        </tr>
 							        <tr th:if="${i.isAfterDate}" th:each="i : ${mciList}"  class="matching-row">
 								            <td>[[${i.beginDt}]]일 [[${i.beginTime}]]시</td>
@@ -171,6 +155,7 @@
 							        </tr>
 							        
 							    </table>
+							    </div>
 							</div>
 						</div>
 						
@@ -182,6 +167,7 @@
     	</div>
 	<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
     <div class="matFixedBtn" th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
+    <br><br><br><br>
     <th:block th:replace="~{common/footer :: footer}"></th:block>
 	
 	

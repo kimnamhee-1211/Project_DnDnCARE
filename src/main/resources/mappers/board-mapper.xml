@@ -30,7 +30,7 @@
 	        join member m on(m.member_no=b.member_no)
 	        join area a on(b.area_no=a.area_no)
 	    where b.board_status='Y' 
-	        and (m.member_category='A' and b.category_no = 0) or m.member_category=#{category} 
+	        and (m.member_category='A' and b.category_no = 0 or m.member_category=#{category}) 
 	    <if test="categoryNo != -1">
 	        and b.category_no = #{categoryNo}
 	    </if>

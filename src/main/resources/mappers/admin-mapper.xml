@@ -167,7 +167,7 @@
 		select *
 		from board
 			join member using(member_no)
-		where member_category = 'C' or (member_category='A' and category_no = 0 and category_no = 99)
+		where (member_category = 'C' or member_category='A') and category_no != 99 and category_no !=7
 		order by board_no desc 
 	</select>
 	
@@ -176,7 +176,7 @@
 		select *
 		from board
 			join member using(member_no)
-		where member_category = 'P' or (member_category='A' and category_no = 0 and category_no = 99)
+		where (member_category = 'P' or member_category='A') and category_no != 99 and category_no !=7
 		order by board_no desc
 	</select>
 	
@@ -185,7 +185,7 @@
 		select count(*)
 		from board
 			join member using(member_no)
-		where member_category = 'C'  or (member_category='A' and category_no = 0 and category_no = 99)
+		where (member_category = 'C'  or member_category='A') and category_no != 99 and category_no !=7
 	</select>
 	
 	<!-- 환자커뮤니티 페이지네이션 -->
@@ -193,7 +193,7 @@
 		select count(*)
 		from board
 			join member using(member_no)
-		where member_category = 'P' or (member_category='A' and category_no = 0  and category_no = 99)
+		where (member_category = 'P' or member_category='A') and category_no != 99 and category_no !=7
 	</select>
 	
 	<!-- 공지 작성 -->

@@ -65,7 +65,7 @@ public class BoardController {
 	    map.put("areas", areas);
 	    
 	    int listCount = bService.getListCountAll(map);
-	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 20);
+	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 10);
 	    
 	    if (areas == null || areas.isEmpty()) {
 	        areas = new ArrayList<>(); 
@@ -262,7 +262,7 @@ public class BoardController {
 	    // 지역
 	    
 	    int listCount = bService.getListCountAll(map);
-	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 20);
+	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 10);
 	    // 페이지네이션
 	    
 	    if (areas == null || areas.isEmpty()) {
@@ -595,7 +595,7 @@ public class BoardController {
 					            HttpServletRequest request, HttpSession session) {
 	    // 페이지네이션
 		int listCount = bService.getListCountQnA();   
-	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 20);
+	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 10);
 	    
 	    // 모든 문의 내역
 		ArrayList<Board> qnaList = bService.qnaBoardList(pi);
@@ -607,7 +607,7 @@ public class BoardController {
 		// 나의 문의내역 페이지
 		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
 		int myListCount = bService.getMyListCountQnA(memberNo);
-		PageInfo mpi = Pagination.getPageInfo(myCurrentPage, myListCount, 20);
+		PageInfo mpi = Pagination.getPageInfo(myCurrentPage, myListCount, 10);
 		// 나의 문의 내역
 		ArrayList<Board> myQnAList = bService.myQnAList(memberNo,mpi);
 		if(myQnAList != null) {

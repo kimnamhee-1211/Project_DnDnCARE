@@ -117,19 +117,25 @@
 						<div style="display:grid; grid-template-columns:100px 1fr 300px;">
 							<div></div>
 							<div>
-								<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
-									<div class="btn-group me-2 text-end" role="group" aria-label="First group">
-										<button type="button" class="btn btn-outline-secondary" th:if="${cpi.currentPage <= 1}" disabled>이전</button>
-	 									<button type="button" class="btn btn-outline-secondary" th:if="${cpi.currentPage > 1}" th:onclick="|location.href='@{${loc} (caregiverPage=${cpi.currentPage - 1}, patientPage=${ppi.currentPage})}'|">이전</button>
-										
-										<th:block th:each="cp: ${#numbers.sequence(cpi.startPage, cpi.endPage)}">
-								    		<button type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{${loc}(caregiverPage=${cp})}'|">[[${cp}]]</button>
-										</th:block> 
-									    
-									    <button type="button" class="btn btn-outline-secondary" th:if="${cpi.currentPage >= cpi.maxPage}" disabled>다음</button>
-									    <button type="button" class="btn btn-outline-secondary" th:if="${cpi.currentPage < cpi.maxPage}" th:onclick="|location.href='@{${loc}(caregiverPage=${cpi.currentPage+1}, patientPage=${ppi.currentPage})}'|">다음</button>
-									</div>
-								</div>
+								<div class="d-flex justify-content-begin align-items-center">
+				                    <nav aria-label="Standard pagination example">
+				                        <ul class="pagination" th:with="loc=${loc}" style="margin:auto 0;color:black;">
+				                            <li class="page-item">
+				                                <a class="page-link" th:href="@{${loc}(caregiverPage=${cpi.currentPage-1})}" aria-label="Previous">
+				                                    <span aria-hidden="true" style="color:black;">&laquo;</span>
+				                                </a>
+				                            </li>
+				                            <li class="page-item" th:each="cp : ${#numbers.sequence(cpi.startPage, cpi.endPage)}">
+				                                <a class="page-link" th:href="@{${loc}(caregiverPage=${cp})}" style="color:black;">[[${ cp }]]</a>
+				                            </li>
+				                            <li class="page-item">
+				                                <a class="page-link" th:href="@{${loc}(caregiverPage=${cpi.currentPage+1})}" aria-label="Next">
+				                                    <span aria-hidden="true" style="color:black;">&raquo;</span>
+				                                </a>
+				                            </li>
+				                        </ul>
+				                    </nav>
+			                    </div>
 							</div>
 						</div>
 						</div>
@@ -174,21 +180,25 @@
 						</table>
 						<div style="display:grid; grid-template-columns:100px 1fr 300px;" >
 							<div></div>
-							<div>
-								<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolba with button groups2" >
-									<div class="btn-group me-2 text-end" role="group" aria-label="Second group">
-										<button type="button" class="btn btn-outline-secondary" th:if="${ppi.currentPage <= 1}" disabled>이전</button>
-	 									<button type="button" class="btn btn-outline-secondary" th:if="${ppi.currentPage > 1}" th:onclick="|location.href='@{${loc}(patientPage=${cpi.currentPage - 1}, caregiverPage=${ppi.currentPage})}'|">이전</button>
-										
-										<th:block th:each="pp: ${#numbers.sequence(ppi.startPage, ppi.endPage)}">
-								    		<button type="button" class="btn btn-outline-secondary" th:onclick="|location.href='@{${loc}(patientPage=${pp}, caregiverPage=${cpi.currentPage})}'|">[[${pp}]]</button>
-										</th:block> 
-									    
-									    <button type="button" class="btn btn-outline-secondary" th:if="${ppi.currentPage >= ppi.maxPage}" disabled>다음</button>
-									    <button type="button" class="btn btn-outline-secondary" th:if="${ppi.currentPage < ppi.maxPage}" th:onclick="|location.href='@{${loc}(patientPage=${cpi.currentPage+1}, caregiverPage=${ppi.currentPage})}'|">다음</button>
-									</div>
-								</div>
-							</div>
+							<div class="d-flex justify-content-begin align-items-center">
+				                    <nav aria-label="Standard pagination example">
+				                        <ul class="pagination" th:with="loc=${loc}" style="margin:auto 0;color:black;">
+				                            <li class="page-item">
+				                                <a class="page-link" th:href="@{${loc}(patientPage=${ppi.currentPage-1})}" aria-label="Previous">
+				                                    <span aria-hidden="true" style="color:black;">&laquo;</span>
+				                                </a>
+				                            </li>
+				                            <li class="page-item" th:each="pp : ${#numbers.sequence(ppi.startPage, ppi.endPage)}">
+				                                <a class="page-link" th:href="@{${loc}(patientPage=${pp})}" style="color:black;">[[${ pp }]]</a>
+				                            </li>
+				                            <li class="page-item">
+				                                <a class="page-link" th:href="@{${loc}(patientPage=${ppi.currentPage+1})}" aria-label="Next">
+				                                    <span aria-hidden="true" style="color:black;">&raquo;</span>
+				                                </a>
+				                            </li>
+				                        </ul>
+				                    </nav>
+			                    </div>
 						</div>
 					</div>
 					
@@ -245,10 +255,6 @@
 		        showComunity('patientComunity');
 		    } else if (caregiverPage) {
 		        showComunity('caregiverComunity');
-		    } else {
-		        // 기본적으로 간병인 커뮤니티를 표시하거나 다른 기본 동작
-		        showComunity('caregiverComunity');
-		    }
 		
 		$(document).ready(function() {
 	        $('#summernote').summernote({
