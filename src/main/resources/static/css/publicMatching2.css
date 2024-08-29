@@ -123,6 +123,42 @@ lable{
       white-space:nowrap;
   }
   
+  .form-floating.mb-5.mt-5 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 가운데 정렬 */
+}
+	
+	.instruction-text.request {
+	    text-align: center;
+	    width: 100%;
+	    margin-bottom: 20px;
+	    margin:0 auto;
+	    
+	}
+	
+	.instruction-text.request p {
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    margin-bottom: 10px;
+	}
+	
+	.instruction-text.request em {
+	    display: block;
+	    text-align: center;
+	}
+	
+	#ptRequest {
+	    width: 100%;
+	    max-width: 600px; /* 텍스트 영역의 최대 너비 */
+	    height: 100px; /* 높이 조정 */
+	    margin: 0 auto;
+	}
+  
   .instruction-text em {
   	color:#ffc04d;
   	font-style:normal;

@@ -9,9 +9,9 @@
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
 	<main class="inner-content d-flex justify-content-center">
 			<form th:action="@{updatePassword.me}" method="post" class="findId-wrap d-flex flex-column">
-				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
-				<h1 class="h3 mb-3 fw-bold text-center">비밀번호 재설정</h1>
-				<div class="text-center mb-5"><strong>김기룡</strong>님 안녕하세요!<br>가입하신 계정 <strong>[[${memberId}]]</strong>에 대한 비밀번호를 재설정해 주세요</div>
+				<a style="margin-left:135px;"href="home.do" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a>
+				<h1 class="h3 mt-5 mb-3 fw-bold text-center">비밀번호 재설정</h1>
+				<div class="text-center mb-5">가입하신 계정 <strong>[[${memberId}]]</strong>에 대한 비밀번호를 재설정해 주세요</div>
 				<div class="updatePwd-input">
 					<div class="form-floating mb-3">
 						<input type="password" class="form-control" id="floatingpassword" name="memberPwd">

@@ -45,8 +45,9 @@ body {
 }
 
 .signIn-btn {
-	background:#8dd986;
+	background:#133b5c;
 	color:white;
+	opacity:0.8;
 }
 
 .find-section a {

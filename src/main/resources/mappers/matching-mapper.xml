@@ -588,6 +588,12 @@
 			join patient on(mpi.pt_no = patient.pt_no)
 		where mpi.group_leader = 'Y' and subquery.end_dt > sysdate
 	</select>
+	
+	<select id="getRequest">
+		select PT_REQUEST
+		from patient
+		where member_no = #{memberNo}
+	</select>
 
 
 
