@@ -47,13 +47,13 @@
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index < 5}" >
+                    	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index < 5 && (l.ptCount == 1 || l.groupLeader == 'Y')}">
 	                         <td>
 	                         	<input type="hidden" th:value="${l.matNo}"/>
 	                         	[[${l.ptName}]]
 	                         </td>
 	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]</td>
+	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
 	                         <td>[[${l.ptAddress}]]</td>
 	                         <td>
 	                         	<th:block th:if="${l.ptDisease != null}">
@@ -78,13 +78,13 @@
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index >= 5}" >
+                    	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index >= 5 && (l.ptCount == 1 || l.groupLeader == 'Y')}" >
 	                         <td>
 	                         	<input type="hidden" th:value="${l.matNo}"/>
 	                         	[[${l.ptName}]]
 	                         </td>
 	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]</td>
+	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
 	                         <td>[[${l.ptAddress}]]</td>
 	                         <td>
 	                         	<th:block th:if="${l.ptDisease != null}">
@@ -1333,7 +1333,7 @@
 															                    <p class="card-text">\
 															                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 															                    	<span>${gender}</span>&nbsp;&nbsp;\
-															                    	<span>${mem.ptRealAge}세</span><br/>\
+															                    	<span>${mem.ptRealAge < 0 ? mem.ptRealAge+100 : mem.ptRealAge}세</span><br/>\
 															                    	<span>${address}</span>\
 															                   	</p>\
 															                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
@@ -1355,7 +1355,7 @@
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.ptRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge < 0 ? mem.ptRealAge+100 : mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
@@ -1364,7 +1364,7 @@
 							   							</div>\
 													</div>`;
 													break;
-												} else if(mat.ptCount == 2 && mem.groupLeader =='Y'){//공동간병
+												} else if(mat.ptCount >= 2 && mem.groupLeader =='Y'){//공동간병
 													console.log(mat.matNo);
 													let leaderName = mem.ptName;
 													root.innerHTML += `<div class="col-sm-6">\
@@ -1378,7 +1378,7 @@
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.ptRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge < 0 ? mem.ptRealAge+100 : mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
@@ -1447,7 +1447,7 @@
 															                    <p class="card-text">\
 															                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 															                    	<span>${gender}</span>&nbsp;&nbsp;\
-															                    	<span>${mem.ptRealAge}세</span><br/>\
+															                    	<span>${mem.ptRealAge < 0 ? mem.ptRealAge+100 : mem.ptRealAge}세</span><br/>\
 															                    	<span>${address}</span>\
 															                   	</p>\
 															                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
@@ -1469,7 +1469,7 @@
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.ptRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge < 0 ? mem.ptRealAge+100 : mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\
@@ -1478,7 +1478,7 @@
 							   							</div>\
 													</div>`;
 													break;
-												} else if(mat.ptCount == 2 && mem.groupLeader =='Y'){//공동간병
+												} else if(mat.ptCount >= 2 && mem.groupLeader =='Y'){//공동간병
 													console.log(mat.matNo);
 													let leaderName = mem.ptName;
 													root.innerHTML += `<div class="col-sm-6">\
@@ -1492,7 +1492,7 @@
 										                    <p class="card-text">\
 										                    	<span>${mat.beginDt} ~ ${mat.endDt}</span><br/>\
 										                    	<span>${gender}</span>&nbsp;&nbsp;\
-										                    	<span>${mem.ptRealAge}세</span><br/>\
+										                    	<span>${mem.ptRealAge < 0 ? mem.ptRealAge+100 : mem.ptRealAge}세</span><br/>\
 										                    	<span>${mpi.hospitalName}</span>\
 										                   	</p>\
 										                   	<input type="hidden" name="matNo" value=${mat.matNo}/>\

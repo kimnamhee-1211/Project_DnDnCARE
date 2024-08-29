@@ -449,7 +449,10 @@ public class MemberController {
 		String joinStatus = infoMap.remove("CARE_JOIN_STATUS"); // 공동 간병 참여여부
 		String careGiverAddress = infoMap.get("주소").contains("서울") ? "서울"
 				: (infoMap.get("주소").contains("제주") ? "제주"
-						: (infoMap.get("주소").contains("세종") ? "세종" : infoMap.get("주소")));
+						: (infoMap.get("주소").contains("인천") ? "인천" : infoMap.get("주소")));
+		
+				
+		
 		// 환자 기본정보 조회 : 회원번호, 이름, 성별, 나이, 간병장소, 국적, 키, 몸무게, 요청서비스, 요청사항, 요청장소, 매칭 시작일,
 		// 매칭 종료일, 금액
 //			PATIENT : 멤버번호(PT_NO), 이름(PT_NAME), 성별(PT_GENDER), 나이(PT_GENDER), 국적, 키(PT_HEIGHT), 몸무게(PT_WEIGHT)
@@ -557,8 +560,23 @@ public class MemberController {
 				}
 			}
 		}
-
-		return completeList;
+		
+		ArrayList<Patient> realCompleteList = new ArrayList<Patient>();
+		for(Patient p : completeList) {
+			if(p.getPtCount() == 1) {
+				realCompleteList.add(p);
+			} else {
+				if(p.getGroupLeader().equals("Y")) {
+					realCompleteList.add(p);
+				}
+			}
+		}
+		
+		System.out.println("====여기여기======");
+		System.out.println(realCompleteList);
+		System.out.println("=====여기여기=====");
+		
+		return realCompleteList;
 	}
 
 	// 메인페이지 이동 후에 환자 메인페이지 렌더링 도중에 캘린더 이벤트를 조회하게 된다.

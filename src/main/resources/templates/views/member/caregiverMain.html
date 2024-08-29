@@ -45,13 +45,13 @@
                  </thead>
                  
                  <tbody>
-                     <tr class="text-center" th:if="${completeList}" th:each="l : ${completeList}">
+                     <tr class="text-center" th:each="l : ${completeList}" th:if="${l.ptCount == 1 || l.groupLeader == 'Y'}">
                          <td>
                          	<input type="hidden" th:value="${l.matNo}"/>
                          	[[${l.ptName}]]
                          </td>
                          <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-                         <td>[[${l.ptRealAge}]]</td>
+                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
                          <td>[[${l.ptAddress}]]</td>
                          <th:block th:with="arr = ${#strings.listSplit(l.ptDisease, '/')}">
 	                         <td>

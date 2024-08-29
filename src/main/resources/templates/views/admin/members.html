@@ -48,6 +48,7 @@
 			<br/>
 			
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+				<br/>
 				<div id="graphDiv">
 					<div class="h-100 p-2 bg-light border rounded-3 text-center">
 						<canvas id="loginLineChart"></canvas>
@@ -286,10 +287,6 @@
 		</div>
 	</div>
 	<!-- 상세주소를 입력할 모달 (시작) -->
-	
-	
-	
-	
 	
 	
 	<script th:inline="javascript">
@@ -686,7 +683,7 @@
 			    	      data: twoWeekLogin,
 			    	      borderColor: 'rgb(75, 192, 192)',
 			    	      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-			    	      stepped: true,
+			    	      stepped: false,
 			    	      yAxisID: 'y',
 			    	    }
 			    	]
