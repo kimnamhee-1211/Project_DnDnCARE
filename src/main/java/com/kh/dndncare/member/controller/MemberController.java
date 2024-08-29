@@ -2646,7 +2646,13 @@ public class MemberController {
 		// 6. 프롬프트를 전달하고 결과값 받아오기
 		String result = botController.chat(prompt);
 		System.out.println("GPT가 추천한 매칭번호 : " + result);
-		String[] choice = result.split(", ");
+		
+		if(result.contains("-")) {
+			return null;
+		}
+		
+		
+		String[] choice = result.split(" ");
 		System.out.println("GPT가 추천한 매칭번호의 스플릿 : " + Arrays.toString(choice));
 		ArrayList<Integer> choiceNoList = new ArrayList<Integer>();
 		for (int i = 0; i < choice.length; i++) {
