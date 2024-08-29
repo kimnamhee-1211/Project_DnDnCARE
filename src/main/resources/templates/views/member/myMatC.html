@@ -41,7 +41,6 @@
 		margin: 0 auto;
 		margin-top: 0px;
 		font-family: 'Pretendard-Regular';
-		box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 		
 	}
 </style>
@@ -66,11 +65,16 @@
 	    	</div>
 	    	
 	    	<div class="col m-2" style="max-width:900px;" >
-	      		<div th:replace="~{matching/myMatchingC :: myMatchingC}"></div>	
-		      		
+	    		 <div class="row m-4" style="width:900px">
+		      		<div class="m-3 h1 menu-name" >내 매칭 현황</div>
+	      		</div>
+	      		<div class="row m-4" style="width:900px"> 
+	      			<div th:replace="~{matching/myMatchingC :: myMatchingC}"></div>	
+		      	</div>
 	      	</div>
 	   	</div>
-	</div> 	     	
+	</div>
+	<br/><br/><br/><br/>  	     	
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 </body>
 </html>
