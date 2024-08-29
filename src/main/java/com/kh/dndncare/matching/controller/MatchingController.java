@@ -555,7 +555,6 @@ public class MatchingController {
 			re.addAttribute("hospitalAddress", hospital.getHospitalAddress());
 			re.addAttribute("msg", "공동간병 등록이 완료되었습니다.");
 			
-			logger.info("matNo : " + jm.getMatNo() + ",공동간병");
 			session.setAttribute("logMatNo",jm.getMatNo() );
 			session.setAttribute("logMatService","공동간병");
 			
