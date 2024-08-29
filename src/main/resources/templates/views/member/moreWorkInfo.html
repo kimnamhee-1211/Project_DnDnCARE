@@ -47,22 +47,24 @@
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index < 5 && (l.ptCount == 1 || l.groupLeader == 'Y')}">
-	                         <td>
-	                         	<input type="hidden" th:value="${l.matNo}"/>
-	                         	[[${l.ptName}]]
-	                         </td>
-	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
-	                         <td>[[${l.ptAddress}]]</td>
-	                         <td>
-	                         	<th:block th:if="${l.ptDisease != null}">
-	                         		[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]
-	                         	</th:block>
-	                         	<th:block th:if="${l.ptDisease == null}">-</th:block>
-                         	</td>
-	                         <td>[[${l.money}]] 원</td>
-                    	 </tr>
+                 		<th:block th:if="${completeList}">
+	                    	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index < 5 && (l.ptCount == 1 || l.groupLeader == 'Y')}">
+		                         <td>
+		                         	<input type="hidden" th:value="${l.matNo}"/>
+		                         	[[${l.ptName}]]
+		                         </td>
+		                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
+		                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
+		                         <td>[[${l.ptAddress}]]</td>
+		                         <td>
+		                         	<th:block th:if="${l.ptDisease != null}">
+		                         		[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]
+		                         	</th:block>
+		                         	<th:block th:if="${l.ptDisease == null}">-</th:block>
+	                         	</td>
+		                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]]원</td>
+	                    	 </tr>
+                    	 </th:block>
                  	</tbody>
              	</table>
 				
@@ -78,22 +80,24 @@
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index >= 5 && (l.ptCount == 1 || l.groupLeader == 'Y')}" >
-	                         <td>
-	                         	<input type="hidden" th:value="${l.matNo}"/>
-	                         	[[${l.ptName}]]
-	                         </td>
-	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
-	                         <td>[[${l.ptAddress}]]</td>
-	                         <td>
-	                         	<th:block th:if="${l.ptDisease != null}">
-	                         		[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]
-	                         	</th:block>
-	                         	<th:block th:if="${l.ptDisease == null}">-</th:block>
-                         	</td>
-	                         <td>[[${l.money}]] 원</td>
-                    	 </tr>
+                 		<th:block th:if="${completeList}">
+	                    	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index >= 5 && (l.ptCount == 1 || l.groupLeader == 'Y')}" >
+		                         <td>
+		                         	<input type="hidden" th:value="${l.matNo}"/>
+		                         	[[${l.ptName}]]
+		                         </td>
+		                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
+		                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
+		                         <td>[[${l.ptAddress}]]</td>
+		                         <td>
+		                         	<th:block th:if="${l.ptDisease != null}">
+		                         		[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]
+		                         	</th:block>
+		                         	<th:block th:if="${l.ptDisease == null}">-</th:block>
+	                         	</td>
+		                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]]원</td>
+	                    	 </tr>
+                    	 </th:block>
                  	</tbody>
              	</table>
 			</div>

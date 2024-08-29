@@ -45,29 +45,31 @@
                  </thead>
                  
                  <tbody>
-                     <tr class="text-center" th:each="l : ${completeList}" th:if="${l.ptCount == 1 || l.groupLeader == 'Y'}">
-                         <td>
-                         	<input type="hidden" th:value="${l.matNo}"/>
-                         	[[${l.ptName}]]
-                         </td>
-                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
-                         <td>[[${l.ptAddress}]]</td>
-                         <th:block th:with="arr = ${#strings.listSplit(l.ptDisease, '/')}">
+                 	<th:block th:if="${completeList}">
+	                    <tr class="text-center" th:each="l : ${completeList}" th:if="${l.ptCount == 1 || l.groupLeader == 'Y'}">
 	                         <td>
-	                         	<th:block th:if="${#lists.size(arr) > 3}" th:each="d, dStat : ${arr}">
-	                         		<th:block th:if="${dStat.index < 3}">[[${d}]],</th:block>
-	                         		<th:block th:if="${dStat.index == 3}">[[${d}]] ...</th:block>
-	                         	</th:block>
-	                         	
-	                         	<th:block th:if="${#lists.size(arr) <= 3}" th:each="d : ${arr}">
-	                         		<th:block th:unless="${dStat.last}">[[${d}]],</th:block>
-	                         		<th:block th:if="${dStat.last}">[[${d}]]</th:block>
-	                         	</th:block>	
+	                         	<input type="hidden" th:value="${l.matNo}"/>
+	                         	[[${l.ptName}]]
 	                         </td>
-                         </th:block>
-                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]] 원</td>
-                     </tr>
+	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
+	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
+	                         <td>[[${l.ptAddress}]]</td>
+	                         <th:block th:with="arr = ${#strings.listSplit(l.ptDisease, '/')}">
+		                         <td>
+		                         	<th:block th:if="${#lists.size(arr) > 3}" th:each="d, dStat : ${arr}">
+		                         		<th:block th:if="${dStat.index < 3}">[[${d}]],</th:block>
+		                         		<th:block th:if="${dStat.index == 3}">[[${d}]] ...</th:block>
+		                         	</th:block>
+		                         	
+		                         	<th:block th:if="${#lists.size(arr) <= 3}" th:each="d : ${arr}">
+		                         		<th:block th:unless="${dStat.last}">[[${d}]],</th:block>
+		                         		<th:block th:if="${dStat.last}">[[${d}]]</th:block>
+		                         	</th:block>	
+		                         </td>
+	                         </th:block>
+	                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]] 원</td>
+	                     </tr>
+                     </th:block>
                  </tbody>
             </table>
 			</div>
