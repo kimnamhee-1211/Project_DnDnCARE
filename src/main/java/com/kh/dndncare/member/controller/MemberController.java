@@ -585,7 +585,7 @@ public class MemberController {
 				String matAddressInfo = c.getMatAddressInfo();
 				Date beginDate = c.getBeginDt();
 				Date endDate = c.getEndDt();
-
+				
 				String[] endDtArr = String.valueOf(c.getEndDt()).split("-");
 				int year = Integer.parseInt(endDtArr[0]);
 				int month = Integer.parseInt(endDtArr[1]);
@@ -594,6 +594,8 @@ public class MemberController {
 				calendar.set(year, month - 1, date + 1);
 				Date endDtPlusOne = new Date(calendar.getTimeInMillis());
 
+				String hospitalName = c.getHospitalName();
+				
 				if (c.getPtCount() == 1) {
 					if (c.getMatMode() == 1) {
 						JSONObject obj = new JSONObject();
@@ -605,6 +607,7 @@ public class MemberController {
 						obj.put("matAddressInfo", matAddressInfo);
 						obj.put("beginDate", beginDate);
 						obj.put("endDate", endDate);
+						obj.put("hospitalName", hospitalName);
 						array.put(obj);
 					} else {
 						String[] strArr = c.getMatDate().split(",");
@@ -619,6 +622,7 @@ public class MemberController {
 							obj.put("matAddressInfo", matAddressInfo);
 							obj.put("beginDate", beginDate);
 							obj.put("endDate", endDate);
+							obj.put("hospitalName", hospitalName);
 							array.put(obj);
 						}
 					}
@@ -633,6 +637,7 @@ public class MemberController {
 						obj.put("matAddressInfo", matAddressInfo);
 						obj.put("beginDate", beginDate);
 						obj.put("endDate", endDate);
+						obj.put("hospitalName", hospitalName);
 						array.put(obj);
 					} else {
 						String[] strArr = c.getMatDate().split(",");
@@ -646,6 +651,7 @@ public class MemberController {
 							obj.put("matAddressInfo", matAddressInfo);
 							obj.put("beginDate", beginDate);
 							obj.put("endDate", endDate);
+							obj.put("hospitalName", hospitalName);
 							array.put(obj);
 						}
 					}
@@ -2803,7 +2809,10 @@ public class MemberController {
 				Calendar calendar = GregorianCalendar.getInstance();
 				calendar.set(year, month - 1, date + 1);
 				Date endDtPlusOne = new Date(calendar.getTimeInMillis());
-
+				
+				String hospitalName = c.getHospitalName();
+				
+				
 				for (Member m : mList) {
 					int matNo = c.getMatNo();
 					int caregiverNo = c.getCareGiverNo();
@@ -2825,6 +2834,7 @@ public class MemberController {
 							obj.put("matAddressInfo", matAddressInfo);
 							obj.put("beginDate", beginDate);
 							obj.put("endDate", endDate);
+							obj.put("hospitalName", hospitalName);
 							if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
 								obj.put("caregiverName", m.getMemberName());
 								obj.put("caregiverGender", m.getMemberGender());
@@ -2846,6 +2856,7 @@ public class MemberController {
 								obj.put("matAddressInfo", matAddressInfo);
 								obj.put("beginDate", beginDate);
 								obj.put("endDate", endDate);
+								obj.put("hospitalName", hospitalName);
 								if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
 									obj.put("caregiverName", m.getMemberName());
 									obj.put("caregiverGender", m.getMemberGender());
@@ -2867,6 +2878,7 @@ public class MemberController {
 							obj.put("matAddressInfo", matAddressInfo);
 							obj.put("beginDate", beginDate);
 							obj.put("endDate", endDate);
+							obj.put("hospitalName", hospitalName);
 							if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
 								obj.put("caregiverName", m.getMemberName());
 								obj.put("caregiverGender", m.getMemberGender());
@@ -2888,6 +2900,7 @@ public class MemberController {
 								obj.put("matAddressInfo", matAddressInfo);
 								obj.put("beginDate", beginDate);
 								obj.put("endDate", endDate);
+								obj.put("hospitalName", hospitalName);
 								if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
 									obj.put("caregiverName", m.getMemberName());
 									obj.put("caregiverGender", m.getMemberGender());
