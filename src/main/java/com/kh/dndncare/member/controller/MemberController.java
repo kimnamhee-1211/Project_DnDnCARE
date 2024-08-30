@@ -855,8 +855,7 @@ public class MemberController {
 				// 환자 입장에서 나를 선택한 간병인 정보 불러오기
 
 				ArrayList<CareGiverMin> requestCaregiverBefore = mService.getRequestCaregiver(loginPt);
-				ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
-				System.out.println(requestCaregiver.toString());
+				ArrayList<CareGiverMin> requestCaregiver = new ArrayList<CareGiverMin>(); 
 				for(int i = 0; i < requestCaregiverBefore.size(); i++){
 								
 					int age = AgeCalculator.calculateAge(requestCaregiverBefore.get(i).getMemberAge());
@@ -866,8 +865,6 @@ public class MemberController {
 						requestCaregiver.add(requestCaregiverBefore.get(i));
 					}
 				}
-				System.out.println(requestCaregiver.get(0));
-				System.out.println(requestCaregiver.get(1));
 				
 				model.addAttribute("requestCaregiver", requestCaregiver);	
 				
