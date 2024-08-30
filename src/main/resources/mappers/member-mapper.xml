@@ -84,7 +84,7 @@
 	  	insert into member
 	  	values(#{memberNo}, #{memberId}, #{memberPwd}, #{memberName}, #{memberGender}, 
 	  			#{memberNickName}, #{memberAge}, #{memberPhone}, #{memberEmail}, sysdate,
-	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, #{memberPay}, sysdate)  	
+	  		 	#{memberAddress}, #{memberCategory}, 'N', #{memberNational}, #{memberSocailToken}, sysdate)  	
 	  </insert>
 	  
 	  
