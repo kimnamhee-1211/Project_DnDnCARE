@@ -177,50 +177,16 @@ public class MemberController {
 			for (HashMap<String, String> m : category) {
 				System.out.println("여기정보 확인하기" + m.get("S_CATEGORY"));
 				switch (m.get("L_CATEGORY")) {
-				case "service":
-					memberInfo.getInfoService().add(0, m.get("S_CATEGORY"));
-					break;
-				// case "serviceCareer" :
-				// memberInfo.getInfoServiceCareer().add(0,m.get("S_CATEGORY")); break;
-				case "career":
-					memberInfo.getInfoCareer().add(0, m.get("S_CATEGORY"));
-					break;
-				case "disease":
-					memberInfo.getInfoDisease().add(0, m.get("S_CATEGORY"));
-					break;
-				case "license":
-					memberInfo.getInfoLicense().add(0, m.get("S_CATEGORY"));
-					break;
-				case "diseaseLevel":
-					memberInfo.getInfoDiseaseLevel().add(0, m.get("S_CATEGORY"));
-					break;
-				case "gender":
-					memberInfo.getInfoGender().add(0, m.get("S_CATEGORY"));
-					break;
-				case "national":
-					memberInfo.getInfoNational().add(0, m.get("S_CATEGORY"));
-					break;
-				case "ageGroup":
-					memberInfo.getInfoAgeGroup().add(0, m.get("S_CATEGORY"));
-					break;
+				case "service":memberInfo.getInfoService().add(0, m.get("S_CATEGORY"));break;
+				case "career":memberInfo.getInfoCareer().add(0, m.get("S_CATEGORY"));break;
+				case "disease":memberInfo.getInfoDisease().add(0, m.get("S_CATEGORY"));break;
+				case "license":memberInfo.getInfoLicense().add(0, m.get("S_CATEGORY"));break;
+				case "diseaseLevel":memberInfo.getInfoDiseaseLevel().add(0, m.get("S_CATEGORY"));break;
+				case "gender":memberInfo.getInfoGender().add(0, m.get("S_CATEGORY"));break;
+				case "national":memberInfo.getInfoNational().add(0, m.get("S_CATEGORY"));break;
+				case "ageGroup":memberInfo.getInfoAgeGroup().add(0, m.get("S_CATEGORY"));break;
 				}
-			}
-			;
-
-			/*
-			 * for (HashMap<String, String> m : category) { switch (m.get("L_CATEGORY")) {
-			 * case "service": memberInfo.getInfoService().add(0, m.get("S_CATEGORY"));
-			 * break; case "career": memberInfo.getInfoCareer().add(0, m.get("S_CATEGORY"));
-			 * break; case "disease": memberInfo.getInfoDisease().add(0,
-			 * m.get("S_CATEGORY")); break; case "license":
-			 * memberInfo.getInfoLicense().add(0, m.get("S_CATEGORY")); break; case
-			 * "diseaseLevel": memberInfo.getInfoDiseaseLevel().add(0, m.get("S_CATEGORY"));
-			 * break; case "gender": memberInfo.getInfoGender().add(0, m.get("S_CATEGORY"));
-			 * break; case "national": memberInfo.getInfoNational().add(0,
-			 * m.get("S_CATEGORY")); break; case "ageGroup":
-			 * memberInfo.getInfoAgeGroup().add(0, m.get("S_CATEGORY")); break; } } ;
-			 */
-
+			};
 			return memberInfo;
 
 		} else {
@@ -695,7 +661,12 @@ public class MemberController {
 			int memberNo = loginUser.getMemberNo();
 					
 			if(loginUser != null) {
+				System.out.println(memberNo);
+				System.out.println("전");
 				ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
+				System.out.println(memberNo);
+				System.out.println("후");
+				//System.out.println(completeList);
 				model.addAttribute("completeList", completeList);
 			}
 					
@@ -884,7 +855,7 @@ public class MemberController {
 				// 환자 입장에서 나를 선택한 간병인 정보 불러오기
 
 				ArrayList<CareGiverMin> requestCaregiverBefore = mService.getRequestCaregiver(loginPt);
-				ArrayList<CareGiverMin> requestCaregiver = new ArrayList<CareGiverMin>();
+				ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
 				System.out.println(requestCaregiver.toString());
 				for(int i = 0; i < requestCaregiverBefore.size(); i++){
 								
@@ -895,7 +866,8 @@ public class MemberController {
 						requestCaregiver.add(requestCaregiverBefore.get(i));
 					}
 				}
-
+				System.out.println(requestCaregiver.get(0));
+				System.out.println(requestCaregiver.get(1));
 				
 				model.addAttribute("requestCaregiver", requestCaregiver);	
 				
