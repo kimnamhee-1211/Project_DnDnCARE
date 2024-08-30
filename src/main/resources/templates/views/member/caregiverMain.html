@@ -436,7 +436,7 @@
 		          		let infoDetail = document.querySelector('.infoDetail').children;
 		          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
 		          		infoDetail[3].innerHTML = info.event.extendedProps.endDate;
-		          		infoDetail[6].innerHTML = info.event.extendedProps.money + '원';
+		          		infoDetail[6].innerHTML = info.event.extendedProps.money.toLocaleString() + '원';
 		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
 		          		//console.log(document.querySelector('.modal-footer').children[0].value);
 		        	  	$('#calendarModal').modal('show');
