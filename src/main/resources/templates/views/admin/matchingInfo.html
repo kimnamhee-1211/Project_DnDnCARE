@@ -251,20 +251,20 @@
 			      datasets: [{
 			        		label: '개인간병',
 			        		data: data1,
-			        		borderWidth: 2,
-			        		borderColor: 'red',
+			        		borderWidth: 4,
+			        		borderColor: '#e65555',
 			        		fill: false,
-			        		backgroundColor: 'red',
+			        		backgroundColor: '#e65555',
 			        		fontSize:24,
 			        		tension : 0.1
 			      			},
 			      			{
 		      				label: '공동간병',
 			        		data: data2,
-			        		borderWidth: 1,
-			        		borderColor: 'blue',
+			        		borderWidth: 4,
+			        		borderColor: '#3b8cd2',
 			        		fill: false,
-			        		backgroundColor: 'blue',
+			        		backgroundColor: '#3b8cd2',
 			        		fontSize:24,
 			        		tension : 0.1
 			      			}]
@@ -439,8 +439,10 @@
 		}
 		
 		function minPayFn(data){
-			let minMoney = 0;
+			let minMoney = data[0];
 			for(d of data){
+				
+				
 				if(d < minMoney){
 					
 					minMoney = d; 
