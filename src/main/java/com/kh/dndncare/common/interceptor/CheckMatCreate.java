@@ -21,10 +21,10 @@ public class CheckMatCreate implements HandlerInterceptor{
 		
 		HttpSession session = request.getSession();
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		int matNo = (int)session.getAttribute("logMatNo");
+		Integer matNo = (Integer)session.getAttribute("logMatNo");
 		String matService = (String)session.getAttribute("logMatService");
 		
-		if(matNo != 0) {
+		if(matNo != null && matNo != 0) {
 			log.info("매칭번호 :" + matNo + ":"+ matService);
 		}
 		session.removeAttribute("logMatNo");

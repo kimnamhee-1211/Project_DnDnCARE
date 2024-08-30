@@ -326,6 +326,8 @@ public class MatchingController {
 		        
 	        	session.removeAttribute("tempPatient"); // 세션에 담아놨던 patient 객체 삭제 
 	        	session.removeAttribute("service");
+	        	session.setAttribute("logMatNo", matNo);
+	        	session.setAttribute("logMatService", "개인간병");
 	        	
 	        	//모달용
 	        	re.addAttribute("result", result);
