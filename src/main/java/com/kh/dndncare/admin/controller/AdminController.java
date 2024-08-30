@@ -68,8 +68,30 @@ public class AdminController {
 	
 	// 관리자 로그인 => 관리자 메인 페이지로 이동하는 메소드
 	@GetMapping("adminMain.adm")
-	public String adminMain() {
-
+	public String adminMain(Model model) {
+		// 1) 최근 방문자 수에 대한 로그파일 읽어오기
+		membersGraph(model);
+		
+		// 2) 최근 문의 목록
+		ArrayList<Board> queryList = aService.recentQueryList();
+		
+		
+		// 실험실
+		java.util.Date now = new java.util.Date();
+		long nowMilli = now.getTime();
+		
+		for(Board q : queryList) {
+			long createMilli = q.getBoardCreateDate().getTime();
+			int calcMilli = (int)Math.floor((nowMilli - createMilli)/3600000);
+			q.setPassHours(calcMilli);
+		}
+		
+		
+		if(queryList != null) {
+			model.addAttribute("queryList", queryList);
+		}
+		
+		
 		return "adminMain";
 	}
 
@@ -1304,7 +1326,6 @@ public class AdminController {
 			//일수 계산하자
 			YearMonth yearMonth = YearMonth.of(year1, month1);
 			int days = yearMonth.lengthOfMonth();
-			System.out.println("내년월수 뭐야?" + yearMonth);
 	        HashMap<String,Object> map = new HashMap<String,Object>();
 	        
 	        
@@ -1323,7 +1344,6 @@ public class AdminController {
 			File usageFolder = new File("C:/logs/matchingCreate/");
 			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
 			
-			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
 			try { 
 				for(File f : usageFileList) {
 					BufferedReader br = new BufferedReader(new FileReader(f));
@@ -1332,7 +1352,6 @@ public class AdminController {
 					String dataService;
 					String date;
 					while((data=br.readLine())!=null) {
-						// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
 						
 						date = data.substring(0,10);
 						dataMatNo = data.split("//")[1].trim();
@@ -1372,7 +1391,6 @@ public class AdminController {
 					
 					br.close();
 				}
-				//model.addAttribute("usage", usageMap);
 			} catch(Exception e) {
 				e.printStackTrace();
 			} 
@@ -1426,7 +1444,6 @@ public class AdminController {
 			File usageFolder = new File("C:/logs/matchingCreate/");
 			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
 			
-			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
 			try { 
 				for(File f : usageFileList) {
 					BufferedReader br = new BufferedReader(new FileReader(f));
@@ -1435,7 +1452,6 @@ public class AdminController {
 					String dataService;
 					String date;
 					while((data=br.readLine())!=null) {
-						// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
 						
 						System.out.println(data);
 						date = data.substring(0,10);
@@ -1445,8 +1461,6 @@ public class AdminController {
 						if(dataMatNo != null && dataService != null) {
 							
 							for(int i = 0; i < labels.length ; i++) {
-								System.out.println(date.substring(0,7));
-								System.out.println("체킇ㄱ");
 								if(labels[i].trim().equals(date.substring(0,7))) {
 									if(dataService.trim().equals("개인간병")) {
 										datas1[i] += 1;
@@ -1462,7 +1476,6 @@ public class AdminController {
 					
 					br.close();
 				}
-				//model.addAttribute("usage", usageMap);
 			} catch(Exception e) {
 				e.printStackTrace();
 			} 
@@ -1482,7 +1495,7 @@ public class AdminController {
 		
 		
 	        
-	}//페이토탈메소드끝 ( 매칭 달)
+	}
 	
 	
 	//어드민 매칭 토탈 통계 년

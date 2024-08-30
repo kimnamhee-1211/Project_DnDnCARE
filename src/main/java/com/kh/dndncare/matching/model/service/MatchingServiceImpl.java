@@ -76,6 +76,7 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	//get member info (대분류 : 소분류)
+	@Override
 	public ArrayList<InfoCategory> getInfo(int ptNo) {
 		return mMapper.getInfo(ptNo);
 	}
@@ -118,6 +119,7 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	//매칭에 참여하고 잇는 인원이 몇인지 => 매칭 table 한 튜플에 따른 matPtInfo 테이블 튜플 수
+	@Override
 	public int joinPtCount(int matNo) {
 		return mMapper.joinPtCount(matNo);
 	}
@@ -240,10 +242,11 @@ public class MatchingServiceImpl implements MatchingService {
 	public int insertReview(HashMap<String, Object> map) {
 		return mMapper.insertReview(map);
 	}
-	
+	@Override
 	public MatMatptInfo selecMatPtInfo(int matNo, int memberNo) {
 		return mMapper.selecMatPtInfo(matNo,memberNo);
 	}
+	@Override
 	public MatMatptInfo selectMatching(int matNo) {
 		return mMapper.selectMatching(matNo);
 	}
@@ -258,6 +261,7 @@ public class MatchingServiceImpl implements MatchingService {
 	public String selectMatDate(int matNo) {
 		return mMapper.selectMatDate(matNo);
 	}
+	@Override
 	public int deleteReivew(int reviewNo) {
 		return mMapper.deleteReview(reviewNo);
 	}
@@ -271,7 +275,7 @@ public class MatchingServiceImpl implements MatchingService {
 	public int updateReview(CareReview cr) {
 		return mMapper.updateReview(cr);
 	}
-
+	@Override
 	public int insertMatPtInfo(MatPtInfo matPtInfo) {
 		// TODO Auto-generated method stub
 		return 0;//없는메소드	

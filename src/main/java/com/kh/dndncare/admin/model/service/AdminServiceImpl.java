@@ -227,4 +227,9 @@ public class AdminServiceImpl implements AdminService{
 		return aMapper.adminInsertAnswer(r);
 	}
 
+	@Override
+	public ArrayList<Board> recentQueryList() {
+		return aMapper.recentQueryList();
+	}
+
 }
