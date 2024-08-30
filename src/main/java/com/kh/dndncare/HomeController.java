@@ -16,6 +16,11 @@ import jakarta.servlet.http.HttpSession;
 public class HomeController {
 	
 	
+	 @GetMapping("/")
+	    public String home() {
+	        return "home";
+	    }
+	 
 	@GetMapping("home.do")
 	public String home(HttpSession session) {
 		
