@@ -29,4 +29,5 @@ public class Board {
 	private String memberNickName;
 	private String memberCategory;
 	private int answerYN;
+	private int passHours;
 }

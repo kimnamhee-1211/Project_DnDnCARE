@@ -298,4 +298,22 @@
 		values (seq_rid.nextval, #{replyContent}, #{memberNo}, sysdate, sysdate, default, #{refBoardNo})
 	</insert>
 	
+	<!-- 최근 문의글 조회 -->
+	<select id="recentQueryList">
+		SELECT *
+		FROM (  select board_no, board_title, member_nickname, board_create_date, count(reply.ref_board_no) answerYN
+		        from board
+		            join member using(member_no)
+		            left join reply on(reply.ref_board_no = board.board_no)
+		        where board.category_no = 99 and board_status = 'Y'
+		        group by board_no, board_title, member_nickname, board_create_date
+		        HAVING count(reply.ref_board_no) = 0
+		        order by board_no desc)
+		WHERE ROWNUM <![CDATA[<]]> 6
+	</select>
+	
+	
+	
+	
+	
 </mapper>

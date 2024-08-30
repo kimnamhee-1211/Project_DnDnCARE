@@ -6,6 +6,8 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <style>
     	.graphDiv {
 			display: grid; grid-template-columns: 1fr 50px 1fr; grid-template-rows: 400px;
@@ -39,7 +41,7 @@
 				
 				<div class="graphDiv">
 					<div class="h-100 p-2 bg-light border rounded-3 text-center">
-						<canvas id="barChart"></canvas>
+						<canvas id="loginBarChart"></canvas>
 					</div>
 					
 					<div><!-- 사이공백 --></div>
@@ -51,14 +53,16 @@
 									<th>Title</th>
 									<th>Writer</th>
 									<th>Date</th>
-									<th>Views</th>
+									<th>PassHours</th>
 								</tr>
-								<tr>
-									<td>-</td>
-									<td>-</td>
-									<td>-</td>
-								 	<td>-</td>
-								 	<td>-</td>
+								<tr th:if="${queryList}" th:each="q: ${queryList}">
+									<td>[[${q.boardNo}]]</td>
+									<td>[[${q.boardTitle}]]</td>
+									<td>[[${q.memberNickName}]]</td>
+								 	<td>[[${q.boardCreateDate}]]</td>
+								 	<td>
+								 		[[${q.passHours}]]시간 지남
+								 	</td>
 								</tr>
 							</table>
 						</div>
@@ -96,75 +100,75 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js" integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG" crossorigin="anonymous"></script>
     <script th:inline="javascript">
 		 window.onload = () => {
-				// 막대 그래프 작성(시작)
-				// Date객체를 yy-mm-dd로 표현하기
-				const dateFormat = date => {
-					return date.toISOString().split('T')[0].substring(2);
-				}
-				
-				// n일전에 대한 Date객체 생성하기
-				const agoDate = ago => {
-					return new Date(new Date().setDate((new Date().getDate() - ago)));
-				}
-				
-				const nearOneWeek = [];
-				const nearTwoWeek = [];
-				for(let i = 6; i >= 0; i--){
-					nearOneWeek.push(dateFormat(agoDate(i)));
-				}
-				for(let i = 13; i >= 7; i--){
-					nearTwoWeek.push(dateFormat(agoDate(i)));
-				}
-				
-				// 전달받은 파라미터 접근하기
-				/*<![CDATA[*/
-				const oneWeekAgo = /*[[${oneWeekAgo}]]*/'1주일전';
-				const twoWeekAgo = /*[[${twoWeekAgo}]]*/'2주일전';
-				/*]]>*/
-							
-				const oneWeekLogin = []; // 최근 일주일에 대한 접속자의 수를 저장할 배열
-				const twoWeekLogin = []; // 14일전 ~ 7일전에 대한 접속자의 수를 저장할 배열
-				
-				for(const near of nearOneWeek){
-					oneWeekAgo[near] == undefined ? oneWeekLogin.push(0) : oneWeekLogin.push(oneWeekAgo[near]);
-				}
-				for(const near of nearTwoWeek){
-					twoWeekAgo[near] == undefined ? twoWeekLogin.push(0) : twoWeekLogin.push(twoWeekAgo[near]);
-				}
-				
-				
-				const loginLineChart = document.getElementById('loginLineChart');
+			// 막대 그래프 작성(시작)
+			// Date객체를 yy-mm-dd로 표현하기
+			const dateFormat = date => {
+				return date.toISOString().split('T')[0].substring(2);
+			}
 			
-				new Chart(loginLineChart, {
-				    type: 'line',
-				    data: {
-				      labels: nearOneWeek, // x축
-				      datasets: [
-				    	    {
-				    	      label: '지난주 접속자',
-				    	      data: oneWeekLogin,
-				    	      borderColor: 'rgb(255, 99, 132)',
-				    	      backgroundColor: 'rgba(255, 99, 132, 0.2)',
-				    	    },
-				    	    {
-				    	      label: '지지난주 접속자',
-				    	      data: twoWeekLogin,
-				    	      borderColor: 'rgb(75, 192, 192)',
-				    	      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-				    	      stepped: false,
-				    	      yAxisID: 'y',
-				    	    }
-				    	]
-				    },
-				    options: {
-				      scales: {
-				        y: {
-				        	beginAtZero: true
-				        }
-				      }
-				    }
-				}); 
-				// 막대 그래프 작성(끝)
+			// n일전에 대한 Date객체 생성하기
+			const agoDate = ago => {
+				return new Date(new Date().setDate((new Date().getDate() - ago)));
+			}
+			
+			const nearOneWeek = [];
+			const nearTwoWeek = [];
+			for(let i = 6; i >= 0; i--){
+				nearOneWeek.push(dateFormat(agoDate(i)));
+			}
+			for(let i = 13; i >= 7; i--){
+				nearTwoWeek.push(dateFormat(agoDate(i)));
+			}
+			
+			// 전달받은 파라미터 접근하기
+			/*<![CDATA[*/
+			const oneWeekAgo = /*[[${oneWeekAgo}]]*/'1주일전';
+			const twoWeekAgo = /*[[${twoWeekAgo}]]*/'2주일전';
+			/*]]>*/
+						
+			const oneWeekLogin = []; // 최근 일주일에 대한 접속자의 수를 저장할 배열
+			const twoWeekLogin = []; // 14일전 ~ 7일전에 대한 접속자의 수를 저장할 배열
+			
+			for(const near of nearOneWeek){
+				oneWeekAgo[near] == undefined ? oneWeekLogin.push(0) : oneWeekLogin.push(oneWeekAgo[near]);
+			}
+			for(const near of nearTwoWeek){
+				twoWeekAgo[near] == undefined ? twoWeekLogin.push(0) : twoWeekLogin.push(twoWeekAgo[near]);
+			}
+			
+			
+			const loginLineChart = document.getElementById('loginBarChart');
+		
+			new Chart(loginLineChart, {
+			    type: 'line',
+			    data: {
+			      labels: nearOneWeek, // x축
+			      datasets: [
+			    	    {
+			    	      label: '지난주 접속자',
+			    	      data: oneWeekLogin,
+			    	      borderColor: 'rgb(255, 99, 132)',
+			    	      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+			    	    },
+			    	    {
+			    	      label: '지지난주 접속자',
+			    	      data: twoWeekLogin,
+			    	      borderColor: 'rgb(75, 192, 192)',
+			    	      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+			    	      stepped: false,
+			    	      yAxisID: 'y',
+			    	    }
+			    	]
+			    },
+			    options: {
+			      scales: {
+			        y: {
+			        	beginAtZero: true
+			        }
+			      }
+			    }
+			}); 
+			// 막대 그래프 작성(끝)
 			 
 			 
 			 

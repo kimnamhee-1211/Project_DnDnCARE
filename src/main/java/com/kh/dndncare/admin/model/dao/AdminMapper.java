@@ -98,5 +98,7 @@ public interface AdminMapper {
 
 	int adminInsertAnswer(Reply r);
 
+	ArrayList<Board> recentQueryList();
+
 
 }

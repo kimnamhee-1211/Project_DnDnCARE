@@ -340,14 +340,7 @@ public class MemberController {
 //				MEMBER_INFO : 경력기간(필수,1개), 서비스경험(선택, 0~3개), 돌봄경험(선택, 0~10개), 자격증(선택, 0~3개), 원하는 서비스(필수, 1~3개)
 //				MEMBER: 성별(필수, MEMBER_GENDER), 나이(필수, MEMBER_AGE), 주소(필수, MEMBER_ADDRESS), 국적(필수, MEMBER_NATIONAL)
 		HashMap<String, String> infoMap = mService.getCaregiverInfo(memberNo);
-		// {국적=내국인, 주소=경기 성남시 분당구 내정로 54 3동 301호, CARE_JOIN_STATUS=Y, 나이=69, 성별=남성,
-		// 최소금액=50000}
 		ArrayList<HashMap<String, String>> cExpList = mService.getCaregiverExp(memberNo);
-		// [{S_CATEGORY=병원돌봄, L_CATEGORY=service}, {S_CATEGORY=가정돌봄,
-		// L_CATEGORY=service},
-		// {S_CATEGORY=동행서비스, L_CATEGORY=service}, {S_CATEGORY=3, L_CATEGORY=career},
-		// {S_CATEGORY=섬망, L_CATEGORY=disease}, {S_CATEGORY=기저귀 케어, L_CATEGORY=disease},
-		// {S_CATEGORY=간병사, L_CATEGORY=license}, {S_CATEGORY=요양보호사, L_CATEGORY=license}]
 
 		ArrayList<HashMap<String, String>> cWantList = mService.getCaregiverWant(memberNo); // 마이페이지에서 선택적으로 입력
 
@@ -450,7 +443,6 @@ public class MemberController {
 		String careGiverAddress = infoMap.get("주소").contains("서울") ? "서울"
 				: (infoMap.get("주소").contains("제주") ? "제주"
 						: (infoMap.get("주소").contains("인천") ? "인천" : infoMap.get("주소")));
-		
 				
 		
 		// 환자 기본정보 조회 : 회원번호, 이름, 성별, 나이, 간병장소, 국적, 키, 몸무게, 요청서비스, 요청사항, 요청장소, 매칭 시작일,
@@ -464,13 +456,6 @@ public class MemberController {
 		condition.put("selectNum", selectNum * 2);
 		condition.put("joinStatus", joinStatus);
 		ArrayList<Patient> pList = mService.selectPatientList(condition); // 길이 : 0~10
-		// [Patient(ptNo=0, memberNo=15, ptName=서은호, ptGender=M, ptAge=null,
-		// ptWeight=79, ptHeight=180, ptService=null,
-		// ptAddress=서울 동대문구 망우로 82 202호777, ptRequest=null, ptUpdateDate=null,
-		// infoCategory=null, ptRealAge=52, matNo=51,
-		// matType=0, hosInfo=0, memberNational=내국인, service=개인간병, matRequest=일단없음,
-		// beginDt=2024-08-14, endDt=2024-08-14,
-		// money=50000, ptDisease=null),
 
 		if (pList.isEmpty()) { // 조건에 맞는 후보 환자가 없을 땐 null로 넘겨야 한다.
 			return null;
@@ -524,10 +509,9 @@ public class MemberController {
 			promptPatientList.add(m);
 		} // 후보에 대한 정보 가공 끝
 
-		System.out.println("프롬프트 작성까지");
 		// 5. 프롬프트 작성
 		String prompt = "간병인 정보는" + infoMap.toString() + "이고" + "환자 목록은" + promptPatientList.toString() + "이다."
-				+ "간병인의 정보를 바탕으로 가장 적절한 매칭번호 " + selectNum + "개만 숫자로만 짧게 대답해줘.";
+				+ "간병인의 정보를 바탕으로 가장 적절한 매칭번호 " + selectNum + "개만 숫자로만 줄바꿈 없이 짧게 대답해줘.";
 
 		// 6. 프롬프트를 전달하고 결과값 받아오기
 		String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
@@ -571,10 +555,6 @@ public class MemberController {
 				}
 			}
 		}
-		
-		System.out.println("====여기여기======");
-		System.out.println(realCompleteList);
-		System.out.println("=====여기여기=====");
 		
 		return realCompleteList;
 	}
@@ -1650,7 +1630,7 @@ public class MemberController {
 		return "moreWorkInfo";
 	}
 
-	// 무한스크롤 테스트 중 : 성공
+	// 무한스크롤 
 	@PostMapping("workAllInfo.me") // 간병인의 입장에서 매칭정보를 가져오는 것
 	@ResponseBody
 	public void workAllInfo(HttpServletResponse response,
@@ -1678,14 +1658,6 @@ public class MemberController {
 																		
 			}
 		}
-
-		System.out.println("============================");
-		System.out.println(matList);
-		System.out.println("============================");
-		//Matching(matNo=210, beginDt=2024-08-30, endDt=2024-08-31, money=0, matConfirm=null, hospitalNo=0, memberNo=0, ptCount=1, beginTime=12:00, endTime=12:00, matMode=2, matType=0, hospitalName=null, ptAge=null, memberGender=null, LCategory=null, SCategory=null, age=0)
-		
-		
-		
 		
 		GsonBuilder gb = new GsonBuilder().setDateFormat("YYYY-MM-dd");
 		Gson gson = gb.create();

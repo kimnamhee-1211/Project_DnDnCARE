@@ -72,8 +72,24 @@ public class AdminController {
 		// 1) 최근 방문자 수에 대한 로그파일 읽어오기
 		membersGraph(model);
 		
+		// 2) 최근 문의 목록
+		ArrayList<Board> queryList = aService.recentQueryList();
 		
 		
+		// 실험실
+		java.util.Date now = new java.util.Date();
+		long nowMilli = now.getTime();
+		
+		for(Board q : queryList) {
+			long createMilli = q.getBoardCreateDate().getTime();
+			int calcMilli = (int)Math.floor((nowMilli - createMilli)/3600000);
+			q.setPassHours(calcMilli);
+		}
+		
+		
+		if(queryList != null) {
+			model.addAttribute("queryList", queryList);
+		}
 		
 		
 		return "adminMain";
