@@ -300,18 +300,13 @@ public class MatchingController {
 	         matPtInfo.setGroupLeader("N");
 
 	         int ptInfoResult = mcService.enrollMatPtInfo(matPtInfo);
-	         
-	         
-	         
-	         
+	         	         	        	         
 	         int finalResult = wantInfoResult + patientResult + ptInfoResult + dateResult + matchingResult + deleteWantInfo + deleteMemberInfoResult + memberInfoResult;
 	         
 	         //모달용
-	         String result = "insert";
-	         
+	         String result = "insert";	         
 	         //공개 매칭 신청 시
-	         if(finalResult != 0) {
-	        	 
+	         if(finalResult != 0) {	        	 
 		         //환자 -> 간병인 정보보기 ->  매칭 신청했을 경우 macthing 테이블에 간병인 memberNo 넣기
 		        if(memberNoC > 0) {
 		        	int updateMatCResult = mcService.updateMatC(matNo, memberNoC);
@@ -329,8 +324,7 @@ public class MatchingController {
 	        	session.setAttribute("logMatService", "개인간병");
 	        	
 	        	//모달용
-	        	re.addAttribute("result", result);
-	        	
+	        	re.addAttribute("result", result);	        	
 	        	//환자 메인페이지로
 	            return "redirect:patientMain.me";
 	         } else {

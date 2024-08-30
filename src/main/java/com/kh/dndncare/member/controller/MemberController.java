@@ -830,32 +830,32 @@ public class MemberController {
 		}
 
 		//남희 
-				//ptno 뽑기
-				int loginPt = mService.getPtNo(loginUser.getMemberNo());
-				// 환자 입장에서 나를 선택한 간병인 정보 불러오기
+		//ptno 뽑기
+		int loginPt = mService.getPtNo(loginUser.getMemberNo());
+		// 환자 입장에서 나를 선택한 간병인 정보 불러오기
 
-				ArrayList<CareGiverMin> requestCaregiverBefore = mService.getRequestCaregiver(loginPt);
-				ArrayList<CareGiverMin> requestCaregiver = new ArrayList<CareGiverMin>(); 
-				for(int i = 0; i < requestCaregiverBefore.size(); i++){
-								
-					int age = AgeCalculator.calculateAge(requestCaregiverBefore.get(i).getMemberAge());
-					requestCaregiverBefore.get(i).setAge(age);
-					
-					if(i < 5) {
-						requestCaregiver.add(requestCaregiverBefore.get(i));
-					}
-				}
-				
-				model.addAttribute("requestCaregiver", requestCaregiver);	
-				
-				//loginUser Name
-				model.addAttribute("loginUserName", loginUser.getMemberName());	
-				
-				//매칭 승낙/신청 시 모달
-				if(matCName != null && result != null) {
-					model.addAttribute("matCName", matCName);	
-					model.addAttribute("result", result);
-				}
+		ArrayList<CareGiverMin> requestCaregiverBefore = mService.getRequestCaregiver(loginPt);
+		ArrayList<CareGiverMin> requestCaregiver = new ArrayList<CareGiverMin>(); 
+		for(int i = 0; i < requestCaregiverBefore.size(); i++){
+						
+			int age = AgeCalculator.calculateAge(requestCaregiverBefore.get(i).getMemberAge());
+			requestCaregiverBefore.get(i).setAge(age);
+			
+			if(i < 5) {
+				requestCaregiver.add(requestCaregiverBefore.get(i));
+			}
+		}
+		
+		model.addAttribute("requestCaregiver", requestCaregiver);	
+		
+		//loginUser Name
+		model.addAttribute("loginUserName", loginUser.getMemberName());	
+		
+
+		if(matCName != null && result != null) {
+			model.addAttribute("matCName", matCName);	
+			model.addAttribute("result", result);
+		}
 
 		return "patientMain";
 	}
