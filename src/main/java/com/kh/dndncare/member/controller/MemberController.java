@@ -899,7 +899,7 @@ public class MemberController {
 						requestCaregiver.add(requestCaregiverBefore.get(i));
 					}
 				}
-				
+				System.out.println(requestCaregiver.toString());
 				model.addAttribute("requestCaregiver", requestCaregiver);	
 				
 				//loginUser Name

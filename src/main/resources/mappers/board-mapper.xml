@@ -9,8 +9,8 @@
             join member m on m.member_no = b.member_no
             join area a on b.area_no = a.area_no
         where b.board_status = 'Y'
-            and m.member_category = #{category}
-        <if test="categoryNo != -1">
+            and (m.member_category='A' or m.member_category=#{category}) and b.category_no != 7 and b.category_no != 99 
+        <if test="categoryNo != -1 and categoryNo != 99 and categoryNo !=7">
             and b.category_no = #{categoryNo}
         </if>
         <if test="areas != null and !areas.isEmpty()">
@@ -23,15 +23,14 @@
     
 	<!-- 게시판 전체 조회 -->
 	<select id="selectBoardAllList">
-	    select b.board_No, c.category_Name, b.board_Title, m.member_NickName, a.area_Name, 
-	           b.board_create_date, b.board_count, m.member_category , b.category_no
+	    select *
 	    from board b
 	        join b_category c on(c.category_no=b.category_no)
 	        join member m on(m.member_no=b.member_no)
 	        join area a on(b.area_no=a.area_no)
 	    where b.board_status='Y' 
-	        and (m.member_category='A' and b.category_no = 0 or m.member_category=#{category}) 
-	    <if test="categoryNo != -1">
+	        and (m.member_category='A' or m.member_category=#{category}) and b.category_no != 7 and b.category_no != 99 
+	    <if test="categoryNo != -1 and categoryNo != 99 and categoryNo !=0">
 	        and b.category_no = #{categoryNo}
 	    </if>
 	    <if test="areas != null and !areas.isEmpty()">
