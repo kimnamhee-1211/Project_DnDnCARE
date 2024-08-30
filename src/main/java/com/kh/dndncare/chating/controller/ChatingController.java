@@ -276,7 +276,6 @@ public class ChatingController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         sdf.setTimeZone(koreaTimeZone);
         chatMessage.setWriteDate(new Date());
-        System.out.println("보내기 직전 참가인원 :" + participantCount);
         return chService.sendMessage(chatMessage);  // 서비스 메서드 사용
     }
 	
@@ -327,10 +326,7 @@ public class ChatingController {
 
         List<Map<String, Object>> messageReadCounts = chService.getMessageReadCounts(chatRoomNoInt);
         int participantCount = chService.getParticipantCount(chatRoomNoInt);
-        System.out.println("챗룸넘버 = " + chatRoomId);
-        System.out.println("참가인원: " + participantCount);
-        System.out.println("메세지 리드카운트 : " + messageReadCounts);
-        System.out.println("메세지 리드카운트2 : " + (messageReadCounts));
+ 
 
         Map<String, Object> response = new HashMap<>();
         response.put("memberNo", memberNo);
