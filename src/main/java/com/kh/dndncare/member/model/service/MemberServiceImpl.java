@@ -49,7 +49,10 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	
+	
 	//// 멤버 테이블만 있고 환자/ 간병인 테이블에 insert됮 않은 경우 멤버 테이블 삭제
+	
+	
 	@Transactional
 	@Override
 	public int noInfomemberdle(int memberNo) {

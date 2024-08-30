@@ -138,11 +138,11 @@
 					  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
 					  	<div style="display:none" th:text="wanted" class="from"></div>
 					    <h2 class="accordion-header">
-					      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsefour' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
+					      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsefour' + ${myMat.matNo} + ${myMat.memberNo}" aria-expanded="false" aria-controls="collapseOne">
 					      	[[${myMat.memberName}]]님([[${myMat.age}]]세 [[${myMat.memberGender == 'M' ? '남' : '여'}]] [[${myMat.memberNational}]])이 매칭을 신청하셨습니다.
 					      </button>
 					    </h2>
-					    <div th:id="'collapsefour' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+					    <div th:id="'collapsefour' + ${myMat.matNo} + ${myMat.memberNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
 							<div class="accordion-body" >
 								<table class="table mx-auto" style="width:800px;">
 									<thead></thead>
@@ -399,35 +399,35 @@
 									thead.innerHTML = theadInner;
 																								
 									let avgReviewScore1 = '';
-									if(1 <= avgReviewScore ){
-										avgReviewScore1 = `<button class="btn-star btn-icon-star-left" value="1"></button>`
-									}else if(2 <= avgReviewScore){
-										avgReviewScore1 = `<button class="btn-star-right btn-icon-star-right" value="2"></button>`
+									if(2 <= avgReviewScore ){
+										avgReviewScore1 = `<button class="btn-star btn-icon-star-left" value="1"></button>`+`<button style="margin-left:1px;"class="btn-star-right btn-icon-star-right" value="2"></button>`
+									}else if(1 <= avgReviewScore){
+										avgReviewScore1 = `<button class="btn-star-right btn-icon-star-left" value="1"></button>`
 									}
 									
 									let avgReviewScore2 = '';
-									if(3 <= avgReviewScore ){
-										avgReviewScore2 = `<button class="btn-star btn-icon-star-left" value="3"></button>`
-									}else if(4 <= avgReviewScore){
-										avgReviewScore2 = `<button class="btn-star-right btn-icon-star-right" value="4"></button>`
+									if(4 <= avgReviewScore ){
+										avgReviewScore2 = `<button class="btn-star btn-icon-star-left" value="3"></button>`+`<button style="margin-left:1px;"class="btn-star-right btn-icon-star-right" value="4"></button>`
+									}else if(3 <= avgReviewScore){
+										avgReviewScore2 = `<button class="btn-star-right btn-icon-star-left" value="3"></button>`
 									}
 									let avgReviewScore3 = '';
-									if(5 <= avgReviewScore ){
-										avgReviewScore3 = `<button class="btn-star btn-icon-star-left" value="5"></button>`
-									}else if(6 <= avgReviewScore){
-										avgReviewScore3 = `<button class="btn-star-right btn-icon-star-right" value="6"></button>`
+									if(6 <= avgReviewScore ){
+										avgReviewScore3 = `<button class="btn-star btn-icon-star-left" value="5"></button>`+`<button style="margin-left:1px;"class="btn-star-right btn-icon-star-right" value="6"></button>`
+									}else if(5 <= avgReviewScore){
+										avgReviewScore3 = `<button class="btn-star-right btn-icon-star-left" value="5"></button>`
 									}
 									let avgReviewScore4 = '';
-									if(7 <= avgReviewScore ){
-										avgReviewScore4 = `<button class="btn-star btn-icon-star-left" value="7"></button>`
-									}else if(8 <= avgReviewScore){
-										avgReviewScore4 = `<button class="btn-star-right btn-icon-star-right" value="8"></button>`
+									if(8 <= avgReviewScore ){
+										avgReviewScore4 = `<button class="btn-star btn-icon-star-left" value="7"></button>`+`<button style="margin-left:1px;"class="btn-star-right btn-icon-star-right" value="8"></button>`
+									}else if(7 <= avgReviewScore){
+										avgReviewScore4 = `<button class="btn-star-right btn-icon-star-left" value="7"></button>`
 									}
 									let avgReviewScore5 = '';
-									if(9 <= avgReviewScore ){
-										avgReviewScore5 = `<button class="btn-star btn-icon-star-left" value="9"></button>`
-									}else if(10 <= avgReviewScore){
-										avgReviewScore5 = `<button class="btn-star-right btn-icon-star-right" value="10"></button>`
+									if(10 <= avgReviewScore ){
+										avgReviewScore5 = `<button class="btn-star btn-icon-star-left" value="9"></button>`+`<button style="margin-left:1px;"class="btn-star-right btn-icon-star-right" value="8"></button>`
+									}else if(9 <= avgReviewScore){
+										avgReviewScore5 = `<button class="btn-star-right btn-icon-star-left" value="9"></button>`
 									}
 									let re = '';
 									if(avgReviewScore != 0){
@@ -453,7 +453,7 @@
 									let cInfoInner=`
 										<div class="row justify-content-center" >
 											<div align="center" class="col-4 m-3 p-3 testBorder" >
-								      			<img id="profile-image" src="image/icon_profile.png"/>
+								      			<img id="profile-image" src="${caregiverIntro.careImg != null ? caregiverIntro.careImg : 'image/icon_profile.png'}"/>
 								      			<hr>
 								      			<div class="h3">${caregiverIntro.memberName}님</div>
 								      			<div align="center">

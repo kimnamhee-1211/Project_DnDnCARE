@@ -108,7 +108,7 @@
 										<div class="m-2 d-flex justify-content-between">
 											<div class="h3 m-2">내가 쓴 댓글</div>
 										</div>
-			      						<table class="m-2">
+			      						<table class="m-2" th:if="${!replyList.isEmpty()}">
 			      							<tr align="center">
 					                            <th width="80">글 번호</th>
 					                            <th width="200">글 제목</th>
@@ -116,17 +116,17 @@
 					                            <th width="80">추천</th>
 					                            <th width="120">작성일</th>
 					                        </tr>
-					                        <tr th:if="${!replyList.isEmpty()}" th:each="r:${replyList}" style="border-bottom:1px solid lightgray" >
+					                        <tr  th:each="r:${replyList}" style="border-bottom:1px solid lightgray; text-align: center;" >
 					                        	<td align="center">[[${r.refBoardNo}]]</td>
 					                        	<td >[[${r.boardTitle}]]</td>
 					                        	<td class="p-2">[[${r.replyContent}]]</td>
 					                        	<td align="center">[[${replyLikeCounts[r.replyNo]}]]</td>
 					                        	<td align="center">[[${r.replyCreateDate}]]</td>
 					                        </tr>
-					                        <tr th:if="${replyList.isEmpty()}" align="center">
-					                        	<td colspan="5">작성한 댓글이없습니다.</td>
-					                        </tr>
 			      						</table>
+					                        <div th:if="${replyList.isEmpty()}" align="center">
+					                        	<h3>작성한 댓글이없습니다.</h3>
+					                        </div>
 					                </div>
 									<div class="d-flex justify-content-end align-items-center mb-5">
 					                    <nav aria-label="Standard pagination example">
@@ -142,7 +142,7 @@
 					                            <li class="page-item">
 					                                <a class="page-link" th:href="@{${loc}(page=${replyPi.currentPage+1})}" aria-label="Next">
 					                                    <span aria-hidden="true">&raquo;</span>
-					                                </a>
+					                                </a> 
 					                            </li>
 					                        </ul>
 					                    </nav>
@@ -165,7 +165,7 @@
 					                            <th width="180">작성일</th>
 						                        <th width="100">조회수</th>
 					                        </tr>
-					                        <tr th:if="${!likeList.isEmpty()}" th:each="l:${likeList}" style="border-bottom:1px solid lightgray">
+					                        <tr th:if="${!likeList.isEmpty()}" th:each="l:${likeList}" style="border-bottom:1px solid lightgray; text-align: center;">
 					                        	<td align="center">[[${l.boardNo}]]</td>
 					                        	<td align="center">[[${l.categoryName}]]</td>
 					                        	<td class="p-2">[[${l.boardTitle}]]</td>
@@ -174,10 +174,10 @@
 					                        	<td align="center">[[${l.boardCreateDate}]]</td>
 					                        	<td align="center">[[${l.boardCount}]]</td>
 					                        </tr>
-					                        <tr th:if="${likeList.isEmpty()}" align="center">
-					                        	<td colspan="7">좋아요한 글이 없습니다.</td>
-					                        </tr>
 			      						</table>
+			      						<div th:if="${likeList.isEmpty()}" align="center">
+					                        	<h3>좋아요한 글이 없습니다.</h3>
+					                        </div>
 					                </div>
 									<div class="d-flex justify-content-end align-items-center mb-5">
 					                    <nav aria-label="Standard pagination example">

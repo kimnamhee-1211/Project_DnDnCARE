@@ -613,11 +613,11 @@ public class BoardController {
 		if(myQnAList != null) {
 			model.addAttribute("myQnAList", myQnAList);
 			model.addAttribute("mpi",mpi);
+			return "qnaBoard";
+		}else {
+			throw new BoardException("문의내역조회에 실패했습니다.");
 		}
-		System.out.println(qnaList);
-		System.out.println("=======================");
-		System.out.println(myQnAList);
-		return "qnaBoard";
+		
 		
 	}
 	

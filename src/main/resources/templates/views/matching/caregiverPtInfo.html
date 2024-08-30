@@ -28,18 +28,18 @@
 				      <th scope="col" colspan="1">[[${mPI[0].service}]]</th>
 				    </tr>	
 				    <tr>
-				      <th scope="col">&nbsp;1일 돌봄비용</th>
+				      <th scope="col" style="width:120px;">&nbsp;1일 돌봄비용</th>
 				      <td scope="col" colspan="3">[[${#numbers.formatInteger(mPI[0].money, 0, 'COMMA')}]]원</td>
 				    </tr>				    
 				    <tr th:if="${mPI[0].ptCount > 1}">
-				      <th style="width:50px;"scope="col">&nbsp;총 인원</th>
-				      <td style="width:90px;"scope="col">[[${mPI[0].ptCount}]]인</td>
-				      <th style="width:50px;"scope="col">현재 인원</th>
-				      <td style="width:90px;"scope="col">[[${mPI.size()}]]인</td>	
-				    <tr>
+				      <th scope="col">&nbsp;총 인원</th>
+				      <td scope="col">[[${mPI[0].ptCount}]]인</td>
+				      <th style="width:120px;" scope="col">현재 인원</th>
+				      <td scope="col">[[${mPI.size()}]]인</td>	
+				    <tr> 
 				      <th scope="col">&nbsp;간병 시작일</th>
 				      <td scope="col">[[${mPI[0].beginDt}]]</td>
-				  	  <th scope="col">간병 종료일</th>
+				  	  <th style="width:120px;" scope="col">간병 종료일</th>
 				      <td scope="col">[[${mPI[0].endDt}]]</td>
 				    </tr>
 				    <tr th:if="${mPI[0].matMode == 2}">
