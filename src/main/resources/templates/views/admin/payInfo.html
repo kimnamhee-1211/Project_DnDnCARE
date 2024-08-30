@@ -98,8 +98,6 @@
 	<script th:inline="javascript">
 		let  weeks=document.getElementsByName('weekScope');
 		function selectPayStatis(){
-
-
 			switch(selectCon.value){
 			case '0':
 				weeks = document.getElementsByName('weekScope');
@@ -117,10 +115,6 @@
 					},
 					error : data=>console.log('ㅜㅜ')
 				});
-				
-				
-				
-				
 				return;
 			case '1':
 				let month1 = document.getElementsByName('monthMScope')[0].value;
@@ -303,7 +297,6 @@
 		const selectCon = document.getElementsByName('selectCon')[0];
 		//console.log(selectScope);	//엥? 변수 지정안해도됨 
 		selectCon.addEventListener('change',function(){
-			
 			switch(selectCon.value){
 				case '0':			//일주일
 					selectScope.innerHTML = '<input type="date" name="weekScope" style="width:200px"class="form-control" value="'+addSevenDays(getDateFormat(today),-6)+'">'+

@@ -232,4 +232,9 @@ public class AdminServiceImpl implements AdminService{
 		return aMapper.recentQueryList();
 	}
 
+	@Override
+	public ArrayList<Pay> getPayDeposit() {
+		return aMapper.getPayDeposit();
+	}
+
 }

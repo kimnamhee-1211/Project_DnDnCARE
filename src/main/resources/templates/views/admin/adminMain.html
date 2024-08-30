@@ -52,14 +52,14 @@
 									<th>No.</th>
 									<th>Title</th>
 									<th>Writer</th>
-									<th>Date</th>
+									<!-- <th>Date</th> -->
 									<th>PassHours</th>
 								</tr>
 								<tr th:if="${queryList}" th:each="q: ${queryList}">
 									<td>[[${q.boardNo}]]</td>
 									<td>[[${q.boardTitle}]]</td>
 									<td>[[${q.memberNickName}]]</td>
-								 	<td>[[${q.boardCreateDate}]]</td>
+								 	<!-- <td>[[${q.boardCreateDate}]]</td> -->
 								 	<td>
 								 		[[${q.passHours}]]시간 지남
 								 	</td>
@@ -80,14 +80,14 @@
 				
 				<div class="graphDiv">
 					<div class="h-100 p-2 bg-light border rounded-3 text-center">
-						<canvas id="barChart1"></canvas>
+						<canvas id="lineChart"></canvas>
 					</div>
 					
 					<div><!-- 사이공백 --></div>
 					
-					<div class="h-100 p-2 bg-light border rounded-3 text-center" style="display:grid; grid-template-columns:1fr 382px 1fr;">
+					<div class="h-100 p-2 bg-light border rounded-3 text-center" >
 						<div><!-- 공백 --></div>
-						<canvas id="pieChart1"></canvas>
+						<canvas id="lineChart2"></canvas>
 						<div><!-- 공백 --></div>
 					</div>
 				</div>
@@ -171,18 +171,113 @@
 			// 막대 그래프 작성(끝)
 			 
 			 
+			// 매칭 일주일 통계 (시작) 
+			/*<![CDATA[*/
+			const personal = /*[[${personalMap}]]*/;
+			const share = /*[[${shareMap}]]*/;
+			/*]]>*/
+			
+			const weekPersonal = []; // 최근 일주일에 개인간병 배열
+			const weekShare = []; // 최근 일주일에 공동간병 배열
+			
+			for(const near of nearOneWeek){
+				personal[near] == undefined ? weekPersonal.push(0) : weekPersonal.push(personal[near]);
+				share[near] == undefined ? weekShare.push(0) : weekShare.push(share[near]);
+			}
+			
+			const lineChart = document.getElementById('lineChart');
+		
+			new Chart(lineChart, {
+			    type: 'line',
+			    data: {
+			      labels: nearOneWeek, // x축
+			      datasets: [
+			    	    {
+			    	      label: '개인간병',
+			    	      data: weekPersonal,
+			    	      borderColor: 'rgb(255, 99, 132)',
+			    	      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+			    	    },
+			    	    {
+			    	      label: '공동간병',
+			    	      data: weekShare,
+			    	      borderColor: 'rgb(75, 192, 192)',
+			    	      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+			    	      stepped: false,
+			    	      yAxisID: 'y',
+			    	    }
+			    	]
+			    },
+			    options: {
+			      scales: {
+			        y: {
+			        	beginAtZero: true
+			        }
+			      }
+			    }
+			});
+			// 매칭 일주일 통계 (끝) 
+			 
+			 
+			// 결제 일주일 통계 (시작) 
+			/*<![CDATA[*/
+			const home = /*[[${homeMap}]]*/;
+			const hospital = /*[[${hospitalMap}]]*/;
+			/*]]>*/
+			
+			const weekHome = []; // 최근 일주일에 개인간병 배열
+			const weekHospital = []; // 최근 일주일에 공동간병 배열
+			
+			for(const near of nearOneWeek){
+				home[near] == undefined ? weekHome.push(0) : weekHome.push(home[near]);
+				hospital[near] == undefined ? weekHospital.push(0) : weekHospital.push(hospital[near]);
+			}
+			
+			const lineChart2 = document.getElementById('lineChart2');
+		
+			new Chart(lineChart2, {
+			    type: 'line',
+			    data: {
+			      labels: nearOneWeek, // x축
+			      datasets: [
+			    	    {
+			    	      label: '가정돌봄',
+			    	      data: weekHome,
+			    	      borderColor: 'rgb(255, 99, 132)',
+			    	      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+			    	    },
+			    	    {
+			    	      label: '병원돌봄',
+			    	      data: weekHospital,
+			    	      borderColor: 'rgb(75, 192, 192)',
+			    	      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+			    	      stepped: false,
+			    	      yAxisID: 'y',
+			    	    }
+			    	]
+			    },
+			    options: {
+			      scales: {
+			        y: {
+			        	beginAtZero: true
+			        }
+			      }
+			    }
+			});
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			 
 			 
 			 
-			 
-			 
-			 
-			 
-			 
-			 
-			 
-			 
-			 
+			// 결제 일주일 통계 (끝) 
 			 
 			 
 			 

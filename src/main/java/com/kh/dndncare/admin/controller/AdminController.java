@@ -75,10 +75,9 @@ public class AdminController {
 		// 2) 최근 문의 목록
 		ArrayList<Board> queryList = aService.recentQueryList();
 		
-		
 		// 실험실
-		java.util.Date now = new java.util.Date();
-		long nowMilli = now.getTime();
+		java.util.Date today = new java.util.Date();
+		long nowMilli = today.getTime();
 		
 		for(Board q : queryList) {
 			long createMilli = q.getBoardCreateDate().getTime();
@@ -86,11 +85,108 @@ public class AdminController {
 			q.setPassHours(calcMilli);
 		}
 		
-		
 		if(queryList != null) {
 			model.addAttribute("queryList", queryList);
 		}
 		
+		//
+		File matchingFoler = new File("C:/logs/matchingCreate/");
+		File[] matchingFileList = matchingFoler.listFiles();
+		TreeMap<String, Integer> personalMap = new TreeMap<String, Integer>();
+		TreeMap<String, Integer> shareMap = new TreeMap<String, Integer>();
+		
+		//최근 1주일 날짜 만들기
+		// 최근 일주일의 날짜에 접근
+		Calendar c = GregorianCalendar.getInstance();
+		int year = c.get(Calendar.YEAR); // 2024
+		int month = c.get(Calendar.MONTH) + 1; // 7 + 1 == 8 (0부터 시작)
+		String realMonth = month < 10 ? "0"+month : month+""; // 08
+		int date = c.get(Calendar.DATE); // 18
+		String now = year + realMonth + date; // 20240818
+		int nowInteger = Integer.parseInt(now);
+		
+		// 일주일전 날짜를 20240811 로 출력하기
+		c.set(year, month, date-7); 
+		int agoYear = c.get(Calendar.YEAR);
+		int agoMonth = c.get(Calendar.MONTH);
+		String agoRealMonth = agoMonth < 10 ? "0"+agoMonth : agoMonth+"";
+		int agoDate = c.get(Calendar.DATE);
+		String agoRealDate = agoDate < 10 ? "0"+agoDate : agoDate+"";
+		String ago = agoYear + agoRealMonth + agoRealDate; // 20240811
+		int agoInteger = Integer.parseInt(ago);
+		
+		try { 
+			for(File f : matchingFileList) {
+				BufferedReader br = new BufferedReader(new FileReader(f));
+				String data;
+				while((data=br.readLine())!=null) {
+					//2023-08-30 10:03:49 _ 매칭번호 //195//공동간병	
+					boolean flag = data.contains("개인간병"); // true == 개인간병, false == 공동간병
+					String dashDate = data.split(" ")[0];
+					String[] arr = dashDate.split("-");
+					int dateInteger = Integer.parseInt(arr[0]+arr[1]+arr[2]);
+					String dateStr = dashDate.substring(2);
+					
+					if(agoInteger < dateInteger) {
+						if(flag) { // 개인간병인 경우
+							if(personalMap.containsKey(dateStr)) {
+								personalMap.put(dateStr, personalMap.get(dateStr) + 1);
+							} else {
+								personalMap.put(dateStr, 1);
+							}
+						} else { // 공동간병인 경우
+							if(shareMap.containsKey(dateStr)) {
+								shareMap.put(dateStr, shareMap.get(dateStr) + 1);
+							} else {
+								shareMap.put(dateStr, 1);
+							}
+						}
+					}
+				}
+				br.close();
+			}
+			model.addAttribute("personalMap", personalMap);
+			model.addAttribute("shareMap", shareMap);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} 
+		
+		
+		// 결제 정보 조회
+		ArrayList<Pay> payList = aService.getPayDeposit();
+		TreeMap<String, Integer> homeMap = new TreeMap<String, Integer>();
+		TreeMap<String, Integer> hospitalMap = new TreeMap<String, Integer>();
+		
+		for(Pay p : payList) {
+			int money = p.getPayMoney();
+			String dashDate = String.valueOf(p.getPayDate()); // 2024-08-28
+			String[] arr = dashDate.split("-");
+			int dateInteger = Integer.parseInt(arr[0]+arr[1]+arr[2]);
+			String dateStr = dashDate.substring(2);
+			
+			if(agoInteger < dateInteger) {
+				if(p.getPayService().equals("가정돌봄")) {
+					if(homeMap.containsKey(dateStr)) {
+						homeMap.put(dateStr, homeMap.get(dateStr) + money);
+					} else {
+						homeMap.put(dateStr, money);
+					}
+				}
+				if(p.getPayService().equals("병원돌봄")) {
+					if(hospitalMap.containsKey(dateStr)) {
+						hospitalMap.put(dateStr, hospitalMap.get(dateStr) + money);
+					} else {
+						hospitalMap.put(dateStr, money);
+					}
+				}
+				
+				
+				
+			}
+		}
+		model.addAttribute("homeMap", homeMap);
+		model.addAttribute("hospitalMap", hospitalMap);
 		
 		return "adminMain";
 	}
@@ -1205,11 +1301,7 @@ public class AdminController {
 	//결제정보 어드민
 	@GetMapping("matching.adm")
 	public String matchingView(Model model) {
-		
-		
-		
 		ArrayList<Matching> mat = aService.selectMatchings();
-		
 		
 		model.addAttribute("mat",mat);
 		return "matchingInfo";

@@ -100,5 +100,7 @@ public interface AdminMapper {
 
 	ArrayList<Board> recentQueryList();
 
+	ArrayList<Pay> getPayDeposit();
+
 
 }

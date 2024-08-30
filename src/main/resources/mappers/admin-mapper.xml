@@ -312,6 +312,11 @@
 		WHERE ROWNUM <![CDATA[<]]> 6
 	</select>
 	
+	<select id="getPayDeposit" resultType="Pay">
+		SELECT *
+		FROM PAY
+		WHERE PAY_DEPOSIT IN ('Y', 'T') AND PAY_DATE >= (SYSDATE -7)
+	</select>
 	
 	
 	

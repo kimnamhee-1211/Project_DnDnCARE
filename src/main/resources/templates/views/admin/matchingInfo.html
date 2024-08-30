@@ -101,8 +101,6 @@
 	<script th:inline="javascript">
 		let  weeks=document.getElementsByName('weekScope');
 		function selectPayStatis(){
-
-
 			switch(selectCon.value){
 			case '0':
 				weeks = document.getElementsByName('weekScope');
@@ -120,9 +118,6 @@
 					},
 					error : data=>console.log('ㅜㅜ')
 				});
-				
-				
-				
 				
 				return;
 			case '1':
@@ -166,11 +161,7 @@
 								error:data=>console.log('실패')
 								
 							});
-							
-							
 						}
-						
-						
 					}
 				}
 				return;

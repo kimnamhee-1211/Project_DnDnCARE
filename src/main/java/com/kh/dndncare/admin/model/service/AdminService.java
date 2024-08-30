@@ -95,6 +95,8 @@ public interface AdminService {
 
 	ArrayList<Board> recentQueryList();
 
+	ArrayList<Pay> getPayDeposit();
+
 
 
 }
