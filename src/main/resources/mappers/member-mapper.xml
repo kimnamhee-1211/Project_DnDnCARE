@@ -289,7 +289,7 @@
 		from board b
 			join b_category c on(c.category_no = b.category_no)
 			join reply r on(board_no = ref_board_no)
-		where b.member_no = #{mNo} and r.reply_status = 'Y'
+		where r.member_no = #{mNo} and r.reply_status = 'Y'
 	</select>
 	
 	<select id="replyLikeCount" resultType="_int">
