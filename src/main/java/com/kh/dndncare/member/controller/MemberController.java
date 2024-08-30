@@ -890,6 +890,7 @@ public class MemberController {
 
 				ArrayList<CareGiverMin> requestCaregiverBefore = mService.getRequestCaregiver(loginPt);
 				ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
+				System.out.println(requestCaregiver.toString());
 				for(int i = 0; i < requestCaregiverBefore.size(); i++){
 								
 					int age = AgeCalculator.calculateAge(requestCaregiverBefore.get(i).getMemberAge());
@@ -899,7 +900,9 @@ public class MemberController {
 						requestCaregiver.add(requestCaregiverBefore.get(i));
 					}
 				}
-				System.out.println(requestCaregiver.toString());
+				System.out.println(requestCaregiver.get(0));
+				System.out.println(requestCaregiver.get(1));
+				
 				model.addAttribute("requestCaregiver", requestCaregiver);	
 				
 				//loginUser Name
@@ -2787,22 +2790,15 @@ public class MemberController {
 				// 해당 간병인에 대한 정보 조회 : 멤버번호, 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
 				// MEMBER : MEMBER_NO, MEMBER_NAME, MEMBER_GENDER, MEMBER_AGE
 				// INFO_CATEGORY : L_CATEGORY==career, L_CATEGORY==license
-
-				mList = mService.selectMemberList(memberNoList); // [Member(memberNo=85, memberId=null, memberPwd=null,
-																	// memberName=나리간병5, memberGender=M,
-																	// memberNickName=null, memberAge=null,
-																	// memberPhone=null, memberEmail=null,
-																	// memberCreateDate=null, memberAddress=null,
-																	// memberCategory=null, memberStatus=null,
-																	// memberNational=null, memberPay=null,
-																	// memberUpdateDate=null, memberRealAge=69)]
+				
+				mList = mService.selectMemberList(memberNoList); 
+				
 				ArrayList<HashMap<String, Object>> infoList = mService.selectCaregiverInfo(memberNoList);
 
 				// 해당 매칭에 대한 정보 조회 : 매칭정보 : 매칭번호, 시작날짜, 종료날짜, 시작시간, 종료시간, 금액, 시간제날짜, 간병인의 회원번호
 				// MATCHING : MAT_NO, BEGIN_DT, END_DT, BEGIN_TIME, END_TIME, MONEY, MEMBER_NO
 				// MATCHING_DATE : MAT_DATE
 				eList = mService.patientCalendarEvent(matNoList);
-
 				
 				for (Member m : mList) {
 					String career = "";
@@ -2829,9 +2825,8 @@ public class MemberController {
 				}
 			}
 		}
-
-		JSONArray array = new JSONArray();
 		
+		JSONArray array = new JSONArray();
 		
 		if (!eList.isEmpty()) {
 			for (CalendarEvent c : eList) {
@@ -2842,9 +2837,7 @@ public class MemberController {
 				Calendar calendar = GregorianCalendar.getInstance();
 				calendar.set(year, month - 1, date + 1);
 				Date endDtPlusOne = new Date(calendar.getTimeInMillis());
-				
 				String hospitalName = c.getHospitalName();
-				
 				
 				for (Member m : mList) {
 					int matNo = c.getMatNo();
@@ -2855,35 +2848,64 @@ public class MemberController {
 					String matAddressInfo = c.getMatAddressInfo();
 					Date beginDate = c.getBeginDt();
 					Date endDate = c.getEndDt();
-
-					if (c.getPtCount() == 1) {
-						if (c.getMatMode() == 1) {
-							JSONObject obj = new JSONObject();
-							obj.put("title", "개인 기간제 간병");
-							obj.put("start", c.getBeginDt());
-							obj.put("end", endDtPlusOne);
-							obj.put("matNo", matNo);
-							obj.put("money", money);
-							obj.put("matAddressInfo", matAddressInfo);
-							obj.put("beginDate", beginDate);
-							obj.put("endDate", endDate);
-							obj.put("hospitalName", hospitalName);
-							if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
-								obj.put("caregiverName", m.getMemberName());
-								obj.put("caregiverGender", m.getMemberGender());
-								obj.put("caregiverRealAge", m.getMemberRealAge());
-								obj.put("caregiverCareer", m.getCareer());
-								obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
-							}
-							array.put(obj);
-						} else {
-							String[] strArr = c.getMatDate().split(",");
-							// System.out.println(Arrays.toString(strArr));
-							for (int i = 0; i < strArr.length; i++) {
+					
+					if(caregiverNo == m.getMemberNo()) {
+						if (c.getPtCount() == 1) { // 개인 간병
+							if (c.getMatMode() == 1) { // 기간제 간병
+								System.out.println("==가공 1번=="); // 2번찍혀야함
+								
 								JSONObject obj = new JSONObject();
-								obj.put("title", "개인 시간제 간병");
-								obj.put("start", strArr[i]);
-								obj.put("end", strArr[i]);
+								obj.put("title", "개인 기간제 간병");
+								obj.put("start", c.getBeginDt());
+								obj.put("end", endDtPlusOne);
+								obj.put("matNo", matNo);
+								obj.put("money", money);
+								obj.put("matAddressInfo", matAddressInfo);
+								obj.put("beginDate", beginDate);
+								obj.put("endDate", endDate);
+								obj.put("hospitalName", hospitalName);
+								if (caregiverNo == m.getMemberNo()) { 
+									// 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
+									obj.put("caregiverName", m.getMemberName());
+									obj.put("caregiverGender", m.getMemberGender());
+									obj.put("caregiverRealAge", m.getMemberRealAge());
+									obj.put("caregiverCareer", m.getCareer());
+									obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+								}
+								array.put(obj);
+							} else {
+								System.out.println("==가공 2번=="); // 1번찍혀야함
+								
+								
+								String[] strArr = c.getMatDate().split(",");
+								// System.out.println(Arrays.toString(strArr));
+								for (int i = 0; i < strArr.length; i++) {
+									JSONObject obj = new JSONObject();
+									obj.put("title", "개인 시간제 간병");
+									obj.put("start", strArr[i]);
+									obj.put("end", strArr[i]);
+									obj.put("matNo", matNo);
+									obj.put("money", money);
+									obj.put("matAddressInfo", matAddressInfo);
+									obj.put("beginDate", beginDate);
+									obj.put("endDate", endDate);
+									obj.put("hospitalName", hospitalName);
+									if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
+										obj.put("caregiverName", m.getMemberName());
+										obj.put("caregiverGender", m.getMemberGender());
+										obj.put("caregiverRealAge", m.getMemberRealAge());
+										obj.put("caregiverCareer", m.getCareer());
+										obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+									}
+									array.put(obj);
+								}
+							}
+						} else {
+							if (c.getMatMode() == 1) {
+								JSONObject obj = new JSONObject();
+								obj.put("title", "공동 기간제 간병");
+								obj.put("start", c.getBeginDt());
+								obj.put("end", endDtPlusOne);
 								obj.put("matNo", matNo);
 								obj.put("money", money);
 								obj.put("matAddressInfo", matAddressInfo);
@@ -2898,55 +2920,128 @@ public class MemberController {
 									obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
 								}
 								array.put(obj);
-							}
-						}
-					} else {
-						if (c.getMatMode() == 1) {
-							JSONObject obj = new JSONObject();
-							obj.put("title", "공동 기간제 간병");
-							obj.put("start", c.getBeginDt());
-							obj.put("end", endDtPlusOne);
-							obj.put("matNo", matNo);
-							obj.put("money", money);
-							obj.put("matAddressInfo", matAddressInfo);
-							obj.put("beginDate", beginDate);
-							obj.put("endDate", endDate);
-							obj.put("hospitalName", hospitalName);
-							if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
-								obj.put("caregiverName", m.getMemberName());
-								obj.put("caregiverGender", m.getMemberGender());
-								obj.put("caregiverRealAge", m.getMemberRealAge());
-								obj.put("caregiverCareer", m.getCareer());
-								obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
-							}
-							array.put(obj);
-						} else {
-							
-							String[] strArr = c.getMatDate().split(",");
-							for (int i = 0; i < strArr.length; i++) {
-								JSONObject obj = new JSONObject();
-								obj.put("title", "공동 시간제 간병");
-								obj.put("start", strArr[i]);
-								obj.put("end", strArr[i]);
-								obj.put("matNo", matNo);
-								obj.put("money", money);
-								obj.put("matAddressInfo", matAddressInfo);
-								obj.put("beginDate", beginDate);
-								obj.put("endDate", endDate);
-								obj.put("hospitalName", hospitalName);
-								if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
-									obj.put("caregiverName", m.getMemberName());
-									obj.put("caregiverGender", m.getMemberGender());
-									obj.put("caregiverRealAge", m.getMemberRealAge());
-									obj.put("caregiverCareer", m.getCareer());
-									obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+							} else {
+								String[] strArr = c.getMatDate().split(",");
+								for (int i = 0; i < strArr.length; i++) {
+									JSONObject obj = new JSONObject();
+									obj.put("title", "공동 시간제 간병");
+									obj.put("start", strArr[i]);
+									obj.put("end", strArr[i]);
+									obj.put("matNo", matNo);
+									obj.put("money", money);
+									obj.put("matAddressInfo", matAddressInfo);
+									obj.put("beginDate", beginDate);
+									obj.put("endDate", endDate);
+									obj.put("hospitalName", hospitalName);
+									if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
+										obj.put("caregiverName", m.getMemberName());
+										obj.put("caregiverGender", m.getMemberGender());
+										obj.put("caregiverRealAge", m.getMemberRealAge());
+										obj.put("caregiverCareer", m.getCareer());
+										obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+									}
+									array.put(obj);
 								}
-								array.put(obj);
 							}
 						}
 					}
+//					if (c.getPtCount() == 1) { // 개인 간병
+//						if (c.getMatMode() == 1) { // 기간제 간병
+//							System.out.println("==가공 1번=="); // 2번찍혀야함
+//							
+//							JSONObject obj = new JSONObject();
+//							obj.put("title", "개인 기간제 간병");
+//							obj.put("start", c.getBeginDt());
+//							obj.put("end", endDtPlusOne);
+//							obj.put("matNo", matNo);
+//							obj.put("money", money);
+//							obj.put("matAddressInfo", matAddressInfo);
+//							obj.put("beginDate", beginDate);
+//							obj.put("endDate", endDate);
+//							obj.put("hospitalName", hospitalName);
+//							if (caregiverNo == m.getMemberNo()) { 
+//								// 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
+//								obj.put("caregiverName", m.getMemberName());
+//								obj.put("caregiverGender", m.getMemberGender());
+//								obj.put("caregiverRealAge", m.getMemberRealAge());
+//								obj.put("caregiverCareer", m.getCareer());
+//								obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+//							}
+//							array.put(obj);
+//						} else {
+//							System.out.println("==가공 2번=="); // 1번찍혀야함
+//							
+//							
+//							String[] strArr = c.getMatDate().split(",");
+//							// System.out.println(Arrays.toString(strArr));
+//							for (int i = 0; i < strArr.length; i++) {
+//								JSONObject obj = new JSONObject();
+//								obj.put("title", "개인 시간제 간병");
+//								obj.put("start", strArr[i]);
+//								obj.put("end", strArr[i]);
+//								obj.put("matNo", matNo);
+//								obj.put("money", money);
+//								obj.put("matAddressInfo", matAddressInfo);
+//								obj.put("beginDate", beginDate);
+//								obj.put("endDate", endDate);
+//								obj.put("hospitalName", hospitalName);
+//								if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
+//									obj.put("caregiverName", m.getMemberName());
+//									obj.put("caregiverGender", m.getMemberGender());
+//									obj.put("caregiverRealAge", m.getMemberRealAge());
+//									obj.put("caregiverCareer", m.getCareer());
+//									obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+//								}
+//								array.put(obj);
+//							}
+//						}
+//					} else {
+//						if (c.getMatMode() == 1) {
+//							JSONObject obj = new JSONObject();
+//							obj.put("title", "공동 기간제 간병");
+//							obj.put("start", c.getBeginDt());
+//							obj.put("end", endDtPlusOne);
+//							obj.put("matNo", matNo);
+//							obj.put("money", money);
+//							obj.put("matAddressInfo", matAddressInfo);
+//							obj.put("beginDate", beginDate);
+//							obj.put("endDate", endDate);
+//							obj.put("hospitalName", hospitalName);
+//							if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
+//								obj.put("caregiverName", m.getMemberName());
+//								obj.put("caregiverGender", m.getMemberGender());
+//								obj.put("caregiverRealAge", m.getMemberRealAge());
+//								obj.put("caregiverCareer", m.getCareer());
+//								obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+//							}
+//							array.put(obj);
+//						} else {
+//							String[] strArr = c.getMatDate().split(",");
+//							for (int i = 0; i < strArr.length; i++) {
+//								JSONObject obj = new JSONObject();
+//								obj.put("title", "공동 시간제 간병");
+//								obj.put("start", strArr[i]);
+//								obj.put("end", strArr[i]);
+//								obj.put("matNo", matNo);
+//								obj.put("money", money);
+//								obj.put("matAddressInfo", matAddressInfo);
+//								obj.put("beginDate", beginDate);
+//								obj.put("endDate", endDate);
+//								obj.put("hospitalName", hospitalName);
+//								if (caregiverNo == m.getMemberNo()) { // 간병인이름, 성별, 연령, 경력(필수, 1개), 자격증(선택, 0~3개)
+//									obj.put("caregiverName", m.getMemberName());
+//									obj.put("caregiverGender", m.getMemberGender());
+//									obj.put("caregiverRealAge", m.getMemberRealAge());
+//									obj.put("caregiverCareer", m.getCareer());
+//									obj.put("caregiverLicense", m.getLicense()); // 자격증이 없을 때는 ""로 들어감
+//								}
+//								array.put(obj);
+//							}
+//						}
+//					}
 				}
 			}
+			
 			return array.toString();
 		} else {
 			return null;

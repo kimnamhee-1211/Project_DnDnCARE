@@ -68,8 +68,14 @@ public class AdminController {
 	
 	// 관리자 로그인 => 관리자 메인 페이지로 이동하는 메소드
 	@GetMapping("adminMain.adm")
-	public String adminMain() {
-
+	public String adminMain(Model model) {
+		// 1) 최근 방문자 수에 대한 로그파일 읽어오기
+		membersGraph(model);
+		
+		
+		
+		
+		
 		return "adminMain";
 	}
 
