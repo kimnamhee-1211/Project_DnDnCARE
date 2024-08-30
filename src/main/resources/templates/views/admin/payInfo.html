@@ -248,7 +248,7 @@
 			      datasets: [{
 			        		label: '가정돌봄',
 			        		data: data1,
-			        		borderWidth: 2,
+			        		borderWidth: 4,
 			        		borderColor: 'orange',
 			        		fill: false,
 			        		backgroundColor: 'orange',
@@ -258,7 +258,7 @@
 			      			{
 		      				label: '병원돌봄',
 			        		data: data2,
-			        		borderWidth: 1,
+			        		borderWidth: 4,
 			        		borderColor: 'skyblue',
 			        		fill: false,
 			        		backgroundColor: 'skyblue',
@@ -444,7 +444,7 @@
 		}
 		
 		function minPayFn(data){
-			let minMoney = 0;
+			let minMoney = data[0];
 			for(d of data){
 				if(d < minMoney){
 					

@@ -53,7 +53,7 @@
 	</appender>
 	
 	<appender name="careInformationUsageFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${LOG_PATH}/careInformationUsage/careInformationAi.log</file> <!-- 기록할 파일의 경로를 지정 -->
+		<file>${LOG_PATH}/careInformationUsage/careInformationUsage.log</file> <!-- 기록할 파일의 경로를 지정 -->
 		
 		<!-- 출력 서식 지정 : 24-07-03 12:10:50 [INFO] LoginLogInterceptor.afterCompletion{25} - user02 -->
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -62,7 +62,7 @@
 		
 		<!-- RollingFile의 정책 기준을 지정 : TimeBased는 매 정시를 기준으로 파일을 나누어준다. -->
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_PATH}/careInformationUsage/careInformationAi.log.%d{yyyyMMdd}</fileNamePattern>
+			<fileNamePattern>${LOG_PATH}/careInformationUsage/careInformationUsage.log.%d{yyyyMMdd}</fileNamePattern>
 		</rollingPolicy>
 	</appender>
 	

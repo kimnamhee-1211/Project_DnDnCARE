@@ -1235,7 +1235,7 @@ public class AdminController {
 				String dataMatNo;
 				String dataService;
 				String date;
-				System.out.println(br.readLine());
+				
 				while((data=br.readLine())!=null) {
 					// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
 					
@@ -1331,30 +1331,42 @@ public class AdminController {
 					String dataMatNo;
 					String dataService;
 					String date;
-					System.out.println(br.readLine());
 					while((data=br.readLine())!=null) {
 						// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
 						
-						System.out.println(data);
 						date = data.substring(0,10);
-						dataMatNo = data.split("//")[1];
-						dataService = data.split("//")[2];
+						dataMatNo = data.split("//")[1].trim();
+						dataService = data.split("//")[2].trim();
 						
-						if(dataMatNo != null && dataService != null) {
-							
-							for(int i = 0; i < labels.length ; i++) {
-								System.out.println(date.substring(7,10));
-								System.out.println("체킇ㄱ");
-								if(labels[i].trim().equals(date.substring(8,10))) {
-									if(dataService.trim().equals("개인간병")) {
-										datas1[i] += 1;
+						if(year1 == Integer.parseInt(date.substring(0,4))) {
+							if(dataMatNo != null && dataService != null) {
+								
+								for(int i = 0; i < labels.length ; i++) {
+									
+									if(i < 9) {
+										if(labels[i].trim().equals(date.substring(9,10)) && date.substring(7,10).contains("-0")) {
+											if(dataService.trim().equals("개인간병")) {
+												datas1[i] += 1;
+											}else {
+												datas2[i] += 1;
+											}
+										}
 									}else {
-										datas2[i] += 1;
+									
+									
+										if(labels[i].trim().equals(date.substring(8,10))) {
+											if(dataService.trim().equals("개인간병")) {
+												datas1[i] += 1;
+											}else {
+												datas2[i] += 1;
+											}
+										}
+									
 									}
+									
 								}
-							}
+							}//
 						}
-						
 					}
 					
 					

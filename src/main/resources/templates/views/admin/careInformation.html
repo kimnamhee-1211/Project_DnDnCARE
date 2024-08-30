@@ -30,6 +30,12 @@
 			
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 				<br/>
+				<div style="display:grid; grid-template-columns: 1fr 50px 1fr;">
+					<div class="text-center"><span class="badge bg-dark fs-5">최근 일주일 간병백과 방문자 수</span></div>
+					<div></div>
+					<div class="text-center"><span class="badge bg-dark fs-5">최근 일주일 (조회가 실패한)검색조건 TOP3</span></div>
+				</div>
+				<br/>
 				<div id="graphDiv">
 					<div class="h-100 p-2 bg-light border rounded-3 text-center">
 						<canvas id="barChart"></canvas>
@@ -37,8 +43,10 @@
 					
 					<div><!-- 사이공백 --></div>
 					
-					<div class="h-100 p-2 bg-light border rounded-3 text-center">
+					<div class="h-100 p-2 bg-light border rounded-3 text-center" style="display:grid; grid-template-columns:1fr 382px 1fr;">
+						<div><!-- 공백 --></div>
 						<canvas id="pieChart"></canvas>
+						<div><!-- 공백 --></div>
 					</div>
 				</div>	
 				
@@ -304,6 +312,7 @@
 											if(i > 1) fourBtnList[i].remove(); // [등록하기],[취소하기] 버튼을 페이지에서 삭제
 											else fourBtnList[i].style.display = 'inline'; // [수정하기], [내리기] 버튼을 화면에 표시
 										}
+										location.reload();
 					 				} else{
 					 					alert('서비스 요청에 실패하였습니다.');
 					 				}
