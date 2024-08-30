@@ -309,7 +309,7 @@
 		        group by board_no, board_title, member_nickname, board_create_date
 		        HAVING count(reply.ref_board_no) = 0
 		        order by board_no desc)
-		WHERE ROWNUM <![CDATA[<]]> 6
+		WHERE ROWNUM <![CDATA[<]]> 11
 	</select>
 	
 	<select id="getPayDeposit" resultType="Pay">

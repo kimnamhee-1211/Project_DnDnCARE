@@ -180,9 +180,6 @@ public class AdminController {
 						hospitalMap.put(dateStr, money);
 					}
 				}
-				
-				
-				
 			}
 		}
 		model.addAttribute("homeMap", homeMap);
