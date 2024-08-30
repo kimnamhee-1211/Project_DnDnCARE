@@ -477,7 +477,7 @@ public class MemberController {
 
 		// 5. 프롬프트 작성
 		String prompt = "간병인 정보는" + infoMap.toString() + "이고" + "환자 목록은" + promptPatientList.toString() + "이다."
-				+ "간병인의 정보를 바탕으로 가장 적절한 매칭번호 " + selectNum + "개만 숫자로만 줄바꿈 없이 짧게 대답해줘.";
+				+ "간병인의 정보를 바탕으로 가장 적절한 매칭번호 " + selectNum + "개만 숫자로만 짧게 대답해줘.";
 
 		// 6. 프롬프트를 전달하고 결과값 받아오기
 		String result = botController.chat(prompt); // "2, 4, 8, 10, 14"
