@@ -301,7 +301,7 @@
 			
 			switch(selectCon.value){
 				case '0':			//일주일
-					selectScope.innerHTML = '<input type="date" name="weekScope" style="width:200px"class="form-control" value="'+addSevenDays(getDateFormat(today),-7)+'">'+
+					selectScope.innerHTML = '<input type="date" name="weekScope" style="width:200px"class="form-control" value="'+addSevenDays(getDateFormat(today),-6)+'">'+
 					'<span class="m-2">~</span>'+
 					'<input type="date" name="weekScope" style="width:200px; background:lightgray"class="form-control" readonly="readonly" value="'+addSevenDays(getDateFormat(today),0)+'">';
 					setSevenDays();
@@ -392,9 +392,9 @@
 		
 		//처음에 한번 불러오기.
 		setSevenDays();
-		weeks[0].value = addSevenDays(today,-7);
+		weeks[0].value = addSevenDays(today,-6);
 		weeks[1].value = addSevenDays(today,0);
-		dayTitle.innerText = addSevenDays(today,-7) + ' ~ ' +addSevenDays(today,0) + '(7일)'
+		dayTitle.innerText = addSevenDays(today,-6) + ' ~ ' +addSevenDays(today,0) + '(7일)'
 		$.ajax({
 					url : 'weekMatTotal.adm',
 					data : {data1:weeks[0].value, data2 : weeks[1].value},
@@ -462,7 +462,7 @@
 				togetherPay.innerText = togetherP.toLocaleString() + '회';
 				maxP = maxPayFn(data1) > maxPayFn(data2) ? maxPayFn(data1) : maxPayFn(data2);
 				maxPay.innerText = maxP.toLocaleString() + '회';
-				minP = maxPayFn(data1) > maxPayFn(data2) ? maxPayFn(data1) : maxPayFn(data2);
+				minP = minPayFn(data1) < minPayFn(data2) ? minPayFn(data1) : minPayFn(data2);
 				minPay.innerText = minP.toLocaleString() + '회';
 			}else if(flag ==2){
 				total = totalPayFn(data1);
