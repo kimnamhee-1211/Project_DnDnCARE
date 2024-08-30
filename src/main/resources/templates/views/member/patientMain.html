@@ -461,7 +461,6 @@
     // 이벤트 : 이벤트 정보를 담아서 객체를 생성해야 한다. 문법은 json을 따른다.
     	document.addEventListener('DOMContentLoaded', function() {
         	var calendarEl = document.getElementById('calendar');
-	    	//console.log('키킥');
         	var request = $.ajax({
         		url: 'caregiverPatientEvent.me',
         		datatype: 'json',
@@ -543,14 +542,15 @@
         			})
         		}
         	}
-        	
-        	
             //종규 삽입 끝
         	
         	
         	// 이벤트 등록
         	request.done(function(data) {
+        		//console.log('--------');
         		//console.log(data);
+        		//console.log('--------');
+        		
         		var calendar = new FullCalendar.Calendar(calendarEl, {
   		          initialView: 'dayGridMonth',
   		          events : data,
