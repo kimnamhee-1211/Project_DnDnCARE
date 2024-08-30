@@ -695,12 +695,7 @@ public class MemberController {
 			int memberNo = loginUser.getMemberNo();
 					
 			if(loginUser != null) {
-				System.out.println(memberNo);
-				System.out.println("전");
 				ArrayList<Patient> completeList = openAiPatientChoice(memberNo, 5); // 추천목록이 없으면 null로 넘어옴
-				System.out.println(memberNo);
-				System.out.println("후");
-				//System.out.println(completeList);
 				model.addAttribute("completeList", completeList);
 			}
 					
@@ -889,7 +884,7 @@ public class MemberController {
 				// 환자 입장에서 나를 선택한 간병인 정보 불러오기
 
 				ArrayList<CareGiverMin> requestCaregiverBefore = mService.getRequestCaregiver(loginPt);
-				ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
+				ArrayList<CareGiverMin> requestCaregiver = new ArrayList<CareGiverMin>();
 				System.out.println(requestCaregiver.toString());
 				for(int i = 0; i < requestCaregiverBefore.size(); i++){
 								
@@ -900,8 +895,7 @@ public class MemberController {
 						requestCaregiver.add(requestCaregiverBefore.get(i));
 					}
 				}
-				System.out.println(requestCaregiver.get(0));
-				System.out.println(requestCaregiver.get(1));
+
 				
 				model.addAttribute("requestCaregiver", requestCaregiver);	
 				
