@@ -861,7 +861,7 @@ public class MemberController {
 					int age = AgeCalculator.calculateAge(requestCaregiverBefore.get(i).getMemberAge());
 					requestCaregiverBefore.get(i).setAge(age);
 					
-					if(i <=  10) {
+					if(i < 5) {
 						requestCaregiver.add(requestCaregiverBefore.get(i));
 					}
 				}
