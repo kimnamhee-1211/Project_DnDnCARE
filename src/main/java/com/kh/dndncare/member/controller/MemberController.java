@@ -890,6 +890,7 @@ public class MemberController {
 
 				ArrayList<CareGiverMin> requestCaregiverBefore = mService.getRequestCaregiver(loginPt);
 				ArrayList<CareGiverMin> requestCaregiver = mService.getRequestCaregiver(loginPt);
+				System.out.println(requestCaregiver.toString());
 				for(int i = 0; i < requestCaregiverBefore.size(); i++){
 								
 					int age = AgeCalculator.calculateAge(requestCaregiverBefore.get(i).getMemberAge());
@@ -899,7 +900,9 @@ public class MemberController {
 						requestCaregiver.add(requestCaregiverBefore.get(i));
 					}
 				}
-				System.out.println(requestCaregiver.toString());
+				System.out.println(requestCaregiver.get(0));
+				System.out.println(requestCaregiver.get(1));
+				
 				model.addAttribute("requestCaregiver", requestCaregiver);	
 				
 				//loginUser Name
