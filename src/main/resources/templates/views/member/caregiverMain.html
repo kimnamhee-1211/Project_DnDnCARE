@@ -116,7 +116,7 @@
 	                    	<td style="display:none" th:text="${matPt.matNo}"></td>
 	                        <td colspan="4" th:if="${matPt.ptCount == 1}">
 	                        	<img th:if="${matPt.ptCount == 1 && matPt.service =='병원돌봄'}" src="image/icon/hospital.png"/>
-	                       		<img th:if="${matPt.ptCount == 1 && matPt.service =='가정돌봄'}" src="image/icon/home.pn/">
+	                       		<img th:if="${matPt.ptCount == 1 && matPt.service =='가정돌봄'}" src="image/icon/home.png/">
 	                       		[[${matPt.ptName}]]님([[${matPt.ptRealAge}]]세 [[${matPt.ptGender =='M' ? '남':'여' }]])이 매칭을 원하고 있어요.
 	                       		 </td>
 	                        <td colspan="4" th:if="${matPt.ptCount > 1}" class="align-middle">
