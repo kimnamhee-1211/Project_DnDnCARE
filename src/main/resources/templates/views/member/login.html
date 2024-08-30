@@ -151,20 +151,12 @@
 		    });
 		  //카카오끝
 	  	
-		document.addEventListener('DOMContentLoaded', function() { // DOMContentLoaded => 페이지 로딩될때 다른거 기다리지 않고 바로 되게하는 것 굳이 필요하진않음
-		    document.getElementById('google').addEventListener('click', handleGoogleLogin);
-		});
 		
 		function handleKakaoLogin() {
 		    console.log('카카오 로그인 시도');
 		    // 카카오 로그인 로직 구현
 		}
 		
-		
-		function handleGoogleLogin() {
-		    console.log('구글 로그인 시도');
-		    // 구글 로그인 로직 구현
-		} 
 		
 		const enrollButton = document.getElementById("enrollButton")
 		enrollButton.addEventListener('click', ()=>{
