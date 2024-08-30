@@ -12,7 +12,7 @@
 <body>
 	<div th:replace="~{common/navbar :: navbar}"></div>
 	<main class="container ">
-		<div class="row m-4">
+		<div class="row m-4" style="border-bottom:2px solid #133B5C;">
 			<div class="m-4 h1 d-flex justify-content-between" style="max-width:1150px; border-bottom:5px solid #133B5C;">
 				<a href="home.do" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a>
 				
@@ -21,8 +21,8 @@
 			<div class="col-8 m-3">
 				<div class="row justify-content-md-center">
 					<div align="center" class="col-4 m-3 p-3 " >
-			      		<img id="profile-image" th:src="${caregiverIntro.careImg} ? ${caregiverIntro.careImg} : (${caregiverIntro.memberGender} =='F' ? 'image/icon/femaleProfile.png' : 'image/icon/maleProfile.png')"/>
-			      		<hr>
+			      		<img class="mb-4" id="profile-image" th:src="${caregiverIntro.careImg} ? ${caregiverIntro.careImg} : (${caregiverIntro.memberGender} =='F' ? 'image/icon/femaleProfile.png' : 'image/icon/maleProfile.png')"/>
+			      		
 			      		<div class="h2" style="color:#133B5C"><b>[[${caregiverIntro.memberName}]]님</b></div>
 			      			<div style="display:none" th:text="${memberNo}" class="memberNo"></div>	
 			      		<div align="center">
@@ -32,7 +32,7 @@
 							<button th:if="${matNo != null && beforePage == 'myInfoMatchingHistoryP'}" type="button" class="m-4 btn-outline-maincolor" id="reviewWriteButton">후기 작성하기</button>		
 						</div>		      		
 		      		</div>
-		      		<div class="col-7 m-3 p-3  justify-content-md-center" style="border-left:4px solid #FCDAB7; border-right:4px solid #FCDAB7;">
+		      		<div class="col-7 m-3 p-3  justify-content-md-center" style="border-left:3px dotted #133B5C; border-right:3px dotted #133B5C;">
 		      				      		
 			      		<div class="row m-2 p-4">
 			      			&nbsp;&nbsp;&nbsp;&nbsp;
@@ -65,7 +65,7 @@
 							<span th:if="${avgReviewScore == 0}">정보가 없습니다.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>		      		
 			      		</div>
 			      		
-			      		<div class="col-11 m-3 p-3 " style="border-top:1px solid #FCDAB7; border-bottom:1px solid #FCDAB7;">
+			      		<div class="col-11 m-3 p-3 " style="border-top:1px solid #133B5C;">
 			      			<h6>
 			      				<b>나이 :</b> [[${caregiverIntro.age}]]세&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				      			<th:block th:if="${caregiverIntro.memberGender} == 'M'">
@@ -87,20 +87,18 @@
 						    </th:block>
 			      			<div class="h6"><b>적정 1일 돌봄 비용 :</b> [[${#numbers.formatInteger(caregiverIntro.minMoney, 0, 'COMMA')}]]원 ~ [[${#numbers.formatInteger(caregiverIntro.maxMoney, 0, 'COMMA')}]]원</div>
 			      			<h6><b>공동간병 참여 여부 :</b> [[${caregiverIntro.careJoinStatus =='Y' ? '참여':'미참여'}]]</h6>
-			      			<hr>
-			      			<h6	 align="center"><b>자기소개</b></h6> 
-			      			<h6>[[${caregiverIntro.careIntro}]]</h6>
+			      			<h6	 align="center" style="border-top:1px solid #133B5C; width:100%; margin-top:15px; padding-top:10px;"><b>자기소개</b></h6> 
+			      			<h6 align="center">[[${caregiverIntro.careIntro}]]</h6>
 			      		</div>
 			      		
 		      		</div>
 	      		</div>
 			</div>
 			<div class="col-3 m-3 p-2 text-center" >
-				<div class="row m-3 text-center" align="center" style="color:#133B5C; border-bottom:2px solid #FCDAB7"><h2><b>매칭 기록</b></h2></div>
+				<div class="row m-3 text-center" align="center" style="color:#133B5C;"><h2><b>매칭 기록</b></h2></div>
 				<h3 th:if="${serviceList.isEmpty()}">기록이 없습니다.</h3>
-				<div th:unless="${serviceList.isEmpty()}" class="m-3 p-2" style="border-bottom:1px solid #dee2e6" id="count-section">
+				<div th:unless="${serviceList.isEmpty()}" class="m-3 p-2"  id="count-section">
 					<canvas class="my-4 w-100" id="matchingRecord" width="900" height="250"></canvas>
-						
 				</div>
 			</div>
 			
@@ -153,12 +151,12 @@
 			
 		</div>
 		<div align="center">
-		<div align="right" style="max-width:700px; color:#133B5C;">
-			<h3 th:unless="${reviewList.size() == 0}"><b>[[${reviewList.size()}]]개의 후기가 있습니다</b></h3>
+		<div align="left" style="max-width:700px; color:#133B5C;">
+			<h3 th:unless="${reviewList.size() == 0}"><img width="48" height="48" src="https://img.icons8.com/color/48/edit--v2.png" alt="edit--v2"/><b style="border-bottom:1px  lightgray; padding-bottom:10px;">  [[${reviewList.size()}]]개의 후기가 있어요</b></h3>
 		</div>
-		<div class="row m-4 testBorder" style="max-width:700px"th:each="rList:${reviewList}"><!-- each -->
+		<div class="row m-4  testBorder" style="max-width:700px"th:each="rList:${reviewList}"><!-- each -->
 			<div class="col m-2">
-				<div align="left" class="p-3">
+				<div align="left" class="p-2">
 					<span class="h5" >[[${rList.ptName}]]님이 쓰신 후기</span><img src="/image/heart.gif" width="20" height="20">
 				</div>
 			</div>
@@ -188,8 +186,8 @@
 	      			
     			</div>
 		    </div>
-			<div align="right"class="col m-4 " style="border-bottom:2px solid lightgray;">
-				<span>작성날짜 : [[${rList.reviewUpdateDate}]]</span>
+			<div align="right"class="col p-1" style="border-bottom:2px solid #FCDAB7;">
+				<span class="mb-3">작성날짜 : [[${rList.reviewUpdateDate}]]</span>
 			</div>
 			<div>	</div>
 			<div align="left"class="col m-4 ">

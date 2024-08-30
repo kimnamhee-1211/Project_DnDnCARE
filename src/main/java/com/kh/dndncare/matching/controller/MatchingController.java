@@ -326,6 +326,8 @@ public class MatchingController {
 		        
 	        	session.removeAttribute("tempPatient"); // 세션에 담아놨던 patient 객체 삭제 
 	        	session.removeAttribute("service");
+	        	session.setAttribute("logMatNo", matNo);
+	        	session.setAttribute("logMatService", "개인간병");
 	        	
 	        	//모달용
 	        	re.addAttribute("result", result);
@@ -555,7 +557,6 @@ public class MatchingController {
 			re.addAttribute("hospitalAddress", hospital.getHospitalAddress());
 			re.addAttribute("msg", "공동간병 등록이 완료되었습니다.");
 			
-			logger.info("matNo : " + jm.getMatNo() + ",공동간병");
 			session.setAttribute("logMatNo",jm.getMatNo() );
 			session.setAttribute("logMatService","공동간병");
 			

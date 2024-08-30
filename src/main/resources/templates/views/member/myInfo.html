@@ -190,7 +190,7 @@
 			      							</td>
 			      						</tr>
 			      						<tr>
-			      							<th class="p-2">질환</th>
+			      							<th class="p-2">질환 경험</th>
 			      							<td class="p-2"colspan="5" id="disaseUpdate">
 			      								
 			      								<span class="memDisease" th:each="disease : ${memberInfo.InfoDisease}"> [[${disease}]] </span>	
@@ -361,7 +361,7 @@
 							    		var calendar = new FullCalendar.Calendar(calendarEl, {
 									          initialView: 'dayGridMonth',
 									          events : data,
-									          eventColor: '#skyblue',
+									          eventColor: 'skyblue',
 									          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
 									        	  let mils = info.event.start - new Date();
 									        	  let infomation = document.querySelector('.infomation').children;
@@ -377,7 +377,7 @@
 								          		let infoDetail = document.querySelector('.infoDetail').children;
 								          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
 								          		infoDetail[3].innerHTML = info.event.extendedProps.endDate;
-								          		infoDetail[6].innerHTML = info.event.extendedProps.money + '원';
+								          		infoDetail[6].innerHTML = info.event.extendedProps.money.toLocaleString() + '원';
 								          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
 								          		//console.log(document.querySelector('.modal-footer').children[0].value);
 								          		$('#calendarModal').modal('show');
@@ -546,7 +546,7 @@
 		    	<div class="modal-footer">
 		    		<input type="hidden" name="matNo"/>
 	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">닫기</button>
-	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">자세히 보기</button>	    			
+	    			<button type="button" class="btn-outline" id="detailInfo" style="width:200px;">자세히 보기</button>	    			
 		    	</div>
 		  	</div>
 		</div>

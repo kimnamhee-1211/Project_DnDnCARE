@@ -1194,7 +1194,7 @@ public class AdminController {
 	}
 	
 	
-	//어드민 페이 토탈 통계 에이작스 (매칭 일주일)
+	//어드민 매칭 토탈 통계 에이작스 (매칭 일주일)
 	
 	@GetMapping("weekMatTotal.adm")
 	@ResponseBody
@@ -1224,7 +1224,7 @@ public class AdminController {
         
         
      // 로그 파일 : 페이지 이용량을 조회 (시작)
-		File usageFolder = new File("C:/logs/matching/");
+		File usageFolder = new File("C:/logs/matchingCreate/");
 		File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
 		
 		//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
@@ -1235,11 +1235,11 @@ public class AdminController {
 				String dataMatNo;
 				String dataService;
 				String date;
-				System.out.println(br.readLine());
+				
 				while((data=br.readLine())!=null) {
 					// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
 					
-					System.out.println(data);
+					//System.out.println(data);
 					date = data.substring(0,10);
 					dataMatNo = data.split("//")[1];
 					dataService = data.split("//")[2];
@@ -1247,7 +1247,8 @@ public class AdminController {
 					if(dataMatNo != null && dataService != null) {
 						
 						for(int i = 0; i < labels.length ; i++) {
-							
+							System.out.println("라벨이랑"+labels[i]);
+							System.out.println("date.trim"+date.trim());
 							
 							if(labels[i].trim().equals(date.trim())) {
 								if(dataService.trim().equals("개인간병")) {
@@ -1289,7 +1290,7 @@ public class AdminController {
 	}//페이토탈메소드끝 ( 매칭 일주일)
 		
 		
-	//어드민 페이 토탈 통계 에이작스 (매칭 달)
+	//어드민 매칭 토탈 통계 에이작스 (매칭 달)
 	
 	@GetMapping("monthMatTotal.adm")
 	@ResponseBody
@@ -1319,7 +1320,7 @@ public class AdminController {
 	        
 	        
 	     // 로그 파일 : 페이지 이용량을 조회 (시작)
-			File usageFolder = new File("C:/logs/matching/");
+			File usageFolder = new File("C:/logs/matchingCreate/");
 			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
 			
 			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
@@ -1330,30 +1331,42 @@ public class AdminController {
 					String dataMatNo;
 					String dataService;
 					String date;
-					System.out.println(br.readLine());
 					while((data=br.readLine())!=null) {
 						// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
 						
-						System.out.println(data);
 						date = data.substring(0,10);
-						dataMatNo = data.split("//")[1];
-						dataService = data.split("//")[2];
+						dataMatNo = data.split("//")[1].trim();
+						dataService = data.split("//")[2].trim();
 						
-						if(dataMatNo != null && dataService != null) {
-							
-							for(int i = 0; i < labels.length ; i++) {
-								System.out.println(date.substring(7,10));
-								System.out.println("체킇ㄱ");
-								if(labels[i].trim().equals(date.substring(8,10))) {
-									if(dataService.trim().equals("개인간병")) {
-										datas1[i] += 1;
+						if(year1 == Integer.parseInt(date.substring(0,4))) {
+							if(dataMatNo != null && dataService != null) {
+								
+								for(int i = 0; i < labels.length ; i++) {
+									
+									if(i < 9) {
+										if(labels[i].trim().equals(date.substring(9,10)) && date.substring(7,10).contains("-0")) {
+											if(dataService.trim().equals("개인간병")) {
+												datas1[i] += 1;
+											}else {
+												datas2[i] += 1;
+											}
+										}
 									}else {
-										datas2[i] += 1;
+									
+									
+										if(labels[i].trim().equals(date.substring(8,10))) {
+											if(dataService.trim().equals("개인간병")) {
+												datas1[i] += 1;
+											}else {
+												datas2[i] += 1;
+											}
+										}
+									
 									}
+									
 								}
-							}
+							}//
 						}
-						
 					}
 					
 					
@@ -1410,7 +1423,7 @@ public class AdminController {
 	        
 	        
 	     // 로그 파일 : 페이지 이용량을 조회 (시작)
-			File usageFolder = new File("C:/logs/matching/");
+			File usageFolder = new File("C:/logs/matchingCreate/");
 			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
 			
 			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
@@ -1472,7 +1485,7 @@ public class AdminController {
 	}//페이토탈메소드끝 ( 매칭 달)
 	
 	
-	//어드민 페이 토탈 통계 년
+	//어드민 매칭 토탈 통계 년
 	
 	@GetMapping("yearMatTotal.adm")
 	@ResponseBody
@@ -1494,7 +1507,7 @@ public class AdminController {
 	        int[] datas2 = new int[12];
 	        
 	     // 로그 파일 : 페이지 이용량을 조회 (시작)
-	     			File usageFolder = new File("C:/logs/matching/");
+	     			File usageFolder = new File("C:/logs/matchingCreate/");
 	     			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
 	     			
 	     			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
@@ -1569,7 +1582,7 @@ public class AdminController {
 	        int[] datas2 = new int[year2 - year1 +1];
 			
 	     // 로그 파일 : 페이지 이용량을 조회 (시작)
- 			File usageFolder = new File("C:/logs/matching/");
+ 			File usageFolder = new File("C:/logs/matchingCreate/");
  			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
  			
  			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();

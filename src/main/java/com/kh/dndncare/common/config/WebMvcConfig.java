@@ -10,6 +10,7 @@ import com.kh.dndncare.common.interceptor.CheckCareInformationAiSearch;
 import com.kh.dndncare.common.interceptor.CheckCareInformationUsage;
 import com.kh.dndncare.common.interceptor.CheckLoginInterceptor;
 import com.kh.dndncare.common.interceptor.CheckLoginUser;
+import com.kh.dndncare.common.interceptor.CheckMatCreate;
 @ComponentScan
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer{
@@ -48,8 +49,8 @@ public class WebMvcConfig implements WebMvcConfigurer{
 				.addPathPatterns("/login.me");
 
 		// 매칭 방 생성시 로그파일을 생성한다 공동,개인
-		registry.addInterceptor(new CheckLoginUser())
-		.addPathPatterns("/enrollJoinMatching.jm");
+		registry.addInterceptor(new CheckMatCreate())
+		.addPathPatterns("/enrollJoinMatching.jm","/publicMatchingApply.mc");
 		
 		
 		

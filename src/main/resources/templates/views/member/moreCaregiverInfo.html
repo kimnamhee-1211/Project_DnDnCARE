@@ -46,17 +46,21 @@
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index < 5}">
-                        	<td>
-                        		<input type="hidden" th:value="${c.memberNo}"/>
-                        		[[${c.memberName}]]
-                       		</td>
-	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
-	                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
-	                        <td>[[${c.caregiverAddress}]]</td>
-	                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
-	                        <td>[[${c.minMoney}]]원</td>
-                     	</tr>
+                 		<th:block th:if="${completeList}">
+                 			<th:block th:if="${completeList}">
+		                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index < 5}">
+		                        	<td>
+		                        		<input type="hidden" th:value="${c.memberNo}"/>
+		                        		[[${c.memberName}]]
+		                       		</td>
+			                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
+			                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
+			                        <td>[[${c.caregiverAddress}]]</td>
+			                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
+			                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
+		                     	</tr>
+	                     	</th:block>
+                     	</th:block>
                  	</tbody>
              	</table>
 				
@@ -72,17 +76,19 @@
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index >= 5}">
-                        	<td>
-                        		<input type="hidden" th:value="${c.memberNo}"/>
-                        		[[${c.memberName}]]
-                       		</td>
-	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
-	                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
-	                        <td>[[${c.caregiverAddress}]]</td>
-	                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
-	                        <td>[[${c.minMoney}]]원</td>
-                     	</tr>
+                 		<th:block th:if="${completeList}">
+	                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index >= 5}">
+	                        	<td>
+	                        		<input type="hidden" th:value="${c.memberNo}"/>
+	                        		[[${c.memberName}]]
+	                       		</td>
+		                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
+		                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
+		                        <td>[[${c.caregiverAddress}]]</td>
+		                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
+		                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
+	                     	</tr>
+                     	</th:block>
                  	</tbody>
              	</table>
 			</div>
