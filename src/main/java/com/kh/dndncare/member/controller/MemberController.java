@@ -537,7 +537,17 @@ public class MemberController {
 			eList = mService.caregiverCalendarEvent(loginUser.getMemberNo());
 
 		}
-
+		
+		System.out.println("===여기여기===");
+		System.out.println(eList);
+		System.out.println("===여기여기===");
+		
+		
+		
+		
+		
+		
+		
 		JSONArray array = new JSONArray();
 
 		if (!eList.isEmpty()) {
@@ -574,6 +584,8 @@ public class MemberController {
 						obj.put("hospitalName", hospitalName);
 						array.put(obj);
 					} else {
+						System.out.println("====저기저기");
+						System.out.println(c.getMatDate());
 						String[] strArr = c.getMatDate().split(",");
 						System.out.println(Arrays.toString(strArr));
 						for (int i = 0; i < strArr.length; i++) {
