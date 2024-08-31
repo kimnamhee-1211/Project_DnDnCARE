@@ -1178,7 +1178,7 @@
 								imgArr.push(document.createElement('img'));
 								imgArr.push(document.createElement('img'));
 								imgArr.push(document.createElement('img'));
-								const modScore = d.avgReviewScore / 2
+								const modScore = d.avgReviewScore % 2;
 								if(modScore == 0){ // 별점이 짝수
 									for(let i = 0; i < modScore; i++){
 										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
@@ -1355,7 +1355,7 @@
 								imgArr.push(document.createElement('img'));
 								imgArr.push(document.createElement('img'));
 								imgArr.push(document.createElement('img'));
-								const modScore = d.avgReviewScore / 2
+								const modScore = d.avgReviewScore % 2
 								if(modScore == 0){ // 별점이 짝수
 									for(let i = 0; i < modScore; i++){
 										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
