@@ -853,7 +853,7 @@
 		    left join patient p on(p.pt_no = mpi.pt_no)
 		    left join member m on(m.member_no = p.member_no)
 		where mc.member_no=#{memberNo} and mat_confirm = 'Y' and sysdate > end_dt
-		order by mc.mat_no
+		order by mc.end_dt
 	</select>
 	
 	<!-- 월간 수익/ 이용자수 -->
@@ -861,7 +861,7 @@
 		select to_char(m.end_dt, 'YYYY-MM') as month, sum(m.end_dt - m.begin_dt+1) useCount, sum(p.pay_money) money
 		from matching m
 		   join pay p on(m.mat_no=p.mat_no) 
-		where m.member_NO = #{memberNo}  and p.pay_deposit = 'N'
+		where m.member_NO = #{memberNo}  and p.pay_deposit = 'Y'
 		group by to_char(m.end_dt, 'YYYY-MM')
 	</select>
 	
