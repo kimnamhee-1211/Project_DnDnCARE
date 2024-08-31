@@ -757,8 +757,8 @@ public class MatchingController {
 			System.out.println("매칭번호"+matPatientInfoList.getMatNo());
 			System.out.println("시작시간"+matPatientInfoList.getBeginDt());
 			System.out.println("종료시간"+matPatientInfoList.getEndDt());
-			System.out.println("나이"+matPatientInfoList.getPtAge());
-			System.out.println("성별"+matPatientInfoList.getMemberGender());
+			System.out.println("나이"+matPatientInfoList.getAge());
+			System.out.println("성별"+matPatientInfoList.getPtGender());
 			System.out.println("Scategory"+matPatientInfoList.getSCategory());
 			System.out.println("회원번호" + matPatientInfoList.getMemberNo());
 			
@@ -773,7 +773,7 @@ public class MatchingController {
 			Date today = new Date(age);
 				// 이미 로그된 matNo인지 확인
 			    if (!loggedMatNos.contains(strMatNo)) {
-			       String logInfo = matPatientInfoList.getMatNo() + "//" + matPatientInfoList.getAge() + "//" + matPatientInfoList.getMemberGender() + "//" + matPatientInfoList.getSCategory() + "//" + matPatientInfoList.getMemberNo();
+			       String logInfo = matPatientInfoList.getMatNo() + "//" + matPatientInfoList.getAge() + "//" + matPatientInfoList.getPtGender() + "//" + matPatientInfoList.getSCategory() + "//" + matPatientInfoList.getMemberNo();
 			       System.out.println("로그에 저장할 정보"+logInfo);
 			        
 			     logger.info(logInfo);
