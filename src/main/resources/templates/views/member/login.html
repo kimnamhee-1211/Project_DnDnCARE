@@ -72,7 +72,7 @@
 	  	//카카오 시작
 	  	function loginWithKakao() {
 		    Kakao.Auth.authorize({
-		      redirectUri: 'http://localhost:8096/kakao.lo',
+		      redirectUri: 'http://192.168.40.18:8096/kakao.lo',
 		    });
 		  }
 		  
@@ -123,7 +123,7 @@
 		  }
 		  
 		  const REST_API_KEY = '524ba33a1cc31d09605ec24786b054ef'; // 여기에 REST API 키를 입력하세요.
-		  const REDIRECT_URI = 'http://localhost:8096/kakao.lo'; // 여기에 리다이렉트 URI를 입력하세요.
+		  const REDIRECT_URI = 'http://192.168.40.18:8096/kakao.lo'; // 여기에 리다이렉트 URI를 입력하세요.
 		  const AUTHORIZE_CODE = '[[${code2}]]'; // 여기에 인가 코드를 입력하세요.
 
 		  const url = 'https://kauth.kakao.com/oauth/token';
