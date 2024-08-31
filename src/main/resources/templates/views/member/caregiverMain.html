@@ -416,8 +416,10 @@
     	
     	
     	request.done(function(data) {
-	    		console.log(data);
-	    		var calendar = new FullCalendar.Calendar(calendarEl, {
+	    		console.log('--------------');
+    			console.log(data);
+    			console.log('--------------');
+    			var calendar = new FullCalendar.Calendar(calendarEl, {
 			          initialView: 'dayGridMonth',
 			          events : data,
 			          eventColor: 'skyblue',
