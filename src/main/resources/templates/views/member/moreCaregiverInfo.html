@@ -56,7 +56,7 @@
 			                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
 			                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
 			                        <td>[[${c.caregiverAddress}]]</td>
-			                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
+			                        <td>[[${c.haveLicense == undefined ? '-' : c.haveLicense}]]</td>
 			                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
 		                     	</tr>
 	                     	</th:block>
