@@ -1433,7 +1433,7 @@ public class MemberController {
 	}
 
 	@GetMapping("findPwd.me")
-	public String findPwd(@RequestParam("memberId") String memberId, Model model) {
+	public String findPwd(@RequestParam(value="memberId", required = false ) String memberId, Model model) {
 		model.addAttribute("existMemberId",memberId);
 		return "findPwdPage";
 	}
