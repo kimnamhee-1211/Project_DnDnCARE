@@ -45,15 +45,15 @@
 	
 	.btn-check:checked + .btn-outline-area {
     color: black;
-	background-color: white; /* 배경색 */
-	border: 1px solid #1E5F74;
-	background:#1E5F74;
-	    color:white;
+    background-color: white;
+    border: 1px solid #1E5F74;
+    background: #1E5F74;
+    color: white;
     font-weight: bold;
-    box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
-  						7px 7px 20px 0px rgba(0,0,0,.1),
-  						4px 4px 5px 0px rgba(0,0,0,.1);
-}
+    box-shadow: inset 2px 2px 2px 0px rgba(255,255,255,.5),
+                7px 7px 20px 0px rgba(0,0,0,.1),
+                4px 4px 5px 0px rgba(0,0,0,.1);
+	}
 
     .btn-write {
 	    height:40px;
@@ -115,56 +115,56 @@
                <form th:action="@{/communityBoardList.bo}" method="get" id="areaForm">
 				    <input type="hidden" name="categoryNo" id="categoryNo" th:value="${categoryNo}">
 				    <input type="checkbox" class="btn-check" id="seoul" name="area" value="1" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 1)}">
+				           th:checked="${area != null and #lists.contains(area, 1)}">
 				    <label class="btn-outline-area btn-sm me-2  mb-2" for="seoul">서울</label>
 				    <input type="checkbox" class="btn-check" id="busan" name="area" value="2" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 2)}">
+				           th:checked="${area != null and #lists.contains(area, 2)}">
 				    <label class="btn-outline-area btn-sm me-2" for="busan">부산</label>
 				    <input type="checkbox" class="btn-check" id="daegu" name="area" value="3" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 3)}">
+				           th:checked="${area != null and #lists.contains(area, 3)}">
 				    <label class="btn-outline-area btn-sm me-2" for="daegu">대구</label>
 				    <input type="checkbox" class="btn-check" id="inchon" name="area" value="4" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains	(areas, 4)}">
+				           th:checked="${area != null and #lists.contains	(area, 4)}">
 				    <label class="btn-outline-area btn-sm me-2" for="inchon">인천</label>
 				    <input type="checkbox" class="btn-check" id="gwangju" name="area" value="5" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 5)}">     
+				           th:checked="${area != null and #lists.contains(area, 5)}">     
 				    <label class="btn-outline-area btn-sm me-2" for="gwangju">광주</label>				    
 				    <input type="checkbox" class="btn-check" id="daejeon" name="area" value="6" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 6)}">
+				           th:checked="${area != null and #lists.contains(area, 6)}">
 				    <label class="btn-outline-area btn-sm me-2" for="daejeon">대전</label>
 				    <input type="checkbox" class="btn-check" id="ulsan" name="area" value="7" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 7)}">
+				           th:checked="${area != null and #lists.contains(area, 7)}">
 				    <label class="btn-outline-area btn-sm me-2" for="ulsan">울산</label>
 				    <input type="checkbox" class="btn-check" id="sejong" name="area" value="17" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 17)}">
+				           th:checked="${area != null and #lists.contains(area, 17)}">
 				    <label class="btn-outline-area btn-sm me-2" for="sejong">세종</label>
 				    <input type="checkbox" class="btn-check" id="jeju" name="area" value="16" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 16)}">
+				           th:checked="${area != null and #lists.contains(area, 16)}">
 				    <label class="btn-outline-area btn-sm me-2" for="jeju">제주</label>
 				           				     <br> 
 				    <input type="checkbox" class="btn-check" id="gyeongi" name="area" value="8" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 8)}">
+				           th:checked="${area != null and #lists.contains(area, 8)}">
 				    <label class="btn-outline-area btn-sm me-2" for="gyeongi">경기도</label>
 				    <input type="checkbox" class="btn-check" id="gangwon" name="area" value="9" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 9)}">
+				           th:checked="${area != null and #lists.contains(area, 9)}">
 				    <label class="btn-outline-area btn-sm me-2" for="gangwon">강원도</label>
 				    <input type="checkbox" class="btn-check" id="chungcheongbuk" name="area" value="10" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 10)}">
+				           th:checked="${area != null and #lists.contains(area, 10)}">
 				    <label class="btn-outline-area btn-sm me-2" for="chungcheongbuk">충청북도</label>
 				    <input type="checkbox" class="btn-check" id="chungcheongnam" name="area" value="11" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 11)}">
+				           th:checked="${area != null and #lists.contains(area, 11)}">
 				    <label class="btn-outline-area btn-sm me-2" for="chungcheongnam">충청남도</label>
 				    <input type="checkbox" class="btn-check" id="jeollabuk" name="area" value="12" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 12)}">
+				           th:checked="${area != null and #lists.contains(area, 12)}">
 				    <label class="btn-outline-area btn-sm me-2" for="jeollabuk">전라북도</label>
 				    <input type="checkbox" class="btn-check" id="jeollanam" name="area" value="13" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 13)}">
+				           th:checked="${area != null and #lists.contains(area, 13)}">
 				    <label class="btn-outline-area btn-sm me-2" for="jeollanam">전라남도</label>
 				    <input type="checkbox" class="btn-check" id="gyongsangbuk" name="area" value="14" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 14)}">
+				           th:checked="${area != null and #lists.contains(area, 14)}">
 				    <label class="btn-outline-area btn-sm me-2" for="gyongsangbuk">경상북도</label>
 				    <input type="checkbox" class="btn-check" id="gyongsangnam" name="area" value="15" autocomplete="off" onchange="submitForm()"
-				           th:checked="${areas != null and #lists.contains(areas, 15)}">
+				           th:checked="${area != null and #lists.contains(area, 15)}">
 				    <label class="btn-outline-area btn-sm me-2" for="gyongsangnam">경상남도</label>
 				    <!-- list가 비어있지않거나 리스트에 번호가 있으면 체크 -->
 				</form>
@@ -222,35 +222,58 @@
                 <!-- 페이지네이션 -->
                 <div class="d-flex justify-content-end align-items-center m-5">
                 	<div class="input-group" style="width: 70%;">
-                		<form id="searchBoardForm" action="searchBoard.bo" method="get" class="d-flex w-100">
-				            <select id="searchType" name="searchType" class="form-select form-select-sm" aria-label="Small select example" style="max-width: 15%;">
+                		<form id="PsearchBoardForm" action="searchBoard.bo" method="get" class="d-flex w-100">
+				            <select id="PsearchType" name="searchType" class="form-select form-select-sm" aria-label="Small select example" style="max-width: 15%;">
 				                <option th:value="boardTitle" selected>제목</option>
 				                <option th:value="memberNickName">작성자</option>
 				                <option th:value="boardContent">글내용</option>
 				            </select>
-				            <input id="searchText" name="searchText" type="text" class="form-control" aria-label="Text input with dropdown buttons" style="max-width: 65%;">
-				            <button class="btn btn-outline-secondary" type="button" id="searchBtn" th:onclick="searchBoard()">검색</button>
+				            <input id="PsearchText" name="searchText" type="text" class="form-control" aria-label="Text input with dropdown buttons" style="max-width: 65%;">
+				            <button class="btn btn-outline-secondary" type="button" id="PsearchBtn" th:onclick="searchBoard()">검색</button>
 				        </form>
 				    </div>               
-	                <div class="d-flex justify-content-end align-items-center">
-	                    <nav aria-label="Standard pagination example">
-	                        <ul class="pagination" th:with="loc=${loc}" style="margin:auto 0;color:black;">
-	                            <li class="page-item">
-	                                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage-1})}" aria-label="Previous">
-	                                    <span aria-hidden="true" style="color:black;">&laquo;</span>
-	                                </a>
-	                            </li>
-	                            <li class="page-item" th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}">
-	                                <a class="page-link" th:href="@{${loc}(page=${p})}" style="color:black;">[[${ p }]]</a>
-	                            </li>
-	                            <li class="page-item">
-	                                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage+1})}" aria-label="Next">
-	                                    <span aria-hidden="true" style="color:black;">&raquo;</span>
-	                                </a>
-	                            </li>
-	                        </ul>
-	                    </nav>
-                    </div>
+	               <!-- 전체 페이지 네이션 -->
+						<th:block th:if="${pi != null}">
+						    <nav aria-label="Page navigation">
+						        <ul class="pagination">
+						            <li class="page-item" th:if="${pi.currentPage > 1}">
+						                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage-1}, categoryNo=${categoryNo}, area=${area})}" aria-label="Previous">
+						                    <span aria-hidden="true">&laquo;</span>
+						                </a>
+						            </li>
+						            <li class="page-item" th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}">
+						                <a class="page-link" th:href="@{${loc}(page=${p}, categoryNo=${categoryNo}, area=${area})}">[[${p}]]</a>
+						            </li>
+						            <li class="page-item" th:if="${pi.currentPage < pi.maxPage}">
+						                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage+1}, categoryNo=${categoryNo}, area=${area})}" aria-label="Next">
+						                    <span aria-hidden="true">&raquo;</span>
+						                </a>
+						            </li>
+						        </ul>
+						    </nav>
+						</th:block>
+						
+						<!-- 검색 결과용 페이지 네이션 -->
+						<th:block th:if="${spi != null}">
+						    <nav aria-label="Page navigation for search results">
+						        <ul class="pagination">
+						            <li class="page-item" th:if="${spi.currentPage > 1}">
+						                <a class="page-link" th:href="@{${loc}(page=${spi.currentPage-1}, categoryNo=${categoryNo}, area=${area}, searchType=${searchType}, searchText=${searchText})}" aria-label="Previous">
+						                    <span aria-hidden="true">&laquo;</span>
+						                </a>
+						            </li>
+						            <li class="page-item" th:each="p : ${#numbers.sequence(spi.startPage, spi.endPage)}">
+						                <a class="page-link" th:href="@{${loc}(page=${p}, categoryNo=${categoryNo}, area=${area}, searchType=${searchType}, searchText=${searchText})}">[[${p}]]</a>
+						            </li>
+						            <li class="page-item" th:if="${spi.currentPage < spi.maxPage}">
+						                <a class="page-link" th:href="@{${loc}(page=${spi.currentPage+1}, categoryNo=${categoryNo}, area=${area}, searchType=${searchType}, searchText=${searchText})}" aria-label="Next">
+						                    <span aria-hidden="true">&raquo;</span>
+						                </a>
+						            </li>
+						        </ul>
+						    </nav>
+</th:block>
+
                 </div>
                 
    
@@ -319,9 +342,9 @@
         }
         
     	function searchBoard(){
-    		const searchForm = document.getElementById('searchBoardForm')
-    		const searchType = document.getElementById('searchType').value;
-	        const searchText = document.getElementById('searchText').value;
+    		const searchForm = document.getElementById('PsearchBoardForm')
+    		const searchType = document.getElementById('PsearchType').value;
+	        const searchText = document.getElementById('PsearchText').value;
 	        
 	        if (searchText.trim() === "") {
 	            alert("검색어를 입력하세요.");

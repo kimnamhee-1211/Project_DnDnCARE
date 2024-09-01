@@ -643,11 +643,14 @@ public class AdminController {
 		// 환자 커뮤니티
 		ArrayList<Board> adminPatientBoardList = aService.selectPatientBoardList(ppi);
 		System.out.println(adminPatientBoardList);
-		
-		model.addAttribute("cpi",cpi);
-		model.addAttribute("ppi",ppi);
-		model.addAttribute("cbList", adminCaregiverBoardList);
-		model.addAttribute("pbList", adminPatientBoardList);
+		if(adminCaregiverBoardList != null) {
+			model.addAttribute("cpi",cpi);
+			model.addAttribute("cbList", adminCaregiverBoardList);
+			model.addAttribute("ppi",ppi);
+			model.addAttribute("pbList", adminPatientBoardList);
+		}else {
+			throw new AdminException("게시글 조회에 실패하였습니다.");
+		}
 		return "adminBoard";
 	}
 
@@ -1776,6 +1779,8 @@ public class AdminController {
 		if(adminQnABoardList != null) {
 			model.addAttribute("pi",pi);
 			model.addAttribute("adminQnABoardList", adminQnABoardList);
+		}else {
+			throw new AdminException("문의내역 조회에 실패했습니다.");
 		}
 		
 		return "adminQnABoard";

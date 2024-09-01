@@ -145,7 +145,7 @@ public interface MatchingMapper {
 	
 	ArrayList<MatMatptInfo> serviceList(int memberNo);
 
-	ArrayList<Matching> matPatientList(int memberNo);
+	ArrayList<Matching> matPatientList();
 
 	int getPtCount(int matNo);
 

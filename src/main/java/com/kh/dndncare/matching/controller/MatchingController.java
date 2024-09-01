@@ -752,7 +752,7 @@ public class MatchingController {
 		}
 		
 		// 매칭번호, 시작시간, 종료시간, 나이, 성별, 질환
-		ArrayList<Matching> matPatientInfoLists = mcService.matPatientList(memberNo);
+		ArrayList<Matching> matPatientInfoLists = mcService.matPatientList();
 		for (Matching matPatientInfoList : matPatientInfoLists) {
 			System.out.println("매칭번호"+matPatientInfoList.getMatNo());
 			System.out.println("시작시간"+matPatientInfoList.getBeginDt());

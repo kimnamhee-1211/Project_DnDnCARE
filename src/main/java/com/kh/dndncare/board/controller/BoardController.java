@@ -54,7 +54,7 @@ public class BoardController {
 	@GetMapping("communityBoardList.bo") 
 	public String CommunityList(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model,
 	                            @RequestParam(value="categoryNo", defaultValue="-1") int categoryNo,
-	                            @RequestParam(value="area", required = false) List<Integer> areas, 
+	                            @RequestParam(value="area", required = false) List<Integer> area, 
 	                            HttpServletRequest request, HttpSession session) {
 	    String category = ((Member)session.getAttribute("loginUser")).getMemberCategory();
 	    // 회원이 간병인인지 피간병인인지구분
@@ -62,13 +62,13 @@ public class BoardController {
 	    HashMap<String, Object> map = new HashMap<>();
 	    map.put("category", category);
 	    map.put("categoryNo", categoryNo);
-	    map.put("areas", areas);
+	    map.put("areas", area);
 	    
 	    int listCount = bService.getListCountAll(map);
 	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 10);
 	    
-	    if (areas == null || areas.isEmpty()) {
-	        areas = new ArrayList<>(); 
+	    if (area == null || area.isEmpty()) {
+	        area = new ArrayList<>(); 
 	    }
 
 	    ArrayList<Board> list = bService.selectBoardAllList(pi, map);
@@ -78,11 +78,13 @@ public class BoardController {
 		    	int replyCount = bService.getReplyCount(board.getBoardNo());
 		    	replyCounts.put(board.getBoardNo(), replyCount);
 		    }
+		    System.out.println("지역");
+		    System.out.println(area);
 		    // 댓글수 가져와서 replyCounts에 담기
 	        model.addAttribute("list", list);
 	        model.addAttribute("pi", pi);
 	        model.addAttribute("categoryNo", categoryNo);
-	        model.addAttribute("areas", areas);
+	        model.addAttribute("area", area);
 	        model.addAttribute("loc", request.getRequestURI());
 	        model.addAttribute("replyCounts", replyCounts);
 	        if(category.equals("P")) {
@@ -262,14 +264,14 @@ public class BoardController {
 	    // 지역
 	    
 	    int listCount = bService.getListCountAll(map);
-	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 10);
+	    PageInfo spi = Pagination.getPageInfo(currentPage, listCount, 10);
 	    // 페이지네이션
 	    
 	    if (areas == null || areas.isEmpty()) {
 	        areas = new ArrayList<>(); 
 	    }
 
-	    ArrayList<Board> list = bService.searchBoard(pi, map);
+	    ArrayList<Board> list = bService.searchBoard(spi, map);
 	    if(list != null) {
 	    	HashMap<Integer, Integer> replyCounts = new HashMap<>();
 		    for (Board board : list) {
@@ -278,7 +280,7 @@ public class BoardController {
 		    	
 		    }
 	        model.addAttribute("list", list);
-	        model.addAttribute("pi", pi);
+	        model.addAttribute("spi", spi);
 	        model.addAttribute("categoryNo", categoryNo);
 	        model.addAttribute("areas", areas);
 	        model.addAttribute("loc", request.getRequestURI());
@@ -353,10 +355,6 @@ public class BoardController {
 		return json.toString();
 	}
 	
-	@GetMapping("chat.bo")
-	public String chatTest() {
-		return "chatTest";
-	}
 	
 	// 간병백과 페이지로의 이동요청을 처리
 	@GetMapping("careInformation.bo")

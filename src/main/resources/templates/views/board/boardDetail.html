@@ -357,11 +357,7 @@
 		                          </svg>
                             </button>
                         ` : `
-                            <button class="non-boarder btn btn-outline-danger">
-	                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eraser-fill" viewBox="0 0 16 16">
-	                            <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
-	                          </svg>
-                            </button>
+                            
                         `}
                     </td>
                 `;
@@ -438,6 +434,7 @@
 			dataType: 'JSON',
 			success: data =>{
 				if (data.resultString === 'success') {
+					const replyLikeCountElement = myTd.querySelector('#replyLikeCount');
 	                $('#replyLikeCount').text(data.replyLikeCount);
 	            } else{
 	            	alert('추천은 한번만 가능합니다.')
@@ -446,11 +443,10 @@
 			error: data => console.log(data)
 		});
 	}
-	//else if(targetSVG.className.baseVal.includes('brightness')){
-	//	alert('신고되었습니다.')
-	//}
+	
 	else if(targetSVG.className.baseVal.includes('eraser')){
 	if(confirm('정말 삭제하시겠습니까?')){
+		targetSVG.parentElement.disabled = true;
 		$.ajax({
 			url: 'deleteReply.bo',
 			data: {rId:replyId},
@@ -461,7 +457,11 @@
 					alert('댓글 삭제 중 오류가 발생했습니다.');
 				}
 			},
-			error: data => console.log(data)
+			error: data => console.log(data),
+			 complete: () => {
+                 // 요청 완료 후 버튼 다시 활성화
+                 targetSVG.parentElement.disabled = false;
+             }
 		});
 	}
 	} else if(targetSVG.className.baseVal.includes('check')){
