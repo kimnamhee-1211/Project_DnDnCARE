@@ -1611,10 +1611,15 @@
 		    						const td3 = document.createElement('td');
 		    						td3.innerText = d.caregiverAddress;
 		    						const td4 = document.createElement('td');
-		    						td4.innerText = d.haveLicense;
+		    						if(d.haveLicense == undefined){
+		    							td4.innerText = '-';
+		    						} else{
+			    						td4.innerText = d.haveLicense;
+		    						}
 		    						const td5 = document.createElement('td');
-		    						td5.innerText = d.minMoney + '원';
-		    						
+		    						//td5.innerText = d.minMoney + '원';
+		    						new Intl.NumberFormat('en-US').format(d.minMoney)
+		    						td5.innerText = new Intl.NumberFormat('en-US').format(d.minMoney) + '원';
 		    						tbodyList[0].appendChild(tr);
 		    						tr.appendChild(td0);
 		    						tr.appendChild(td1);
@@ -1635,10 +1640,15 @@
 		    						const td3 = document.createElement('td');
 		    						td3.innerText = d.caregiverAddress;
 		    						const td4 = document.createElement('td');
-		    						td4.innerText = d.haveLicense;
+		    						if(d.haveLicense == undefined){
+		    							td4.innerText = '-';
+		    						} else{
+			    						td4.innerText = d.haveLicense;
+		    						}
 		    						const td5 = document.createElement('td');
-		    						td5.innerText = d.minMoney + '원';
-		    						
+		    						//td5.innerText = d.minMoney + '원';
+		    						new Intl.NumberFormat('en-US').format(d.minMoney)
+		    						td5.innerText = new Intl.NumberFormat('en-US').format(d.minMoney) + '원';
 		    						tbodyList[1].appendChild(tr);
 		    						tr.appendChild(td0);
 		    						tr.appendChild(td1);
