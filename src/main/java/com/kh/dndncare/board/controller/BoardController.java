@@ -51,41 +51,65 @@ public class BoardController {
 	private CustomBotController bot;
 	
 	// 커뮤니티클릭하면 이동
-	@GetMapping("communityBoardList.bo") 
-	public String CommunityList(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model,
-	                            @RequestParam(value="categoryNo", defaultValue="-1") int categoryNo,
-	                            @RequestParam(value="area", required = false) List<Integer> areas, 
-	                            HttpServletRequest request, HttpSession session) {
-	    String category = ((Member)session.getAttribute("loginUser")).getMemberCategory();
-	    // 회원이 간병인인지 피간병인인지구분
+	@GetMapping("communityBoardList.bo")
+	public String CommunityList(
+						        @RequestParam(value = "searchType", required = false) String searchType,
+						        @RequestParam(value = "searchText", required = false) String searchText,
+						        @RequestParam(value = "page", defaultValue = "1") int currentPage,
+						        Model model,
+						        @RequestParam(value = "categoryNo", defaultValue = "-1") int categoryNo,
+						        @RequestParam(value = "area", required = false) List<Integer> areas,
+						        HttpServletRequest request,
+						        HttpSession session) {
+
+	    String category = ((Member) session.getAttribute("loginUser")).getMemberCategory();
+	    // 회원의 타입 확인
 
 	    HashMap<String, Object> map = new HashMap<>();
 	    map.put("category", category);
 	    map.put("categoryNo", categoryNo);
 	    map.put("areas", areas);
-	    
+
+	    // 검색 조건이 있을 경우 추가
+	    if (searchType != null && !searchType.isEmpty()) {
+	        map.put("searchType", searchType);
+	    }
+	    if (searchText != null && !searchText.isEmpty()) {
+	        map.put("searchText", searchText);
+	    }
+
 	    int listCount = bService.getListCountAll(map);
 	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 10);
-	    
+
 	    if (areas == null || areas.isEmpty()) {
 	        areas = new ArrayList<>(); 
 	    }
 
-	    ArrayList<Board> list = bService.selectBoardAllList(pi, map);
-	    if(list != null) {
-	    	HashMap<Integer, Integer> replyCounts = new HashMap<>();
-		    for (Board board : list) {
-		    	int replyCount = bService.getReplyCount(board.getBoardNo());
-		    	replyCounts.put(board.getBoardNo(), replyCount);
-		    }
-		    // 댓글수 가져와서 replyCounts에 담기
+	    ArrayList<Board> list;
+
+	    // 검색 조건이 있는 경우와 없는 경우에 따라 다른 서비스 메서드 호출
+	    if (searchType != null && searchText != null && !searchText.isEmpty()) {
+	        list = bService.searchBoard(pi, map);  // 검색 조건에 따른 게시글 목록 조회
+	    } else {
+	        list = bService.selectBoardAllList(pi, map);  // 일반 게시글 목록 조회
+	    }
+
+	    if (list != null) {
+	        HashMap<Integer, Integer> replyCounts = new HashMap<>();
+	        for (Board board : list) {
+	            int replyCount = bService.getReplyCount(board.getBoardNo());
+	            replyCounts.put(board.getBoardNo(), replyCount);
+	        }
 	        model.addAttribute("list", list);
 	        model.addAttribute("pi", pi);
 	        model.addAttribute("categoryNo", categoryNo);
-	        model.addAttribute("areas", areas);
+	        model.addAttribute("area", areas);
 	        model.addAttribute("loc", request.getRequestURI());
 	        model.addAttribute("replyCounts", replyCounts);
-	        if(category.equals("P")) {
+	        model.addAttribute("searchType", searchType);
+	        model.addAttribute("searchText", searchText);
+
+	        if (category.equals("P")) {
 	            return "patientBoard";
 	        } else {
 	            return "caregiverBoard";
@@ -94,6 +118,7 @@ public class BoardController {
 	        throw new BoardException("게시글 조회를 실패하였습니다.");
 	    }
 	}
+
 
 	
 	// 글작성 클릭
@@ -262,14 +287,14 @@ public class BoardController {
 	    // 지역
 	    
 	    int listCount = bService.getListCountAll(map);
-	    PageInfo pi = Pagination.getPageInfo(currentPage, listCount, 10);
+	    PageInfo spi = Pagination.getPageInfo(currentPage, listCount, 10);
 	    // 페이지네이션
 	    
 	    if (areas == null || areas.isEmpty()) {
 	        areas = new ArrayList<>(); 
 	    }
 
-	    ArrayList<Board> list = bService.searchBoard(pi, map);
+	    ArrayList<Board> list = bService.searchBoard(spi, map);
 	    if(list != null) {
 	    	HashMap<Integer, Integer> replyCounts = new HashMap<>();
 		    for (Board board : list) {
@@ -278,7 +303,7 @@ public class BoardController {
 		    	
 		    }
 	        model.addAttribute("list", list);
-	        model.addAttribute("pi", pi);
+	        model.addAttribute("spi", spi);
 	        model.addAttribute("categoryNo", categoryNo);
 	        model.addAttribute("areas", areas);
 	        model.addAttribute("loc", request.getRequestURI());
@@ -353,10 +378,6 @@ public class BoardController {
 		return json.toString();
 	}
 	
-	@GetMapping("chat.bo")
-	public String chatTest() {
-		return "chatTest";
-	}
 	
 	// 간병백과 페이지로의 이동요청을 처리
 	@GetMapping("careInformation.bo")

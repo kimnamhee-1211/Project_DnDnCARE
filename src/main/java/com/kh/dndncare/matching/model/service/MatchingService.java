@@ -171,7 +171,7 @@ public interface MatchingService {
 	ArrayList<MatMatptInfo> serviceList(int memberNo);
 
 	// 매칭 환자정보 통계용
-	ArrayList<Matching> matPatientList(int memberNo);
+	ArrayList<Matching> matPatientList();
 
 
 	//ptCount get

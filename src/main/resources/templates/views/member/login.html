@@ -59,10 +59,10 @@
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	<script>
 		//네이버
-		var naver_id_login = new naver_id_login("m2tmMPCHBBaFCdz1OOkT", "http://localhost:8096/callback.lo");
+		var naver_id_login = new naver_id_login("m2tmMPCHBBaFCdz1OOkT", "http://192.168.40.18:8096/callback.lo");
 	  	var state = naver_id_login.getUniqState();
 	  	naver_id_login.setButton("green", 60);
-	  	naver_id_login.setDomain("http://localhost:8096/login.me");
+	  	naver_id_login.setDomain("http://192.168.40.18:8096/login.me");
 	  	naver_id_login.setState(state);
 	  	//naver_id_login.setPopup();
 	  	naver_id_login.init_naver_id_login();

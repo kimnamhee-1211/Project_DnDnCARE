@@ -327,15 +327,15 @@
 	        let queryParams = '?' + encodeURIComponent('serviceKey') + '='+'TqXL2WevbCLJDY0ZVbFrL22ehLsP2bdAdbD08YPjNXsiVHbasLfGANMr%2BJlO%2FlWvSd9acDudRtmxz4WZBVF0ag%3D%3D';
 	        queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100');
 	        queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(pageNo);
-	        
+	        console.log('여기는 언제마다 실행될까?');
 	        xhr.open('GET', url + queryParams);
 	        xhr.onreadystatechange = function () {
 	            if (this.readyState == 4 && this.status == 200) {
 	                let parser = new DOMParser();
 	                let xmlDoc = parser.parseFromString(this.responseText, "text/xml");
-	                
 	                if (pageNo === 1) {
-	                    let totalCount = parseInt(xmlDoc.getElementsByTagName('totalCount')[0].textContent);
+	                	let totalCount = parseInt(xmlDoc.getElementsByTagName('totalCount')[0].textContent);
+	                	
 	                    totalPages = Math.ceil(totalCount / 100);
 	                }
 	                
@@ -351,6 +351,7 @@
 	                    pageNo++;
 	                    fetchHospitalsPage();
 	                } else {
+	                	
 	                    displayHospitals(allHospitals);
 	                }
 	            }
@@ -368,8 +369,9 @@
 	    
 	    let startIndex = (currentPage - 1) * itemsPerPage;
 	    let endIndex = startIndex + itemsPerPage;
-	    let pageHospitals = hospitals.slice(startIndex, endIndex);
-	    
+	    hospitalsSet = [...new Set(hospitals)];
+	    console.log(hospitalsSet);
+	    let pageHospitals = hospitalsSet.slice(startIndex, endIndex);
 	    pageHospitals.forEach(hospital => {
 	        let div = document.createElement('div');
 	        div.textContent = `${hospital.hospitalNm} - ${hospital.addr}`;
@@ -377,6 +379,7 @@
 	            selectHospital(hospital);
 	        };
 	        hospitalList.appendChild(div);
+	        
 	    });
 	    
 	    displayPagination(hospitals.length);
