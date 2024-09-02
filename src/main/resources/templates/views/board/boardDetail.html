@@ -81,7 +81,7 @@
     
     <div class="content-wrapper  p-4 m-4">
         <main class="container" >
-        	<div class="h1 p-2"><a href="home.do" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a></div>
+        	<div class="h1 p-2"><a href="communityBoardList.bo" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a></div>
             <hr>
             <div class="p-5">
 	            <form action="submitPost" method="post" id=detailBoardForm>
@@ -357,11 +357,7 @@
 		                          </svg>
                             </button>
                         ` : `
-                            <button class="non-boarder btn btn-outline-danger">
-	                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eraser-fill" viewBox="0 0 16 16">
-	                            <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
-	                          </svg>
-                            </button>
+                            
                         `}
                     </td>
                 `;
@@ -405,83 +401,100 @@
 	});
 	
 	tbody.addEventListener('click', e =>{
-		const eventTarget = e.target;
-		const targetTagName = eventTarget.tagName.toLowerCase();
-		let targetSVG = null;
-		switch(targetTagName){
-			case 'span': targetSVG = eventTarget.children[0]; break;
-			case 'svg': targetSVG = eventTarget;break;
-			case 'path': targetSVG = eventTarget.parentElement;break;
-		}
-	
-	const myTd = targetSVG.parentElement.parentElement;
-	const replyId = myTd.children[0].value;
-	const contentTd = myTd.parentElement.children[1];
-	
-	if(targetSVG != null){
-		if(targetSVG.className.baseVal.includes('pencil')){
-			if(document.getElementsByClassName('bi-check-lg').length > 0){
-				changePencilEraser();
-		}
-	
-		contentTd.innerHTML = '<textarea rows="2" cols="30" style="resize:none">' + contentTd.innerText + '</textarea>';
-		myTd.children[2].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022"/></svg>';
-		myTd.children[3].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></svg>';
-	}else if(targetSVG.className.baseVal.includes('thumbs')){
-		const memberNo = /*[[${session.loginUser.memberNo}]]*/1;
-		$.ajax({
-			url: 'replyLike.bo',
-			type: 'POST',
-			data: {rId:replyId,
-				   memberNo:memberNo		
-				  },
-			dataType: 'JSON',
-			success: data =>{
-				if (data.resultString === 'success') {
-	                $('#replyLikeCount').text(data.replyLikeCount);
-	            } else{
-	            	alert('추천은 한번만 가능합니다.')
+	    const eventTarget = e.target;
+	    const targetTagName = eventTarget.tagName.toLowerCase();
+	    let targetSVG = null;
+	    switch(targetTagName){
+	        case 'span': targetSVG = eventTarget.children[0]; break;
+	        case 'svg': targetSVG = eventTarget;break;
+	        case 'path': targetSVG = eventTarget.parentElement;break;
+	    }
+
+	    const myTd = targetSVG.parentElement.parentElement;
+	    const replyId = myTd.children[0].value;
+	    const contentTd = myTd.parentElement.children[1];
+	    
+	    if(targetSVG != null){
+	        if(targetSVG.className.baseVal.includes('pencil')){
+	            if(document.getElementsByClassName('bi-check-lg').length > 0){
+	                changePencilEraser();
 	            }
-			},
-			error: data => console.log(data)
-		});
-	}
-	//else if(targetSVG.className.baseVal.includes('brightness')){
-	//	alert('신고되었습니다.')
-	//}
-	else if(targetSVG.className.baseVal.includes('eraser')){
-	if(confirm('정말 삭제하시겠습니까?')){
-		$.ajax({
-			url: 'deleteReply.bo',
-			data: {rId:replyId},
-			success: data =>{
-				if(data == 'success'){
-					myTd.parentElement.remove();
-				} else{
-					alert('댓글 삭제 중 오류가 발생했습니다.');
-				}
-			},
-			error: data => console.log(data)
-		});
-	}
-	} else if(targetSVG.className.baseVal.includes('check')){
-		$.ajax({
-			url:"updateReply.bo",
-			data: {replyNo:replyId, replyContent:contentTd.children[0].value},
-			success: data =>{
-				if(data == 'success'){
-					changePencilEraser(contentTd.children[0].value);
-				} else{
-					alert('댓글 수정 중 오류가 발생했습니다.')
-				}
-			},
-			error: data => console.log(data)
-		});
-			} else if(targetSVG.className.baseVal.includes('x')){
-				changePencilEraser();
-			}
-		}
+
+	            contentTd.innerHTML = '<textarea rows="2" cols="30" style="resize:none">' + contentTd.innerText + '</textarea>';
+	            myTd.children[2].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022"/></svg>';
+	            myTd.children[3].innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></svg>';
+	        } else if(targetSVG.className.baseVal.includes('thumbs')){
+	            // 댓글 요소에서 isProcessing 상태를 가져옴
+	            const parentElement = targetSVG.closest('tr'); // 각 댓글에 대한 tr 요소
+	            const isProcessing = parentElement.getAttribute('data-is-processing');
+	            
+	            if (isProcessing === 'true') return;  // 이전 요청이 처리 중이면 새로운 요청 막기.
+	            
+	            // AJAX 요청이 시작되면 처리 중 상태로 설정
+	            parentElement.setAttribute('data-is-processing', 'true');
+	            
+	            const memberNo = /*[[${session.loginUser.memberNo}]]*/1;
+	            $.ajax({
+	                url: 'replyLike.bo',
+	                type: 'POST',
+	                data: {rId:replyId,
+	                       memberNo:memberNo		
+	                      },
+	                dataType: 'JSON',
+	                cache: false,
+	                success: data =>{
+	                    if (data.resultString === 'success') {
+	                        const replyLikeCountElement = myTd.querySelector('#replyLikeCount');
+	                        $(replyLikeCountElement).text(data.replyLikeCount);
+	                    } else{
+	                        alert('추천은 한번만 가능합니다.')
+	                    }
+	                },
+	                error: data => {
+	                    console.log(data);
+	                },
+	                complete: () => {
+	                    parentElement.setAttribute('data-is-processing', 'false');  // AJAX 요청이 완료되면 처리 중 상태를 해제
+	                }
+	            });
+	        } else if(targetSVG.className.baseVal.includes('eraser')){
+	            if(confirm('정말 삭제하시겠습니까?')){
+	                targetSVG.parentElement.disabled = true;
+	                $.ajax({
+	                    url: 'deleteReply.bo',
+	                    data: {rId:replyId},	
+	                    success: data =>{
+	                        if(data == 'success'){
+	                            myTd.parentElement.remove();
+	                        } else{
+	                            alert('댓글 삭제 중 오류가 발생했습니다.');
+	                        }
+	                    },
+	                    error: data => console.log(data),
+	                    complete: () => {
+	                        targetSVG.parentElement.disabled = false;
+	                    }
+	                });
+	            }
+	        } else if(targetSVG.className.baseVal.includes('check')){
+	            $.ajax({
+	                url:"updateReply.bo",
+	                data: {replyNo:replyId, replyContent:contentTd.children[0].value},
+	                success: data =>{
+	                    if(data == 'success'){
+	                        changePencilEraser(contentTd.children[0].value);
+	                    } else{
+	                        alert('댓글 수정 중 오류가 발생했습니다.')
+	                    }
+	                },
+	                error: data => console.log(data)
+	            });
+	        } else if(targetSVG.className.baseVal.includes('x')){
+	            changePencilEraser();
+	        }
+	    }
 	});
+
 
 
 			const changePencilEraser = (type) =>{

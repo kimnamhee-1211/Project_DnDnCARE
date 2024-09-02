@@ -541,7 +541,7 @@
 		    left join member m on(m.member_no = p.member_no)
 		    left join member_info mi on(m.member_no = mi.member_no)
 		    left join info_category cn on(mi.category_no = cn.category_no)
-		where mc.member_no=#{memberNo} and l_category = 'disease' and sysdate > end_dt
+		where l_category = 'disease' and sysdate > end_dt
 		group by mc.mat_no, mc.begin_dt, mc.end_dt, mc.mat_confirm, p.pt_age, p.pt_gender, mc.member_no
 		order by mc.mat_no
 	</select>

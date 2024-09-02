@@ -47,20 +47,23 @@
                  	</thead>
                  	<tbody>
                  		<th:block th:if="${completeList}">
-                 			<th:block th:if="${completeList}">
-		                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index < 5}">
-		                        	<td>
-		                        		<input type="hidden" th:value="${c.memberNo}"/>
-		                        		[[${c.memberName}]]
-		                       		</td>
-			                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
-			                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
-			                        <td>[[${c.caregiverAddress}]]</td>
-			                        <td>[[${c.haveLicense == undefined ? '-' : c.haveLicense}]]</td>
-			                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
-		                     	</tr>
-	                     	</th:block>
+	                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index < 5}">
+	                        	<td>
+	                        		<input type="hidden" th:value="${c.memberNo}"/>
+	                        		[[${c.memberName}]]
+	                       		</td>
+		                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
+		                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
+		                        <td>[[${c.caregiverAddress}]]</td>
+		                        <td>[[${c.haveLicense == undefined ? '-' : c.haveLicense}]]</td>
+		                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
+	                     	</tr>
                      	</th:block>
+                     	<th:block th:if="${completeList == null}">
+                   	 		<tr class="text-center">
+                   	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
+                   	 		</tr>
+                    	 </th:block>
                  	</tbody>
              	</table>
 				
@@ -89,6 +92,11 @@
 		                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
 	                     	</tr>
                      	</th:block>
+                     	<th:block th:if="${completeList == null}">
+                   	 		<tr class="text-center">
+                   	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
+                   	 		</tr>
+                    	 </th:block>
                  	</tbody>
              	</table>
 			</div>
@@ -1603,10 +1611,15 @@
 		    						const td3 = document.createElement('td');
 		    						td3.innerText = d.caregiverAddress;
 		    						const td4 = document.createElement('td');
-		    						td4.innerText = d.haveLicense;
+		    						if(d.haveLicense == undefined){
+		    							td4.innerText = '-';
+		    						} else{
+			    						td4.innerText = d.haveLicense;
+		    						}
 		    						const td5 = document.createElement('td');
-		    						td5.innerText = d.minMoney + '원';
-		    						
+		    						//td5.innerText = d.minMoney + '원';
+		    						new Intl.NumberFormat('en-US').format(d.minMoney)
+		    						td5.innerText = new Intl.NumberFormat('en-US').format(d.minMoney) + '원';
 		    						tbodyList[0].appendChild(tr);
 		    						tr.appendChild(td0);
 		    						tr.appendChild(td1);
@@ -1627,10 +1640,15 @@
 		    						const td3 = document.createElement('td');
 		    						td3.innerText = d.caregiverAddress;
 		    						const td4 = document.createElement('td');
-		    						td4.innerText = d.haveLicense;
+		    						if(d.haveLicense == undefined){
+		    							td4.innerText = '-';
+		    						} else{
+			    						td4.innerText = d.haveLicense;
+		    						}
 		    						const td5 = document.createElement('td');
-		    						td5.innerText = d.minMoney + '원';
-		    						
+		    						//td5.innerText = d.minMoney + '원';
+		    						new Intl.NumberFormat('en-US').format(d.minMoney)
+		    						td5.innerText = new Intl.NumberFormat('en-US').format(d.minMoney) + '원';
 		    						tbodyList[1].appendChild(tr);
 		    						tr.appendChild(td0);
 		    						tr.appendChild(td1);

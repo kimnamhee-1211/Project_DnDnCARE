@@ -72,7 +72,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@SessionAttributes({ "loginUser", "tempMemberCategory", "enrollmember" })
+@SessionAttributes({ "loginUser", "tempMemberCategory" })
 @Controller
 public class MemberController {
 
@@ -485,18 +485,22 @@ public class MemberController {
 		String[] choice = result.split(", ");
 		System.out.println("GPT 추천번호의 split" + Arrays.toString(choice));
 		ArrayList<Integer> choiceNoList = new ArrayList<Integer>();
-		for (int i = 0; i < choice.length; i++) {
-			if (choice[i].contains(".")) {
-				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
-				choiceNoList.add(Integer.parseInt(choice[i].split("[.]")[0]));
-			} else if (choice[i].contains(" ")) {
-				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
-			} else {
-				choiceNoList.add(Integer.parseInt(choice[i]));
-			}
-		} // [2, 5, 8, 10, 14]
-			// 7. View로 전달한 결과값만 추리기
-			// 이름, 성별, 나이, 지역, 질환, 금액, 매칭번호, 멤버번호
+		try {
+			for (int i = 0; i < choice.length; i++) {
+				if (choice[i].contains(".")) {
+					System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
+					choiceNoList.add(Integer.parseInt(choice[i].split("[.]")[0]));
+				} else if (choice[i].contains(" ")) {
+					choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
+				} else {
+					choiceNoList.add(Integer.parseInt(choice[i]));
+				}
+			} // [2, 5, 8, 10, 14]
+		} catch(Exception e) {
+			return null;
+		}
+		// 7. View로 전달한 결과값만 추리기
+		// 이름, 성별, 나이, 지역, 질환, 금액, 매칭번호, 멤버번호
 		ArrayList<Patient> completeList = mService.choicePatientList(choiceNoList);
 		ArrayList<HashMap<String, Object>> diseaseList = mService.getPatientInfo(choiceNoList);
 
@@ -868,7 +872,6 @@ public class MemberController {
 
 		// 멤버 테이블만 있고 환자/ 간병인 테이블에 insert됮 않은 경우 멤버 테이블 삭제 -> 회원가입 도충 탈출 등
 		Integer memberNoDel = mService.getDelMemberNo();
-		System.out.println(memberNoDel);
 		if(memberNoDel != null) {
 			int resultNoInfo = mService.noInfomemberdle(memberNoDel);
 		}
@@ -926,12 +929,15 @@ public class MemberController {
 		m.setMemberEmail(memberEmail);
 
 		System.out.println("회원가입 검증=" + m);
+		
 		// 소셜회원가입하나추가
 		String code = (String) session.getAttribute("code");
 		m.setMemberSocailToken(code);
 		session.removeAttribute("code");
+		
 		int result = mService.enroll(m);
 
+		
 		// 회원가입용 session데이터
 		model.addAttribute("enrollmember", m);
 		System.out.println("회원가입 데이터 전송 검증 =" + m);
@@ -1364,11 +1370,11 @@ public class MemberController {
 
 	// 간병인 회원가입(간병인 정보 입력)
 	@PostMapping("enrollCaregiver.me")
-	public String enrollCaregiver(@ModelAttribute CareGiver cg, HttpSession session) {
+	public String enrollCaregiver(@ModelAttribute CareGiver cg, @RequestParam("memberNo") int memberNo) {
 		System.out.println("데이터 확인" + cg);
 
 		// 간병인 memberNo 세팅
-		cg.setMemberNo(((Member) session.getAttribute("enrollmember")).getMemberNo());
+		cg.setMemberNo(memberNo);
 
 		System.out.println("간병인 정보=" + cg);
 
@@ -1379,7 +1385,6 @@ public class MemberController {
 		System.out.println("result2" + result2);
 
 		if (result1 > 0 || result2 > 0) {
-			session.removeAttribute("enrollmember");
 			return "enroll4";
 		} else {
 			throw new MemberException("회원가입에 실패했습니다.");
@@ -1390,10 +1395,9 @@ public class MemberController {
 	@PostMapping("enrollPatient.me")
 	public String enrollPatient(@ModelAttribute Patient pt, @RequestParam("postcode") String postcode,
 			@RequestParam("roadAddress") String roadAddress, @RequestParam("detailAddress") String detailAddress,
-			HttpSession session) {
-
+			@RequestParam("memberNo") int memberNo) {
 		// 간병인 memberNo 세팅
-		pt.setMemberNo(((Member) session.getAttribute("enrollmember")).getMemberNo());
+		pt.setMemberNo(memberNo);
 
 		// 돌봄 주소 세팅
 		String ptAddress = postcode + "//" + roadAddress + "//" + detailAddress;
@@ -1408,7 +1412,6 @@ public class MemberController {
 		System.out.println("result2" + result2);
 
 		if (result1 > 0 || result2 > 0) {
-			session.removeAttribute("enrollmember");
 			return "enroll4";
 		} else {
 
@@ -2567,9 +2570,7 @@ public class MemberController {
 					m.put("보유한 자격증", haveLicense.substring(0, haveLicense.lastIndexOf("/")));
 				}
 			}
-		} 
-		// 후보에 대한 정보 가공 끝 => cList
-
+		}
 		// 5. 프롬프트 작성
 		String prompt = "환자의 정보는" + infoMap.toString() + "이고" + "환자 목록은" + cList.toString() + "이다."
 				+ "환자의 정보를 바탕으로 가장 적절한 회원번호 " + selectNum + "개만 숫자로만 짧게 대답해줘.";
@@ -2578,25 +2579,25 @@ public class MemberController {
 		String result = botController.chat(prompt);
 		System.out.println("GPT가 추천한 매칭번호 : " + result);
 		
-		if(result.contains("-")) {
-			return null;
-		}
-		
-		
 		String[] choice = result.split(", ");
 		System.out.println("GPT가 추천한 매칭번호의 스플릿 : " + Arrays.toString(choice));
 		ArrayList<Integer> choiceNoList = new ArrayList<Integer>();
-		for (int i = 0; i < choice.length; i++) {
-			if (choice[i].contains(".")) {
-				System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
-				choiceNoList.add(Integer.parseInt(choice[i].split("[.]")[0]));
-			} else if (choice[i].contains(" ")) {
-				choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
-			} else {
-				choiceNoList.add(Integer.parseInt(choice[i]));
-			}
-		} // [2, 5, 8, 10, 14]
-//			
+		
+		try {
+			for (int i = 0; i < choice.length; i++) {
+				if (choice[i].contains(".")) {
+					System.out.println("에러의 원인일 수 있는 부분 : " + choice[i]);
+					choiceNoList.add(Integer.parseInt(choice[i].split("[.]")[0]));
+				} else if (choice[i].contains(" ")) {
+					choiceNoList.add(Integer.parseInt(choice[i].split(" ")[1]));
+				} else {
+					choiceNoList.add(Integer.parseInt(choice[i]));
+				}
+			} // [2, 5, 8, 10, 14]
+		} catch(Exception e) {
+			return null;
+		}
+			
 		// 7. View로 전달한 결과값만 추리기
 		// cList : {연령=69, 국적=내국인, 최소요구금액=50000, 보유한 자격증=요양보호사, 주소=서울 중랑구 망우로74가길 16 3층,
 		// 성별=남성, 돌봄해봤던 질환=기저귀 케어, 회원번호=85, 경력=3, 제공하려는 서비스=동행서비스}
@@ -2655,7 +2656,6 @@ public class MemberController {
 			}
 		}
 
-		System.out.println("completeList : " + completeList);
 		return completeList;
 	}
 

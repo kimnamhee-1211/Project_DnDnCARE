@@ -375,8 +375,8 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	@Override
-	public ArrayList<Matching> matPatientList(int memberNo) {
-		return mMapper.matPatientList(memberNo);
+	public ArrayList<Matching> matPatientList() {
+		return mMapper.matPatientList();
 	}
 
 	

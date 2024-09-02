@@ -11,7 +11,7 @@
         where b.board_status = 'Y'
             and (m.member_category='A' or m.member_category=#{category}) and b.category_no != 7 and b.category_no != 99 
         <if test="categoryNo != -1 and categoryNo != 99 and categoryNo !=7">
-            and b.category_no = #{categoryNo}
+            and b.category_no = #{categoryNo}	
         </if>
         <if test="areas != null and !areas.isEmpty()">
             and a.area_no IN 
@@ -19,6 +19,15 @@
                 #{area}
             </foreach>
         </if>
+        <if test="searchType != null and searchType=='boardTitle'">
+				and b.board_Title like '%' || #{searchText} || '%'
+			</if>
+	         <if test="searchType != null and searchType=='boardContent'">
+	         	and b.board_Content like '%' || #{searchText} || '%'
+	         </if>
+	         <if test= "searchType != null and searchType=='memberNickName'">
+	         	and m.member_NickName like '%' || #{searchText} || '%'
+	   		</if>
     </select>
     
 	<!-- 게시판 전체 조회 -->
@@ -30,7 +39,7 @@
 	        join area a on(b.area_no=a.area_no)
 	    where b.board_status='Y' 
 	        and (m.member_category='A' or m.member_category=#{category}) and b.category_no != 7 and b.category_no != 99 
-	    <if test="categoryNo != -1 and categoryNo != 99 and categoryNo !=0">
+	    <if test="categoryNo != -1 and categoryNo != 99">
 	        and b.category_no = #{categoryNo}
 	    </if>
 	    <if test="areas != null and !areas.isEmpty()">

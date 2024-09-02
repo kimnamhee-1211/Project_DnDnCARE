@@ -65,6 +65,11 @@
 		                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]]원</td>
 	                    	 </tr>
                     	 </th:block>
+                    	 <th:block th:if="${completeList == null}">
+                   	 		<tr class="text-center">
+                   	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
+                   	 		</tr>
+                    	 </th:block>
                  	</tbody>
              	</table>
 				
@@ -90,13 +95,18 @@
 		                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
 		                         <td>[[${l.ptAddress}]]</td>
 		                         <td>
-		                         	<th:block th:if="${l.ptDisease != null}">
+		                         	<th:block th:if="${l.ptDisease != null">
 		                         		[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]
 		                         	</th:block>
 		                         	<th:block th:if="${l.ptDisease == null}">-</th:block>
 	                         	</td>
 		                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]]원</td>
 	                    	 </tr>
+                    	 </th:block>
+                    	 <th:block th:if="${completeList == null}">
+                   	 		<tr class="text-center">
+                   	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
+                   	 		</tr>
                     	 </th:block>
                  	</tbody>
              	</table>

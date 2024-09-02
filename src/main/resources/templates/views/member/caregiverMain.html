@@ -70,6 +70,11 @@
 	                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]] 원</td>
 	                     </tr>
                      </th:block>
+                     <th:block th:if="${completeList == null}">
+                   	 		<tr class="text-center">
+                   	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
+                   	 		</tr>
+                   	 </th:block>
                  </tbody>
             </table>
 			</div>
@@ -524,8 +529,18 @@
 	    						const td4 = document.createElement('td');
 	    						
 	    						
-								let diseaseArr = d.ptDisease.split('/');
-								let arrLength = diseaseArr.length;
+								let diseaseArr;
+	    						if(d.ptDisease != undefined){
+	    							diseaseArr = d.ptDisease.split('/');
+	    						}
+	    						
+	    						let arrLength;
+	    						if(diseaseArr != undefined){
+	    							arrLength = diseaseArr.length;
+	    						} else {
+	    							arrLength = 0;
+	    						}
+								
 	    						let disease = '';
 								if(arrLength > 4){ // 보유 질병이 5개 이상인 경우
 	    							for(let i = 0; i < 4; i++){
@@ -535,7 +550,7 @@
 	    									disease += diseaseArr[i] + ' ...';
 	    								}
 	    							}
-	    						} else{ // 보유 질병이 4개 이하인 경우
+	    						} else if(arrLength > 0){ // 보유 질병이 4개 이하인 경우
 	    							for(let i = 0; i < arrLength; i++){
 	    								if(i != arrLength - 1) { // 마지막 인덱스가 아닌 경우에 끝에 쉼표(,)를 붙인다.
 		    								disease += diseaseArr[i] + ', ';
@@ -543,6 +558,8 @@
 	    									disease += diseaseArr[i];
 	    								}
 	    							}
+	    						} else {
+	    							disease = '-';
 	    						}
 	    						td4.innerText = disease;
 	    						

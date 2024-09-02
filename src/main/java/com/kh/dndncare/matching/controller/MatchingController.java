@@ -752,7 +752,7 @@ public class MatchingController {
 		}
 		
 		// 매칭번호, 시작시간, 종료시간, 나이, 성별, 질환
-		ArrayList<Matching> matPatientInfoLists = mcService.matPatientList(memberNo);
+		ArrayList<Matching> matPatientInfoLists = mcService.matPatientList();
 		for (Matching matPatientInfoList : matPatientInfoLists) {
 			System.out.println("매칭번호"+matPatientInfoList.getMatNo());
 			System.out.println("시작시간"+matPatientInfoList.getBeginDt());
@@ -1048,7 +1048,7 @@ public class MatchingController {
 			@RequestParam(value="before", required=false) String before) {
 		
 		Member loginUser = (Member)session.getAttribute("loginUser");
-		ArrayList<MatMatptInfoPt> myMatchingAll = mcService. getMyMatching(loginUser.getMemberNo());
+		ArrayList<MatMatptInfoPt> myMatchingAll = mcService.getMyMatching(loginUser.getMemberNo());
 		System.out.println("myMatchingAll : " + myMatchingAll);
 		
 		
@@ -1080,6 +1080,7 @@ public class MatchingController {
 		        if (beginLocalDate.isAfter(today)) {
 		        	myMatchingW.add(i);
 		        }
+		       
 			}
 			
 			//매칭신청 받은 내역
@@ -1344,9 +1345,7 @@ public class MatchingController {
 	public String matchingApproveP(@RequestParam("matNo") int matNo, @RequestParam("memberNo") int memberNo,
 									RedirectAttributes re) {
 		
-		int result = mcService.matchingApproveP(matNo, memberNo);
-		
-		
+		int result = mcService.matchingApproveP(matNo, memberNo);				
 		//매칭 간병인 이름 얻어오기
 		String matCName = mcService.getNameC(memberNo);
 		
@@ -1357,7 +1356,6 @@ public class MatchingController {
 		}else {
 			throw new MatchingException(" 환자 매칭 승낙 실패");
 		}
-
 	}
 	
 	
@@ -1445,18 +1443,7 @@ public class MatchingController {
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	
 		
 		
 		
@@ -1491,13 +1478,10 @@ public class MatchingController {
 	//환자 매칭 신청 취소
 	@GetMapping("matchingCancelP.mc")
 	public String matchingCancelP(@RequestParam("matNo") int matNo, @RequestParam("memberNo") int memberNo,
-									RedirectAttributes re) {
-		
-		int result = mcService.matchingCancelP(matNo);
-				
+									RedirectAttributes re) {		
+		int result = mcService.matchingCancelP(matNo);				
 		//매칭 간병인 이름 얻어오기
-		String matCName = mcService.getNameC(memberNo);
-		
+		String matCName = mcService.getNameC(memberNo);		
 		if(result > 0) {
 			re.addAttribute("matCName", matCName);
 			re.addAttribute("result", "cancell");
@@ -1505,7 +1489,6 @@ public class MatchingController {
 		}else {
 			throw new MatchingException(" 환자 매칭 신청 취소 실패");
 		}
-
 	}
 	
 	
