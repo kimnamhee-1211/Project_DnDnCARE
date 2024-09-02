@@ -95,7 +95,7 @@
 		                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
 		                         <td>[[${l.ptAddress}]]</td>
 		                         <td>
-		                         	<th:block th:if="${l.ptDisease != null}">
+		                         	<th:block th:if="${l.ptDisease != null">
 		                         		[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]
 		                         	</th:block>
 		                         	<th:block th:if="${l.ptDisease == null}">-</th:block>
