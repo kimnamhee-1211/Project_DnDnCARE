@@ -1392,7 +1392,6 @@ public class MemberController {
 	public String enrollPatient(@ModelAttribute Patient pt, @RequestParam("postcode") String postcode,
 			@RequestParam("roadAddress") String roadAddress, @RequestParam("detailAddress") String detailAddress,
 			@RequestParam("memberNo") int memberNo) {
-
 		// 간병인 memberNo 세팅
 		pt.setMemberNo(memberNo);
 
