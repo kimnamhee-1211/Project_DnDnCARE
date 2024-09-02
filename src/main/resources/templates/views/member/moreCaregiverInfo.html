@@ -47,20 +47,23 @@
                  	</thead>
                  	<tbody>
                  		<th:block th:if="${completeList}">
-                 			<th:block th:if="${completeList}">
-		                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index < 5}">
-		                        	<td>
-		                        		<input type="hidden" th:value="${c.memberNo}"/>
-		                        		[[${c.memberName}]]
-		                       		</td>
-			                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
-			                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
-			                        <td>[[${c.caregiverAddress}]]</td>
-			                        <td>[[${c.haveLicense == undefined ? '-' : c.haveLicense}]]</td>
-			                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
-		                     	</tr>
-	                     	</th:block>
+	                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index < 5}">
+	                        	<td>
+	                        		<input type="hidden" th:value="${c.memberNo}"/>
+	                        		[[${c.memberName}]]
+	                       		</td>
+		                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
+		                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
+		                        <td>[[${c.caregiverAddress}]]</td>
+		                        <td>[[${c.haveLicense == undefined ? '-' : c.haveLicense}]]</td>
+		                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
+	                     	</tr>
                      	</th:block>
+                     	<th:block th:if="${completeList == null}">
+                   	 		<tr class="text-center">
+                   	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
+                   	 		</tr>
+                    	 </th:block>
                  	</tbody>
              	</table>
 				
@@ -89,6 +92,11 @@
 		                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
 	                     	</tr>
                      	</th:block>
+                     	<th:block th:if="${completeList == null}">
+                   	 		<tr class="text-center">
+                   	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
+                   	 		</tr>
+                    	 </th:block>
                  	</tbody>
              	</table>
 			</div>
