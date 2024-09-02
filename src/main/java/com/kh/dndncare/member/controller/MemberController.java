@@ -485,6 +485,8 @@ public class MemberController {
 		String[] choice = result.split(", ");
 		System.out.println("GPT 추천번호의 split" + Arrays.toString(choice));
 		ArrayList<Integer> choiceNoList = new ArrayList<Integer>();
+		//String[] choice = {"개나리", "소"};
+		
 		try {
 			for (int i = 0; i < choice.length; i++) {
 				if (choice[i].contains(".")) {
