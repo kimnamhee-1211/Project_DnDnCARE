@@ -48,23 +48,26 @@
                  	</thead>
                  	<tbody>
                  		<th:block th:if="${completeList}">
-	                    	<tr class="text-center" th:each="l, lStat : ${completeList}" th:if="${lStat.index < 5 && (l.ptCount == 1 || l.groupLeader == 'Y')}">
-		                         <td>
-		                         	<input type="hidden" th:value="${l.matNo}"/>
-		                         	[[${l.ptName}]]
-		                         </td>
-		                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-		                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
-		                         <td>[[${l.ptAddress}]]</td>
-		                         <td>
-		                         	<th:block th:if="${l.ptDisease != null}">
-		                         		[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]
-		                         	</th:block>
-		                         	<th:block th:if="${l.ptDisease == null}">-</th:block>
-	                         	</td>
-		                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]]원</td>
-	                    	 </tr>
+                 			<th:block th:each="l, lStat : ${completeList}" th:if="${lStat.index < 5 && (l.ptCount == 1 || l.groupLeader == 'Y')}">
+		                    	<tr class="text-center">
+			                         <td>
+			                         	<input type="hidden" th:value="${l.matNo}"/>
+			                         	[[${l.ptName}]]
+			                         </td>
+			                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
+			                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
+			                         <td>[[${l.ptAddress}]]</td>
+			                         <td>
+			                         	<th:block th:if="${l.ptDisease != null}">
+			                         		[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]
+			                         	</th:block>
+			                         	<th:block th:if="${l.ptDisease == null}">-</th:block>
+		                         	</td>
+			                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]]원</td>
+		                    	 </tr>
+		                    	 <th:block th:with="check = ${5 - lStat.count}"></th:block>
                     	 </th:block>
+                    	 
                     	 <th:block th:if="${completeList == null}">
                    	 		<tr class="text-center">
                    	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
@@ -95,7 +98,7 @@
 		                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
 		                         <td>[[${l.ptAddress}]]</td>
 		                         <td>
-		                         	<th:block th:if="${l.ptDisease != null">
+		                         	<th:block th:if="${l.ptDisease != null}">
 		                         		[[${#strings.arraySplit(l.ptDisease, '/')[0]}]]
 		                         	</th:block>
 		                         	<th:block th:if="${l.ptDisease == null}">-</th:block>
@@ -103,6 +106,15 @@
 		                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]]원</td>
 	                    	 </tr>
                     	 </th:block>
+                    	 
+                    	 <th:block th:if="${completeList.size() < 10}" th:each="num : ${#numbers.sequence(1, 10-completeList.size())}">
+                    	 	<tr>
+                    	 		<td></td><td></td><td></td><td></td><td></td><td></td>
+                    	 	</tr>
+                    	 </th:block>
+                    	 
+                    	 
+                    	 
                     	 <th:block th:if="${completeList == null}">
                    	 		<tr class="text-center">
                    	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
@@ -1617,7 +1629,13 @@
 		    						const td3 = document.createElement('td');
 		    						td3.innerText = d.ptAddress;
 		    						const td4 = document.createElement('td');
-		    						td4.innerText = d.ptDisease.split('/')[0];
+		    						
+		    						if(d.ptDisease != undefined){
+			    						td4.innerText = d.ptDisease.split('/')[0];
+		    						} else {
+		    							td4.innerText = '-';
+		    						}
+		    						
 		    						const td5 = document.createElement('td');
 		    						td5.innerText = d.money + '원';
 		    						
@@ -1641,7 +1659,11 @@
 		    						const td3 = document.createElement('td');
 		    						td3.innerText = d.ptAddress;
 		    						const td4 = document.createElement('td');
-		    						td4.innerText = d.ptDisease.split('/')[0];
+		    						if(d.ptDisease != undefined){
+			    						td4.innerText = d.ptDisease.split('/')[0];
+		    						} else {
+		    							td4.innerText = '-';
+		    						}
 		    						const td5 = document.createElement('td');
 		    						td5.innerText = d.money + '원';
 		    						

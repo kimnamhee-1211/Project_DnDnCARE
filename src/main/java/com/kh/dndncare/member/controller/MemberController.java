@@ -2155,18 +2155,6 @@ public class MemberController {
 			} else {
 				gson.toJson("noExist", response.getWriter());
 			}
-			// [{CATEGORY_NO=15, MEMBER_NO=83}, {CATEGORY_NO=1, MEMBER_NO=83},
-			// {CATEGORY_NO=2, MEMBER_NO=83}, {CATEGORY_NO=21, MEMBER_NO=83},
-			// {CATEGORY_NO=22, MEMBER_NO=83}, {CATEGORY_NO=23, MEMBER_NO=83},
-			// {CATEGORY_NO=24, MEMBER_NO=83}, {CATEGORY_NO=25, MEMBER_NO=83},
-			// {CATEGORY_NO=26, MEMBER_NO=83}, {CATEGORY_NO=27, MEMBER_NO=83},
-			// {CATEGORY_NO=28, MEMBER_NO=83}, {CATEGORY_NO=29, MEMBER_NO=83},
-			// {CATEGORY_NO=30, MEMBER_NO=83}, {CATEGORY_NO=51, MEMBER_NO=83},
-			// {CATEGORY_NO=72, MEMBER_NO=83}, {CATEGORY_NO=73, MEMBER_NO=83},
-			// {CATEGORY_NO=11, MEMBER_NO=22}, {CATEGORY_NO=11, MEMBER_NO=14},
-			// {CATEGORY_NO=2, MEMBER_NO=14}, {CATEGORY_NO=52, MEMBER_NO=14},
-			// {CATEGORY_NO=51, MEMBER_NO=14}, {CATEGORY_NO=52, MEMBER_NO=14},
-			// {CATEGORY_NO=51, MEMBER_NO=14}]
 
 			// 질병과 서비스, 경력, 자격증 검색 조건을 가져온다
 			ArrayList<Integer> categoryNoList = new ArrayList<Integer>(); // 조건을 카테고리 넘버로 변환하여 저장
@@ -2585,7 +2573,6 @@ public class MemberController {
 				}
 			}
 		}
-
 		// 5. 프롬프트 작성
 		String prompt = "환자의 정보는" + infoMap.toString() + "이고" + "환자 목록은" + cList.toString() + "이다."
 				+ "환자의 정보를 바탕으로 가장 적절한 회원번호 " + selectNum + "개만 숫자로만 짧게 대답해줘.";
@@ -2593,10 +2580,6 @@ public class MemberController {
 		// 6. 프롬프트를 전달하고 결과값 받아오기
 		String result = botController.chat(prompt);
 		System.out.println("GPT가 추천한 매칭번호 : " + result);
-		
-		if(result.contains("-")) {
-			return null;
-		}
 		
 		String[] choice = result.split(", ");
 		System.out.println("GPT가 추천한 매칭번호의 스플릿 : " + Arrays.toString(choice));
@@ -2675,7 +2658,6 @@ public class MemberController {
 			}
 		}
 
-		System.out.println("completeList : " + completeList);
 		return completeList;
 	}
 

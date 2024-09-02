@@ -37,13 +37,7 @@ public class CustomBotController { // 챗 GPT 테스트용 컨트롤러
 		// 이 메소드는 요청을 보내고, 응답을 받아 ChatGPTResponse 타입의 객체로 변환한다.
 		
 		//System.out.println("여기부터 챗 GPT");
-		//System.out.println(chatGPTResponse.getChoices().get(0).getMessage().getContent());
+		//ChatGPTResponse(choices=[ChatGPTResponse.Choice(index=0, message=Message(role=assistant, content=296, 285, 306, 342, 285))])
 		return chatGPTResponse.getChoices().get(0).getMessage().getContent();
 	}
-	
-	
-	
-	
-	
-	
 }

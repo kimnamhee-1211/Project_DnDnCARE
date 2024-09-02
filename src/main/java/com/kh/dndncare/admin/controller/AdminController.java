@@ -300,10 +300,6 @@ public class AdminController {
 	public String writeCareInformation(HttpSession session, Model model,
 										@RequestParam("labels") ArrayList<String> labels,
 										@RequestParam("data") ArrayList<String> data) {
-		System.out.println(labels); // [이건없어, 아아, test-m-p20]
-		System.out.println(data); // [19, 5, 3]
-		
-		
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		if (loginUser != null) {
 			if (loginUser.getMemberCategory().equals("A")) {
@@ -360,7 +356,7 @@ public class AdminController {
 					
 					String copyName = copyNameCreate(); 				// 첨부파일명(확장자가 없음)을 생성한다.
 					renameName = copyName + "." + type; 				// 첨부파일명 + ".확장자"를 DB에 저장할 리네임으로 지정한다.
-				ImageUtil.base64ToFile(copyName, b64);  				// 첨부파일명과 암호화된 이미지src를 전달한다.
+					ImageUtil.base64ToFile(copyName, b64);  				// 첨부파일명과 암호화된 이미지src를 전달한다.
 					
 					if(content.contains(b64)) {
 						content = content.replace(b64, renameName); 	// HTML의 암호화부분을 "첨부파일명.확장자"로 바꾸어 둔다. (View에서 출력하기 편리하게 하기 위함)

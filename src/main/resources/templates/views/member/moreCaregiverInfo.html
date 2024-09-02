@@ -92,6 +92,13 @@
 		                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
 	                     	</tr>
                      	</th:block>
+                     	
+                     	<th:block th:if="${completeList.size() < 10}" th:each="num : ${#numbers.sequence(1, 10-completeList.size())}">
+                    	 	<tr>
+                    	 		<td></td><td></td><td></td><td></td><td></td><td></td>
+                    	 	</tr>
+                    	 </th:block>
+                     	
                      	<th:block th:if="${completeList == null}">
                    	 		<tr class="text-center">
                    	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
