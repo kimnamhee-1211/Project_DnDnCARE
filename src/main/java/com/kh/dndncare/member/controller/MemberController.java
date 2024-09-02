@@ -878,7 +878,6 @@ public class MemberController {
 
 		// 멤버 테이블만 있고 환자/ 간병인 테이블에 insert됮 않은 경우 멤버 테이블 삭제 -> 회원가입 도충 탈출 등
 		Integer memberNoDel = mService.getDelMemberNo();
-		System.out.println(memberNoDel);
 		if(memberNoDel != null) {
 			int resultNoInfo = mService.noInfomemberdle(memberNoDel);
 		}
@@ -936,12 +935,15 @@ public class MemberController {
 		m.setMemberEmail(memberEmail);
 
 		System.out.println("회원가입 검증=" + m);
+		
 		// 소셜회원가입하나추가
 		String code = (String) session.getAttribute("code");
 		m.setMemberSocailToken(code);
 		session.removeAttribute("code");
+		
 		int result = mService.enroll(m);
 
+		
 		// 회원가입용 session데이터
 		model.addAttribute("enrollmember", m);
 		System.out.println("회원가입 데이터 전송 검증 =" + m);
@@ -1374,11 +1376,11 @@ public class MemberController {
 
 	// 간병인 회원가입(간병인 정보 입력)
 	@PostMapping("enrollCaregiver.me")
-	public String enrollCaregiver(@ModelAttribute CareGiver cg, HttpSession session) {
+	public String enrollCaregiver(@ModelAttribute CareGiver cg, @RequestParam("memberNo") int memberNo) {
 		System.out.println("데이터 확인" + cg);
 
 		// 간병인 memberNo 세팅
-		cg.setMemberNo(((Member) session.getAttribute("enrollmember")).getMemberNo());
+		cg.setMemberNo(memberNo);
 
 		System.out.println("간병인 정보=" + cg);
 
@@ -1389,7 +1391,6 @@ public class MemberController {
 		System.out.println("result2" + result2);
 
 		if (result1 > 0 || result2 > 0) {
-			session.removeAttribute("enrollmember");
 			return "enroll4";
 		} else {
 			throw new MemberException("회원가입에 실패했습니다.");
@@ -1400,10 +1401,10 @@ public class MemberController {
 	@PostMapping("enrollPatient.me")
 	public String enrollPatient(@ModelAttribute Patient pt, @RequestParam("postcode") String postcode,
 			@RequestParam("roadAddress") String roadAddress, @RequestParam("detailAddress") String detailAddress,
-			HttpSession session) {
+			@RequestParam("memberNo") int memberNo) {
 
 		// 간병인 memberNo 세팅
-		pt.setMemberNo(((Member) session.getAttribute("enrollmember")).getMemberNo());
+		pt.setMemberNo(memberNo);
 
 		// 돌봄 주소 세팅
 		String ptAddress = postcode + "//" + roadAddress + "//" + detailAddress;
@@ -1418,7 +1419,6 @@ public class MemberController {
 		System.out.println("result2" + result2);
 
 		if (result1 > 0 || result2 > 0) {
-			session.removeAttribute("enrollmember");
 			return "enroll4";
 		} else {
 
