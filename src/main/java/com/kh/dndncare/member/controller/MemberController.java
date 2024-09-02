@@ -538,16 +538,6 @@ public class MemberController {
 
 		}
 		
-		System.out.println("===여기여기===");
-		System.out.println(eList);
-		System.out.println("===여기여기===");
-		
-		
-		
-		
-		
-		
-		
 		JSONArray array = new JSONArray();
 
 		if (!eList.isEmpty()) {
@@ -2160,18 +2150,6 @@ public class MemberController {
 			} else {
 				gson.toJson("noExist", response.getWriter());
 			}
-			// [{CATEGORY_NO=15, MEMBER_NO=83}, {CATEGORY_NO=1, MEMBER_NO=83},
-			// {CATEGORY_NO=2, MEMBER_NO=83}, {CATEGORY_NO=21, MEMBER_NO=83},
-			// {CATEGORY_NO=22, MEMBER_NO=83}, {CATEGORY_NO=23, MEMBER_NO=83},
-			// {CATEGORY_NO=24, MEMBER_NO=83}, {CATEGORY_NO=25, MEMBER_NO=83},
-			// {CATEGORY_NO=26, MEMBER_NO=83}, {CATEGORY_NO=27, MEMBER_NO=83},
-			// {CATEGORY_NO=28, MEMBER_NO=83}, {CATEGORY_NO=29, MEMBER_NO=83},
-			// {CATEGORY_NO=30, MEMBER_NO=83}, {CATEGORY_NO=51, MEMBER_NO=83},
-			// {CATEGORY_NO=72, MEMBER_NO=83}, {CATEGORY_NO=73, MEMBER_NO=83},
-			// {CATEGORY_NO=11, MEMBER_NO=22}, {CATEGORY_NO=11, MEMBER_NO=14},
-			// {CATEGORY_NO=2, MEMBER_NO=14}, {CATEGORY_NO=52, MEMBER_NO=14},
-			// {CATEGORY_NO=51, MEMBER_NO=14}, {CATEGORY_NO=52, MEMBER_NO=14},
-			// {CATEGORY_NO=51, MEMBER_NO=14}]
 
 			// 질병과 서비스, 경력, 자격증 검색 조건을 가져온다
 			ArrayList<Integer> categoryNoList = new ArrayList<Integer>(); // 조건을 카테고리 넘버로 변환하여 저장
@@ -2589,23 +2567,8 @@ public class MemberController {
 					m.put("보유한 자격증", haveLicense.substring(0, haveLicense.lastIndexOf("/")));
 				}
 			}
-		} // [{연령=69, 국적=내국인, 최소요구금액=50000, 보유한 자격증=요양보호사, 주소=서울 중랑구 망우로74가길 16 3층, 성별=남성,
-			// 돌봄해봤던 질환=기저귀 케어, 회원번호=85, 경력=3, 제공하려는 서비스=동행서비스}, {연령=12, 국적=내국인,
-			// 최소요구금액=10000, 주소=서울 강북구 4.19로12길 8 1231, 성별=남성, 돌봄해봤던 질환=섬망, 회원번호=84, 경력=0,
-			// 제공하려는 서비스=가정돌봄}, {연령=30, 국적=외국인, 최소요구금액=15000, 보유한 자격증=간병사, 주소=서울 강북구
-			// 4.19로32길 69 수유동101호, 성별=남성, 회원번호=14, 경력=0, 제공하려는 서비스=병원돌봄}, {연령=42, 국적=내국인,
-			// 최소요구금액=100000, 보유한 자격증=간병사, 주소=서울 영등포구 63로 7 101호, 성별=남성, 돌봄해봤던 질환=기저귀 케어,
-			// 회원번호=23, 경력=3, 제공하려는 서비스=동행서비스}, {연령=24, 국적=내국인, 제공해봤던 서비스=동행서비스,
-			// 최소요구금액=50000, 주소=서울 중구 을지로 6 3층, 성별=남성, 돌봄해봤던 질환=석션, 회원번호=46, 경력=0, 제공하려는
-			// 서비스=동행서비스}, {연령=0, 국적=내국인, 최소요구금액=10000, 주소=서울 도봉구 노해로 133 집, 성별=남성, 회원번호=22,
-			// 경력=0}, {연령=45, 국적=외국인, 최소요구금액=10000, 보유한 자격증=간병사, 주소=서울 강서구 곰달래로22길 8 12312,
-			// 성별=남성, 돌봄해봤던 질환=치매, 회원번호=50, 경력=0}, {연령=58, 국적=내국인, 제공해봤던 서비스=동행서비스,
-			// 최소요구금액=10000, 보유한 자격증=간호조무사, 주소=서울 강북구 삼양로22길 4 102호, 성별=남성, 돌봄해봤던 질환=의식 없음,
-			// 회원번호=49, 경력=3, 제공하려는 서비스=가정돌봄}, {연령=34, 국적=내국인, 최소요구금액=50000, 주소=서울 강북구 방학로
-			// 384 201번지, 성별=남성, 회원번호=79, 경력=0}, {연령=44, 국적=내국인, 최소요구금액=20000, 보유한
-			// 자격증=요양보호사, 주소=서울 종로구 경희궁3가길 7 1, 성별=남성, 돌봄해봤던 질환=피딩, 회원번호=83, 경력=8, 제공하려는
-			// 서비스=가정돌봄}]
-			// 후보에 대한 정보 가공 끝 => cList
+		} 
+		// 후보에 대한 정보 가공 끝 => cList
 
 		// 5. 프롬프트 작성
 		String prompt = "환자의 정보는" + infoMap.toString() + "이고" + "환자 목록은" + cList.toString() + "이다."
