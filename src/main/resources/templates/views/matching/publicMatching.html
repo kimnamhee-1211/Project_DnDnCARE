@@ -327,7 +327,6 @@
 	        let queryParams = '?' + encodeURIComponent('serviceKey') + '='+'TqXL2WevbCLJDY0ZVbFrL22ehLsP2bdAdbD08YPjNXsiVHbasLfGANMr%2BJlO%2FlWvSd9acDudRtmxz4WZBVF0ag%3D%3D';
 	        queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100');
 	        queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(pageNo);
-	        console.log('여기는 언제마다 실행될까?');
 	        xhr.open('GET', url + queryParams);
 	        xhr.onreadystatechange = function () {
 	            if (this.readyState == 4 && this.status == 200) {

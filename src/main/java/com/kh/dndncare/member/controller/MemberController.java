@@ -72,7 +72,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@SessionAttributes({ "loginUser", "tempMemberCategory", "enrollmember" })
+@SessionAttributes({ "loginUser", "tempMemberCategory" })
 @Controller
 public class MemberController {
 
@@ -1392,6 +1392,10 @@ public class MemberController {
 	public String enrollPatient(@ModelAttribute Patient pt, @RequestParam("postcode") String postcode,
 			@RequestParam("roadAddress") String roadAddress, @RequestParam("detailAddress") String detailAddress,
 			@RequestParam("memberNo") int memberNo) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> branch 'backup' of https://github.com/JONGGYU94/dndncare.git
 		// 간병인 memberNo 세팅
 		pt.setMemberNo(memberNo);
 
