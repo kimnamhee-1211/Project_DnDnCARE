@@ -106,7 +106,7 @@
     <main class="bg-board-main container p-5">
         <div class="row h-50 p-3">
         	<div class="text-center m-4 d-flex justify-content-between">
-	      	  <div class="h1 p-2"><a href="home.do" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a></div>
+	      	  <div class="h1 p-2"><a href="communityBoardList.bo" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a></div>
 	          <h1 class="text-center p-2 m-4" style="font-weight: bold; color:#1D2D50;" id="target">환자/보호자 커뮤니티</h1>
           </div>
             <br><br>
@@ -222,7 +222,7 @@
                 <!-- 페이지네이션 -->
                 <div class="d-flex justify-content-end align-items-center m-5">
                 	<div class="input-group" style="width: 70%;">
-                		<form id="PsearchBoardForm" action="searchBoard.bo" method="get" class="d-flex w-100">
+                		<form id="PsearchBoardForm" action="communityBoardList.bo" method="get" class="d-flex w-100">
 				            <select id="PsearchType" name="searchType" class="form-select form-select-sm" aria-label="Small select example" style="max-width: 15%;">
 				                <option th:value="boardTitle" selected>제목</option>
 				                <option th:value="memberNickName">작성자</option>
@@ -233,46 +233,23 @@
 				        </form>
 				    </div>               
 	               <!-- 전체 페이지 네이션 -->
-						<th:block th:if="${pi != null}">
 						    <nav aria-label="Page navigation">
 						        <ul class="pagination">
 						            <li class="page-item" th:if="${pi.currentPage > 1}">
-						                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage-1}, categoryNo=${categoryNo}, area=${area})}" aria-label="Previous">
-						                    <span aria-hidden="true">&laquo;</span>
+						                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage-1}, categoryNo=${categoryNo}, area=${area}, searchType=${searchType}, searchText=${searchText})}" aria-label="Previous">
+						             	   <span aria-hidden="true">&laquo;</span>
 						                </a>
 						            </li>
 						            <li class="page-item" th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}">
-						                <a class="page-link" th:href="@{${loc}(page=${p}, categoryNo=${categoryNo}, area=${area})}">[[${p}]]</a>
-						            </li>
-						            <li class="page-item" th:if="${pi.currentPage < pi.maxPage}">
-						                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage+1}, categoryNo=${categoryNo}, area=${area})}" aria-label="Next">
-						                    <span aria-hidden="true">&raquo;</span>
-						                </a>
-						            </li>
-						        </ul>
-						    </nav>
-						</th:block>
-						
-						<!-- 검색 결과용 페이지 네이션 -->
-						<th:block th:if="${spi != null}">
-						    <nav aria-label="Page navigation for search results">
-						        <ul class="pagination">
-						            <li class="page-item" th:if="${spi.currentPage > 1}">
-						                <a class="page-link" th:href="@{${loc}(page=${spi.currentPage-1}, categoryNo=${categoryNo}, area=${area}, searchType=${searchType}, searchText=${searchText})}" aria-label="Previous">
-						                    <span aria-hidden="true">&laquo;</span>
-						                </a>
-						            </li>
-						            <li class="page-item" th:each="p : ${#numbers.sequence(spi.startPage, spi.endPage)}">
 						                <a class="page-link" th:href="@{${loc}(page=${p}, categoryNo=${categoryNo}, area=${area}, searchType=${searchType}, searchText=${searchText})}">[[${p}]]</a>
 						            </li>
-						            <li class="page-item" th:if="${spi.currentPage < spi.maxPage}">
-						                <a class="page-link" th:href="@{${loc}(page=${spi.currentPage+1}, categoryNo=${categoryNo}, area=${area}, searchType=${searchType}, searchText=${searchText})}" aria-label="Next">
+						            <li class="page-item" th:if="${pi.currentPage < pi.maxPage}">
+						                <a class="page-link" th:href="@{${loc}(page=${pi.currentPage+1}, categoryNo=${categoryNo}, area=${area}, searchType=${searchType}, searchText=${searchText})}" aria-label="Next">
 						                    <span aria-hidden="true">&raquo;</span>
 						                </a>
 						            </li>
 						        </ul>
 						    </nav>
-</th:block>
 
                 </div>
                 
