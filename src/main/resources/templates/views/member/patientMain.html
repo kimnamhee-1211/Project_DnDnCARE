@@ -366,7 +366,7 @@
    	  <!-- 매칭 신청/승낙 성공 시 모달 -->
 	<div class="modal fade" id="matSuccesseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-centered modal-lg">
-	    <div class="modal-content" th:if ="${matCName != null && result == 'request'}">
+	    <div class="modal-content" th:if ="${result == 'request'}">
 	      <div class="modal-header">
 	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 완료</h3>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -378,7 +378,7 @@
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 	      </div>
 	    </div>
-	     <div class="modal-content" th:if ="${matCName != null && result == 'approve'}">
+	    <div class="modal-content" th:if ="${result == 'approve'}">
 	      <div class="modal-header">
 	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 승낙 완료</h3>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -390,7 +390,7 @@
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 	      </div>
 	   </div>
-	   <div class="modal-content" th:if ="${ matCName == null && result == 'insert'}">
+	   <div class="modal-content" th:if ="${result == 'insert'}">
 	      <div class="modal-header">
 	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">공개 매칭 신청 완료</h3>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -402,7 +402,7 @@
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 	      </div>
 	   </div>
-	   <div class="modal-content" th:if ="${ matCName != null && result == 'cancell'}">
+	   <div class="modal-content" th:if ="${result == 'cancell'}">
 	      <div class="modal-header">
 	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 취소 완료</h3>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -622,7 +622,7 @@
     	    const result = /*[[${result}]]*/''
     	    /*]]>*/
     	    
-        	if(result != null){
+        	if(result =='request' || result =='approve' ||  result =='insert' || result =='cancell' ){
         		$('#matSuccesseModal').modal('show');
         	}
         	
