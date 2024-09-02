@@ -538,16 +538,6 @@ public class MemberController {
 
 		}
 		
-		System.out.println("===여기여기===");
-		System.out.println(eList);
-		System.out.println("===여기여기===");
-		
-		
-		
-		
-		
-		
-		
 		JSONArray array = new JSONArray();
 
 		if (!eList.isEmpty()) {
@@ -940,6 +930,8 @@ public class MemberController {
 		String code = (String) session.getAttribute("code");
 		m.setMemberSocailToken(code);
 		session.removeAttribute("code");
+		
+		
 		int result = mService.enroll(m);
 
 		// 회원가입용 session데이터
@@ -1401,7 +1393,11 @@ public class MemberController {
 	public String enrollPatient(@ModelAttribute Patient pt, @RequestParam("postcode") String postcode,
 			@RequestParam("roadAddress") String roadAddress, @RequestParam("detailAddress") String detailAddress,
 			HttpSession session) {
-
+		
+		System.out.println("=========여기여기여기===========");
+		System.out.println(session.getAttribute("enrollmember"));
+		System.out.println("=========여기여기여기===========");
+		
 		// 간병인 memberNo 세팅
 		pt.setMemberNo(((Member) session.getAttribute("enrollmember")).getMemberNo());
 
