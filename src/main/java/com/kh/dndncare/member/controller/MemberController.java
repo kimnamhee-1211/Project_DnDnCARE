@@ -931,10 +931,6 @@ public class MemberController {
 		m.setMemberSocailToken(code);
 		session.removeAttribute("code");
 		
-<<<<<<< HEAD
-		
-=======
->>>>>>> branch 'backup' of https://github.com/JONGGYU94/dndncare.git
 		int result = mService.enroll(m);
 
 		
@@ -1395,17 +1391,8 @@ public class MemberController {
 	@PostMapping("enrollPatient.me")
 	public String enrollPatient(@ModelAttribute Patient pt, @RequestParam("postcode") String postcode,
 			@RequestParam("roadAddress") String roadAddress, @RequestParam("detailAddress") String detailAddress,
-<<<<<<< HEAD
-			HttpSession session) {
-		
-		System.out.println("=========여기여기여기===========");
-		System.out.println(session.getAttribute("enrollmember"));
-		System.out.println("=========여기여기여기===========");
-		
-=======
 			@RequestParam("memberNo") int memberNo) {
 
->>>>>>> branch 'backup' of https://github.com/JONGGYU94/dndncare.git
 		// 간병인 memberNo 세팅
 		pt.setMemberNo(memberNo);
 
