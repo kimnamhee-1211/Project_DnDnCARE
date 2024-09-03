@@ -1210,8 +1210,10 @@
 									}
 									
 									let half = Math.floor(modScore);
-									imgArr[half].setAttribute("src", "image/icon/halfStar.png");
-									imgArr[half].setAttribute("width", "25px");
+									if(half != undefined && half < 5) {
+										imgArr[half].setAttribute("src", "image/icon/halfStar.png");
+										imgArr[half].setAttribute("width", "25px");
+									}
 									
 									
 									for(let i = 4; i >= Math.ceil(modScore); i--){
@@ -1370,7 +1372,7 @@
 								imgArr.push(document.createElement('img'));
 								imgArr.push(document.createElement('img'));
 								imgArr.push(document.createElement('img'));
-								const modScore = d.avgReviewScore % 2
+								const modScore = d.avgReviewScore / 2;
 								if(modScore == 0){ // 별점이 짝수
 									for(let i = 0; i < modScore; i++){
 										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
@@ -1387,8 +1389,10 @@
 									}
 									
 									let half = Math.floor(modScore);
-									imgArr[half].setAttribute("src", "image/icon/halfStar.png");
-									imgArr[half].setAttribute("width", "25px");
+									if(half != undefined && half < 5) {
+										imgArr[half].setAttribute("src", "image/icon/halfStar.png");
+										imgArr[half].setAttribute("width", "25px");
+									}
 									
 									
 									for(let i = 4; i >= Math.ceil(modScore); i--){
