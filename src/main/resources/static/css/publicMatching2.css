@@ -103,8 +103,9 @@ lable{
 }
 
 .apply-btn {
-	background:#8dd986;
+	background:#2D6475;
 	color:white;
+	
 }
 .icon-wrap {
             display: flex;
@@ -121,6 +122,42 @@ lable{
       width: 50%;
       white-space:nowrap;
   }
+  
+  .form-floating.mb-5.mt-5 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 가운데 정렬 */
+}
+	
+	.instruction-text.request {
+	    text-align: center;
+	    width: 100%;
+	    margin-bottom: 20px;
+	    margin:0 auto;
+	    
+	}
+	
+	.instruction-text.request p {
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+	    margin-bottom: 10px;
+	}
+	
+	.instruction-text.request em {
+	    display: block;
+	    text-align: center;
+	}
+	
+	#ptRequest {
+	    width: 100%;
+	    max-width: 600px; /* 텍스트 영역의 최대 너비 */
+	    height: 100px; /* 높이 조정 */
+	    margin: 0 auto;
+	}
   
   .instruction-text em {
   	color:#ffc04d;
@@ -212,7 +249,7 @@ lable{
         text-align: center;
     }
     .btn-radio.selected {
-        background-color: #8dd986;
+        background-color: #1E5F74;
         color: white;
     }
 
@@ -223,7 +260,8 @@ lable{
 }
 
 .btn-radio:hover {
-    background-color: #8dd986;
+    background-color: #1E5F74;
+    color:white;
 }
 
 .btn-check:checked + .btn-radio:hover {
@@ -256,15 +294,18 @@ lable{
             border-radius:10px;
         }
         .icon-container.selected {
-            border : 4px solid #1D2D50;
-            background:white;
-            	box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
-						  7px 7px 20px 0px rgba(0,0,0,.1),
-						  4px 4px 5px 0px rgba(0,0,0,.1);
+            border : 4px solid #1E5F74;
+            background:#1E5F74;
+            opacity:0.9;
+			color:white;
         }
         .icon-container img {
         	margin-top:10px;
             margin-bottom: 10px;  /* 이미지와 텍스트 사이 간격 */
+        }
+        
+        .icon-container.selected img {
+        	filter: invert(1);
         }
         .icon-container p {
             font-size: 1.75rem;
@@ -293,11 +334,20 @@ lable{
 }
 
 .wantMoney-section {
-	margin-left:190px;
+	 width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
 #money-input {
-	margin-left:100px;
+	margin-top:30px;
+	margin-left:200px;
+}
+
+#money {
+	height:50px;
 }
 
 .input-field-row {

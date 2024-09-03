@@ -139,6 +139,32 @@ public class BoardServiceImpl implements BoardService {
 		return bMapper.searchCareInformation(map, rowBounds);
 	}
 
+	@Override
+	public int getListCountQnA() {
+		return bMapper.getListCountQnA();
+	}
+
+	@Override
+	public ArrayList<Board> qnaBoardList(PageInfo pi) {
+		int offset = (pi.getCurrentPage() - 1)*pi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
+		return bMapper.qnaBoardList(rowBounds);
+	}
+	
+	@Override
+	public int getMyListCountQnA(int memberNo) {
+		return bMapper.getMyListCountQnA(memberNo);
+	}
+
+	@Override
+	public ArrayList<Board> myQnAList(int memberNo, PageInfo mpi) {
+		int offset = (mpi.getCurrentPage() - 1)*mpi.getBoardLimit();
+		RowBounds rowBounds = new RowBounds(offset, mpi.getBoardLimit());
+		return bMapper.myQnAList(memberNo, rowBounds);
+	}
+
+	
+
 
 
 

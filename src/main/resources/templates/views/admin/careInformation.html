@@ -29,6 +29,13 @@
 			<div th:replace="~{common/adminbarTemp :: sidebar}"></div>
 			
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+				<br/>
+				<div style="display:grid; grid-template-columns: 1fr 50px 1fr;">
+					<div class="text-center"><span class="badge bg-dark fs-5">최근 일주일 간병백과 방문자 수</span></div>
+					<div></div>
+					<div class="text-center"><span class="badge bg-dark fs-5">최근 일주일 (조회가 실패한)검색조건 TOP3</span></div>
+				</div>
+				<br/>
 				<div id="graphDiv">
 					<div class="h-100 p-2 bg-light border rounded-3 text-center">
 						<canvas id="barChart"></canvas>
@@ -36,8 +43,10 @@
 					
 					<div><!-- 사이공백 --></div>
 					
-					<div class="h-100 p-2 bg-light border rounded-3 text-center">
+					<div class="h-100 p-2 bg-light border rounded-3 text-center" style="display:grid; grid-template-columns:1fr 382px 1fr;">
+						<div><!-- 공백 --></div>
 						<canvas id="pieChart"></canvas>
+						<div><!-- 공백 --></div>
 					</div>
 				</div>	
 				
@@ -57,7 +66,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="b : ${bList}">
+								<tr th:each="b : ${bList}" th:if="${bList != null}">
 									<td>[[${b.boardNo}]]</td>
 									<td>[[${b.boardTitle}]]</td>
 									<td>[[${b.memberNickName}]]</td>
@@ -141,34 +150,55 @@
 								other.parentElement.style.background = 'white'; // 클릭하지 않은 tr의 배경색을 white로 변경
 							}
 						}
-					})
-					this.parentElement.style.background = 'lightgray'; // 클릭한 tr의 배경색을 lightgray로 변경
-					
-					// 상세보기 div에 출력할 노드 작성(시작)
-					const titleSpan = document.createElement('span');
-					titleSpan.setAttribute("class", "badge rounded-pill bg-dark fs-6");
-					titleSpan.innerText = '내용';
-					
-					const br = document.createElement('br');
-					
-					let content = '';
-					/*<![CDATA[*/
-					const bList = /*[[${bList}]]*/'bList'
-					/*]]>*/
-					for(const b of bList){
-						if(this.parentElement.children[0].innerText == b.boardNo){
-							content = b.boardContent;
-							break;
+						
+						let myStatusDivList = this.parentElement.children[5].children;
+						let status; // 현재 상태를 저장할 변수 선언
+						for(const div of myStatusDivList){
+							if(div.className.includes('selectState')){
+								status = div.innerText; // 현재 상태를 변수에 저장한다.
+							}
 						}
-					}
-					
-					detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + content;
-					/* detailDiv.append(titleSpan);
-					detailDiv.append(br);
-					detailDiv.append(content); */
-				})
-				
-				
+						
+						if(status == 'Y'){ // 현재 글의 상태가 Y인 경우
+							btnList[1].innerText = '내리기';
+							btnList[1].classList.remove('btn-primary');
+							btnList[1].classList.add('btn-danger');
+						} else { // 현재 글의 상태가 N인 경우
+							btnList[1].innerText = '올리기';
+							btnList[1].classList.remove('btn-danger');
+							btnList[1].classList.add('btn-primary');
+						}
+						
+						if(btnList.length == 4) { 
+							btnList[3].remove(); // [등록하기], [취소하기] 버튼을 삭제한다.
+							btnList[2].remove();
+							btnList[1].style.display = 'inline';
+							btnList[0].style.display = 'inline';
+						}
+						
+						this.parentElement.style.background = 'lightgray'; // 클릭한 tr의 배경색을 lightgray로 변경
+						
+						/*<![CDATA[*/
+						const bList = /*[[${bList}]]*/'bList'
+						/*]]>*/
+						for(const b of bList){
+							if(this.parentElement.children[0].innerText == b.boardNo){
+								boardContent = b.boardContent;
+								boardTitle = b.boardTitle;
+								boardNo = b.boardNo;
+								break;
+							}
+						}
+						
+						detailDiv.innerHTML = '<span class="badge rounded-pill bg-dark fs-6">내용</span><br/>' + boardContent;
+						
+						for(let btn of btnList){
+							btn.classList.remove('btn-light');
+							btn.classList.add('btn-primary');
+							btn.disabled = false;
+						}
+					})
+				}
 			}
 			
 			// 글 조회에서 수정과 삭제 요청 (시작)
@@ -282,6 +312,7 @@
 											if(i > 1) fourBtnList[i].remove(); // [등록하기],[취소하기] 버튼을 페이지에서 삭제
 											else fourBtnList[i].style.display = 'inline'; // [수정하기], [내리기] 버튼을 화면에 표시
 										}
+										location.reload();
 					 				} else{
 					 					alert('서비스 요청에 실패하였습니다.');
 					 				}
@@ -503,7 +534,11 @@
 		let labels = [];
 		let data = [];
 		for(const arr of ent){
-			labels.push(arr[0]);
+			if(arr[0] == 'undefined') {
+				labels.push('-');
+			} else {
+				labels.push(arr[0]);
+			}
 			data.push(arr[1]);
 		}
 		

@@ -28,7 +28,7 @@ public interface MemberService {
 
 	Member login(Member m);
 	
-	int noInfomemberdle();
+	int noInfomemberdle(int memberNo);
 
 	int idCheck(String id);
 	
@@ -110,7 +110,7 @@ public interface MemberService {
 
 	int getMatchingListCount(HashMap<String, Object> searchOption);
 
-	ArrayList<Member> selectMatchingMemberList(ArrayList<Integer> matNoList);
+	ArrayList<Patient> selectMatchingMemberList(ArrayList<Integer> matNoList);
 
 	ArrayList<MatPtInfo> selectMatchingPTInfoList(ArrayList<Integer> matNoList);
 
@@ -209,6 +209,11 @@ public interface MemberService {
 	int getCountPendingMe(int matNo, int memberNo);
 
 	int getCountPt(int matNo);
+
+	Integer getDelMemberNo();
+
+	Member findPwdResult(Member member);
+	Matching selectEndDateMat(int matNo);
 
 
 

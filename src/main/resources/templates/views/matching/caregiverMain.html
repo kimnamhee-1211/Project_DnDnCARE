@@ -307,8 +307,8 @@
    	   </div>
     
     </div>
+    <br><br><br><br>
     
-    <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     
     <!-- 캘린더 이벤트의 모달박스 (시작)-->
@@ -350,8 +350,9 @@
 		</div>
 	</div>
     <!-- 캘린더 이벤트의 모달박스 (끝) -->
-    
-    
+    <div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
+    <div class="matFixedBtn" th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
+    <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     <script th:inline="javascript">
     /*<![CDATA[*/

@@ -4,8 +4,11 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -15,7 +18,10 @@ import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,20 +29,28 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 import com.kh.dndncare.admin.model.exception.AdminException;
 import com.kh.dndncare.admin.model.service.AdminService;
 import com.kh.dndncare.admin.model.vo.Attachment;
+import com.kh.dndncare.board.model.exception.BoardException;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Reply;
 import com.kh.dndncare.common.ImageUtil;
+import com.kh.dndncare.common.Pagination;
 import com.kh.dndncare.common.Pagination2;
 import com.kh.dndncare.common.ThumbnailUtil;
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.Exception.MemberException;
 import com.kh.dndncare.member.model.vo.Member;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -48,13 +62,129 @@ public class AdminController {
 	@Autowired
 	private ThumbnailUtil thumbnailUtil;
 	
-	
+	@Autowired
+	private BCryptPasswordEncoder bCrypt;
 	
 	
 	// 관리자 로그인 => 관리자 메인 페이지로 이동하는 메소드
 	@GetMapping("adminMain.adm")
-	public String adminMain() {
-
+	public String adminMain(Model model) {
+		// 1) 최근 방문자 수에 대한 로그파일 읽어오기
+		membersGraph(model);
+		
+		// 2) 최근 문의 목록
+		ArrayList<Board> queryList = aService.recentQueryList();
+		
+		// 실험실
+		java.util.Date today = new java.util.Date();
+		long nowMilli = today.getTime();
+		
+		for(Board q : queryList) {
+			long createMilli = q.getBoardCreateDate().getTime();
+			int calcMilli = (int)Math.floor((nowMilli - createMilli)/3600000);
+			q.setPassHours(calcMilli);
+		}
+		
+		if(queryList != null) {
+			model.addAttribute("queryList", queryList);
+		}
+		
+		//
+		File matchingFoler = new File("C:/logs/matchingCreate/");
+		File[] matchingFileList = matchingFoler.listFiles();
+		TreeMap<String, Integer> personalMap = new TreeMap<String, Integer>();
+		TreeMap<String, Integer> shareMap = new TreeMap<String, Integer>();
+		
+		//최근 1주일 날짜 만들기
+		// 최근 일주일의 날짜에 접근
+		Calendar c = GregorianCalendar.getInstance();
+		int year = c.get(Calendar.YEAR); // 2024
+		int month = c.get(Calendar.MONTH) + 1; // 7 + 1 == 8 (0부터 시작)
+		String realMonth = month < 10 ? "0"+month : month+""; // 08
+		int date = c.get(Calendar.DATE); // 18
+		String now = year + realMonth + date; // 20240818
+		int nowInteger = Integer.parseInt(now);
+		
+		// 일주일전 날짜를 20240811 로 출력하기
+		c.set(year, month, date-7); 
+		int agoYear = c.get(Calendar.YEAR);
+		int agoMonth = c.get(Calendar.MONTH);
+		String agoRealMonth = agoMonth < 10 ? "0"+agoMonth : agoMonth+"";
+		int agoDate = c.get(Calendar.DATE);
+		String agoRealDate = agoDate < 10 ? "0"+agoDate : agoDate+"";
+		String ago = agoYear + agoRealMonth + agoRealDate; // 20240811
+		int agoInteger = Integer.parseInt(ago);
+		
+		try { 
+			for(File f : matchingFileList) {
+				BufferedReader br = new BufferedReader(new FileReader(f));
+				String data;
+				while((data=br.readLine())!=null) {
+					//2023-08-30 10:03:49 _ 매칭번호 //195//공동간병	
+					boolean flag = data.contains("개인간병"); // true == 개인간병, false == 공동간병
+					String dashDate = data.split(" ")[0];
+					String[] arr = dashDate.split("-");
+					int dateInteger = Integer.parseInt(arr[0]+arr[1]+arr[2]);
+					String dateStr = dashDate.substring(2);
+					
+					if(agoInteger < dateInteger) {
+						if(flag) { // 개인간병인 경우
+							if(personalMap.containsKey(dateStr)) {
+								personalMap.put(dateStr, personalMap.get(dateStr) + 1);
+							} else {
+								personalMap.put(dateStr, 1);
+							}
+						} else { // 공동간병인 경우
+							if(shareMap.containsKey(dateStr)) {
+								shareMap.put(dateStr, shareMap.get(dateStr) + 1);
+							} else {
+								shareMap.put(dateStr, 1);
+							}
+						}
+					}
+				}
+				br.close();
+			}
+			model.addAttribute("personalMap", personalMap);
+			model.addAttribute("shareMap", shareMap);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} 
+		
+		
+		// 결제 정보 조회
+		ArrayList<Pay> payList = aService.getPayDeposit();
+		TreeMap<String, Integer> homeMap = new TreeMap<String, Integer>();
+		TreeMap<String, Integer> hospitalMap = new TreeMap<String, Integer>();
+		
+		for(Pay p : payList) {
+			int money = p.getPayMoney();
+			String dashDate = String.valueOf(p.getPayDate()); // 2024-08-28
+			String[] arr = dashDate.split("-");
+			int dateInteger = Integer.parseInt(arr[0]+arr[1]+arr[2]);
+			String dateStr = dashDate.substring(2);
+			
+			if(agoInteger < dateInteger) {
+				if(p.getPayService().equals("가정돌봄")) {
+					if(homeMap.containsKey(dateStr)) {
+						homeMap.put(dateStr, homeMap.get(dateStr) + money);
+					} else {
+						homeMap.put(dateStr, money);
+					}
+				}
+				if(p.getPayService().equals("병원돌봄")) {
+					if(hospitalMap.containsKey(dateStr)) {
+						hospitalMap.put(dateStr, hospitalMap.get(dateStr) + money);
+					} else {
+						hospitalMap.put(dateStr, money);
+					}
+				}
+			}
+		}
+		model.addAttribute("homeMap", homeMap);
+		model.addAttribute("hospitalMap", hospitalMap);
+		
 		return "adminMain";
 	}
 
@@ -63,7 +193,7 @@ public class AdminController {
 	public String careInformation(@RequestParam(value="page", defaultValue="1") int currentPage, Model model,
 									HttpServletRequest request) {
 		// 로그 파일 : 페이지 이용량을 조회 (시작)
-		File usageFolder = new File("C:/logs/dndnCare/careInformationUsage/");
+		File usageFolder = new File("C:/logs/careInformationUsage/");
 		File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
 		
 		TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
@@ -89,7 +219,7 @@ public class AdminController {
 		// 로그 파일 : 페이지 이용량을 조회 (끝)
 			
 		// 로그 파일 : 최근 일주일 검색어 조회 (시작)	
-		File searchFolder = new File("C:/logs/dndnCare/careInformation/");
+		File searchFolder = new File("C:/logs/careInformation/");
 		File[] searchFileList = searchFolder.listFiles();
 		//System.out.println(Arrays.toString(searchFileList));
 		//[C:\logs\dndnCare\careInformation\careInformation.log, C:\logs\dndnCare\careInformation\careInformation.log.20240816]
@@ -149,23 +279,20 @@ public class AdminController {
 		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 7, 5);
 		ArrayList<Board> bList = aService.selectAllCareInformation(pi); // 이래도 되나?
 		ArrayList<Integer> bNoList = new ArrayList<Integer>();
+		ArrayList<Attachment> aList = new ArrayList<Attachment>();
 		for(Board b : bList) {
 			bNoList.add(b.getBoardNo());
 		}
-		ArrayList<Attachment> aList = aService.selectAttachment(bNoList);
-		
-		
-		
-		if(!bList.isEmpty()) {
-			model.addAttribute("bList", bList);
-			model.addAttribute("aList", aList);
-			model.addAttribute("pi", pi);
-			System.out.println(pi);
-			model.addAttribute("loc", request.getRequestURI());
-			return "admin/careInformation";
-		} else {
-			throw new AdminException("서비스 요청에 실패하였습니다.");
+		if(!bNoList.isEmpty()) {
+			aList = aService.selectAttachment(bNoList);
 		}
+		
+		model.addAttribute("bList", bList);
+		model.addAttribute("aList", aList);
+		model.addAttribute("pi", pi);
+		model.addAttribute("loc", request.getRequestURI());
+		return "admin/careInformation";
+		
 	}
 
 	// 간병백과 작성 페이지로 이동
@@ -173,10 +300,6 @@ public class AdminController {
 	public String writeCareInformation(HttpSession session, Model model,
 										@RequestParam("labels") ArrayList<String> labels,
 										@RequestParam("data") ArrayList<String> data) {
-		System.out.println(labels); // [이건없어, 아아, test-m-p20]
-		System.out.println(data); // [19, 5, 3]
-		
-		
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		if (loginUser != null) {
 			if (loginUser.getMemberCategory().equals("A")) {
@@ -227,9 +350,13 @@ public class AdminController {
 						}
 					}
 					
+					if(type.equals("jpeg")) {
+						type="jpg";
+					}
+					
 					String copyName = copyNameCreate(); 				// 첨부파일명(확장자가 없음)을 생성한다.
 					renameName = copyName + "." + type; 				// 첨부파일명 + ".확장자"를 DB에 저장할 리네임으로 지정한다.
-				ImageUtil.base64ToFile(copyName, b64);  				// 첨부파일명과 암호화된 이미지src를 전달한다.
+					ImageUtil.base64ToFile(copyName, b64);  				// 첨부파일명과 암호화된 이미지src를 전달한다.
 					
 					if(content.contains(b64)) {
 						content = content.replace(b64, renameName); 	// HTML의 암호화부분을 "첨부파일명.확장자"로 바꾸어 둔다. (View에서 출력하기 편리하게 하기 위함)
@@ -246,11 +373,11 @@ public class AdminController {
 			
 			// 2. 썸네일 생성하기
 			//BufferedImage image = ImageIO.read(new File("\\\\192.168.40.37\\sharedFolder/dndnCare/thumbnail.png")); // 바탕이 될 썸네일 기본 이미지를 불러온다.
-			BufferedImage image = ImageIO.read(new File("C:\\\\uploadFinalFiles/thumbnail.png"));
-			image = thumbnailUtil.createThumbnail(image, b.getBoardTitle(), 25, 150); // 썸네일 기본 이미지 위에 텍스트 입력하기
+			BufferedImage image = ImageIO.read(new File("C:\\\\uploadFiles/careInformation/thumbnail.png"));
+			image = thumbnailUtil.createThumbnail(image, b.getBoardTitle(), 50, 130); // 썸네일 기본 이미지 위에 텍스트 입력하기
 			String thumbnailName = copyNameCreate() + ".png"; // 텍스트 입력한 썸네일 파일을 저장할 때 사용할 파일명
 			//thumbnailUtil.saveImage(image, "\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
-			thumbnailUtil.saveImage(image, "C:\\\\uploadFinalFiles/" + thumbnailName);
+			thumbnailUtil.saveImage(image, "C:\\\\uploadFiles/careInformation/" + thumbnailName);
 			
 			// 3. DB에 전달할 데이터로서 가공한다. : "data:image/~~~~~"인 부분을 잘라내면됨
 			int bResult = aService.insertCareInfomation(b); // 게시글 삽입 후 생성된 글 번호를 받아온다.
@@ -260,7 +387,7 @@ public class AdminController {
 					attm.setRefBoardNo(b.getBoardNo()); // 첨부파일에 대한 참조글번호를 지정한다.
 					attm.setOriginalName(b.getBoardTitle());
 					//attm.setAttmPath("\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + renameName);
-					attm.setAttmPath("C:\\\\uploadFinalFiles/" + renameName);
+					attm.setAttmPath("C:\\\\uploadFiles/careInformation" + renameName);
 					attm.setAttmLevel(1);
 				}
 				
@@ -268,7 +395,7 @@ public class AdminController {
 				thumbnail.setRefBoardNo(b.getBoardNo());
 				thumbnail.setOriginalName("auto_Thumbnail");
 				thumbnail.setRenameName(thumbnailName);
-				thumbnail.setAttmPath("C:\\\\uploadFinalFiles/" + thumbnailName);
+				thumbnail.setAttmPath("C:\\\\uploadFiles/careInformation" + thumbnailName);
 				//thumbnail.setAttmPath("\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
 				thumbnail.setAttmLevel(0);
 				aList.add(thumbnail); // aList의 마지막 index에 썸네일을 add한다.
@@ -378,6 +505,11 @@ public class AdminController {
 							}
 						}
 						
+						if(type.equals("jpeg")) {
+							type="jpg";
+						}
+						
+						
 						String copyName = copyNameCreate(); // 첨부파일명(확장자가 없음)을 생성한다.
 						renameName = copyName + "." + type; // 첨부파일명 + ".확장자"를 DB에 저장할 리네임으로 지정한다.
 						ImageUtil.base64ToFile(copyName, b64);  // 첨부파일명과 암호화된 이미지src를 전달한다.
@@ -435,11 +567,11 @@ public class AdminController {
 				
 				// 썸네일을 새롭게 생성한다.
 				//BufferedImage image = ImageIO.read(new File("\\\\192.168.40.37\\sharedFolder/dndnCare/thumbnail.png")); // 바탕이 될 썸네일 기본 이미지를 불러온다.
-				BufferedImage image = ImageIO.read(new File("C:\\\\uploadFinalFiles/thumbnail.png"));
+				BufferedImage image = ImageIO.read(new File("C:\\\\uploadFiles/careInformation/thumbnail.png"));
 				image = thumbnailUtil.createThumbnail(image, b.getBoardTitle(), 25, 150); // 썸네일 기본 이미지 위에 텍스트 입력하기
 				String thumbnailName = copyNameCreate() + ".png"; // 텍스트 입력한 썸네일 파일을 저장할 때 사용할 파일명
 				//thumbnailUtil.saveImage(image, "\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
-				thumbnailUtil.saveImage(image, "C:\\\\uploadFinalFiles/" + thumbnailName);
+				thumbnailUtil.saveImage(image, "C:\\\\uploadFiles/careInformation/" + thumbnailName);
 				
 				
 				// 새로운 썸네일을 DB에 저장한다.
@@ -447,7 +579,7 @@ public class AdminController {
 				thumbnail.setRefBoardNo(b.getBoardNo());
 				thumbnail.setOriginalName("auto_Thumbnail");
 				thumbnail.setRenameName(thumbnailName);
-				thumbnail.setAttmPath("C:\\\\uploadFinalFiles/" + thumbnailName);
+				thumbnail.setAttmPath("C:\\\\uploadFiles/careInformation/" + thumbnailName);
 				//thumbnail.setAttmPath("\\\\192.168.40.37\\sharedFolder/dndnCare/admin/board/" + thumbnailName);
 				thumbnail.setAttmLevel(0);
 				int insertThumbnailResult = aService.insertThumbnail(thumbnail);
@@ -468,7 +600,7 @@ public class AdminController {
 	}
 	
 	public void deleteFile(String fileName) {
-		File saveFile = new File("C:\\uploadFinalFiles\\" + fileName);
+		File saveFile = new File("C:\\uploadFiles\\careInformation\\" + fileName);
 		if(saveFile.exists()) saveFile.delete(); // 저장소 내에 파일이 존재할 때만 삭제한다.
 	}
 	
@@ -489,6 +621,36 @@ public class AdminController {
 		return "payInfo";
 	}
 	
+	// 관리자 게시판 관리
+	@GetMapping("adminBoard.adm")
+	public String adminBoardView(@RequestParam(value="caregiverPage", defaultValue = "1") int caregiverPage,
+		    					@RequestParam(value="patientPage", defaultValue = "1") int patientPage, Model model) {
+		// 간병인 커뮤니티 게시판 페이지네이션
+		int caregiverListCount = aService.getCaregiverListCount();
+		PageInfo cpi = Pagination.getPageInfo(caregiverPage, caregiverListCount, 10);
+		
+		// 환자 커뮤니티 게시판 페이지네이션
+		int patientListCount = aService.getPatientListCount();
+		PageInfo ppi = Pagination.getPageInfo(patientPage, patientListCount, 10);
+		
+		// 간병인 커뮤니티 게시판 type만들걸
+		ArrayList<Board> adminCaregiverBoardList = aService.selectCaregiverBoardList(cpi);
+		System.out.println(adminCaregiverBoardList);
+		// 환자 커뮤니티
+		ArrayList<Board> adminPatientBoardList = aService.selectPatientBoardList(ppi);
+		System.out.println(adminPatientBoardList);
+		if(adminCaregiverBoardList != null) {
+			model.addAttribute("cpi",cpi);
+			model.addAttribute("cbList", adminCaregiverBoardList);
+			model.addAttribute("ppi",ppi);
+			model.addAttribute("pbList", adminPatientBoardList);
+		}else {
+			throw new AdminException("게시글 조회에 실패하였습니다.");
+		}
+		return "adminBoard";
+	}
+
+
 	// 회원관리 페이지로 이동을 요청
 	@GetMapping("members.adm")
 	public String members(@RequestParam(value="page", defaultValue="1") int currentPage, Model model,
@@ -522,7 +684,7 @@ public class AdminController {
 	// 그래프 작업용 메소드를 따로 만들기
 	public void membersGraph(Model model) {
 		// 로그 읽어오기 : C:\logs\dndnCare\loginUser
-		File folder = new File("C:/logs/dndnCare/loginUser");
+		File folder = new File("C:/logs/loginUser");
 		File[] fileList = folder.listFiles();
 		
 		// 2주치의 로그파일을 1주일씩 각각 읽어오기
@@ -561,7 +723,7 @@ public class AdminController {
 		try {
 			for(File f : fileList) {
 				String fileName = f.getName();
-				String[] nameArr = fileName.split(".log");
+				String[] nameArr = fileName.split(".log.");
 				
 				BufferedReader br = new BufferedReader(new FileReader(f));
 				
@@ -593,6 +755,9 @@ public class AdminController {
 				
 				br.close();
 			}
+			System.out.println("=====여기여기=====");
+			System.out.println(oneWeekAgo);
+			System.out.println("=====여기여기=====");
 			
 			model.addAttribute("oneWeekAgo", oneWeekAgo);
 			model.addAttribute("twoWeekAgo", twoWeekAgo);
@@ -740,21 +905,943 @@ public class AdminController {
 //		보유질환 (0~10개, 선택)					: MEMBER_INFO 
 //		키	(필수)							: PATIENT
 //		몸무게  (필수)							: PATIENT
+	}
+	
+	// 게시글(공지) 작성
+	@PostMapping("insertAnnouncement.adm")
+	public String insertAnnouncement(@ModelAttribute Board b, HttpSession session) {
+		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		b.setMemberNo(memberNo);
+		b.setMemberNickName("관리자");
 		
+		System.out.println("------------");
+		System.out.println(b);
+		System.out.println("------------");
 		
+		int result = aService.insertAnnouncement(b);
+		if(result > 0) {
+			return "redirect:adminBoard.adm";
+		}else {
+			throw new BoardException("공지 작성에 실패하였습니다.");
+		}
+	}
+	
+	// 게시글 상태변경
+	@GetMapping("updateAdminBoardStatus.adm")
+	@ResponseBody
+	public String updateAdminBoardStatus(@RequestParam("boardNo") int boardNo, @RequestParam("boardStatus") String boardStatus ) {
+		int result = aService.updateAdminBoardStatus(boardNo, boardStatus);
+		if(result > 0) {
+			return result == 1 ? "success" : "fail";
+		}else {
+			throw new AdminException("게시글 상태변경에 실패했습니다.");
+		}
+	}
+	
+	
+	// 게시물 상세조회
+	@GetMapping("selectAdminBoard.adm")
+	public String selectAdminBoard(@RequestParam("bNo") int bNo, @RequestParam("page") int page,  Model model) {
+		// 게시글
+		Board boardList = aService.adminSelectBoard(bNo);
+
+		// 댓글
+		ArrayList<Reply> replyList = aService.adminSelectReply(bNo);
 		
+		System.out.println("===================");
+		System.out.println(boardList);
+		System.out.println("+++++++++++++++++++");
+		System.out.println(replyList);
+		System.out.println("===================");
+		
+		if(boardList != null) {
+			model.addAttribute("b", boardList);
+			model.addAttribute("replyList", replyList);
+			return "adminBoardDetail";
+		}else {
+			throw new AdminException("게시글 상세보기에 실패했습니다.");
+		}
+	}
+	
+	// 게시글 삭제
+	@PostMapping("amdimDeleteBoard.adm")
+	public String adminDeleteBoard(@RequestParam("boardNo") int boardNo) {
+		int result = aService.adminDeleteBoard(boardNo);
+		if(result > 0) {
+			return "redirect:adminBoard.adm";
+		}else {
+			throw new AdminException("게시글 삭제에 실패했습니다.");
+		}
+	}
+	
+	//어드민 페이 토탈 통계 에이작스
+	
+	@GetMapping("weekPayTotal.adm")
+	@ResponseBody
+	public void weekPayTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2, HttpServletResponse response) {
+		
+		int year1 = Integer.parseInt(data1.split("-")[0]);
+		int month1 = Integer.parseInt(data1.split("-")[1]);
+		int day1 = Integer.parseInt(data1.split("-")[2]);
+		
+		LocalDate date1 = LocalDate.of(year1, month1, day1);
+        
+        
+        //long daysBetween = ChronoUnit.DAYS.between(date1, date2);
+        
+        HashMap<String,Object> map = new HashMap<String,Object>();
+        
+        
+        String[] labels = {date1.plusDays(0).toString(),date1.plusDays(1).toString(),date1.plusDays(2).toString()
+        					,date1.plusDays(3).toString(),date1.plusDays(4).toString(),date1.plusDays(5).toString(),date1.plusDays(6).toString()};
+        map.put("labels", labels);
+        
+        int[] datas1 = new int[7];
+        int[] datas2 = new int[7];
+        
+        
+        ArrayList<Pay> psDp = aService.selectPayDeposit("Y");		//페이 다가져와
+		for(Pay p : psDp) {
+			System.out.println("결제날짜 = " + p.getPayDate());
+			
+			if(p.getPayService().equals("가정돌봄")){
+				
+				if(p.getPayDate().toLocalDate().equals(date1)) {
+					datas1[0] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(1))) {
+					datas1[1] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(2))) {
+					datas1[2] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(3))) {
+					datas1[3] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(4))) {
+					datas1[4] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(5))) {
+					datas1[5] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(6))) {
+					datas1[6] += p.getPayMoney();
+				}
+			}else if(p.getPayService().equals("병원돌봄")) {
+				
+				if(p.getPayDate().toLocalDate().equals(date1)) {
+					datas2[0] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(1))) {
+					datas2[1] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(2))) {
+					datas2[2] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(3))) {
+					datas2[3] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(4))) {
+					datas2[4] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(5))) {
+					datas2[5] += p.getPayMoney();
+				}else if(p.getPayDate().toLocalDate().equals(date1.plusDays(6))) {
+					datas2[6] += p.getPayMoney();
+				}
+				
+			}
+			
+		}
+        map.put("datas1",datas1);
+        map.put("datas2",datas2);
+        
+        Gson gson = new Gson();
+		response.setContentType("application/json; charset=UTF-8;");
+		try {
+			gson.toJson(map, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
+	        
+			
+	}//페이토탈메소드끝
+	
+	//어드민 페이 토탈 통계 달
+	
+		@GetMapping("monthPayTotal.adm")
+		@ResponseBody
+		public void monthPayTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2,@RequestParam("flag") int flag, HttpServletResponse response) {
+			ArrayList<Pay> psDp = aService.selectPayDeposit("Y");		//페이 다가져와
+			if(flag == 1) {
+				int year1 = Integer.parseInt(data1.split(",")[0]);
+				int month1 = Integer.parseInt(data2.split(",")[0]);
+				
+				//일수 계산하자
+				YearMonth yearMonth = YearMonth.of(year1, month1);
+				int days = yearMonth.lengthOfMonth();
+				System.out.println("내년월수 뭐야?" + yearMonth);
+		        HashMap<String,Object> map = new HashMap<String,Object>();
+		        
+		        
+		        int[] labels = new int[days];
+		        for(int i =1 ; i <=labels.length ; i++) {
+		        	labels[i-1] = i;
+		        }
+		        map.put("labels", labels);
+		        
+		        int[] datas1 = new int[days];
+		        int[] datas2 = new int[days];
+		        
+		        
+		        
+		        for(Pay p : psDp) {
+		        	if(p.getPayService().equals("가정돌봄")){
+						for(int i = 1; i <= labels.length ; i++) {
+							if(p.getPayDate().toLocalDate().equals(LocalDate.of(year1, month1, i))) {
+								datas1[i-1] += p.getPayMoney();
+							}
+							
+						}
+		        		
+					}else {
+						for(int i = 1; i <= labels.length ; i++) {
+							if(p.getPayDate().toLocalDate().equals(LocalDate.of(year1, month1, i))) {
+								datas2[i-1] += p.getPayMoney();
+							}
+							
+						}
+						
+					}
+		        	
+		        }
+		        
+		        map.put("datas1",datas1);
+		        map.put("datas2",datas2);
+		        
+		        Gson gson = new Gson();
+				response.setContentType("application/json; charset=UTF-8;");
+				try {
+					gson.toJson(map, response.getWriter());
+				} catch (JsonIOException | IOException e) {
+					e.printStackTrace();
+				}
+			}else {	//여러 달 검색하는것
+				int year1 = Integer.parseInt(data1.split(",")[0]);
+				int year2 = Integer.parseInt(data1.split(",")[1]);
+				int month1 = Integer.parseInt(data2.split(",")[0]);
+				int month2 = Integer.parseInt(data2.split(",")[1]);
+				
+				
+				HashMap<String,Object> map = new HashMap<String,Object>();
+				int size = month2-month1+1;
+				if(year1 != year2 ) {
+					size += 12 * ( year2 - year1);
+				}
+				
+				String[] labels = new String[size];
+				int j = 0;
+				int k = 0;
+				for(int i = 1 ; i <= size ; i++) {
+					String labelMonth = "0"+((month1+i-1) % 12 == 0 ? "12" : (month1+i-1) % 12);
+		        	labels[j] = year1+ k + "-" +labelMonth.substring(labelMonth.length() - 2);
+		        	
+		        	j += 1;
+		        	if(i % 12 == 0) {
+		        		k +=1;
+		        	}
+				}
+				
+		        System.out.println("확인해보자" + labels.length);
+		        System.out.println("확인해보자" + labels[0]);
+		        map.put("labels", labels);
+		        
+		        int[] datas1 = new int[labels.length];
+		        int[] datas2 = new int[labels.length];
+		        
+		        
+		        System.out.println("확인해보자" + labels.length);
+		        System.out.println("확인해보자" + datas1.length);
+		        System.out.println("확인해보자" + datas2.length);
+		        for(Pay p : psDp) {
+		        	if(p.getPayService().equals("가정돌봄")){
+		        		for(int i = 0; i < labels.length ; i++) {
+		        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+		        				datas1[i] += p.getPayMoney();
+		        			}
+		        		}
+		        	}else {
+		        		for(int i = 0; i < labels.length ; i++) {
+		        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+		        				datas2[i] += p.getPayMoney();
+		        			}
+		        		}
+		        	}
+		        };
+		        
+		        map.put("datas1",datas1);
+		        map.put("datas2",datas2);
+		        
+		        Gson gson = new Gson();
+				response.setContentType("application/json; charset=UTF-8;");
+				try {
+					gson.toJson(map, response.getWriter());
+				} catch (JsonIOException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+	        
+		}//페이토탈메소드끝 월
+	
+		//어드민 페이 토탈 통계 년
+		
+			@GetMapping("yearPayTotal.adm")
+			@ResponseBody
+			public void yearPayTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2,@RequestParam("flag") int flag, HttpServletResponse response) {
+			
+				ArrayList<Pay> psDp = aService.selectPayDeposit("Y");		//페이 다가져와
+				if(flag ==1) {
+					int year = Integer.parseInt(data1.split(",")[0]);
+					
+					HashMap<String,Object> map = new HashMap<String,Object>();
+					
+					String[] labels = new String[12];
+					for(int i = 1 ; i <= 12 ; i++) {
+						String labelMonth = "0"+i;
+						labels[i-1] = year +"-"+ labelMonth.substring(labelMonth.length()-2);
+					}
+					map.put("labels", labels);
+					
+					int[] datas1 = new int[12];
+			        int[] datas2 = new int[12];
+			        
+			        for(Pay p : psDp) {
+			        	if(p.getPayService().equals("가정돌봄")){
+			        		for(int i = 0; i < 12 ; i++) {
+			        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+			        				datas1[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}else {
+			        		for(int i = 0; i < labels.length ; i++) {
+			        			if(labels[i].equals(YearMonth.from(p.getPayDate().toLocalDate()).toString())){
+			        				datas2[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}
+			        };
+			        
+			        map.put("datas1",datas1);
+			        map.put("datas2",datas2);
+			        
+			        Gson gson = new Gson();
+					response.setContentType("application/json; charset=UTF-8;");
+					try {
+						gson.toJson(map, response.getWriter());
+					} catch (JsonIOException | IOException e) {
+						e.printStackTrace();
+					}
+					
+				}else {
+					int year1 = Integer.parseInt(data1.split(",")[0]);
+					int year2 = Integer.parseInt(data1.split(",")[1]);
+					
+					HashMap<String,Object> map = new HashMap<String,Object>();
+					
+					String[] labels = new String[year2 - year1 +1];
+					int j =0;
+					for(int i = year1 ; i <= year2 ; i++) {
+						labels[j] = year1+ j +"년" ;
+						j += 1;
+					}
+					
+					map.put("labels", labels);
+										
+					int[] datas1 = new int[year2 - year1 +1];
+			        int[] datas2 = new int[year2 - year1 +1];
+					
+			        for(Pay p : psDp) {
+			        	if(p.getPayService().equals("가정돌봄")){
+			        		for(int i = 0; i < labels.length ; i++) {
+			        			if(labels[i].equals(p.getPayDate().toLocalDate().getYear()+"년")){
+			        				datas1[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}else {
+			        		for(int i = 0; i < labels.length ; i++) {
+			        			if(labels[i].equals(p.getPayDate().toLocalDate().getYear()+"년")){
+			        				datas2[i] += p.getPayMoney();
+			        			}
+			        		}
+			        	}
+			        };
+			        
+			        map.put("datas1",datas1);
+			        map.put("datas2",datas2);
+			        
+			        Gson gson = new Gson();
+					response.setContentType("application/json; charset=UTF-8;");
+					try {
+						gson.toJson(map, response.getWriter());
+					} catch (JsonIOException | IOException e) {
+						e.printStackTrace();
+					}
+			        
+				}
+			
+			}// 년 메소드
+	
+	// 댓글 삭제
+	@GetMapping("adminDeleteReply.adm")
+	@ResponseBody
+	public String adminDeleteReply(@RequestParam("rNo") int rNo) {
+		int result = aService.adminDeleteReply(rNo);
+		if(result > 0) {
+			return result == 1 ? "success" : "fail";
+		}else {
+			throw new AdminException("댓글작성에 실패했습니다.");
+		}
 		
 	}
 	
 	
+	//결제정보 어드민
+	@GetMapping("matching.adm")
+	public String matchingView(Model model) {
+		ArrayList<Matching> mat = aService.selectMatchings();
+		
+		model.addAttribute("mat",mat);
+		return "matchingInfo";
+	}
+	
+	
+	//어드민 매칭 토탈 통계 에이작스 (매칭 일주일)
+	
+	@GetMapping("weekMatTotal.adm")
+	@ResponseBody
+	public void weekMatTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2, HttpServletResponse response) {
+		
+		int year1 = Integer.parseInt(data1.split("-")[0]);
+		int month1 = Integer.parseInt(data1.split("-")[1]);
+		int day1 = Integer.parseInt(data1.split("-")[2]);
+		
+		LocalDate date1 = LocalDate.of(year1, month1, day1);
+        
+        
+        //long daysBetween = ChronoUnit.DAYS.between(date1, date2);
+        
+        HashMap<String,Object> map = new HashMap<String,Object>();
+        
+        
+        String[] labels = {date1.plusDays(0).toString(),date1.plusDays(1).toString(),date1.plusDays(2).toString()
+        					,date1.plusDays(3).toString(),date1.plusDays(4).toString(),date1.plusDays(5).toString(),date1.plusDays(6).toString()};
+        map.put("labels", labels);
+        
+        int[] datas1 = new int[7];
+        int[] datas2 = new int[7];
+        
+        
+        ArrayList<Matching> mat = aService.selectMatchings();
+        
+        
+     // 로그 파일 : 페이지 이용량을 조회 (시작)
+		File usageFolder = new File("C:/logs/matchingCreate/");
+		File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+		
+		//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
+		try { 
+			for(File f : usageFileList) {
+				BufferedReader br = new BufferedReader(new FileReader(f));
+				String data;
+				String dataMatNo;
+				String dataService;
+				String date;
+				
+				while((data=br.readLine())!=null) {
+					// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
+					
+					//System.out.println(data);
+					date = data.substring(0,10);
+					dataMatNo = data.split("//")[1];
+					dataService = data.split("//")[2];
+					
+					if(dataMatNo != null && dataService != null) {
+						
+						for(int i = 0; i < labels.length ; i++) {
+							System.out.println("라벨이랑"+labels[i]);
+							System.out.println("date.trim"+date.trim());
+							
+							if(labels[i].trim().equals(date.trim())) {
+								if(dataService.trim().equals("개인간병")) {
+									System.out.println("djelemfdjrksl?");
+									datas1[i] += 1;
+								}else {
+									System.out.println("djelemfdjrksl?222");
+									datas2[i] += 1;
+								}
+							}
+						}
+					}
+					
+				}
+				
+				
+				br.close();
+			}
+			//model.addAttribute("usage", usageMap);
+		} catch(Exception e) {
+			e.printStackTrace();
+		} 
+        
+		
+		map.put("datas1",datas1);
+        map.put("datas2",datas2);
+        
+        Gson gson = new Gson();
+		response.setContentType("application/json; charset=UTF-8;");
+		try {
+			gson.toJson(map, response.getWriter());
+		} catch (JsonIOException | IOException e) {
+			e.printStackTrace();
+		}
+		
+        
+        
+	        
+	}//페이토탈메소드끝 ( 매칭 일주일)
+		
+		
+	//어드민 매칭 토탈 통계 에이작스 (매칭 달)
+	
+	@GetMapping("monthMatTotal.adm")
+	@ResponseBody
+	public void monthMatTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2,@RequestParam("flag") int flag, HttpServletResponse response) {
+		
+
+		if(flag == 1) {
+			int year1 = Integer.parseInt(data1.split(",")[0]);
+			int month1 = Integer.parseInt(data2.split(",")[0]);
+			
+			//일수 계산하자
+			YearMonth yearMonth = YearMonth.of(year1, month1);
+			int days = yearMonth.lengthOfMonth();
+	        HashMap<String,Object> map = new HashMap<String,Object>();
+	        
+	        
+	        String[] labels = new String[days];
+	        for(int i =1 ; i <=labels.length ; i++) {
+	        	labels[i-1] = i+"";
+	        }
+	        map.put("labels", labels);
+	        
+	        int[] datas1 = new int[days];
+	        int[] datas2 = new int[days];
+	        
+	        
+	        
+	     // 로그 파일 : 페이지 이용량을 조회 (시작)
+			File usageFolder = new File("C:/logs/matchingCreate/");
+			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+			
+			try { 
+				for(File f : usageFileList) {
+					BufferedReader br = new BufferedReader(new FileReader(f));
+					String data;
+					String dataMatNo;
+					String dataService;
+					String date;
+					while((data=br.readLine())!=null) {
+						
+						date = data.substring(0,10);
+						dataMatNo = data.split("//")[1].trim();
+						dataService = data.split("//")[2].trim();
+						
+						if(year1 == Integer.parseInt(date.substring(0,4))) {
+							if(dataMatNo != null && dataService != null) {
+								
+								for(int i = 0; i < labels.length ; i++) {
+									
+									if(i < 9) {
+										if(labels[i].trim().equals(date.substring(9,10)) && date.substring(7,10).contains("-0")) {
+											if(dataService.trim().equals("개인간병")) {
+												datas1[i] += 1;
+											}else {
+												datas2[i] += 1;
+											}
+										}
+									}else {
+									
+									
+										if(labels[i].trim().equals(date.substring(8,10))) {
+											if(dataService.trim().equals("개인간병")) {
+												datas1[i] += 1;
+											}else {
+												datas2[i] += 1;
+											}
+										}
+									
+									}
+									
+								}
+							}//
+						}
+					}
+					
+					
+					br.close();
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			} 
+	        
+			
+			map.put("datas1",datas1);
+	        map.put("datas2",datas2);
+	        
+	        Gson gson = new Gson();
+			response.setContentType("application/json; charset=UTF-8;");
+			try {
+				gson.toJson(map, response.getWriter());
+			} catch (JsonIOException | IOException e) {
+				e.printStackTrace();
+			}
+		}else {	//여러 달 검색하는것
+			int year1 = Integer.parseInt(data1.split(",")[0]);
+			int year2 = Integer.parseInt(data1.split(",")[1]);
+			int month1 = Integer.parseInt(data2.split(",")[0]);
+			int month2 = Integer.parseInt(data2.split(",")[1]);
+			
+			
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			int size = month2-month1+1;
+			if(year1 != year2 ) {
+				size += 12 * ( year2 - year1);
+			}
+			
+			String[] labels = new String[size];
+			int j = 0;
+			int k = 0;
+			for(int i = 1 ; i <= size ; i++) {
+				String labelMonth = "0"+((month1+i-1) % 12 == 0 ? "12" : (month1+i-1) % 12);
+	        	labels[j] = year1+ k + "-" +labelMonth.substring(labelMonth.length() - 2);
+	        	
+	        	j += 1;
+	        	if(i % 12 == 0) {
+	        		k +=1;
+	        	}
+			}
+			
+	        System.out.println("확인해보자" + labels.length);
+	        System.out.println("확인해보자" + labels[0]);
+	        map.put("labels", labels);
+	        
+	        int[] datas1 = new int[labels.length];
+	        int[] datas2 = new int[labels.length];
+	        
+	        
+	     // 로그 파일 : 페이지 이용량을 조회 (시작)
+			File usageFolder = new File("C:/logs/matchingCreate/");
+			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+			
+			try { 
+				for(File f : usageFileList) {
+					BufferedReader br = new BufferedReader(new FileReader(f));
+					String data;
+					String dataMatNo;
+					String dataService;
+					String date;
+					while((data=br.readLine())!=null) {
+						
+						System.out.println(data);
+						date = data.substring(0,10);
+						dataMatNo = data.split("//")[1];
+						dataService = data.split("//")[2];
+						
+						if(dataMatNo != null && dataService != null) {
+							
+							for(int i = 0; i < labels.length ; i++) {
+								if(labels[i].trim().equals(date.substring(0,7))) {
+									if(dataService.trim().equals("개인간병")) {
+										datas1[i] += 1;
+									}else {
+										datas2[i] += 1;
+									}
+								}
+							}
+						}
+						
+					}
+					
+					
+					br.close();
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			} 
+	        
+			
+			map.put("datas1",datas1);
+	        map.put("datas2",datas2);
+	        
+	        Gson gson = new Gson();
+			response.setContentType("application/json; charset=UTF-8;");
+			try {
+				gson.toJson(map, response.getWriter());
+			} catch (JsonIOException | IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+	        
+	}
+	
+	
+	//어드민 매칭 토탈 통계 년
+	
+	@GetMapping("yearMatTotal.adm")
+	@ResponseBody
+	public void yearMatTotal(@RequestParam("data1") String data1,@RequestParam("data2") String data2,@RequestParam("flag") int flag, HttpServletResponse response) {
+	
+		if(flag ==1) {
+			int year = Integer.parseInt(data1.split(",")[0]);
+			
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			
+			String[] labels = new String[12];
+			for(int i = 1 ; i <= 12 ; i++) {
+				String labelMonth = "0"+i;
+				labels[i-1] = year +"-"+ labelMonth.substring(labelMonth.length()-2);
+			}
+			map.put("labels", labels);
+			
+			int[] datas1 = new int[12];
+	        int[] datas2 = new int[12];
+	        
+	     // 로그 파일 : 페이지 이용량을 조회 (시작)
+	     			File usageFolder = new File("C:/logs/matchingCreate/");
+	     			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+	     			
+	     			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
+	     			try { 
+	     				for(File f : usageFileList) {
+	     					BufferedReader br = new BufferedReader(new FileReader(f));
+	     					String data;
+	     					String dataMatNo;
+	     					String dataService;
+	     					String date;
+	     					while((data=br.readLine())!=null) {
+	     						// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
+	     						
+	     						System.out.println(data);
+	     						date = data.substring(0,10);
+	     						dataMatNo = data.split("//")[1];
+	     						dataService = data.split("//")[2];
+	     						
+	     						if(dataMatNo != null && dataService != null) {
+	     							
+	     							for(int i = 0; i < labels.length ; i++) {
+	     								System.out.println(date.substring(0,7));
+	     								System.out.println("체킇ㄱ");
+	     								if(labels[i].trim().equals(date.substring(0,7))) {
+	     									if(dataService.trim().equals("개인간병")) {
+	     										datas1[i] += 1;
+	     									}else {
+	     										datas2[i] += 1;
+	     									}
+	     								}
+	     							}
+	     						}
+	     						
+	     					}
+	     					
+	     					
+	     					br.close();
+	     				}
+	     				//model.addAttribute("usage", usageMap);
+	     			} catch(Exception e) {
+	     				e.printStackTrace();
+	     			} 
+	     	        
+	     			
+	     			map.put("datas1",datas1);
+	     	        map.put("datas2",datas2);
+	     	        
+	     	        Gson gson = new Gson();
+	     			response.setContentType("application/json; charset=UTF-8;");
+	     			try {
+	     				gson.toJson(map, response.getWriter());
+	     			} catch (JsonIOException | IOException e) {
+	     				e.printStackTrace();
+	     			}
+			
+		}else {
+			int year1 = Integer.parseInt(data1.split(",")[0]);
+			int year2 = Integer.parseInt(data1.split(",")[1]);
+			
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			
+			String[] labels = new String[year2 - year1 +1];
+			int j =0;
+			for(int i = year1 ; i <= year2 ; i++) {
+				labels[j] = year1+ j +"년" ;
+				j += 1;
+			}
+			
+			map.put("labels", labels);
+								
+			int[] datas1 = new int[year2 - year1 +1];
+	        int[] datas2 = new int[year2 - year1 +1];
+			
+	     // 로그 파일 : 페이지 이용량을 조회 (시작)
+ 			File usageFolder = new File("C:/logs/matchingCreate/");
+ 			File[] usageFileList = usageFolder.listFiles(); // 사용량이 기록된 로그 파일들 모두에게 접근
+ 			
+ 			//TreeMap<String, Integer> usageMap = new TreeMap<String, Integer>();
+ 			try { 
+ 				for(File f : usageFileList) {
+ 					BufferedReader br = new BufferedReader(new FileReader(f));
+ 					String data;
+ 					String dataMatNo;
+ 					String dataService;
+ 					String date;
+ 					while((data=br.readLine())!=null) {
+ 						// 24-08-17 21:25:77 [INFO] c.k.d.c.i.CheckCareInformationUsage.preHandle - test-m-p20
+ 						
+ 						System.out.println(data);
+ 						date = data.substring(0,10);
+ 						dataMatNo = data.split("//")[1];
+ 						dataService = data.split("//")[2];
+ 						
+ 						if(dataMatNo != null && dataService != null) {
+ 							
+ 							for(int i = 0; i < labels.length ; i++) {
+ 								System.out.println(date.substring(0,4));
+ 								if(labels[i].trim().substring(0,4).equals(date.substring(0,4))) {
+ 									if(dataService.trim().equals("개인간병")) {
+ 										datas1[i] += 1;
+ 									}else {
+ 										datas2[i] += 1;
+ 									}
+ 								}
+ 							}
+ 						}
+ 						
+ 					}
+ 					
+ 					
+ 					br.close();
+ 				}
+ 				//model.addAttribute("usage", usageMap);
+ 			} catch(Exception e) {
+ 				e.printStackTrace();
+ 			} 
+ 	        
+ 			
+ 			map.put("datas1",datas1);
+ 	        map.put("datas2",datas2);
+ 	        
+ 	        Gson gson = new Gson();
+ 			response.setContentType("application/json; charset=UTF-8;");
+ 			try {
+ 				gson.toJson(map, response.getWriter());
+ 			} catch (JsonIOException | IOException e) {
+ 				e.printStackTrace();
+ 			}
+	        
+		}
+	
+	}// 년 메소드
+			
+			
+			
+	// 공지글 수정
+	@PostMapping("adminUpdateBoard.adm")
+	public String adminUpdateBoard(@ModelAttribute Board b, @RequestParam(value="page", defaultValue = "1") int page, RedirectAttributes ra) {
+		System.out.println("**************");
+		System.out.println(b);
+		int result = aService.adminUpdateBoard(b);
+		
+		if(result > 0) {
+			ra.addAttribute("bNo", b.getBoardNo());
+			ra.addAttribute("page", page);
+			return "redirect:selectAdminBoard.adm";
+		}else {
+			throw new AdminException("게시글 수정에 실패했습니다.");
+		}
+	}
+	
+	// 문의내역 조회
+	@GetMapping("adminQnABoard.adm")
+	public String adminQnABoard(@RequestParam(value="page", defaultValue = "1") int currentPage, Model model) {
+		int listCount = aService.getAdminQnABoardListCount();
+		
+		PageInfo pi = Pagination2.getPageInfo(currentPage, listCount, 7, 5);
+		ArrayList<Board> adminQnABoardList = aService.adminQnABoardList(pi);
+		
+		System.out.println(pi);
+		System.out.println("%%%%%%%%%%%%%%");
+		System.out.println(adminQnABoardList);
+		System.out.println("%%%%%%%%%%%%%%");
+		if(adminQnABoardList != null) {
+			model.addAttribute("pi",pi);
+			model.addAttribute("adminQnABoardList", adminQnABoardList);
+		}else {
+			throw new AdminException("문의내역 조회에 실패했습니다.");
+		}
+		
+		return "adminQnABoard";
+	}
+	// 관리자 아이디 중복확인
+	@PostMapping("checkAdminId.adm")
+	@ResponseBody
+	public String checkAdminId(@RequestParam("memberId") String memberId) {
+		int result = aService.checkAdminId(memberId);
+		return result == 0 ? "yes" : "no";
+	}
+	
+	// 관리자 추가하기
+	@PostMapping("insertMember.adm")
+	@ResponseBody
+	public String insertMember(@RequestParam("memberId") String memberId, @RequestParam("memberPwd") String pwd,
+								@RequestParam("memberPhone") String memberPhone) {
+		Member m = new Member();
+		m.setMemberId(memberId);
+		m.setMemberPwd(bCrypt.encode(pwd));
+		m.setMemberCategory("A");
+		m.setMemberPhone(memberPhone);
+		m.setMemberEmail("idmyungja@naver.com");
+		m.setMemberAddress("04540//서울 중구 남대문로 120//3층 D강의실");
+		m.setMemberNational("내국인");
+		m.setMemberName("관리자");
+		m.setMemberGender("M");
+		m.setMemberNickName(memberId);
+		int result = aService.insertMember(m);
+		
+		return result == 1 ? "success" : "fail";
+	}
+	
+	// 문의내역 답변
+	@PostMapping("adminInsertAnswer.adm")
+	@ResponseBody
+	public String adminInsertAnswer(@RequestParam("boardNo") int boardNo, @RequestParam("answerContent") String answerContent, @ModelAttribute Reply r, HttpSession session) {
+		r.setRefBoardNo(boardNo);
+		r.setReplyContent(answerContent);
+		int memberNo = ((Member)session.getAttribute("loginUser")).getMemberNo();
+		r.setMemberNo(memberNo);
+		int result = aService.adminInsertAnswer(r);
+
+		ArrayList<Reply> replyList = aService.adminSelectReply(r.getRefBoardNo());
+		
+		System.out.println(replyList);
+		
+		JSONArray array = new  JSONArray();
+		
+		for(Reply reply : replyList) {
+			JSONObject json = new JSONObject();
+			json.put("replyNo", reply.getReplyNo());
+			json.put("replyContent", reply.getReplyContent());
+			json.put("memberNo", reply.getMemberNo());
+			json.put("memberNickName", reply.getMemberNickName());
+			json.put("replyCreateDate", reply.getReplyCreateDate());
+			json.put("replyUpdateDate", reply.getReplyUpdateDate());
+			json.put("refBoardNo", reply.getRefBoardNo());
+			
+			array.put(json);
+		}
+		
+		return array.toString();
+	}
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-}
+}//클래스 끝

@@ -9,9 +9,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+	<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.14/index.global.min.js'></script>
+	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
     <style>
     	.fc{width:500px !important; height:500px !important; } 
+    	.fc-day-sun a { color: red; }
+    	.fc-day-sat a { color: blue; }
+    	.fc-day-mon a, .fc-day-thu a, .fc-day-fri a, .fc-day-tue a, .fc-day-wed a { color: black;}
     </style>
 </head>
 <body>
@@ -22,9 +27,12 @@
 			<div><!-- 왼쪽 공백 --></div>
 			<div id="upperLeftContents">
 				<div style="max-width:725px; height:480px;"><!-- AI 매칭 : 가로 700, 세로 200 -->
-				<div class="m-2 d-flex justify-content-between">
-					<div class="m-2">[[${loginUserName}]]님. 그동안 일한 금액 [[${money}]]원을 받으실 수 있어요!</div>
-					<div class="m-2"><button class="btn btn-success payButton" onclick="location.href='insertPayTransfer.mc'">[[${money}]]원 받기</button></div>
+				<div class="m-2 d-flex justify-content-between" style="border-bottom:2px solid #133B5C;" th:if="${money} != 0">
+					<div class="m-2" style="margin:0; font-size:20px">[[${loginUserName}]]님. 그동안 일한 금액 [[${#numbers.formatInteger(money, 0, 'COMMA')}]]원을 받으실 수 있어요! <span class="newIcon"> new!</span></div>
+					<div class="m-2"><button class="btn btn-success payButton" onclick="requestCert()">[[${#numbers.formatInteger(money, 0, 'COMMA')}]]원 받기</button></div>
+				</div>
+				<div class="m-2 d-flex justify-content-between" style="border-bottom:2px solid #133B5C;" th:unless="${money} != 0">
+					<div class="m-2" style="margin:0; font-size:20px">[[${loginUserName}]]님 안녕하세요! 정산할 매칭 금액은 없습니다!</div>
 				</div>
 				<table class="table mainTable table-hover">
                  <thead>
@@ -35,27 +43,38 @@
                         </th>
                      </tr>
                  </thead>
+                 
                  <tbody>
-                     <tr class="text-center" th:if="${completeList}" th:each="l : ${completeList}">
-                         <td>[[${l.ptName}]]</td>
-                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
-                         <td>[[${l.ptRealAge}]]</td>
-                         <td>[[${l.ptAddress}]]</td>
-                         <th:block th:with="arr = ${#strings.listSplit(l.ptDisease, '/')}">
+                 	<th:block th:if="${completeList}">
+	                    <tr class="text-center" th:each="l : ${completeList}" th:if="${l.ptCount == 1 || l.groupLeader == 'Y'}">
 	                         <td>
-	                         	<th:block th:if="${#lists.size(arr) > 3}" th:each="d, dStat : ${arr}">
-	                         		<th:block th:if="${dStat.index < 3}">[[${d}]],</th:block>
-	                         		<th:block th:if="${dStat.index == 3}">[[${d}]] ...</th:block>
-	                         	</th:block>
-	                         	
-	                         	<th:block th:if="${#lists.size(arr) <= 3}" th:each="d : ${arr}">
-	                         		<th:block th:unless="${dStat.last}">[[${d}]],</th:block>
-	                         		<th:block th:if="${dStat.last}">[[${d}]]</th:block>
-	                         	</th:block>	
+	                         	<input type="hidden" th:value="${l.matNo}"/>
+	                         	[[${l.ptName}]]
 	                         </td>
-                         </th:block>
-                         <td>[[${l.money}]] 원</td>
-                     </tr>
+	                         <td>[[${l.ptGender == 'M' ? '남' : '여'}]]</td>
+	                         <td>[[${l.ptRealAge < 0 ? l.ptRealAge+100 : l.ptRealAge}]]세</td>
+	                         <td>[[${l.ptAddress}]]</td>
+	                         <th:block th:with="arr = ${#strings.listSplit(l.ptDisease, '/')}">
+		                         <td>
+		                         	<th:block th:if="${#lists.size(arr) > 3}" th:each="d, dStat : ${arr}">
+		                         		<th:block th:if="${dStat.index < 3}">[[${d}]],</th:block>
+		                         		<th:block th:if="${dStat.index == 3}">[[${d}]] ...</th:block>
+		                         	</th:block>
+		                         	
+		                         	<th:block th:if="${#lists.size(arr) <= 3}" th:each="d : ${arr}">
+		                         		<th:block th:unless="${dStat.last}">[[${d}]],</th:block>
+		                         		<th:block th:if="${dStat.last}">[[${d}]]</th:block>
+		                         	</th:block>	
+		                         </td>
+	                         </th:block>
+	                         <td>[[${#numbers.formatInteger(l.money, 0, 'COMMA')}]] 원</td>
+	                     </tr>
+                     </th:block>
+                     <th:block th:if="${completeList == null}">
+                   	 		<tr class="text-center">
+                   	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
+                   	 		</tr>
+                   	 </th:block>
                  </tbody>
             </table>
 			</div>
@@ -63,7 +82,7 @@
 					<table>
 	                    <tr>
 	                        <td><button class="custom-btn btn-14" onclick="location.href='myInfo.me'">내 정보</button></td>
-	                        <td><button class="custom-btn btn-14" id="careInformation" onclick="location.href='careInformation.bo'">간병 정보</button></td>
+	                        <td><button class="custom-btn btn-14" id="careInformation">간병 백과</button></td>
 	                        <td><button class="custom-btn btn-14" onclick="location.href='communityBoardList.bo'">커뮤니티</button></td>
 	                    </tr>
 	                </table>
@@ -75,8 +94,8 @@
 			<div><!-- 오른쪽 공백 --></div>
 		</div>
 		
-	    <br/><br/>
-	
+	    <br/><br/><br/><br/><br/>
+	    
 	    <!-- 아래쪽 컨텐츠-->
 	    <div id="underContents">
 	        <div><!--왼쪽 공백--></div>
@@ -90,16 +109,19 @@
             	<br/>
 	            <table class="table mainTable matCard">
 	                <thead >
-	                    <tr>
+	                	<tr th:if="${requestMatPt.empty}">
+	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님 반가워요! 아직 매칭을 원하는 분이 없어요!</th>
+	                    </tr>
+	                    <tr th:if="${!requestMatPt.empty}">
 	                        <th style="height:20px;" colspan="5" class="align-middle">[[${loginUserName}]]님과의 매칭을 원하는 분들이 있습니다.</th>
 	                    </tr>
 	                </thead>
-	                <tbody>
+	                <tbody th:if=${!requestMatPt.empty}>
 	                    <tr class="align-middle text-center" th:each="matPt : ${requestMatPt}">
 	                    	<td style="display:none" th:text="${matPt.matNo}"></td>
 	                        <td colspan="4" th:if="${matPt.ptCount == 1}">
 	                        	<img th:if="${matPt.ptCount == 1 && matPt.service =='병원돌봄'}" src="image/icon/hospital.png"/>
-	                       		<img th:if="${matPt.ptCount == 1 && matPt.service =='가정돌봄'}" src="image/icon/home.pn/">
+	                       		<img th:if="${matPt.ptCount == 1 && matPt.service =='가정돌봄'}" src="image/icon/home.png/">
 	                       		[[${matPt.ptName}]]님([[${matPt.ptRealAge}]]세 [[${matPt.ptGender =='M' ? '남':'여' }]])이 매칭을 원하고 있어요.
 	                       		 </td>
 	                        <td colspan="4" th:if="${matPt.ptCount > 1}" class="align-middle">
@@ -108,6 +130,13 @@
 	                        </td>
 	                        <td><button class="btn btn-success workInfo two">정보보기</button></td>
 	                    </tr>
+	                </tbody>
+	                <tbody th:if=${requestMatPt.empty}>
+	                	<tr>
+	                		<th>	                	
+	                			<img class="m-3" th:src="@{/image/peopleicon.png}" width="450px" height="500px"/>
+	                		</th>
+	                	</tr>
 	                </tbody>
 	            </table>
 	        </div>
@@ -251,6 +280,7 @@
 	            <div>나의 매칭 현황</div>
 	    </div> -->
 	    
+   		<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
 	    <div th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
 	    
 	    
@@ -263,7 +293,7 @@
 			        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 완료</h3>
 			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			      </div>
-			      <div class="modal-body" style="margin:30px;" th:if ="${result == 'request'}">
+			      <div class="modal-body" style="margin:30px;">
 			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
 			        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹에 매칭을 신청하셨습니다.
 			        </h4>
@@ -277,7 +307,7 @@
 			        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 승낙 완료</h3>
 			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			      </div>
-			      <div class="modal-body" style="margin:30px;" th:if ="${result == 'approve'}">
+			      <div class="modal-body" style="margin:30px;">
 			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
 			        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹의 매칭 신청을 승낙하셨습니다. 
 			        </h4>
@@ -291,7 +321,7 @@
 			        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 신청 취소 완료</h3>
 			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			      </div>
-			      <div class="modal-body" style="margin:30px;" th:if ="${result == 'approve'}">
+			      <div class="modal-body" style="margin:30px;">
 			        <h4 class="h4 mb-4 fw-bold" th:if="${matPtCount > 1 }">
 			        	[[${matPtName}]]님 등 [[${matPtCount}]]명의 공동간병 그룹에 보낸 매칭 신청을 취소하셨습니다. 
 			        </h4>
@@ -307,7 +337,7 @@
 		</div>     
    	 </div>
     
-    <div class="m-5"></div>
+     <br><br><br><br>
     <th:block th:replace="~{common/footer :: footer}"></th:block>
     
     
@@ -318,9 +348,9 @@
 		   		<div class="modal-header">
 		    		<div class="modal-title workInfo">
 		    			<div class="infomation">
-			    			<span class="badge bg-danger"><img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음</span><br/>
-			    			<span>혜민병원</span><br/>
-			    			<span>서울특별시 광진구</span>
+			    			<span class="badge bg-danger"><!-- <img src="image/icon/time.png"/>&nbsp;HH시간 mm분 ss초 남음 --></span><br/>
+			    			<span class="badge rounded-pill bg-light text-dark fs-5">혜민병원</span><br/>
+			    			<span class="badge rounded-pill bg-light text-dark fs-6">서울특별시 광진구</span>
 		    			</div>
 		    			<div class="text-end align-middle imgDiv">
 		    				<br/>
@@ -331,20 +361,20 @@
 		   		</div>
 		    	<div class="modal-body workInfo">
 		    		<div>
-		    			<span>시작 시간</span><br/>
-		    			<span>종료 시간</span><br/>
-		    			<span>일 간병비</span><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">시작 시간</span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">종료 시간</span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6">일 간병비</span><br/><br/>
 		    		</div>
 		    		<div class="text-end fw-bold infoDetail">
-		    			<span></span><br/>
-		    			<span></span><br/>
-		    			<span></span>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span><br/><br/>
+		    			<span class="badge rounded-pill bg-light text-dark fs-6"></span>
 		    		</div>
 		    	</div>
 		    	<div class="modal-footer">
 		    		<input type="hidden" name="matNo"/>
-	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">Close</button>
-	    			<button type="button" class="btn btn-primary" id="detailInfo" style="width:200px;">자세히 보기</button>	    			
+	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">닫기</button>
+	    			<button type="button" class="btn-outline" id="detailInfo" style="width:200px;">자세히 보기</button>	    			
 		    	</div>
 		  	</div>
 		</div>
@@ -354,13 +384,14 @@
     
     
     <script th:inline="javascript">
-    /*<![CDATA[*/
-	document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     	var calendarEl = document.getElementById('calendar');
     	var request = $.ajax({
     		url: 'caregiverCalendarEvent.me',
     		datatype: 'json',
+		    /*<![CDATA[*/
     		data: {memberNo : /*[[${session.loginUser.memberNo}]]*/0},
+    		/*]]>*/
     	})
     	
     	const getTimeFormat = (date) => {
@@ -377,36 +408,93 @@
     		return year + '-' + month + '-' + day;
     	}
     	
-    	request.done(function(data) {
-    		console.log(data);
-    		var calendar = new FullCalendar.Calendar(calendarEl, {
-		          initialView: 'dayGridMonth',
-		          events : data,
-		          eventColor: '#8dd986',
-		          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
-		        	  let d = info.event.start - new Date();
-		        	  let infomation = document.querySelector('.infomation').children;
-		        	  
-		        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '남음';
-						infomation[2].innerHTML = '병원명이 들어올 자리';
-		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
-	          		
-	          		let infoDetail = document.querySelector('.infoDetail').children;
-	          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
-	          		infoDetail[2].innerHTML = info.event.extendedProps.endDate;
-	          		infoDetail[4].innerHTML = info.event.extendedProps.money + '원';
-	          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
-	        	  	$('#calendarModal').modal('show');
-	        	  }
-		        });
-		        calendar.render();
-    	}) 
-  	});
-	/*]]>*/
-	/*<![CDATA[*/
+    	// 시간계산
+    	const remainCalc = (miseconds) => {
+    		let hours = Number.parseInt(miseconds/3600000);  // 시간 계산
+    		let temp1 = miseconds%3600000; // 시간을 뺀 나머지 계산
+    		let mins = Number.parseInt(temp1/60000); // 분 계산
+    		let temp2 = mins%60000; // 분을 뺀 나머지 계산
+    		let seconds = Number.parseInt(temp2/1000)
+    		
+    		return hours + "시간 " + mins + "분 " + seconds +"초";
+    	}
     	
+    	
+    	request.done(function(data) {
+	    		console.log('--------------');
+    			console.log(data);
+    			console.log('--------------');
+    			var calendar = new FullCalendar.Calendar(calendarEl, {
+			          initialView: 'dayGridMonth',
+			          events : data,
+			          eventColor: 'skyblue',
+			          eventClick: function(info) {//info.event.title, info.event.extendedProps: 현재이벤트 정보가 담긴 객체
+			        	  let mils = info.event.start - new Date();
+			        	  let infomation = document.querySelector('.infomation').children;
+			        	  if(info.event.start - new Date() < 0) { // 이벤트날짜가 과거인 경우
+			        	  	/* infomation[0].innerHTML = '<img src="image/icon/time.png"/>' + remainCalc(mils) + '지남'; */
+			        		  infomation[0].innerHTML = '';
+			        	  } else { // 이벤트 날짜가 미래인 경우
+			        	  	infomation[0].innerHTML = '<img src="image/icon/time.png"/>&nbsp;&nbsp;' + remainCalc(mils) + ' 남음';
+			        	  }
+						infomation[2].innerHTML = info.event.extendedProps.hospitalName;
+		          		infomation[4].innerHTML = info.event.extendedProps.matAddressInfo;
+		          		
+		          		let infoDetail = document.querySelector('.infoDetail').children;
+		          		infoDetail[0].innerHTML = info.event.extendedProps.beginDate;
+		          		infoDetail[3].innerHTML = info.event.extendedProps.endDate;
+		          		infoDetail[6].innerHTML = info.event.extendedProps.money.toLocaleString() + '원';
+		          		document.querySelector('.modal-footer').children[0].value = info.event.extendedProps.matNo; // 해당 매칭번호
+		          		//console.log(document.querySelector('.modal-footer').children[0].value);
+		        	  	$('#calendarModal').modal('show');
+		        	  },
+		        	  locale: "ko"
+			        });
+			        calendar.render();
+			        //calenderEdit();
+	    	}) 
+	  	});
+   
+	  	//종규 삽입
+	    /* function calenderEdit(){
+	       const dateTitle = document.getElementById('fc-dom-1');
+	       
+	       console.log(dateTitle);
+	       dateTitle.style.color = '#1E5F74';
+	       dateTitle.style.fontWeight = 'bold';
+	       
+	       const bts = document.getElementsByClassName('fc-button');
+	       const cal =document.getElementsByClassName('fc-scrollgrid  fc-scrollgrid-liquid')[0];
+	       
+	       const cala = cal.querySelectorAll('a');
+	       for(i = 0; i< cala.length ; i++){
+	          if(i % 7 == 0){
+	             console.log(i);
+	          cala[i].style.color = 'red';
+	          }else if(i % 7 == 6){
+	             cala[i].style.color = '#0a58ca';
+	          }else{
+	             if(i != 'entries' && i !='keys'){
+	                console.log(i);
+	             cala[i].style.color = '#1D2D50';
+	             }
+	          }
+	       }
+	    }  */
+	    //종규 삽입 끝
+    
+		
     	/*<![CDATA[*/
     	window.onload = () => {
+    		// 캘린더 이벤트 모달 => 매칭 정보 자세히 보기(시작)
+    		document.querySelector('#detailInfo').addEventListener('click', function() {
+    			//goCaregiverPtInfo.mc?matNo=222 로 이동하기
+    			//console.log(document.querySelector('.modal-footer').children[0].value)
+    			location.href='goCaregiverPtInfo.mc?matNo=' + document.querySelector('.modal-footer').children[0].value;
+    		});
+    		// 캘린더 이벤트 모달 => 매칭 정보 자세히 보기(끝)
+    		
+    		
     		// 자동추천 새로고침 비동기 요청 (시작)
     		const refreshChoice = document.querySelector('#refreshChoice');
     		refreshChoice.addEventListener('mouseenter', function() {
@@ -428,8 +516,10 @@
 	    					for(let d of data) {
 	    						const tr = document.createElement('tr');
 	    						tr.classList.add('text-center');
-	    						const td0 = document.createElement('td');
-	    						td0.innerText = d.ptName;
+	    						
+	    						const td0 = document.createElement('td'); // 여기여기
+	    						td0.innerHTML = `<input type="hidden" value=${d.matNo}>${d.ptName}`;
+	    						//td0.innerText = d.ptName;
 	    						const td1 = document.createElement('td');
 	    						td1.innerText = d.ptGender == 'M' ? '남' : '여';
 	    						const td2 = document.createElement('td');
@@ -439,8 +529,18 @@
 	    						const td4 = document.createElement('td');
 	    						
 	    						
-								let diseaseArr = d.ptDisease.split('/');
-								let arrLength = diseaseArr.length;
+								let diseaseArr;
+	    						if(d.ptDisease != undefined){
+	    							diseaseArr = d.ptDisease.split('/');
+	    						}
+	    						
+	    						let arrLength;
+	    						if(diseaseArr != undefined){
+	    							arrLength = diseaseArr.length;
+	    						} else {
+	    							arrLength = 0;
+	    						}
+								
 	    						let disease = '';
 								if(arrLength > 4){ // 보유 질병이 5개 이상인 경우
 	    							for(let i = 0; i < 4; i++){
@@ -450,7 +550,7 @@
 	    									disease += diseaseArr[i] + ' ...';
 	    								}
 	    							}
-	    						} else{ // 보유 질병이 4개 이하인 경우
+	    						} else if(arrLength > 0){ // 보유 질병이 4개 이하인 경우
 	    							for(let i = 0; i < arrLength; i++){
 	    								if(i != arrLength - 1) { // 마지막 인덱스가 아닌 경우에 끝에 쉼표(,)를 붙인다.
 		    								disease += diseaseArr[i] + ', ';
@@ -458,11 +558,13 @@
 	    									disease += diseaseArr[i];
 	    								}
 	    							}
+	    						} else {
+	    							disease = '-';
 	    						}
 	    						td4.innerText = disease;
 	    						
 	    						const td5 = document.createElement('td');
-	    						td5.innerText = d.money + '원';
+	    						td5.innerText = d.money.toLocaleString() + '원';
 	    						
 	    						tbody.appendChild(tr);
 	    						tr.appendChild(td0);
@@ -473,7 +575,7 @@
 	    						tr.appendChild(td5);
 	    						// 새로 추천받은 목록으로 교체(끝)
 	    					}
-	    					alert('새고운 추천목록으로 갱신되었습니다.');
+	    					alert('새로운 추천목록으로 갱신되었습니다.');
 	    				},
 	    				error: data => {
 	    					console.log('에러')
@@ -511,22 +613,51 @@
 	    	
 	    	// 간병정보(간병백과) 페이지로 이동 (시작)
 	    	document.querySelector('#careInformation').onclick = () => {
-	    		/*<![CDATA[*/
 	    		const isAdmin = /*[[${session.loginUser.memberCategory}]]*/'관리자여부';
 	    		if(isAdmin == 'A'){ // 관리자의 입장에서 간병정보 페이지 출력
 	    			location.href='careInformation.adm';
 	    		} else{ // 일반 사용자의 입장에서 간병정보 페이지 출력
-	    			//location.href='';
+	    			location.href='careInformation.bo';
 	    		}	
-	    		/*]]>*/	
 	    	}
 	    	// 간병정보(간병백과) 페이지로 이동 (끝)
-	    	
-	    	
-	    	
     	}
+    	/*]]>*/
     	
-    </script>    
+    	// ai추천 목록에 대한 이벤트 (시작)
+	    document.querySelector('.mainTable').children[1].addEventListener('click', function(e) {
+	    	// goCaregiverPtInfo.mc?matNo=55 로 이동하기
+	    	//console.log(e.target.parentElement.children[0].children[0].value);
+	    	location.href='goCaregiverPtInfo.mc?matNo=' + e.target.parentElement.children[0].children[0].value;
+	    });
+    	
+    	console.log(document.querySelector('.mainTable').children[1]);
+    	document.querySelector('.mainTable').children[1].addEventListener('mouseover', function() {
+    		this.style.cursor = 'pointer';
+    	});
+		// ai추천 목록에 대한 이벤트 (끝)
+    	
+    	//본인인증 api 추가하기
+    	
+    	
+
+
+		IMP.init("imp25707021");
+
+		function requestCert() {
+		 let test10 = IMP.certification({
+		    pg: "inicis_unified.INIpayTest",
+		    merchant_uid: "test_m0douc10",
+		  },function(response){
+			  console.log(response.success);
+			  console.log(response.success == true)
+			  
+			  if(response.success == true){
+				  location.href= 'insertPayTransfer.mc';
+			  }
+			});
+		}
+</script>
 </body>
 
 </html>

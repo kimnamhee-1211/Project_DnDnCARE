@@ -108,7 +108,10 @@ input {
 
 
 .testBorder{
-	border:1px solid #dee2e6;
+	border-radius: 5px;
+}
+.layout-bd{
+	border:2px solid  #FCDAB7;
 	border-radius: 5px;
 }
 
@@ -234,7 +237,7 @@ input {
 
 
 .btn-maincolor {
-	background:#8dd986;
+	background:#1D2D50;
 	border:0;
 	border-radius:10px;
 	color:white;
@@ -286,6 +289,14 @@ input {
 	width:26px; height:27px;
 }
 
+.btn-icon-star-one{
+	background-image:url(../image/icon_star2.svg);
+	background-size: 167px 167px;
+	padding:0px;
+	margin-left:0px;
+	background-repeat: no-repeat;	
+}
+
 
 
 
@@ -304,7 +315,16 @@ input {
 }
 
 
-
+.btn-dndn{	
+	color: white !important;
+	background-color: #1D2D50 !important;
+	border: none;
+	width: 200px;
+	height: 40px;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
 
 
 

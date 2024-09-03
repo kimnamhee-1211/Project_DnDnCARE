@@ -7,9 +7,18 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-    
     <link th:href="@{css/footer.css}" rel="stylesheet" type="text/css"/>
-    
+    <style>
+    	.searchAreaBtn {width: 82px;}
+    	.searchDisBtn {width:100px;}
+    	.searchCareerBtn{width: 78px;}
+    	.searchLicenseBtn{width: 96px;}
+    	.subAreaBtn {width: 82px;}
+    	.subDisBtn {width:100px;}
+    	.subCareerBtn{width: 78px;}
+    	.subLicenseBtn{width: 96px;}
+    	.subCostBtn {width:110px;}
+    </style>
 </head>
 <body>
 	<div th:replace="~{common/navbar :: navbar}">></div>
@@ -18,8 +27,8 @@
 		<div><!-- 왼쪽 공백 --></div>
 		<div><!-- 컨텐츠 --> 
 			<div class="d-flex justify-content-between">
-				<span class="badge bg-color" style="font-size: 24px;">AI가 추천하는 간병사들이에요!</span>
-				<span class="btn-outline-maincolor" id="refreshChoice" style="font-size: 24px;">새 추천 받기</span>	
+				<span class="badge bg-color" style="font-size: 24px;">AI가 추천하는 간병인이에요!</span>
+				<span class="btn-outline" id="refreshChoice" style="font-size: 16px;">새 추천 받기</span>	
 			</div>
 			
 			<br/>
@@ -37,14 +46,24 @@
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index < 5}">
-                        	<td>[[${c.memberName}]]</td>
-	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
-	                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
-	                        <td>[[${c.caregiverAddress}]]</td>
-	                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
-	                        <td>[[${c.minMoney}]]원</td>
-                     	</tr>
+                 		<th:block th:if="${completeList}">
+	                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index < 5}">
+	                        	<td>
+	                        		<input type="hidden" th:value="${c.memberNo}"/>
+	                        		[[${c.memberName}]]
+	                       		</td>
+		                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
+		                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
+		                        <td>[[${c.caregiverAddress}]]</td>
+		                        <td>[[${c.haveLicense == undefined ? '-' : c.haveLicense}]]</td>
+		                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
+	                     	</tr>
+                     	</th:block>
+                     	<th:block th:if="${completeList == null}">
+                   	 		<tr class="text-center">
+                   	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
+                   	 		</tr>
+                    	 </th:block>
                  	</tbody>
              	</table>
 				
@@ -60,14 +79,31 @@
                      	</tr>
                  	</thead>
                  	<tbody>
-                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index >= 5}">
-                        	<td>[[${c.memberName}]]</td>
-	                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
-	                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
-	                        <td>[[${c.caregiverAddress}]]</td>
-	                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
-	                        <td>[[${c.minMoney}]]원</td>
-                     	</tr>
+                 		<th:block th:if="${completeList}">
+	                    	<tr class="text-center" th:each="c, cStat : ${completeList}" th:if="${cStat.index >= 5}">
+	                        	<td>
+	                        		<input type="hidden" th:value="${c.memberNo}"/>
+	                        		[[${c.memberName}]]
+	                       		</td>
+		                        <td>[[${c.memberGender == 'M' ? '남성' : '여성'}]]</td>
+		                        <td>[[${c.caregiverRealAge < 0 ? c.caregiverRealAge+100 : c.caregiverRealAge}]]</td>
+		                        <td>[[${c.caregiverAddress}]]</td>
+		                        <td>[[${c.haveLicense == null ? '-' : c.haveLicense}]]</td>
+		                        <td>[[${#numbers.formatInteger(c.minMoney, 0, 'COMMA')}]]원</td>
+	                     	</tr>
+                     	</th:block>
+                     	
+                     	<th:block th:if="${completeList.size() < 10}" th:each="num : ${#numbers.sequence(1, 10-completeList.size())}">
+                    	 	<tr>
+                    	 		<td></td><td></td><td></td><td></td><td></td><td></td>
+                    	 	</tr>
+                    	 </th:block>
+                     	
+                     	<th:block th:if="${completeList == null}">
+                   	 		<tr class="text-center">
+                   	 			<td>서비스 장애가 발생하였습니다. 잠시 후 다시 시도해주세요.</td>
+                   	 		</tr>
+                    	 </th:block>
                  	</tbody>
              	</table>
 			</div>
@@ -79,8 +115,8 @@
 					<div id="lowerContentsTitle">
 						<div><span class="badge bg-color" style="font-size: 25px;">간병인 목록</span></div>
 						<div class="text-end">
-							<button type="button" class="btn-outline-maincolor" id="goClear">검색조건 초기화하기</button>
-							<button type="button" class="btn-outline-maincolor goSearch">검색하기</button>
+							<button type="button" class="btn-outline" id="goClear">검색조건 초기화하기</button>
+							<button type="button" class="btn-outline goSearch">검색하기</button>
 						</div>
 					</div>
 					<br/>
@@ -120,7 +156,7 @@
 						<!-- 서비스 유형에 대한 세부 버튼 -->
 						<button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">병원돌봄</button>
 						<button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">가정돌봄</button>
-						<button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">동행서비스</button>
+						<!-- <button type="button" class="btn btn-light subBtn subServiceBtn" style="display:none;">동행서비스</button> -->
 						<!-- 성별 유형에 대한 세부 버튼 -->
 						<button type="button" class="btn btn-light subBtn subShareBtn" style="display:none;">개인</button>
 						<button type="button" class="btn btn-light subBtn subShareBtn" style="display:none;">공동</button>
@@ -205,53 +241,53 @@
 		   		</div>
 		    	<div class="modal-body" id="searchBtnDiv">
 		    		<form id="searchForm" action="searchPatientList.me" method="post">
-		    			<div><span class="badge bg-warning2">서비스 유형</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge bg-warning2 fs-6">서비스 유형</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="병원돌봄/OFF">병원돌봄</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="가정돌봄/OFF">가정돌봄</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="동행서비스/OFF">동행서비스</button>
+		    			<!-- <button type="button" class="btn btn-light searchBtn searchServiceBtn" name="service" value="동행서비스/OFF">동행서비스</button> -->
 		    			 
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge bg-warning2">공동간병 유형</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge bg-warning2 fs-6">공동간병 유형</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchShareBtn" name="share" value="personal/OFF">개인간병</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchShareBtn" name="share" value="share/OFF">공동간병</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge bg-warning2">지역 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
+		    			<div><span class="badge bg-warning2 fs-6">지역 선택</span> <span class="badge rounded-pill bg-danger fs-6">단일선택</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="전국/OFF">전국</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="서울/OFF">서울</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="부산/OFF">부산</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="대구/OFF">대구</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="인천/OFF">인천</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="인천/OFF">인천</button>&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="광주/OFF">광주</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="대전/OFF">대전</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="울산/OFF">울산</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경기도/OFF">경기도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="강원도/OFF">강원도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="강원도/OFF">강원도</button>&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="충청북도/OFF">충청북도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="충청남도/OFF">충청남도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="전라북도/OFF">전라북도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="전라남도/OFF">전라남도</button>&nbsp;&nbsp;
-		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경상북도/OFF">경상북도</button>&nbsp;&nbsp;
+		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경상북도/OFF">경상북도</button>&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="경상남도/OFF">경상남도</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="제주/OFF">제주</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAreaBtn" name="area" value="세종/OFF">세종</button>
 		    			
-		    			<div><span class="badge bg-warning2">성별 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge bg-warning2 fs-6">성별 선택</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchGenderBtn" name="gender" value="남성/OFF">남성</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchGenderBtn" name="gender" value="여성/OFF">여성</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge bg-warning2">연령 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge bg-warning2 fs-6">연령 선택</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchAgeBtn" name="age" value="청년/OFF">청년</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAgeBtn" name="age" value="중년/OFF">중년</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchAgeBtn" name="age" value="장년/OFF">장년</button>
 		    			
 		    			<br/><br/>
 		    			
-		    			<div><span class="badge bg-warning2">질환 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge bg-warning2 fs-6">질환 선택</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchDisBtn" name="disease" value="치매/OFF">치매</button>
 						<button type="button" class="btn btn-light searchBtn searchDisBtn" name="disease" value="섬망/OFF">섬망</button>
 		    			<button type="button" class="btn btn-light searchBtn searchDisBtn" name="disease" value="욕창/OFF">욕창</button>
@@ -271,7 +307,7 @@
 					
 						<br/><br/>
 		    			
-		    			<div><span class="badge bg-warning2">경력 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+		    			<div><span class="badge bg-warning2 fs-6">경력 선택</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchCareerBtn" name="career">없음</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchCareerBtn" name="career">1년미만</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchCareerBtn" name="career">1~3년</button>&nbsp;&nbsp;
@@ -279,13 +315,13 @@
 						<button type="button" class="btn btn-light searchBtn searchCareerBtn" name="career">5년이상</button>
 						<br/><br/>
 	
-						<div><span class="badge bg-warning2">자격증 선택</span><span class="badge rounded-pill bg-info2">복수선택 가능</span></div><br/>
+						<div><span class="badge bg-warning2 fs-6">자격증 선택</span> <span class="badge rounded-pill bg-info2 fs-6">복수선택 가능</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchLicenseBtn" name="license">간병사</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchLicenseBtn" name="license">요양보호사</button>&nbsp;&nbsp;
 						<button type="button" class="btn btn-light searchBtn searchLicenseBtn" name="license">간호조무사</button>
 						<br/><br/>
 	
-						<div><span class="badge bg-warning2">돌봄비 선택</span><span class="badge rounded-pill bg-danger">단일선택</span></div><br/>
+						<div><span class="badge bg-warning2 fs-6">돌봄비 선택</span> <span class="badge rounded-pill bg-danger fs-6">단일선택</span></div><br/>
 		    			<button type="button" class="btn btn-light searchBtn searchCostBtn" name="cost" value="3/OFF">~30,000원</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchCostBtn" name="cost" value="5/OFF">~50,000원</button>&nbsp;&nbsp;
 		    			<button type="button" class="btn btn-light searchBtn searchCostBtn" name="cost" value="8/OFF">~80,000원</button>&nbsp;&nbsp;
@@ -296,7 +332,7 @@
 		    		</form>
 		    	</div>
 		    	<div class="modal-footer">
-	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">Close</button>
+	    			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width:200px;">닫기</button>
 	    			<button type="button" class="btn-outline-maincolor goSearch" style="width:200px;">검색하기</button>
 		    	</div>
 		  	</div>
@@ -305,44 +341,12 @@
 	
 	<!-- 테스트중 -->
 	<!-- <div th:replace="~{common/footer :: footer}" id=""></div> -->
-	<div id="footer-section">
-	    <div class="inner">
-	        <div class="footer-logo">
-	            <a href="home.do"><img th:src="@{/image/logo-removebg.png}" alt="로고" id="footer-logo"></a>
-	        </div>
-	        <div class="column-wrap d-flex">
-		        <div class="footer-column">
-		            <h3>Project</h3>
-		            <p>Title</p>
-		            <h6>DnDnCare</h6> 
-		            <p>Tell</p>              
-		            <h6>02-6959-2159</h6>
-		            <p>Address</p>
-		            <h6>서울특별시 중구 남대문로 120</h6>
-		        </div>
-		        <div class="footer-column">
-		            <h3>Team Member</h3>
-		            <h4>김명훈</h4>               
-		            <h4>김종규</h4>
-		            <h4>김기룡</h4>  
-		            <h4>김남희</h4>
-		            <h4>이재영</h4>
-		        </div>
-		        <div class="footer-column">
-		           <h3>Project Info</h3>
-				   <h6>KH정보교육원 JAVA개발자 양성 과정</h6>
-				   <h6>Final Project</h6>
-				   <h6>2024.07.29 - 2024.09.03</h6>
-				   <h6>Java, SpringBoot, Oracle, JavaScript</h6>
-		        </div>
-	        </div>
-	        
-	    </div>
-	    <div class="footer-bottom">
-	        <p class="text-center">&copy; 2024 HomeWork. All rights reserved.</p>
-	    </div>
-	</div>
-    <div id="obsTarget"></div>             
+	<br/><br/><br/><br/>
+	
+	<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
+    <div class="matFixedBtn" th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
+    <th:block th:replace="~{common/footer :: footer}"></th:block>
+    <div id="obsTarget" style="height:10px;"></div>             
 	
 	
 	<!-- <script src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script> -->
@@ -1141,17 +1145,26 @@
 					// *** 검색 조건 저장하기 (끝) ***	
 					
 					// *** 비동기 방식으로 검색결과 요청하기 (시작)***
+	//				console.log(searchExist);
 					if(searchExist) { // 검색 조건이 하나라도 있을 때를 의미함
 						ajaxSearchPage = 1;
+						searchFlag = true;
 						root.innerHTML = ''; // 기존의 목록출력을 모두 지운다.
 						searchAjax(ajaxSearchPage); // 새로운 목록을 불러온다.
 					} else { // 검색 조건이 하나도 없을 때를 의미함
 						ajaxNoSearchPage = 1;
+						searchFlag = false;
 						root.innerHTML = ''; // 기존의 목록출력을 모두 지운다.
 						noSearchAjax(ajaxNoSearchPage);
 					}
 					// *** 비동기 방식으로 검색결과 요청하기 (끝) ***
+					
+					// 전체 모달 박스 닫기 (시작)
+					$('#allTagModal').modal('hide');
+					// 전체 모달 박스 닫기 (끝)
 				})
+				
+				
 			}
 			// 태그 조건으로 검색하기 (끝)
 			
@@ -1170,6 +1183,7 @@
 					success: data => {
 						console.log(data);
 						if(data != 'noExist') {
+							
 							for(let d of data) {
 								// 별점 이미지 그리기 작업
 								const nameSpan = document.querySelector('#tartget');
@@ -1179,7 +1193,7 @@
 								imgArr.push(document.createElement('img'));
 								imgArr.push(document.createElement('img'));
 								imgArr.push(document.createElement('img'));
-								const modScore = d.avgReviewScore / 2
+								const modScore = d.avgReviewScore / 2;
 								if(modScore == 0){ // 별점이 짝수
 									for(let i = 0; i < modScore; i++){
 										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
@@ -1196,7 +1210,11 @@
 									}
 									
 									let half = Math.floor(modScore);
-									imgArr[half].setAttribute("src", "image/icon/halfStar.png");
+									if(half != undefined && half < 5) {
+										imgArr[half].setAttribute("src", "image/icon/halfStar.png");
+										imgArr[half].setAttribute("width", "25px");
+									}
+									
 									
 									for(let i = 4; i >= Math.ceil(modScore); i--){
 										imgArr[i].setAttribute("src", "image/icon/emptyStar.png");
@@ -1223,11 +1241,18 @@
 										img.setAttribute('src', 'image/icon/femaleProfile.png');
 									}
 									const h6Span = document.createElement('span');
-									h6Span.innerText = d.memberName + '님';
+									h6Span.innerHTML = ` ${d.memberName}님<br><br>`; 
 									h6.append(img);
 									h6.append(h6Span);
-									for(let i = 0; i < 5; i++) {
-										h6.append(imgArr[i]);
+									if(d.reviewCount == 0){
+										const noReviewSpan = document.createElement('span');
+										noReviewSpan.className = 'badge rounded-pill bg-light text-dark';
+										noReviewSpan.innerText = '아직 리뷰가 없어요!';
+										h6.append(noReviewSpan);
+									} else {
+										for(let i = 0; i < 5; i++) {
+											h6.append(imgArr[i]);
+										}
 									}
 									
 									const p = document.createElement('p');
@@ -1242,7 +1267,7 @@
 									inp.setAttribute('value', d.memberNo);
 									const button = document.createElement('button');
 									button.className = 'btn btn-success';
-									button.setAttribute('onclick', 'caregiverDetail()');
+									button.setAttribute('onclick', `location.href='reviewDetail.mc?memberNo='+${d.memberNo}`);
 									button.innerText = '정보보기';
 									
 									div2.append(h6);
@@ -1273,11 +1298,18 @@
 										img.setAttribute('src', 'image/icon/femaleProfile.png');
 									} // **이미지 경로 수정해야함**
 									const h6Span = document.createElement('span');
-									h6Span.innerText = d.memberName + '님';
+									h6Span.innerHTML = ` ${d.memberName}님<br><br>`; 
 									h6.append(img);
 									h6.append(h6Span);
-									for(let i = 0; i < 5; i++) {
-										h6.append(imgArr[i]);
+									if(d.reviewCount == 0){
+										const noReviewSpan = document.createElement('span');
+										noReviewSpan.className = 'badge rounded-pill bg-light text-dark';
+										noReviewSpan.innerText = '아직 리뷰가 없어요!';
+										h6.append(noReviewSpan);
+									} else {
+										for(let i = 0; i < 5; i++) {
+											h6.append(imgArr[i]);
+										}
 									}
 									
 									const p = document.createElement('p');
@@ -1292,7 +1324,7 @@
 									inp.setAttribute('value', d.memberNo);
 									const button = document.createElement('button');
 									button.className = 'btn btn-success';
-									button.setAttribute('onclick', 'caregiverDetail()');
+									button.setAttribute('onclick', `location.href='reviewDetail.mc?memberNo='+${d.memberNo}`);
 									button.innerText = '정보보기';
 									
 									div2.append(h6);
@@ -1305,14 +1337,9 @@
 									root.append(div0);
 								}
 							}
-						ajaxNoSearchPage++;
+						ajaxSearchPage++;
 						console.log('page : ' + ajaxSearchPage);
-						searchFlag = false;
-						
-						innerHeight = window.innerHeight;
-						scrollY = window.scrollY;
-						scrollHeight = document.body.scrollHeight;
-						
+						searchFlag = true;
 						} else {
 							console.log('검색결과 없음');
 						}
@@ -1345,7 +1372,7 @@
 								imgArr.push(document.createElement('img'));
 								imgArr.push(document.createElement('img'));
 								imgArr.push(document.createElement('img'));
-								const modScore = d.avgReviewScore / 2
+								const modScore = d.avgReviewScore / 2;
 								if(modScore == 0){ // 별점이 짝수
 									for(let i = 0; i < modScore; i++){
 										imgArr[i].setAttribute("src", "image/icon/fullStar.png");
@@ -1362,7 +1389,11 @@
 									}
 									
 									let half = Math.floor(modScore);
-									imgArr[half].setAttribute("src", "image/icon/halfStar.png");
+									if(half != undefined && half < 5) {
+										imgArr[half].setAttribute("src", "image/icon/halfStar.png");
+										imgArr[half].setAttribute("width", "25px");
+									}
+									
 									
 									for(let i = 4; i >= Math.ceil(modScore); i--){
 										imgArr[i].setAttribute("src", "image/icon/emptyStar.png");
@@ -1389,17 +1420,24 @@
 										img.setAttribute('src', 'image/icon/femaleProfile.png');
 									}
 									const h6Span = document.createElement('span');
-									h6Span.innerText = d.memberName + '님';
+									h6Span.innerHTML = ` ${d.memberName}님<br><br>`; 
 									h6.append(img);
 									h6.append(h6Span);
-									for(let i = 0; i < 5; i++) {
-										h6.append(imgArr[i]);
+									if(d.reviewCount == 0){
+										const noReviewSpan = document.createElement('span');
+										noReviewSpan.className = 'badge rounded-pill bg-light text-dark';
+										noReviewSpan.innerText = '아직 리뷰가 없어요!';
+										h6.append(noReviewSpan);
+									} else {
+										for(let i = 0; i < 5; i++) {
+											h6.append(imgArr[i]);
+										}
 									}
 									
 									const p = document.createElement('p');
 									p.className = 'card-text';
 									const pSpan = document.createElement('span');
-									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									pSpan.innerText = (d.memberGender == 'M' ? '남  ' : '여  ') + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세  ' + d.caregiverNational;
 									p.append(pSpan);
 									
 									const inp = document.createElement('input');
@@ -1408,7 +1446,7 @@
 									inp.setAttribute('value', d.memberNo);
 									const button = document.createElement('button');
 									button.className = 'btn btn-success';
-									button.setAttribute('onclick', 'caregiverDetail()');
+									button.setAttribute('onclick', `location.href='reviewDetail.mc?memberNo='+${d.memberNo}`);
 									button.innerText = '정보보기';
 									
 									div2.append(h6);
@@ -1439,17 +1477,24 @@
 										img.setAttribute('src', 'image/icon/femaleProfile.png');
 									} // **이미지 경로 수정해야함**
 									const h6Span = document.createElement('span');
-									h6Span.innerText = d.memberName + '님';
+									h6Span.innerHTML = ` ${d.memberName}님<br><br>`; 
 									h6.append(img);
 									h6.append(h6Span);
-									for(let i = 0; i < 5; i++) {
-										h6.append(imgArr[i]);
+									if(d.reviewCount == 0){
+										const noReviewSpan = document.createElement('span');
+										noReviewSpan.className = 'badge rounded-pill bg-light text-dark';
+										noReviewSpan.innerText = '아직 리뷰가 없어요!';
+										h6.append(noReviewSpan);
+									} else {
+										for(let i = 0; i < 5; i++) {
+											h6.append(imgArr[i]);
+										}
 									}
 									
 									const p = document.createElement('p');
 									p.className = 'card-text';
 									const pSpan = document.createElement('span');
-									pSpan.innerText = (d.memberGender == 'M' ? '남' : '여') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세 ' + d.caregiverNational;
+									pSpan.innerText = (d.memberGender == 'M' ? '남 ' : '여 ') + ' ' + (d.caregiverRealAge >= 0 ? d.caregiverRealAge : d.caregiverRealAge + 100) + '세  ' + d.caregiverNational;
 									p.append(pSpan);
 									
 									const inp = document.createElement('input');
@@ -1458,7 +1503,7 @@
 									inp.setAttribute('value', d.memberNo);
 									const button = document.createElement('button');
 									button.className = 'btn btn-success';
-									button.setAttribute('onclick', 'caregiverDetail()');
+									button.setAttribute('onclick', `location.href='reviewDetail.mc?memberNo='+${d.memberNo}`);
 									button.innerText = '정보보기';
 									
 									div2.append(h6);
@@ -1521,6 +1566,7 @@
 			const callback = (entries, observer) => {
 				  entries.forEach((entry) => {
 					if (entry.isIntersecting) {
+						console.log('스크롤바 바닥 일 때 : ' + searchFlag); // 검색했는데도 불구하고 false네? 여기여기
 						if(searchFlag == false) {
 							noSearchAjax(ajaxNoSearchPage);
 						} else {
@@ -1567,7 +1613,8 @@
 		    						const tr = document.createElement('tr');
 		    						tr.classList.add('text-center');
 		    						const td0 = document.createElement('td');
-		    						td0.innerText = d.memberName;
+		    						td0.innerHTML = `<input type="hidden" value=${d.memberNo}>${d.memberName}`;
+		    						//td0.innerText = d.memberName;
 		    						const td1 = document.createElement('td');
 		    						td1.innerText = d.memberGender == 'M' ? '남' : '여';
 		    						const td2 = document.createElement('td');
@@ -1575,10 +1622,15 @@
 		    						const td3 = document.createElement('td');
 		    						td3.innerText = d.caregiverAddress;
 		    						const td4 = document.createElement('td');
-		    						td4.innerText = d.haveLicense;
+		    						if(d.haveLicense == undefined){
+		    							td4.innerText = '-';
+		    						} else{
+			    						td4.innerText = d.haveLicense;
+		    						}
 		    						const td5 = document.createElement('td');
-		    						td5.innerText = d.minMoney + '원';
-		    						
+		    						//td5.innerText = d.minMoney + '원';
+		    						new Intl.NumberFormat('en-US').format(d.minMoney)
+		    						td5.innerText = new Intl.NumberFormat('en-US').format(d.minMoney) + '원';
 		    						tbodyList[0].appendChild(tr);
 		    						tr.appendChild(td0);
 		    						tr.appendChild(td1);
@@ -1590,7 +1642,8 @@
 	    							const tr = document.createElement('tr');
 		    						tr.classList.add('text-center');
 		    						const td0 = document.createElement('td');
-		    						td0.innerText = d.memberName;
+		    						td0.innerHTML = `<input type="hidden" value=${d.memberNo}>${d.memberName}`;
+		    						//td0.innerText = d.memberName;
 		    						const td1 = document.createElement('td');
 		    						td1.innerText = d.memberGender == 'M' ? '남' : '여';
 		    						const td2 = document.createElement('td');
@@ -1598,10 +1651,15 @@
 		    						const td3 = document.createElement('td');
 		    						td3.innerText = d.caregiverAddress;
 		    						const td4 = document.createElement('td');
-		    						td4.innerText = d.haveLicense;
+		    						if(d.haveLicense == undefined){
+		    							td4.innerText = '-';
+		    						} else{
+			    						td4.innerText = d.haveLicense;
+		    						}
 		    						const td5 = document.createElement('td');
-		    						td5.innerText = d.minMoney + '원';
-		    						
+		    						//td5.innerText = d.minMoney + '원';
+		    						new Intl.NumberFormat('en-US').format(d.minMoney)
+		    						td5.innerText = new Intl.NumberFormat('en-US').format(d.minMoney) + '원';
 		    						tbodyList[1].appendChild(tr);
 		    						tr.appendChild(td0);
 		    						tr.appendChild(td1);
@@ -1624,6 +1682,21 @@
     		})
     		// 자동추천 새로고침 비동기 요청 (끝)
 	    	/*]]>*/
+	    	
+	    	
+	    	// ai추천 목록에 대한 이벤트 (시작)
+    		const tableList = document.querySelectorAll('.autoMatching');
+	    	for(const table of tableList){
+				table.children[1].addEventListener('click', function(e) {
+					location.href='reviewDetail.mc?memberNo=' + e.target.parentElement.children[0].children[0].value;
+				});
+				table.children[1].addEventListener('mouseover', function() {
+					this.style.cursor = 'pointer';
+				});
+			}
+			// ai추천 목록에 대한 이벤트 (끝)
+	    	
+	    	
 		}
 	</script>
 </body>

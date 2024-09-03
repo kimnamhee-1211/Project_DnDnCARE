@@ -9,29 +9,50 @@
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
             margin: 0;
-            padding: 20px;
             background-color: #f4f4f4;
         }
         .chat-list-container {
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 20px;
+            margin-top:80px;
+            margin-bottom:80px;
+            border:1px solid lightgray;
+            height: 80vh;
+            overflow-y: auto;
         }
         h1 {
             color: #333;
             text-align: center;
         }
+        
+        .chat-header {
+        	display:flex;
+        	justify-content:start;
+        	font-size: 30px;
+        	background:#133b5c;
+        	color:white;
+        	height:70px;
+        	algin-items:center;
+        	opacity:0.5;
+        }
+        
+        .chat-header p {
+        	font-weight: 500;
+        	margin-top:10px;
+        	margin-left:30px;
+        }
         .chat-room-list {
             list-style-type: none;
-            padding: 0;
+            padding: 30px;
         }
         .chat-room-item {
             border-bottom: 1px solid #eee;
             padding: 15px 10px;
             transition: background-color 0.3s ease;
+            margin-bottom:5px;
         }
         .chat-room-item:last-child {
             border-bottom: none;
@@ -67,26 +88,55 @@
             color: #7f8c8d;
             padding: 20px;
         }
+        
+         /* 스크롤바 전체 스타일 */
+	    .chat-list-container::-webkit-scrollbar {
+	        width: 10px;
+	    }
+	
+	    /* 스크롤바 트랙 스타일 */
+	    .chat-list-container::-webkit-scrollbar-track {
+	        background: #133b5c;
+	        border-radius: 10px;
+	        opacity:0.5;
+	        
+	    }
+	 
+	    /* 스크롤바 핸들 스타일 */
+	    .chat-list-container::-webkit-scrollbar-thumb {
+	        background: lightgray; 
+	        border-radius: 10px;
+	        
+	    }
+ 
+
     </style>
+    
+    
 </head>
 <body>
-    <div class="chat-list-container">
-        <h1>내 채팅방 목록</h1>
-        <ul class="chat-room-list" th:if="${not #lists.isEmpty(latestMessages)}">
-            <li class="chat-room-item" th:each="message : ${latestMessages}">
-                <a th:href="@{createAndGetChat.ch(chatRoomNo=${message.chatRoomNo})}" class="chat-room-link">
-				    <div class="chat-room-info">
-				        <div class="chat-room-name" th:text="${'채팅방 ' + message.chatRoomNo}">채팅방 이름</div>
-				        <div class="latest-message" th:text="${message.chatContent}">최근 메시지</div>
-				    </div>
-				    <div class="message-time" th:text="${#dates.format(message.writeDate, 'yyyy-MM-dd HH:mm')}">시간</div>
+	<div th:replace="~{common/navbar :: navbar}"></div>
+		<div class="chat-list-container">
+		<div class="chat-header"><p>채팅방 목록</p></div>
+		<ul class="chat-room-list" th:if="${not #lists.isEmpty(latestMessages)}">
+			<li class="chat-room-item" th:each="message : ${latestMessages}">
+				<a th:href="@{createAndGetChat.ch(chatRoomNo=${message.chatRoomNo})}" class="chat-room-link">
+					<div class="chat-room-info">
+						<div class="chat-room-name" th:text="${'채팅방 ' + message.chatRoomNo}">채팅방 이름</div>
+						<div class="latest-message" th:text="${message.chatContent}">최근 메시지</div>
+					</div>
+					<div class="message-time" th:text="${#dates.format(message.writeDate, 'yyyy-MM-dd HH:mm')}">시간</div>
 				</a>
+			</li>
+		</ul>
+		<div class="no-messages" th:if="${#lists.isEmpty(latestMessages)}">
+		참여 중인 채팅방이 없습니다.
+		</div>
+	</div>
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+    
 
-            </li>
-        </ul>
-        <div class="no-messages" th:if="${#lists.isEmpty(latestMessages)}">
-            참여 중인 채팅방이 없습니다.
-        </div>
-    </div>
 </body>
+
+
 </html>

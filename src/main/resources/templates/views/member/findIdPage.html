@@ -11,17 +11,17 @@
 	<main class="inner-content d-flex justify-content-center">
 		<form action="findIdResult.me" method="post">
 			<div class="findId-wrap">
-				<a href="home.do"><img class="logo-image mb-4 w-75" src="image/logo-removebg.png" width="150"></a>
-				<h1 class="h3 mb-3 fw-bold text-center">아이디 찾기</h1>
+				<a style="margin-left:75px;"href="home.do" class="logo">든든케어<img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}"></a>
+				<h1 class="h3 mt-5 mb-3 fw-bold text-center">아이디 찾기</h1>
 				<div class="text-center mb-5">본인의 이름과 휴대폰 번호로 아이디를 찾을 수 있습니다.</div>
 				
 				<div class="login-input">
 					<div class="form-floating mb-3">
-						<input type="text" class="form-control" id="floatingInput" name="memberId">
-						<label for="floatingInput">아이디를 입력해주세요</label>
+						<input type="text" class="form-control" id="floatingInput" name="memberName">
+						<label for="floatingInput">이름을 입력해주세요</label>
 					</div>
 					<div class="form-floating">
-						<input type="password" class="form-control" id="floatingPassword" name="memberPhone">
+						<input type="text" class="form-control" id="floatingPassword" name="memberPhone">
 						<label for="floatingPassword">핸드폰 번호를 입력해주세요</label>
 					</div>
 				</div>

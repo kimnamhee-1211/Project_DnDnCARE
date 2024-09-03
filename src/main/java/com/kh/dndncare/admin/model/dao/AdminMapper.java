@@ -6,10 +6,13 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
+import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.Member;
 
@@ -42,6 +45,13 @@ public interface AdminMapper {
 
 	int updateCareInformation(Board b);
 
+	ArrayList<Board> selectCaregiverBoardList(RowBounds rowBounds);
+
+	ArrayList<Board> selectPatientBoardList(RowBounds rowBounds);
+
+	int getCaregiverListCount();
+
+	int getPatientListCount();
 	ArrayList<Pay> selectPayDeposit(String type);
 
 	int getMembersListCount();
@@ -61,6 +71,36 @@ public interface AdminMapper {
 	String getMemberAge(int memberNo);
 
 	ArrayList<HashMap<String, Object>> getEnrollCount(HashMap<String, Integer> map);
+
+	int insertAnnouncement(Board b);
+
+	int updateAdminBoardStatus(@Param("boardNo") int boardNo, @Param("boardStatus") String boardStatus);
+
+	Board adminSelectBoard(int bNo);
+
+	ArrayList<Reply> adminSelectReply(int bNo);
+
+	int adminDeleteBoard(int boardNo);
+
+	int adminDeleteReply(int rNo);
+
+	ArrayList<Matching> selectMatchings();
+	
+	int adminUpdateBoard(Board b);
+
+	int getAdminQnABoardCount();
+	
+	ArrayList<Board> adminQnABoardList(RowBounds rowBounds);
+
+	int checkAdminId(String memberId);
+
+	int insertMember(Member m);
+
+	int adminInsertAnswer(Reply r);
+
+	ArrayList<Board> recentQueryList();
+
+	ArrayList<Pay> getPayDeposit();
 
 
 }

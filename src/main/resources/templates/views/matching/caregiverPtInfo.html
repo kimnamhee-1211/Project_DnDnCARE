@@ -28,18 +28,18 @@
 				      <th scope="col" colspan="1">[[${mPI[0].service}]]</th>
 				    </tr>	
 				    <tr>
-				      <th scope="col">&nbsp;1일 돌봄비용</th>
-				      <td scope="col" colspan="3">[[${mPI[0].money}]]원</td>
+				      <th scope="col" style="width:120px;">&nbsp;1일 돌봄비용</th>
+				      <td scope="col" colspan="3">[[${#numbers.formatInteger(mPI[0].money, 0, 'COMMA')}]]원</td>
 				    </tr>				    
 				    <tr th:if="${mPI[0].ptCount > 1}">
-				      <th style="width:50px;"scope="col">&nbsp;총 인원</th>
-				      <td style="width:90px;"scope="col">[[${mPI[0].ptCount}]]인</td>
-				      <th style="width:50px;"scope="col">현재 인원</th>
-				      <td style="width:90px;"scope="col">[[${mPI.size()}]]인</td>	
-				    <tr>
+				      <th scope="col">&nbsp;총 인원</th>
+				      <td scope="col">[[${mPI[0].ptCount}]]인</td>
+				      <th style="width:120px;" scope="col">현재 인원</th>
+				      <td scope="col">[[${mPI.size()}]]인</td>	
+				    <tr> 
 				      <th scope="col">&nbsp;간병 시작일</th>
 				      <td scope="col">[[${mPI[0].beginDt}]]</td>
-				  	  <th scope="col">간병 종료일</th>
+				  	  <th style="width:120px;" scope="col">간병 종료일</th>
 				      <td scope="col">[[${mPI[0].endDt}]]</td>
 				    </tr>
 				    <tr th:if="${mPI[0].matMode == 2}">
@@ -115,8 +115,8 @@
 			</div>	
 
 			<div class="sign-btn d-flex justify-content-center mx-auto" style="weight:300px;">
-				<button type="button" th:if="${MatMemberNo > 0}" class="signIn-btn mt-4" id="modalOfenOk"><span>매칭 승낙</span></button>
-				<button type="button" th:if="${MatMemberNo < 0}" class="signIn-btn mt-4" id="modalOfen"><span>매칭 신청</span></button>
+				<button type="button" th:if="${MatMemberNo > 0 && mPI[0].matConfirm == 'N'}" class="signIn-btn mt-4" id="modalOfenOk"><span>매칭 승낙</span></button>
+				<button type="button" th:if="${MatMemberNo < 0 && mPI[0].matConfirm == 'N'}" class="signIn-btn mt-4" id="modalOfen"><span>매칭 신청</span></button>
 				<button type="button" class="signIn-btn mt-4" id="startChat">채팅하기</button>
 				<button type="button" onclick="history.go(-1)" class="signUp-btn mt-4" id="backButton"><span>이전으로</span></button>
 			</div>
@@ -143,7 +143,7 @@
 	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청이 완료됩니다.<br>상대가 매칭 신청을 승낙하고, 입금을 완료하면 매칭이 성사됩니다.</h5>	        
 	      </div>
 	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-primary" id="requestMatching">매칭 신청</button>
+	      	<button type="button" class="btn btn-dndn" id="requestMatching">매칭 신청</button>
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 	      </div>
 	    </div>
@@ -169,14 +169,15 @@
 	      </div>
 	      
 	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-primary" id="requestMatchingOk">매칭 승낙</button>
+	      	<button type="button" class="btn btn-dndn" id="requestMatchingOk">매칭 승낙</button>
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 	      </div>
 	    </div>
 	  </div>
 	</div>	
 	
-	
+    <div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
+    <div class="matFixedBtn" th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	
 	

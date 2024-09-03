@@ -47,7 +47,9 @@ public interface ChatingMapper {
 
 	void markMessagesAsRead(@Param("chatRoomNo") int chatRoomNo, @Param("memberNo") int memberNo);
 
-	List<Integer> markAsReadAndGetUpdatedMessages(int chatRoomNo, int memberNo);
+	List<Integer> markAsReadAndGetUpdatedMessages(@Param("chatRoomNo") int chatRoomNo, @Param("memberNo") int memberNo);
+	
+	int getRemainingReadCount(@Param("chatRoomNo") int chatRoomNo, @Param("chatMessageNo") int chatMessageNo);
 
 	List<Map<String, Object>> getMessageReadCounts(int chatRoomNo);
 
@@ -66,6 +68,15 @@ public interface ChatingMapper {
 
 	int getChatCount(Integer finalChatRoomNo);
 
-	
+	void updateReadByMembers(@Param("chatRoomNo") int chatRoomNo, @Param("memberNo") int memberNo);
+
+	int getAlreadyChatRoomNo(@Param("matNo") Integer matNo, @Param("memberNo") int memberNo, @Param("relatedMemberNo") int relatedMemberNo);
+
+	Integer getAlreadyChatRoomNo2(@Param("matNo") Integer matNo, @Param("firstMemberNo") int firstMemberNo, @Param("secondMemberNo") int secondMemberNo, @Param("cMemberNo") int cMemberNo);
+
+	Integer getAlreadyChatRoomNo3(@Param("matNo") Integer matNo, @Param("firstMemberNo") int firstMemberNo, @Param("secondMemberNo") int secondMemberNo, @Param("thirdMemberNo")int thirdMemberNo,
+			@Param("cMemberNo") int cMemberNo);
+
+	List<String> getParticipantMemberNames(Integer finalChatRoomNo);
  
 }

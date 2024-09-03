@@ -13,445 +13,411 @@
 	<div class="wrap">
 	
 		<div class="title-content d-flex justify-content-center mx-auto">
-			<h1 class="h1 mb-4 fw-bold text-center">나의 매칭 현황</h1><br>
+			<h1 class="h1 mb-4 fw-bold text-center"><img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}">나의 매칭 현황</h1><br>
 		</div>
-		
 		<main class="container align-items-center mx-auto" style="width:900px;">
-		
-			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">현재 진행중인 매칭 내역</h3>
-			<br>
-			<div class="form-floating mb-5 mx-auto">
-				<div class="accordion" id="accordionExample">
-				  <div class="accordion-item"  th:each="myMat : ${myMatching}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
-				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
-				    <h2 class="accordion-header">
-				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseOne' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
-				      	<th:block th:if="${myMat.ptCount > 1}">[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹과의 매칭이 진행 중입니다.</th:block>
-				        <th:block th:if="${myMat.ptCount == 1}">[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])과의 매칭이 진행 중입니다.</th:block>
-				      </button>
-				    </h2>
-				    <div th:id="'collapseOne' + ${myMat.matNo}" class="accordion-collapse collapse " data-bs-parent="#accordionExample">
-						<div class="accordion-body">
-							<table class="table mx-auto">
-								<thead></thead>
-							    <tbody></tbody>	    		
-				      		</table>
-				      </div>
-				    </div>
-				  </div>
-				  
-				  <div class="accordion-item" th:if="${myMatching.empty}">
-				    <h2 class="accordion-header">
-				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
-				    	 	현재 진행중인 매칭이 없습니다.
-				    	 </button>
-				    </h2>
-				  </div>
-				  			  
-				  
+			<th:block th:fragment="myMatchingC">
+				<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">현재 진행중인 매칭 내역</h3>
+				<br>
+				<div class="form-floating mb-5 mx-auto">
+					<div class="accordion" id="accordionExample">
+					  <div class="accordion-item"  th:each="myMat : ${myMatching}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
+					  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
+					    <h2 class="accordion-header">
+					      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseOne' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
+					      	<th:block th:if="${myMat.ptCount > 1}">[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹과의 매칭이 진행 중입니다.</th:block>
+					        <th:block th:if="${myMat.ptCount == 1}">[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])과의 매칭이 진행 중입니다.</th:block>
+					      </button>
+					    </h2>
+					    <div th:id="'collapseOne' + ${myMat.matNo}" class="accordion-collapse collapse " data-bs-parent="#accordionExample">
+							<div class="accordion-body">
+								<table class="table mx-auto">
+									<thead></thead>
+								    <tbody></tbody>	    		
+					      		</table>
+					      </div>
+					    </div>
+					  </div>
+					  
+					  <div class="accordion-item" th:if="${myMatching.empty}">
+					    <h2 class="accordion-header">
+					    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+					    	 	현재 진행중인 매칭이 없습니다.
+					    	 </button>
+					    </h2>
+					  </div>
+					  			  
+					  
+					</div>
 				</div>
-			</div>
-			
-			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">현재 결제 대기 중인 매칭 내역</h3>
-			<br>
-			<div class="form-floating mb-5 mx-auto">
-				<div class="accordion" id="accordionExample2">
-				  <div class="accordion-item"  th:each="myMat : ${myMatchingW}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
-				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
-				    <h2 class="accordion-header">
-				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsetwo' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
-				      	<th:block th:if="${myMat.ptCount > 1}">[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹과의 매칭이 결제 대기 중입니다.</th:block>
-				        <th:block th:if="${myMat.ptCount == 1}">[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])과의 매칭이 결제 대기 중입니다.</th:block>
-				      </button>
-				    </h2>
-				    <div th:id="'collapsetwo' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
-						<div class="accordion-body">
-							<table class="table mx-auto">
-								<thead></thead>
-								<tbody></tbody>
-							</table>
-				      </div>
-				    </div>
-				  </div>
-				  
-				  <div class="accordion-item" th:if="${myMatchingW.empty}">
-				    <h2 class="accordion-header">
-				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
-				    	 	현재 진행중인 매칭이 없습니다.
-				    	 </button>
-				    </h2>
-				  </div>
-				  
-				  
-				  
+				
+				<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">현재 결제 대기 중인 매칭 내역</h3>
+				<br>
+				<div class="form-floating mb-5 mx-auto">
+					<div class="accordion" id="accordionExample2">
+					  <div class="accordion-item"  th:each="myMat : ${myMatchingW}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
+					  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
+					    <h2 class="accordion-header">
+					      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsetwo' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
+					      	<th:block th:if="${myMat.ptCount > 1}">[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹과의 매칭이 결제 대기 중입니다.</th:block>
+					        <th:block th:if="${myMat.ptCount == 1}">[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])과의 매칭이 결제 대기 중입니다.</th:block>
+					      </button>
+					    </h2>
+					    <div th:id="'collapsetwo' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample2">
+							<div class="accordion-body">
+								<table class="table mx-auto">
+									<thead></thead>
+									<tbody></tbody>
+								</table>
+					      </div>
+					    </div>
+					  </div>
+					  
+					  <div class="accordion-item" th:if="${myMatchingW.empty}">
+					    <h2 class="accordion-header">
+					    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+					    	 	현재 진행중인 매칭이 없습니다.
+					    	 </button>
+					    </h2>
+					  </div>
+					  
+					  
+					  
+					</div>
 				</div>
-			</div>
-			
-			
-			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">[[${loginUserName}]]님이 신청한 매칭 내역</h3>
-			<br>
-			<div class="form-floating mb-5 mx-auto">
-				<div class="accordion" id="accordionExample3">
-					<div class="accordion-item"  th:each="myMat : ${myRequestMat}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
-						<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
-				    	<h2 class="accordion-header">
-				      		<button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsethree' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
-				      			<th:block th:if="${myMat.ptCount > 1}">[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹과의 매칭을 신청하셨습니다.</th:block>
-				        		<th:block th:if="${myMat.ptCount == 1}">[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])과의 매칭을 신청하셨습니다.</th:block>
-				      		</button>
-				    	</h2>
-				   		<div th:id="'collapsethree' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample3">
+				
+				
+				<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">[[${loginUserName}]]님이 신청한 매칭 내역</h3>
+				<br>
+				<div class="form-floating mb-5 mx-auto">
+					<div class="accordion" id="accordionExample3">
+						<div class="accordion-item"  th:each="myMat : ${myRequestMat}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
+							<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
+					    	<h2 class="accordion-header">
+					      		<button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsethree' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
+					      			<th:block th:if="${myMat.ptCount > 1}">[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹과의 매칭을 신청하셨습니다.</th:block>
+					        		<th:block th:if="${myMat.ptCount == 1}">[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])과의 매칭을 신청하셨습니다.</th:block>
+					      		</button>
+					    	</h2>
+					   		<div th:id="'collapsethree' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample3">
+								<div class="accordion-body">
+									<div style="display:none" th:text="${myMat.ptCount}" class="ptCount"></div>
+									<table class="table mx-auto">
+										<thead></thead>
+										<tbody></tbody>
+									</table>
+									<button type="button" class="btn-dndn matCan" style="margin:0 40%;">매칭 신청 취소</button>
+								</div>
+							</div>
+						</div>
+						
+					  <div class="accordion-item" th:if="${myRequestMat.empty}">
+					    <h2 class="accordion-header">
+					    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+					    	 	현재 진행중인 매칭이 없습니다.
+					    	 </button>
+					    </h2>
+					  </div>					
+						
+					</div>
+				</div>
+				
+				
+				<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">[[${loginUserName}]]님이 받은 매칭 신청 내역</h3>
+				<br>
+				<div class="form-floating mb-5 mx-auto">
+					<div class="accordion" id="accordionExample4">
+					  <div class="accordion-item"  th:each="myMat : ${myRequestMatPt}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
+					  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
+					    <h2 class="accordion-header">
+					      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsefour' + ${myMat.matNo} + ${myMat.ptNo}" aria-expanded="false" aria-controls="collapseOne">
+					      	<th:block th:if="${myMat.ptCount > 1}">
+					      		[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹이 매칭을 신청하셨습니다.
+					      	</th:block>
+					        <th:block th:if="${myMat.ptCount == 1}">
+					        	[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])이 매칭을 신청하셨습니다.
+					        </th:block>
+					      </button>
+					    </h2>
+					    <div th:id="'collapsefour' + ${myMat.matNo} + ${myMat.ptNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample4">
 							<div class="accordion-body">
 								<div style="display:none" th:text="${myMat.ptCount}" class="ptCount"></div>
 								<table class="table mx-auto">
 									<thead></thead>
 									<tbody></tbody>
 								</table>
-								<button type="button" class="btn-dndn matCan" style="margin:0 40%;">매칭 신청 취소</button>
+								<button type="button" style="width:120px;margin:0 45%;" class="btn btn-dndn matOk">매칭 승낙</button>
 							</div>
-						</div>
+					    </div>
+					  </div>
+					  
+					  <div class="accordion-item" th:if="${myRequestMatPt.empty}">
+					    <h2 class="accordion-header">
+					    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
+					    	 	현재 진행중인 매칭이 없습니다.
+					    	 </button>
+					    </h2>
+					  </div>	
+					  
 					</div>
-					
-				  <div class="accordion-item" th:if="${myRequestMat.empty}">
-				    <h2 class="accordion-header">
-				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
-				    	 	현재 진행중인 매칭이 없습니다.
-				    	 </button>
-				    </h2>
-				  </div>					
-					
 				</div>
-			</div>
-			
-			
-			<h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">[[${loginUserName}]]님이 받은 매칭 신청 내역</h3>
-			<br>
-			<div class="form-floating mb-5 mx-auto">
-				<div class="accordion" id="accordionExample4">
-				  <div class="accordion-item"  th:each="myMat : ${myRequestMatPt}" th:if="${myMat.ptCount == 1 || myMat.ptCount > 1 && myMat.groupLeader == 'Y'}">
-				  	<div style="display:none" th:text="${myMat.matNo}" class="matNo"></div>
-				    <h2 class="accordion-header">
-				      <button class="accordion-button collapsed" style="font-size:18px;" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapsefour' + ${myMat.matNo}" aria-expanded="false" aria-controls="collapseOne">
-				      	<th:block th:if="${myMat.ptCount > 1}">
-				      		[[${myMat.ptName}]]님 등 [[${myMat.ptCount}]]명의 공동간병 그룹이 매칭을 신청하셨습니다.
-				      	</th:block>
-				        <th:block th:if="${myMat.ptCount == 1}">
-				        	[[${myMat.ptName}]]님([[${myMat.ptRealAge}]]세 [[${myMat.ptGender == 'M' ? '남' : '여'}]])이 매칭을 신청하셨습니다.
-				        </th:block>
-				      </button>
-				    </h2>
-				    <div th:id="'collapsefour' + ${myMat.matNo}" class="accordion-collapse collapse" data-bs-parent="#accordionExample4">
-						<div class="accordion-body">
-							<div style="display:none" th:text="${myMat.ptCount}" class="ptCount"></div>
-							<table class="table mx-auto">
-								<thead></thead>
-								<tbody></tbody>
-							</table>
-							<button type="button" style="width:120px;margin:0 45%;" class="btn btn-dndn matOk">매칭 승낙</button>
-						</div>
-				    </div>
-				  </div>
-				  
-				  <div class="accordion-item" th:if="${myRequestMatPt.empty}">
-				    <h2 class="accordion-header">
-				    	 <button class="accordion-button collapsed" style="font-size:18px;" type="button">
-				    	 	현재 진행중인 매칭이 없습니다.
-				    	 </button>
-				    </h2>
-				  </div>	
-				  
-				</div>
-			</div>
-			
-			
-		</main>
-	</div>
-	
-	<!-- 매칭 승낙 모달 -->	
-	<div class="modal fade" id="matOkModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered modal-xl">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 승낙</h3>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body" style="margin:30px;">
-	        <h4 class="h4 mb-4 fw-bold" id="modalBody"></h4>
-	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청 승낙이 완료됩니다.<br>상대가 입금을 완료하면 매칭이 성사됩니다.</h5>	        
-	      </div>
-	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-dndn" id="requestMatchingOk">매칭 승낙</button>
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>	
-	
-	<!-- 매칭 취소 모달 -->	
-	<div class="modal fade" id="matCancelModal" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered modal-xl">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel2">매칭 신청 취소</h3>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body" style="margin:30px;">
-	        <h4 class="h4 mb-4 fw-bold" id="modalBody2"></h4> 
-	        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청이 취소됩니다.<br>한 번 취소한 매칭 신청은 회복이 불가능합니다.</h5>	        
-	      </div>
-	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-dndn" id="matCancel">매칭 신청 취소</button>
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>	
-	
-	
-	
-	
-	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
-	
-	<script th:inline="javascript">
-	
-		window.onload = function() {
-			
-			const accordionButtons = document.querySelectorAll('.accordion-button')
-			
-			for(const accordionButton of accordionButtons){
-				accordionButton.addEventListener('click', function(){
-					const matNo = this.parentElement.previousElementSibling.innerHTML;
-					
-					const thead = this.parentElement.parentElement.querySelector('thead')
-					const tbody = this.parentElement.parentElement.querySelector('tbody')
-					
-					$.ajax({
-						url : 'getMatPtToMatNo.mc',
-						type :'post',
-						data : {matNo : matNo},
-						datatype : 'json',
-						success : data=>{
-							const matInfo = data;
-						
-							let addMin = '';
-							if(matInfo[0].ptCount == 1){
-								addMin = `&nbsp;&nbsp;&nbsp;${matInfo[0].matAddressMin}`;
-							}else if(matInfo[0].ptCount > 1){
-								addMin = `&nbsp;${matInfo[0].matAddressMin}&nbsp;&nbsp;&nbsp;&nbsp;${matInfo[0].hospitalName}`;
-							}
-							
-							let request =''
-							if(matInfo[0].matRequest == undefined){
-								request = `-`;
-							}else{
-								request = `${matInfo[0].matRequest}`;
-							}
-							
-							
-							
-							
-							let matDate = '';
-							if(matInfo[0].matMode == 2){
-								matDate = `<tr>
-										     <th scope="col">&nbsp;선택 일자</th>
-										     <td scope="col" colspan="3">${matInfo[0].matDate}</td>
-										   </tr>`;
-							}			
-							
-							let theadInner=`
-								<tr style="font-size:18px;">
-									<th scope="col"colspan="3">${addMin}</th>
-							    	<th scope="col" colspan="1">${matInfo[0].service}</th>
-							    </tr>					    
-							    <tr>
-							      <th scope="col">&nbsp;1일 돌봄비용</th>
-							      <td scope="col" colspan="3">${matInfo[0].money}원</td>
-							    </tr>
-							    <tr>
-							      <th scope="col">&nbsp;간병 시작일</th>
-							      <td scope="col">${matInfo[0].beginDt}</td>
-							  	  <th scope="col">간병 종료일</th>
-							      <td scope="col">${matInfo[0].endDt}</td>
-							    </tr>
-								${matDate}
-					    		<tr>
-							      <th scope="col">&nbsp;시작시간</th>
-							      <td scope="col">${matInfo[0].beginTime}</td>
-							  	  <th scope="col">종료시간</th>
-							      <td scope="col">${matInfo[0].endTime}</td>
-							    </tr>
-							    <tr>
-							      <th scope="col">&nbsp;상세 주소</th>
-							      <td scope="col" colspan="3">${matInfo[0].matAddressInfo}&nbsp;&nbsp;</td>
-							    </tr>
-							    <tr>
-							      <th scope="col">&nbsp;요청사항</th>
-							      <td scope="col" colspan="3">${request}</td>
-							    </tr>`;
-		
-							thead.innerHTML = theadInner;
-							
-							for(const onePt of matInfo){						
-								
-								let ptGender ='';
-								if(onePt.ptGender == 'M'){
-									ptGender = '남성'
-								}else if(onePt.ptGender == 'F'){
-									ptGender = '여성'
-								}
-								
-																
-								let request2 =''
-									if(onePt.ptRequest == undefined){
-										request2 = `-`;
-									}else{
-										request2 = `${matInfo[0].matRequest}`;
-									}								
-								
-								
-								let tbodyInner=`
-									<tr>
-								      <th scope="col" colspan="4" style="font-size:18px;text-align:center;"><환자 정보></th>
-								    </tr>
-									<tr>
-								      <th scope="col">&nbsp;이름</th>
-								      <td scope="col" colspan="3">${onePt.ptName}</td>
-								    </tr>
-								    <tr>
-								      <th style="width:50px;">&nbsp;성별</th>
-								      <td style="width:90px;">${ptGender}</td>
-								      <th style="width:50px;">나이</th>
-								      <td style="width:90px;">${onePt.ptRealAge}</td>
-								    </tr>
-								    <tr>
-								      <th>&nbsp;신장</th>
-								      <td>${onePt.ptHeight}</td>
-								      <th>체중</th>
-								      <td>${onePt.ptWeight}</td>
-								    </tr>
-								     <tr>
-								      <th>&nbsp;질병</th>
-								      <td colspan="3">${onePt.disease}</td>
-								    </tr>											  
-								  	<tr>
-								      <th>&nbsp;중증도</th>
-								      <td>${onePt.diseaseLevel}</td>
-								      <th>&nbsp;거동 상태</th>
-								      <td>${onePt.mobilityStatus}</td>
-								    </tr>
-								    <tr>
-								      <th>&nbsp;요청사항</th>
-								      <td colspan="3">${request2}</td>
-								    </tr>`;
-							
-								tbody.innerHTML = tbodyInner;							
-							}
-						
-						},
-						error : data=>console.log(data)			
-					});
-								
-				})
-				
-			}
-			
-			const matOks = document.querySelectorAll('.matOk');
-			const modalBody = document.querySelector('#modalBody');
-			let modalMatNo = '';
-			let modalPtCount = '';
-			
-			/*<![CDATA[*/
-			const myRequestMatPt = /*[[${myRequestMatPt}]]*/'[]';
-			/*]]>*/
-			
-			if(matOks){
-				for(const matOk of matOks){
-					matOk.addEventListener('click', function(){
-						modalMatNo = this.parentElement.parentElement.parentElement.querySelector('.matNo').innerHTML;
-						modalPtCount = this.parentElement.querySelector('.ptCount').innerHTML;
-						let modalBodyInner = '';						
-						for(const matPt of myRequestMatPt){
-							if(matPt.ptCount == 1 && matPt.matNo == modalMatNo){
-								modalBodyInner = `${matPt.ptName}님의 매칭 신청을 승낙하시겠습니까?`
-							}else if(matPt.ptCount > 1 && matPt.groupLeader == 'Y' && matPt.matNo == modalMatNo){
-								modalBodyInner = `${matPt.ptName}님 등 ${matPt.ptCount}명의 공동간병 그룹의 매칭 신청을 승낙하시겠습니까?`
-							}
-						}
-						if (modalBodyInner !== '') {
-			                modalBody.innerHTML = modalBodyInner;
-			            }
-						$('#matOkModal').modal('show');
-						
-					});
-				}
-			}
 
-			
-			document.querySelector('#requestMatchingOk').addEventListener('click', ()=>{
-				location.href='MatchingapproveC.mc?matNo='+ modalMatNo + '&ptCount=' + modalPtCount;
-			});
-			
-			
-			//매칭 취소			
-			const matCans = document.querySelectorAll('.matCan');
-			const modalBody2 = document.querySelector('#modalBody2');
-			modalBody2.innerHTML = '';
-			
-			/*<![CDATA[*/
-			const myRequestMat = /*[[${myRequestMat}]]*/'[]';
-			/*]]>*/
-			
-			if(matCans){
-				for(const matCan of matCans){
-					matCan.addEventListener('click', function(){
-						modalMatNo = this.parentElement.parentElement.parentElement.querySelector('.matNo').innerHTML;
-						modalPtCount = this.parentElement.querySelector('.ptCount').innerHTML;
-						for(const mat of myRequestMat){
-							if(modalMatNo = mat.matNo)
-							modalBody2.innerHTML = mat.memberName + '님에게 보낸 매칭 신청을 취소하시겠습니까?'	
-						}
-						$('#matCancelModal').modal('show');
-						
-					});
-				}
-			}
-			
-			document.querySelector('#matCancel').addEventListener('click', ()=>{
-				location.href='matchingCancelC.mc?matNo='+ modalMatNo + '&ptCount=' + modalPtCount;
-			});
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-		}
 		
+			<!-- 매칭 승낙 모달 -->	
+			<div class="modal fade" id="matOkModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered modal-lg">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel">매칭 승낙</h3>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body" style="margin:30px;">
+			        <h4 class="h4 mb-4 fw-bold" id="modalBody"></h4>
+			        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청 승낙이 완료됩니다.<br>상대가 입금을 완료하면 매칭이 성사됩니다.</h5>	        
+			      </div>
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-dndn" id="requestMatchingOk">매칭 승낙</button>
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>	
 			
-	
-	</script>
+			<!-- 매칭 취소 모달 -->	
+			<div class="modal fade" id="matCancelModal" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered modal-lg">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h3 class="modal-title fw-bold fs-5" id="exampleModalLabel2">매칭 신청 취소</h3>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body" style="margin:30px;">
+			        <h4 class="h4 mb-4 fw-bold" id="modalBody2"></h4> 
+			        <h5 class="h5 mb-1">아래 버튼을 누르면 매칭 신청이 취소됩니다.<br>한 번 취소한 매칭 신청은 회복이 불가능합니다.</h5>	        
+			      </div>
+			      <div class="modal-footer">
+			      	<button type="button" class="btn btn-dndn" id="matCancel">매칭 신청 취소</button>
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>	
+			
+			<script th:inline="javascript">
+			
+				window.onload = function() {
+					
+					const accordionButtons = document.querySelectorAll('.accordion-button')
+					
+					for(const accordionButton of accordionButtons){
+						accordionButton.addEventListener('click', function(){
+							const matNo = this.parentElement.previousElementSibling.innerHTML;
+							
+							const thead = this.parentElement.parentElement.querySelector('thead')
+							const tbody = this.parentElement.parentElement.querySelector('tbody')
+							
+							$.ajax({
+								url : 'getMatPtToMatNo.mc',
+								type :'post',
+								data : {matNo : matNo},
+								datatype : 'json',
+								success : data=>{
+									const matInfo = data;
+								
+									let addMin = '';
+									if(matInfo[0].ptCount == 1){
+										addMin = `&nbsp;&nbsp;&nbsp;${matInfo[0].matAddressMin}`;
+									}else if(matInfo[0].ptCount > 1){
+										addMin = `&nbsp;${matInfo[0].matAddressMin}&nbsp;&nbsp;&nbsp;&nbsp;${matInfo[0].hospitalName}`;
+									}
+									
+									let request =''
+									if(matInfo[0].matRequest == undefined){
+										request = `-`;
+									}else{
+										request = `${matInfo[0].matRequest}`;
+									}
+									
+									
+									
+									
+									let matDate = '';
+									if(matInfo[0].matMode == 2){
+										matDate = `<tr>
+												     <th scope="col">&nbsp;선택 일자</th>
+												     <td scope="col" colspan="3">${matInfo[0].matDate}</td>
+												   </tr>`;
+									}			
+									
+									let theadInner=`
+										<tr style="font-size:18px;">
+											<th scope="col"colspan="3">${addMin}</th>
+									    	<th scope="col" colspan="1">${matInfo[0].service}</th>
+									    </tr>					    
+									    <tr>
+									      <th scope="col">&nbsp;1일 돌봄비용</th>
+									      <td scope="col" colspan="3">${matInfo[0].money.toLocaleString()}원</td>
+									    </tr>
+									    <tr>
+									      <th scope="col">&nbsp;간병 시작일</th>
+									      <td scope="col">${matInfo[0].beginDt}</td>
+									  	  <th scope="col">간병 종료일</th>
+									      <td scope="col">${matInfo[0].endDt}</td>
+									    </tr>
+										${matDate}
+							    		<tr>
+									      <th scope="col">&nbsp;시작시간</th>
+									      <td scope="col">${matInfo[0].beginTime}</td>
+									  	  <th scope="col">종료시간</th>
+									      <td scope="col">${matInfo[0].endTime}</td>
+									    </tr>
+									    <tr>
+									      <th scope="col">&nbsp;상세 주소</th>
+									      <td scope="col" colspan="3">${matInfo[0].matAddressInfo}&nbsp;&nbsp;</td>
+									    </tr>
+									    <tr>
+									      <th scope="col">&nbsp;요청사항</th>
+									      <td scope="col" colspan="3">${request}</td>
+									    </tr>`;
+				
+									thead.innerHTML = theadInner;
+									
+									for(const onePt of matInfo){						
+										
+										let ptGender ='';
+										if(onePt.ptGender == 'M'){
+											ptGender = '남성'
+										}else if(onePt.ptGender == 'F'){
+											ptGender = '여성'
+										}
+										
+																		
+										let request2 =''
+											if(onePt.ptRequest == undefined){
+												request2 = `-`;
+											}else{
+												request2 = `${matInfo[0].matRequest}`;
+											}								
+										
+										
+										let tbodyInner=`
+											<tr>
+										      <th scope="col" colspan="4" style="font-size:18px;text-align:center;"><환자 정보></th>
+										    </tr>
+											<tr>
+										      <th scope="col">&nbsp;이름</th>
+										      <td scope="col" colspan="3">${onePt.ptName}</td>
+										    </tr>
+										    <tr>
+										      <th style="width:50px;">&nbsp;성별</th>
+										      <td style="width:90px;">${ptGender}</td>
+										      <th style="width:50px;">나이</th>
+										      <td style="width:90px;">${onePt.ptRealAge}</td>
+										    </tr>
+										    <tr>
+										      <th>&nbsp;신장</th>
+										      <td>${onePt.ptHeight}</td>
+										      <th>체중</th>
+										      <td>${onePt.ptWeight}</td>
+										    </tr>
+										     <tr>
+										      <th>&nbsp;질병</th>
+										      <td colspan="3">${onePt.disease}</td>
+										    </tr>											  
+										  	<tr>
+										      <th>&nbsp;중증도</th>
+										      <td>${onePt.diseaseLevel}</td>
+										      <th>&nbsp;거동 상태</th>
+										      <td>${onePt.mobilityStatus}</td>
+										    </tr>
+										    <tr>
+										      <th>&nbsp;요청사항</th>
+										      <td colspan="3">${request2}</td>
+										    </tr>`;
+									
+										tbody.innerHTML = tbodyInner;							
+									}
+								
+								},
+								error : data=>console.log(data)			
+							});
+										
+						})
+						
+					}
+					
+					const matOks = document.querySelectorAll('.matOk');
+					const modalBody = document.querySelector('#modalBody');
+					let modalMatNo = '';
+					let modalPtCount = '';
+					
+					/*<![CDATA[*/
+					const myRequestMatPt = /*[[${myRequestMatPt}]]*/'[]';
+					/*]]>*/
+					
+					if(matOks){
+						for(const matOk of matOks){
+							matOk.addEventListener('click', function(){
+								modalMatNo = this.parentElement.parentElement.parentElement.querySelector('.matNo').innerHTML;
+								modalPtCount = this.parentElement.querySelector('.ptCount').innerHTML;
+								let modalBodyInner = '';						
+								for(const matPt of myRequestMatPt){
+									if(matPt.ptCount == 1 && matPt.matNo == modalMatNo){
+										modalBodyInner = `${matPt.ptName}님의 매칭 신청을 승낙하시겠습니까?`
+									}else if(matPt.ptCount > 1 && matPt.groupLeader == 'Y' && matPt.matNo == modalMatNo){
+										modalBodyInner = `${matPt.ptName}님 등 ${matPt.ptCount}명의 공동간병 그룹의 매칭 신청을 승낙하시겠습니까?`
+									}
+								}
+								if (modalBodyInner !== '') {
+					                modalBody.innerHTML = modalBodyInner;
+					            }
+								$('#matOkModal').modal('show');
+								
+							});
+						}
+					}
+		
+					
+					document.querySelector('#requestMatchingOk').addEventListener('click', ()=>{
+						location.href='MatchingapproveC.mc?matNo='+ modalMatNo + '&ptCount=' + modalPtCount;
+					});
+					
+					
+					//매칭 취소			
+					const matCans = document.querySelectorAll('.matCan');
+					const modalBody2 = document.querySelector('#modalBody2');
+					modalBody2.innerHTML = '';
+					
+					/*<![CDATA[*/
+					const myRequestMat = /*[[${myRequestMat}]]*/'[]';
+					/*]]>*/
+					
+					if(matCans){
+						for(const matCan of matCans){
+							matCan.addEventListener('click', function(){
+								modalMatNo = this.parentElement.parentElement.parentElement.querySelector('.matNo').innerHTML;
+								modalPtCount = this.parentElement.querySelector('.ptCount').innerHTML;
+								for(const mat of myRequestMat){
+									if(modalMatNo = mat.matNo)
+									modalBody2.innerHTML = mat.memberName + '님에게 보낸 매칭 신청을 취소하시겠습니까?'	
+								}
+								$('#matCancelModal').modal('show');
+								
+							});
+						}
+					}
+					
+					document.querySelector('#matCancel').addEventListener('click', ()=>{
+						location.href='matchingCancelC.mc?matNo='+ modalMatNo + '&ptCount=' + modalPtCount;
+					});
+									
+				}
+			
+			</script>
+		</main>
+	</th:block>
+	</div>
+	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 		
 </body>
 </html>

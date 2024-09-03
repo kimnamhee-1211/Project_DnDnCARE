@@ -72,7 +72,8 @@ strong {
 	font-size:18px;
 	border-radius:25px;
 	border:none;
-	background:#8dd986;
+	background:#133b5c;
+	opacity:0.8;
 }
 
 .signIn-btn a {

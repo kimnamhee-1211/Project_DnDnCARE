@@ -32,7 +32,7 @@ public class Matching {
 	
 	//통계용 정보
 	private Date ptAge;
-	private String memberGender;
+	private String ptGender;
 	private String LCategory;
 	private String SCategory;
 	private int age;

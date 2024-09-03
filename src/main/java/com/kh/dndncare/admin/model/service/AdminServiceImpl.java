@@ -13,6 +13,8 @@ import com.kh.dndncare.admin.model.dao.AdminMapper;
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.Member;
 
@@ -89,6 +91,26 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
+	public ArrayList<Board> selectCaregiverBoardList(PageInfo cpi) {
+		RowBounds rowBounds = new RowBounds((cpi.getCurrentPage()-1)*cpi.getBoardLimit(), cpi.getBoardLimit());
+		return aMapper.selectCaregiverBoardList(rowBounds);
+	}
+
+	@Override
+	public ArrayList<Board> selectPatientBoardList(PageInfo ppi) {
+		RowBounds rowBounds = new RowBounds((ppi.getCurrentPage()-1)*ppi.getBoardLimit(), ppi.getBoardLimit());
+		return aMapper.selectPatientBoardList(rowBounds);
+	}
+
+	@Override
+	public int getCaregiverListCount() {
+		return aMapper.getCaregiverListCount();
+	}
+
+	@Override
+	public int getPatientListCount() {
+		return aMapper.getPatientListCount();
+	}
 	public ArrayList<Pay> selectPayDeposit(String type) {
 		return aMapper.selectPayDeposit(type);
 	}
@@ -138,6 +160,81 @@ public class AdminServiceImpl implements AdminService{
 	@Override
 	public ArrayList<HashMap<String, Object>> getEnrollCount(HashMap<String, Integer> map) {
 		return aMapper.getEnrollCount(map);
+	}
+
+	@Override
+	public int insertAnnouncement(Board b) {
+		return aMapper.insertAnnouncement(b);
+	}
+
+	@Override
+	public int updateAdminBoardStatus(int boardNo, String boardStatus) {
+		return aMapper.updateAdminBoardStatus(boardNo, boardStatus);
+	}
+
+
+
+	@Override
+	public Board adminSelectBoard(int bNo) {
+		return aMapper.adminSelectBoard(bNo);
+	}
+
+	@Override
+	public ArrayList<Reply> adminSelectReply(int bNo) {
+		return aMapper.adminSelectReply(bNo);
+	}
+
+	@Override
+	public int adminDeleteBoard(int boardNo) {
+		return aMapper.adminDeleteBoard(boardNo);
+	}
+
+	@Override
+	public int adminDeleteReply(int rNo) {
+		return aMapper.adminDeleteReply(rNo);
+	}
+
+	@Override
+	public ArrayList<Matching> selectMatchings() {
+		return aMapper.selectMatchings();
+	}
+	public int adminUpdateBoard(Board b) {
+		return aMapper.adminUpdateBoard(b);
+	}
+
+	@Override
+	public int getAdminQnABoardListCount() {
+		return aMapper.getAdminQnABoardCount();
+	}
+	
+	@Override
+	public ArrayList<Board> adminQnABoardList(PageInfo pi) {
+		RowBounds rowBounds = new RowBounds((pi.getCurrentPage()-1)*pi.getBoardLimit(), pi.getBoardLimit());
+		return aMapper.adminQnABoardList(rowBounds);
+	}
+
+	public int checkAdminId(String memberId) {
+		return aMapper.checkAdminId(memberId);
+	}
+
+	@Override
+	public int insertMember(Member m) {
+		return aMapper.insertMember(m);
+	}
+
+	@Override
+	public int adminInsertAnswer(Reply r) {
+		return aMapper.adminInsertAnswer(r);
+	}
+
+	@Override
+	public ArrayList<Board> recentQueryList() {
+		return aMapper.recentQueryList();
+	}
+
+	@Override
+	public ArrayList<Pay> getPayDeposit() {
+		return aMapper.getPayDeposit();
 	}
 
 }

@@ -7,12 +7,6 @@
 /* #cardDiv {display:grid; grid-template-columns: 350px 350px; grid-template-rows: 200px;} */
 /* #findWorkList {border: 2px solid black;} */
 #upperContentsBtn div:nth-child(2) {display:grid; grid-template-columns: 1fr 600px 1fr; grid-template-rows: 100px;}
-#myPresentMatching { 
-    position:fixed; top:80%; left:85%; 
-    border : 3px solid #133B5C; border-radius:20px;
-    background: white;
-    font-size: 20px;
-}
 
 /* 대빵 버튼 */
 button {
@@ -207,6 +201,12 @@ a {
 /* 	background-color:yellow; */
 /* } */
 
+/* 캘린더 이벤트의 정보를 보는 모달박스 */
+.workInfo {
+	display:grid; grid-template-columns: 300px 160px;
+}
+
+
 #profile-image {
    width: 60px; /* 원하는 크기로 설정 */
    height: 60px; /* 원하는 크기로 설정 */
@@ -351,4 +351,20 @@ a {
 .resultPay{
 	border-top:2px solid #1E5F74;
 	padding:24px;
+}
+
+/*남희님 css 훔치기*/
+.btn-outline {	
+	color: #1D2D50;
+	border: 2px solid #1D2D50;
+	width: 190px;
+	background:white;
+	border-radius: 10px; 
+	text-align: center;
+	padding: 8px;
+}
+
+.btn-outline:hover, .btn-outline:focus{
+	color: white;
+	background: #1D2D50;
 }

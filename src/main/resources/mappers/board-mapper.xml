@@ -9,9 +9,9 @@
             join member m on m.member_no = b.member_no
             join area a on b.area_no = a.area_no
         where b.board_status = 'Y'
-            and m.member_category = #{category}
-        <if test="categoryNo != -1">
-            and b.category_no = #{categoryNo}
+            and (m.member_category='A' or m.member_category=#{category}) and b.category_no != 7 and b.category_no != 99 
+        <if test="categoryNo != -1 and categoryNo != 99 and categoryNo !=7">
+            and b.category_no = #{categoryNo}	
         </if>
         <if test="areas != null and !areas.isEmpty()">
             and a.area_no IN 
@@ -19,19 +19,27 @@
                 #{area}
             </foreach>
         </if>
+        <if test="searchType != null and searchType=='boardTitle'">
+				and b.board_Title like '%' || #{searchText} || '%'
+			</if>
+	         <if test="searchType != null and searchType=='boardContent'">
+	         	and b.board_Content like '%' || #{searchText} || '%'
+	         </if>
+	         <if test= "searchType != null and searchType=='memberNickName'">
+	         	and m.member_NickName like '%' || #{searchText} || '%'
+	   		</if>
     </select>
     
 	<!-- 게시판 전체 조회 -->
 	<select id="selectBoardAllList">
-	    select b.board_No, c.category_Name, b.board_Title, m.member_NickName, a.area_Name, 
-	           b.board_create_date, b.board_count 
+	    select *
 	    from board b
 	        join b_category c on(c.category_no=b.category_no)
 	        join member m on(m.member_no=b.member_no)
 	        join area a on(b.area_no=a.area_no)
 	    where b.board_status='Y' 
-	        and m.member_category=#{category}
-	    <if test="categoryNo != -1">
+	        and (m.member_category='A' or m.member_category=#{category}) and b.category_no != 7 and b.category_no != 99 
+	    <if test="categoryNo != -1 and categoryNo != 99">
 	        and b.category_no = #{categoryNo}
 	    </if>
 	    <if test="areas != null and !areas.isEmpty()">
@@ -56,7 +64,7 @@
 	<!-- 게시판 상세조회 -->
 	<select id="selectBoard" resultType="Board">
 		select b.board_No, c.category_Name, b.board_Title, m.member_NickName, a.area_Name, b.board_create_date,
-			   b.board_update_date, b.board_count, b.board_content, b.category_No, b.area_no, m.member_no
+			   b.board_update_date, b.board_count, b.board_content, b.category_No, b.area_no, m.member_no, m.member_category
 		from board b
 			join b_category c on(c.category_no=b.category_no)
 			join member m on(m.member_no=b.member_no)
@@ -179,7 +187,7 @@
 	
 	<!-- 간병백과 컨텐츠 조회 : 일반 정보 -->
 	<select id="selectCareInformation" resultType="Board">
-		SELECT * FROM BOARD WHERE CATEGORY_NO = 7 AND BOARD_STATUS = 'Y' ORDER BY BOARD_UPDATE_DATE DESC
+		SELECT * FROM BOARD JOIN MEMBER USING(MEMBER_NO) WHERE CATEGORY_NO = 7 AND BOARD_STATUS = 'Y' ORDER BY BOARD_UPDATE_DATE DESC
 	</select>
 	
 	<!-- 간병백과 컨텐츠 조회 : 첨부 정보 -->
@@ -198,11 +206,46 @@
 	<select id="searchCareInformation" resultType="Board">
 		SELECT * 
 		FROM BOARD
+				JOIN MEMBER USING(MEMBER_NO)
 		WHERE BOARD_STATUS = 'Y' AND CATEGORY_NO = 7 AND ${column} LIKE '%${searchContent}%'
 		ORDER BY BOARD_UPDATE_DATE DESC
 	</select>
 	
+	<!-- 문의게시판 페이지네이션 -->
+	<select id="getListCountQnA" resultType="_int">
+		select count(*)
+		from board
+		where category_no = 99 and board_status = 'Y'
+	</select>
 	
+	<!-- 문의게시판 -->
+	<select id="qnaBoardList" resultType="Board">
+		select board_no, board_title, member_nickname, board_create_date, count(reply.ref_board_no) answerYN
+		from board
+			join member using(member_no)
+			left join reply on(reply.ref_board_no = board.board_no)
+		where board.category_no = 99 and board_status = 'Y'
+		group by board_no, board_title, member_nickname, board_create_date
+		order by board_no desc
+	</select>
+	
+	<!-- 나의 문의내역 페이지 -->
+	<select id="getMyListCountQnA" resultType="_int">
+		select count(*)
+		from board
+		where category_no = 99 and board_status = 'Y' and member_no = #{memberNo}
+	</select>
+	
+	<!-- 나의 문의내역 -->
+	<select id="myQnAList" resultType="Board">
+		select b.board_no, b.board_title, m.member_nickname, b.board_create_date, count(r.ref_board_no) answerYN
+		from board b
+			join member m on(m.member_no = b.member_no)
+			left join reply r on(r.ref_board_no = b.board_no)
+		where b.category_no = 99 and b.board_status = 'Y' and b.member_no = #{memberNo} 
+		group by b.board_no, b.board_title, m.member_nickname, b.board_create_date
+		order by b.board_no desc
+	</select>
 	
 	
 	

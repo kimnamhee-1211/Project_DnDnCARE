@@ -65,13 +65,15 @@ body {
 .accordion-button:active, .accordion-button:focus, .accordion-button:click {
 	box-shadow : none !important;
 	background-color: white !important;
+	font-weight: bold !important;
+	color: black !important;
 }
 
 .accordion-button{
 	box-shadow : none !important;
 	background-color: white !important;
+	color: black !important;
 }
-
 
 
 

@@ -50,8 +50,7 @@
 						</a>
 					</div>
 					<div class="m-2">
-						<div id="naver_id_login"></div>
-        					<use xlink:href="../image/icon_naver.svg#icon"></use>
+						<div id="naver_id_login" style="height:200px;"></div>
 					</div>
 				</div>
 			</div>
@@ -60,10 +59,10 @@
 	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
 	<script>
 		//네이버
-		var naver_id_login = new naver_id_login("m2tmMPCHBBaFCdz1OOkT", "http://localhost:8096/callback.lo");
+		var naver_id_login = new naver_id_login("m2tmMPCHBBaFCdz1OOkT", "http://192.168.40.18:8096/callback.lo");
 	  	var state = naver_id_login.getUniqState();
-	  	naver_id_login.setButton("green", 40);
-	  	naver_id_login.setDomain("http://localhost:8096/login.me");
+	  	naver_id_login.setButton("green", 60);
+	  	naver_id_login.setDomain("http://192.168.40.18:8096/login.me");
 	  	naver_id_login.setState(state);
 	  	//naver_id_login.setPopup();
 	  	naver_id_login.init_naver_id_login();
@@ -73,7 +72,7 @@
 	  	//카카오 시작
 	  	function loginWithKakao() {
 		    Kakao.Auth.authorize({
-		      redirectUri: 'http://localhost:8096/kakao.lo',
+		      redirectUri: 'http://192.168.40.18:8096/kakao.lo',
 		    });
 		  }
 		  
@@ -124,7 +123,7 @@
 		  }
 		  
 		  const REST_API_KEY = '524ba33a1cc31d09605ec24786b054ef'; // 여기에 REST API 키를 입력하세요.
-		  const REDIRECT_URI = 'http://localhost:8096/kakao.lo'; // 여기에 리다이렉트 URI를 입력하세요.
+		  const REDIRECT_URI = 'http://192.168.40.18:8096/kakao.lo'; // 여기에 리다이렉트 URI를 입력하세요.
 		  const AUTHORIZE_CODE = '[[${code2}]]'; // 여기에 인가 코드를 입력하세요.
 
 		  const url = 'https://kauth.kakao.com/oauth/token';
@@ -152,20 +151,12 @@
 		    });
 		  //카카오끝
 	  	
-		document.addEventListener('DOMContentLoaded', function() { // DOMContentLoaded => 페이지 로딩될때 다른거 기다리지 않고 바로 되게하는 것 굳이 필요하진않음
-		    document.getElementById('google').addEventListener('click', handleGoogleLogin);
-		});
 		
 		function handleKakaoLogin() {
 		    console.log('카카오 로그인 시도');
 		    // 카카오 로그인 로직 구현
 		}
 		
-		
-		function handleGoogleLogin() {
-		    console.log('구글 로그인 시도');
-		    // 구글 로그인 로직 구현
-		} 
 		
 		const enrollButton = document.getElementById("enrollButton")
 		enrollButton.addEventListener('click', ()=>{

@@ -7,19 +7,43 @@
 <style>
 	
 	#myPresentMatching {
+	width:150px;
+    position:fixed;
+    bottom:80px;
+	right:78px;
+    border : 3px solid #133B5C; border-radius:50%;
+    height:140px;
+    background: #white;
+    font-size: 20px;
+    font-weight:1000;
+    cursor:pointer;
+}
+
+#matching-wrap {
+	margin-top:11px;
+}
+	
+	
+
+/* #myPresentMatching {
 	width:175px;
-    position:fixed; top:25%; left:85%; 
+    position:fixed; top:75%; left:88%; 
     border : 3px solid #133B5C; border-radius:15px;
     background: #white;
     font-size: 20px;
     cursor:pointer;
-}
+} */
+
+	
 </style>
 <body>
 	<!-- 사이드 버튼 -->
 	    <div align="center" id="myPresentMatching">
-	         <img width="72" height="72" src="https://img.icons8.com/parakeet-line/96/000000/welfare.png" alt="welfare"/>
-	         <div>나의 매칭 현황</div>
+	    	<div id="matching-wrap">
+		    	 <img width="60" height="60" src="https://img.icons8.com/parakeet-line/96/000000/welfare.png" alt="welfare"/>
+		         <div>나의 매칭 현황</div>
+	    	</div>
+	        
 	    </div>
 	    
 	    <script th:inline="javascript">

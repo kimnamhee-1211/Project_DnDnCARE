@@ -19,6 +19,7 @@ import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.matching.model.vo.Pay;
+import com.kh.dndncare.matching.model.vo.joinMatInfoMin;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
@@ -75,6 +76,7 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	//get member info (대분류 : 소분류)
+	@Override
 	public ArrayList<InfoCategory> getInfo(int ptNo) {
 		return mMapper.getInfo(ptNo);
 	}
@@ -88,7 +90,7 @@ public class MatchingServiceImpl implements MatchingService {
 	
 	//병원  데이터 get
 	@Override
-	public Hospital getHospital(Hospital hospital) {
+	public int getHospital(Hospital hospital) {
 		return mMapper.getHospital(hospital);
 	}
 
@@ -117,6 +119,7 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	//매칭에 참여하고 잇는 인원이 몇인지 => 매칭 table 한 튜플에 따른 matPtInfo 테이블 튜플 수
+	@Override
 	public int joinPtCount(int matNo) {
 		return mMapper.joinPtCount(matNo);
 	}
@@ -239,10 +242,11 @@ public class MatchingServiceImpl implements MatchingService {
 	public int insertReview(HashMap<String, Object> map) {
 		return mMapper.insertReview(map);
 	}
-	
+	@Override
 	public MatMatptInfo selecMatPtInfo(int matNo, int memberNo) {
 		return mMapper.selecMatPtInfo(matNo,memberNo);
 	}
+	@Override
 	public MatMatptInfo selectMatching(int matNo) {
 		return mMapper.selectMatching(matNo);
 	}
@@ -257,6 +261,7 @@ public class MatchingServiceImpl implements MatchingService {
 	public String selectMatDate(int matNo) {
 		return mMapper.selectMatDate(matNo);
 	}
+	@Override
 	public int deleteReivew(int reviewNo) {
 		return mMapper.deleteReview(reviewNo);
 	}
@@ -270,7 +275,7 @@ public class MatchingServiceImpl implements MatchingService {
 	public int updateReview(CareReview cr) {
 		return mMapper.updateReview(cr);
 	}
-
+	@Override
 	public int insertMatPtInfo(MatPtInfo matPtInfo) {
 		// TODO Auto-generated method stub
 		return 0;//없는메소드	
@@ -370,8 +375,35 @@ public class MatchingServiceImpl implements MatchingService {
 	}
 
 	@Override
-	public ArrayList<Matching> matPatientList(int memberNo) {
-		return mMapper.matPatientList(memberNo);
+	public ArrayList<Matching> matPatientList() {
+		return mMapper.matPatientList();
+	}
+
+	
+	//참여중인 공동간병그룹 만들기
+	@Override
+	public ArrayList<joinMatInfoMin> getMyJoinMat(int loginPt) {
+		return mMapper.getMyJoinMat(loginPt);
+	}
+	@Override
+	public int getHospitalNo(String hospitalName) {
+	    Integer result = mMapper.getHospitalNo(hospitalName);
+	    return result != null ? result : 0;
+	}
+
+	@Override
+	public int insertHospital(String hospitalName, String hospitalAddress) {
+		return mMapper.insertHospital(hospitalName,hospitalAddress);
+	}
+
+	@Override
+	public String getRequest(int memberNo) {
+		return mMapper.getRequest(memberNo);
+	}
+	//결제완료된 페이 상태수정
+	@Override
+	public int updatePayTransfer(Pay p) {
+		return mMapper.updatePayTransfer(p);
 	}
 
 

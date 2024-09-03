@@ -17,6 +17,7 @@ import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.member.model.vo.CareGiver;
 import com.kh.dndncare.member.model.vo.CareGiverMin;
 import com.kh.dndncare.matching.model.vo.Pay;
+import com.kh.dndncare.matching.model.vo.joinMatInfoMin;
 import com.kh.dndncare.member.model.vo.InfoCategory;
 import com.kh.dndncare.member.model.vo.Member;
 import com.kh.dndncare.member.model.vo.Patient;
@@ -48,7 +49,7 @@ public interface MatchingService {
 	int insertMatDate(int matNo, String matDate);
 	
 	//병원  데이터 Count  get
-	Hospital getHospital(Hospital hospital);
+	int getHospital(Hospital hospital);
 	
 	//loginUser-MatNo get
 	Set<Integer> getloginMatNo(int memberNo);
@@ -170,7 +171,7 @@ public interface MatchingService {
 	ArrayList<MatMatptInfo> serviceList(int memberNo);
 
 	// 매칭 환자정보 통계용
-	ArrayList<Matching> matPatientList(int memberNo);
+	ArrayList<Matching> matPatientList();
 
 
 	//ptCount get
@@ -178,6 +179,13 @@ public interface MatchingService {
 	
 	//loginUser가 그룹 리더인지 아닌지 확인
 	String getGroupLeader(int matNo, int ptNo);
+	
+	//참여중인 공동간병 정보 
+	ArrayList<joinMatInfoMin> getMyJoinMat(int loginPt);
+	int getHospitalNo(String hospitalName);
+	int insertHospital(String hospitalName, String hospitalAddress);
+	String getRequest(int memberNo);
+	int updatePayTransfer(Pay p);
 
 
 }

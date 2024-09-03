@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.dndncare.chating.model.dao.ChatingMapper;
 import com.kh.dndncare.chating.model.vo.ChatingRoom;
@@ -55,12 +56,13 @@ public class ChatingServiceImpl implements ChatingService {
 	public List<ChatingRoomMessage> getLatestMessages(int memberNo) {
 		return chMapper.getLatestMessages(memberNo);
 	}
-    @Override
-    public void sendMessage(ChatingRoomMessage message) {
-        int participantCount = chMapper.getParticipantCount(message.getChatRoomNo());
-        message.setReadCount(participantCount - 1);
-        chMapper.insertMessage(message);
-    }
+	@Override
+	public ChatingRoomMessage sendMessage(ChatingRoomMessage message) {
+	    int participantCount = chMapper.getParticipantCount(message.getChatRoomNo());
+	    message.setReadCount(participantCount - 1);
+	    chMapper.insertMessage(message);
+	    return message;
+	}
 
 
     @Override
@@ -78,8 +80,10 @@ public class ChatingServiceImpl implements ChatingService {
         return chMapper.getMessageReadCount(messageId);
     }
     @Override
+    @Transactional
     public void markAsRead(int chatRoomNo, int memberNo) {
         chMapper.markMessagesAsRead(chatRoomNo, memberNo);
+        chMapper.updateReadByMembers(chatRoomNo, memberNo);
     }
     @Override
     public List<Integer> markAsReadAndGetUpdatedMessages(int chatRoomNo, int memberNo) {
@@ -89,15 +93,16 @@ public class ChatingServiceImpl implements ChatingService {
     @Override
     public List<Map<String, Object>> getMessageReadCounts(int chatRoomNo) {
         List<ChatingRoomMessage> messages = chMapper.getMessagesByChatRoomNo(chatRoomNo);
-        int participantCount = chMapper.getParticipantCount(chatRoomNo);
+        
         
         return messages.stream().map(message -> {
             Map<String, Object> readCountInfo = new HashMap<>();
             readCountInfo.put("CHAT_MASSAGE_NO", message.getChatMassageNo());
-            readCountInfo.put("READ_COUNT", participantCount - message.getReadCount());
+            readCountInfo.put("READ_COUNT", message.getReadCount());
             return readCountInfo;
         }).collect(Collectors.toList());
     }
+    
 	@Override
 	public int getPtCount(Integer matNo) {
 		return chMapper.getPtCount(matNo);
@@ -128,6 +133,24 @@ public class ChatingServiceImpl implements ChatingService {
 	public int getChatCount(Integer finalChatRoomNo) {
 		// TODO Auto-generated method stub
 		return chMapper.getChatCount(finalChatRoomNo);
+	}
+	
+	@Override
+	public int getAlreadyChatRoomNo(Integer matNo, int memberNo, int relatedMemberNo) {
+		return chMapper.getAlreadyChatRoomNo(matNo,memberNo,relatedMemberNo);
+	}
+	@Override
+	public Integer getAlreadyChatRoomNo2(Integer matNo, int firstMemberNo, int secondMemberNo, int cMemberNo) {
+		return chMapper.getAlreadyChatRoomNo2(matNo,firstMemberNo,secondMemberNo,cMemberNo);
+	}
+	@Override
+	public Integer getAlreadyChatRoomNo3(Integer matNo, int firstMemberNo, int secondMemberNo, int thirdMemberNo,
+			int cMemberNo) {
+		return chMapper.getAlreadyChatRoomNo3(matNo, firstMemberNo, secondMemberNo, thirdMemberNo, cMemberNo);
+	}
+	@Override
+	public List<String> getParticipantMemberNames(Integer finalChatRoomNo) {
+		return chMapper.getParticipantMemberNames(finalChatRoomNo);
 	}
     
 

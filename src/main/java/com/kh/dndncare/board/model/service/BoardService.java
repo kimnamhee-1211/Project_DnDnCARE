@@ -52,6 +52,14 @@ public interface BoardService {
 
 	ArrayList<Board> searchCareInformation(HashMap<String, String> map, PageInfo pi);
 
+	int getListCountQnA();
+
+	ArrayList<Board> qnaBoardList(PageInfo pi);
+
+	ArrayList<Board> myQnAList(int memberNo, PageInfo mpi);
+
+	int getMyListCountQnA(int memberNo);
+
 
 
 

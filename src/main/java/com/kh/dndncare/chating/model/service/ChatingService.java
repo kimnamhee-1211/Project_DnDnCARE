@@ -27,7 +27,7 @@ public interface ChatingService {
 
 	List<ChatingRoomMessage> getLatestMessages(int memberNo);
 
-	void sendMessage(ChatingRoomMessage message);
+	ChatingRoomMessage sendMessage(ChatingRoomMessage message);
     void markAsRead(int chatRoomNo, int memberNo);
     int getUnreadMessageCount(int chatRoomNo, int memberNo);
     int getParticipantCount(int chatRoomId);
@@ -50,6 +50,15 @@ public interface ChatingService {
 	List<Integer> getMatMemberNos3(Integer firstPtNo, Integer secondPtNo, Integer thirdPtNo);
 
 	int getChatCount(Integer finalChatRoomNo);
+
+	int getAlreadyChatRoomNo(Integer matNo, int memberNo, int relatedMemberNo);
+
+	Integer getAlreadyChatRoomNo2(Integer matNo, int firstMemberNo, int secondMemberNo, int cMemberNo);
+
+	Integer getAlreadyChatRoomNo3(Integer matNo, int firstMemberNo, int secondMemberNo, int thirdMemberNo,
+			int cMemberNo);
+
+	List<String> getParticipantMemberNames(Integer finalChatRoomNo);
     
 
 }

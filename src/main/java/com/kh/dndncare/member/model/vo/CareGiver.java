@@ -48,7 +48,7 @@ public class CareGiver {
 	// ai추천용 필드 (끝)
 	
 	private Double avgReviewScoreDouble;
-	
+	private int reviewCount;
 	
 	
 }

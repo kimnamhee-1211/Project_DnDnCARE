@@ -85,10 +85,11 @@
 	</select>
 	
 	<!-- 병원 get : 병원 존재 유무 확인-->
-	<select id="getHospital" resultType="Hospital">
-		select *
+	<select id="getHospital" resultType="_int">
+		select count(*)
 		from hospital
-		where hospital_name = #{hospitalName} and hospital_address = #{hospitalAddress}	
+		where hospital_name = #{hospitalName} 
+				<!-- and hospital_address like '%${hospitalAddress}%'	-->
 	</select>
 	
 	<!-- loginUser-MatNo get -->
@@ -264,8 +265,8 @@
 	<select id="matPtInfoToCaregiver" resultType="MatMatptInfoPt">
 		select *
 		from matching
-			join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
-			join patient on(mat_pt_info.pt_no = patient.pt_no)	
+			left join mat_pt_info on(matching.mat_no = mat_pt_info.mat_no) 	
+			left join patient on(mat_pt_info.pt_no = patient.pt_no)	
 			left join hospital on(hospital.hospital_no = matching.hospital_no)
 			left join matching_date on(matching.mat_no = matching_date.mat_no) 		
 		where matching.mat_no = #{matNo}
@@ -383,7 +384,7 @@
 			#{loginUser.memberName},
 			#{loginUser.memberPhone},
 			#{loginUser.memberEmail},
-			#{p.merchantUid},
+			#{p.mercharntUid},
 			#{p.payService},
 			'Y'
 		)
@@ -503,7 +504,7 @@
 		from pay
 		where mat_no in(select mat_no
 						from matching 
-						where member_no = #{memberNo}) and pay_deposit = 'N'
+						where member_no = #{memberNo}) and pay_deposit = 'Y'
 	</select>	
 
 	<!-- 간병인 결제 대금 받기 -->
@@ -517,7 +518,7 @@
 			#{loginUser.memberName},
 			#{loginUser.memberPhone},
 			#{loginUser.memberEmail},
-			#{p.merchantUid},
+			#{p.mercharntUid},
 			#{p.payService},
 			'N'
 		)
@@ -527,7 +528,7 @@
 		select service, count(service) serviceCount
 		from mat_pt_info
 			join matching using(mat_no)
-		where member_no = #{memberNo}
+		where member_no = #{memberNo} and service != '개인간병'
 		group by service
 	</select>
 	
@@ -540,7 +541,7 @@
 		    left join member m on(m.member_no = p.member_no)
 		    left join member_info mi on(m.member_no = mi.member_no)
 		    left join info_category cn on(mi.category_no = cn.category_no)
-		where mc.member_no=#{memberNo} and l_category = 'disease' and sysdate > end_dt
+		where l_category = 'disease' and sysdate > end_dt
 		group by mc.mat_no, mc.begin_dt, mc.end_dt, mc.mat_confirm, p.pt_age, p.pt_gender, mc.member_no
 		order by mc.mat_no
 	</select>
@@ -558,6 +559,57 @@
 		from mat_pt_info
 		where mat_no = #{matNo} and pt_no = #{ptNo}	
 	</select>
+	
+	<select id="getHospitalNo" resultType="java.lang.Integer">
+	    SELECT NVL(hospital_no, 0) as hospital_no
+	    FROM hospital
+	    WHERE hospital_name = #{hospitalName}
+	</select>
+	
+	<insert id="insertHospital" useGeneratedKeys="true">
+		<selectKey resultType="_int" keyProperty="hospitalNo" order="BEFORE">
+			select seq_hid.nextval from dual
+		</selectKey>
+		insert into hospital values(#{hospitalNo},#{hospitalAddress},#{hospitalName})	
+	</insert>
+
+
+	<select id="getMyJoinMat" resultType="joinMatInfoMin">
+		select subquery.mat_no, subquery.pt_count, subquery.mat_mode,
+				hospital.hospital_name, hospital.hospital_address, 
+				patient.pt_no, patient.pt_name
+		from (select mat_no, pt_count, hospital_no, end_dt, mat_mode
+				from matching
+					join mat_pt_info mpi_me using(mat_no)
+				where mpi_me.pt_no = #{loginPt}
+						and matching.pt_count > 1) subquery
+			join hospital on(subquery.hospital_no = hospital.hospital_no)
+			join mat_pt_info mpi on(subquery.mat_no = mpi.mat_no)
+			join patient on(mpi.pt_no = patient.pt_no)
+		where mpi.group_leader = 'Y' and subquery.end_dt > sysdate
+	</select>
+	
+	<select id="getRequest">
+		select PT_REQUEST
+		from patient
+		where member_no = #{memberNo}
+	</select>
+
+
+
+
+	<!-- 결제 승인된 결제대금 상태변경 -->
+	<update id="updatePayTransfer">
+		update Pay
+		set pay_deposit = 'T'
+		where pay_no =#{payNo}
+	</update>
+	
+
+
+
+
+
 
 
 

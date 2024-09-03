@@ -10,7 +10,7 @@
 <body>
 	<div class="navbar" th:replace="~{common/navbar.html :: navbar}"></div>
 	<div class="title-content d-flex justify-content-center">
-		<h1 class="h1 mb-1 fw-bold mb-1 text-center">공동간병</h1><br>
+		<h1 class="h1 mb-1 fw-bold mb-1 text-center"><img class="logoImage m-1"th:src="@{/image/mainLogoVer2.png}">공동간병</h1><br>
 	</div>
 	<div class="title2-content d-flex justify-content-center">	
 		<h1 class="h3 mb-3 fw-bold mb-5 text-center">지도에서 돌봄서비스를 진행할 병원을 선택해주세요</h1>	
@@ -103,7 +103,10 @@
 				
 				
 	</main>
-	<div class="footer" th:replace="~{common/footer.html :: footer}"></div>
+	<br/><br/>
+	<div class="chatFixedBtn" th:replace="~{common/chatFixedBtn.html :: chatFixedBtn}"></div>
+    <div class="matFixedBtn" th:replace="~{common/matFixedBtn :: matFixedBtn}"></div>
+    <th:block th:replace="~{common/footer :: footer}"></th:block>
 	
 	
 	<script th:inline="javascript">	

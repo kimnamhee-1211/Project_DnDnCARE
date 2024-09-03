@@ -8,6 +8,8 @@ import java.util.TreeMap;
 import com.kh.dndncare.admin.model.vo.Attachment;
 import com.kh.dndncare.board.model.vo.Board;
 import com.kh.dndncare.board.model.vo.PageInfo;
+import com.kh.dndncare.board.model.vo.Reply;
+import com.kh.dndncare.matching.model.vo.Matching;
 import com.kh.dndncare.matching.model.vo.Pay;
 import com.kh.dndncare.member.model.vo.Member;
 
@@ -39,6 +41,13 @@ public interface AdminService {
 
 	int updateCareInformation(Board b);
 
+	ArrayList<Board> selectCaregiverBoardList(PageInfo cpi);
+
+	ArrayList<Board> selectPatientBoardList(PageInfo ppi);
+
+	int getCaregiverListCount();
+
+	int getPatientListCount();
 	ArrayList<Pay> selectPayDeposit(String type);
 	int getMembersListCount();
 
@@ -57,6 +66,36 @@ public interface AdminService {
 	String getMemberAge(int memberNo);
 
 	ArrayList<HashMap<String, Object>> getEnrollCount(HashMap<String, Integer> map);
+
+	int insertAnnouncement(Board b);
+
+	int updateAdminBoardStatus(int boardNo, String boardStatus);
+
+
+	Board adminSelectBoard(int bNo);
+
+	ArrayList<Reply> adminSelectReply(int bNo);
+
+	int adminDeleteBoard(int boardNo);
+
+	int adminDeleteReply(int rNo);
+
+	ArrayList<Matching> selectMatchings();
+	int adminUpdateBoard(Board b);
+
+	int getAdminQnABoardListCount();
+	
+	ArrayList<Board> adminQnABoardList(PageInfo pi);
+
+	int checkAdminId(String memberId);
+
+	int insertMember(Member m);
+
+	int adminInsertAnswer(Reply r);
+
+	ArrayList<Board> recentQueryList();
+
+	ArrayList<Pay> getPayDeposit();
 
 
 
